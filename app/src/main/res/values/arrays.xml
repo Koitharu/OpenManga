@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="providers_names">
+        <item>[RU] ReadManga</item>
+        <item>[RU] AdultManga(18+)</item>
+        <item>E-Hentai(18+)</item>
+    </string-array>
+    <string-array name="providers">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+</resources>

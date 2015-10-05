@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">OpenManga</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_error">Loading failed</string>
+    <string name="close">Close</string>
+    <string name="local_storage">Local storage</string>
+    <string name="storages_remote">Remote storages:</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="loading_page">Loading page</string>
+    <string name="action_search">Search</string>
+    <string name="search_on">Search on</string>
+    <string name="operation_not_supported">Operation not supported for this content source</string>
+    <string name="chapters_list">Chapters list</string>
+    <string name="action_favourites">Favourites</string>
+    <string name="action_favourite">Add to favourites</string>
+    <string name="setting_providers">Available sources</string>
+    <string name="wait">Wait…</string>
+
+    <string-array name="providers_def">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!--item name="android:actionBarStyle">@style/ActionBar</item-->
+    </style>
+
+    <style name="AppTheme.Main" parent="AppTheme">
+        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="MenuItem">
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
+        <item name="android:background">?android:activatedBackgroundIndicator</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+    </style>
+
+    <style name="ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
+    </style>
+
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <MultiSelectListPreference android:key="providers"
+        android:title="@string/setting_providers"
+        android:entries="@array/providers_names"
+        android:entryValues="@array/providers"
+        android:defaultValue="@array/providers_def" />
+</PreferenceScreen>

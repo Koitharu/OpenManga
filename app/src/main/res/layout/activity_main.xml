@@ -1,0 +1,25 @@
+<android.support.v4.widget.DrawerLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer"
+    tools:context=".MainActivity">
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="org.nv95.openmanga.MangaListFragment"
+        android:id="@+id/fragment"
+        tools:layout="@layout/fragment_mangalist" />
+
+    <ListView
+        android:id="@+id/listView_menu"
+        android:layout_width="@dimen/drawer_size"
+        android:layout_gravity="start"
+        android:divider="@android:color/transparent"
+        android:background="@android:color/background_light"
+        android:choiceMode="singleChoice"
+        android:listSelector="?android:activatedBackgroundIndicator"
+        android:dividerHeight="0dp"
+        android:layout_height="match_parent" />
+</android.support.v4.widget.DrawerLayout>
