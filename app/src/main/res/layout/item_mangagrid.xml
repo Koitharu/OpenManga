@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:background="?android:activatedBackgroundIndicator">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="@dimen/cell_width"
+        android:layout_height="@dimen/cell_height">
+
+        <ImageView
+            android:layout_width="@dimen/preview_width_large"
+            android:layout_height="@dimen/preview_height_large"
+            android:id="@+id/imageView"
+            android:src="@android:drawable/ic_dialog_dialer"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Medium Text"
+            android:id="@+id/textView_title"
+            android:singleLine="false"
+            android:layout_gravity="bottom"
+            android:padding="1dp"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/textView_subtitle"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/textView_summary" />
+    </LinearLayout>
+</FrameLayout>

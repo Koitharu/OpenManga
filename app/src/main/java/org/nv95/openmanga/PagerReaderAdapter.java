@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -55,8 +54,10 @@ public class PagerReaderAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         PageLoadTask task = pages.get(position).getLoadTask();
-        if (task != null)
+        if (task != null) {
             task.cancel(true);
+            pages.get(position).setLoadTask(null);
+        }
         ((ViewPager) container).removeView((View) object);
     }
 }

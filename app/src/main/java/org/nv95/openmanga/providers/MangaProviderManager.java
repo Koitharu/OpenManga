@@ -12,6 +12,7 @@ import java.util.Set;
 public class MangaProviderManager {
     public static final int FUTURE_MULTIPAGE = 0;
     public static final int FEAUTURE_SEARCH = 1;
+    public static final int FEAUTURE_REMOVE = 2;
     private Context context;
     Set<String> providers;
     public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai"};

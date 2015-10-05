@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,17 +9,18 @@ import org.nv95.openmanga.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
- * Created by nv95 on 03.10.15.
+ * Created by nv95 on 05.10.15.
  */
-public class FavouritesProvider extends MangaProvider {
-    private static final String TABLE_NAME = "favourites";
+public class HistoryProvider extends MangaProvider {
+    private static final String TABLE_NAME = "history";
     StorageHelper dbHelper;
     private Context context;
     protected static boolean features[] = {false, false, true};
 
-    public FavouritesProvider(Context context) {
+    public HistoryProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
     }
@@ -38,11 +40,11 @@ public class FavouritesProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, "timestamp");
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    list.add(manga);
+                    list.add(0, manga);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -69,7 +71,7 @@ public class FavouritesProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return context.getString(R.string.action_favourites);
+        return context.getString(R.string.action_history);
     }
 
     @Override
@@ -79,7 +81,12 @@ public class FavouritesProvider extends MangaProvider {
 
     public boolean add(MangaInfo mangaInfo) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-        database.insert(TABLE_NAME, null, mangaInfo.toContentValues());
+        ContentValues cv = mangaInfo.toContentValues();
+        cv.put("timestamp", new Date().getTime());
+        int updCount = database.update(TABLE_NAME, cv, "id=" + mangaInfo.path.hashCode(), null);
+        if (updCount == 0) {
+            database.insert(TABLE_NAME, null, cv);
+        }
         database.close();
         return true;
     }
@@ -112,15 +119,15 @@ public class FavouritesProvider extends MangaProvider {
         return res;
     }
 
-    public static boolean addToFavourites(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).add(mangaInfo);
+    public static boolean addToHistory(Context context, MangaInfo mangaInfo) {
+        return new HistoryProvider(context).add(mangaInfo);
     }
 
-    public static boolean removeFromFavourites(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).remove(mangaInfo);
+    public static boolean removeFromHistory(Context context, MangaInfo mangaInfo) {
+        return new HistoryProvider(context).remove(mangaInfo);
     }
 
     public static boolean has(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).has(mangaInfo);
+        return new HistoryProvider(context).has(mangaInfo);
     }
 }

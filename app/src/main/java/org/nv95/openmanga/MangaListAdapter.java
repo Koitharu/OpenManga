@@ -41,7 +41,7 @@ public class MangaListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return list.get(position).getPath().hashCode();
     }
 
     public MangaInfo getMangaInfo(int position) {
@@ -51,7 +51,7 @@ public class MangaListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.item_mangalist, null);
+            convertView = inflater.inflate(grid ? R.layout.item_mangagrid : R.layout.item_mangalist, null);
         MangaInfo info = getMangaInfo(position);
         ((TextView) convertView.findViewById(R.id.textView_title)).setText(info.getName());
         ((TextView) convertView.findViewById(R.id.textView_subtitle)).setText(info.getSubtitle());
@@ -59,5 +59,21 @@ public class MangaListAdapter extends BaseAdapter {
         ((ImageView) convertView.findViewById(R.id.imageView)).setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, 0).execute();
         return convertView;
+    }
+
+    public boolean isGrid() {
+        return grid;
+    }
+
+    public void setGrid(boolean grid) {
+        if (this.grid != grid) {
+            this.grid = grid;
+            notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
     }
 }

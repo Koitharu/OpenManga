@@ -11,13 +11,14 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     public StorageHelper(Context context) {
         // конструктор суперкласса
-        super(context, "localmanga", null, 1);
+        super(context, "localmanga", null, 2);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table local_storage ("
-                + "id integer primary key autoincrement,"   //0
+                + "id integer primary key,"   //0
                 + "name text,"                              //1
                 + "subtitle text,"                          //2
                 + "summary text,"                           //3
@@ -26,13 +27,24 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "path text"                               //6
                 + ");");
         db.execSQL("create table favourites ("
-                + "id integer primary key autoincrement,"   //0
+                + "id integer primary key,"   //0
                 + "name text,"                              //1
                 + "subtitle text,"                          //2
                 + "summary text,"                           //3
                 + "preview text,"                           //4
                 + "provider text,"                          //5
                 + "path text"                               //6
+                + ");");
+        db.execSQL("create table history ("
+                + "id integer primary key,"                 //0
+                + "name text,"                              //1
+                + "subtitle text,"                          //2
+                + "summary text,"                           //3
+                + "preview text,"                           //4
+                + "provider text,"                          //5
+                + "path text,"                               //6
+                + "timestamp integer,"                      //7
+                + "progress integer"                       //8
                 + ");");
     }
 

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
@@ -37,13 +38,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         drawerListView = (ListView) findViewById(R.id.listView_menu);
         providerManager = new MangaProviderManager(this);
-        headers = new TextView[2];
+        headers = new TextView[3];
         headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
         headers[0].setText(R.string.local_storage);
         headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
         headers[1].setText(R.string.action_favourites);
+        headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
+        headers[2].setText(R.string.action_history);
         drawerListView.addHeaderView(headers[0]);
         drawerListView.addHeaderView(headers[1]);
+        drawerListView.addHeaderView(headers[2]);
         drawerListView.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
         drawerListView.setItemChecked(0, true);
         drawerListView.setOnItemClickListener(this);
@@ -76,7 +80,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MangaProvider provider = listFragment.getProvider();
-        menu.findItem(R.id.action_search).setVisible(provider.hasFeatures(MangaProviderManager.FEAUTURE_SEARCH));
+        menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
+        menu.findItem(R.id.action_listmode).setTitle(listFragment.isGridLayout() ? R.string.switch_to_list : R.string.switch_to_grid);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -90,7 +95,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_search:
-                startActivity(new Intent(this, SearchActivity.class).putExtra("provider", drawerListView.getCheckedItemPosition() - 3));
+                startActivity(new Intent(this, SearchActivity.class).putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
+                return true;
+            case R.id.action_listmode:
+                listFragment.setGridLayout(!listFragment.isGridLayout());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -106,8 +114,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             case 1:
                 listFragment.setProvider(new FavouritesProvider(this));
                 break;
+            case 2:
+                listFragment.setProvider(new HistoryProvider(this));
+                break;
             default:
-                listFragment.setProvider(providerManager.getMangaProvider(position - 3));
+                listFragment.setProvider(providerManager.getMangaProvider(position - 4));
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         getActionBar().setSubtitle(listFragment.getProvider().getName());

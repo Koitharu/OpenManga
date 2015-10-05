@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
@@ -31,7 +32,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
-        ((TextView)findViewById(R.id.textView_title)).setText(mangaSummary.getName());
+        ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
         ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
         findViewById(R.id.button_read).setOnClickListener(this);
         new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, android.R.drawable.btn_default).execute();
@@ -63,6 +64,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        HistoryProvider.addToHistory(this, mangaSummary);
         startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mangaSummary.toBundle()));
     }
 

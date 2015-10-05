@@ -98,6 +98,8 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
                 // allow canceling with back button
                 if (isCancelled()) {
                     input.close();
+                    output.close();
+                    new File(destination).delete();
                     return;
                 }
                 total += count;

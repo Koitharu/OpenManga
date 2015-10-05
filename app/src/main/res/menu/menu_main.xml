@@ -3,6 +3,8 @@
     <item android:id="@+id/action_search" android:title="@string/action_search"
         android:icon="@drawable/ic_action_action_search"
         android:orderInCategory="100" android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_listmode" android:title="@string/action_listmode"
+        android:orderInCategory="100" android:showAsAction="never" />
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

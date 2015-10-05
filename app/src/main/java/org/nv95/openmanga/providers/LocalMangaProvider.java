@@ -73,7 +73,7 @@ public class LocalMangaProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeatures(int future) {
+    public boolean hasFeature(int feature) {
         return false;
     }
 

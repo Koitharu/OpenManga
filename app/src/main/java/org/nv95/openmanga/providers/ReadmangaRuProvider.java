@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * provider for http://readmanga.me/
  */
 public class ReadmangaRuProvider extends MangaProvider {
+    protected static boolean features[] = {true, true, false};
 
     @Override
     public MangaList getList(int page) throws IOException {
@@ -106,8 +107,8 @@ public class ReadmangaRuProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeatures(int future) {
-        return true;
+    public boolean hasFeature(int feature) {
+        return features[feature];
     }
 
     @Override

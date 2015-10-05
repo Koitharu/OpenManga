@@ -18,6 +18,13 @@
     <string name="action_favourite">Add to favourites</string>
     <string name="setting_providers">Available sources</string>
     <string name="wait">Wait…</string>
+    <string name="action_listmode">List mode</string>
+    <string name="switch_to_grid">Switch to grid</string>
+    <string name="switch_to_list">Switch to list</string>
+    <string name="action_history">History</string>
+    <string name="action_remove">Remove</string>
+    <string name="selected">Selected:</string>
+    <string name="action_save">Save</string>
 
     <string-array name="providers_def">
         <item>1</item>

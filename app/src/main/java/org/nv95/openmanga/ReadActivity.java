@@ -32,7 +32,7 @@ public class ReadActivity extends Activity {
         int chapterId = getIntent().getIntExtra("chapter", 0);
         chapter = mangaInfo.getChapters().get(chapterId);
         pager = (ViewPager) findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(3);
+        pager.setOffscreenPageLimit(2);
         new LoadPagesTask().execute();
     }
 

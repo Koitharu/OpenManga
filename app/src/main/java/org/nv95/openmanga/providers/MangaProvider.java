@@ -33,9 +33,12 @@ public abstract class MangaProvider {
     public MangaChapters getChapters(MangaSummary mangaSummary) {
         return null;
     }
+    public boolean remove(long[] ids) {
+        return false;
+    }
     //other methods
     public abstract String getName();
-    public abstract boolean hasFeatures(int future);
+    public abstract boolean hasFeature(int feature);
     //String[] getGenres();
 
     //******************************static*********************************

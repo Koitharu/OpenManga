@@ -66,6 +66,7 @@ public class MangaInfo {
 
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
+        cv.put("id", path.hashCode());
         cv.put("name", name);
         cv.put("summary", summary);
         cv.put("path", path);

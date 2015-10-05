@@ -11,7 +11,9 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class EHentaiProvider extends MangaProvider {
+    protected static boolean features[] = {true, true, false};
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
+
     @Override
     public MangaList getList(int page) throws IOException {
         MangaList list = new MangaList();
@@ -82,8 +84,8 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeatures(int future) {
-        return true;
+    public boolean hasFeature(int feature) {
+        return features[feature];
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class AdultmangaRuProvider extends MangaProvider {
+    protected static boolean features[] = {true, true, false};
 
     @Override
     public MangaList getList(int page) throws IOException {
@@ -104,8 +105,8 @@ public class AdultmangaRuProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeatures(int future) {
-        return true;
+    public boolean hasFeature(int feature) {
+        return features[feature];
     }
 
     //advanced--------
