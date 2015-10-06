@@ -16,6 +16,7 @@ public class MangaProviderManager {
     private Context context;
     Set<String> providers;
     public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai", "MangaTown"};
+    //public static String[] allProviders = {"ReadManga", "MangaTown"};
 
     public class ProviderSumm {
         String name;
@@ -29,8 +30,8 @@ public class MangaProviderManager {
     }
 
     private static final Class<?> mangaProviders[] = {
-            ReadmangaRuProvider.class
-            , AdultmangaRuProvider.class,
+            ReadmangaRuProvider.class,
+            AdultmangaRuProvider.class,
             EHentaiProvider.class,
             MangaTownProvider.class
         };

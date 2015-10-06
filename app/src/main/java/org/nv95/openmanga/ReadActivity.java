@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import org.nv95.openmanga.components.ReaderViewPager;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.MangaChapter;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
@@ -21,19 +22,28 @@ import java.util.ArrayList;
  */
 public class ReadActivity extends Activity {
     private ReaderViewPager pager;
-    private MangaSummary mangaInfo;
+    private MangaSummary mangaSummary;
     private MangaChapter chapter;
+    private int chapterId;
+    private int pageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
-        mangaInfo = new MangaSummary(getIntent().getExtras());
-        int chapterId = getIntent().getIntExtra("chapter", 0);
-        chapter = mangaInfo.getChapters().get(chapterId);
+        mangaSummary = new MangaSummary(getIntent().getExtras());
+        chapterId = getIntent().getIntExtra("chapter", 0);
+        pageId = getIntent().getIntExtra("page", 0);
+        chapter = mangaSummary.getChapters().get(chapterId);
         pager = (ReaderViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(3);
         new LoadPagesTask().execute();
+    }
+
+    @Override
+    protected void onPause() {
+        HistoryProvider.addToHistory(this, mangaSummary, chapterId, pager.getCurrentItem());
+        super.onPause();
     }
 
     private class LoadPagesTask extends AsyncTask<Void,Void,ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
@@ -67,13 +77,13 @@ public class ReadActivity extends Activity {
                 return;
             }
             pager.setAdapter(new PagerReaderAdapter(ReadActivity.this, mangaPages));
-            pager.setCurrentItem(0);
+            pager.setCurrentItem(pageId);
         }
 
         @Override
         protected ArrayList<MangaPage> doInBackground(Void... params) {
             try {
-                MangaProvider provider = (MangaProvider) mangaInfo.getProvider().newInstance();
+                MangaProvider provider = (MangaProvider) mangaSummary.getProvider().newInstance();
                 return provider.getPages(chapter.getReadLink());
             } catch (Exception ignored) {
                 return null;

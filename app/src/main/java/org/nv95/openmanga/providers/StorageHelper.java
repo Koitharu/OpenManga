@@ -11,7 +11,7 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     public StorageHelper(Context context) {
         // конструктор суперкласса
-        super(context, "localmanga", null, 2);
+        super(context, "localmanga", null, 3);
     }
 
 
@@ -44,12 +44,17 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "provider text,"                          //5
                 + "path text,"                               //6
                 + "timestamp integer,"                      //7
-                + "progress integer"                       //8
+                + "chapter integer"                       //8
+                + "page integer"                       //8
                 + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion <= 2) {
+            //db.execSQL("alter table history drop column progress;");
+            db.execSQL("alter table history add column chapter integer;");
+            db.execSQL("alter table history add column page integer;");
+        }
     }
 }

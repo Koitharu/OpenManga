@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_favourite">Добавить в избранное</string>
+    <string name="action_favourites">Избранное</string>
+    <string name="action_history">История</string>
+    <string name="action_remove">Удалить</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_settings">Настройки</string>
+    <string name="chapters_list">Список глав</string>
+    <string name="close">Закрыть</string>
+    <string name="continue_reading">Продолжить</string>
+    <string name="drawer_close">Закрыть меню навигации</string>
+    <string name="drawer_open">Открыть меню навигации</string>
+    <string name="loading">Загрузка…</string>
+    <string name="loading_error">Произошла ошибка</string>
+    <string name="loading_page">Загрузка страницы</string>
+    <string name="local_storage">На устройстве</string>
+    <string name="operation_not_supported">Операция не поддерживается для данного источника</string>
+    <string name="search_on">Поиск в</string>
+    <string name="selected">Выбрано:</string>
+    <string name="setting_providers">Доступные источники</string>
+    <string name="start_reading">Читать</string>
+    <string name="storages_remote">Онлайн каталоги</string>
+    <string name="switch_to_grid">Отображать таблицей</string>
+    <string name="switch_to_list">Отображать списком</string>
+    <string name="wait">Подождите…</string>
+</resources>

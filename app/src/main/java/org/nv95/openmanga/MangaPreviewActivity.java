@@ -61,12 +61,24 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
                 dialog.cancel();
             }
         });
+        builder.setPositiveButton(R.string.continue_reading, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
+                intent.putExtras(mangaSummary.toBundle());
+                HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
+                intent.putExtra("chapter", hs.getChapter());
+                intent.putExtra("page", hs.getPage());
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
         builder.create().show();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        HistoryProvider.addToHistory(this, mangaSummary);
+        HistoryProvider.addToHistory(this, mangaSummary, which, 0);
         startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mangaSummary.toBundle()));
     }
 

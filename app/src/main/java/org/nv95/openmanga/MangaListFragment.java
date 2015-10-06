@@ -92,6 +92,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         this.provider = provider;
         list.clear();
         adapter.notifyDataSetChanged();
+        endlessScroller.reset();
         new ListLoadTask().execute();
     }
 
@@ -242,6 +243,12 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         public void loadingDone() {
             page++;
             loading = false;
+            footer.setVisibility(View.GONE);
+        }
+
+        public void reset() {
+            page = 0;
+            loading = true;
             footer.setVisibility(View.GONE);
         }
 
