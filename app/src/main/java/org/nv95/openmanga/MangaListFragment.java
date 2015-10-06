@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.nv95.openmanga.components.EndlessScrollListener;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
@@ -31,36 +32,43 @@ import java.io.IOException;
  *
  */
 public class MangaListFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
-    //private ListView listView;
-    //private GridView gridView;
     private AbsListView absListView;
     private boolean grid = false;
     private MangaListAdapter adapter;
     private MangaProvider provider;
     private MangaList list;
     private ProgressBar progressBar;
-    private EndlessScrollListener endlessScroller;
+    private EndlessScroller endlessScroller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mangalist,
                 container, false);
+        endlessScroller = new EndlessScroller(view) {
+            @Override
+            public boolean onNextPage(int page) {
+                if (provider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE)) {
+                    new ListLoadTask().execute(page);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        grid = PreferenceManager.getDefaultSharedPreferences(inflater.getContext()).getBoolean("grid",false);
         ListView listView = (ListView) view.findViewById(R.id.listView);
         GridView gridView = (GridView) view.findViewById(R.id.gridView);
-        gridView.setOnItemClickListener(this);
         listView.setOnItemClickListener(this);
-        listView.setOnScrollListener(endlessScroller = new EndlessScrollListener(inflater.inflate(R.layout.footer_loadpage, null)) {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                //progressBar.setVisibility(View.VISIBLE);
-                new ListLoadTask().execute(page);
-                return true;
-            }
-        });
+        gridView.setOnItemClickListener(this);
+        listView.setOnScrollListener(endlessScroller);
+        gridView.setOnScrollListener(endlessScroller);
         listView.setMultiChoiceModeListener(this);
         gridView.setMultiChoiceModeListener(this);
+        listView.setVisibility(grid ? View.GONE : View.VISIBLE);
+        gridView.setVisibility(grid ? View.VISIBLE : View.GONE);
+        //listView.addFooterView(endlessScroller.getFooter());
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        absListView = listView;
+        absListView = grid ? gridView : listView;
         return view;
     }
 
@@ -72,7 +80,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         //((LocalMangaProvider)provider).test();
 
         absListView.setAdapter(adapter);
-        setGridLayout(grid);
+        //setGridLayout(grid);
         new ListLoadTask().execute();
     }
 
@@ -84,7 +92,6 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         this.provider = provider;
         list.clear();
         adapter.notifyDataSetChanged();
-        endlessScroller.setEnabled(provider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE));
         new ListLoadTask().execute();
     }
 
@@ -101,6 +108,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             absListView.setAdapter(adapter);
             adapter.setGrid(grid);
             absListView.setSelection(pos);
+            PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("grid",grid).apply();
         }
     }
 
@@ -171,11 +179,14 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             progressBar.setVisibility(View.GONE);
             if (mangaInfos == null) {
                 Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                endlessScroller.loadingFail();
             } else if (mangaInfos.size() == 0) {
                 Toast.makeText(getActivity(), "No manga found", Toast.LENGTH_SHORT).show();
+                endlessScroller.loadingFail();
             } else {
                 list.addAll(mangaInfos);
                 adapter.notifyDataSetChanged();
+                endlessScroller.loadingDone();
             }
         }
 
@@ -187,5 +198,57 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 return null;
             }
         }
+    }
+
+    protected abstract class EndlessScroller implements AbsListView.OnScrollListener {
+        private int page;
+        private boolean loading;
+        private TextView textView;
+        private View footer;
+
+        public EndlessScroller(View view) {
+            footer = view.findViewById(R.id.frame_footer);
+            textView = (TextView) footer.findViewById(R.id.textView_footer);
+            progressBar = (ProgressBar) footer.findViewById(R.id.progressBar2);
+            loading = true;
+            footer.setVisibility(View.GONE);
+        }
+
+        public View getFooter() {
+            return footer;
+        }
+
+        public int getPage() {
+            return page;
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (!loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+                loading = onNextPage(page + 1);
+                if (loading) {
+                    footer.setVisibility(View.VISIBLE);
+                    String s = getString(R.string.loading_page) + " " + (page + 1);
+                    textView.setText(s);
+                }
+            }
+        }
+
+        public void loadingDone() {
+            page++;
+            loading = false;
+            footer.setVisibility(View.GONE);
+        }
+
+        public void loadingFail() {
+            footer.setVisibility(View.GONE);
+        }
+
+        public abstract boolean onNextPage(int page);
     }
 }

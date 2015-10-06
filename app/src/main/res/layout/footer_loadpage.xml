@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/progressBar2"
         android:layout_gravity="center_horizontal"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="visible"
+        android:indeterminateOnly="true" />
 
     <TextView
         android:layout_width="wrap_content"

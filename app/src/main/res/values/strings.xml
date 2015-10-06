@@ -25,6 +25,7 @@
     <string name="action_remove">Remove</string>
     <string name="selected">Selected:</string>
     <string name="action_save">Save</string>
+    <string name="start_reading">Start reading</string>
 
     <string-array name="providers_def">
         <item>1</item>

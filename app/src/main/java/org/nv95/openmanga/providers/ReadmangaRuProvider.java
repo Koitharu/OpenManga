@@ -32,7 +32,11 @@ public class ReadmangaRuProvider extends MangaProvider {
             }
             manga.summary = o.select("a.element-link").text();
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
-            manga.preview = o.select("img").first().attr("src");
+            try {
+                manga.preview = o.select("img").first().attr("src");
+            } catch (Exception e) {
+                manga.preview = "";
+            }
             manga.provider = ReadmangaRuProvider.class;
             list.add(manga);
         }

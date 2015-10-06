@@ -2,6 +2,8 @@ package org.nv95.openmanga;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -70,6 +72,12 @@ public class SearchActivity extends Activity implements SearchView.OnQueryTextLi
         searchMenuItem = menu.add(R.string.action_search);
         searchMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         searchMenuItem.setActionView(searchView = new SearchView(this));
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
         searchView.setOnQueryTextListener(this);
         searchView.setQueryHint(getString(R.string.search_on) + " " + provider.getName());
         searchMenuItem.expandActionView();
@@ -88,6 +96,7 @@ public class SearchActivity extends Activity implements SearchView.OnQueryTextLi
     public boolean onQueryTextSubmit(String query) {
         searchMenuItem.collapseActionView();
         getActionBar().setSubtitle(query);
+        list.clear();
         new SearchTask().execute(query);
         return true;
     }

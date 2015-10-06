@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         android:id="@+id/listView"
         android:fastScrollEnabled="true"
-        android:choiceMode="multipleChoiceModal" />
+        android:choiceMode="multipleChoiceModal"
+        android:paddingBottom="2dp" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
@@ -20,10 +21,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gridView"
-        android:visibility="gone"
+        android:visibility="visible"
         android:stretchMode="spacingWidthUniform"
         android:numColumns="auto_fit"
         android:columnWidth="@dimen/cell_width"
         android:choiceMode="multipleChoiceModal"
-        android:fastScrollEnabled="true" />
+        android:fastScrollEnabled="true"
+        android:paddingBottom="2dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:id="@+id/frame_footer"
+        android:background="@android:color/background_light"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="center_vertical">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateOnly="true"
+                android:id="@+id/progressBar3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/loading_page"
+                android:id="@+id/textView_footer" />
+        </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

@@ -140,7 +140,7 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
         } else {
             publishProgress(-1);
         }
-        return file.exists() ? ImageSource.uri(file.getPath()) : null;
+        return file.exists() ? ImageSource.uri(file.getPath()).tilingDisabled() : null;
         /*
         try {
             bitmap = BitmapFactory.decodeFile(file.getPath());
@@ -157,7 +157,12 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
 
     @Override
     public void onReady() {
-
+        final ProgressBar progressBar = progressBarReference.get();
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+        final TextView textView = textViewReference.get();
+        if (textView != null)
+            textView.setVisibility(View.GONE);
     }
 
     @Override

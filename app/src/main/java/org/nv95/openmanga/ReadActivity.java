@@ -6,8 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 
+import org.nv95.openmanga.components.ReaderViewPager;
 import org.nv95.openmanga.providers.MangaChapter;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *
  */
 public class ReadActivity extends Activity {
-    private ViewPager pager;
+    private ReaderViewPager pager;
     private MangaSummary mangaInfo;
     private MangaChapter chapter;
 
@@ -31,7 +31,7 @@ public class ReadActivity extends Activity {
         mangaInfo = new MangaSummary(getIntent().getExtras());
         int chapterId = getIntent().getIntExtra("chapter", 0);
         chapter = mangaInfo.getChapters().get(chapterId);
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ReaderViewPager) findViewById(R.id.pager);
         pager.setOffscreenPageLimit(3);
         new LoadPagesTask().execute();
     }
