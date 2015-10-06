@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,7 +37,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
         ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
         ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
         findViewById(R.id.button_read).setOnClickListener(this);
-        new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, android.R.drawable.btn_default).execute();
+        new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).execute();
         new LoadInfoTask().execute();
     }
 
@@ -113,7 +115,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
             findViewById(R.id.progressBar).setVisibility(View.GONE);
             findViewById(R.id.button_read).setEnabled(true);
             ((TextView)findViewById(R.id.textView_description)).setText(mangaSummary.getDescription());
-            new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, 0).execute();
+            new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, null).execute();
         }
 
         @Override

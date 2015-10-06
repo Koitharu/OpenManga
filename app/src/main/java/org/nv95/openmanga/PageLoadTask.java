@@ -134,7 +134,7 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
             path = page.getPath();
         }
         Bitmap bitmap;
-        File file = new File(context.getExternalCacheDir(),ImageLoadTask.generateFilename(path));
+        File file = new File(context.getExternalCacheDir(), String.valueOf(path.hashCode()));
         if (!file.exists()) {
             downloadFile(path, file.getPath());
         } else {

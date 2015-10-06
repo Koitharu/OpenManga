@@ -56,8 +56,7 @@ public class MangaListAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.textView_title)).setText(info.getName());
         ((TextView) convertView.findViewById(R.id.textView_subtitle)).setText(info.getSubtitle());
         ((TextView) convertView.findViewById(R.id.textView_summary)).setText(info.getSummary());
-        ((ImageView) convertView.findViewById(R.id.imageView)).setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, 0).execute();
+        new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).execute();
         return convertView;
     }
 

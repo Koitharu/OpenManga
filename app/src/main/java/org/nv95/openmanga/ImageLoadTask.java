@@ -21,10 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.net.URLDecoder;
 
 public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
     //кэш в памяти
@@ -49,7 +47,6 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
 
     private final String url,filename;
     private final Context context;
-    //private ImageView imageView;
     private final WeakReference<ImageView> imageViewReference;
     private boolean round;
 
@@ -81,13 +78,13 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
         }
     }
 
-    public ImageLoadTask(ImageView imageView, String url, boolean round, int defaultDrawable) {
+    public ImageLoadTask(ImageView imageView, String url, boolean round, Drawable defaultDrawable) {
         this.url = url;
         this.context = imageView.getContext();
-        //this.imageView = imageView;
         imageViewReference = new WeakReference<>(imageView);
         this.round = round;
-        filename = generateFilename(url);
+        filename = String.valueOf(url.hashCode());
+        imageView.setTag(filename);
         Bitmap bitmap;
         if ((bitmap = getBitmapFromMemCache(filename)) != null) {
             if (round)
@@ -96,8 +93,8 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
             this.cancel(true);
             return;
         }
-        if (defaultDrawable!=0)
-            imageView.setImageResource(defaultDrawable);
+        if (defaultDrawable != null)
+            imageView.setImageDrawable(defaultDrawable);
     }
 
     //кэширует на карту памяти
@@ -148,24 +145,12 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
     protected void onPostExecute(Bitmap bdrawable) {
         super.onPostExecute(bdrawable);
         final ImageView imageView = imageViewReference.get();
-        if (bdrawable != null && imageView != null) {
+        if (bdrawable != null && imageView != null && imageView.getTag().equals(filename)) {
             TransitionDrawable drawable = new TransitionDrawable(new Drawable[]{imageView.getDrawable(), new BitmapDrawable(bdrawable)});
-            drawable.setCrossFadeEnabled(true);
+            drawable.setCrossFadeEnabled(false);
             drawable.startTransition(100);
             //drawable.setBounds(0,0,imageView.getMeasuredWidth(),imageView.getMeasuredHeight());
             imageView.setImageDrawable(drawable);
         }
-    }
-
-    public static String generateFilename(String url) {
-        String s = null;
-        try {
-            s = URLDecoder.decode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            s = url;
-        }
-        //s = s.substring(url.indexOf("//")+2);
-        //s = s.replace('=','_').replace(':','_');
-        return String.valueOf(s.hashCode());
     }
 }

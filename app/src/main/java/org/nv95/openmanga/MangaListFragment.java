@@ -91,6 +91,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     public void setGridLayout(boolean useGrid) {
         if (useGrid != grid) {
             grid = useGrid;
+            final int pos = absListView.getFirstVisiblePosition();
             absListView.setAdapter(null);
             ListView listView = (ListView) getView().findViewById(R.id.listView);
             GridView gridView = (GridView) getView().findViewById(R.id.gridView);
@@ -99,6 +100,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             absListView = useGrid ? gridView : listView;
             absListView.setAdapter(adapter);
             adapter.setGrid(grid);
+            absListView.setSelection(pos);
         }
     }
 

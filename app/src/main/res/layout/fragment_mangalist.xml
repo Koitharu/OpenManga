@@ -24,5 +24,6 @@
         android:stretchMode="spacingWidthUniform"
         android:numColumns="auto_fit"
         android:columnWidth="@dimen/cell_width"
-        android:choiceMode="multipleChoiceModal" />
+        android:choiceMode="multipleChoiceModal"
+        android:fastScrollEnabled="true" />
 </FrameLayout>
