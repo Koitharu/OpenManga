@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,17 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private MangaList list;
     private ProgressBar progressBar;
     private EndlessScroller endlessScroller;
+    private MangaListListener listListener;
+
+    public interface MangaListListener {
+        MangaList onListNeeded(MangaProvider provider, int page) throws IOException;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,12 +87,16 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (getActivity() instanceof  MangaListListener) {
+            listListener = (MangaListListener) getActivity();
+        } else {
+            throw new NullPointerException("List listener not found");
+        }
         provider = new LocalMangaProvider(getActivity());
         adapter = new MangaListAdapter(getActivity(),list = new MangaList(), grid);
         //((LocalMangaProvider)provider).test();
 
         absListView.setAdapter(adapter);
-        //setGridLayout(grid);
         new ListLoadTask().execute();
     }
 
@@ -117,6 +133,30 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         return grid;
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_mangalist, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_listmode).setTitle(grid ? R.string.switch_to_list : R.string.switch_to_grid);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_listmode:
+                setGridLayout(!grid);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), MangaPreviewActivity.class);
@@ -150,7 +190,9 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 provider.remove(absListView.getCheckedItemIds());
                 list.clear();
                 progressBar.setVisibility(View.VISIBLE);
-                new ListLoadTask().execute();
+                if (provider != null) {
+                    new ListLoadTask().execute();
+                }
                 mode.finish();
                 return true;
             default:
@@ -182,7 +224,8 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                 endlessScroller.loadingFail();
             } else if (mangaInfos.size() == 0) {
-                Toast.makeText(getActivity(), "No manga found", Toast.LENGTH_SHORT).show();
+                if (list.size() == 0)
+                    Toast.makeText(getActivity(), "No manga found", Toast.LENGTH_SHORT).show();
                 endlessScroller.loadingFail();
             } else {
                 list.addAll(mangaInfos);
@@ -194,7 +237,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         @Override
         protected MangaList doInBackground(Integer... params) {
             try {
-                return provider.getList(params.length > 0 ? params[0] : 0);
+                return listListener.onListNeeded(provider,params.length > 0 ? params[0] : 0);
             } catch (IOException e) {
                 return null;
             }
@@ -206,12 +249,14 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         private boolean loading;
         private TextView textView;
         private View footer;
+        boolean nextPage;
 
         public EndlessScroller(View view) {
             footer = view.findViewById(R.id.frame_footer);
             textView = (TextView) footer.findViewById(R.id.textView_footer);
             progressBar = (ProgressBar) footer.findViewById(R.id.progressBar2);
             loading = true;
+            nextPage = true;
             footer.setVisibility(View.GONE);
         }
 
@@ -230,7 +275,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (!loading && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+            if (!loading && nextPage && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
                 loading = onNextPage(page + 1);
                 if (loading) {
                     footer.setVisibility(View.VISIBLE);
@@ -250,10 +295,16 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             page = 0;
             loading = true;
             footer.setVisibility(View.GONE);
+            nextPage = true;
         }
 
         public void loadingFail() {
             footer.setVisibility(View.GONE);
+            nextPage = false;
+        }
+
+        public boolean hasNextPage() {
+            return nextPage;
         }
 
         public abstract boolean onNextPage(int page);

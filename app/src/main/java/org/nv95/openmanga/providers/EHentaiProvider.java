@@ -40,7 +40,11 @@ public class EHentaiProvider extends MangaProvider {
         summary.readLink = summary.path;
         try {
             Document document = getPage(mangaInfo.getPath());
-            summary.description = document.body().getElementById("taglist").text();
+            StringBuilder builder = new StringBuilder();
+            for (Element o:document.body().getElementById("taglist").select("tr")) {
+                builder.append(o.text()).append('\n');
+            }
+            summary.description = builder.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,9 +93,9 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList search(String query) throws IOException {
+    public MangaList search(String query, int page) throws IOException {
         MangaList list = new MangaList();
-        Document document = getPage("http://g.e-hentai.org/?f_search=" + query + "&f_apply=Apply+Filter",DEF_COOKIE);
+        Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + query + "&f_apply=Apply+Filter",DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");

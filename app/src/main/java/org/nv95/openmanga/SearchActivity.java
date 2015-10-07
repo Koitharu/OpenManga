@@ -5,20 +5,12 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
@@ -28,21 +20,17 @@ import java.io.IOException;
 /**
  * Created by nv95 on 01.10.15.
  */
-public class SearchActivity extends Activity implements SearchView.OnQueryTextListener, AdapterView.OnItemClickListener {
+public class SearchActivity extends Activity implements SearchView.OnQueryTextListener, MangaListFragment.MangaListListener {
     private MenuItem searchMenuItem;
     private SearchView searchView;
     private MangaProvider provider;
-    private ListView listView;
-    private ProgressBar progressBar;
-    private MangaList list;
-    private MangaListAdapter adapter;
+    private MangaListFragment listFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        listView = (ListView) findViewById(R.id.listView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        listFragment = (MangaListFragment) getFragmentManager().findFragmentById(R.id.fragment);
         int i = getIntent().getIntExtra("provider",-1);
         if (i == -1) {
             new AlertDialog.Builder(SearchActivity.this).setMessage(R.string.operation_not_supported).setTitle(R.string.app_name)
@@ -61,8 +49,6 @@ public class SearchActivity extends Activity implements SearchView.OnQueryTextLi
         } else {
             provider = new MangaProviderManager(this).getMangaProvider(i);
         }
-        listView.setOnItemClickListener(this);
-        listView.setAdapter(adapter = new MangaListAdapter(this, list = new MangaList(), false));
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
     }
@@ -96,8 +82,7 @@ public class SearchActivity extends Activity implements SearchView.OnQueryTextLi
     public boolean onQueryTextSubmit(String query) {
         searchMenuItem.collapseActionView();
         getActionBar().setSubtitle(query);
-        list.clear();
-        new SearchTask().execute(query);
+        listFragment.setProvider(provider);
         return true;
     }
 
@@ -107,41 +92,7 @@ public class SearchActivity extends Activity implements SearchView.OnQueryTextLi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, MangaPreviewActivity.class);
-        MangaInfo info = adapter.getMangaInfo(position);
-        intent.putExtras(info.toBundle());
-        startActivity(intent);
-    }
-
-    private class SearchTask extends AsyncTask<String, Void, MangaList> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(MangaList mangaInfos) {
-            super.onPostExecute(mangaInfos);
-            progressBar.setVisibility(View.GONE);
-            if (mangaInfos == null) {
-                Toast.makeText(SearchActivity.this, "Error", Toast.LENGTH_SHORT).show();
-            } else if (mangaInfos.size() == 0) {
-                Toast.makeText(SearchActivity.this, "No manga found", Toast.LENGTH_SHORT).show();
-            } else {
-                list.addAll(mangaInfos);
-                adapter.notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        protected MangaList doInBackground(String... params) {
-            try {
-                return provider.search(params[0]);
-            } catch (IOException e) {
-                return null;
-            }
-        }
+    public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
+        return getActionBar().getSubtitle() == null ? MangaList.Empty() : provider.search(getActionBar().getSubtitle().toString(), page);
     }
 }

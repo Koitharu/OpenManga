@@ -26,7 +26,7 @@ public abstract class MangaProvider {
     public abstract String getPageImage(MangaPage mangaPage);
     //optional content acces methods
     @Nullable
-    public MangaList search(String query) throws IOException {
+    public MangaList search(String query, int page) throws IOException {
         return null;
     }
     @Nullable

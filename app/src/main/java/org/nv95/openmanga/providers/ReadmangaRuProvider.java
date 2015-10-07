@@ -116,7 +116,10 @@ public class ReadmangaRuProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList search(String query) throws IOException {
+    public MangaList search(String query, int page) throws IOException {
+        if (page > 0) {
+            return MangaList.Empty();
+        }
         MangaList list = new MangaList();
         String data[] = new String[] {
                 "q", query

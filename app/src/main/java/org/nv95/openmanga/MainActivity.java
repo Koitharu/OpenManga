@@ -18,10 +18,13 @@ import android.widget.TextView;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
+import java.io.IOException;
+
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener, MangaListFragment.MangaListListener {
     private MangaListFragment listFragment;
     private ListView drawerListView;
     private MangaProviderManager providerManager;
@@ -81,7 +84,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public boolean onPrepareOptionsMenu(Menu menu) {
         MangaProvider provider = listFragment.getProvider();
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
-        menu.findItem(R.id.action_listmode).setTitle(listFragment.isGridLayout() ? R.string.switch_to_list : R.string.switch_to_grid);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -134,5 +136,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
+        return provider.getList(page);
     }
 }
