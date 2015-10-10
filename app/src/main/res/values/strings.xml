@@ -26,6 +26,12 @@
     <string name="action_save">Save</string>
     <string name="start_reading">Start reading</string>
     <string name="continue_reading">Continue</string>
+    <string name="search_results">Search results</string>
+    <string name="action_share">Share</string>
+    <string name="chapter_prev">Previous chapter</string>
+    <string name="chapter_next">Next chapter</string>
+    <string name="action_image_opts">Image</string>
+    <string name="action_options">Options</string>
 
     <string-array name="providers_def">
         <item>1</item>

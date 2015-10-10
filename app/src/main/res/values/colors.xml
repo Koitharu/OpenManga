@@ -3,4 +3,5 @@
     <color tools:override="true" name="primary_material_dark">#3949AB</color>
     <color tools:override="true" name="primary_dark_material_dark">#1A237E</color>
     <color tools:override="true" name="accent_material_light">#C5CAE9</color>
+    <color name="transparent_dark">#b5000000</color>
 </resources>

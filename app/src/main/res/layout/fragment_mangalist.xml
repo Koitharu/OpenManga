@@ -36,7 +36,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:id="@+id/frame_footer"
         android:background="@android:color/background_light"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <LinearLayout
             android:orientation="horizontal"

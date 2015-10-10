@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
@@ -92,7 +94,8 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         } else {
             throw new NullPointerException("List listener not found");
         }
-        provider = new LocalMangaProvider(getActivity());
+        int i = getArguments() == null ? -1 : getArguments().getInt("provider", -1);
+        provider = i == -1 ? new LocalMangaProvider(getActivity()) : new MangaProviderManager(getActivity()).getMangaProvider(i);
         adapter = new MangaListAdapter(getActivity(),list = new MangaList(), grid);
         //((LocalMangaProvider)provider).test();
 
@@ -257,7 +260,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             progressBar = (ProgressBar) footer.findViewById(R.id.progressBar2);
             loading = true;
             nextPage = true;
-            footer.setVisibility(View.GONE);
+            footer.setVisibility(View.INVISIBLE);
         }
 
         public View getFooter() {
@@ -278,7 +281,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             if (!loading && nextPage && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
                 loading = onNextPage(page + 1);
                 if (loading) {
-                    footer.setVisibility(View.VISIBLE);
+                    new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).show();
                     String s = getString(R.string.loading_page) + " " + (page + 1);
                     textView.setText(s);
                 }
@@ -288,18 +291,18 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         public void loadingDone() {
             page++;
             loading = false;
-            footer.setVisibility(View.GONE);
+            new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).hide();
         }
 
         public void reset() {
             page = 0;
             loading = true;
-            footer.setVisibility(View.GONE);
+            new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).hide();
             nextPage = true;
         }
 
         public void loadingFail() {
-            footer.setVisibility(View.GONE);
+            new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).hide();
             nextPage = false;
         }
 

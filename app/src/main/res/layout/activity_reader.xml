@@ -3,12 +3,130 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/frame_main" >
 
-
     <org.nv95.openmanga.components.ReaderViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/pager" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView_menu"
+        android:layout_gravity="right|top"
+        android:src="@drawable/ic_action_navigation_more_vert" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_gravity="top"
+        android:background="@color/transparent_dark"
+        android:id="@+id/toolbar_top"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_prev"
+            android:src="@drawable/ic_action_navigation_arrow_back"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/chapter_prev" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:id="@+id/block_chapters">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Medium Text"
+                android:id="@+id/textView_title"
+                android:textColor="@android:color/primary_text_dark"
+                android:singleLine="true"
+                android:drawableRight="@drawable/ic_action_navigation_arrow_drop_down"
+                android:gravity="center_vertical" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar_reading"
+                android:progress="0"
+                android:indeterminate="false" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_next"
+            android:src="@drawable/ic_action_navigation_arrow_forward"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/chapter_next" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:id="@+id/toolbar_bottom"
+        android:background="@color/transparent_dark"
+        android:layout_gravity="bottom"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_save"
+            android:src="@drawable/ic_action_content_save"
+            android:layout_weight="1"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/action_save" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_fav"
+            android:src="@drawable/ic_action_action_favorite"
+            android:layout_weight="1"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/action_favourite" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_img"
+            android:src="@drawable/ic_action_image_crop_original"
+            android:layout_weight="1"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/action_image_opts" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_share"
+            android:src="@drawable/ic_action_social_share"
+            android:layout_weight="1"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/action_share" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toolbutton_opt"
+            android:src="@drawable/ic_action_action_settings"
+            android:layout_weight="1"
+            style="@style/AppTheme.ToolButton"
+            android:contentDescription="@string/action_options" />
+    </LinearLayout>
 
 </FrameLayout>

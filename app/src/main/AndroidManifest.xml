@@ -26,10 +26,11 @@
         </activity>
         <activity android:name=".MangaPreviewActivity" />
         <activity android:name=".SearchActivity"
-            android:label="@string/action_search">
+            android:label="@string/search_results">
         </activity>
         <activity android:name=".ReadActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SettingsActivity" android:label="@string/action_settings" />
+        <service android:name=".providers.SaveService" />
     </application>
 
 </manifest>

@@ -25,4 +25,5 @@
     <string name="switch_to_grid">Отображать таблицей</string>
     <string name="switch_to_list">Отображать списком</string>
     <string name="wait">Подождите…</string>
+    <string name="search_results">Результаты поиска</string>
 </resources>
