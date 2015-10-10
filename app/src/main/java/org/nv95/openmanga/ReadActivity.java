@@ -1,3 +1,4 @@
+
 package org.nv95.openmanga;
 
 import android.app.Activity;
@@ -5,16 +6,19 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.components.ReaderViewPager;
+import org.nv95.openmanga.components.AdvancedViewPager;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.MangaChapter;
@@ -28,8 +32,8 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  *
  */
-public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener {
-    private ReaderViewPager pager;
+public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener {
+    private AdvancedViewPager pager;
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
     private int chapterId;
@@ -42,7 +46,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
-        pager = (ReaderViewPager) findViewById(R.id.pager);
+        pager = (AdvancedViewPager) findViewById(R.id.pager);
         chapterTitleTextView = (TextView) findViewById(R.id.textView_title);
         chapterProgressBar = (ProgressBar) findViewById(R.id.progressBar_reading);
 
@@ -64,7 +68,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
             }
         });
         pager.addOnPageChangeListener(this);
-
+        onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
         chapterId = getIntent().getIntExtra("chapter", 0);
         pageId = getIntent().getIntExtra("page", 0);
@@ -117,6 +121,9 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                 intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mangaSummary.getName());
                 startActivity(Intent.createChooser(intent, getString(R.string.action_share)));
                 break;
+            case R.id.toolbutton_opt:
+                new ReaderOptionsDialog(this).setOptionsChangedListener(this).show();
+                break;
         }
     }
 
@@ -133,6 +140,17 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onOptionsChanged() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        pager.setOrientation(prefs.getInt("scroll_direction", 0) == 0 ? AdvancedViewPager.HORIZONTAL : AdvancedViewPager.VERTICAL);
+        if (prefs.getBoolean("keep_screen", false)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     private class LoadPagesTask extends AsyncTask<Void,Void,ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {

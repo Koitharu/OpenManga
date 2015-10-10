@@ -26,4 +26,16 @@
     <string name="switch_to_list">Отображать списком</string>
     <string name="wait">Подождите…</string>
     <string name="search_results">Результаты поиска</string>
+    <string name="action_share">Поделиться</string>
+    <string name="chapter_next">Следующая глава</string>
+    <string name="chapter_prev">Предыдущая глава</string>
+    <string name="action_image_opts">Изображение</string>
+    <string name="action_reading_options">Параметры чтения</string>
+    <string name="scrolling_direction">Направление листания</string>
+    <string name="keep_screen">Держать экран включеным</string>
+
+    <string-array name="directions">
+        <item>Слева направо</item>
+        <item>Сверху вниз</item>
+    </string-array>
 </resources>

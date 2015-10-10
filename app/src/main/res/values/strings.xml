@@ -31,10 +31,17 @@
     <string name="chapter_prev">Previous chapter</string>
     <string name="chapter_next">Next chapter</string>
     <string name="action_image_opts">Image</string>
-    <string name="action_options">Options</string>
+    <string name="action_reading_options">Reading options</string>
+    <string name="scrolling_direction">Scrolling direction</string>
+    <string name="keep_screen">Keep screen on</string>
 
     <string-array name="providers_def">
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="directions">
+        <item>Left to right</item>
+        <item>Top to bottom</item>
     </string-array>
 </resources>
