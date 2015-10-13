@@ -1,5 +1,7 @@
 package org.nv95.openmanga.providers;
 
+import android.database.Cursor;
+
 import org.nv95.openmanga.PageLoadTask;
 
 import java.lang.ref.WeakReference;
@@ -11,11 +13,13 @@ public class MangaPage {
     protected String path;
     protected Class<?> provider;
     protected WeakReference<PageLoadTask> loadTaskReference;
-    protected String subdir;
 
     public MangaPage(String path) {
         this.path = path;
-        subdir = "unsorted";
+    }
+
+    public MangaPage(Cursor cursor) {
+        path = cursor.getString(3);
     }
 
     public String getPath() {
@@ -34,7 +38,4 @@ public class MangaPage {
         this.loadTaskReference = loadTask != null ? new WeakReference<PageLoadTask>(loadTask) : null;
     }
 
-    public String getSubdir() {
-        return subdir;
-    }
 }

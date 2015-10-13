@@ -25,10 +25,6 @@
         <item name="android:paddingRight">3dp</item>
     </style>
 
-    <style name="ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
-    </style>
-
     <style name="AppTheme.ToolButton" >
         <item name="android:background">?android:selectableItemBackground</item>
     </style>

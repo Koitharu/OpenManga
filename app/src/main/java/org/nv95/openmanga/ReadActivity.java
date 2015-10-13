@@ -7,8 +7,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
@@ -17,15 +20,19 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedViewPager;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.HistoryProvider;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaChapter;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -124,6 +131,47 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
             case R.id.toolbutton_opt:
                 new ReaderOptionsDialog(this).setOptionsChangedListener(this).show();
                 break;
+            case R.id.toolbutton_img:
+                PagerReaderAdapter adapter = (PagerReaderAdapter) pager.getAdapter();
+                if (adapter == null)
+                    break;
+                final MangaPage page = adapter.getItem(pager.getCurrentItem());
+                new AlertDialog.Builder(this).setTitle(R.string.action_image_opts)
+                        .setItems(R.array.image_opts, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
+                                if (!file.exists()) {
+                                    return;
+                                }
+                                switch (which) {
+                                    case 0: //save
+                                        SaveImage(file, page);
+                                        dialog.dismiss();
+                                        break;
+                                }
+                            }
+                        })
+                        .create().show();
+                break;
+        }
+    }
+
+    private void SaveImage(File file, MangaPage page) {
+        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),page.getPath().substring(page.getPath().lastIndexOf('/') + 1));
+        try {
+            LocalMangaProvider.CopyFile(file, dest);
+            MediaScannerConnection.scanFile(ReadActivity.this,
+                    new String[]{dest.getPath()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            //....
+                        }
+                    });
+            Toast.makeText(ReadActivity.this, R.string.image_saved, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(ReadActivity.this, R.string.unable_to_save_image, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,7 +240,12 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         @Override
         protected ArrayList<MangaPage> doInBackground(Void... params) {
             try {
-                MangaProvider provider = (MangaProvider) mangaSummary.getProvider().newInstance();
+                MangaProvider provider;
+                if (mangaSummary.getProvider().equals(LocalMangaProvider.class)) {
+                    provider = new LocalMangaProvider(ReadActivity.this);
+                } else {
+                    provider = (MangaProvider) mangaSummary.getProvider().newInstance();
+                }
                 return provider.getPages(chapter.getReadLink());
             } catch (Exception ignored) {
                 return null;

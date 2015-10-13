@@ -26,6 +26,7 @@ public class AdvancedViewPager extends ViewPager {
     //---------------------------------------------------------
     private int orientation;
     private View overscrollFrontView;
+    private boolean reverseOrder;
 
     public AdvancedViewPager(Context context) {
         super(context);
@@ -39,6 +40,7 @@ public class AdvancedViewPager extends ViewPager {
 
     private void init() {
         setOrientation(HORIZONTAL);
+        reverseOrder = false;
         // The easiest way to get rid of the overscroll drawing that happens on the left and right
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
@@ -53,6 +55,31 @@ public class AdvancedViewPager extends ViewPager {
         ev.setLocation(newX, newY);
 
         return ev;
+    }
+
+    @Override
+    public int getCurrentItem() {
+        int r = super.getCurrentItem();
+        if (reverseOrder && getAdapter() != null) {
+            r = getAdapter().getCount() - 1 - r;
+        }
+        return r;
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        if (reverseOrder && getAdapter() != null) {
+            item = getAdapter().getCount() - 1 - item;
+        }
+        super.setCurrentItem(item);
+    }
+
+    @Override
+    public void setCurrentItem(int item, boolean smoothScroll) {
+        if (reverseOrder && getAdapter() != null) {
+            item = getAdapter().getCount() - 1 - item;
+        }
+        super.setCurrentItem(item, smoothScroll);
     }
 
     @Override
@@ -90,4 +117,14 @@ public class AdvancedViewPager extends ViewPager {
         this.overscrollFrontView = overscrollFrontView;
     }
 
+
+    public boolean isReverseOrder() {
+        return reverseOrder;
+    }
+
+    public void setReverseOrder(boolean reverseOrder) {
+        int pos = getCurrentItem();
+        this.reverseOrder = reverseOrder;
+        setCurrentItem(pos);
+    }
 }

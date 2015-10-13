@@ -34,6 +34,12 @@
     <string name="action_reading_options">Reading options</string>
     <string name="scrolling_direction">Scrolling direction</string>
     <string name="keep_screen">Keep screen on</string>
+    <string name="image_saved">Image saved successfully</string>
+    <string name="unable_to_save_image">Unable to save image</string>
+    <string name="saving_manga">Saving manga</string>
+    <string name="preparing">Preparing…</string>
+    <string name="done">Done</string>
+    <string name="cancelling">Cancelling...</string>
 
     <string-array name="providers_def">
         <item>1</item>
@@ -43,5 +49,9 @@
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
+    </string-array>
+    <string-array name="image_opts">
+        <item>Save to gallery</item>
+        <item>Share image</item>
     </string-array>
 </resources>

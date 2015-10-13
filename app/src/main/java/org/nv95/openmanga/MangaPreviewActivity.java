@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
+import org.nv95.openmanga.providers.SaveService;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -105,7 +107,9 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
                     }
                 }
                 return true;
-
+            case R.id.action_save:
+                SaveService.Save(this, mangaSummary);
+                return true;
             case android.R.id.home:
                 finish();
                 return true;
@@ -133,7 +137,12 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
         @Override
         protected MangaSummary doInBackground(Void... params) {
             try {
-                MangaProvider provider = (MangaProvider) mangaSummary.getProvider().newInstance();
+                MangaProvider provider;
+                if (mangaSummary.getProvider().equals(LocalMangaProvider.class)) {
+                    provider = new LocalMangaProvider(MangaPreviewActivity.this);
+                } else {
+                    provider = (MangaProvider) mangaSummary.getProvider().newInstance();
+                }
                 return provider.getDetailedInfo(mangaSummary);
             } catch (Exception ignored) {
                 return new MangaSummary(mangaSummary);

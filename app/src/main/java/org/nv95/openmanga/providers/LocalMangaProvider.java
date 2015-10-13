@@ -6,6 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.nv95.openmanga.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +19,9 @@ import java.util.ArrayList;
  *
  */
 public class LocalMangaProvider extends MangaProvider {
-    private static final String TABLE_NAME = "local_storage";
+    public static final String TABLE_STORAGE = "local_storage";
+    public static final String TABLE_CHAPTERS = "local_chapters";
+    public static final String TABLE_PAGES = "local_pages";
     StorageHelper dbHelper;
     private Context context;
 
@@ -37,7 +45,7 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+            Cursor cursor = database.query(TABLE_STORAGE, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
@@ -54,12 +62,50 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        return new MangaSummary(mangaInfo);
+        MangaSummary summary = new MangaSummary(mangaInfo);
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        MangaChapters list = new MangaChapters();
+        MangaChapter chapter;
+        //
+        try {
+            Cursor cursor = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaInfo.path, null, null, null, "number");
+            if (cursor.moveToFirst()) {
+                do {
+                    chapter = new MangaChapter(cursor);
+                    chapter.provider = LocalMangaProvider.class;
+                    list.add(chapter);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+        summary.chapters = list;
+        return summary;
     }
 
     @Override
     public ArrayList<MangaPage> getPages(String readLink) {
-        return null;
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        ArrayList<MangaPage> list = new ArrayList<>();
+        MangaPage page;
+        //
+        try {
+            Cursor cursor = database.query(TABLE_PAGES, null, "chapterId=" + readLink, null, null, null, "number");
+            if (cursor.moveToFirst()) {
+                do {
+                    page = new MangaPage(cursor);
+                    page.provider = LocalMangaProvider.class;
+                    list.add(page);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } finally {
+            database.close();
+            dbHelper.close();
+        }
+        return list;
     }
 
     @Override
@@ -77,4 +123,24 @@ public class LocalMangaProvider extends MangaProvider {
         return false;
     }
 
+    public static void CopyFile(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
+
+    public static void RemoveDir(File dir) {
+        for (File o:dir.listFiles()) {
+            RemoveDir(o);
+        }
+        dir.delete();
+    }
 }

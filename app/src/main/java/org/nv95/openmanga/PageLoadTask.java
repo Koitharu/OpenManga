@@ -1,7 +1,6 @@
 package org.nv95.openmanga;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -33,6 +32,7 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
         imageViewReference = new WeakReference<>(imageView);
         progressBarReference = new WeakReference<>(progressBar);
         textViewReference = new WeakReference<>(textView);
+        imageView.setParallelLoadingEnabled(true);
         this.page = page;
         this.context = context;
 
@@ -133,26 +133,19 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
         } catch (Exception e) {
             path = page.getPath();
         }
-        Bitmap bitmap;
-        File file = new File(context.getExternalCacheDir(), String.valueOf(path.hashCode()));
+        File file = null;
+        if (!path.startsWith("http")) {
+             file = new File(path);
+        }
+        if (file == null || !file.exists()) {
+            file = new File(context.getExternalCacheDir(), String.valueOf(path.hashCode()));
+        }
         if (!file.exists()) {
             downloadFile(path, file.getPath());
         } else {
             publishProgress(-1);
         }
         return file.exists() ? ImageSource.uri(file.getPath()).tilingDisabled() : null;
-        /*
-        try {
-            bitmap = BitmapFactory.decodeFile(file.getPath());
-        } catch (Exception e) { //стоит попробовать ещё раз
-            downloadFile(path, file.getPath());
-            try {
-                bitmap = BitmapFactory.decodeFile(file.getPath());
-            }catch (Exception e1) { //дальше нет смысла пытаться
-                return null;
-            }
-        }
-        return bitmap != null ? ImageSource.bitmap(bitmap) : null;*/
     }
 
     @Override

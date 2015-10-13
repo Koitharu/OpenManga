@@ -5,6 +5,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -39,16 +40,28 @@ public class EHentaiProvider extends MangaProvider {
         MangaSummary summary = new MangaSummary(mangaInfo);
         summary.readLink = summary.path;
         try {
-            Document document = getPage(mangaInfo.getPath());
+            Document document = getPage(mangaInfo.getPath(), DEF_COOKIE);
             StringBuilder builder = new StringBuilder();
             for (Element o:document.body().getElementById("taglist").select("tr")) {
                 builder.append(o.text()).append('\n');
             }
             summary.description = builder.toString();
+            Elements els = document.body().select("table.ptt").first().select("td");
+            els.remove(els.size() - 1);
+            els.remove(0);
+            MangaChapter chapter;
+            for (Element o: els.select("a")) {
+                chapter = new MangaChapter();
+                chapter.name = "Chapter " + o.text();
+                chapter.readLink = o.attr("href");
+                chapter.provider = summary.provider;
+                summary.chapters.add(chapter);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            if (summary.chapters.size() == 0)
+                summary.addDefaultChapter();
         }
-        summary.addDefaultChapter();
         return summary;
     }
 
@@ -58,7 +71,7 @@ public class EHentaiProvider extends MangaProvider {
         String s;
         MangaPage page;
         try {
-            Document document = getPage(readLink);
+            Document document = getPage(readLink, DEF_COOKIE);
             Elements elements = document.body().select("div.gdtm");
             for (Element o: elements) {
                 s = o.select("a").first().attr("href");
@@ -75,7 +88,7 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.getPath());
+            Document document = getPage(mangaPage.getPath(), DEF_COOKIE);
             return document.body().getElementById("img").attr("src");
         } catch (IOException e) {
             return null;
@@ -95,7 +108,7 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws IOException {
         MangaList list = new MangaList();
-        Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + query + "&f_apply=Apply+Filter",DEF_COOKIE);
+        Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");

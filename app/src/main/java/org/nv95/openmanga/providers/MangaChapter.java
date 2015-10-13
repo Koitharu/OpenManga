@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 /**
@@ -23,6 +24,11 @@ public class MangaChapter {
         }
     }
 
+    public MangaChapter(Cursor cursor) {
+        name = cursor.getString(3);
+        readLink = cursor.getString(1);
+    }
+
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putString("name",name);
@@ -42,4 +48,5 @@ public class MangaChapter {
     public Class<?> getProvider() {
         return provider;
     }
+
 }

@@ -1,6 +1,7 @@
 package org.nv95.openmanga;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -45,7 +46,8 @@ public class PagerReaderAdapter extends PagerAdapter {
             PageLoadTask task = new PageLoadTask(inflater.getContext(), (SubsamplingScaleImageView) view.findViewById(R.id.ssiv),
                     (ProgressBar) view.findViewById(R.id.progressBar), (TextView) view.findViewById(R.id.textView_progress), pages.get(position));
             page.setLoadTask(task);
-            task.execute();
+            //TODO:
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         }
         ((ViewPager) container).addView(view, 0);
         return view;
@@ -59,5 +61,9 @@ public class PagerReaderAdapter extends PagerAdapter {
             pages.get(position).setLoadTask(null);
         }
         ((ViewPager) container).removeView((View) object);
+    }
+
+    public MangaPage getItem(int position) {
+        return pages.get(position);
     }
 }

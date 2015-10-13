@@ -38,4 +38,14 @@
         <item>Слева направо</item>
         <item>Сверху вниз</item>
     </string-array>
+    <string-array name="image_opts">
+        <item>Созранить в галерею</item>
+        <item>Поделиться</item>
+    </string-array>
+    <string name="cancelling">Отмена...</string>
+    <string name="done">Выполнено</string>
+    <string name="image_saved">Изображение сохранено</string>
+    <string name="preparing">Подготовка...</string>
+    <string name="saving_manga">Сохранение манги</string>
+    <string name="unable_to_save_image">Не удалось сохранить изображение</string>
 </resources>

@@ -44,7 +44,8 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="2"
             android:id="@+id/block_chapters"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:background="?android:selectableItemBackground">
 
             <TextView
                 android:layout_width="match_parent"
@@ -52,7 +53,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/textView_title"
-                android:textColor="@android:color/primary_text_dark"
+                android:textColor="@color/light_foreground"
                 android:singleLine="true"
                 android:drawableRight="@drawable/ic_action_navigation_arrow_drop_down"
                 android:gravity="center_vertical" />
@@ -91,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/toolbutton_fav"
-            android:src="@drawable/ic_action_action_favorite"
+            android:src="@drawable/ic_tool_favorite_outline"
             style="@style/AppTheme.ToolButton"
             android:contentDescription="@string/action_favourite"
             android:layout_weight="3" />

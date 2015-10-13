@@ -45,7 +45,8 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
         return mMemoryCache.get(key);
     }
 
-    private final String url,filename;
+    private final String url;
+    private final File file;
     private final Context context;
     private final WeakReference<ImageView> imageViewReference;
     private boolean round;
@@ -83,10 +84,14 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
         this.context = imageView.getContext();
         imageViewReference = new WeakReference<>(imageView);
         this.round = round;
-        filename = String.valueOf(url.hashCode());
-        imageView.setTag(filename);
         Bitmap bitmap;
-        if ((bitmap = getBitmapFromMemCache(filename)) != null) {
+        if (!url.startsWith("http") && new File(url).exists()) {
+            file = new File(url);
+        } else {
+            file = new File(context.getExternalCacheDir(), String.valueOf(url.hashCode()));
+        }
+        imageView.setTag(file.getName());
+        if ((bitmap = getBitmapFromMemCache(file.getName())) != null) {
             if (round)
                 bitmap = createSquaredBitmap(bitmap);
             imageView.setImageBitmap(bitmap);
@@ -114,7 +119,6 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Void... voids) {
         Bitmap bitmap;
-        File file = new File(context.getExternalCacheDir(),filename);
         if (file.exists()) {
             try {
                 bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
@@ -130,7 +134,7 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
             cacheBitmap(bitmap,file);
         }
         if (bitmap!=null)
-            addBitmapToMemoryCache(filename,bitmap);
+            addBitmapToMemoryCache(file.getName(),bitmap);
         if (round)
             bitmap = createSquaredBitmap(bitmap);
         return bitmap;
@@ -145,7 +149,7 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
     protected void onPostExecute(Bitmap bdrawable) {
         super.onPostExecute(bdrawable);
         final ImageView imageView = imageViewReference.get();
-        if (bdrawable != null && imageView != null && imageView.getTag().equals(filename)) {
+        if (bdrawable != null && imageView != null && imageView.getTag().equals(file.getName())) {
             TransitionDrawable drawable = new TransitionDrawable(new Drawable[]{imageView.getDrawable(), new BitmapDrawable(bdrawable)});
             drawable.setCrossFadeEnabled(false);
             drawable.startTransition(100);
