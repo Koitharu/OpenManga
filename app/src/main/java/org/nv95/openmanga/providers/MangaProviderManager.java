@@ -15,7 +15,7 @@ public class MangaProviderManager {
     public static final int FEAUTURE_REMOVE = 2;
     private Context context;
     Set<String> providers;
-    public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai", "MangaTown"};
+    public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai", "MangaTown", "MangaReader"};
     //public static String[] allProviders = {"ReadManga", "MangaTown"};
 
     public class ProviderSumm {
@@ -33,7 +33,8 @@ public class MangaProviderManager {
             ReadmangaRuProvider.class,
             AdultmangaRuProvider.class,
             EHentaiProvider.class,
-            MangaTownProvider.class
+            MangaTownProvider.class,
+            MangaReaderProvider.class
         };
 
     public MangaProvider getMangaProvider(int index) {

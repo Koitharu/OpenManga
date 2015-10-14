@@ -5,11 +5,12 @@
     -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!--item name="android:actionBarStyle">@style/ActionBar</item-->
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_action_navigation_arrow_back</item>
     </style>
 
     <style name="AppTheme.Main" parent="AppTheme">
-        <item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_action_navigation_menu</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.Light.NoActionBar">
@@ -27,6 +28,11 @@
 
     <style name="AppTheme.ToolButton" >
         <item name="android:background">?android:selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:logo">@android:color/transparent</item>
+        <item name="android:background">@color/primary_dark</item>
     </style>
 
 </resources>

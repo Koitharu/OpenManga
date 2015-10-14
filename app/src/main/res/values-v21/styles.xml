@@ -3,9 +3,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/primary_material_dark</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark_material_dark</item>
-        <item name="android:colorAccent">@color/accent_material_light</item>
+        <item name="android:colorPrimary">@color/primary_dark</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_dark</item>
+        <item name="android:colorAccent">@color/accent_light</item>
 
     </style>
 
@@ -14,9 +14,9 @@
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/primary_material_dark</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark_material_dark</item>
-        <item name="android:colorAccent">@color/accent_material_light</item>
+        <item name="android:colorPrimary">@color/primary_dark</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_dark</item>
+        <item name="android:colorAccent">@color/accent_light</item>
     </style>
 
     <style name="MenuItem">
