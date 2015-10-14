@@ -29,10 +29,6 @@ public abstract class MangaProvider {
     public MangaList search(String query, int page) throws IOException {
         return null;
     }
-    @Nullable
-    public MangaChapters getChapters(MangaSummary mangaSummary) {
-        return null;
-    }
     public boolean remove(long[] ids) {
         return false;
     }

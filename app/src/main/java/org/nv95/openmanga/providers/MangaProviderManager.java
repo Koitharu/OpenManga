@@ -2,9 +2,8 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -14,40 +13,56 @@ public class MangaProviderManager {
     public static final int FEAUTURE_SEARCH = 1;
     public static final int FEAUTURE_REMOVE = 2;
     private Context context;
-    Set<String> providers;
+    ArrayList<ProviderSumm> providers;
     public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai", "MangaTown", "MangaReader"};
-    //public static String[] allProviders = {"ReadManga", "MangaTown"};
-
-    public class ProviderSumm {
-        String name;
-        Class<?> aClass;
-    }
-
-    public MangaProviderManager(Context context) {
-        this.context = context;
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        providers = sharedPrefs.getStringSet("providers", null);
-    }
-
     private static final Class<?> mangaProviders[] = {
             ReadmangaRuProvider.class,
             AdultmangaRuProvider.class,
             EHentaiProvider.class,
             MangaTownProvider.class,
             MangaReaderProvider.class
-        };
+    };
+
+    public class ProviderSumm {
+        String name;
+        Class<?> aClass;
+
+        public ProviderSumm(String name, Class<?> aClass) {
+            this.name = name;
+            this.aClass = aClass;
+        }
+    }
+
+    public MangaProviderManager(Context context) {
+        this.context = context;
+        providers = new ArrayList<>();
+        update();
+    }
+
+    public void update() {
+        providers.clear();
+        SharedPreferences prefs = context.getSharedPreferences("providers", Context.MODE_PRIVATE);
+        for (int i=0; i<mangaProviders.length; i++) {
+            if (prefs.getBoolean(allProviders[i], true)) {
+                providers.add(new ProviderSumm(allProviders[i], mangaProviders[i]));
+            }
+        }
+    }
 
     public MangaProvider getMangaProvider(int index) {
         try {
-            return (MangaProvider) mangaProviders[index].newInstance();
+            return (MangaProvider) providers.get(index).aClass.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
     public String[] getNames() {
-        //return providers.toArray(new String[providers.size()]);
-        return allProviders;
+        String[] res = new String[providers.size()];
+        for (int i=0; i<res.length; i++) {
+            res[i] = providers.get(i).name;
+        }
+        return res;
     }
 
 }

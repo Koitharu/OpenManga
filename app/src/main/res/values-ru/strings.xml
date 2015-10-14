@@ -33,6 +33,14 @@
     <string name="action_reading_options">Параметры чтения</string>
     <string name="scrolling_direction">Направление листания</string>
     <string name="keep_screen">Держать экран включеным</string>
+    <string name="cancelling">Отмена…</string>
+    <string name="done">Выполнено</string>
+    <string name="image_saved">Изображение сохранено</string>
+    <string name="preparing">Подготовка…</string>
+    <string name="saving_manga">Сохранение манги</string>
+    <string name="unable_to_save_image">Не удалось сохранить изображение</string>
+    <string name="disclaimer">Вся манга, символы и логотипы принадлежат их владельцам. Разработчики данного приложения никак не связаны с источниками содержимого.</string>
+    <string name="select_sources">Источники манги</string>
 
     <string-array name="directions">
         <item>Слева направо</item>
@@ -42,10 +50,4 @@
         <item>Созранить в галерею</item>
         <item>Поделиться</item>
     </string-array>
-    <string name="cancelling">Отмена...</string>
-    <string name="done">Выполнено</string>
-    <string name="image_saved">Изображение сохранено</string>
-    <string name="preparing">Подготовка...</string>
-    <string name="saving_manga">Сохранение манги</string>
-    <string name="unable_to_save_image">Не удалось сохранить изображение</string>
 </resources>

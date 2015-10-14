@@ -39,13 +39,9 @@
     <string name="saving_manga">Saving manga</string>
     <string name="preparing">Preparing…</string>
     <string name="done">Done</string>
-    <string name="cancelling">Cancelling...</string>
-
-    <string-array name="providers_def">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
+    <string name="cancelling">Cancelling…</string>
+    <string name="disclaimer">All manga, characters and logos belong to their respective copyright owners. This app\'s developers not have any affiliation with the content providers.</string>
+    <string name="select_sources">Select manga\'s sources</string>
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>

@@ -11,7 +11,7 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     public StorageHelper(Context context) {
         // конструктор суперкласса
-        super(context, "localmanga", null, 3);
+        super(context, "localmanga", null, 4);
     }
 
 
@@ -36,7 +36,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "path text,"                               //6
                 + "timestamp integer,"                      //7
                 + "chapter integer,"                       //8
-                + "page integer"                       //8
+                + "page integer,"                       //8
+                + "size integer"                       //8
                 + ");");
         db.execSQL("create table local_storage ("       //менять нельзя ничего
                 + "id integer primary key,"             //0
@@ -45,13 +46,14 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "summary text,"                           //3
                 + "preview text,"                           //4
                 + "provider text,"                          //5
-                + "path text"                               //6 - хеш readlink-а - путь и id
+                + "path text,"                               //6 - хеш readlink-а - путь и id
+                + "description text"                           //7
                 + ");");
         db.execSQL("create table local_chapters ("
                 + "number integer primary key,"                 //0
-                + "id integer,"                                 // - хеш readlink-а
-                + "mangaId integer,"                        //1 - dir - соответствует path из storage
-                + "name text"                              //2
+                + "id integer,"                                 //1 - хеш readlink-а
+                + "mangaId integer,"                        //2 - dir - соответствует path из storage
+                + "name text"                              //3
                 + ");");
         db.execSQL("create table local_pages ("
                 + "number integer primary key,"                 //0
@@ -63,6 +65,13 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion < 10) {
+            db.execSQL("drop table favourites");
+            db.execSQL("drop table history");
+            db.execSQL("drop table local_storage");
+            db.execSQL("drop table local_chapters");
+            db.execSQL("drop table local_pages");
+            onCreate(db);
+        }
     }
 }

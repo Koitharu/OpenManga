@@ -1,6 +1,7 @@
 package org.nv95.openmanga;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -37,6 +38,9 @@ public class SettingsActivity extends Activity  implements Preference.OnPreferen
             case "readeropt":
                 new ReaderOptionsDialog(this).show();
                 return true;
+            case "srcselect":
+                startActivity(new Intent(this, ProviderSelectActivity.class));
+                return true;
         }
         return false;
     }
@@ -53,17 +57,8 @@ public class SettingsActivity extends Activity  implements Preference.OnPreferen
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+            findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-        }
-    }
-
-    public static class SettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.pref_sources);
         }
     }
 }

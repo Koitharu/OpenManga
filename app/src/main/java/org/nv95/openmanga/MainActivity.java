@@ -33,7 +33,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private TextView headers[];
     private ActionBarDrawerToggle toggle;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +54,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         drawerListView.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
         drawerListView.setItemChecked(0, true);
         drawerListView.setOnItemClickListener(this);
-        drawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, providerManager.getNames()));
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -158,5 +156,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
         return provider.getList(page);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (providerManager != null && drawerListView != null) {
+            providerManager.update();
+            int ci = drawerListView.getCheckedItemPosition();
+            drawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, providerManager.getNames()));
+            drawerListView.setItemChecked(ci, true);
+        }
     }
 }

@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import org.nv95.openmanga.R;
 
@@ -66,9 +67,14 @@ public class LocalMangaProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         MangaChapters list = new MangaChapters();
         MangaChapter chapter;
-        //
+
         try {
-            Cursor cursor = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaInfo.path, null, null, null, "number");
+            Cursor cursor = database.query(TABLE_STORAGE, null, "path=" + mangaInfo.path, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                summary.description = cursor.getString(7);
+            }
+            cursor.close();
+            cursor = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaInfo.path, null, null, null, "number");
             if (cursor.moveToFirst()) {
                 do {
                     chapter = new MangaChapter(cursor);
@@ -120,7 +126,35 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean hasFeature(int feature) {
-        return false;
+        return feature == MangaProviderManager.FEAUTURE_REMOVE;
+    }
+
+    @Override
+    public boolean remove(long[] ids) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        for (long id:ids) {
+            String filename;
+            Cursor cursor1 = database.query(TABLE_STORAGE, null, "id=" + id, null, null, null, null);
+            String mangaId = String.valueOf(id);
+            if (cursor1.moveToFirst()) {
+                mangaId = cursor1.getString(6);
+            }
+            cursor1.close();
+            cursor1 = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaId, null, null, null, null);
+            if (cursor1.moveToFirst()) {
+                int chapterId;
+                do {
+                    chapterId = cursor1.getInt(1);
+                    database.delete(TABLE_PAGES, "chapterId=" + chapterId, null);
+                } while (cursor1.moveToNext());
+            }
+            cursor1.close();
+            database.delete(TABLE_CHAPTERS, "mangaId=" + mangaId, null);
+            database.delete(TABLE_STORAGE, "id=" + id, null);
+            RemoveDir(new File(context.getExternalFilesDir("saved"), String.valueOf(mangaId)));
+        }
+        database.close();
+        return true;
     }
 
     public static void CopyFile(File src, File dst) throws IOException {
@@ -138,8 +172,15 @@ public class LocalMangaProvider extends MangaProvider {
     }
 
     public static void RemoveDir(File dir) {
+        if (!dir.exists()) {
+            Log.e("STORAGE", "Directory not exist!" + dir.getPath());
+            return;
+        }
         for (File o:dir.listFiles()) {
-            RemoveDir(o);
+            if (o.isDirectory())
+                RemoveDir(o);
+            else
+                o.delete();
         }
         dir.delete();
     }

@@ -198,6 +198,9 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 }
                 mode.finish();
                 return true;
+            case R.id.action_cancel:
+                mode.finish();
+                return true;
             default:
                 return false;
         }

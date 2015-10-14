@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_remove"
-        android:title="@string/action_remove" android:icon="@drawable/ic_action_action_delete" />
+    <item android:title="@string/action_remove" android:icon="@drawable/ic_action_action_delete" android:showAsAction="always" >
+        <menu>
+            <item android:id="@+id/action_remove"
+                android:title="@string/action_remove" />
+            <item android:id="@+id/action_cancel"
+                android:title="@android:string/cancel"/>
+        </menu>
+    </item>
 
 </menu>

@@ -36,14 +36,18 @@ public class SaveService extends Service {
     private NotificationManager notificationManager;
 
     private class ProgressInfo {
+        public static final byte STATE_PROGRESS = 0;
+        public static final byte STATE_INTERMEDIATE = 1;
         protected int progress;
         protected int max;
         protected String title;
+        protected byte state;
 
-        public ProgressInfo(int max, int progress, String title) {
+        public ProgressInfo(int max, int progress, String title, byte state) {
             this.progress = progress;
             this.max = max;
             this.title = title;
+            this.state = state;
         }
     }
 
@@ -59,7 +63,8 @@ public class SaveService extends Service {
         int action = intent.getIntExtra("action", SAVE_ADD);
         switch (action) {
             case SAVE_CANCEL:
-                if (downloadTask != null) {
+                if (downloadTask != null && !downloadTask.isCancelled()) {
+                    downloadTask.onProgressUpdate(new ProgressInfo(0, 0, getString(R.string.cancelling), ProgressInfo.STATE_INTERMEDIATE));
                     downloadTask.cancel(false);
                 }
                 break;
@@ -123,7 +128,7 @@ public class SaveService extends Service {
         protected void onProgressUpdate(ProgressInfo... values) {
             super.onProgressUpdate(values);
             notificationBuilder.setContentText(values[0].title);
-            notificationBuilder.setProgress(values[0].max, values[0].progress, values[0].max == 0);
+            notificationBuilder.setProgress(values[0].max, values[0].progress, values[0].state == ProgressInfo.STATE_INTERMEDIATE);
             notificationManager.notify(1, notificationBuilder.getNotification());
         }
 
@@ -134,45 +139,37 @@ public class SaveService extends Service {
             MangaSummary summary;
             File dest;
             MangaProvider provider;
+            ContentValues cv;
             int mangaId;
             int chapterId;
             while (!mangaList.isEmpty()){
                 summary = mangaList.get(0);
                 mangaList.remove(0);
                 //preparing
-                publishProgress(new ProgressInfo(0,0,summary.getName()));
+                publishProgress(new ProgressInfo(0,0,summary.getName(), ProgressInfo.STATE_INTERMEDIATE));
                 try {
                     provider = (MangaProvider) summary.getProvider().newInstance();
                 } catch (Exception e) {
                     continue;
                 }
-                dest = new File(getExternalFilesDir("saved"), String.valueOf(provider.getName().hashCode()));
-                dest = new File(dest, String.valueOf(summary.getReadLink().hashCode()));
+                dest = new File(getExternalFilesDir("saved"), String.valueOf(mangaId = summary.getReadLink().hashCode()));
                 dest.mkdirs();
                 summary.preview = downloadFile(summary.preview, dest);
                 //loading lists
-                if (summary.chapters.size() == 0)
-                    summary.chapters = provider.getChapters(summary);
 
-                summary.path = String.valueOf(mangaId = dest.getPath().hashCode());
-                database.insert(LocalMangaProvider.TABLE_STORAGE, null, summary.toContentValues());
+                summary.path = String.valueOf(mangaId);
+                cv = summary.toContentValues();
+                cv.put("description", summary.description);
+                database.insert(LocalMangaProvider.TABLE_STORAGE, null, cv);
                 File chapt; //dir for chapter
                 ArrayList<MangaPage> pages;
-                ContentValues cv;
                 int i=0;
                 for (MangaChapter o:summary.getChapters()) {
-                    if (isCancelled()) {
-                        break;
-                    }
-                    publishProgress(new ProgressInfo(summary.chapters.size(), i, o.getName()));
+                    publishProgress(new ProgressInfo(summary.chapters.size(), i, summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     chapt = new File(dest, String.valueOf(o.getReadLink().hashCode()));
                     chapt.mkdir();
 
-                    cv = new ContentValues();
-                    cv.put("id", chapterId = o.readLink.hashCode());
-                    cv.put("mangaId", mangaId);
-                    cv.put("name", o.getName());
-                    database.insert(LocalMangaProvider.TABLE_CHAPTERS, null, cv);
+                    chapterId = o.readLink.hashCode();
 
                     pages = provider.getPages(o.getReadLink());
                     for (MangaPage o1: pages) {
@@ -180,18 +177,22 @@ public class SaveService extends Service {
                         cv.put("id", o1.path.hashCode());
                         cv.put("chapterId", chapterId);
                         cv.put("path", downloadFile(provider.getPageImage(o1), chapt));
-                        database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
                         if (isCancelled()) {
                             break;
                         }
+                        database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
                     }
-                    i++;
-                }
-                if (isCancelled()) {    //need to remove all incompletely downloaded files
-                    publishProgress(new ProgressInfo(0,0,getString(R.string.cancelling)));
-                    LocalMangaProvider.RemoveDir(dest);
-                } else {
-                    //TODO: register in database
+                    if (isCancelled()) {
+                        LocalMangaProvider.RemoveDir(chapt);
+                        break;
+                    } else {
+                        cv = new ContentValues();
+                        cv.put("id", chapterId);
+                        cv.put("mangaId", mangaId);
+                        cv.put("name", o.getName());
+                        database.insert(LocalMangaProvider.TABLE_CHAPTERS, null, cv);
+                        i++;
+                    }
                 }
             }
             database.close();
@@ -202,7 +203,6 @@ public class SaveService extends Service {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            //TODO: ничего не работает!
             stopForeground(true);
             notificationManager.cancel(1);
             stopSelf();
