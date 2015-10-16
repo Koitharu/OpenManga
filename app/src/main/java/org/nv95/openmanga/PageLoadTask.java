@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import org.nv95.openmanga.components.ErrorReporter;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 
@@ -190,6 +191,7 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
             String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
             textView.setText(msg);
         }
+        new ErrorReporter(context).report("# PageLoadTask.onImageLoadError\n page.path: " + page.getPath());
     }
 
     @Override
@@ -202,5 +204,6 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
             String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
             textView.setText(msg);
         }
+        new ErrorReporter(context).report("# PageLoadTask.onTileLoadError\n page.path: " + page.getPath());
     }
 }

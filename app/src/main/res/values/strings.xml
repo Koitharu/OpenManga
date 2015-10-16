@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">OpenManga</string>
-
     <string name="action_settings">Settings</string>
     <string name="loading">Loading…</string>
     <string name="loading_error">Loading failed</string>
@@ -42,6 +41,16 @@
     <string name="cancelling">Cancelling…</string>
     <string name="disclaimer">All manga, characters and logos belong to their respective copyright owners. This app\'s developers not have any affiliation with the content providers.</string>
     <string name="select_sources">Select manga\'s sources</string>
+    <string name="navigate">Go to</string>
+    <string name="current_pos" formatted="false">Current page: %d -> %d</string>
+    <string name="current_summary" formatted="false">Total %d pages.</string>
+    <string name="exception_logged">An error has occurred. Please send a bug report to the developer.</string>
+    <string name="bug_report">Send a bug report</string>
+    <string name="bug_report_summ">Send debug log to developer</string>
+    <string name="log_not_found">Error log not found!</string>
+    <string name="bug_report_message">Sending a bug report you will help the developers. Debug log may contain addresses of some viewed pages.</string>
+    <string name="send">Send</string>
+
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
@@ -49,5 +58,12 @@
     <string-array name="image_opts">
         <item>Save to gallery</item>
         <item>Share image</item>
+    </string-array>
+    <string-array name="provider_summs">
+        <item>Russian</item>
+        <item>Russian</item>
+        <item>Multilanguage</item>
+        <item>English</item>
+        <item>English</item>
     </string-array>
 </resources>

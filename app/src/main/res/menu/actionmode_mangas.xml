@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/action_remove" android:icon="@drawable/ic_action_action_delete" android:showAsAction="always" >
+    <item android:title="@string/action_remove" android:id="@+id/group_remove"
+        android:icon="@drawable/ic_action_action_delete" android:showAsAction="always" >
         <menu>
             <item android:id="@+id/action_remove"
                 android:title="@string/action_remove" />

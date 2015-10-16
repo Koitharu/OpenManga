@@ -15,6 +15,8 @@ import android.os.AsyncTask;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import org.nv95.openmanga.components.ErrorReporter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -111,8 +113,9 @@ public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
             fOut.flush();
             fOut.close();
         }
-        catch (Exception ignored)
+        catch (Exception e)
         {
+            new ErrorReporter(context).report(e);
         }
     }
 

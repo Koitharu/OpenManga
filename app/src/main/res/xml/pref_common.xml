@@ -4,4 +4,6 @@
         android:title="@string/select_sources" />
     <Preference android:key="readeropt"
         android:title="@string/action_reading_options" />
+    <Preference android:key="bugreport"
+        android:title="@string/bug_report" android:summary="@string/bug_report_summ" />
 </PreferenceScreen>

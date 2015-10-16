@@ -1,12 +1,11 @@
 package org.nv95.openmanga;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import org.nv95.openmanga.components.InlayoutNotify;
@@ -17,7 +16,8 @@ import org.nv95.openmanga.providers.MangaProviderManager;
  */
 public class ProviderSelectActivity extends Activity implements AdapterView.OnItemClickListener {
     private ListView listView;
-    private ArrayAdapter<String> adapter;
+    private MangaProviderManager.ProviderSelectAdapter adapter;
+    private MangaProviderManager providerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +25,11 @@ public class ProviderSelectActivity extends Activity implements AdapterView.OnIt
         setContentView(R.layout.activity_provselect);
         ((InlayoutNotify)findViewById(R.id.disclaimer_notify)).setText(R.string.disclaimer);
         listView = (ListView) findViewById(R.id.listView);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, MangaProviderManager.allProviders);
+        providerManager = new MangaProviderManager(this);
+        adapter = providerManager.getAdapter();
         listView.setAdapter(adapter);
-        SharedPreferences prefs = getSharedPreferences("providers", MODE_PRIVATE);
         for (int i=0; i<adapter.getCount(); i++) {
-            listView.setItemChecked(i, prefs.getBoolean(adapter.getItem(i), true));
+            listView.setItemChecked(i, providerManager.isProviderEnabled(adapter.getItem(i)));
         }
         listView.setOnItemClickListener(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -45,6 +45,8 @@ public class ProviderSelectActivity extends Activity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        getSharedPreferences("providers", MODE_PRIVATE).edit().putBoolean(adapter.getItem(position), listView.isItemChecked(position)).apply();
+        CheckBox cb = ((CheckBox)view.findViewById(android.R.id.checkbox));
+        cb.setChecked(!cb.isChecked());
+        providerManager.setProviderEnabled(adapter.getItem(position), cb.isChecked());
     }
 }

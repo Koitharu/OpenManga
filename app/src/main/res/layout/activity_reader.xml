@@ -28,12 +28,12 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/toolbutton_prev"
+            android:id="@+id/toolbutton_back"
             android:src="@drawable/ic_action_navigation_arrow_back"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             style="@style/AppTheme.ToolButton"
-            android:contentDescription="@string/chapter_prev" />
+            android:contentDescription="@string/close" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -67,12 +67,12 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/toolbutton_next"
-            android:src="@drawable/ic_action_navigation_arrow_forward"
+            android:id="@+id/toolbutton_nav"
+            android:src="@drawable/ic_editor_wrap_text"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             style="@style/AppTheme.ToolButton"
-            android:contentDescription="@string/chapter_next" />
+            android:contentDescription="@string/navigate" />
 
     </LinearLayout>
 

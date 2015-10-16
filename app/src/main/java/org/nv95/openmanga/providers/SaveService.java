@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.components.ErrorReporter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -150,6 +151,7 @@ public class SaveService extends Service {
                 try {
                     provider = (MangaProvider) summary.getProvider().newInstance();
                 } catch (Exception e) {
+                    new ErrorReporter(getApplicationContext()).report(e);
                     continue;
                 }
                 dest = new File(getExternalFilesDir("saved"), String.valueOf(mangaId = summary.getReadLink().hashCode()));

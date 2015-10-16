@@ -1,6 +1,7 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -66,11 +67,31 @@ public class StorageHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 10) {
-            db.execSQL("drop table favourites");
-            db.execSQL("drop table history");
-            db.execSQL("drop table local_storage");
-            db.execSQL("drop table local_chapters");
-            db.execSQL("drop table local_pages");
+            try {
+                db.execSQL("drop table favourites");
+            } catch (SQLException ignored) {
+
+            }
+            try {
+                db.execSQL("drop table history");
+            } catch (SQLException ignored) {
+
+            }
+            try {
+                db.execSQL("drop table local_storage");
+            } catch (SQLException ignored) {
+
+            }
+            try {
+                db.execSQL("drop table local_chapters");
+            } catch (SQLException ignored) {
+
+            }
+            try {
+                db.execSQL("drop table local_pages");
+            } catch (SQLException ignored) {
+
+            }
             onCreate(db);
         }
     }

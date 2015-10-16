@@ -7,6 +7,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
+import org.nv95.openmanga.components.ErrorReporter;
+
 /**
  * Created by nv95 on 03.10.15.
  * Activity with settings fragments
@@ -41,6 +43,9 @@ public class SettingsActivity extends Activity  implements Preference.OnPreferen
             case "srcselect":
                 startActivity(new Intent(this, ProviderSelectActivity.class));
                 return true;
+            case "bugreport":
+                ErrorReporter.sendLog(this);
+                return true;
         }
         return false;
     }
@@ -59,6 +64,22 @@ public class SettingsActivity extends Activity  implements Preference.OnPreferen
             super.onActivityCreated(savedInstanceState);
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+            findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+        }
+    }
+
+    public static class HelpSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.pref_help);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
         }
     }
 }

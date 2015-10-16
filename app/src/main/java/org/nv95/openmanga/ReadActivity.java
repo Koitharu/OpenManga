@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedViewPager;
+import org.nv95.openmanga.components.ErrorReporter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  *
  */
-public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener {
+public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener, NavigationDialog.NavigationListener {
     private AdvancedViewPager pager;
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -61,8 +62,8 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         findViewById(R.id.block_chapters).setOnClickListener(this);
         findViewById(R.id.toolbutton_fav).setOnClickListener(this);
         findViewById(R.id.toolbutton_img).setOnClickListener(this);
-        findViewById(R.id.toolbutton_next).setOnClickListener(this);
-        findViewById(R.id.toolbutton_prev).setOnClickListener(this);
+        findViewById(R.id.toolbutton_nav).setOnClickListener(this);
+        findViewById(R.id.toolbutton_back).setOnClickListener(this);
         findViewById(R.id.toolbutton_opt).setOnClickListener(this);
         findViewById(R.id.toolbutton_save).setOnClickListener(this);
         findViewById(R.id.toolbutton_share).setOnClickListener(this);
@@ -100,25 +101,12 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
             case R.id.block_chapters:
                 showChaptersList();
                 break;
-            case R.id.toolbutton_prev:
-                if (chapterId == 0)
-                    break;
-                chapterId--;
-                pageId = 0;
-                chapter = mangaSummary.getChapters().get(chapterId);
-                chapterTitleTextView.setText(chapter.getName());
-                hideToolbars();
-                new LoadPagesTask().execute();
+            case R.id.toolbutton_nav:
+                new NavigationDialog(this, pager.getAdapter().getCount(), pager.getCurrentItem())
+                        .setNavigationListener(this).show();
                 break;
-            case R.id.toolbutton_next:
-                if (chapterId == mangaSummary.getChapters().size() - 1)
-                    break;
-                chapterId++;
-                pageId = 0;
-                chapter = mangaSummary.getChapters().get(chapterId);
-                chapterTitleTextView.setText(chapter.getName());
-                hideToolbars();
-                new LoadPagesTask().execute();
+            case R.id.toolbutton_back:
+                finish();
                 break;
             case R.id.toolbutton_share:
                 hideToolbars();
@@ -140,8 +128,12 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                         .setItems(R.array.image_opts, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                File file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
+                                File file = new File(page.getPath());
                                 if (!file.exists()) {
+                                    file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
+                                }
+                                if (!file.exists()) {
+                                    new ErrorReporter(getApplicationContext()).report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
                                     return;
                                 }
                                 switch (which) {
@@ -201,6 +193,11 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         }
     }
 
+    @Override
+    public void onPageChange(int page) {
+        pager.setCurrentItem(page, false);
+    }
+
     private class LoadPagesTask extends AsyncTask<Void,Void,ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
         private ProgressDialog progressDialog;
 
@@ -234,7 +231,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
             chapterProgressBar.setMax(mangaPages.size());
             chapterProgressBar.setProgress(pageId);
             pager.setAdapter(new PagerReaderAdapter(ReadActivity.this, mangaPages));
-            pager.setCurrentItem(pageId);
+            pager.setCurrentItem(pageId, false);
         }
 
         @Override

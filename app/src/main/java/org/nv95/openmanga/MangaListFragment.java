@@ -177,7 +177,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater().inflate(R.menu.actionmode_mangas, menu);
-        menu.findItem(R.id.action_remove).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
+        menu.findItem(R.id.group_remove).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
         return menu.hasVisibleItems();
     }
 

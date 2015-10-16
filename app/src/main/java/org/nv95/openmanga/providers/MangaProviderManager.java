@@ -2,6 +2,15 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.components.ErrorReporter;
 
 import java.util.ArrayList;
 
@@ -14,7 +23,7 @@ public class MangaProviderManager {
     public static final int FEAUTURE_REMOVE = 2;
     private Context context;
     ArrayList<ProviderSumm> providers;
-    public static String[] allProviders = {"ReadManga", "AdultManga", "E-Hentai", "MangaTown", "MangaReader"};
+    public static String[] allProviders = {"ReadManga","AdultManga", "E-Hentai", "MangaTown", "MangaReader"}; //
     private static final Class<?> mangaProviders[] = {
             ReadmangaRuProvider.class,
             AdultmangaRuProvider.class,
@@ -53,6 +62,7 @@ public class MangaProviderManager {
         try {
             return (MangaProvider) providers.get(index).aClass.newInstance();
         } catch (Exception e) {
+            new ErrorReporter(context).report(e);
             return null;
         }
     }
@@ -63,6 +73,53 @@ public class MangaProviderManager {
             res[i] = providers.get(i).name;
         }
         return res;
+    }
+
+    public void setProviderEnabled(String name, boolean enabled) {
+        context.getSharedPreferences("providers", Context.MODE_PRIVATE).edit().putBoolean(name, enabled).apply();
+    }
+
+    public boolean isProviderEnabled(String name) {
+        return context.getSharedPreferences("providers", Context.MODE_PRIVATE).getBoolean(name, true);
+    }
+
+    public ProviderSelectAdapter getAdapter() {
+        return new ProviderSelectAdapter();
+    }
+
+    public class ProviderSelectAdapter extends BaseAdapter {
+        private LayoutInflater inflater;
+        private String[] summs;
+
+        public ProviderSelectAdapter() {
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            summs = context.getResources().getStringArray(R.array.provider_summs);
+        }
+
+        @Override
+        public int getCount() {
+            return allProviders.length;
+        }
+
+        @Override
+        public String getItem(int position) {
+            return allProviders[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return allProviders[position].hashCode();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = inflater.inflate(R.layout.item_adapter_checkable, null);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(allProviders[position]);
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(summs[position]);
+            ((CheckBox) convertView.findViewById(android.R.id.checkbox)).setChecked(isProviderEnabled(allProviders[position]));
+            return convertView;
+        }
     }
 
 }

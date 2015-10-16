@@ -41,6 +41,15 @@
     <string name="unable_to_save_image">Не удалось сохранить изображение</string>
     <string name="disclaimer">Вся манга, символы и логотипы принадлежат их владельцам. Разработчики данного приложения никак не связаны с источниками содержимого.</string>
     <string name="select_sources">Источники манги</string>
+    <string name="current_pos" formatted="false">Текущая позиция: %d -> %d</string>
+    <string name="current_summary" formatted="false">Всего страниц: %d</string>
+    <string name="exception_logged">Произошла ошибка. Пожалуйста, отправьте отчет об ошибке разработчику.</string>
+    <string name="log_not_found">Лог не найден!</string>
+    <string name="navigate">Перейти</string>
+    <string name="send">Отправить</string>
+    <string name="bug_report">Отчёт об ошибке</string>
+    <string name="bug_report_summ">Отправить отладочный лог разработчику</string>
+    <string name="bug_report_message">Отправив отчёт об ошибке Вы поможете разработчикам. Отладочный лог может содержать адреса некоторых просмотренных страниц.</string>
 
     <string-array name="directions">
         <item>Слева направо</item>
