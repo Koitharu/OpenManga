@@ -12,10 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.components.InlayoutNotify;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -159,6 +161,19 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     @Override
+    public String onEmptyList(MangaProvider provider) {
+        if (provider instanceof LocalMangaProvider) {
+            return getString(R.string.no_saved_manga);
+        } else if (provider instanceof FavouritesProvider) {
+            return getString(R.string.no_favourites);
+        } else if (provider instanceof HistoryProvider) {
+            return getString(R.string.history_empty);
+        } else {
+            return getString(R.string.no_manga_found);
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (providerManager != null && drawerListView != null) {
@@ -167,5 +182,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             drawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, providerManager.getNames()));
             drawerListView.setItemChecked(ci, true);
         }
+    }
+
+    private void notify(String string) {
+        InlayoutNotify inlayoutNotify = new InlayoutNotify(this).setText(string);
+        inlayoutNotify.setId(string.hashCode());
+        ((LinearLayout) findViewById(R.id.block_main)).addView(inlayoutNotify, 0);
     }
 }

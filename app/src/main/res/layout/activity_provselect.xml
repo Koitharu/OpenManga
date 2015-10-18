@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <org.nv95.openmanga.components.InlayoutNotify
         android:layout_width="match_parent"
@@ -13,6 +12,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listView" />
+        android:id="@+id/listView"
+        android:padding="4dp" />
 
 </LinearLayout>

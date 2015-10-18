@@ -112,15 +112,15 @@ public class FavouritesProvider extends MangaProvider {
         return res;
     }
 
-    public static boolean addToFavourites(Context context, MangaInfo mangaInfo) {
+    public static boolean AddToFavourites(Context context, MangaInfo mangaInfo) {
         return new FavouritesProvider(context).add(mangaInfo);
     }
 
-    public static boolean removeFromFavourites(Context context, MangaInfo mangaInfo) {
+    public static boolean RemoveFromFavourites(Context context, MangaInfo mangaInfo) {
         return new FavouritesProvider(context).remove(mangaInfo);
     }
 
-    public static boolean has(Context context, MangaInfo mangaInfo) {
+    public static boolean Has(Context context, MangaInfo mangaInfo) {
         return new FavouritesProvider(context).has(mangaInfo);
     }
 }
