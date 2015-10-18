@@ -51,7 +51,9 @@ public class InlayoutNotify extends LinearLayout implements View.OnClickListener
             return;
         }
         this.setOrientation(HORIZONTAL);
+        int p = getResources().getDimensionPixelSize(R.dimen.inlayout_notify_padding);
         textView = new TextView(getContext());
+        textView.setPadding(p, p, p, p);
         textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         this.addView(textView);
         imageView = new ImageView(getContext());
@@ -70,16 +72,18 @@ public class InlayoutNotify extends LinearLayout implements View.OnClickListener
         this.addView(imageView);
     }
 
-    public void setText(String text) {
+    public InlayoutNotify setText(String text) {
         if (textView != null) {
             textView.setText(text);
         }
+        return this;
     }
 
-    public void setText(int resid) {
+    public InlayoutNotify setText(int resid) {
         if (textView != null) {
             textView.setText(resid);
         }
+        return this;
     }
 
     @Override

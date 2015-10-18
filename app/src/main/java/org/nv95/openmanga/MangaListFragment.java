@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,9 +44,11 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private ProgressBar progressBar;
     private EndlessScroller endlessScroller;
     private MangaListListener listListener;
+    private LinearLayout messageBlock;
 
     public interface MangaListListener {
         MangaList onListNeeded(MangaProvider provider, int page) throws IOException;
+        String onEmptyList(MangaProvider provider);
     }
 
     @Override
@@ -70,6 +73,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             }
         };
         grid = PreferenceManager.getDefaultSharedPreferences(inflater.getContext()).getBoolean("grid",false);
+        messageBlock = (LinearLayout) view.findViewById(R.id.block_message);
         ListView listView = (ListView) view.findViewById(R.id.listView);
         GridView gridView = (GridView) view.findViewById(R.id.gridView);
         listView.setOnItemClickListener(this);
@@ -108,6 +112,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     public void setProvider(MangaProvider provider) {
+        messageBlock.setVisibility(View.GONE);
         this.provider = provider;
         list.clear();
         adapter.notifyDataSetChanged();
@@ -216,6 +221,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            messageBlock.setVisibility(View.GONE);
             if (list.size() == 0)
                 progressBar.setVisibility(View.VISIBLE);
             /*if (listView.getFooterViewsCount() != 0)
@@ -230,8 +236,10 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                 endlessScroller.loadingFail();
             } else if (mangaInfos.size() == 0) {
-                if (list.size() == 0)
-                    Toast.makeText(getActivity(), "No manga found", Toast.LENGTH_SHORT).show();
+                if (list.size() == 0) {
+                    ((TextView)messageBlock.findViewById(R.id.textView)).setText(listListener.onEmptyList(provider));
+                    messageBlock.setVisibility(View.VISIBLE);
+                }
                 endlessScroller.loadingFail();
             } else {
                 list.addAll(mangaInfos);

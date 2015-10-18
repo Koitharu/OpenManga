@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +26,14 @@ import android.widget.Toast;
 import org.nv95.openmanga.components.AdvancedViewPager;
 import org.nv95.openmanga.components.ErrorReporter;
 import org.nv95.openmanga.components.SimpleAnimator;
+import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaChapter;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
+import org.nv95.openmanga.providers.SaveService;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +86,10 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         chapter = mangaSummary.getChapters().get(chapterId);
         pager.setOffscreenPageLimit(3);
         chapterTitleTextView.setText(chapter.getName());
+        if (FavouritesProvider.Has(this, mangaSummary)) {
+            ((ImageView) findViewById(R.id.toolbutton_fav)).setImageResource(R.drawable.ic_tool_favorite);
+            findViewById(R.id.toolbutton_fav).setContentDescription(getString(R.string.action_unfavourite));
+        }
         new LoadPagesTask().execute();
     }
 
@@ -107,6 +114,25 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                 break;
             case R.id.toolbutton_back:
                 finish();
+                break;
+            case R.id.toolbutton_save:
+                SaveService.Save(this, mangaSummary);
+                hideToolbars();
+                break;
+            case R.id.toolbutton_fav:
+                ImageView favbtn = (ImageView) findViewById(R.id.toolbutton_fav);
+                FavouritesProvider favouritesProvider = new FavouritesProvider(this);
+                if (favouritesProvider.has(mangaSummary)) {
+                    if (favouritesProvider.remove(mangaSummary)) {
+                        favbtn.setImageResource(R.drawable.ic_tool_favorite_outline);
+                        favbtn.setContentDescription(getString(R.string.action_unfavourite));
+                    }
+                } else {
+                    if (favouritesProvider.add(mangaSummary)) {
+                        favbtn.setImageResource(R.drawable.ic_tool_favorite);
+                        favbtn.setContentDescription(getString(R.string.action_favourite));
+                    }
+                }
                 break;
             case R.id.toolbutton_share:
                 hideToolbars();
@@ -195,6 +221,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public void onPageChange(int page) {
+        hideToolbars();
         pager.setCurrentItem(page, false);
     }
 

@@ -87,8 +87,10 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_preview, menu);
-        if (FavouritesProvider.has(this, mangaSummary))
+        if (FavouritesProvider.Has(this, mangaSummary)) {
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
+            menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -100,10 +102,12 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
                 if (favouritesProvider.has(mangaSummary)) {
                     if (favouritesProvider.remove(mangaSummary)) {
                         item.setIcon(R.drawable.ic_action_action_favorite_outline);
+                        item.setTitle(R.string.action_favourite);
                     }
                 } else {
                     if (favouritesProvider.add(mangaSummary)) {
                         item.setIcon(R.drawable.ic_action_action_favorite);
+                        item.setTitle(R.string.action_unfavourite);
                     }
                 }
                 return true;

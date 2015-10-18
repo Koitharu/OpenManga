@@ -50,6 +50,11 @@
     <string name="log_not_found">Error log not found!</string>
     <string name="bug_report_message">Sending a bug report you will help the developers. Debug log may contain addresses of some viewed pages.</string>
     <string name="send">Send</string>
+    <string name="action_unfavourite">Remove from favourites</string>
+    <string name="no_saved_manga">No saved manga on your device</string>
+    <string name="no_manga_found">No manga found</string>
+    <string name="history_empty">History is empty</string>
+    <string name="no_favourites">No favourites</string>
 
     <string-array name="directions">
         <item>Left to right</item>

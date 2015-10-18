@@ -47,4 +47,9 @@ public class SearchActivity extends Activity implements MangaListFragment.MangaL
     public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
         return query == null ? MangaList.Empty() : provider.search(query, page);
     }
+
+    @Override
+    public String onEmptyList(MangaProvider provider) {
+        return getString(R.string.no_manga_found);
+    }
 }
