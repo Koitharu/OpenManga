@@ -55,6 +55,8 @@
     <string name="no_manga_found">No manga found</string>
     <string name="history_empty">History is empty</string>
     <string name="no_favourites">No favourites</string>
+    <string name="new_version_available">New version is available</string>
+    <string name="version_available">New version %s is available</string>
 
     <string-array name="directions">
         <item>Left to right</item>
