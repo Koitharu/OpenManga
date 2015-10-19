@@ -8,5 +8,5 @@
     android:gravity="center_vertical"
     android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
     android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="@drawable/list_selector_menu"
     android:minHeight="?android:attr/listPreferredItemHeightSmall" />

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -91,6 +92,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
             menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
+        menu.findItem(R.id.action_save).setVisible(!LocalMangaProvider.class.equals(mangaSummary.getProvider()));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -136,6 +138,10 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
             findViewById(R.id.button_read).setEnabled(true);
             ((TextView)findViewById(R.id.textView_description)).setText(mangaSummary.getDescription());
             new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, null).execute();
+            if (mangaSummary.getChapters().size() == 0) {
+                findViewById(R.id.button_read).setEnabled(false);
+                Toast.makeText(MangaPreviewActivity.this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -148,7 +154,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
                     provider = (MangaProvider) mangaSummary.getProvider().newInstance();
                 }
                 return provider.getDetailedInfo(mangaSummary);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
                 return new MangaSummary(mangaSummary);
             }
         }

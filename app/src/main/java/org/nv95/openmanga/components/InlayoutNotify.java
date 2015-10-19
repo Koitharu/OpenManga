@@ -88,7 +88,7 @@ public class InlayoutNotify extends LinearLayout implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        this.animate().setInterpolator(new AccelerateInterpolator()).translationX(getMeasuredWidth() + 20).setListener(this).setDuration(300).start();
+        this.animate().setInterpolator(new AccelerateInterpolator()).translationX(getMeasuredWidth() + 20).setListener(this).setDuration(100).start();
     }
 
     @Override

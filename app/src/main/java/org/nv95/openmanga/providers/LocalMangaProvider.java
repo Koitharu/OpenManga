@@ -184,4 +184,16 @@ public class LocalMangaProvider extends MangaProvider {
         }
         dir.delete();
     }
+
+    public static long DirSize(File dir) {
+        long size = 0;
+        for (File file : dir.listFiles()) {
+            if (file.isFile()) {
+                size += file.length();
+            }
+            else
+                size += DirSize(file);
+        }
+        return size;
+    }
 }
