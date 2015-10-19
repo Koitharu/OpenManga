@@ -233,7 +233,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             super.onPostExecute(mangaInfos);
             progressBar.setVisibility(View.GONE);
             if (mangaInfos == null) {
-                Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.loading_error, Toast.LENGTH_SHORT).show();
                 endlessScroller.loadingFail();
             } else if (mangaInfos.size() == 0) {
                 if (list.size() == 0) {

@@ -73,7 +73,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setSubtitle(R.string.local_storage);
-        UpdateChecker.CheckForUpdates(this);
     }
 
     @Override

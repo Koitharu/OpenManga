@@ -134,6 +134,9 @@ public class PageLoadTask extends AsyncTask<Void,Integer,ImageSource> implements
         } catch (Exception e) {
             path = page.getPath();
         }
+        if (path == null) {
+            return null;
+        }
         File file = null;
         if (!path.startsWith("http")) {
              file = new File(path);

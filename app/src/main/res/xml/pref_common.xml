@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference android:key="srcselect"
+    <Preference
+        android:key="srcselect"
         android:title="@string/select_sources" />
-    <Preference android:key="readeropt"
+    <Preference
+        android:key="readeropt"
         android:title="@string/action_reading_options" />
-    <Preference android:key="bugreport"
-        android:title="@string/bug_report" android:summary="@string/bug_report_summ" />
+    <Preference
+        android:key="ccache"
+        android:title="@string/action_clear_cache" />
+    <PreferenceCategory android:title="@string/help">
+        <Preference
+            android:key="checkupdates"
+            android:title="@string/check_for_updates" />
+        <Preference
+            android:key="bugreport"
+            android:summary="@string/bug_report_summ"
+            android:title="@string/bug_report" />
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -36,7 +36,7 @@ public class ErrorReporter {
             msg += "\n ---- \n";
             ostream.write(msg.getBytes());
             ostream.flush();
-            Toast.makeText(context, R.string.exception_logged, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, R.string.exception_logged, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

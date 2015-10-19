@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -81,8 +82,13 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         pager.addOnPageChangeListener(this);
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
-        chapterId = getIntent().getIntExtra("chapter", 0);
-        pageId = getIntent().getIntExtra("page", 0);
+        if (savedInstanceState != null) {
+            chapterId = savedInstanceState.getInt("chapter");
+            pageId = savedInstanceState.getInt("page");
+        } else {
+            chapterId = getIntent().getIntExtra("chapter", 0);
+            pageId = getIntent().getIntExtra("page", 0);
+        }
         chapter = mangaSummary.getChapters().get(chapterId);
         pager.setOffscreenPageLimit(3);
         chapterTitleTextView.setText(chapter.getName());
@@ -97,6 +103,22 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
     protected void onPause() {
         HistoryProvider.addToHistory(this, mangaSummary, chapterId, pager.getCurrentItem());
         super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("page", pageId);
+        outState.putInt("chapter", chapterId);
+        outState.putBoolean("toolbars", toolbars);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.getBoolean("toolbars")) {
+            showToolbars();
+        }
     }
 
     @Override
@@ -116,6 +138,12 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                 finish();
                 break;
             case R.id.toolbutton_save:
+                if (LocalMangaProvider.class.equals(mangaSummary.getProvider())) {
+                    Toast toast = Toast.makeText(this, R.string.already_saved, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    break;
+                }
                 SaveService.Save(this, mangaSummary);
                 hideToolbars();
                 break;
@@ -160,11 +188,26 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                                 }
                                 if (!file.exists()) {
                                     new ErrorReporter(getApplicationContext()).report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
+                                    Toast.makeText(getApplicationContext(), "File not found", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 switch (which) {
                                     case 0: //save
                                         SaveImage(file, page);
+                                        dialog.dismiss();
+                                        break;
+                                    case 1: //share
+                                        try {
+                                            File dest = new File(getExternalFilesDir("temp"),page.getPath().substring(page.getPath().lastIndexOf('/') + 1));
+                                            LocalMangaProvider.CopyFile(file, dest);
+                                            Intent shareIntent = new Intent();
+                                            shareIntent.setAction(Intent.ACTION_SEND);
+                                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(dest));
+                                            shareIntent.setType("image/jpeg");
+                                            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+                                        } catch (Exception e) {
+                                            new ErrorReporter(getApplicationContext()).report(e);
+                                        }
                                         dialog.dismiss();
                                         break;
                                 }
@@ -201,6 +244,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
     @Override
     public void onPageSelected(int position) {
         chapterProgressBar.setProgress(position);
+        pageId = position;
     }
 
     @Override
