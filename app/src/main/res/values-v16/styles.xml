@@ -4,4 +4,8 @@
 
     </style>
 
+    <style name="AppTheme.Preview" parent="AppTheme">
+        <!--TODO-->
+    </style>
+
 </resources>

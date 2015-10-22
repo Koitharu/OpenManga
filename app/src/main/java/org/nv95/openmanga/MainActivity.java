@@ -1,8 +1,11 @@
 package org.nv95.openmanga;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +30,7 @@ import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.MangaSummary;
 
 import java.io.IOException;
 
@@ -68,12 +72,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
+                if (floatingAb.getTag().equals(true) && floatingAb.getVisibility() == View.VISIBLE) {
+                    new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).hide();
+                }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
+                if (floatingAb.getTag().equals(true) && floatingAb.getVisibility() != View.VISIBLE) {
+                    new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).show();
+                }
             }
         };
         drawerLayout.setDrawerListener(toggle);
@@ -111,6 +121,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         return super.onPrepareOptionsMenu(menu);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -218,15 +230,61 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageView_fab:
-                MangaInfo info = HistoryProvider.GetLast(this);
-                if (info == null) {
-                    return;
-                }
-
-                Intent intent = new Intent(this, MangaPreviewActivity.class);
-                intent.putExtras(info.toBundle());
-                startActivity(intent);
+                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
+        }
+    }
+
+    private class OpenLastTask extends AsyncTask<Void, Void, Intent> implements DialogInterface.OnCancelListener {
+        private ProgressDialog pd;
+
+        public OpenLastTask() {
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setIndeterminate(true);
+            pd.setCancelable(true);
+            pd.setOnCancelListener(this);
+            pd.setMessage(getString(R.string.loading));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd.show();
+        }
+
+        @Override
+        protected Intent doInBackground(Void... params) {
+            try{
+                HistoryProvider historyProvider = new HistoryProvider(MainActivity.this);
+                MangaInfo info = historyProvider.getList(0).get(0);
+                MangaProvider provider;
+                if (info.getProvider().equals(LocalMangaProvider.class)) {
+                    provider = new LocalMangaProvider(MainActivity.this);
+                } else {
+                    provider = (MangaProvider) info.getProvider().newInstance();
+                }
+                MangaSummary summary = provider.getDetailedInfo(info);
+                Intent intent = new Intent(MainActivity.this, ReadActivity.class);
+                intent.putExtras(summary.toBundle());
+                HistoryProvider.HistorySummary hs = historyProvider.get(info);
+                intent.putExtra("chapter", hs.getChapter());
+                intent.putExtra("page", hs.getPage());
+                return intent;
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Intent intent) {
+            super.onPostExecute(intent);
+            pd.dismiss();
+            startActivity(intent);
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            this.cancel(false);
         }
     }
 }

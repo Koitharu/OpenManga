@@ -12,6 +12,10 @@
     <style name="AppTheme.Main" parent="AppTheme">
         <item name="android:homeAsUpIndicator">@drawable/ic_action_navigation_menu</item>
     </style>
+
+    <style name="AppTheme.Preview" parent="AppTheme">
+        <!--TODO-->
+    </style>
     <!-- Base application theme. -->
     <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -33,6 +37,12 @@
     <style name="AppTheme.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:logo">@android:color/transparent</item>
         <item name="android:background">@color/primary_dark</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.Transparent" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:logo">@android:color/transparent</item>
+        <item name="android:background">@color/primary_dark</item>
+        <!--TODO-->
     </style>
 
 </resources>

@@ -122,7 +122,7 @@ public class HistoryProvider extends MangaProvider {
     }
 
 
-    private HistorySummary get(MangaInfo mangaInfo) {
+    public HistorySummary get(MangaInfo mangaInfo) {
         HistorySummary res = new HistorySummary();
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         Cursor c = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);

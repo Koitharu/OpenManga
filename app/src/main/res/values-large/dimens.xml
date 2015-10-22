@@ -10,4 +10,5 @@
     <dimen name="drawer_size">260dp</dimen>
     <dimen name="cell_height">230dp</dimen>
     <dimen name="cell_width">160dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
 </resources>
