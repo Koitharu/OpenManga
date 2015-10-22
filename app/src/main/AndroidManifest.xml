@@ -24,7 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MangaPreviewActivity" />
+        <activity android:name=".MangaPreviewActivity"
+            android:label=""
+            android:theme="@style/AppTheme.Preview"/>
         <activity android:name=".SearchActivity"
             android:label="@string/search_results">
         </activity>

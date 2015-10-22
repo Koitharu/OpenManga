@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,12 +35,19 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActionBar().setHomeButtonEnabled(true);
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
         ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
         ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
-        findViewById(R.id.button_read).setOnClickListener(this);
+        findViewById(R.id.ab_read).setOnClickListener(this);
         new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).execute();
         new LoadInfoTask().execute();
     }
@@ -47,7 +55,7 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_read:
+            case R.id.ab_read:
                 //startActivity(new Intent(this,ReadActivity.class).putExtras(mangaSummary.toBundle()));
                 showChaptersList();
                 break;
@@ -135,11 +143,11 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
             super.onPostExecute(mangaSummary);
             MangaPreviewActivity.this.mangaSummary = mangaSummary;
             findViewById(R.id.progressBar).setVisibility(View.GONE);
-            findViewById(R.id.button_read).setEnabled(true);
+            findViewById(R.id.ab_read).setEnabled(true);
             ((TextView)findViewById(R.id.textView_description)).setText(mangaSummary.getDescription());
             new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, null).execute();
             if (mangaSummary.getChapters().size() == 0) {
-                findViewById(R.id.button_read).setEnabled(false);
+                findViewById(R.id.ab_read).setEnabled(false);
                 Toast.makeText(MangaPreviewActivity.this, R.string.loading_error, Toast.LENGTH_SHORT).show();
             }
         }

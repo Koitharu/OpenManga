@@ -24,10 +24,11 @@
             android:id="@+id/imageView_fab"
             android:layout_gravity="right|bottom"
             android:background="@drawable/background_fab"
-            android:layout_marginBottom="34dp"
-            android:layout_marginRight="34dp"
-            android:src="@drawable/ic_fab_read"
-            android:scaleType="center" />
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:src="@drawable/ic_action_enter_to"
+            android:scaleType="center"
+            android:visibility="visible" />
     </FrameLayout>
 
     <ListView
