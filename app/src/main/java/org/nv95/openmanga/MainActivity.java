@@ -7,33 +7,37 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import org.nv95.openmanga.components.InlayoutNotify;
+import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 
 import java.io.IOException;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener, MangaListFragment.MangaListListener {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener, MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
     private MangaListFragment listFragment;
     private ListView drawerListView;
     private MangaProviderManager providerManager;
     private DrawerLayout drawerLayout;
     private TextView headers[];
     private ActionBarDrawerToggle toggle;
+    private ImageView floatingAb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         listFragment = (MangaListFragment) getFragmentManager().findFragmentById(R.id.fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         drawerListView = (ListView) findViewById(R.id.listView_menu);
+        floatingAb = (ImageView) findViewById(R.id.imageView_fab);
+        floatingAb.setTag(true);
+        floatingAb.setOnClickListener(this);
         providerManager = new MangaProviderManager(this);
         headers = new TextView[3];
         headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
@@ -70,6 +77,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             }
         };
         drawerLayout.setDrawerListener(toggle);
+        listFragment.setScrollListener(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setSubtitle(R.string.local_storage);
@@ -184,9 +192,41 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         }
     }
 
-    private void notify(String string) {
-        InlayoutNotify inlayoutNotify = new InlayoutNotify(this).setText(string);
-        inlayoutNotify.setId(string.hashCode());
-        ((LinearLayout) findViewById(R.id.block_main)).addView(inlayoutNotify, 0);
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (firstVisibleItem == 0) {
+            //show fab
+            if (floatingAb.getTag().equals(false)) {
+                floatingAb.setTag(true);
+                new SimpleAnimator(floatingAb).forceGravity(Gravity.BOTTOM).show();
+            }
+        } else {
+            //hide fab
+            if (floatingAb.getTag().equals(true)) {
+                floatingAb.setTag(false);
+                new SimpleAnimator(floatingAb).forceGravity(Gravity.BOTTOM).hide();
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imageView_fab:
+                MangaInfo info = HistoryProvider.GetLast(this);
+                if (info == null) {
+                    return;
+                }
+
+                Intent intent = new Intent(this, MangaPreviewActivity.class);
+                intent.putExtras(info.toBundle());
+                startActivity(intent);
+                break;
+        }
     }
 }

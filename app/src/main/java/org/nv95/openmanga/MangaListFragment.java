@@ -45,6 +45,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private EndlessScroller endlessScroller;
     private MangaListListener listListener;
     private LinearLayout messageBlock;
+    private AbsListView.OnScrollListener scrollListener;
 
     public interface MangaListListener {
         MangaList onListNeeded(MangaProvider provider, int page) throws IOException;
@@ -141,6 +142,13 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         return grid;
     }
 
+    public AbsListView.OnScrollListener getScrollListener() {
+        return scrollListener;
+    }
+
+    public void setScrollListener(AbsListView.OnScrollListener scrollListener) {
+        this.scrollListener = scrollListener;
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -284,11 +292,16 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+            if (scrollListener != null) {
+                scrollListener.onScrollStateChanged(view, scrollState);
+            }
         }
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (scrollListener != null) {
+                scrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
             if (!loading && nextPage && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
                 loading = onNextPage(page + 1);
                 if (loading) {

@@ -125,7 +125,7 @@ public class HistoryProvider extends MangaProvider {
     private HistorySummary get(MangaInfo mangaInfo) {
         HistorySummary res = new HistorySummary();
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor c = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null,null);
+        Cursor c = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);
         if (c.moveToFirst()) {
             res.time = c.getLong(c.getColumnIndex("timestamp"));
             res.chapter = c.getInt(c.getColumnIndex("chapter"));
@@ -150,6 +150,14 @@ public class HistoryProvider extends MangaProvider {
 
     public static HistorySummary get(Context context, MangaInfo mangaInfo) {
         return new HistoryProvider(context).get(mangaInfo);
+    }
+
+    public static MangaInfo GetLast(Context context) {
+        try {
+            return new HistoryProvider(context).getList(0).get(0);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public class HistorySummary {
