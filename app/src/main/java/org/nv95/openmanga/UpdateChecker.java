@@ -46,6 +46,7 @@ public class UpdateChecker extends AsyncTask<Void,Void,Pair<String,String>> {
             e = e.select("a.js-directory-link").last();
             return new Pair<>(e.text(), "https://github.com" + e.attr("href") + "?raw=true");
         } catch (Exception e) {
+            new ErrorReporter(preference.getContext()).report(e);
             return null;
         }
     }

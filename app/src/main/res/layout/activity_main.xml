@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,7 +17,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_mangalist" />
-    </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:id="@+id/imageView_fab"
+            android:layout_gravity="right|bottom"
+            android:background="@drawable/background_fab"
+            android:layout_marginBottom="34dp"
+            android:layout_marginRight="34dp"
+            android:src="@drawable/ic_fab_read"
+            android:scaleType="center" />
+    </FrameLayout>
 
     <ListView
         android:id="@+id/listView_menu"
