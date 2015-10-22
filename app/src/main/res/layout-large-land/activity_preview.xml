@@ -1,86 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="3">
 
-        <FrameLayout
-            android:layout_width="@dimen/details_margin_top"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="-30dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/imageView"
-                android:scaleType="fitStart" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/preview_height_large"
-                android:id="@+id/imageView2"
-                android:layout_gravity="bottom"
-                android:background="@drawable/gradient_bacground_details" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:layout_gravity="right|top"
-                android:indeterminate="true" />
-
-        </FrameLayout>
-
-        <ScrollView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/scrollView">
+            android:id="@+id/imageView"
+            android:scaleType="centerCrop"
+            android:layout_gravity="top" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp">
+                android:paddingTop="80dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Large Text"
                     android:id="@+id/textView_title"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                    android:layout_marginLeft="30dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
-                    android:id="@+id/textView_summary"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView_description"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/start_reading"
-                    android:id="@+id/button_read"
-                    android:enabled="false"
-                    android:layout_gravity="right|bottom" />
-
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:id="@+id/imageView2"
+                    android:background="@drawable/gradient_bacground_details"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
-</FrameLayout>
+            <ImageView
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:id="@+id/ab_read"
+                android:background="@drawable/background_fab"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_fab_read"
+                android:scaleType="center"
+                android:layout_marginTop="-32dp"
+                android:layout_marginRight="42dp" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_marginRight="100dp"
+                android:indeterminate="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="-28dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/textView_summary"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_description"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
