@@ -61,7 +61,7 @@
     <string name="no_manga_found">Ничего не найдено</string>
     <string name="no_saved_manga">Нет сохранённой манги</string>
     <string name="updates_checking">Проверка обновлений…</string>
-    <string name="version_available">Доступна новая версия %s</string>
+    <string name="version_available" formatted="false">Доступна новая версия %s %s</string>
     <string name="version_uptodate">Установлена последняя версия</string>
     <string name="already_saved">Эта манга уже сохранена</string>
     <string name="cache_clearing">Очистка кэша…</string>

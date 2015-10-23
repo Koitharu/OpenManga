@@ -39,14 +39,22 @@ public class SimpleAnimator implements Animator.AnimatorListener {
     public void hide() {
         visibility = View.INVISIBLE;
         switch (gravity) {
+            case Gravity.CENTER:
+                animator.scaleX(0).scaleY(0);
+                break;
             case Gravity.BOTTOM:
                 animator.translationY(view.getMeasuredHeight() + margins[1]);
                 break;
             case Gravity.TOP:
                 animator.translationY(-view.getMeasuredHeight() - margins[0]);
                 break;
-            case Gravity.CENTER:
-                animator.scaleX(0).scaleY(0);
+            case Gravity.RIGHT+Gravity.CENTER_VERTICAL:
+            case Gravity.RIGHT:
+                animator.translationX(view.getMeasuredHeight() + margins[3]);
+                break;
+            case Gravity.LEFT+Gravity.CENTER_VERTICAL:
+            case Gravity.LEFT:
+                animator.translationX(-view.getMeasuredHeight() - margins[2]);
                 break;
             default:
                 animator.alpha(0);

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nv95.openmanga.components.AdvancedScrollView;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -28,8 +29,10 @@ import org.nv95.openmanga.providers.SaveService;
 /**
  * Created by nv95 on 30.09.15.
  */
-public class MangaPreviewActivity extends Activity implements View.OnClickListener, DialogInterface.OnClickListener {
+public class MangaPreviewActivity extends Activity implements View.OnClickListener, DialogInterface.OnClickListener, AdvancedScrollView.OnScrollListener {
     protected MangaSummary mangaSummary;
+    private ImageView imageView;
+    private ImageView readButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +48,17 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
+        imageView = (ImageView) findViewById(R.id.imageView);
+        readButton = (ImageView) findViewById(R.id.ab_read);
         ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
         ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
-        findViewById(R.id.ab_read).setOnClickListener(this);
-        new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).execute();
-        new LoadInfoTask().execute();
+        readButton.setOnClickListener(this);
+        AdvancedScrollView scrollView = (AdvancedScrollView) findViewById(R.id.scrollView);
+        if (scrollView != null) {
+            scrollView.setOnScrollListener(this);
+        }
+        new ImageLoadTask(imageView ,mangaSummary.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -130,6 +139,25 @@ public class MangaPreviewActivity extends Activity implements View.OnClickListen
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void OnScroll(AdvancedScrollView scrollView, int x, int y, int oldx, int oldy) {
+        float scrollFactor = (float)y / imageView.getHeight();
+        if (scrollFactor > 1) {
+            scrollFactor = 1f;
+        }
+        imageView.setPadding(0, y / 2, 0, 0);
+        imageView.setColorFilter(Color.argb((int) (180 * scrollFactor), 0, 0, 0));
+        float scaleFactor = 3f * (1 - scrollFactor) - 0.9f;
+        if (scaleFactor > 1) {
+            scaleFactor = 1;
+        }
+        if (scaleFactor < 0) {
+            scaleFactor = 0;
+        }
+        readButton.setScaleX(scaleFactor);
+        readButton.setScaleY(scaleFactor);
     }
 
     private class LoadInfoTask extends AsyncTask<Void,Void,MangaSummary> {

@@ -68,7 +68,7 @@ public class UpdateChecker extends AsyncTask<Void,Void,Pair<String,String>> {
                 final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(pair.second));
                 new AlertDialog.Builder(preference.getContext())
                         .setTitle(R.string.new_version_available)
-                        .setMessage(String.format(preference.getContext().getString(R.string.version_available), info[1]))
+                        .setMessage(String.format(preference.getContext().getString(R.string.version_available), info[1], info[2]))
                         .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

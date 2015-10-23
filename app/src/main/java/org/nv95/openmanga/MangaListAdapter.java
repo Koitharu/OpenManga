@@ -3,7 +3,6 @@ package org.nv95.openmanga;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,7 @@ public class MangaListAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.textView_title)).setText(info.getName());
         ((TextView) convertView.findViewById(R.id.textView_subtitle)).setText(info.getSubtitle());
         ((TextView) convertView.findViewById(R.id.textView_summary)).setText(info.getSummary());
-        new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).executeOnExecutor(ImageLoadTask.FIXED_EXECUTOR);
         return convertView;
     }
 

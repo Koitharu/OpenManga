@@ -36,6 +36,8 @@ import java.io.IOException;
  *
  */
 public class MangaListFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
+    private ListLoadTask taskInstance;
+
     private AbsListView absListView;
     private boolean grid = false;
     private MangaListAdapter adapter;
@@ -226,6 +228,15 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
 
 
     private class ListLoadTask extends AsyncTask<Integer, Void, MangaList> {
+        public ListLoadTask() {
+            if (taskInstance != null) {
+                if (taskInstance.getStatus() == Status.RUNNING) {
+                    taskInstance.cancel(true);
+                }
+            }
+            taskInstance = this;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

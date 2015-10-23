@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +46,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  *
  */
-public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener, NavigationDialog.NavigationListener {
+public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener, NavigationDialog.NavigationListener, AdvancedViewPager.OnScrollListener {
     private AdvancedViewPager pager;
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -52,6 +54,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
     private int pageId;
     private TextView chapterTitleTextView;
     private ProgressBar chapterProgressBar;
+    private ImageView oversrollImageView;
     private boolean toolbars = false;
 
     @Override
@@ -61,6 +64,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         pager = (AdvancedViewPager) findViewById(R.id.pager);
         chapterTitleTextView = (TextView) findViewById(R.id.textView_title);
         chapterProgressBar = (ProgressBar) findViewById(R.id.progressBar_reading);
+        oversrollImageView = (ImageView) findViewById(R.id.imageViewOverscroll);
 
         findViewById(R.id.imageView_menu).setOnClickListener(this);
         findViewById(R.id.block_chapters).setOnClickListener(this);
@@ -79,6 +83,7 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
                 return false;
             }
         });
+        pager.setOnScrollListener(this);
         pager.addOnPageChangeListener(this);
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
@@ -268,6 +273,67 @@ public class ReadActivity extends Activity implements View.OnClickListener, View
         hideToolbars();
         pager.setCurrentItem(page, false);
     }
+
+    @Override
+    public void OnScroll(AdvancedViewPager viewPager, int x, int y, int oldx, int oldy) {
+
+    }
+
+    @Override
+    public boolean OnOverScroll(AdvancedViewPager viewPager, int deltaX, int direction) {
+        if (deltaX == 0) {
+            FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams)oversrollImageView.getLayoutParams());
+            if (direction == -1 && chapterId > 0) {
+                params.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
+                params.leftMargin = -oversrollImageView.getWidth();
+                oversrollImageView.setTranslationX(0);
+                oversrollImageView.setVisibility(View.VISIBLE);
+                oversrollImageView.getParent().requestLayout();
+                return true;
+            } else if (direction == 1 && chapterId < mangaSummary.getChapters().size() - 1) {
+                params.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+                params.rightMargin = -oversrollImageView.getWidth();
+                oversrollImageView.setTranslationX(0);
+                oversrollImageView.setVisibility(View.VISIBLE);
+                oversrollImageView.getParent().requestLayout();
+                return true;
+            } else if (direction == 0){
+                if (oversrollImageView.getTag() != null) {
+                    float scrollFactor = (float) oversrollImageView.getTag();
+                    if (scrollFactor > 0.4) {
+                        new SimpleAnimator(oversrollImageView).forceGravity(Gravity.CENTER).hide();
+                        if (params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT) {
+                            chapterId++;
+                        } else {
+                            chapterId--;
+                        }
+                        //TODO::switchpage
+                        pageId = 0;
+                        chapter = mangaSummary.getChapters().get(chapterId);
+                        chapterTitleTextView.setText(chapter.getName());
+                        hideToolbars();
+                        new LoadPagesTask().execute();
+                        return true;
+                    }
+                }
+                new SimpleAnimator(oversrollImageView).hide();
+                return false;
+            } else {
+                return false;
+            }
+        }
+        float scrollFactor = deltaX/2;
+        oversrollImageView.setTranslationX(-direction * scrollFactor);
+        scrollFactor = scrollFactor / viewPager.getWidth() + 0.1f;
+        if (scrollFactor > 0.5f) {
+            scrollFactor = 0.5f;
+        }
+        oversrollImageView.setColorFilter(Color.argb((int) (500*(0.5f-scrollFactor)),57,73,171));
+        oversrollImageView.setRotation(scrollFactor * 360 - (direction == 1 ? 180 : 0));
+        oversrollImageView.setTag(scrollFactor);
+        return true;
+    }
+
 
     private class LoadPagesTask extends AsyncTask<Void,Void,ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
         private ProgressDialog progressDialog;

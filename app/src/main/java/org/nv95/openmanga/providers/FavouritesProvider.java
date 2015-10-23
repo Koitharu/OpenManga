@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +9,7 @@ import org.nv95.openmanga.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -38,11 +40,11 @@ public class FavouritesProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, "timestamp");
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    list.add(manga);
+                    list.add(0,manga);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -79,6 +81,8 @@ public class FavouritesProvider extends MangaProvider {
 
     public boolean add(MangaInfo mangaInfo) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues cv = mangaInfo.toContentValues();
+        cv.put("timestamp", new Date().getTime());
         database.insert(TABLE_NAME, null, mangaInfo.toContentValues());
         database.close();
         return true;

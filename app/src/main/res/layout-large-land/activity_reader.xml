@@ -137,4 +137,16 @@
 
     </LinearLayout>
 
+
+    <ImageView
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:id="@+id/imageViewOverscroll"
+        android:layout_gravity="right|center_vertical"
+        android:background="@drawable/background_fab"
+        android:layout_marginRight="0dp"
+        android:src="@drawable/ic_nav_arrow"
+        android:scaleType="center"
+        android:visibility="invisible" />
+
 </FrameLayout>

@@ -279,7 +279,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         protected void onPostExecute(Intent intent) {
             super.onPostExecute(intent);
             pd.dismiss();
-            startActivity(intent);
+            if (intent != null) {
+                startActivity(intent);
+            } else {
+                //TODO::message
+            }
         }
 
         @Override
