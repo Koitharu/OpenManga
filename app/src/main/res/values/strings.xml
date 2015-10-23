@@ -56,7 +56,7 @@
     <string name="history_empty">History is empty</string>
     <string name="no_favourites">No favourites</string>
     <string name="new_version_available">Update available</string>
-    <string name="version_available" formatted="false">New version %s is available</string>
+    <string name="version_available" formatted="false">New version %s %s is available</string>
     <string name="updates_checking">Checking for updates…</string>
     <string name="version_uptodate">Your version is already up-to-date</string>
     <string name="download">Download</string>

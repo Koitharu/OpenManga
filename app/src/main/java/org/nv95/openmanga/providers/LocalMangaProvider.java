@@ -46,7 +46,7 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_STORAGE, null, null, null, null, null, null);
+            Cursor cursor = database.query(TABLE_STORAGE, null, null, null, null, null, "timestamp");
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);

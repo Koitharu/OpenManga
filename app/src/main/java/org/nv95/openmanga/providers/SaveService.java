@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by nv95 on 10.10.15.
@@ -162,6 +163,7 @@ public class SaveService extends Service {
                 summary.path = String.valueOf(mangaId);
                 cv = summary.toContentValues();
                 cv.put("description", summary.description);
+                cv.put("timestamp", new Date().getTime());
                 database.insert(LocalMangaProvider.TABLE_STORAGE, null, cv);
                 File chapt; //dir for chapter
                 ArrayList<MangaPage> pages;

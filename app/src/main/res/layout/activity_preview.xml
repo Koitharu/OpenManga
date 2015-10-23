@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.nv95.openmanga.components.AdvancedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollView"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent" android:overScrollMode="never">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <FrameLayout
+
+            <org.nv95.openmanga.components.TopCropImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/details_margin_top">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:id="@+id/imageView"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="top" />
-
-            </FrameLayout>
-
+                android:layout_height="@dimen/details_margin_top"
+                android:id="@+id/imageView"
+                android:layout_gravity="top" />
 
             <ImageView
                 android:layout_width="@dimen/fab_size"
@@ -49,8 +42,9 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Large Text"
                 android:id="@+id/textView_title"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+                android:layout_marginRight="100dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="3dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,4 +64,4 @@
                 android:layout_marginTop="10dp" />
 
         </LinearLayout>
-</ScrollView>
+</org.nv95.openmanga.components.AdvancedScrollView>

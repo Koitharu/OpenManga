@@ -29,6 +29,7 @@
             android:src="@drawable/ic_action_enter_to"
             android:scaleType="center"
             android:visibility="visible" />
+
     </FrameLayout>
 
     <ListView

@@ -5,7 +5,6 @@ import android.support.annotation.IntDef;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,10 +22,17 @@ public class AdvancedViewPager extends ViewPager {
     public static final int HORIZONTAL = 0;
     public static final int VERTICAL = 1;
 
+    public interface OnScrollListener {
+        void OnScroll(AdvancedViewPager viewPager, int x, int y, int oldx, int oldy);
+        boolean OnOverScroll(AdvancedViewPager viewPager, int deltaX, int direction);
+    }
+
+    protected OnScrollListener onScrollListener;
+
     //---------------------------------------------------------
     private int orientation;
-    private View overscrollFrontView;
     private boolean reverseOrder;
+    private int lastX = -1;
 
     public AdvancedViewPager(Context context) {
         super(context);
@@ -84,6 +90,8 @@ public class AdvancedViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev){
+        if (checkForOverscroll(ev))
+            return false;
         boolean intercepted = super.onInterceptTouchEvent(orientation == VERTICAL ? swapXY(ev) : ev);
         if (orientation == VERTICAL) {
             swapXY(ev);
@@ -93,6 +101,9 @@ public class AdvancedViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (checkForOverscroll(ev)) {
+            return false;
+        };
         return super.onTouchEvent(orientation == VERTICAL ? swapXY(ev) : ev);
     }
 
@@ -109,14 +120,53 @@ public class AdvancedViewPager extends ViewPager {
             setCurrentItem(pos);
     }
 
-    public View getOverscrollFrontView() {
-        return overscrollFrontView;
+    protected boolean checkForOverscroll(MotionEvent event) {
+        if (onScrollListener == null || getAdapter() == null) {
+            return false;
+        }
+        int state = 0;
+        if (getCurrentItem() == 0) {
+            state = -1;
+        } else if (getCurrentItem() == getAdapter().getCount() - 1) {
+            state = 1;
+        }
+        if (state == 0) {
+            return false;
+        }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                lastX = onScrollListener.OnOverScroll(this, 0, state) ? (int) event.getX() : -1;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (lastX == -1) {
+                    return false;
+                }
+                int deltaX = (int) (event.getX() - lastX);
+                if (state == -1 && deltaX > 0) {
+                    return onScrollListener.OnOverScroll(this, deltaX, state);
+                } else if (state == 1 && deltaX < 0) {
+                    return onScrollListener.OnOverScroll(this, -deltaX, state);
+                } else {
+                    lastX = -1;
+                }
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                if (lastX != -1) {
+                    onScrollListener.OnOverScroll(this, 0, 0);
+                }
+                lastX = -1;
+                break;
+        }
+        return false;
     }
 
-    public void setOverscrollFrontView(View overscrollFrontView) {
-        this.overscrollFrontView = overscrollFrontView;
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (onScrollListener != null) {
+            onScrollListener.OnScroll(this, l, t, oldl, oldt);
+        }
     }
-
 
     public boolean isReverseOrder() {
         return reverseOrder;
@@ -126,5 +176,13 @@ public class AdvancedViewPager extends ViewPager {
         int pos = getCurrentItem();
         this.reverseOrder = reverseOrder;
         setCurrentItem(pos);
+    }
+
+    public OnScrollListener getOnScrollListener() {
+        return onScrollListener;
+    }
+
+    public void setOnScrollListener(OnScrollListener onScrollListener) {
+        this.onScrollListener = onScrollListener;
     }
 }

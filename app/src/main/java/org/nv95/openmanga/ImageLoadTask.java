@@ -25,8 +25,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.concurrent.Executor;
 
 public class ImageLoadTask  extends AsyncTask<Void, Void, Bitmap> {
+    public static final Executor FIXED_EXECUTOR = AsyncTask.THREAD_POOL_EXECUTOR;
     //кэш в памяти
     private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>((int) (Runtime.getRuntime().maxMemory() / 1024)/8) {
         @Override
