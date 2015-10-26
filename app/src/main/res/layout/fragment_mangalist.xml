@@ -30,37 +30,6 @@
         android:fastScrollEnabled="true"
         android:paddingBottom="2dp" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:id="@+id/frame_footer"
-        android:background="@android:color/background_light"
-        android:visibility="invisible">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:gravity="center_vertical">
-
-            <ProgressBar
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminateOnly="true"
-                android:id="@+id/progressBar3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/loading_page"
-                android:id="@+id/textView_footer" />
-        </LinearLayout>
-    </FrameLayout>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -76,4 +45,23 @@
             android:text="Medium Text"
             android:id="@+id/textView" />
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:id="@+id/frame_footer">
+
+        <ImageView
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:id="@+id/imageView_footer"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@drawable/background_fab"
+            android:layout_marginBottom="24dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_action_autorenew"
+            android:visibility="invisible" />
+    </FrameLayout>
+
 </FrameLayout>

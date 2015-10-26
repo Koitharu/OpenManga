@@ -104,6 +104,7 @@ public class SimpleAnimator implements Animator.AnimatorListener {
 
     @Override
     public void onAnimationEnd(Animator animation) {
+        view.clearAnimation();
         view.setVisibility(visibility);
         view.setTranslationX(0);
         view.setTranslationY(0);

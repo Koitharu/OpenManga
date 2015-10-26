@@ -5,7 +5,6 @@ import android.text.Html;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,7 +14,7 @@ public class MangaTownProvider extends MangaProvider {
     protected static boolean features[] = {true, false, false};
 
     @Override
-    public MangaList getList(int page) throws IOException {
+    public MangaList getList(int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangatown.com/hot/" + (page + 1) + ".htm");
         MangaInfo manga;
@@ -59,7 +58,7 @@ public class MangaTownProvider extends MangaProvider {
                 summary.chapters.add(0, chapter);
             }
             summary.readLink = summary.chapters.get(0).getReadLink();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //summary.addDefaultChapter();
@@ -79,7 +78,7 @@ public class MangaTownProvider extends MangaProvider {
                 pages.add(page);
             }
             return pages;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -90,7 +89,7 @@ public class MangaTownProvider extends MangaProvider {
         try {
             Document document = getPage(mangaPage.getPath());
             return document.body().getElementById("image").attr("src");
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }

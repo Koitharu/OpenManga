@@ -6,7 +6,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +15,7 @@ public class AdultmangaRuProvider extends MangaProvider {
     protected static boolean features[] = {true, true, false};
 
     @Override
-    public MangaList getList(int page) throws IOException {
+    public MangaList getList(int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://adultmanga.ru/list?sortType=rate&offset=" + page*70 + "&max=70");
         MangaInfo manga;
@@ -60,7 +59,7 @@ public class AdultmangaRuProvider extends MangaProvider {
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return summary;
@@ -88,7 +87,7 @@ public class AdultmangaRuProvider extends MangaProvider {
                     return pages;
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -113,7 +112,7 @@ public class AdultmangaRuProvider extends MangaProvider {
 
 
     @Override
-    public MangaList search(String query, int page) throws IOException {
+    public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
             return MangaList.Empty();
         }

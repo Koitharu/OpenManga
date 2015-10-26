@@ -4,7 +4,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -16,12 +15,15 @@ public class EHentaiProvider extends MangaProvider {
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
 
     @Override
-    public MangaList getList(int page) throws IOException {
+    public MangaList getList(int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://g.e-hentai.org/?page=" + page, DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
+        if (root == null) {
+            return null;
+        }
         for (Element o: elements) {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
@@ -79,7 +81,7 @@ public class EHentaiProvider extends MangaProvider {
                 page.provider = EHentaiProvider.class;
                 pages.add(page);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return pages;
@@ -90,7 +92,7 @@ public class EHentaiProvider extends MangaProvider {
         try {
             Document document = getPage(mangaPage.getPath(), DEF_COOKIE);
             return document.body().getElementById("img").attr("src");
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -106,7 +108,7 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList search(String query, int page) throws IOException {
+    public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", DEF_COOKIE);
         Element root = document.body().select("div.itg").first();

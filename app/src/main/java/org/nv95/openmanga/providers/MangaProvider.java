@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,13 +19,13 @@ import java.util.ArrayList;
 public abstract class MangaProvider {
     protected boolean features[];
     //content access methods
-    public abstract MangaList getList(int page) throws IOException;
+    public abstract MangaList getList(int page) throws Exception;
     public abstract MangaSummary getDetailedInfo(MangaInfo mangaInfo);
     public abstract ArrayList<MangaPage> getPages(String readLink);
     public abstract String getPageImage(MangaPage mangaPage);
     //optional content acces methods
     @Nullable
-    public MangaList search(String query, int page) throws IOException {
+    public MangaList search(String query, int page) throws Exception {
         return null;
     }
     public boolean remove(long[] ids) {
@@ -38,14 +37,14 @@ public abstract class MangaProvider {
     //String[] getGenres();
 
     //******************************static*********************************
-    protected static Document getPage(String url) throws IOException {
+    protected static Document getPage(String url) throws Exception {
         HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
         con.setConnectTimeout(15000);
         InputStream is = con.getInputStream();
         return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
-    protected static Document getPage(String url, String cookie) throws IOException {
+    protected static Document getPage(String url, String cookie) throws Exception {
         HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
         con.setDoOutput(true);
         /*DataOutputStream out = new DataOutputStream(con.getOutputStream());
@@ -58,7 +57,7 @@ public abstract class MangaProvider {
         return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
-    protected static Document postPage(String url, String[] data) throws IOException {
+    protected static Document postPage(String url, String[] data) throws Exception {
         HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
         con.setConnectTimeout(15000);
         con.setRequestMethod("POST");
