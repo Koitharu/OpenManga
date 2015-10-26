@@ -32,8 +32,6 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
 
-import java.io.IOException;
-
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener, MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
     private MangaListFragment listFragment;
     private ListView drawerListView;
@@ -176,7 +174,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
+    public MangaList onListNeeded(MangaProvider provider, int page) throws Exception {
         return provider.getList(page);
     }
 

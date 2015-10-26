@@ -6,7 +6,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ public class MangaReaderProvider extends MangaProvider {
     protected static boolean features[] = {true, true, false};
 
     @Override
-    public MangaList getList(int page) throws IOException {
+    public MangaList getList(int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangareader.net/popular/" + page * 30);
         MangaInfo manga;
@@ -61,7 +60,7 @@ public class MangaReaderProvider extends MangaProvider {
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         summary.readLink = summary.chapters.get(0).readLink;
@@ -80,7 +79,7 @@ public class MangaReaderProvider extends MangaProvider {
                 page.provider = MangaReaderProvider.class;
                 pages.add(page);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return pages;
@@ -91,7 +90,7 @@ public class MangaReaderProvider extends MangaProvider {
         try {
             Document document = getPage(mangaPage.getPath());
             return document.body().getElementById("img").attr("src");
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -110,7 +109,7 @@ public class MangaReaderProvider extends MangaProvider {
 
 
     @Override
-    public MangaList search(String query, int page) throws IOException {
+    public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
             return MangaList.Empty();
         }

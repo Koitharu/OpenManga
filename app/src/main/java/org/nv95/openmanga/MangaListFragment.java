@@ -13,9 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -28,8 +32,6 @@ import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
-
-import java.io.IOException;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -50,7 +52,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private AbsListView.OnScrollListener scrollListener;
 
     public interface MangaListListener {
-        MangaList onListNeeded(MangaProvider provider, int page) throws IOException;
+        MangaList onListNeeded(MangaProvider provider, int page) throws Exception;
         String onEmptyList(MangaProvider provider);
     }
 
@@ -271,7 +273,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         protected MangaList doInBackground(Integer... params) {
             try {
                 return listListener.onListNeeded(provider,params.length > 0 ? params[0] : 0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -280,16 +282,20 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     protected abstract class EndlessScroller implements AbsListView.OnScrollListener {
         private int page;
         private boolean loading;
-        private TextView textView;
         private View footer;
+        private ImageView imageView;
         boolean nextPage;
+        RotateAnimation rotate;
 
         public EndlessScroller(View view) {
             footer = view.findViewById(R.id.frame_footer);
-            textView = (TextView) footer.findViewById(R.id.textView_footer);
-            progressBar = (ProgressBar) footer.findViewById(R.id.progressBar2);
+            imageView = (ImageView) footer.findViewById(R.id.imageView_footer);
             loading = true;
             nextPage = true;
+            rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotate.setDuration(500);
+            rotate.setRepeatCount(Animation.INFINITE);
+            rotate.setInterpolator(new LinearInterpolator());
             footer.setVisibility(View.INVISIBLE);
         }
 
@@ -317,8 +323,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 loading = onNextPage(page + 1);
                 if (loading) {
                     new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).show();
-                    String s = getString(R.string.loading_page) + " " + (page + 1);
-                    textView.setText(s);
+                    imageView.startAnimation(rotate);
                 }
             }
         }

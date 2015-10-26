@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 
-import java.io.IOException;
-
 /**
  * Created by nv95 on 01.10.15.
  */
@@ -44,7 +42,7 @@ public class SearchActivity extends Activity implements MangaListFragment.MangaL
     }
 
     @Override
-    public MangaList onListNeeded(MangaProvider provider, int page) throws IOException {
+    public MangaList onListNeeded(MangaProvider provider, int page) throws Exception {
         return query == null ? MangaList.Empty() : provider.search(query, page);
     }
 
