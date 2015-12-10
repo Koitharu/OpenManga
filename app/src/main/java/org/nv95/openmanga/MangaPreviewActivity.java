@@ -3,7 +3,6 @@ package org.nv95.openmanga;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedScrollView;
+import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -35,7 +35,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         DialogInterface.OnClickListener, AdvancedScrollView.OnScrollListener {
 
     protected MangaSummary mangaSummary;
-    private ImageView imageView;
+    private AsyncImageView imageView;
     private ImageView readButton;
 
     @Override
@@ -54,7 +54,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
-        imageView = (ImageView) findViewById(R.id.imageView);
+        imageView = (AsyncImageView) findViewById(R.id.imageView);
         readButton = (ImageView) findViewById(R.id.ab_read);
         ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
         ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
@@ -63,7 +63,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         if (scrollView != null) {
             scrollView.setOnScrollListener(this);
         }
-        new ImageLoadTask(imageView ,mangaSummary.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        imageView.setImageAsync(mangaSummary.getPreview());
         new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -126,7 +126,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
-                FavouritesProvider favouritesProvider = new FavouritesProvider(this);
+                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mangaSummary)) {
                     if (favouritesProvider.remove(mangaSummary)) {
                         item.setIcon(R.drawable.ic_action_action_favorite_outline);
@@ -148,7 +148,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                         .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (new LocalMangaProvider(MangaPreviewActivity.this).remove(new long[]{mangaSummary.getPath().hashCode()})) {
+                                if (LocalMangaProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mangaSummary.getPath().hashCode()})) {
                                     finish();
                                 } else {
                                     Toast.makeText(MangaPreviewActivity.this,R.string.error, Toast.LENGTH_SHORT).show();
@@ -200,7 +200,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
             findViewById(R.id.progressBar).setVisibility(View.GONE);
             findViewById(R.id.ab_read).setEnabled(true);
             ((TextView)findViewById(R.id.textView_description)).setText(mangaSummary.getDescription());
-            new ImageLoadTask((ImageView) findViewById(R.id.imageView),mangaSummary.getPreview(), false, null).execute();
+            imageView.setImageAsync(mangaSummary.getPreview(), false);
             if (mangaSummary.getChapters().size() == 0) {
                 findViewById(R.id.ab_read).setEnabled(false);
                 Toast.makeText(MangaPreviewActivity.this, R.string.loading_error, Toast.LENGTH_SHORT).show();
@@ -212,7 +212,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
             try {
                 MangaProvider provider;
                 if (mangaSummary.getProvider().equals(LocalMangaProvider.class)) {
-                    provider = new LocalMangaProvider(MangaPreviewActivity.this);
+                    provider = LocalMangaProvider.getInstacne(MangaPreviewActivity.this);
                 } else {
                     provider = (MangaProvider) mangaSummary.getProvider().newInstance();
                 }

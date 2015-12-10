@@ -106,7 +106,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             ((ImageView) findViewById(R.id.toolbutton_fav)).setImageResource(R.drawable.ic_tool_favorite);
             findViewById(R.id.toolbutton_fav).setContentDescription(getString(R.string.action_unfavourite));
         }
-        new LoadPagesTask().execute();
+        new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.toolbutton_fav:
                 ImageView favbtn = (ImageView) findViewById(R.id.toolbutton_fav);
-                FavouritesProvider favouritesProvider = new FavouritesProvider(this);
+                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mangaSummary)) {
                     if (favouritesProvider.remove(mangaSummary)) {
                         favbtn.setImageResource(R.drawable.ic_tool_favorite_outline);
@@ -382,7 +382,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 MangaProvider provider;
                 if (mangaSummary.getProvider().equals(LocalMangaProvider.class)) {
-                    provider = new LocalMangaProvider(ReadActivity.this);
+                    provider = LocalMangaProvider.getInstacne(ReadActivity.this);
                 } else {
                     provider = (MangaProvider) mangaSummary.getProvider().newInstance();
                 }

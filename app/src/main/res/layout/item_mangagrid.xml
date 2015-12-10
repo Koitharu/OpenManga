@@ -8,7 +8,7 @@
         android:layout_width="@dimen/cell_width"
         android:layout_height="@dimen/cell_height">
 
-        <ImageView
+        <org.nv95.openmanga.components.AsyncImageView
             android:layout_width="@dimen/preview_width_large"
             android:layout_height="@dimen/preview_height_large"
             android:id="@+id/imageView"

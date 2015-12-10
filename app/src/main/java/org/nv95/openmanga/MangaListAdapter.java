@@ -1,15 +1,13 @@
 package org.nv95.openmanga;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaList;
 
@@ -50,13 +48,23 @@ public class MangaListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null)
+        ViewHolder viewHolder;
+        if (convertView == null) {
             convertView = inflater.inflate(grid ? R.layout.item_mangagrid : R.layout.item_mangalist, null);
+            viewHolder = new ViewHolder();
+            viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.textView_title);
+            viewHolder.textViewSubtitle = (TextView) convertView.findViewById(R.id.textView_subtitle);
+            viewHolder.textViewSummary = (TextView) convertView.findViewById(R.id.textView_summary);
+            viewHolder.asyncImageView = (AsyncImageView) convertView.findViewById(R.id.imageView);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
         MangaInfo info = getMangaInfo(position);
-        ((TextView) convertView.findViewById(R.id.textView_title)).setText(info.getName());
-        ((TextView) convertView.findViewById(R.id.textView_subtitle)).setText(info.getSubtitle());
-        ((TextView) convertView.findViewById(R.id.textView_summary)).setText(info.getSummary());
-        new ImageLoadTask((ImageView) convertView.findViewById(R.id.imageView),info.getPreview(), false, new ColorDrawable(Color.TRANSPARENT)).executeOnExecutor(ImageLoadTask.FIXED_EXECUTOR);
+        viewHolder.textViewTitle.setText(info.getName());
+        viewHolder.textViewSubtitle.setText(info.getSubtitle());
+        viewHolder.textViewSummary.setText(info.getSummary());
+        viewHolder.asyncImageView.setImageAsync(info.getPreview());
         return convertView;
     }
 
@@ -74,5 +82,12 @@ public class MangaListAdapter extends BaseAdapter {
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    private static class ViewHolder {
+        TextView textViewTitle;
+        TextView textViewSubtitle;
+        TextView textViewSummary;
+        AsyncImageView asyncImageView;
     }
 }

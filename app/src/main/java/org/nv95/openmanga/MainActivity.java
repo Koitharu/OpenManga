@@ -172,13 +172,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                listFragment.setProvider(new LocalMangaProvider(this));
+                listFragment.setProvider(LocalMangaProvider.getInstacne(this));
                 break;
             case 1:
-                listFragment.setProvider(new FavouritesProvider(this));
+                listFragment.setProvider(FavouritesProvider.getInstacne(this));
                 break;
             case 2:
-                listFragment.setProvider(new HistoryProvider(this));
+                listFragment.setProvider(HistoryProvider.getInstacne(this));
                 break;
             default:
                 listFragment.setProvider(providerManager.getMangaProvider(position - 4));
@@ -279,11 +279,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected Intent doInBackground(Void... params) {
             try{
-                HistoryProvider historyProvider = new HistoryProvider(MainActivity.this);
+                HistoryProvider historyProvider = HistoryProvider.getInstacne(MainActivity.this);
                 MangaInfo info = historyProvider.getList(0).get(0);
                 MangaProvider provider;
                 if (info.getProvider().equals(LocalMangaProvider.class)) {
-                    provider = new LocalMangaProvider(MainActivity.this);
+                    provider = LocalMangaProvider.getInstacne(MainActivity.this);
                 } else {
                     provider = (MangaProvider) info.getProvider().newInstance();
                 }

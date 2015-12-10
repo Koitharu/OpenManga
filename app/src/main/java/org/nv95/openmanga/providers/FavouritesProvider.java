@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.nv95.openmanga.R;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,6 +21,18 @@ public class FavouritesProvider extends MangaProvider {
     private Context context;
     protected static boolean features[] = {false, false, true};
 
+    private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
+
+    public static FavouritesProvider getInstacne(Context context) {
+        FavouritesProvider instance = instanceReference.get();
+        if (instance == null) {
+            instance = new FavouritesProvider(context);
+            instanceReference = new WeakReference<>(instance);
+        }
+        return instance;
+    }
+
+    @Deprecated
     public FavouritesProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
@@ -117,14 +130,14 @@ public class FavouritesProvider extends MangaProvider {
     }
 
     public static boolean AddToFavourites(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).add(mangaInfo);
+        return FavouritesProvider.getInstacne(context).add(mangaInfo);
     }
 
     public static boolean RemoveFromFavourites(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).remove(mangaInfo);
+        return FavouritesProvider.getInstacne(context).remove(mangaInfo);
     }
 
     public static boolean Has(Context context, MangaInfo mangaInfo) {
-        return new FavouritesProvider(context).has(mangaInfo);
+        return FavouritesProvider.getInstacne(context).has(mangaInfo);
     }
 }

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="?android:activatedBackgroundIndicator">
 
-    <ImageView
+    <org.nv95.openmanga.components.AsyncImageView
         android:layout_width="@dimen/preview_width_small"
         android:layout_height="@dimen/preview_height_small"
         android:id="@+id/imageView"

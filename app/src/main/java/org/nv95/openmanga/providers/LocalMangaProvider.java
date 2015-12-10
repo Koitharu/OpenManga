@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +27,18 @@ public class LocalMangaProvider extends MangaProvider {
     StorageHelper dbHelper;
     private Context context;
 
+    private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);
+
+    public static LocalMangaProvider getInstacne(Context context) {
+        LocalMangaProvider instance = instanceReference.get();
+        if (instance == null) {
+            instance = new LocalMangaProvider(context);
+            instanceReference = new WeakReference<>(instance);
+        }
+        return instance;
+    }
+
+    @Deprecated
     public LocalMangaProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
@@ -154,7 +167,7 @@ public class LocalMangaProvider extends MangaProvider {
             RemoveDir(new File(context.getExternalFilesDir("saved"), String.valueOf(mangaId)));
         }
         database.close();
-        new HistoryProvider(context).remove(ids);
+        HistoryProvider.getInstacne(context).remove(ids);
         return true;
     }
 
