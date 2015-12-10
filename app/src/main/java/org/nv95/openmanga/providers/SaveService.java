@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.ErrorReporter;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,7 +137,7 @@ public class SaveService extends Service {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            StorageHelper dbHelper = new StorageHelper(SaveService.this);
+            StorageHelper dbHelper = StorageHelper.getInstance(SaveService.this);
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             MangaSummary summary;
             File dest;

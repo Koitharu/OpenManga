@@ -12,7 +12,7 @@ import android.util.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.nv95.openmanga.components.ErrorReporter;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

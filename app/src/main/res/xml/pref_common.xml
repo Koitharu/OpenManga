@@ -9,6 +9,9 @@
     <Preference
         android:key="ccache"
         android:title="@string/action_clear_cache" />
+    <!--Preference
+        android:key="csearchhist"
+        android:title="@string/action_clear_search_hist" /-->
     <PreferenceCategory android:title="@string/help">
         <Preference
             android:key="checkupdates"

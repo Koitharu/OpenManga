@@ -81,4 +81,5 @@
     <string name="save_to_gallery">Сохранить в галлерею</string>
     <string name="saving_cancelled">Сохранение отменено</string>
     <string name="share_image">Поделиться изображением</string>
+    <string name="action_clear_search_hist">Очистить историю поиска</string>
 </resources>

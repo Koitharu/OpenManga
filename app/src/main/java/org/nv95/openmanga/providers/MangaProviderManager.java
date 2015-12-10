@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.ErrorReporter;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.util.ArrayList;
 

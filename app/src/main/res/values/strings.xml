@@ -76,6 +76,7 @@
     <string name="error">An error has occurred</string>
     <string name="manga_delete_confirm">This manga will be deleted from local storage</string>
     <string name="saving_cancelled">Saving was cancelled</string>
+    <string name="action_clear_search_hist">Clear search history</string>
 
     <string-array name="directions">
         <item>Left to right</item>

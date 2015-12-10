@@ -8,9 +8,11 @@ import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import org.nv95.openmanga.components.ErrorReporter;
+import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 import java.io.File;
 
@@ -56,6 +58,10 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             case "checkupdates":
                 new UpdateChecker(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
+            case "csearchhist":
+                SearchHistoryAdapter.clearHistory(this);
+                Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
+                return true;
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
@@ -76,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+            //findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("checkupdates").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
