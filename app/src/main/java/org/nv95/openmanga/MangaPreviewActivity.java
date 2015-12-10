@@ -115,7 +115,10 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
             menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
-        menu.findItem(R.id.action_save).setVisible(!LocalMangaProvider.class.equals(mangaSummary.getProvider()));
+        if (LocalMangaProvider.class.equals(mangaSummary.getProvider())) {
+            menu.findItem(R.id.action_save).setVisible(false);
+            menu.findItem(R.id.action_remove).setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -138,6 +141,24 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                 return true;
             case R.id.action_save:
                 SaveService.Save(this, mangaSummary);
+                return true;
+            case R.id.action_remove:
+                new AlertDialog.Builder(MangaPreviewActivity.this)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (new LocalMangaProvider(MangaPreviewActivity.this).remove(new long[]{mangaSummary.getPath().hashCode()})) {
+                                    finish();
+                                } else {
+                                    Toast.makeText(MangaPreviewActivity.this,R.string.error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setMessage(R.string.manga_delete_confirm)
+                        .create().show();
+
                 return true;
             case android.R.id.home:
                 finish();

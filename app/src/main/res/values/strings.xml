@@ -70,14 +70,16 @@
     <string name="size_calculating">Calculating size…</string>
     <string name="action_histclear">Clear history</string>
     <string name="history_will_cleared">History will be erased</string>
+    <string name="file_not_found">File not found</string>
+    <string name="save_to_gallery">Save to gallery</string>
+    <string name="share_image">Share image</string>
+    <string name="error">An error has occurred</string>
+    <string name="manga_delete_confirm">This manga will be deleted from local storage</string>
+    <string name="saving_cancelled">Saving was cancelled</string>
 
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
-    </string-array>
-    <string-array name="image_opts">
-        <item>Save to gallery</item>
-        <item>Share image</item>
     </string-array>
     <string-array name="provider_summs">
         <item>Russian</item>

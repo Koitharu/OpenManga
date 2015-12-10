@@ -73,8 +73,12 @@
         <item>Слева направо</item>
         <item>Сверху вниз</item>
     </string-array>
-    <string-array name="image_opts">
-        <item>Созранить в галерею</item>
-        <item>Поделиться</item>
-    </string-array>
+    <string name="action_histclear">Очистить историю</string>
+    <string name="error">Произошла ошибка</string>
+    <string name="file_not_found">Файл не найден</string>
+    <string name="history_will_cleared">История будет очищена</string>
+    <string name="manga_delete_confirm">Манга будет удалена с устройства</string>
+    <string name="save_to_gallery">Сохранить в галлерею</string>
+    <string name="saving_cancelled">Сохранение отменено</string>
+    <string name="share_image">Поделиться изображением</string>
 </resources>

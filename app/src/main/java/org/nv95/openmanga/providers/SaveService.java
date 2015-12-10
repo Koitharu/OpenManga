@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.ErrorReporter;
@@ -117,12 +118,12 @@ public class SaveService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            stopForeground(false);
+            stopForeground(true);
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
                     .setProgress(0,0,false)
                     .setContentTitle(getString(R.string.saving_manga))
                     .setContentText(getString(R.string.done));
-            notificationManager.notify(1, notificationBuilder.getNotification());
+            notificationManager.notify(2, notificationBuilder.getNotification());
             stopSelf();
         }
 
@@ -169,13 +170,14 @@ public class SaveService extends Service {
                 ArrayList<MangaPage> pages;
                 int i=0;
                 for (MangaChapter o:summary.getChapters()) {
-                    publishProgress(new ProgressInfo(summary.chapters.size(), i, summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
+                    publishProgress(new ProgressInfo(summary.chapters.size()*100, i*100, summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     chapt = new File(dest, String.valueOf(o.getReadLink().hashCode()));
                     chapt.mkdir();
 
                     chapterId = o.readLink.hashCode();
 
                     pages = provider.getPages(o.getReadLink());
+                    int k = 0;
                     for (MangaPage o1: pages) {
                         cv = new ContentValues();
                         cv.put("id", o1.path.hashCode());
@@ -185,6 +187,8 @@ public class SaveService extends Service {
                             break;
                         }
                         database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
+                        k++;
+                        publishProgress(new ProgressInfo(summary.chapters.size()*100, i*100+k*100/pages.size(), summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     }
                     if (isCancelled()) {
                         LocalMangaProvider.RemoveDir(chapt);
@@ -207,6 +211,7 @@ public class SaveService extends Service {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            Toast.makeText(SaveService.this, R.string.saving_cancelled, Toast.LENGTH_SHORT).show();
             stopForeground(true);
             notificationManager.cancel(1);
             stopSelf();
