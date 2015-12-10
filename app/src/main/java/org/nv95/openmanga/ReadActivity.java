@@ -15,7 +15,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -186,42 +188,43 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 if (adapter == null)
                     break;
                 final MangaPage page = adapter.getItem(pager.getCurrentItem());
-                new AlertDialog.Builder(this).setTitle(R.string.action_image_opts)
-                        .setItems(R.array.image_opts, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                File file = new File(page.getPath());
-                                if (!file.exists()) {
-                                    file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
+                PopupMenu popupMenu = new PopupMenu(this,v);
+                popupMenu.inflate(R.menu.popup_image);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        File file = new File(page.getPath());
+                        if (!file.exists()) {
+                            file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
+                        }
+                        if (!file.exists()) {
+                            new ErrorReporter(getApplicationContext()).report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
+                            Toast.makeText(getApplicationContext(), R.string.file_not_found, Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        switch (item.getItemId()) {
+                            case R.id.action_img_save: //save
+                                SaveImage(file, page);
+                                return true;
+                            case R.id.action_img_share: //share
+                                try {
+                                    File dest = new File(getExternalFilesDir("temp"), page.getPath().substring(page.getPath().lastIndexOf('/') + 1));
+                                    LocalMangaProvider.CopyFile(file, dest);
+                                    Intent shareIntent = new Intent();
+                                    shareIntent.setAction(Intent.ACTION_SEND);
+                                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(dest));
+                                    shareIntent.setType("image/jpeg");
+                                    startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+                                } catch (Exception e) {
+                                    new ErrorReporter(getApplicationContext()).report(e);
                                 }
-                                if (!file.exists()) {
-                                    new ErrorReporter(getApplicationContext()).report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
-                                    Toast.makeText(getApplicationContext(), "File not found", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                switch (which) {
-                                    case 0: //save
-                                        SaveImage(file, page);
-                                        dialog.dismiss();
-                                        break;
-                                    case 1: //share
-                                        try {
-                                            File dest = new File(getExternalFilesDir("temp"),page.getPath().substring(page.getPath().lastIndexOf('/') + 1));
-                                            LocalMangaProvider.CopyFile(file, dest);
-                                            Intent shareIntent = new Intent();
-                                            shareIntent.setAction(Intent.ACTION_SEND);
-                                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(dest));
-                                            shareIntent.setType("image/jpeg");
-                                            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
-                                        } catch (Exception e) {
-                                            new ErrorReporter(getApplicationContext()).report(e);
-                                        }
-                                        dialog.dismiss();
-                                        break;
-                                }
-                            }
-                        })
-                        .create().show();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
                 break;
         }
     }

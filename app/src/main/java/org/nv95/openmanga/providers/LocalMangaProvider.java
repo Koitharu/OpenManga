@@ -154,6 +154,7 @@ public class LocalMangaProvider extends MangaProvider {
             RemoveDir(new File(context.getExternalFilesDir("saved"), String.valueOf(mangaId)));
         }
         database.close();
+        new HistoryProvider(context).remove(ids);
         return true;
     }
 
