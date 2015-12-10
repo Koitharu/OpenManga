@@ -113,6 +113,15 @@ public class HistoryProvider extends MangaProvider {
         return true;
     }
 
+    public void clear() {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database.beginTransaction();
+        database.delete(TABLE_NAME, null, null);
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
+    }
+
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = dbHelper.getReadableDatabase();

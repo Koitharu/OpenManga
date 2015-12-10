@@ -1,45 +1,66 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <FrameLayout
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="7dp"
+        android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="true"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:id="@+id/toolbar">
+
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/block_main" >
+        tools:context=".MainActivity">
 
-        <fragment
-            android:id="@+id/fragment"
-            android:name="org.nv95.openmanga.MangaListFragment"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_mangalist" />
+            android:orientation="vertical"
+            android:id="@+id/block_main" >
 
-        <ImageView
-            android:layout_width="@dimen/fab_size"
-            android:layout_height="@dimen/fab_size"
-            android:id="@+id/imageView_fab"
-            android:layout_gravity="right|bottom"
-            android:background="@drawable/background_fab"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:src="@drawable/ic_action_enter_to"
-            android:scaleType="center"
-            android:visibility="visible" />
+            <fragment
+                android:id="@+id/fragment"
+                android:name="org.nv95.openmanga.MangaListFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/fragment_mangalist" />
 
-    </FrameLayout>
+            <ImageView
+                android:layout_width="@dimen/fab_size"
+                android:layout_height="@dimen/fab_size"
+                android:id="@+id/imageView_fab"
+                android:layout_gravity="right|bottom"
+                android:background="@drawable/background_fab"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:elevation="7dp"
+                android:src="@drawable/ic_action_enter_to"
+                android:scaleType="center"
+                android:visibility="visible" />
 
-    <ListView
-        android:id="@+id/listView_menu"
-        android:layout_width="@dimen/drawer_size"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@android:color/background_light"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:listSelector="?android:activatedBackgroundIndicator" />
-</android.support.v4.widget.DrawerLayout>
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/listView_menu"
+            android:layout_width="@dimen/drawer_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/background_light"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:listSelector="?android:activatedBackgroundIndicator" />
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

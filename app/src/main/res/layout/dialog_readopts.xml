@@ -45,7 +45,7 @@
                 android:id="@+id/textView_keepscreen"
                 android:layout_weight="1" />
 
-            <Switch
+            <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/switch_keepscreen"

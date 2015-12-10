@@ -1,8 +1,6 @@
 
 package org.nv95.openmanga;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,7 +46,10 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  *
  */
-public class ReadActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener, NavigationDialog.NavigationListener, AdvancedViewPager.OnScrollListener {
+public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
+        ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener,
+        NavigationDialog.NavigationListener, AdvancedViewPager.OnScrollListener {
+
     private AdvancedViewPager pager;
     private MangaSummary mangaSummary;
     private MangaChapter chapter;

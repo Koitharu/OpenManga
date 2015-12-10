@@ -4,23 +4,15 @@
 
     -->
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_action_navigation_arrow_back</item>
-    </style>
-
-    <style name="AppTheme.Main" parent="AppTheme">
-        <item name="android:homeAsUpIndicator">@drawable/ic_action_navigation_menu</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/primary_dark_dark</item>
+        <item name="colorAccent">@color/accent_light</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="AppTheme.Preview" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/AppTheme.ActionBar.Transparent</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
-    </style>
-    <!-- Base application theme. -->
-    <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@color/transparent_dark</item>
     </style>
 
     <style name="MenuItem">

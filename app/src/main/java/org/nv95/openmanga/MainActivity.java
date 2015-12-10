@@ -1,6 +1,5 @@
 package org.nv95.openmanga;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,8 +7,14 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.components.SimpleAnimator;
@@ -32,7 +36,10 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener, MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+        MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
+
+    private Toolbar toolbar;
     private MangaListFragment listFragment;
     private ListView drawerListView;
     private MangaProviderManager providerManager;
@@ -45,6 +52,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
         listFragment = (MangaListFragment) getFragmentManager().findFragmentById(R.id.fragment);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         drawerListView = (ListView) findViewById(R.id.listView_menu);
@@ -65,36 +73,36 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         drawerListView.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
         drawerListView.setItemChecked(0, true);
         drawerListView.setOnItemClickListener(this);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
-                if (floatingAb.getTag().equals(true) && floatingAb.getVisibility() == View.VISIBLE) {
-                    new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).hide();
-                }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
-                if (floatingAb.getTag().equals(true) && floatingAb.getVisibility() != View.VISIBLE) {
-                    new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).show();
-                }
             }
         };
         drawerLayout.setDrawerListener(toggle);
         listFragment.setScrollListener(this);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setSubtitle(R.string.local_storage);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setSubtitle(R.string.local_storage);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        //// TODO: 10.12.15
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        //SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -117,6 +125,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     public boolean onPrepareOptionsMenu(Menu menu) {
         MangaProvider provider = listFragment.getProvider();
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
+        menu.setGroupVisible(R.id.group_history,drawerListView.getCheckedItemPosition() == 2);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -134,6 +143,23 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             //case R.id.action_search:
                 //startActivity(new Intent(this, SearchActivity.class).putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
                 //return true;
+            case R.id.action_histclear:
+                final MangaProvider prov = listFragment.getProvider();
+                if (prov instanceof HistoryProvider) {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setCancelable(true)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((HistoryProvider)prov).clear();
+                                    listFragment.update();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setMessage(R.string.history_will_cleared)
+                            .create().show();
+                }
+                return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());
                 return true;
@@ -158,7 +184,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 listFragment.setProvider(providerManager.getMangaProvider(position - 4));
         }
         drawerLayout.closeDrawer(GravityCompat.START);
-        getActionBar().setSubtitle(listFragment.getProvider().getName());
+        getSupportActionBar().setSubtitle(listFragment.getProvider().getName());
     }
 
     @Override
@@ -280,7 +306,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             if (intent != null) {
                 startActivity(intent);
             } else {
-                //TODO::message
+                new AlertDialog.Builder(MainActivity.this)
+                        .setCancelable(true)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setMessage(R.string.history_empty)
+                        .create().show();
             }
         }
 

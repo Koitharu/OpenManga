@@ -1,11 +1,12 @@
 package org.nv95.openmanga;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.nv95.openmanga.components.ErrorReporter;
@@ -17,14 +18,16 @@ import java.io.File;
  * Created by nv95 on 03.10.15.
  * Activity with settings fragments
  */
-public class SettingsActivity extends Activity  implements Preference.OnPreferenceClickListener{
+public class SettingsActivity extends AppCompatActivity implements Preference.OnPreferenceClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new CommonSettingsFragment())
+                .replace(R.id.content, new CommonSettingsFragment())
                 .commit();
 
     }
