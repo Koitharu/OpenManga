@@ -41,7 +41,7 @@ public class LocalMangaProvider extends MangaProvider {
     @Deprecated
     public LocalMangaProvider(Context context) {
         this.context = context;
-        dbHelper = new StorageHelper(context);
+        dbHelper = StorageHelper.getInstance(context);
     }
 
     @Override

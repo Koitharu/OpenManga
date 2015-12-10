@@ -1,4 +1,4 @@
-package org.nv95.openmanga.components;
+package org.nv95.openmanga.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;

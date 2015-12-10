@@ -35,7 +35,7 @@ public class FavouritesProvider extends MangaProvider {
     @Deprecated
     public FavouritesProvider(Context context) {
         this.context = context;
-        dbHelper = new StorageHelper(context);
+        dbHelper = StorageHelper.getInstance(context);
     }
 
     @Override

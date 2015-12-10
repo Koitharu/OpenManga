@@ -4,13 +4,25 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
+    private static WeakReference<StorageHelper> instanceReference = new WeakReference<StorageHelper>(null);
 
-    public StorageHelper(Context context) {
-        super(context, "localmanga", null, 6);
+    public static StorageHelper getInstance(Context context) {
+        StorageHelper instance = instanceReference.get();
+        if (instance == null) {
+            instance = new StorageHelper(context);
+            instanceReference = new WeakReference<StorageHelper>(instance);
+        }
+        return instance;
+    }
+
+    private StorageHelper(Context context) {
+        super(context, "localmanga", null, 8);
     }
 
 
@@ -66,6 +78,11 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "id INTEGER,"
                 + "chapterId INTEGER,"                             //1 - dir
                 + "path TEXT"
+                + ");");
+        db.execSQL("DROP TABLE IF EXISTS search_history");
+        db.execSQL("CREATE TABLE search_history ("
+                + "_id INTEGER PRIMARY KEY,"                 //0
+                + "query TEXT"
                 + ");");
     }
 

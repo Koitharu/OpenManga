@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedViewPager;
-import org.nv95.openmanga.components.ErrorReporter;
+import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;

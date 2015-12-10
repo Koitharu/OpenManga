@@ -35,6 +35,7 @@ import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
+import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
@@ -99,13 +100,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        //// TODO: 10.12.15
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         //SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        /*searchView.setSuggestionsAdapter(SearchHistoryAdapter.newInstance(this));
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                SQLiteCursor cursor = (SQLiteCursor) searchView.getSuggestionsAdapter().getItem(position);
+                searchView.setQuery(cursor.getString(1), true);
+                return true;
+            }
+        });*/
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                SearchHistoryAdapter adapter = (SearchHistoryAdapter) searchView.getSuggestionsAdapter();
+                if (adapter != null) {
+                    adapter.addToHistory(query);
+                }
                 startActivity(new Intent(MainActivity.this, SearchActivity.class)
                         .putExtra("query", query)
                         .putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
@@ -225,6 +243,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             int ci = drawerListView.getCheckedItemPosition();
             drawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, providerManager.getNames()));
             drawerListView.setItemChecked(ci, true);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            drawerLayout.closeDrawer(Gravity.LEFT);
+        } else {
+            super.onBackPressed();
         }
     }
 
