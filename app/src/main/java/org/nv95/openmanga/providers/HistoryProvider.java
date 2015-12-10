@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.nv95.openmanga.R;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,6 +21,18 @@ public class HistoryProvider extends MangaProvider {
     private Context context;
     protected static boolean features[] = {false, false, true};
 
+    private static WeakReference<HistoryProvider> instanceReference = new WeakReference<HistoryProvider>(null);
+
+    public static HistoryProvider getInstacne(Context context) {
+        HistoryProvider instance = instanceReference.get();
+        if (instance == null) {
+            instance = new HistoryProvider(context);
+            instanceReference = new WeakReference<HistoryProvider>(instance);
+        }
+        return instance;
+    }
+
+    @Deprecated
     public HistoryProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
@@ -146,24 +159,24 @@ public class HistoryProvider extends MangaProvider {
     }
 
     public static boolean addToHistory(Context context, MangaInfo mangaInfo, int chapter, int page) {
-        return new HistoryProvider(context).add(mangaInfo, chapter, page);
+        return HistoryProvider.getInstacne(context).add(mangaInfo, chapter, page);
     }
 
     public static boolean removeFromHistory(Context context, MangaInfo mangaInfo) {
-        return new HistoryProvider(context).remove(mangaInfo);
+        return HistoryProvider.getInstacne(context).remove(mangaInfo);
     }
 
     public static boolean has(Context context, MangaInfo mangaInfo) {
-        return new HistoryProvider(context).has(mangaInfo);
+        return HistoryProvider.getInstacne(context).has(mangaInfo);
     }
 
     public static HistorySummary get(Context context, MangaInfo mangaInfo) {
-        return new HistoryProvider(context).get(mangaInfo);
+        return HistoryProvider.getInstacne(context).get(mangaInfo);
     }
 
     public static MangaInfo GetLast(Context context) {
         try {
-            return new HistoryProvider(context).getList(0).get(0);
+            return HistoryProvider.getInstacne(context).getList(0).get(0);
         } catch (Exception e) {
             return null;
         }
