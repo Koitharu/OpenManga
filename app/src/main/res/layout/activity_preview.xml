@@ -1,67 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.nv95.openmanga.components.AdvancedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:overScrollMode="never">
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.nv95.openmanga.components.AdvancedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
             <org.nv95.openmanga.components.TopCropImageView
+                android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/details_margin_top"
-                android:id="@+id/imageView"
                 android:layout_gravity="top" />
 
             <ImageView
+                android:id="@+id/ab_read"
                 android:layout_width="@dimen/fab_size"
                 android:layout_height="@dimen/fab_size"
-                android:id="@+id/ab_read"
-                android:layout_marginTop="-28dp"
-                android:layout_marginBottom="-28dp"
-                android:background="@drawable/background_fab"
                 android:layout_gravity="right"
+                android:layout_marginBottom="-28dp"
                 android:layout_marginRight="28dp"
-                android:src="@drawable/ic_fab_read"
-                android:scaleType="center" />
+                android:layout_marginTop="-28dp"
+                android:background="@drawable/background_fab"
+                android:scaleType="center"
+                android:src="@drawable/ic_fab_read" />
 
             <ProgressBar
+                android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="100dp"
-                android:indeterminate="true"
-                android:layout_marginLeft="10dp" />
+                android:indeterminate="true" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Large Text"
                 android:id="@+id/textView_title"
-                android:layout_marginRight="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="3dp" />
+                android:layout_marginRight="100dp"
+                android:layout_marginTop="3dp"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
                 android:id="@+id/textView_summary"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
                 android:id="@+id/textView_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="10dp" />
 
         </LinearLayout>
-</org.nv95.openmanga.components.AdvancedScrollView>
+    </org.nv95.openmanga.components.AdvancedScrollView>
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/gradient_bacground_details"
+        android:elevation="0dp"
+        android:fitsSystemWindows="true"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+</FrameLayout>

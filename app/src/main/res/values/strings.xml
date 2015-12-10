@@ -68,6 +68,8 @@
     <string name="cache_clearing">Clearing cache…</string>
     <string name="cache_size">Cache size: %.1f Mb</string>
     <string name="size_calculating">Calculating size…</string>
+    <string name="action_histclear">Clear history</string>
+    <string name="history_will_cleared">History will be erased</string>
 
     <string-array name="directions">
         <item>Left to right</item>

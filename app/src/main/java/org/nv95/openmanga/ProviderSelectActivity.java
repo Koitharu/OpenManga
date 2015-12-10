@@ -1,7 +1,8 @@
 package org.nv95.openmanga;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +15,7 @@ import org.nv95.openmanga.providers.MangaProviderManager;
 /**
  * Created by nv95 on 14.10.15.
  */
-public class ProviderSelectActivity extends Activity implements AdapterView.OnItemClickListener {
+public class ProviderSelectActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private ListView listView;
     private MangaProviderManager.ProviderSelectAdapter adapter;
     private MangaProviderManager providerManager;
@@ -23,6 +24,7 @@ public class ProviderSelectActivity extends Activity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provselect);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ((InlayoutNotify)findViewById(R.id.disclaimer_notify)).setText(R.string.disclaimer);
         listView = (ListView) findViewById(R.id.listView);
         providerManager = new MangaProviderManager(this);
@@ -32,7 +34,7 @@ public class ProviderSelectActivity extends Activity implements AdapterView.OnIt
             listView.setItemChecked(i, providerManager.isProviderEnabled(adapter.getItem(i)));
         }
         listView.setOnItemClickListener(this);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

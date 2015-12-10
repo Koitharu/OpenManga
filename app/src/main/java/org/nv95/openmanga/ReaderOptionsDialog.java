@@ -1,13 +1,13 @@
 package org.nv95.openmanga;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 /**
  * Created by nv95 on 10.10.15.
@@ -18,7 +18,7 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
     protected OnOptionsChangedListener optionsChangedListener;
     //controls
     protected Spinner spinnerDirection;
-    protected Switch switchKeepScreen;
+    protected SwitchCompat switchKeepScreen;
 
     public interface OnOptionsChangedListener {
         void onOptionsChanged();
@@ -28,7 +28,7 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
         this.context = context;
         View view = View.inflate(context, R.layout.dialog_readopts, null);
         spinnerDirection = (Spinner) view.findViewById(R.id.spinner_direction);
-        switchKeepScreen = (Switch) view.findViewById(R.id.switch_keepscreen);
+        switchKeepScreen = (SwitchCompat) view.findViewById(R.id.switch_keepscreen);
         //loading prefs
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         spinnerDirection.setSelection(prefs.getInt("scroll_direction", 0));

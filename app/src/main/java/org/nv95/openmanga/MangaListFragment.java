@@ -51,6 +51,13 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private LinearLayout messageBlock;
     private AbsListView.OnScrollListener scrollListener;
 
+    public void update() {
+        if (list != null && adapter != null) {
+            list.clear();
+            new ListLoadTask().execute();
+        }
+    }
+
     public interface MangaListListener {
         MangaList onListNeeded(MangaProvider provider, int page) throws Exception;
         String onEmptyList(MangaProvider provider);
@@ -208,11 +215,8 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         switch (item.getItemId()) {
             case R.id.action_remove:
                 provider.remove(absListView.getCheckedItemIds());
-                list.clear();
                 progressBar.setVisibility(View.VISIBLE);
-                if (provider != null) {
-                    new ListLoadTask().execute();
-                }
+                update();
                 mode.finish();
                 return true;
             case R.id.action_cancel:
@@ -256,12 +260,14 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             if (mangaInfos == null) {
                 Toast.makeText(getActivity(), R.string.loading_error, Toast.LENGTH_SHORT).show();
                 endlessScroller.loadingFail();
+                adapter.notifyDataSetInvalidated();
             } else if (mangaInfos.size() == 0) {
                 if (list.size() == 0) {
                     ((TextView)messageBlock.findViewById(R.id.textView)).setText(listListener.onEmptyList(provider));
                     messageBlock.setVisibility(View.VISIBLE);
                 }
                 endlessScroller.loadingFail();
+                adapter.notifyDataSetInvalidated();
             } else {
                 list.addAll(mangaInfos);
                 adapter.notifyDataSetChanged();
