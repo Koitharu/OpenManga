@@ -4,24 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
-    private static WeakReference<StorageHelper> instanceReference = new WeakReference<StorageHelper>(null);
 
-    public static StorageHelper getInstance(Context context) {
-        StorageHelper instance = instanceReference.get();
-        if (instance == null) {
-            instance = new StorageHelper(context);
-            instanceReference = new WeakReference<StorageHelper>(instance);
-        }
-        return instance;
-    }
-
-    private StorageHelper(Context context) {
+    public StorageHelper(Context context) {
         super(context, "localmanga", null, 8);
     }
 
