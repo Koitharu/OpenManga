@@ -137,7 +137,7 @@ public class SaveService extends Service {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            StorageHelper dbHelper = StorageHelper.getInstance(SaveService.this);
+            StorageHelper dbHelper = new StorageHelper(SaveService.this);
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             MangaSummary summary;
             File dest;

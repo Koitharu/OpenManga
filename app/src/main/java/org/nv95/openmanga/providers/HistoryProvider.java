@@ -35,7 +35,7 @@ public class HistoryProvider extends MangaProvider {
     @Deprecated
     public HistoryProvider(Context context) {
         this.context = context;
-        dbHelper = StorageHelper.getInstance(context);
+        dbHelper = new StorageHelper(context);
     }
 
     @Override
