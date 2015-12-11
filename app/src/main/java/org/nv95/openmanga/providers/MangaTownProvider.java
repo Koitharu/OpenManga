@@ -1,9 +1,11 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.text.Html;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.nv95.openmanga.R;
 
 import java.util.ArrayList;
 
@@ -11,12 +13,14 @@ import java.util.ArrayList;
  * Created by nv95 on 06.10.15.
  */
 public class MangaTownProvider extends MangaProvider {
-    protected static boolean features[] = {true, false, false};
+    protected static boolean features[] = {true, false, false, true};
+    protected static final int sorts[] = {R.string.sort_latest};
+    protected static final String sortUrls[] = {"latest"};
 
     @Override
-    public MangaList getList(int page) throws Exception {
+    public MangaList getList(int page, int sort) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://www.mangatown.com/hot/" + (page + 1) + ".htm");
+        Document document = getPage("http://www.mangatown.com/" + sortUrls[sort] + "/" + (page + 1) + ".htm");
         MangaInfo manga;
         Element root = document.body().select("ul.post-list").first();
         for (Element o: root.select("li")) {
@@ -102,6 +106,11 @@ public class MangaTownProvider extends MangaProvider {
     @Override
     public boolean hasFeature(int feature) {
         return features[feature];
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 
 }

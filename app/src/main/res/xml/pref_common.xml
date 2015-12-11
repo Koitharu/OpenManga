@@ -17,6 +17,9 @@
             android:key="checkupdates"
             android:title="@string/check_for_updates" />
         <Preference
+            android:key="about"
+            android:title="@string/about" />
+        <Preference
             android:key="bugreport"
             android:summary="@string/bug_report_summ"
             android:title="@string/bug_report" />

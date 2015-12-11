@@ -1,10 +1,12 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.text.Html;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nv95.openmanga.R;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -13,10 +15,12 @@ import java.util.ArrayList;
  * Created by nv95 on 14.10.15.
  */
 public class MangaReaderProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false};
+    protected static boolean features[] = {true, true, false, true};
+    protected static final int sorts[] = {R.string.sort_popular};
+    protected static final String sortUrls[] = {""};
 
     @Override
-    public MangaList getList(int page) throws Exception {
+    public MangaList getList(int page, int sort) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangareader.net/popular/" + page * 30);
         MangaInfo manga;
@@ -133,5 +137,10 @@ public class MangaReaderProvider extends MangaProvider {
             list.add(manga);
         }
         return list;
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 }

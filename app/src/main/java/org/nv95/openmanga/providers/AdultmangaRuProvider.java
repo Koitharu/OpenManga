@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.text.Html;
 
 import org.jsoup.nodes.Document;
@@ -12,12 +13,12 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class AdultmangaRuProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false};
+    protected static boolean features[] = {true, true, false, true};
 
     @Override
-    public MangaList getList(int page) throws Exception {
+    public MangaList getList(int page, int sort) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://adultmanga.ru/list?sortType=rate&offset=" + page*70 + "&max=70");
+        Document document = getPage("http://adultmanga.ru/list?sortType=" + ReadmangaRuProvider.sortUrls[sort] + "&offset=" + page*70 + "&max=70");
         MangaInfo manga;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o: elements) {
@@ -106,6 +107,11 @@ public class AdultmangaRuProvider extends MangaProvider {
     @Override
     public boolean hasFeature(int feature) {
         return features[feature];
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, ReadmangaRuProvider.sorts);
     }
 
     //advanced--------

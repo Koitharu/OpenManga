@@ -1,8 +1,11 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nv95.openmanga.R;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -11,11 +14,13 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class EHentaiProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false};
+    protected static boolean features[] = {true, true, false, true};
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
+    protected static final int sorts[] = {R.string.sort_latest};
+    protected static final String sortUrls[] = {""};
 
     @Override
-    public MangaList getList(int page) throws Exception {
+    public MangaList getList(int page, int sort) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://g.e-hentai.org/?page=" + page, DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
@@ -124,5 +129,10 @@ public class EHentaiProvider extends MangaProvider {
             list.add(manga);
         }
         return list;
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 }

@@ -46,7 +46,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private boolean grid = false;
     private MangaListAdapter adapter;
     private MangaProvider provider;
-    private MangaList list;
+    private MangaList list = new MangaList();
     private ProgressBar progressBar;
     private EndlessScroller endlessScroller;
     private MangaListListener listListener;
@@ -55,7 +55,9 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
 
     public void update() {
         if (list != null && adapter != null) {
+            endlessScroller.reset();
             list.clear();
+            adapter.notifyDataSetInvalidated();
             new ListLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -114,7 +116,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         }
         int i = getArguments() == null ? -1 : getArguments().getInt("provider", -1);
         provider = i == -1 ? LocalMangaProvider.getInstacne(getActivity()) : new MangaProviderManager(getActivity()).getMangaProvider(i);
-        adapter = new MangaListAdapter(getActivity(),list = new MangaList(), grid);
+        adapter = new MangaListAdapter(getActivity(),list, grid);
         //((LocalMangaProvider)provider).test();
 
         absListView.setAdapter(adapter);
@@ -260,7 +262,10 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             super.onPostExecute(mangaInfos);
             progressBar.setVisibility(View.GONE);
             if (mangaInfos == null) {
-                Toast.makeText(getActivity(), R.string.loading_error, Toast.LENGTH_SHORT).show();
+                if (list.size() == 0) {
+                    Toast.makeText(getActivity(), R.string.loading_error, Toast.LENGTH_SHORT).show();
+                    messageBlock.setVisibility(View.VISIBLE);
+                }
                 endlessScroller.loadingFail();
                 adapter.notifyDataSetInvalidated();
             } else if (mangaInfos.size() == 0) {
@@ -330,7 +335,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             }
             if (!loading && nextPage && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
                 loading = onNextPage(page + 1);
-                if (loading) {
+                if (loading && list.size() != 0) {
                     new SimpleAnimator(footer).forceGravity(Gravity.BOTTOM).show();
                     imageView.startAnimation(rotate);
                 }

@@ -77,6 +77,15 @@
     <string name="manga_delete_confirm">This manga will be deleted from local storage</string>
     <string name="saving_cancelled">Saving was cancelled</string>
     <string name="action_clear_search_hist">Clear search history</string>
+    <string name="about">About</string>
+    <string name="about_msg">OpenManga - Manga reader for Android.\nYou can find source code on GitHub</string>
+    <string name="version">Version: %s</string>
+    <string name="sort_updated">Updated</string>
+    <string name="sort_popular">Popular</string>
+    <string name="sort_latest">Latest</string>
+    <string name="action_sort">Sort order</string>
+    <string name="alphabetical">Alphabetical</string>
+    <string name="rating">By rating</string>
 
     <string-array name="directions">
         <item>Left to right</item>

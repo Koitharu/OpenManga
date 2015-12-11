@@ -334,7 +334,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         if (scrollFactor > 0.5f) {
             scrollFactor = 0.5f;
         }
-        oversrollImageView.setColorFilter(Color.argb((int) (500*(0.5f-scrollFactor)),57,73,171));
+        oversrollImageView.setColorFilter(Color.argb((int) (500*(0.5f-scrollFactor)),183,28,28));
         oversrollImageView.setRotation(scrollFactor * 360 - (direction == 1 ? 180 : 0));
         oversrollImageView.setTag(scrollFactor);
         return true;

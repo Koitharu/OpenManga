@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onPrepareOptionsMenu(Menu menu) {
         MangaProvider provider = listFragment.getProvider();
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
+        menu.findItem(R.id.action_sort).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
         menu.setGroupVisible(R.id.group_history,drawerListView.getCheckedItemPosition() == 2);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
+        final MangaProvider prov = listFragment.getProvider();
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -162,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //startActivity(new Intent(this, SearchActivity.class).putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
                 //return true;
             case R.id.action_histclear:
-                final MangaProvider prov = listFragment.getProvider();
                 if (prov instanceof HistoryProvider) {
                     new AlertDialog.Builder(MainActivity.this)
                             .setCancelable(true)
@@ -175,6 +176,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             })
                             .setNegativeButton(android.R.string.cancel, null)
                             .setMessage(R.string.history_will_cleared)
+                            .create().show();
+                }
+                return true;
+            case R.id.action_sort:
+                if (prov != null && prov.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                    new AlertDialog.Builder(this)
+                            .setSingleChoiceItems(prov.getSortTitles(this),
+                                    MangaProviderManager.GetSort(this, prov),
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            MangaProviderManager.SetSort(MainActivity.this, prov, which);
+                                            listFragment.update();
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .setCancelable(true)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setTitle(R.string.action_sort)
                             .create().show();
                 }
                 return true;
@@ -219,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public MangaList onListNeeded(MangaProvider provider, int page) throws Exception {
-        return provider.getList(page);
+        return provider.getList(page,MangaProviderManager.GetSort(this, provider));
     }
 
     @Override

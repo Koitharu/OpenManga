@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class SaveService extends Service {
     private DownloadTask downloadTask;
     private ArrayList<MangaSummary> mangaList;
     private NotificationManager notificationManager;
+    private PowerManager.WakeLock wakeLock;
 
     private class ProgressInfo {
         public static final byte STATE_PROGRESS = 0;
@@ -59,6 +61,15 @@ public class SaveService extends Service {
         super.onCreate();
         mangaList = new ArrayList<>();
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Saving manga");
+        wakeLock.acquire();
+    }
+
+    @Override
+    public void onDestroy() {
+        wakeLock.release();
+        super.onDestroy();
     }
 
     @Override

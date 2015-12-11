@@ -1,10 +1,12 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.text.Html;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nv95.openmanga.R;
 
 import java.util.ArrayList;
 
@@ -13,12 +15,14 @@ import java.util.ArrayList;
  * provider for http://readmanga.me/
  */
 public class ReadmangaRuProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false};
+    protected static final boolean features[] = {true, true, false, true};
+    protected static final int sorts[] = {R.string.sort_popular,R.string.sort_updated,R.string.rating};
+    protected static final String sortUrls[] = {"popular","updated","votes"};
 
     @Override
-    public MangaList getList(int page) throws Exception {
+    public MangaList getList(int page, int sort) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://readmanga.me/list?sortType=rate&offset=" + page*70 + "&max=70");
+        Document document = getPage("http://readmanga.me/list?sortType=" + sortUrls[sort] + "&offset=" + page*70 + "&max=70");
         MangaInfo manga;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o: elements) {
@@ -112,6 +116,11 @@ public class ReadmangaRuProvider extends MangaProvider {
     @Override
     public boolean hasFeature(int feature) {
         return features[feature];
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 
     @Override
