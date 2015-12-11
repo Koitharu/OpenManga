@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.jsoup.Jsoup;
@@ -19,7 +20,11 @@ import java.util.ArrayList;
 public abstract class MangaProvider {
     protected boolean features[];
     //content access methods
-    public abstract MangaList getList(int page) throws Exception;
+    public abstract MangaList getList(int page, int sort) throws Exception;
+    @Deprecated
+    public MangaList getList(int page) throws Exception {
+        return getList(page, 0);
+    }
     public abstract MangaSummary getDetailedInfo(MangaInfo mangaInfo);
     public abstract ArrayList<MangaPage> getPages(String readLink);
     public abstract String getPageImage(MangaPage mangaPage);
@@ -34,7 +39,19 @@ public abstract class MangaProvider {
     //other methods
     public abstract String getName();
     public abstract boolean hasFeature(int feature);
+    @Nullable
+    public String[] getSortTitles(Context context) {
+        return null;
+    }
     //String[] getGenres();
+
+    protected String[] getTitles(Context context, int[] ids) {
+        String[] res = new String[ids.length];
+        for (int i=0;i<ids.length;i++) {
+            res[i] = context.getString(ids[i]);
+        }
+        return res;
+    }
 
     //******************************static*********************************
     protected static Document getPage(String url) throws Exception {

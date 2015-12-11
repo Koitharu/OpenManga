@@ -82,4 +82,13 @@
     <string name="saving_cancelled">Сохранение отменено</string>
     <string name="share_image">Поделиться изображением</string>
     <string name="action_clear_search_hist">Очистить историю поиска</string>
+    <string name="action_sort">Сортировка</string>
+    <string name="about">О программе</string>
+    <string name="about_msg">OpenManga - приложение для чтения манги под Android.\nИсходный код доступен на GitHub</string>
+    <string name="sort_latest">Новое</string>
+    <string name="sort_popular">Популярное</string>
+    <string name="sort_updated">Обновлённые</string>
+    <string name="version">Версия: %s</string>
+    <string name="alphabetical">По алфавиту</string>
+    <string name="rating">По оценкам</string>
 </resources>

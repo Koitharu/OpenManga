@@ -21,6 +21,7 @@ public class MangaProviderManager {
     public static final int FUTURE_MULTIPAGE = 0;
     public static final int FEAUTURE_SEARCH = 1;
     public static final int FEAUTURE_REMOVE = 2;
+    public static final int FEAUTURE_SORT = 3;
     private Context context;
     ArrayList<ProviderSumm> providers;
     public static String[] allProviders = {"ReadManga","AdultManga", "E-Hentai", "MangaTown", "MangaReader"}; //
@@ -81,6 +82,17 @@ public class MangaProviderManager {
 
     public boolean isProviderEnabled(String name) {
         return context.getSharedPreferences("providers", Context.MODE_PRIVATE).getBoolean(name, true);
+    }
+
+    public static void SetSort(Context context, MangaProvider provider, int sort) {
+        context.getSharedPreferences("sort", Context.MODE_PRIVATE)
+                .edit()
+                .putInt(provider.getName(), sort)
+                .apply();
+    }
+
+    public static int GetSort(Context context, MangaProvider provider) {
+        return context.getSharedPreferences("sort", Context.MODE_PRIVATE).getInt(provider.getName(), 0);
     }
 
     public ProviderSelectAdapter getAdapter() {

@@ -45,7 +45,7 @@ public class HistoryProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList getList(int page) throws IOException {
+    public MangaList getList(int page, int sort) throws IOException {
         if (page > 0)
             return null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();
