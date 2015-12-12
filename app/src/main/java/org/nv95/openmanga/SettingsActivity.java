@@ -1,8 +1,10 @@
 package org.nv95.openmanga;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -58,9 +60,6 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             case "bugreport":
                 ErrorReporter.sendLog(this);
                 return true;
-            case "checkupdates":
-                new UpdateChecker(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                return true;
             case "csearchhist":
                 SearchHistoryAdapter.clearHistory(this);
                 Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
@@ -92,7 +91,6 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             //findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-            findPreference("checkupdates").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             String version;
@@ -175,7 +173,16 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     private void aboutDialog() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.about_msg)
-                .setPositiveButton(R.string.close, null)
+                .setNegativeButton(R.string.close, null)
+                .setPositiveButton(R.string.check_for_updates, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String url = "https://github.com/nv95/OpenManga/tree/master/builds";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                    }
+                })
                 .create().show();
     }
 }

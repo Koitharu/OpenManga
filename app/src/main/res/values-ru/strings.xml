@@ -52,17 +52,12 @@
     <string name="bug_report_message">Отправив отчёт об ошибке Вы поможете разработчикам. Отладочный лог может содержать адреса некоторых просмотренных страниц.</string>
     <string name="action_unfavourite">Удалить из избранного</string>
     <string name="check_for_updates">Проверить обновления</string>
-    <string name="check_updates_error">Проверка обновлений не удалась</string>
     <string name="download">Скачать</string>
     <string name="help">Помощь</string>
     <string name="history_empty">История пуста</string>
-    <string name="new_version_available">Доступно обновление</string>
     <string name="no_favourites">Нет избранных</string>
     <string name="no_manga_found">Ничего не найдено</string>
     <string name="no_saved_manga">Нет сохранённой манги</string>
-    <string name="updates_checking">Проверка обновлений…</string>
-    <string name="version_available" formatted="false">Доступна новая версия %s %s</string>
-    <string name="version_uptodate">Установлена последняя версия</string>
     <string name="already_saved">Эта манга уже сохранена</string>
     <string name="cache_clearing">Очистка кэша…</string>
     <string name="cache_size">Размер кэша: %.1f Мб</string>
@@ -109,4 +104,8 @@
     <string name="genre_school">Школа</string>
     <string name="genre_seinen">Cэйнэн</string>
     <string name="genre_yaoi">Яой</string>
+    <string name="genre_misc">Другое</string>
+    <string name="genre_cosplay">Косплей</string>
+    <string name="genre_doujinshi">Додзинси</string>
+    <string name="genre_manga">Манга</string>
 </resources>
