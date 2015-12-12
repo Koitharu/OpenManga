@@ -1,6 +1,7 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,19 +15,20 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class EHentaiProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false, true, false};
+    protected static boolean features[] = {true, true, false, false, true};
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
-    protected static final int sorts[] = {R.string.sort_latest};
-    protected static final String sortUrls[] = {""};
+    protected static final int genres[] = {R.string.genre_all,R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset,R.string.genre_cosplay,R.string.genre_asianporn,R.string.genre_misc};
+    protected static final String genreUrls[] = {"f_doujinshi","f_manga","f_artistcg","f_gamecg","f_western","f_non-h","f_imageset","f_cosplay","f_asianporn","f_misc"};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://g.e-hentai.org/?page=" + page, DEF_COOKIE);
+        Document document = getPage("http://g.e-hentai.org/?page=" + page +
+                (genre == 0 ? "" : "&"+genreUrls[genre-1] + "=on&f_apply=Apply+Filter"), DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
-        if (root == null) {
+        if (elements == null) {
             return null;
         }
         for (Element o: elements) {
@@ -131,8 +133,9 @@ public class EHentaiProvider extends MangaProvider {
         return list;
     }
 
+    @Nullable
     @Override
-    public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+    public String[] getGenresTitles(Context context) {
+        return super.getTitles(context, genres);
     }
 }

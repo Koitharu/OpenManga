@@ -106,6 +106,16 @@
     <string name="genre_genderbender">Gender bender</string>
     <string name="genre_seinen">Seinen</string>
     <string name="genre_yaoi">Yaoi</string>
+    <string name="genre_doujinshi">Doujinshi</string>
+    <string name="genre_manga">Manga</string>
+    <string name="genre_artistcg">Artist CG</string>
+    <string name="genre_gamecg">Game CG</string>
+    <string name="genre_western">Western</string>
+    <string name="genre_nonh">Non-H</string>
+    <string name="genre_imageset">Image set</string>
+    <string name="genre_misc">Misc</string>
+    <string name="genre_asianporn">Asian porn</string>
+    <string name="genre_cosplay">Cosplay</string>
 
     <string-array name="directions">
         <item>Left to right</item>
