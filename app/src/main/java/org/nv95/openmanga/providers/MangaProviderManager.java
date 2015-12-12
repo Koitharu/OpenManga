@@ -64,7 +64,7 @@ public class MangaProviderManager {
         try {
             return (MangaProvider) providers.get(index).aClass.newInstance();
         } catch (Exception e) {
-            new ErrorReporter(context).report(e);
+            ErrorReporter.getInstance().report(e);
             return null;
         }
     }

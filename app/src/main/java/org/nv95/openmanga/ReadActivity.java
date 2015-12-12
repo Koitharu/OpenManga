@@ -203,7 +203,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             file = new File(ReadActivity.this.getExternalCacheDir(), String.valueOf(page.getPath().hashCode()));
                         }
                         if (!file.exists()) {
-                            new ErrorReporter(getApplicationContext()).report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
+                            ErrorReporter.getInstance().report("# ReadActivity.SaveImg.NotFound\n page.path: " + page.getPath());
                             Toast.makeText(getApplicationContext(), R.string.file_not_found, Toast.LENGTH_SHORT).show();
                             return true;
                         }
@@ -221,7 +221,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                                     shareIntent.setType("image/jpeg");
                                     startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
                                 } catch (Exception e) {
-                                    new ErrorReporter(getApplicationContext()).report(e);
+                                    ErrorReporter.getInstance().report(e);
                                 }
                                 return true;
                             default:

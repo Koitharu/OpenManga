@@ -10,32 +10,39 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
  * Created by nv95 on 16.10.15.
  */
-public class ErrorReporter {
+public class ErrorReporter implements Thread.UncaughtExceptionHandler {
+    private static ErrorReporter instance;
     private Context context;
-    private FileOutputStream ostream;
+    private Thread.UncaughtExceptionHandler oldHandler;
 
-    public ErrorReporter(Context context) {
+    public static ErrorReporter getInstance() {
+        return instance;
+    }
+
+    public static void Init(Context context) {
+        instance = new ErrorReporter(context);
+        instance.oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(instance);
+    }
+
+    private ErrorReporter(Context context) {
         this.context = context;
-        File file = new File(context.getExternalFilesDir("debug"), "log.txt");
-        try {
-             ostream = new FileOutputStream(file, true);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public void report(String msg) {
         try {
+            File file = new File(context.getExternalFilesDir("debug"), "log.txt");
+            FileOutputStream ostream = new FileOutputStream(file, true);
             msg += "\n ---- \n";
             ostream.write(msg.getBytes());
             ostream.flush();
+            ostream.close();
             //Toast.makeText(context, R.string.exception_logged, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,13 +50,14 @@ public class ErrorReporter {
     }
 
     public void report(Exception e) {
-        report(e.getLocalizedMessage());
+        report(e.getMessage());
     }
 
     @Override
-    protected void finalize() throws Throwable {
-        ostream.close();
-        super.finalize();
+    public void uncaughtException(Thread thread, Throwable ex) {
+        report("!CRASH\n\n" + ex.getMessage() + "\n\n" +ex.getCause() + "\n");
+        if(oldHandler != null)
+            oldHandler.uncaughtException(thread, ex);
     }
 
     public static void sendLog(final Context context){
