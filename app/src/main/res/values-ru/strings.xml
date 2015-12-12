@@ -102,4 +102,11 @@
     <string name="genre_shoujo">Сёдзё</string>
     <string name="genre_shounen">Сёнэн</string>
     <string name="genre_vampires">Вампиры</string>
+    <string name="genre_adventure">Приключения</string>
+    <string name="genre_comedy">Комедия</string>
+    <string name="genre_ecchi">Этти</string>
+    <string name="genre_romance">Романтика</string>
+    <string name="genre_school">Школа</string>
+    <string name="genre_seinen">Cэйнэн</string>
+    <string name="genre_yaoi">Яой</string>
 </resources>
