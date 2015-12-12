@@ -14,9 +14,6 @@
         android:title="@string/action_clear_search_hist" /-->
     <PreferenceCategory android:title="@string/help">
         <Preference
-            android:key="checkupdates"
-            android:title="@string/check_for_updates" />
-        <Preference
             android:key="about"
             android:title="@string/about" />
         <Preference

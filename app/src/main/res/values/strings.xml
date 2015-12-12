@@ -55,14 +55,9 @@
     <string name="no_manga_found">No manga found</string>
     <string name="history_empty">History is empty</string>
     <string name="no_favourites">No favourites</string>
-    <string name="new_version_available">Update available</string>
-    <string name="version_available" formatted="false">New version %s %s is available</string>
-    <string name="updates_checking">Checking for updates…</string>
-    <string name="version_uptodate">Your version is already up-to-date</string>
     <string name="download">Download</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="help">Help</string>
-    <string name="check_updates_error">Checking for updates failed</string>
     <string name="already_saved">This manga is already saved on your device</string>
     <string name="action_clear_cache">Clear image cache</string>
     <string name="cache_clearing">Clearing cache…</string>
