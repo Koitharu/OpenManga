@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView headers[];
     private ActionBarDrawerToggle toggle;
     private ImageView floatingAb;
+    private int genre = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         MangaProvider provider = listFragment.getProvider();
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         menu.findItem(R.id.action_sort).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
+        menu.findItem(R.id.action_genre).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
         menu.setGroupVisible(R.id.group_history,drawerListView.getCheckedItemPosition() == 2);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -198,6 +200,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             .create().show();
                 }
                 return true;
+            case R.id.action_genre:
+                if (prov != null && prov.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
+                    new AlertDialog.Builder(this)
+                            .setSingleChoiceItems(prov.getGenresTitles(this),
+                                    genre,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            genre = which;
+                                            listFragment.update();
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .setCancelable(true)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .setTitle(R.string.action_genre)
+                            .create().show();
+                }
+                return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());
                 return true;
@@ -208,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        genre = 0;
         switch (position) {
             case 0:
                 listFragment.setProvider(LocalMangaProvider.getInstacne(this));
@@ -239,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public MangaList onListNeeded(MangaProvider provider, int page) throws Exception {
-        return provider.getList(page,MangaProviderManager.GetSort(this, provider));
+        return provider.getList(page,MangaProviderManager.GetSort(this, provider), genre);
     }
 
     @Override

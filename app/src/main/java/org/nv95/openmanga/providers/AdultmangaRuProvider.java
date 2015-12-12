@@ -6,6 +6,7 @@ import android.text.Html;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nv95.openmanga.R;
 
 import java.util.ArrayList;
 
@@ -13,24 +14,33 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class AdultmangaRuProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false, true};
+    protected static boolean features[] = {true, true, false, true, true};
+    protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem, R.string.genre_mystery,R.string.genre_shoujo,R.string.genre_shounen,R.string.genre_horror,R.string.genre_school,R.string.genre_ecchi};
+    protected static final String genreUrls[] = {"art","action","martial_arts","vampires","harem","mystery","shoujo","shounen","horror","school","ecchi"};
 
     @Override
-    public MangaList getList(int page, int sort) throws Exception {
+    public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://adultmanga.ru/list?sortType=" + ReadmangaRuProvider.sortUrls[sort] + "&offset=" + page*70 + "&max=70");
+        Document document = getPage("http://mintmanga.com/list" +
+                                (genre == 0 ? "" : "/genre/" + genreUrls[genre-1])
+                                + "?sortType=" + ReadmangaRuProvider.sortUrls[sort] + "&offset=" + page*70 + "&max=70");
         MangaInfo manga;
+        Element t;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o: elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h3").first().text();
+            t = o.select("h3").first();
+            if (t == null) {
+                continue;
+            }
+            manga.name = t.text();
             try {
                 manga.subtitle = o.select("h4").first().text();
             } catch (Exception e) {
                 manga.subtitle = "";
             }
             manga.summary = o.select("a.element-link").text();
-            manga.path = "http://adultmanga.ru" + o.select("a").first().attr("href");
+            manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = AdultmangaRuProvider.class;
             list.add(manga);
@@ -44,7 +54,7 @@ public class AdultmangaRuProvider extends MangaProvider {
         try {
             Document document = getPage(mangaInfo.getPath());
             Element e = document.body();
-            summary.readLink = "http://adultmanga.ru" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
+            summary.readLink = "http://mintmanga.com" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
             String descr = e.select("div.manga-description").first().html();
             int p = descr.indexOf("<a h");
             if (p>0)
@@ -56,7 +66,7 @@ public class AdultmangaRuProvider extends MangaProvider {
             for (Element o:e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = "http://adultmanga.ru" + o.attr("href") + "?mature=1";;
+                chapter.readLink = "http://mintmanga.com" + o.attr("href") + "?mature=1";;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -101,7 +111,7 @@ public class AdultmangaRuProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return "AdultManga";
+        return "MintManga";
     }
 
     @Override
@@ -112,6 +122,11 @@ public class AdultmangaRuProvider extends MangaProvider {
     @Override
     public String[] getSortTitles(Context context) {
         return super.getTitles(context, ReadmangaRuProvider.sorts);
+    }
+
+    @Override
+    public String[] getGenresTitles(Context context) {
+        return super.getTitles(context, genres);
     }
 
     //advanced--------
@@ -126,14 +141,14 @@ public class AdultmangaRuProvider extends MangaProvider {
         String data[] = new String[] {
             "q", query
         };
-        Document document = postPage("http://adultmanga.ru/search", data);
+        Document document = postPage("http://mintmanga.com/search", data);
         MangaInfo manga;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o: elements) {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
             manga.summary = o.select("a.element-link").text();
-            manga.path = "http://adultmanga.ru" + o.select("a").first().attr("href");
+            manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = AdultmangaRuProvider.class;
             list.add(manga);

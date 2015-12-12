@@ -15,19 +15,28 @@ import java.util.ArrayList;
  * provider for http://readmanga.me/
  */
 public class ReadmangaRuProvider extends MangaProvider {
-    protected static final boolean features[] = {true, true, false, true};
+    protected static final boolean features[] = {true, true, false, true, true};
     protected static final int sorts[] = {R.string.sort_popular,R.string.sort_updated,R.string.rating};
     protected static final String sortUrls[] = {"popular","updated","votes"};
+    protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem, R.string.genre_mystery,R.string.genre_shoujo,R.string.genre_shounen,R.string.genre_horror,R.string.genre_school,R.string.genre_ecchi};
+    protected static final String genreUrls[] = {"art","action","martial_arts","vampires","harem","mystery","shoujo","shounen","horror","school","ecchi"};
 
     @Override
-    public MangaList getList(int page, int sort) throws Exception {
+    public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://readmanga.me/list?sortType=" + sortUrls[sort] + "&offset=" + page*70 + "&max=70");
+        Document document = getPage("http://readmanga.me/list" +
+                (genre == 0 ? "" : "/genre/" + genreUrls[genre-1])
+                + "?sortType=" + sortUrls[sort] + "&offset=" + page*70 + "&max=70");
         MangaInfo manga;
+        Element t;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o: elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h3").first().text();
+            t = o.select("h3").first();
+            if (t == null) {
+                continue;
+            }
+            manga.name = t.text();
             try {
                 manga.subtitle = o.select("h4").first().text();
             } catch (Exception e) {
@@ -121,6 +130,11 @@ public class ReadmangaRuProvider extends MangaProvider {
     @Override
     public String[] getSortTitles(Context context) {
         return super.getTitles(context, sorts);
+    }
+
+    @Override
+    public String[] getGenresTitles(Context context) {
+        return super.getTitles(context, genres);
     }
 
     @Override

@@ -92,6 +92,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         pager.addOnPageChangeListener(this);
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
+        if (mangaSummary.getChapters().size() == 0) {
+            Toast.makeText(this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         if (savedInstanceState != null) {
             chapterId = savedInstanceState.getInt("chapter");
             pageId = savedInstanceState.getInt("page");
