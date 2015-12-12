@@ -19,7 +19,7 @@ public class FavouritesProvider extends MangaProvider {
     private static final String TABLE_NAME = "favourites";
     StorageHelper dbHelper;
     private Context context;
-    protected static boolean features[] = {false, false, true};
+    protected static boolean features[] = {false, false, true, false};
 
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
 
