@@ -99,6 +99,13 @@
     <string name="genre_horror">Horror</string>
     <string name="genre_ecchi">Ecchi</string>
     <string name="genre_school">School</string>
+    <string name="genre_romance">Romance</string>
+    <string name="genre_adventure">Adventure</string>
+    <string name="genre_comedy">Comedy</string>
+    <string name="genre_youkai">Youkai</string>
+    <string name="genre_genderbender">Gender bender</string>
+    <string name="genre_seinen">Seinen</string>
+    <string name="genre_yaoi">Yaoi</string>
 
     <string-array name="directions">
         <item>Left to right</item>

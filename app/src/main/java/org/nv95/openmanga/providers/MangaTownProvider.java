@@ -13,14 +13,18 @@ import java.util.ArrayList;
  * Created by nv95 on 06.10.15.
  */
 public class MangaTownProvider extends MangaProvider {
-    protected static boolean features[] = {true, false, false, true, false};
+    protected static boolean features[] = {true, false, false, true, true};
     protected static final int sorts[] = {R.string.sort_latest,R.string.sort_popular};
     protected static final String sortUrls[] = {"latest","hot"};
+    protected static final int genres[] = {R.string.genre_all, R.string.genre_romance, R.string.genre_adventure, R.string.genre_school, R.string.genre_comedy,R.string.genre_vampires, R.string.genre_youkai, R.string.genre_horror,R.string.genre_genderbender,R.string.genre_harem,R.string.genre_ecchi,R.string.genre_shoujo,R.string.genre_seinen,R.string.genre_shounen,R.string.genre_yaoi};
+    protected static final String genreUrls[] = {"romance","adventure","school_life","comedy","vampire","youkai","horror","gender_bender","harem","ecchi","shoujo","seinen","shounen","yaoi"};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://www.mangatown.com/" + sortUrls[sort] + "/" + (page + 1) + ".htm");
+        Document document = getPage("http://www.mangatown.com/" + sortUrls[sort] + "/"
+                + (genre == 0 ? "" : genreUrls[genre-1] + "/")
+                + (page + 1) + ".htm");
         MangaInfo manga;
         Element root = document.body().select("ul.post-list").first();
         for (Element o: root.select("li")) {
@@ -113,4 +117,8 @@ public class MangaTownProvider extends MangaProvider {
         return super.getTitles(context, sorts);
     }
 
+    @Override
+    public String[] getGenresTitles(Context context) {
+        return super.getTitles(context, genres);
+    }
 }
