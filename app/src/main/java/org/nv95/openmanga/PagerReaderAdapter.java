@@ -241,7 +241,7 @@ public class PagerReaderAdapter extends PagerAdapter {
             viewHolder.progressBar.setVisibility(View.GONE);
             String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
             viewHolder.textView.setText(msg);
-            new ErrorReporter(context).report("# PageLoadTask.onImageLoadError\n page.path: " + page.getPath());
+            ErrorReporter.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.getPath());
         }
 
         @Override
@@ -249,7 +249,7 @@ public class PagerReaderAdapter extends PagerAdapter {
             viewHolder.progressBar.setVisibility(View.GONE);
             String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
             viewHolder.textView.setText(msg);
-            new ErrorReporter(context).report("# PageLoadTask.onTileLoadError\n page.path: " + page.getPath());
+            ErrorReporter.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.getPath());
         }
     }
 }

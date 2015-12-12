@@ -164,7 +164,7 @@ public class SaveService extends Service {
                 try {
                     provider = (MangaProvider) summary.getProvider().newInstance();
                 } catch (Exception e) {
-                    new ErrorReporter(getApplicationContext()).report(e);
+                    ErrorReporter.getInstance().report(e);
                     continue;
                 }
                 dest = new File(getExternalFilesDir("saved"), String.valueOf(mangaId = summary.getReadLink().hashCode()));

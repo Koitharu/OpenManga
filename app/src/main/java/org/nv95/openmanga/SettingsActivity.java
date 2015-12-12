@@ -183,6 +183,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                         startActivity(i);
                     }
                 })
+                .setTitle(R.string.app_name)
                 .create().show();
     }
 }

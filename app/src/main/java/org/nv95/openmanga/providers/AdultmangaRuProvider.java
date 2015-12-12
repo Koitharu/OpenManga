@@ -3,10 +3,12 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.text.Html;
 
+import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.util.ArrayList;
 
@@ -62,7 +64,7 @@ public class AdultmangaRuProvider extends MangaProvider {
             summary.description = Html.fromHtml(descr).toString();
             summary.preview = e.select("div.picture-fotorama").first().child(0).attr("data-full");
             MangaChapter chapter;
-            e = e.getElementById("chapters-list");
+            e = e.select("table.table").first();
             for (Element o:e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
@@ -82,15 +84,21 @@ public class AdultmangaRuProvider extends MangaProvider {
         try {
             Document document = getPage(readLink);
             MangaPage page;
+            int start= 0;
+            String s;
             Elements es = document.body().select("script");
             for (Element o: es) {
-                if (o.html().contains("var pictures")) {
-                    String s = o.html();
-                    int p = s.indexOf("];");
-                    s = s.substring(s.indexOf('['), p);
-                    p = 0;
-                    while ((p = s.indexOf(":\"",p)) > 0) {
-                        page = new MangaPage(s.substring(p+2,s.indexOf("\",",p)));
+                s = o.html();
+                start = s.indexOf("rm_h.init(");
+                if (start != -1) {
+                    start += 10;
+                    int p = s.lastIndexOf("]") + 1;
+                    s = s.substring(start, p);
+                    JSONArray array = new JSONArray(s);
+                    JSONArray o1;
+                    for (int i=0;i<array.length();i++) {
+                        o1 = array.getJSONArray(i);
+                        page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
                         page.provider = AdultmangaRuProvider.class;
                         pages.add(page);
                         p++;
@@ -99,7 +107,7 @@ public class AdultmangaRuProvider extends MangaProvider {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorReporter.getInstance().report(e);
         }
         return null;
     }
