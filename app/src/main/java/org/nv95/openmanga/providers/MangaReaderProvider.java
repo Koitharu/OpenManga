@@ -15,12 +15,12 @@ import java.util.ArrayList;
  * Created by nv95 on 14.10.15.
  */
 public class MangaReaderProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false, true};
+    protected static boolean features[] = {true, true, false, true, false};
     protected static final int sorts[] = {R.string.sort_popular};
     protected static final String sortUrls[] = {""};
 
     @Override
-    public MangaList getList(int page, int sort) throws Exception {
+    public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangareader.net/popular/" + page * 30);
         MangaInfo manga;

@@ -91,4 +91,15 @@
     <string name="version">Версия: %s</string>
     <string name="alphabetical">По алфавиту</string>
     <string name="rating">По оценкам</string>
+    <string name="action_genre">Жанры</string>
+    <string name="genre_action">Боевик</string>
+    <string name="genre_all">Все</string>
+    <string name="genre_art">Арт</string>
+    <string name="genre_harem">Гарем</string>
+    <string name="genre_horror">Ужасы</string>
+    <string name="genre_martialarts">Боевые искусства</string>
+    <string name="genre_mystery">Мистика</string>
+    <string name="genre_shoujo">Сёдзё</string>
+    <string name="genre_shounen">Сёнэн</string>
+    <string name="genre_vampires">Вампиры</string>
 </resources>

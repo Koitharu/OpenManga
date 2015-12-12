@@ -51,7 +51,7 @@ public class LocalMangaProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList getList(int page, int sort) {
+    public MangaList getList(int page, int sort, int genre) {
         if (page > 0)
             return null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();

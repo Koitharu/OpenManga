@@ -86,6 +86,19 @@
     <string name="action_sort">Sort order</string>
     <string name="alphabetical">Alphabetical</string>
     <string name="rating">By rating</string>
+    <string name="genre_all">All</string>
+    <string name="action_genre">Genres</string>
+    <string name="genre_art">Art</string>
+    <string name="genre_action">Action</string>
+    <string name="genre_martialarts">Martial arts</string>
+    <string name="genre_vampires">Vampires</string>
+    <string name="genre_harem">Harem</string>
+    <string name="genre_mystery">Mystery</string>
+    <string name="genre_shoujo">Shoujo</string>
+    <string name="genre_shounen">Shounen</string>
+    <string name="genre_horror">Horror</string>
+    <string name="genre_ecchi">Ecchi</string>
+    <string name="genre_school">School</string>
 
     <string-array name="directions">
         <item>Left to right</item>

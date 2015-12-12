@@ -19,7 +19,7 @@ public class FavouritesProvider extends MangaProvider {
     private static final String TABLE_NAME = "favourites";
     StorageHelper dbHelper;
     private Context context;
-    protected static boolean features[] = {false, false, true, false};
+    protected static boolean features[] = {false, false, true, false, false};
 
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
 
@@ -45,7 +45,7 @@ public class FavouritesProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList getList(int page, int sort) throws IOException {
+    public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();

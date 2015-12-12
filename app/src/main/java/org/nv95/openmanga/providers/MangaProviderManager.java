@@ -22,9 +22,10 @@ public class MangaProviderManager {
     public static final int FEAUTURE_SEARCH = 1;
     public static final int FEAUTURE_REMOVE = 2;
     public static final int FEAUTURE_SORT = 3;
+    public static final int FEAUTURE_GENRES = 4;
     private Context context;
     ArrayList<ProviderSumm> providers;
-    public static String[] allProviders = {"ReadManga","AdultManga", "E-Hentai", "MangaTown", "MangaReader"}; //
+    public static String[] allProviders = {"ReadManga","MintManga", "E-Hentai", "MangaTown", "MangaReader"}; //
     private static final Class<?> mangaProviders[] = {
             ReadmangaRuProvider.class,
             AdultmangaRuProvider.class,
@@ -88,7 +89,7 @@ public class MangaProviderManager {
         context.getSharedPreferences("sort", Context.MODE_PRIVATE)
                 .edit()
                 .putInt(provider.getName(), sort)
-                .apply();
+                .commit();
     }
 
     public static int GetSort(Context context, MangaProvider provider) {

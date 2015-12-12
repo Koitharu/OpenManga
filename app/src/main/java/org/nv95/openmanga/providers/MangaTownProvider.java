@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by nv95 on 06.10.15.
  */
 public class MangaTownProvider extends MangaProvider {
-    protected static boolean features[] = {true, false, false, true};
-    protected static final int sorts[] = {R.string.sort_latest};
-    protected static final String sortUrls[] = {"latest"};
+    protected static boolean features[] = {true, false, false, true, false};
+    protected static final int sorts[] = {R.string.sort_latest,R.string.sort_popular};
+    protected static final String sortUrls[] = {"latest","hot"};
 
     @Override
-    public MangaList getList(int page, int sort) throws Exception {
+    public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangatown.com/" + sortUrls[sort] + "/" + (page + 1) + ".htm");
         MangaInfo manga;

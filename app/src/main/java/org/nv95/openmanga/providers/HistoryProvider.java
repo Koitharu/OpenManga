@@ -19,7 +19,7 @@ public class HistoryProvider extends MangaProvider {
     private static final String TABLE_NAME = "history";
     StorageHelper dbHelper;
     private Context context;
-    protected static boolean features[] = {false, false, true, false};
+    protected static boolean features[] = {false, false, true, false, false};
 
     private static WeakReference<HistoryProvider> instanceReference = new WeakReference<HistoryProvider>(null);
 
@@ -45,7 +45,7 @@ public class HistoryProvider extends MangaProvider {
     }
 
     @Override
-    public MangaList getList(int page, int sort) throws IOException {
+    public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();

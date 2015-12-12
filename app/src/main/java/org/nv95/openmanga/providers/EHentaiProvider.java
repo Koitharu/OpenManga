@@ -14,13 +14,13 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class EHentaiProvider extends MangaProvider {
-    protected static boolean features[] = {true, true, false, true};
+    protected static boolean features[] = {true, true, false, true, false};
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
     protected static final int sorts[] = {R.string.sort_latest};
     protected static final String sortUrls[] = {""};
 
     @Override
-    public MangaList getList(int page, int sort) throws Exception {
+    public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://g.e-hentai.org/?page=" + page, DEF_COOKIE);
         Element root = document.body().select("div.itg").first();

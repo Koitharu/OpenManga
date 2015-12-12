@@ -20,10 +20,14 @@ import java.util.ArrayList;
 public abstract class MangaProvider {
     protected boolean features[];
     //content access methods
-    public abstract MangaList getList(int page, int sort) throws Exception;
+    public abstract MangaList getList(int page, int sort, int genre) throws Exception;
+    @Deprecated
+    public MangaList getList(int page, int sort) throws Exception {
+        return getList(page, sort, 0);
+    }
     @Deprecated
     public MangaList getList(int page) throws Exception {
-        return getList(page, 0);
+        return getList(page, 0, 0);
     }
     public abstract MangaSummary getDetailedInfo(MangaInfo mangaInfo);
     public abstract ArrayList<MangaPage> getPages(String readLink);
@@ -41,6 +45,10 @@ public abstract class MangaProvider {
     public abstract boolean hasFeature(int feature);
     @Nullable
     public String[] getSortTitles(Context context) {
+        return null;
+    }
+    @Nullable
+    public String[] getGenresTitles(Context context) {
         return null;
     }
     //String[] getGenres();
