@@ -264,6 +264,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
             if (mangaInfos == null) {
                 if (list.size() == 0) {
                     Toast.makeText(getActivity(), R.string.loading_error, Toast.LENGTH_SHORT).show();
+                    ((TextView)messageBlock.findViewById(R.id.textView)).setText(listListener.onEmptyList(provider));
                     messageBlock.setVisibility(View.VISIBLE);
                 }
                 endlessScroller.loadingFail();

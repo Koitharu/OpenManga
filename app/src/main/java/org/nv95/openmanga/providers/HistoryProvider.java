@@ -19,7 +19,7 @@ public class HistoryProvider extends MangaProvider {
     private static final String TABLE_NAME = "history";
     StorageHelper dbHelper;
     private Context context;
-    protected static boolean features[] = {false, false, true};
+    protected static boolean features[] = {false, false, true, false};
 
     private static WeakReference<HistoryProvider> instanceReference = new WeakReference<HistoryProvider>(null);
 
