@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 30.09.15.
  */
-public class AdultmangaRuProvider extends MangaProvider {
+public class MintMangaProvider extends MangaProvider {
     protected static boolean features[] = {true, true, false, true, true};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem, R.string.genre_mystery,R.string.genre_shoujo,R.string.genre_shounen,R.string.genre_horror,R.string.genre_school,R.string.genre_ecchi};
     protected static final String genreUrls[] = {"art","action","martial_arts","vampires","harem","mystery","shoujo","shounen","horror","school","ecchi"};
@@ -44,7 +44,7 @@ public class AdultmangaRuProvider extends MangaProvider {
             manga.summary = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
-            manga.provider = AdultmangaRuProvider.class;
+            manga.provider = MintMangaProvider.class;
             list.add(manga);
         }
         return list;
@@ -99,7 +99,7 @@ public class AdultmangaRuProvider extends MangaProvider {
                     for (int i=0;i<array.length();i++) {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
-                        page.provider = AdultmangaRuProvider.class;
+                        page.provider = MintMangaProvider.class;
                         pages.add(page);
                         p++;
                     }
@@ -158,7 +158,7 @@ public class AdultmangaRuProvider extends MangaProvider {
             manga.summary = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
-            manga.provider = AdultmangaRuProvider.class;
+            manga.provider = MintMangaProvider.class;
             list.add(manga);
         }
         return list;

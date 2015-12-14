@@ -57,7 +57,9 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         if (list != null && adapter != null) {
             endlessScroller.reset();
             list.clear();
-            adapter.notifyDataSetInvalidated();
+            try {
+                adapter.notifyDataSetInvalidated();
+            } catch (Exception ignored){}
             new ListLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

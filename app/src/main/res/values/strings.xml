@@ -111,12 +111,14 @@
     <string name="genre_misc">Misc</string>
     <string name="genre_asianporn">Asian porn</string>
     <string name="genre_cosplay">Cosplay</string>
+    <string name="sort_random">Random</string>
 
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
     </string-array>
     <string-array name="provider_summs">
+        <item>Russian</item>
         <item>Russian</item>
         <item>Russian</item>
         <item>Multilanguage</item>
