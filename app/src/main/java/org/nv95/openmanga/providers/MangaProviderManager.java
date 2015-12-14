@@ -25,10 +25,11 @@ public class MangaProviderManager {
     public static final int FEAUTURE_GENRES = 4;
     private Context context;
     ArrayList<ProviderSumm> providers;
-    public static String[] allProviders = {"ReadManga","MintManga", "E-Hentai", "MangaTown", "MangaReader"}; //
+    public static String[] allProviders = {"ReadManga","MintManga","Манга-тян", "E-Hentai", "MangaTown", "MangaReader"}; //
     private static final Class<?> mangaProviders[] = {
             ReadmangaRuProvider.class,
-            AdultmangaRuProvider.class,
+            MintMangaProvider.class,
+            MangachanProvider.class,
             EHentaiProvider.class,
             MangaTownProvider.class,
             MangaReaderProvider.class
