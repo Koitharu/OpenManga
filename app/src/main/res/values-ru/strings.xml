@@ -108,4 +108,8 @@
     <string name="genre_doujinshi">Додзинси</string>
     <string name="genre_manga">Манга</string>
     <string name="scroll_by_volkeys">Листание кнопками громкости</string>
+    <string name="chapters_to_save">Сохранить главы</string>
+    <string name="all">Все</string>
+    <string name="genre_yuri">Юри</string>
+    <string name="sort_random">Случайно</string>
 </resources>

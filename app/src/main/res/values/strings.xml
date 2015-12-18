@@ -115,6 +115,7 @@
     <string name="chapters_to_save">Chapters to save</string>
     <string name="all">All</string>
     <string name="no_chapters_found">No chapters found</string>
+    <string name="genre_yuri">Yuri</string>
 
     <string-array name="directions">
         <item>Left to right</item>
