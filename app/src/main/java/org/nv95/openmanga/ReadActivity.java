@@ -264,16 +264,27 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (scrollWithVolkeys) {
             int page = pager.getCurrentItem();
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && page < pager.getAdapter().getCount()) {
-                pager.setCurrentItem(page + 1, true);
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                if (page < pager.getAdapter().getCount()) {
+                    pager.setCurrentItem(page + 1, true);
+                }
                 return true;
             }
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && page > 0) {
-                pager.setCurrentItem(page - 1, true);
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                if (page > 0) {
+                    pager.setCurrentItem(page - 1, true);
+                }
                 return true;
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return scrollWithVolkeys &&
+                (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) ||
+                super.onKeyUp(keyCode, event);
     }
 
     @Override

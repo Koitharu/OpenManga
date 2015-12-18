@@ -38,7 +38,7 @@ public class MangachanProvider extends MangaProvider {
             manga.preview = "http://mangachan.ru" + t.attr("src");
             t = o.select("div.genre").first();
             if (t != null) {
-                manga.subtitle = t.text();
+                manga.summary = t.text();
             }
             manga.provider = MangachanProvider.class;
             list.add(manga);
@@ -144,7 +144,7 @@ public class MangachanProvider extends MangaProvider {
             manga.preview = "http://mangachan.ru" + t.attr("src");
             t = o.select("div.genre").first();
             if (t != null) {
-                manga.subtitle = t.text();
+                manga.summary = t.text();
             }
             manga.provider = MangachanProvider.class;
             list.add(manga);

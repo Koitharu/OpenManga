@@ -70,6 +70,15 @@ public class MangaProviderManager {
         }
     }
 
+    public static int indexOf(Class<?> provider) {
+        for (int i=0;i<allProviders.length;i++) {
+            if (provider.equals(mangaProviders[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public String[] getNames() {
         String[] res = new String[providers.size()];
         for (int i=0; i<res.length; i++) {
