@@ -19,6 +19,7 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
     //controls
     protected Spinner spinnerDirection;
     protected SwitchCompat switchKeepScreen;
+    protected SwitchCompat switchVolkeyScroll;
 
     public interface OnOptionsChangedListener {
         void onOptionsChanged();
@@ -29,10 +30,12 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
         View view = View.inflate(context, R.layout.dialog_readopts, null);
         spinnerDirection = (Spinner) view.findViewById(R.id.spinner_direction);
         switchKeepScreen = (SwitchCompat) view.findViewById(R.id.switch_keepscreen);
+        switchVolkeyScroll = (SwitchCompat) view.findViewById(R.id.switch_volkeyscroll);
         //loading prefs
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         spinnerDirection.setSelection(prefs.getInt("scroll_direction", 0));
         switchKeepScreen.setChecked(prefs.getBoolean("keep_screen", false));
+        switchVolkeyScroll.setChecked(prefs.getBoolean("volkeyscroll", false));
         //--
         view.findViewById(R.id.textView_keepscreen).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +47,12 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
             @Override
             public void onClick(View v) {
                 spinnerDirection.performClick();
+            }
+        });
+        view.findViewById(R.id.textView_volkeyscroll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchVolkeyScroll.performClick();
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -68,6 +77,7 @@ public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
         SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         prefEditor.putInt("scroll_direction", spinnerDirection.getSelectedItemPosition());
         prefEditor.putBoolean("keep_screen", switchKeepScreen.isChecked());
+        prefEditor.putBoolean("volkeyscroll", switchVolkeyScroll.isChecked());
         prefEditor.apply();
         if (optionsChangedListener != null)
             optionsChangedListener.onOptionsChanged();

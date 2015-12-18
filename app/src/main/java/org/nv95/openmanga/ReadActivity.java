@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedViewPager;
-import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -39,6 +39,7 @@ import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.providers.SaveService;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,16 +52,18 @@ import java.util.ArrayList;
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener,
         NavigationDialog.NavigationListener, AdvancedViewPager.OnScrollListener {
-
+    //views
     private AdvancedViewPager pager;
+    private TextView chapterTitleTextView;
+    private ProgressBar chapterProgressBar;
+    private ImageView oversrollImageView;
+    //data
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
     private int chapterId;
     private int pageId;
-    private TextView chapterTitleTextView;
-    private ProgressBar chapterProgressBar;
-    private ImageView oversrollImageView;
     private boolean toolbars = false;
+    private boolean scrollWithVolkeys = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +261,22 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (scrollWithVolkeys) {
+            int page = pager.getCurrentItem();
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && page < pager.getAdapter().getCount()) {
+                pager.setCurrentItem(page + 1, true);
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && page > 0) {
+                pager.setCurrentItem(page - 1, true);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void onPageSelected(int position) {
         chapterProgressBar.setProgress(position);
         pageId = position;
@@ -277,6 +296,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+        scrollWithVolkeys = prefs.getBoolean("volkeyscroll", false);
     }
 
     @Override
