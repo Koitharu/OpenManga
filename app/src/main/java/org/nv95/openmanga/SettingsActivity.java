@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 SearchHistoryAdapter.clearHistory(this);
                 Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
                 return true;
-            case "raw/about":
+            case "about":
                 aboutDialog();
                 return true;
             case "ccache":
