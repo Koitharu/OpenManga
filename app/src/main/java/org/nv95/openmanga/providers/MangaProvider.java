@@ -53,7 +53,7 @@ public abstract class MangaProvider {
     }
     //String[] getGenres();
 
-    protected String[] getTitles(Context context, int[] ids) {
+    protected final String[] getTitles(Context context, int[] ids) {
         String[] res = new String[ids.length];
         for (int i=0;i<ids.length;i++) {
             res[i] = context.getString(ids[i]);

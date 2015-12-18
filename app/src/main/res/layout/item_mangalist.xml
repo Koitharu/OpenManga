@@ -8,8 +8,7 @@
         android:layout_width="@dimen/preview_width_small"
         android:layout_height="@dimen/preview_height_small"
         android:id="@+id/imageView"
-        android:src="@android:drawable/ic_dialog_dialer"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:orientation="vertical"

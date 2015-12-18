@@ -40,7 +40,7 @@ import org.nv95.openmanga.providers.MangaProviderManager;
  */
 public class MangaListFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
     @Nullable
-    private ListLoadTask taskInstance;
+    private static ListLoadTask taskInstance;
 
     private AbsListView absListView;
     private boolean grid = false;
@@ -55,12 +55,13 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
 
     public void update() {
         if (list != null && adapter != null) {
+            ListLoadTask task = new ListLoadTask();
             endlessScroller.reset();
             list.clear();
             try {
-                adapter.notifyDataSetInvalidated();
+                adapter.notifyDataSetChanged();
             } catch (Exception ignored){}
-            new ListLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

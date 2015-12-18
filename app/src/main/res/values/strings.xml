@@ -114,17 +114,10 @@
     <string name="scroll_by_volkeys">Scroll by volume keys</string>
     <string name="chapters_to_save">Chapters to save</string>
     <string name="all">All</string>
+    <string name="no_chapters_found">No chapters found</string>
 
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
-    </string-array>
-    <string-array name="provider_summs">
-        <item>Russian</item>
-        <item>Russian</item>
-        <item>Russian</item>
-        <item>Multilanguage</item>
-        <item>English</item>
-        <item>English</item>
     </string-array>
 </resources>

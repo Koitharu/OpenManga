@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedScrollView;
 import org.nv95.openmanga.components.AsyncImageView;
+import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.components.TagSpan;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -210,15 +212,20 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
 
         @Override
         protected void onPostExecute(MangaSummary mangaSummary) {
-            super.onPostExecute(mangaSummary);
-            MangaPreviewActivity.this.mangaSummary = mangaSummary;
             findViewById(R.id.progressBar).setVisibility(View.GONE);
             findViewById(R.id.ab_read).setEnabled(true);
+            super.onPostExecute(mangaSummary);
+            if (mangaSummary== null) {
+                new SimpleAnimator(findViewById(R.id.ab_read)).forceGravity(Gravity.CENTER).hide();
+                Toast.makeText(MangaPreviewActivity.this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            MangaPreviewActivity.this.mangaSummary = mangaSummary;
             ((TextView)findViewById(R.id.textView_description)).setText(mangaSummary.getDescription());
             imageView.setImageAsync(mangaSummary.getPreview(), false);
             if (mangaSummary.getChapters().size() == 0) {
-                findViewById(R.id.ab_read).setEnabled(false);
-                Toast.makeText(MangaPreviewActivity.this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+                new SimpleAnimator(findViewById(R.id.ab_read)).forceGravity(Gravity.CENTER).hide();
+                Toast.makeText(MangaPreviewActivity.this, R.string.no_chapters_found, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -233,7 +240,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                 }
                 return provider.getDetailedInfo(mangaSummary);
             } catch (Exception e) {
-                return new MangaSummary(mangaSummary);
+                return null;
             }
         }
     }
