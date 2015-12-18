@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
@@ -31,7 +33,10 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.content, new CommonSettingsFragment())
@@ -64,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 SearchHistoryAdapter.clearHistory(this);
                 Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
                 return true;
-            case "about":
+            case "raw/about":
                 aboutDialog();
                 return true;
             case "ccache":
@@ -91,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             //findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-            findPreference("about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+            findPreference("raw/about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             String version;
             try {
@@ -99,7 +104,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             } catch (PackageManager.NameNotFoundException e) {
                 version = "unknown";
             }
-            findPreference("about").setSummary(String.format(context.getString(R.string.version),version));
+            findPreference("raw/about").setSummary(String.format(context.getString(R.string.version),version));
 
             new AsyncTask<Void,Void,Float>() {
 
@@ -172,7 +177,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
 
     private void aboutDialog() {
         new AlertDialog.Builder(this)
-                .setMessage(R.string.about_msg)
+                .setMessage(AppHelper.getRawString(this, R.raw.about))
                 .setNegativeButton(R.string.close, null)
                 .setPositiveButton(R.string.check_for_updates, new DialogInterface.OnClickListener() {
                     @Override

@@ -79,7 +79,6 @@
     <string name="action_clear_search_hist">Очистить историю поиска</string>
     <string name="action_sort">Сортировка</string>
     <string name="about">О программе</string>
-    <string name="about_msg">OpenManga - приложение для чтения манги под Android.\nИсходный код доступен на GitHub</string>
     <string name="sort_latest">Новое</string>
     <string name="sort_popular">Популярное</string>
     <string name="sort_updated">Обновлённые</string>
@@ -108,4 +107,5 @@
     <string name="genre_cosplay">Косплей</string>
     <string name="genre_doujinshi">Додзинси</string>
     <string name="genre_manga">Манга</string>
+    <string name="scroll_by_volkeys">Листание кнопками громкости</string>
 </resources>

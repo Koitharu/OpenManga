@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +21,13 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedScrollView;
 import org.nv95.openmanga.components.AsyncImageView;
+import org.nv95.openmanga.components.TagSpan;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.providers.SaveService;
 
@@ -37,6 +40,17 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     protected MangaSummary mangaSummary;
     private AsyncImageView imageView;
     private ImageView readButton;
+    private TagSpan.OnTagClickListener onTagClick = new TagSpan.OnTagClickListener() {
+        @Override
+        public void onTagClick(String tag) {
+            int index = MangaProviderManager.indexOf(mangaSummary.getProvider());
+            if (index != -1) {
+            startActivity(new Intent(MangaPreviewActivity.this, SearchActivity.class)
+                    .putExtra("query", tag)
+                    .putExtra("provider", index));
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +71,8 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         imageView = (AsyncImageView) findViewById(R.id.imageView);
         readButton = (ImageView) findViewById(R.id.ab_read);
         ((TextView) findViewById(R.id.textView_title)).setText(mangaSummary.getName());
-        ((TextView)findViewById(R.id.textView_summary)).setText(mangaSummary.getSummary());
+        ((TextView)findViewById(R.id.textView_summary)).setText(TagSpan.ParseString(mangaSummary.getSummary(), onTagClick));
+        ((TextView)findViewById(R.id.textView_summary)).setMovementMethod(LinkMovementMethod.getInstance());
         readButton.setOnClickListener(this);
         AdvancedScrollView scrollView = (AdvancedScrollView) findViewById(R.id.scrollView);
         if (scrollView != null) {
