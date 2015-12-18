@@ -17,8 +17,15 @@ public class PuzzmosProvider extends MangaProvider {
     protected static final boolean features[] = {true, true, false, true, true};
     protected static final int sorts[] = {R.string.sort_popular,R.string.sort_updated,R.string.alphabetical};
     protected static final String sortUrls[] = {"views&sorting-type=DESC","lastUpdate&sorting-type=DESC","name"};
-    protected static final int genres[] = {R.string.genre_all, R.string.genre_shounen, R.string.genre_shoujo, R.string.genre_harem, R.string.genre_romance, R.string.genre_yuri, R.string.genre_yaoi};
-    protected static final String genreUrls[] = {"shounen","shoujo","harem","romantizm", "yuri", "yaoi"};
+    protected static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_military, R.string.genre_sfiction, R.string.genre_magic,
+            R.string.genre_genderch, R.string.genre_supernatural, R.string.genre_doujinshi, R.string.genre_martialarts, R.string.genre_drama, R.string.genre_ecchi,
+            R.string.genre_fantasy, R.string.genre_fantastic, R.string.genre_mystery, R.string.genre_daily, R.string.genre_harem, R.string.genre_shounen,
+            R.string.genre_shoujo, R.string.genre_romance, R.string.genre_yuri, R.string.genre_yaoi};
+    protected static final String genreUrls[] = {"aksiyon", "askeri", "bilim+kurgu", "büyü",
+            "cinsiyet+değişimi", "doğa+üstü", "doujinshi", "dövüş+sanatları", "dram", "ecchi",
+            "fantezi", "fantastik", "gizem", "günlük+yaşam","harem", "shounen","shoujo","romantizm", "yuri", "yaoi"};
+    //// TODO: 18.12.15
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

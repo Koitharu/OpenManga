@@ -35,6 +35,8 @@ public class AsyncImageView extends ImageView {
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
 
+    //// TODO: 18.12.15 compress
+
     public AsyncImageView(Context context) {
         super(context);
         if (fileCache == null) {

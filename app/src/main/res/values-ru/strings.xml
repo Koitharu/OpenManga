@@ -112,4 +112,15 @@
     <string name="all">Все</string>
     <string name="genre_yuri">Юри</string>
     <string name="sort_random">Случайно</string>
+    <string name="genre_fantastic">Фантастика</string>
+    <string name="genre_fantasy">Фэнтези</string>
+    <string name="genre_gamecg"></string>
+    <string name="genre_magic">Магия</string>
+    <string name="genre_military">Война</string>
+    <string name="genre_supernatural">Сверхъестественное</string>
+    <string name="genre_western"></string>
+    <string name="no_chapters_found">Нет доступных глав</string>
+    <string name="genre_sfiction">Научная фантастика</string>
+    <string name="genre_daily">Повседневность</string>
+    <string name="genre_drama">Драмма</string>
 </resources>
