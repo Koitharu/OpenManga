@@ -12,8 +12,8 @@
             android:layout_width="@dimen/preview_width_large"
             android:layout_height="@dimen/preview_height_large"
             android:id="@+id/imageView"
-            android:src="@android:drawable/ic_dialog_dialer"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerCrop"
+            android:padding="1dp" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             //findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-            findPreference("raw/about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+            findPreference("about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             String version;
             try {
@@ -104,7 +104,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             } catch (PackageManager.NameNotFoundException e) {
                 version = "unknown";
             }
-            findPreference("raw/about").setSummary(String.format(context.getString(R.string.version),version));
+            findPreference("about").setSummary(String.format(context.getString(R.string.version),version));
 
             new AsyncTask<Void,Void,Float>() {
 
