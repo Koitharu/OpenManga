@@ -112,6 +112,8 @@
     <string name="genre_cosplay">Cosplay</string>
     <string name="sort_random">Random</string>
     <string name="scroll_by_volkeys">Scroll by volume keys</string>
+    <string name="chapters_to_save">Chapters to save</string>
+    <string name="all">All</string>
 
     <string-array name="directions">
         <item>Left to right</item>
