@@ -155,7 +155,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                 }
                 return true;
             case R.id.action_save:
-                SaveService.Save(this, mangaSummary);
+                SaveService.SaveWithDialog(this, mangaSummary);
                 return true;
             case R.id.action_remove:
                 new AlertDialog.Builder(MangaPreviewActivity.this)
