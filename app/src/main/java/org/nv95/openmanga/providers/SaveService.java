@@ -130,8 +130,8 @@ public class SaveService extends Service {
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
             stopForeground(true);
+            notificationBuilder = new Notification.Builder(SaveService.this);
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    .setProgress(0,0,false)
                     .setContentTitle(getString(R.string.saving_manga))
                     .setContentText(getString(R.string.done));
             notificationManager.notify(2, notificationBuilder.getNotification());

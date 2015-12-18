@@ -112,6 +112,7 @@
     <string name="genre_asianporn">Asian porn</string>
     <string name="genre_cosplay">Cosplay</string>
     <string name="sort_random">Random</string>
+    <string name="scroll_by_volkeys">Scroll by volume keys</string>
 
     <string-array name="directions">
         <item>Left to right</item>

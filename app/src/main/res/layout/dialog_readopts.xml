@@ -53,5 +53,29 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:listPreferredItemHeightSmall"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/scroll_by_volkeys"
+                android:id="@+id/textView_volkeyscroll"
+                android:layout_weight="1" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_volkeyscroll"
+                android:checked="false" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </ScrollView>
