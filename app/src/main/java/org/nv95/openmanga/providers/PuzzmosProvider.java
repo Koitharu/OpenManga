@@ -16,9 +16,9 @@ import java.util.ArrayList;
 public class PuzzmosProvider extends MangaProvider {
     protected static final boolean features[] = {true, true, false, true, true};
     protected static final int sorts[] = {R.string.sort_popular,R.string.sort_updated,R.string.alphabetical};
-    protected static final String sortUrls[] = {"views","lastUpdate","name"};
-    protected static final int genres[] = {R.string.genre_all, R.string.genre_shounen, R.string.genre_shoujo, R.string.genre_harem, R.string.genre_romance};
-    protected static final String genreUrls[] = {"shounen","shoujo","harem","romantizm"};
+    protected static final String sortUrls[] = {"views&sorting-type=DESC","lastUpdate&sorting-type=DESC","name"};
+    protected static final int genres[] = {R.string.genre_all, R.string.genre_shounen, R.string.genre_shoujo, R.string.genre_harem, R.string.genre_romance, R.string.genre_yuri, R.string.genre_yaoi};
+    protected static final String genreUrls[] = {"shounen","shoujo","harem","romantizm", "yuri", "yaoi"};
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
