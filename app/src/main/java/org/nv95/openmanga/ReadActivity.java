@@ -162,7 +162,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     toast.show();
                     break;
                 }
-                SaveService.Save(this, mangaSummary);
+                SaveService.SaveWithDialog(this, mangaSummary);
                 hideToolbars();
                 break;
             case R.id.toolbutton_fav:

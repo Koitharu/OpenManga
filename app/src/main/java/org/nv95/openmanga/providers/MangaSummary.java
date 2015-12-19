@@ -23,6 +23,18 @@ public class MangaSummary extends MangaInfo {
         this.chapters = new MangaChapters();
     }
 
+    public MangaSummary(MangaSummary mangaSummary) {
+        this.name = mangaSummary.name;
+        this.summary = mangaSummary.summary;
+        this.path = mangaSummary.path;
+        this.preview = mangaSummary.preview;
+        this.subtitle = mangaSummary.subtitle;
+        this.provider = mangaSummary.provider;
+        this.description = mangaSummary.description;
+        this.readLink = mangaSummary.readLink;
+        this.chapters = new MangaChapters(mangaSummary.chapters);
+    }
+
     public MangaSummary(Bundle bundle) {
         super(bundle);
         this.readLink = bundle.getString("readlink");
