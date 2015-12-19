@@ -19,6 +19,10 @@ public class MangaChapters extends ArrayList<MangaChapter> {
         }
     }
 
+    public MangaChapters(MangaChapters chapters) {
+        super(chapters);
+    }
+
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putInt("size",size());
