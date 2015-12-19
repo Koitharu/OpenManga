@@ -113,13 +113,13 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_preview, menu);
-        if (FavouritesProvider.Has(this, mangaSummary)) {
-            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
-            menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
-        }
         if (LocalMangaProvider.class.equals(mangaSummary.getProvider())) {
             menu.findItem(R.id.action_save).setVisible(false);
             menu.findItem(R.id.action_remove).setVisible(true);
+            menu.findItem(R.id.action_favourite).setVisible(false);
+        } else if (FavouritesProvider.Has(this, mangaSummary)) {
+            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
+            menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
         return super.onCreateOptionsMenu(menu);
     }
