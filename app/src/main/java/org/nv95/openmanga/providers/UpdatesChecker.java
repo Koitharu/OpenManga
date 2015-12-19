@@ -24,7 +24,7 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
     }
 
     public interface OnMangaUpdatedListener {
-        void onMangaUpdated(MangaUpdate[] updates);
+        void onMangaUpdated(@NonNull MangaUpdate[] updates);
     }
 
     public static class MangaUpdate {
@@ -111,10 +111,10 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
                     provider = (MangaProvider) o.getProvider().newInstance();
                     key = o.getPath().hashCode();
                     MangaUpdate upd = new MangaUpdate(o);
-                    upd.lastChapters = map.containsKey(key) ? map.get(key) : 0;
+                    upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
                     map.put(key, upd.chapters);
-                    if (upd.chapters > upd.lastChapters) {
+                    if (upd.lastChapters != -1 && upd.chapters > upd.lastChapters) {
                         updates.add(upd);
                     }
                 } catch (Exception e) {
