@@ -68,8 +68,6 @@ public class EHentaiProvider extends MangaProvider {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (summary.chapters.size() == 0)
-                summary.addDefaultChapter();
         }
         return summary;
     }

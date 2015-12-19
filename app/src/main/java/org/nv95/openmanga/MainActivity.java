@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -35,6 +36,7 @@ import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
+import org.nv95.openmanga.providers.UpdatesChecker;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
@@ -146,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         menu.findItem(R.id.action_sort).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
         menu.findItem(R.id.action_genre).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
-        menu.setGroupVisible(R.id.group_history,drawerListView.getCheckedItemPosition() == 2);
+        menu.setGroupVisible(R.id.group_history, drawerListView.getCheckedItemPosition() == 2);
+        menu.setGroupVisible(R.id.group_favourites,drawerListView.getCheckedItemPosition() == 1);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -218,6 +221,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             .setTitle(R.string.action_genre)
                             .create().show();
                 }
+                return true;
+            case R.id.action_updates:
+                UpdatesChecker.CheckUpdates(this, new UpdatesChecker.OnMangaUpdatedListener() {
+                    @Override
+                    public void onMangaUpdated(UpdatesChecker.MangaUpdate[] updates) {
+                        if (updates.length > 0) {
+                            StringBuilder builder = new StringBuilder();
+                            for (UpdatesChecker.MangaUpdate o : updates) {
+                                builder.append(o.manga.getName()).append("   ").append(o.chapters - o.lastChapters).append('\n');
+                            }
+                            builder.deleteCharAt(builder.length() - 1);
+                            Toast.makeText(MainActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());

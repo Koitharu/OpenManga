@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class StorageHelper extends SQLiteOpenHelper {
 
     public StorageHelper(Context context) {
-        super(context, "localmanga", null, 8);
+        super(context, "localmanga", null, 9);
     }
 
 
@@ -72,11 +72,23 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "_id INTEGER PRIMARY KEY,"                 //0
                 + "query TEXT"
                 + ");");
+        db.execSQL("DROP TABLE IF EXISTS updates");
+        db.execSQL("CREATE TABLE updates ("
+                + "id INTEGER PRIMARY KEY,"                 //0
+                + "chapters INTEGER"
+                + ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
+            case 8: //после этой версии была добавлена проверка обновлений
+                db.execSQL("DROP TABLE IF EXISTS updates");
+                db.execSQL("CREATE TABLE updates ("
+                        + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
+                        + "chapters INTEGER"
+                        + ");");
+                break;
             default: {
                 onCreate(db);
             }

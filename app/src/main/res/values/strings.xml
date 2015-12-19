@@ -124,6 +124,8 @@
     <string name="genre_sfiction">Science fiction</string>
     <string name="genre_drama">Drama</string>
     <string name="genre_daily">Daily</string>
+    <string name="no_new_chapters">No new chapters</string>
+    <string name="check_new_chapters">Lookup for new chapters</string>
 
     <string-array name="directions">
         <item>Left to right</item>
