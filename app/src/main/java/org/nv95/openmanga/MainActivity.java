@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -36,7 +35,7 @@ import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
-import org.nv95.openmanga.providers.UpdatesChecker;
+import org.nv95.openmanga.utils.ChaptersSyncService;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
@@ -223,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 return true;
             case R.id.action_updates:
+                /*
                 UpdatesChecker.CheckUpdates(this, new UpdatesChecker.OnMangaUpdatedListener() {
                     @Override
                     public void onMangaUpdated(UpdatesChecker.MangaUpdate[] updates) {
@@ -237,7 +237,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                });*/
+                startService(new Intent(this, ChaptersSyncService.class));
                 return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());

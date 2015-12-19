@@ -37,6 +37,7 @@
         <activity android:name=".SettingsActivity" android:label="@string/action_settings" />
         <activity android:name=".WelcomeActivity" />
         <service android:name=".providers.SaveService" />
+        <service android:name=".utils.ChaptersSyncService" />
     </application>
 
 </manifest>
