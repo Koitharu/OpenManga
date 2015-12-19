@@ -10,4 +10,9 @@
         <item>English</item>
         <item>Turkish</item>
     </string-array>
+    <string-array name="intervals_hours">
+        <item>1</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
 </resources>

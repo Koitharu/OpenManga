@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home && !getFragmentManager().popBackStackImmediate()) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -75,8 +75,16 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
+            default:
+                return false;
         }
-        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!getFragmentManager().popBackStackImmediate()) {
+            super.onBackPressed();
+        }
     }
 
     public static class CommonSettingsFragment extends PreferenceFragment {
@@ -89,11 +97,19 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            findPreference("chupd").setSummary(
+                    getPreferenceManager().getSharedPreferences().getBoolean("chupd", false) ?
+                            R.string.enabled : R.string.disabled
+            );
+        }
+
+        @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             Context context = getActivity();
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-            //findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
@@ -128,21 +144,6 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                     }
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    public static class HelpSettingsFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.pref_help);
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
         }
     }
 

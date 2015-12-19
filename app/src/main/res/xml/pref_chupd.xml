@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:selectable="false"
+        android:title="@string/check_chapters_summary"
+        android:layout="@layout/pref_info" />
+    <ListPreference
+        android:key="chupd.interval"
+        android:title="@string/checking_frequency"
+        android:entries="@array/intervals"
+        android:entryValues="@array/intervals_hours"
+        android:defaultValue="12" />
+</PreferenceScreen>

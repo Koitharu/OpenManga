@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <Preference
         android:key="srcselect"
         android:title="@string/select_sources" />
@@ -9,10 +9,12 @@
     <Preference
         android:key="ccache"
         android:title="@string/action_clear_cache" />
-    <!--Preference
-        android:key="csearchhist"
-        android:title="@string/action_clear_search_hist" /-->
-    <PreferenceCategory android:title="@string/help">
+    <Preference
+        android:key="chupd"
+        android:title="@string/checking_new_chapters" >
+        <intent android:action="org.nv95.openmanga.chupd" />
+    </Preference>
+    <PreferenceCategory android:title="@string/help" >
         <Preference
             android:key="about"
             android:title="@string/about" />

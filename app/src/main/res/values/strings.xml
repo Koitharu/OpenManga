@@ -125,11 +125,21 @@
     <string name="genre_drama">Drama</string>
     <string name="genre_daily">Daily</string>
     <string name="no_new_chapters">No new chapters</string>
-    <string name="check_new_chapters">Lookup for new chapters</string>
+    <string name="check_new_chapters">Check for new chapters</string>
     <string name="new_chapters">New chapters are available</string>
+    <string name="checking_new_chapters">Checking for new chapters</string>
+    <string name="check_chapters_summary">If you added manga to favourites, you will receive a notifications about new chapters.</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="checking_frequency">Frequency of checking</string>
 
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
+    </string-array>
+    <string-array name="intervals">
+        <item>Every hour (for testing)</item>
+        <item>Twice a day</item>
+        <item>Every day</item>
     </string-array>
 </resources>

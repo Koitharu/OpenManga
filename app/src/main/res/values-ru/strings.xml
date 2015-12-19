@@ -63,11 +63,6 @@
     <string name="cache_size">Размер кэша: %.1f Мб</string>
     <string name="action_clear_cache">Очистить кэш изображений</string>
     <string name="size_calculating">Расчет размера…</string>
-
-    <string-array name="directions">
-        <item>Слева направо</item>
-        <item>Сверху вниз</item>
-    </string-array>
     <string name="action_histclear">Очистить историю</string>
     <string name="error">Произошла ошибка</string>
     <string name="file_not_found">Файл не найден</string>
@@ -114,13 +109,29 @@
     <string name="sort_random">Случайно</string>
     <string name="genre_fantastic">Фантастика</string>
     <string name="genre_fantasy">Фэнтези</string>
-    <string name="genre_gamecg"></string>
     <string name="genre_magic">Магия</string>
     <string name="genre_military">Война</string>
     <string name="genre_supernatural">Сверхъестественное</string>
-    <string name="genre_western"></string>
     <string name="no_chapters_found">Нет доступных глав</string>
     <string name="genre_sfiction">Научная фантастика</string>
     <string name="genre_daily">Повседневность</string>
     <string name="genre_drama">Драмма</string>
+    <string name="new_chapters">Доступны новые главы</string>
+    <string name="no_new_chapters">Нет новых глав</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Отключено</string>
+    <string name="check_chapters_summary">Вы будете получать уведомления о новых главах для манги, которую добавили в избранное</string>
+    <string name="check_new_chapters">Проверить новые главы</string>
+    <string name="checking_frequency">Частота проверки</string>
+    <string name="checking_new_chapters">Проверка новых глав</string>
+
+    <string-array name="directions">
+        <item>Слева направо</item>
+        <item>Сверху вниз</item>
+    </string-array>
+    <string-array name="intervals">
+        <item>Каждый час (для тестировния)</item>
+        <item>Дважды в день</item>
+        <item>Ежедневно</item>
+    </string-array>
 </resources>

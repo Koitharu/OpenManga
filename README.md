@@ -3,7 +3,7 @@
 OpenManga - Manga reader for Android with simple user-friendly interface and online catalogues.
 
 Current version isn't stable<br>
-[Download latest build](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-0.20-beta.apk?raw=true)
+[Download latest build](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-0.21-beta.apk?raw=true)
 
 ## Features
  - Local storage
@@ -13,8 +13,9 @@ Current version isn't stable<br>
  - Favourites and history with remembering last viewed chapter and page
  - Selecting sort order
  - Filter by genre
+ - Checking for new chapters for favourites
 
- You can help translate this app and add online catalogues.
+You can help translate this app and add online catalogues.
 
 ## License
 
