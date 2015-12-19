@@ -346,11 +346,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         new SimpleAnimator(oversrollImageView).forceGravity(Gravity.CENTER).hide();
                         if (params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT) {
                             chapterId++;
+                            pageId = 0;
                         } else {
                             chapterId--;
+                            pageId = -1;
                         }
                         //TODO::switchpage
-                        pageId = 0;
                         chapter = mangaSummary.getChapters().get(chapterId);
                         chapterTitleTextView.setText(chapter.getName());
                         hideToolbars();
@@ -410,6 +411,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             chapterProgressBar.setMax(mangaPages.size());
             chapterProgressBar.setProgress(pageId);
             pager.setAdapter(new PagerReaderAdapter(ReadActivity.this, mangaPages));
+            if (pageId == -1) {
+                pageId = mangaPages.size() - 1;
+            }
             pager.setCurrentItem(pageId, false);
         }
 

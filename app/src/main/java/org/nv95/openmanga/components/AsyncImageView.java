@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,6 +35,7 @@ public class AsyncImageView extends ImageView {
     private SetImageTask setImageTask = null;
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
+    private boolean compress = false;
 
     //// TODO: 18.12.15 compress
 
@@ -113,6 +115,14 @@ public class AsyncImageView extends ImageView {
         }
     }
 
+    public boolean isCompress() {
+        return compress;
+    }
+
+    public void setCompress(boolean compress) {
+        this.compress = compress;
+    }
+
     private void cancelAllTasks() {
         try {
             if (setImageTask != null && setImageTask.getStatus() != AsyncTask.Status.FINISHED) {
@@ -134,6 +144,12 @@ public class AsyncImageView extends ImageView {
 
 
     private class LoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        private final int h,w;
+
+        private LoadImageTask() {
+            h = getLayoutParams().height;
+            w = getLayoutParams().width;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -146,7 +162,7 @@ public class AsyncImageView extends ImageView {
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(params[0]).getContent());
                 memoryCache.putBitmap(params[0], bitmap);
                 fileCache.putBitmap(params[0], bitmap);
-                return bitmap;
+                return compress ? ThumbnailUtils.extractThumbnail(bitmap, w, h) : bitmap;
             } catch (Exception e) {
                 return null;
             }
@@ -167,6 +183,12 @@ public class AsyncImageView extends ImageView {
     }
 
     private class SetImageTask extends AsyncTask<String,Void,Bitmap> {
+        private final int h,w;
+
+        private SetImageTask() {
+            h = getLayoutParams().height;
+            w = getLayoutParams().width;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -183,7 +205,7 @@ public class AsyncImageView extends ImageView {
                     bitmap = fileCache.getBitmap(params[0]);
                 }
             }
-            return bitmap;
+            return compress ? ThumbnailUtils.extractThumbnail(bitmap, w, h) : bitmap;
         }
 
         @Override
