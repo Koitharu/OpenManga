@@ -289,7 +289,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onPageSelected(int position) {
-        chapterProgressBar.setProgress(position);
+        chapterProgressBar.setProgress(pager.isReverseOrder() ? pager.getAdapter().getCount() - 1 - position : position);
         pageId = position;
     }
 
@@ -314,7 +314,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        pager.setOrientation(prefs.getInt("scroll_direction", 0) == 0 ? AdvancedViewPager.HORIZONTAL : AdvancedViewPager.VERTICAL);
+        pager.setReverseOrder(prefs.getInt("scroll_direction", 0) > 1);
+        pager.setOrientation(prefs.getInt("scroll_direction", 0) % 2 == 0 ? AdvancedViewPager.HORIZONTAL : AdvancedViewPager.VERTICAL);
         if (prefs.getBoolean("keep_screen", false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {

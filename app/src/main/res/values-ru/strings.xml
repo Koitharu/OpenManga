@@ -128,6 +128,7 @@
     <string-array name="directions">
         <item>Слева направо</item>
         <item>Сверху вниз</item>
+        <item>Справа налево</item>
     </string-array>
     <string-array name="intervals">
         <item>Каждый час (для тестировния)</item>

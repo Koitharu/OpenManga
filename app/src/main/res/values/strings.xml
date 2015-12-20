@@ -136,6 +136,7 @@
     <string-array name="directions">
         <item>Left to right</item>
         <item>Top to bottom</item>
+        <item>Right to left</item>
     </string-array>
     <string-array name="intervals">
         <item>Every hour (for testing)</item>
