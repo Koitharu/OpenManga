@@ -113,9 +113,11 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
                     MangaUpdate upd = new MangaUpdate(o);
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
-                    map.put(key, upd.chapters);
-                    if (upd.lastChapters != -1 && upd.chapters > upd.lastChapters) {
-                        updates.add(upd);
+                    if (upd.chapters > upd.lastChapters) {
+                        map.put(key, upd.chapters);
+                        if (upd.lastChapters != -1) {
+                            updates.add(upd);
+                        }
                     }
                 } catch (Exception e) {
                     ErrorReporter.getInstance().report(e);
