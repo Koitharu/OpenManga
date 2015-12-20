@@ -30,26 +30,28 @@ public class ChaptersSyncService extends Service implements UpdatesChecker.OnMan
     public static final int HOUR = 1000 * 60 * 60;
     private static final int NOTIFY_ID = 502;
     //data
-    private boolean enabled;
+    private boolean enabled = false;
+    private boolean wifiOnly = false;
 
 
     boolean internetConnectionIsValid(Context context,boolean wifi_only) {
         ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if(cm==null)return false;
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isConnected() && (ni.getType() == ConnectivityManager.TYPE_WIFI || !wifi_only);
+        return ni != null && ni.isConnected() && (!wifi_only || ni.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        enabled = prefs.getBoolean("chupd", false);
+        enabled = prefs.getBoolean("chupd", enabled);
+        wifiOnly = prefs.getBoolean("chupd.wifionly", wifiOnly);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (enabled) {
+        if (enabled && internetConnectionIsValid(this, wifiOnly)) {
             UpdatesChecker.CheckUpdates(this, this);
         } else {
             stopSelf();
@@ -78,9 +80,19 @@ public class ChaptersSyncService extends Service implements UpdatesChecker.OnMan
                     .setTicker(getString(R.string.new_chapters))
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                     .setContentText(content.toString());
+            Notification notification;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
+                for (UpdatesChecker.MangaUpdate o : updates) {
+                    inboxStyle.addLine((o.chapters - o.lastChapters) + " - " + o.manga.getName());
+                }
 
-            ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(NOTIFY_ID,
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ? builder.build() : builder.getNotification());
+                notification = inboxStyle.build();
+            } else {
+                notification = builder.getNotification();
+            }
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+            ((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).notify(NOTIFY_ID, notification);
         }
         stopSelf();
     }

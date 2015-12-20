@@ -37,7 +37,12 @@ public class UpdatesSettingsActivity extends AppCompatActivity implements View.O
         toggle.setOnClickListener(this);
 
         settingsFragment = new SettingsFragment();
-        this.onClick(toggle);
+        if (toggle.isChecked()) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content, settingsFragment)
+                    .commit();
+            findViewById(R.id.textView).setVisibility(View.GONE);
+        }
     }
 
     @Override

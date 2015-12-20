@@ -10,4 +10,9 @@
         android:entries="@array/intervals"
         android:entryValues="@array/intervals_hours"
         android:defaultValue="12" />
+    <CheckBoxPreference
+        android:key="chupd.wifionly"
+        android:title="Over WiFi only"
+        android:widgetLayout="@layout/pref_switchcompat"
+        android:defaultValue="false" />
 </PreferenceScreen>
