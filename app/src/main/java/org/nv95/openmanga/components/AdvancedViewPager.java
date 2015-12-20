@@ -2,9 +2,12 @@ package org.nv95.openmanga.components;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import org.nv95.openmanga.PagerReaderAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -65,12 +68,14 @@ public class AdvancedViewPager extends ViewPager {
 
     @Override
     public int getCurrentItem() {
-        int r = super.getCurrentItem();
+        int currentItem = super.getCurrentItem();
         if (reverseOrder && getAdapter() != null) {
-            r = getAdapter().getCount() - 1 - r;
+            return getAdapter().getCount() - 1 - currentItem;
+        } else {
+            return currentItem;
         }
-        return r;
     }
+
 
     @Override
     public void setCurrentItem(int item) {
@@ -87,6 +92,7 @@ public class AdvancedViewPager extends ViewPager {
         }
         super.setCurrentItem(item, smoothScroll);
     }
+
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev){
@@ -173,9 +179,23 @@ public class AdvancedViewPager extends ViewPager {
     }
 
     public void setReverseOrder(boolean reverseOrder) {
-        int pos = getCurrentItem();
-        this.reverseOrder = reverseOrder;
-        setCurrentItem(pos);
+        PagerAdapter adapter = getAdapter();
+        if (adapter != null && adapter instanceof PagerReaderAdapter) {
+            ((PagerReaderAdapter)adapter).setReversed(reverseOrder);
+        }
+        if (this.reverseOrder != reverseOrder) {
+            int pos = getCurrentItem();
+            this.reverseOrder = reverseOrder;
+            setCurrentItem(pos);
+        }
+    }
+
+    @Override
+    public void setAdapter(PagerAdapter adapter) {
+        if (adapter != null && adapter instanceof PagerReaderAdapter) {
+            ((PagerReaderAdapter)adapter).setReversed(reverseOrder);
+        }
+        super.setAdapter(adapter);
     }
 
     public OnScrollListener getOnScrollListener() {

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 public class PagerReaderAdapter extends PagerAdapter {
     private LayoutInflater inflater;
     private ArrayList<MangaPage> pages;
+    private boolean reversed;
 
     private static class ViewHolder {
         ProgressBar progressBar;
@@ -56,10 +57,19 @@ public class PagerReaderAdapter extends PagerAdapter {
         return view.equals(object);
     }
 
+    public boolean isReversed() {
+        return reversed;
+    }
+
+    public void setReversed(boolean reversed) {
+        this.reversed = reversed;
+        notifyDataSetChanged();
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_page, null);
-        MangaPage page = pages.get(position);
+        MangaPage page = getItem(position);
         ViewHolder holder = new ViewHolder();
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
@@ -84,7 +94,7 @@ public class PagerReaderAdapter extends PagerAdapter {
     }
 
     public MangaPage getItem(int position) {
-        return pages.get(position);
+        return pages.get(reversed? getCount() - 1 - position : position);
     }
 
     public static class PageLoadTask extends AsyncTask<Void,Integer,File> implements SubsamplingScaleImageView.OnImageEventListener {
