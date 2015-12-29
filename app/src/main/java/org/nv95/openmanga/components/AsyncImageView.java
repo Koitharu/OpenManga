@@ -17,6 +17,8 @@ import android.util.AttributeSet;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import org.nv95.openmanga.utils.SerialExecutor;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,6 +38,7 @@ public class AsyncImageView extends ImageView {
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
     private boolean compress = false;
+    private static final SerialExecutor SERIAL_EXECUTOR = new SerialExecutor();
 
     //// TODO: 18.12.15 compress
 
@@ -215,7 +218,7 @@ public class AsyncImageView extends ImageView {
                 AsyncImageView.super.setImageBitmap(bitmap);
             } else {
                 loadImageTask = new LoadImageTask();
-                loadImageTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, url);
+                loadImageTask.executeOnExecutor(SERIAL_EXECUTOR, url);
             }
         }
     }
