@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -239,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });*/
                 startService(new Intent(this, ChaptersSyncService.class));
+                Toast.makeText(this, R.string.checking_new_chapters, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());

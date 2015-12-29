@@ -12,6 +12,7 @@ import android.widget.ScrollView;
 public class AdvancedScrollView extends ScrollView {
     public interface OnScrollListener {
         void OnScroll(AdvancedScrollView scrollView, int x, int y, int oldx, int oldy);
+        boolean OnOverScroll(AdvancedScrollView scrollView, int deltaX, int deltaY);
     }
 
     protected OnScrollListener onScrollListener;
@@ -40,12 +41,15 @@ public class AdvancedScrollView extends ScrollView {
             onScrollListener.OnScroll(this, x, y, oldx, oldy);
         }
     }
-
+/*
     @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+    protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+        if ((scrollY != 0 || deltaY > 0) || onScrollListener == null) {
+            return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+        }
+        return onScrollListener.OnOverScroll(this, deltaX, deltaY) || super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
     }
-
+*/
     public OnScrollListener getOnScrollListener() {
         return onScrollListener;
     }

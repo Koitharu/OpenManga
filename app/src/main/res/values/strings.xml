@@ -132,6 +132,7 @@
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="checking_frequency">Frequency of checking</string>
+    <string name="retry">Retry</string>
 
     <string-array name="directions">
         <item>Left to right</item>

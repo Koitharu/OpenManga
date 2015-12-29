@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.SerialExecutor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,17 +31,32 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 30.09.15.
  */
-public class PagerReaderAdapter extends PagerAdapter {
+public class PagerReaderAdapter extends PagerAdapter implements View.OnClickListener {
     private LayoutInflater inflater;
     private ArrayList<MangaPage> pages;
     private boolean reversed;
+    private final SerialExecutor executor = new SerialExecutor();
+
+    @Override
+    public void onClick(View v) {
+        Object tag = v.getTag();
+        if (tag == null || !(tag instanceof  ViewHolder)) {
+            return;
+        }
+        ViewHolder holder = (ViewHolder) tag;
+        MangaPage page = pages.get(holder.position);
+        holder.loadTask = new PageLoadTask(inflater.getContext(),holder, page);
+        holder.loadTask.executeOnExecutor(executor);
+    }
 
     private static class ViewHolder {
         ProgressBar progressBar;
         SubsamplingScaleImageView ssiv;
         TextView textView;
+        Button buttonRetry;
         @Nullable
         PageLoadTask loadTask;
+        int position;
     }
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
@@ -71,11 +88,15 @@ public class PagerReaderAdapter extends PagerAdapter {
         View view = inflater.inflate(R.layout.item_page, null);
         MangaPage page = getItem(position);
         ViewHolder holder = new ViewHolder();
+        holder.position = position;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
+        holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
+        holder.buttonRetry.setTag(holder);
+        holder.buttonRetry.setOnClickListener(this);
         holder.textView = (TextView) view.findViewById(R.id.textView_progress);
         holder.loadTask = new PageLoadTask(inflater.getContext(),holder, page);
-        holder.loadTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        holder.loadTask.executeOnExecutor(executor);
         container.addView(view, 0);
         return view;
     }
@@ -114,17 +135,23 @@ public class PagerReaderAdapter extends PagerAdapter {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
+            viewHolder.textView.setText(R.string.loading);
+            viewHolder.textView.setVisibility(View.VISIBLE);
+            viewHolder.buttonRetry.setVisibility(View.GONE);
         }
 
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            if (file != null) {
-                ImageSource source = file.exists() ? ImageSource.uri(file.getPath()).tilingDisabled() : null;
+            if (file != null && file.exists()) {
+                ImageSource source = ImageSource.uri(file.getPath()).tilingEnabled();
                 viewHolder.ssiv.setImage(source);
                 viewHolder.textView.setText(R.string.wait);
             } else {
-                viewHolder.textView.setText(R.string.loading_error);
+                viewHolder.progressBar.setVisibility(View.GONE);
+                viewHolder.textView.setVisibility(View.GONE);
+                viewHolder.buttonRetry.setVisibility(View.VISIBLE);
             }
             viewHolder.loadTask = null;
         }
@@ -184,7 +211,7 @@ public class PagerReaderAdapter extends PagerAdapter {
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
-                //
+                new File(destination).delete();
             } finally {
                 try {
                     if (output != null)
@@ -241,24 +268,24 @@ public class PagerReaderAdapter extends PagerAdapter {
         @Override
         public void onPreviewLoadError(Exception e) {
             viewHolder.progressBar.setVisibility(View.GONE);
-            String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
-            viewHolder.textView.setText(msg);
+            viewHolder.textView.setVisibility(View.GONE);
+            viewHolder.buttonRetry.setVisibility(View.VISIBLE);
 
         }
 
         @Override
         public void onImageLoadError(Exception e) {
             viewHolder.progressBar.setVisibility(View.GONE);
-            String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
-            viewHolder.textView.setText(msg);
+            viewHolder.textView.setVisibility(View.GONE);
+            viewHolder.buttonRetry.setVisibility(View.VISIBLE);
             ErrorReporter.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.getPath());
         }
 
         @Override
         public void onTileLoadError(Exception e) {
             viewHolder.progressBar.setVisibility(View.GONE);
-            String msg = context.getText(R.string.loading_error) + "\n" + e.getLocalizedMessage();
-            viewHolder.textView.setText(msg);
+            viewHolder.textView.setVisibility(View.GONE);
+            viewHolder.buttonRetry.setVisibility(View.VISIBLE);
             ErrorReporter.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.getPath());
         }
     }

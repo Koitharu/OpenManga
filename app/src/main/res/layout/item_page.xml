@@ -24,4 +24,12 @@
         android:layout_gravity="center"
         android:gravity="center" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/retry"
+        android:id="@+id/button_retry"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
 </FrameLayout>

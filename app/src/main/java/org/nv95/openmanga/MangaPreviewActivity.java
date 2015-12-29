@@ -189,6 +189,12 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         readButton.setScaleY(scaleFactor);
     }
 
+    @Override
+    public boolean OnOverScroll(AdvancedScrollView scrollView, int deltaX, int deltaY) {
+        //imageView.setPadding(0, deltaY, 0, 0);
+        return false;
+    }
+
     private class LoadInfoTask extends AsyncTask<Void,Void,MangaSummary> {
         @Override
         protected void onPreExecute() {
