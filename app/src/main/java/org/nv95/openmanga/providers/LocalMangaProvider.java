@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.nv95.openmanga.R;
@@ -164,7 +165,7 @@ public class LocalMangaProvider extends MangaProvider {
             cursor1.close();
             database.delete(TABLE_CHAPTERS, "mangaId=" + mangaId, null);
             database.delete(TABLE_STORAGE, "id=" + id, null);
-            RemoveDir(new File(context.getExternalFilesDir("saved"), String.valueOf(mangaId)));
+            RemoveDir(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId)));
         }
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
@@ -209,5 +210,10 @@ public class LocalMangaProvider extends MangaProvider {
                 size += DirSize(file);
         }
         return size;
+    }
+
+    public static File getMangaDir(Context context) {
+        String dir = PreferenceManager.getDefaultSharedPreferences(context).getString("mangadir","");
+        return dir.length() == 0 ? context.getExternalFilesDir("saved") : new File(dir);
     }
 }

@@ -209,7 +209,7 @@ public class SaveService extends Service {
                     ErrorReporter.getInstance().report(e);
                     continue;
                 }
-                dest = new File(getExternalFilesDir("saved"), String.valueOf(mangaId = summary.getReadLink().hashCode()));
+                dest = new File(LocalMangaProvider.getMangaDir(SaveService.this), String.valueOf(mangaId = summary.getReadLink().hashCode()));
                 dest.mkdirs();
                 summary.preview = downloadFile(summary.preview, dest);
                 //loading lists
@@ -282,7 +282,7 @@ public class SaveService extends Service {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    //
+                    return "";
                 }
                 int fileLength = connection.getContentLength();
                 input = connection.getInputStream();

@@ -7,6 +7,9 @@
         android:key="readeropt"
         android:title="@string/action_reading_options" />
     <Preference
+        android:key="mangadir"
+        android:title="@string/manga_local_dir" />
+    <Preference
         android:key="ccache"
         android:title="@string/action_clear_cache" />
     <Preference

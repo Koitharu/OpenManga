@@ -133,6 +133,8 @@
     <string name="disabled">Disabled</string>
     <string name="checking_frequency">Frequency of checking</string>
     <string name="retry">Retry</string>
+    <string name="def">Default</string>
+    <string name="manga_local_dir">Local manga\'s directory</string>
 
     <string-array name="directions">
         <item>Left to right</item>

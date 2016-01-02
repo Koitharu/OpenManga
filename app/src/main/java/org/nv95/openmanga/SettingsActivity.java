@@ -112,15 +112,35 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-            findPreference("about").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+
+            Preference p = findPreference("about");
+            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             String version;
             try {
                 version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
             } catch (PackageManager.NameNotFoundException e) {
                 version = "unknown";
             }
-            findPreference("about").setSummary(String.format(context.getString(R.string.version),version));
+            p.setSummary(String.format(context.getString(R.string.version),version));
+
+            p = findPreference("mangadir");
+            p.setSummary(LocalMangaProvider.getMangaDir(getActivity()).getPath());
+            p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(final Preference preference) {
+                    new DirSelectDialog(getActivity())
+                            .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
+                                @Override
+                                public void onDirSelected(File dir) {
+                                    preference.setSummary(dir.getPath());
+                                    preference.getEditor().putString("mangadir",dir.getPath()).apply();
+                                }
+                            })
+                            .show();
+                    return true;
+                }
+            });
 
             new AsyncTask<Void,Void,Float>() {
 
