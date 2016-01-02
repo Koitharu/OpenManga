@@ -59,6 +59,7 @@
                 android:layout_gravity="top"
                 android:visibility="gone"
                 android:divider="@android:color/transparent"
+                android:drawSelectorOnTop="true"
                 android:dividerHeight="0dp" />
 
         </FrameLayout>

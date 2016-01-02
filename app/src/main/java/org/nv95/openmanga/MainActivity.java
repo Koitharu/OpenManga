@@ -117,14 +117,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onMenuItemActionExpand(MenuItem item) {
                 historyAdapter.update();
                 listViewSearch.setVisibility(View.VISIBLE);
-                floatingAb.setVisibility(View.GONE);
+                //show fab
+                new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).hide();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 listViewSearch.setVisibility(View.GONE);
-                floatingAb.setVisibility(View.VISIBLE);
+                new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).show();
                 return true;
             }
         });
