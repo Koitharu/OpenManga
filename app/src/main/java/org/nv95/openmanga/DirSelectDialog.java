@@ -20,14 +20,16 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
     private final AlertDialog dialog;
     private final ListView listView;
     private final DirAdapter adapter;
+    private final TextView headerUp;
     private OnDirSelectListener dirSelectListener;
 
     public DirSelectDialog(final Context context) {
         listView = new ListView(context);
         adapter = new DirAdapter(context, LocalMangaProvider.getMangaDir(context));
-        TextView headerUp = (TextView) View.inflate(context, R.layout.item_dir, null);
+        headerUp = (TextView) View.inflate(context, R.layout.item_dir, null);
         headerUp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hardware_keyboard_return, 0, 0, 0);
-        headerUp.setText("..");
+        headerUp.setMaxLines(2);
+        headerUp.setText(adapter.getCurrentDir().getPath());
         listView.addHeaderView(headerUp);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -57,10 +59,14 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
-            adapter.setCurrentDir(adapter.getCurrentDir().getParentFile());
+            File dir = adapter.getCurrentDir().getParentFile();
+            if (dir != null) {
+                adapter.setCurrentDir(adapter.getCurrentDir().getParentFile());
+            }
         } else {
             adapter.setCurrentDir(adapter.getItem(position - 1));
         }
+        headerUp.setText(adapter.getCurrentDir().getPath());
         adapter.notifyDataSetChanged();
     }
 

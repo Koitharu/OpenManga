@@ -135,6 +135,7 @@
     <string name="retry">Retry</string>
     <string name="def">Default</string>
     <string name="manga_local_dir">Local manga\'s directory</string>
+    <string name="dir_no_access">No write access to this directory</string>
 
     <string-array name="directions">
         <item>Left to right</item>

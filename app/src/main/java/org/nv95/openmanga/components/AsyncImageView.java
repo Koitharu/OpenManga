@@ -38,7 +38,7 @@ public class AsyncImageView extends ImageView {
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
     private boolean compress = false;
-    private static final SerialExecutor SERIAL_EXECUTOR = new SerialExecutor();
+    private static final SerialExecutor EXECUTOR = new SerialExecutor();
 
     //// TODO: 18.12.15 compress
 
@@ -218,7 +218,7 @@ public class AsyncImageView extends ImageView {
                 AsyncImageView.super.setImageBitmap(bitmap);
             } else {
                 loadImageTask = new LoadImageTask();
-                loadImageTask.executeOnExecutor(SERIAL_EXECUTOR, url);
+                loadImageTask.executeOnExecutor(EXECUTOR, url);
             }
         }
     }
