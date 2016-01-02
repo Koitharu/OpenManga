@@ -112,6 +112,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+            findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
 
             Preference p = findPreference("about");
@@ -133,8 +134,12 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                             .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
                                 @Override
                                 public void onDirSelected(File dir) {
+                                    if (!dir.canWrite()) {
+                                        Toast.makeText(getActivity(), R.string.dir_no_access, Toast.LENGTH_SHORT).show();
+                                    }
                                     preference.setSummary(dir.getPath());
-                                    preference.getEditor().putString("mangadir",dir.getPath()).apply();
+                                    preference.getEditor()
+                                            .putString("mangadir", dir.getPath()).apply();
                                 }
                             })
                             .show();

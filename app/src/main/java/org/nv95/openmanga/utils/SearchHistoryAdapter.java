@@ -4,28 +4,27 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.StorageHelper;
 
 /**
- * Created by nv95 on 10.12.15.
+ * Created by nv95 on 02.01.16.
  */
-public class SearchHistoryAdapter extends CursorAdapter {
+public class SearchHistoryAdapter  extends CursorAdapter {
     //todo use loader
     private static final String TABLE_NAME = "search_history";
-    private static final int oddColor = Color.rgb(245,245,245);
-    private static final int evenColor = Color.rgb(255,255,255);
+    private final int oddColor;
+    private final int evenColor;
 
     private LayoutInflater inflater;
 
-    public static CursorAdapter newInstance(Context context) {
+    public static SearchHistoryAdapter newInstance(Context context) {
         StorageHelper storageHelper = new StorageHelper(context);
         Cursor c = storageHelper.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
         return new SearchHistoryAdapter(context, c);
@@ -33,6 +32,8 @@ public class SearchHistoryAdapter extends CursorAdapter {
 
     private SearchHistoryAdapter(Context context, Cursor cursor) {
         super(context, cursor, true);
+        oddColor = context.getResources().getColor(R.color.primary_dark);
+        evenColor = context.getResources().getColor(R.color.primary_dark_dark);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -58,8 +59,6 @@ public class SearchHistoryAdapter extends CursorAdapter {
             database.insert(TABLE_NAME, null, cv);
         }
         database.close();
-        getCursor().requery();
-        notifyDataSetChanged();
     }
 
     public static void clearHistory(Context context) {
@@ -69,5 +68,9 @@ public class SearchHistoryAdapter extends CursorAdapter {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
+    }
+
+    public void update() {
+        getCursor().requery();
     }
 }

@@ -135,4 +135,7 @@
         <item>Дважды в день</item>
         <item>Ежедневно</item>
     </string-array>
+    <string name="def">По умолчанию</string>
+    <string name="manga_local_dir">Папка для сохранения</string>
+    <string name="retry">Повторить</string>
 </resources>

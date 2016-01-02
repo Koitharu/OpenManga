@@ -75,6 +75,27 @@ public class LocalMangaProvider extends MangaProvider {
         return list;
     }
 
+    public int getCount() {
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        int res = 0;
+        try {
+            database= dbHelper.getReadableDatabase();
+            cursor = database.query(TABLE_STORAGE, null, null, null, null, null, null);
+            res = cursor.getCount();
+        } catch (Exception e) {
+            res = -1;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        return res;
+    }
+
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
@@ -216,4 +237,5 @@ public class LocalMangaProvider extends MangaProvider {
         String dir = PreferenceManager.getDefaultSharedPreferences(context).getString("mangadir","");
         return dir.length() == 0 ? context.getExternalFilesDir("saved") : new File(dir);
     }
+
 }

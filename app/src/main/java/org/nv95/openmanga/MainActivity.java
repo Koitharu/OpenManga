@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -67,10 +68,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         headers = new TextView[3];
         headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
         headers[0].setText(R.string.local_storage);
+        headers[0].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_device_storage, 0, 0, 0);
         headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
         headers[1].setText(R.string.action_favourites);
+        headers[1].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_toggle_star_half, 0, 0, 0);
         headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
         headers[2].setText(R.string.action_history);
+        headers[2].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_history, 0, 0, 0);
         drawerListView.addHeaderView(headers[0]);
         drawerListView.addHeaderView(headers[1]);
         drawerListView.addHeaderView(headers[2]);
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         };
         drawerLayout.setDrawerListener(toggle);
+
         listFragment.setScrollListener(this);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -103,30 +108,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        //SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        /*searchView.setSuggestionsAdapter(SearchHistoryAdapter.newInstance(this));
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        final ListView listViewSearch = (ListView) findViewById(R.id.listView_search);
+        final SearchHistoryAdapter historyAdapter = SearchHistoryAdapter.newInstance(this);
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                historyAdapter.update();
+                listViewSearch.setVisibility(View.VISIBLE);
+                floatingAb.setVisibility(View.GONE);
+                return true;
             }
 
             @Override
-            public boolean onSuggestionClick(int position) {
-                SQLiteCursor cursor = (SQLiteCursor) searchView.getSuggestionsAdapter().getItem(position);
-                searchView.setQuery(cursor.getString(1), true);
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                listViewSearch.setVisibility(View.GONE);
+                floatingAb.setVisibility(View.VISIBLE);
                 return true;
             }
-        });*/
+        });
+        listViewSearch.setAdapter(historyAdapter);
+        listViewSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
+                searchView.setQuery(cursor.getString(1), false);
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                SearchHistoryAdapter adapter = (SearchHistoryAdapter) searchView.getSuggestionsAdapter();
-                if (adapter != null) {
-                    adapter.addToHistory(query);
-                }
+                historyAdapter.addToHistory(query);
                 startActivity(new Intent(MainActivity.this, SearchActivity.class)
                         .putExtra("query", query)
                         .putExtra("provider", drawerListView.getCheckedItemPosition() - 4));

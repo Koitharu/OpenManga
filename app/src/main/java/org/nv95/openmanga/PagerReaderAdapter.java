@@ -32,8 +32,8 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class PagerReaderAdapter extends PagerAdapter implements View.OnClickListener {
-    private LayoutInflater inflater;
-    private ArrayList<MangaPage> pages;
+    private final LayoutInflater inflater;
+    private final ArrayList<MangaPage> pages;
     private boolean reversed;
     private final SerialExecutor executor = new SerialExecutor();
 
@@ -45,7 +45,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         }
         ViewHolder holder = (ViewHolder) tag;
         MangaPage page = pages.get(holder.position);
-        holder.loadTask = new PageLoadTask(inflater.getContext(),holder, page);
+        holder.loadTask = new PageLoadTask(inflater.getContext(), holder, page);
         holder.loadTask.executeOnExecutor(executor);
     }
 
@@ -95,7 +95,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
         holder.textView = (TextView) view.findViewById(R.id.textView_progress);
-        holder.loadTask = new PageLoadTask(inflater.getContext(),holder, page);
+        holder.loadTask = new PageLoadTask(inflater.getContext(), holder, page);
         holder.loadTask.executeOnExecutor(executor);
         container.addView(view, 0);
         return view;
@@ -121,12 +121,12 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
     public static class PageLoadTask extends AsyncTask<Void,Integer,File> implements SubsamplingScaleImageView.OnImageEventListener {
         private final ViewHolder viewHolder;
         private MangaPage page;
-        private final Context context;
+        private final File cacheDir;
 
         public PageLoadTask(Context context, ViewHolder viewHolder, MangaPage page) {
             this.viewHolder = viewHolder;
             this.page = page;
-            this.context = context;
+            cacheDir = context.getExternalCacheDir();
 
             viewHolder.ssiv.setParallelLoadingEnabled(true);
             viewHolder.ssiv.setOnImageEventListener(this);
@@ -243,7 +243,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
                  file = new File(path);
             }
             if (file == null || !file.exists()) {
-                file = new File(context.getExternalCacheDir(), String.valueOf(path.hashCode()));
+                file = new File(cacheDir, String.valueOf(path.hashCode()));
             }
             if (!file.exists()) {
                 downloadFile(path, file.getPath());

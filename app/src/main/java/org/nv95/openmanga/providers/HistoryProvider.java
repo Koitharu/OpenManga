@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.nv95.openmanga.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -117,6 +118,7 @@ public class HistoryProvider extends MangaProvider {
     public boolean remove(long[] ids) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.beginTransaction();
+        File cacheDir = context.getExternalCacheDir();
         for (long o:ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
         }
