@@ -16,22 +16,26 @@ public class TopCropImageView extends AsyncImageView {
     public TopCropImageView(Context context) {
         super(context);
         setScaleType(ScaleType.MATRIX);
+        useMemoryCache(false);
     }
 
     public TopCropImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setScaleType(ScaleType.MATRIX);
+        useMemoryCache(false);
     }
 
     public TopCropImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setScaleType(ScaleType.MATRIX);
+        useMemoryCache(false);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public TopCropImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setScaleType(ScaleType.MATRIX);
+        useMemoryCache(false);
     }
 
     @Override

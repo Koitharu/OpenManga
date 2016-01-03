@@ -26,7 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -37,7 +36,6 @@ import org.nv95.openmanga.providers.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
-import org.nv95.openmanga.utils.ChaptersSyncService;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
@@ -118,15 +116,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onMenuItemActionExpand(MenuItem item) {
                 historyAdapter.update();
                 listViewSearch.setVisibility(View.VISIBLE);
-                //show fab
-                new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).hide();
+                floatingAb.setVisibility(View.GONE);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 listViewSearch.setVisibility(View.GONE);
-                new SimpleAnimator(floatingAb).forceGravity(Gravity.CENTER).show();
+                floatingAb.setVisibility(View.VISIBLE);
                 return true;
             }
         });
@@ -191,9 +188,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            //case R.id.action_search:
-                //startActivity(new Intent(this, SearchActivity.class).putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
-                //return true;
             case R.id.action_histclear:
                 if (prov instanceof HistoryProvider) {
                     new AlertDialog.Builder(MainActivity.this)
@@ -248,24 +242,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 return true;
             case R.id.action_updates:
-                /*
-                UpdatesChecker.CheckUpdates(this, new UpdatesChecker.OnMangaUpdatedListener() {
-                    @Override
-                    public void onMangaUpdated(UpdatesChecker.MangaUpdate[] updates) {
-                        if (updates.length > 0) {
-                            StringBuilder builder = new StringBuilder();
-                            for (UpdatesChecker.MangaUpdate o : updates) {
-                                builder.append(o.manga.getName()).append("   ").append(o.chapters - o.lastChapters).append('\n');
-                            }
-                            builder.deleteCharAt(builder.length() - 1);
-                            Toast.makeText(MainActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
-                startService(new Intent(this, ChaptersSyncService.class));
-                Toast.makeText(this, R.string.checking_new_chapters, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, UpdatesActivity.class));
                 return true;
             case R.id.action_listmode:
                 listFragment.setGridLayout(!listFragment.isGridLayout());

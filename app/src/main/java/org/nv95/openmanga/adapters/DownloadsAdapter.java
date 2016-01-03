@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
@@ -73,7 +72,6 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
             viewHolder = new ViewHolder();
             viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.textView_title);
             viewHolder.textViewStatus = (TextView) convertView.findViewById(R.id.textView_status);
-            viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
             viewHolder.asyncImageView = (AsyncImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(viewHolder);
         } else {
@@ -81,8 +79,6 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
         }
         MangaInfo info = getItem(position);
         viewHolder.textViewTitle.setText(info.getName());
-        //viewHolder.progressBar.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-        //viewHolder.progressBar.setIndeterminate(true);
         viewHolder.asyncImageView.setImageAsync(info.getPreview());
         return convertView;
     }
@@ -110,7 +106,6 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
     private static class ViewHolder {
         TextView textViewTitle;
         TextView textViewStatus;
-        ProgressBar progressBar;
         AsyncImageView asyncImageView;
     }
 }

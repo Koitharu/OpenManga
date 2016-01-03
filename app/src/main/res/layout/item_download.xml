@@ -39,21 +39,13 @@
             android:id="@+id/textView_title"
             android:singleLine="true" />
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:indeterminate="false"
-            android:visibility="gone" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/queue"
             android:id="@+id/textView_status"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 </LinearLayout>

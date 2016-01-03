@@ -1,6 +1,7 @@
 package org.nv95.openmanga.providers;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -9,6 +10,7 @@ import android.os.Bundle;
 public class MangaSummary extends MangaInfo {
     protected String readLink;
     protected String description;
+    @NonNull
     protected MangaChapters chapters;
 
     public MangaSummary(MangaInfo mangaInfo) {
@@ -59,6 +61,7 @@ public class MangaSummary extends MangaInfo {
         return description;
     }
 
+    @NonNull
     public MangaChapters getChapters() {
         return chapters;
     }

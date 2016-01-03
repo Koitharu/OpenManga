@@ -39,6 +39,7 @@ import org.nv95.openmanga.providers.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.providers.SaveService;
+import org.nv95.openmanga.providers.UpdatesChecker;
 import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.File;
@@ -175,6 +176,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 } else {
                     if (favouritesProvider.add(mangaSummary)) {
+                        UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
                         favbtn.setImageResource(R.drawable.ic_tool_favorite);
                         favbtn.setContentDescription(getString(R.string.action_favourite));
                     }

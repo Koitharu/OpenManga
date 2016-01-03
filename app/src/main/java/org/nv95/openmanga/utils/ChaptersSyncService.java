@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.UpdatesActivity;
 import org.nv95.openmanga.providers.UpdatesChecker;
 
 import java.util.Calendar;
@@ -68,25 +69,26 @@ public class ChaptersSyncService extends Service implements UpdatesChecker.OnMan
     @Override
     public void onMangaUpdated(@NonNull UpdatesChecker.MangaUpdate[] updates) {
         if (updates.length != 0) {
-            StringBuilder content = new StringBuilder();
+            int sum = 0;
             for (UpdatesChecker.MangaUpdate o : updates) {
-                content.append(o.chapters - o.lastChapters).append(" - ").append(o.manga.getName()).append('\n');
+                sum += (o.chapters - o.lastChapters);
             }
-            content.deleteCharAt(content.length() - 1);
 
             Notification.Builder builder = new Notification.Builder(this)
                     .setSmallIcon(R.drawable.ic_stat_star)
                     .setContentTitle(getString(R.string.new_chapters))
+                    .setContentIntent(PendingIntent.getActivity(this, 1,
+                            new Intent(this, UpdatesActivity.class), 0))
                     .setTicker(getString(R.string.new_chapters))
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                    .setContentText(content.toString());
+                    .setContentText(String.format(getString(R.string.new_chapters_count), sum));
             Notification notification;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
                 for (UpdatesChecker.MangaUpdate o : updates) {
                     inboxStyle.addLine((o.chapters - o.lastChapters) + " - " + o.manga.getName());
                 }
-
+                inboxStyle.setSummaryText(String.format(getString(R.string.new_chapters_count), sum));
                 notification = inboxStyle.build();
             } else {
                 notification = builder.getNotification();

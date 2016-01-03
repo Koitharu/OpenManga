@@ -11,7 +11,6 @@ import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by nv95 on 19.12.15.
@@ -19,7 +18,7 @@ import java.util.Map;
 public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpdate[]> {
     private final Context context;
 
-    public UpdatesChecker(Context context) {
+    private UpdatesChecker(Context context) {
         this.context = context;
     }
 
@@ -68,32 +67,6 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
         return map;
     }
 
-    private void saveChaptersMap(@NonNull HashMap<Integer,Integer> map) {
-        StorageHelper storageHelper = null;
-        SQLiteDatabase database = null;
-        try {
-            storageHelper = new StorageHelper(context);
-            database = storageHelper.getWritableDatabase();
-            for (Map.Entry<Integer,Integer> o:map.entrySet()) {
-                ContentValues cv = new ContentValues();
-                cv.put("id", o.getKey());
-                cv.put("chapters", o.getValue());
-                if (database.update("updates", cv, "id=?", new String[]{String.valueOf(o.getKey())}) == 0) {
-                    database.insert("updates", null, cv);
-                }
-            }
-        } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
-        } finally {
-            if (database != null) {
-                database.close();
-            }
-            if (storageHelper != null) {
-                storageHelper.close();
-            }
-        }
-    }
-
     @Override
     protected MangaUpdate[] doInBackground(Void... params) {
         FavouritesProvider favs = FavouritesProvider.getInstacne(context);
@@ -114,16 +87,16 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
                     if (upd.chapters > upd.lastChapters) {
-                        map.put(key, upd.chapters);
                         if (upd.lastChapters != -1) {
                             updates.add(upd);
+                        } else {
+                            rememberChaptersCount(context, key, upd.chapters);
                         }
                     }
                 } catch (Exception e) {
                     ErrorReporter.getInstance().report(e);
                 }
             }
-            saveChaptersMap(map);
             return updates.toArray(new MangaUpdate[updates.size()]);
         } catch (Exception e) {
             return null;
@@ -140,5 +113,29 @@ public class UpdatesChecker extends AsyncTask<Void,Void,UpdatesChecker.MangaUpda
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public static void rememberChaptersCount(Context context, int mangaId, int chapters) {
+        StorageHelper storageHelper = null;
+        SQLiteDatabase database = null;
+        try {
+            storageHelper = new StorageHelper(context);
+            database = storageHelper.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("id",mangaId);
+            cv.put("chapters", chapters);
+            if (database.update("updates", cv, "id=?", new String[]{String.valueOf(mangaId)}) == 0) {
+                database.insert("updates", null, cv);
+            }
+        } catch (Exception e) {
+            ErrorReporter.getInstance().report(e);
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+            if (storageHelper != null) {
+                storageHelper.close();
+            }
+        }
     }
 }

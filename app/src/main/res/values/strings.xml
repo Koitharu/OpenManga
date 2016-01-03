@@ -139,6 +139,11 @@
     <string name="downloads_queue">Downloads queue</string>
     <string name="no_downloads">No queued downloads</string>
     <string name="queue">In queue</string>
+    <string name="new_chapters_count" formatted="false">New chapters: %d</string>
+    <string name="manga_updates">Updated manga</string>
+    <string name="over_wifi_only">Over WiFi only</string>
+    <string name="mark_all_viewed">Mark all as viewed</string>
+    <string name="mark_all_viewed_confirm">Mark all updated mangas as viewed?</string>
 
     <string-array name="directions">
         <item>Left to right</item>
