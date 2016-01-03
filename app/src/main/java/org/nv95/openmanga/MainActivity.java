@@ -38,10 +38,11 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.utils.ChaptersSyncService;
+import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
-        MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener {
+        MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener, MangaChangesObserver.OnMangaChangesListener {
 
     private Toolbar toolbar;
     private MangaListFragment listFragment;
@@ -168,6 +169,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MangaChangesObserver.addListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        MangaChangesObserver.removeListener(this);
+        super.onStop();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -190,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ((HistoryProvider)prov).clear();
-                                    listFragment.update();
                                 }
                             })
                             .setNegativeButton(android.R.string.cancel, null)
@@ -207,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             MangaProviderManager.SetSort(MainActivity.this, prov, which);
-                                            listFragment.update();
+                                            listFragment.update(true);
                                             dialog.dismiss();
                                         }
                                     })
@@ -226,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             genre = which;
-                                            listFragment.update();
+                                            listFragment.update(true);
                                             dialog.dismiss();
                                         }
                                     })
@@ -362,6 +373,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.imageView_fab:
                 new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
+        }
+    }
+
+    @Override
+    public void onMangaChanged(int category) {
+        if (category == drawerListView.getCheckedItemPosition()) {
+            listFragment.update(false);
         }
     }
 

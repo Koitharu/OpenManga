@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,6 +105,7 @@ public class HistoryProvider extends MangaProvider {
             database.insert(TABLE_NAME, null, cv);
         }
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -111,6 +113,7 @@ public class HistoryProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -125,6 +128,7 @@ public class HistoryProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -135,6 +139,7 @@ public class HistoryProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_HISTORY);
     }
 
     public boolean has(MangaInfo mangaInfo) {

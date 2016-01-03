@@ -53,14 +53,16 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private LinearLayout messageBlock;
     private AbsListView.OnScrollListener scrollListener;
 
-    public void update() {
+    public void update(boolean cleanList) {
         if (list != null && adapter != null) {
             ListLoadTask task = new ListLoadTask();
             endlessScroller.reset();
             list.clear();
-            try {
-                adapter.notifyDataSetChanged();
-            } catch (Exception ignored){}
+            if (cleanList) {
+                try {
+                    adapter.notifyDataSetChanged();
+                } catch (Exception ignored){}
+            }
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -222,8 +224,6 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
         switch (item.getItemId()) {
             case R.id.action_remove:
                 provider.remove(absListView.getCheckedItemIds());
-                progressBar.setVisibility(View.VISIBLE);
-                update();
                 mode.finish();
                 return true;
             case R.id.action_cancel:

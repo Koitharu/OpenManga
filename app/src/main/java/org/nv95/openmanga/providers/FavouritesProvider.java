@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -98,6 +99,7 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("timestamp", new Date().getTime());
         database.insert(TABLE_NAME, null, mangaInfo.toContentValues());
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
@@ -105,6 +107,7 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
@@ -118,6 +121,7 @@ public class FavouritesProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
