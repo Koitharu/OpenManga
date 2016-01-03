@@ -32,6 +32,8 @@
             android:label="@string/search_results">
         </activity>
         <activity android:name=".ReadActivity" />
+        <activity android:name=".DownloadsActivity"
+            android:label="@string/downloads_queue" android:launchMode="singleInstance" />
         <activity android:name=".ProviderSelectActivity" android:label="@string/select_sources" />
         <activity android:name=".SettingsActivity" android:label="@string/action_settings" />
         <activity android:name=".WelcomeActivity" />

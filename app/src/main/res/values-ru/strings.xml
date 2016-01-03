@@ -138,4 +138,8 @@
     <string name="def">По умолчанию</string>
     <string name="manga_local_dir">Папка для сохранения</string>
     <string name="retry">Повторить</string>
+    <string name="dir_no_access">Выбранный каталог недоступен для записи</string>
+    <string name="downloads_queue">Очередь загрузок</string>
+    <string name="no_downloads">Очередь загрузок пуста</string>
+    <string name="queue">В очереди</string>
 </resources>

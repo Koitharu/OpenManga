@@ -99,4 +99,20 @@ public class MangaInfo {
     public Class<?> getProvider() {
         return provider;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MangaInfo mangaInfo = (MangaInfo) o;
+
+        return !(path != null ? !path.equals(mangaInfo.path) : mangaInfo.path != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return path != null ? path.hashCode() : 0;
+    }
 }

@@ -136,6 +136,9 @@
     <string name="def">Default</string>
     <string name="manga_local_dir">Local manga\'s directory</string>
     <string name="dir_no_access">No write access to this directory</string>
+    <string name="downloads_queue">Downloads queue</string>
+    <string name="no_downloads">No queued downloads</string>
+    <string name="queue">In queue</string>
 
     <string-array name="directions">
         <item>Left to right</item>

@@ -19,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.SparseArray;
 import android.widget.Toast;
 
+import org.nv95.openmanga.DownloadsActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -154,6 +155,12 @@ public class SaveService extends Service {
                     .setSmallIcon(android.R.drawable.stat_sys_download)
                     .setProgress(0,0,true)
                     .setContentTitle(getString(R.string.saving_manga))
+                    .setContentIntent(PendingIntent.getActivity(
+                            SaveService.this,
+                            0,
+                            new Intent(SaveService.this, DownloadsActivity.class),
+                            0
+                    ))
                     .setContentText(getString(R.string.preparing));
             if (Build.VERSION.SDK_INT >= 16) {
                 notificationBuilder.addAction(R.drawable.sym_cancel, getString(android.R.string.cancel),
@@ -177,6 +184,7 @@ public class SaveService extends Service {
             stopForeground(true);
             notificationBuilder = new Notification.Builder(SaveService.this);
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
+                    .setContentIntent(null)
                     .setContentTitle(getString(R.string.saving_manga))
                     .setContentText(getString(R.string.done));
             notificationManager.notify(2, notificationBuilder.getNotification());
@@ -338,8 +346,8 @@ public class SaveService extends Service {
 
     //---------------------------------------------------------------------------------------
 
-    class SaveBinder extends Binder {
-        SaveService getService() {
+    public class SaveBinder extends Binder {
+        public SaveService getService() {
             return SaveService.this;
         }
     }
