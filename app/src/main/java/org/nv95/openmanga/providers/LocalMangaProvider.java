@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.FileRemover;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.File;
@@ -187,7 +187,7 @@ public class LocalMangaProvider extends MangaProvider {
             cursor1.close();
             database.delete(TABLE_CHAPTERS, "mangaId=" + mangaId, null);
             database.delete(TABLE_STORAGE, "id=" + id, null);
-            RemoveDir(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId)));
+            new FileRemover(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId))).runAsync();
         }
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
@@ -207,20 +207,6 @@ public class LocalMangaProvider extends MangaProvider {
         }
         in.close();
         out.close();
-    }
-
-    public static void RemoveDir(File dir) {
-        if (!dir.exists()) {
-            Log.e("STORAGE", "Directory not exist!" + dir.getPath());
-            return;
-        }
-        for (File o:dir.listFiles()) {
-            if (o.isDirectory())
-                RemoveDir(o);
-            else
-                o.delete();
-        }
-        dir.delete();
     }
 
     public static long DirSize(File dir) {
