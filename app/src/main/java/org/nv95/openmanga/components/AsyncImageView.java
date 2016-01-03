@@ -22,7 +22,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -52,10 +51,8 @@ public class AsyncImageView extends ImageView {
     private SetImageTask setImageTask = null;
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
-    private boolean compress = false;
+    private boolean useMemCache = true;
     private static final SerialExecutor EXECUTOR = new SerialExecutor();
-
-    //// TODO: 18.12.15 compress
 
     public AsyncImageView(Context context) {
         super(context);
@@ -88,28 +85,28 @@ public class AsyncImageView extends ImageView {
 
     @Override
     public void setImageBitmap(Bitmap bm) {
-        cancelAllTasks();
+        cancelLoading();
         //url = null;
         super.setImageBitmap(bm);
     }
 
     @Override
     public void setImageResource(int resId) {
-        cancelAllTasks();
+        cancelLoading();
         //url = null;
         super.setImageResource(resId);
     }
 
     @Override
     public void setImageURI(Uri uri) {
-        cancelAllTasks();
+        cancelLoading();
         //url = null;
         super.setImageURI(uri);
     }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
-        cancelAllTasks();
+        cancelLoading();
         //url = null;
         super.setImageDrawable(drawable);
     }
@@ -125,7 +122,7 @@ public class AsyncImageView extends ImageView {
         if (useHolder) {
             setImageDrawable(IMAGE_HOLDER);
         }
-        cancelAllTasks();
+        cancelLoading();
         this.url = url;
         if (url != null) {
             setImageTask = new SetImageTask();
@@ -133,15 +130,11 @@ public class AsyncImageView extends ImageView {
         }
     }
 
-    public boolean isCompress() {
-        return compress;
+    public void useMemoryCache(boolean value) {
+        this.useMemCache = value;
     }
 
-    public void setCompress(boolean compress) {
-        this.compress = compress;
-    }
-
-    private void cancelAllTasks() {
+    public void cancelLoading() {
         try {
             if (setImageTask != null && setImageTask.getStatus() != AsyncTask.Status.FINISHED) {
                 setImageTask.cancel(false);
@@ -156,7 +149,7 @@ public class AsyncImageView extends ImageView {
 
     @Override
     protected void finalize() throws Throwable {
-        cancelAllTasks();
+        cancelLoading();
         super.finalize();
     }
 
@@ -178,9 +171,11 @@ public class AsyncImageView extends ImageView {
         protected Bitmap doInBackground(String... params) {
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(params[0]).getContent());
-                memoryCache.putBitmap(params[0], bitmap);
+                if (useMemCache) {
+                    memoryCache.putBitmap(params[0], bitmap);
+                }
                 fileCache.putBitmap(params[0], bitmap);
-                return compress ? ThumbnailUtils.extractThumbnail(bitmap, w, h) : bitmap;
+                return bitmap;
             } catch (Exception e) {
                 return null;
             }
@@ -223,7 +218,7 @@ public class AsyncImageView extends ImageView {
                     bitmap = fileCache.getBitmap(params[0]);
                 }
             }
-            return compress ? ThumbnailUtils.extractThumbnail(bitmap, w, h) : bitmap;
+            return bitmap;
         }
 
         @Override

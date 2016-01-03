@@ -29,6 +29,7 @@ import org.nv95.openmanga.providers.MangaInfo;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.providers.SaveService;
+import org.nv95.openmanga.providers.UpdatesChecker;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -136,6 +137,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                     }
                 } else {
                     if (favouritesProvider.add(mangaSummary)) {
+                        UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
                         item.setIcon(R.drawable.ic_action_action_favorite);
                         item.setTitle(R.string.action_unfavourite);
                     }
