@@ -22,6 +22,7 @@ import android.widget.Toast;
 import org.nv95.openmanga.DownloadsActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileRemover;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.File;
@@ -257,7 +258,7 @@ public class SaveService extends Service {
                         publishProgress(new ProgressInfo(summary.chapters.size()*100, i*100+k*100/pages.size(), summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     }
                     if (isCancelled()) {
-                        LocalMangaProvider.RemoveDir(chapt);
+                        new FileRemover(chapt).run();
                         break;
                     } else {
                         cv = new ContentValues();

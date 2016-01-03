@@ -19,6 +19,7 @@ import android.widget.Toast;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileRemover;
 import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 import java.io.File;
@@ -188,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         @Override
         protected Void doInBackground(Void... params) {
             File dir = preference.getContext().getExternalCacheDir();
-            LocalMangaProvider.RemoveDir(dir);
+            new FileRemover(dir).run();
             return null;
         }
 
