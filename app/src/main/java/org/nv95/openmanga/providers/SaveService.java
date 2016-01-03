@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -172,6 +173,7 @@ public class SaveService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
+            MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
             stopForeground(true);
             notificationBuilder = new Notification.Builder(SaveService.this);
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -184,6 +186,9 @@ public class SaveService extends Service {
         @Override
         protected void onProgressUpdate(ProgressInfo... values) {
             super.onProgressUpdate(values);
+            if (values[0].state == ProgressInfo.STATE_INTERMEDIATE) {
+                MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
+            }
             notificationBuilder.setContentText(values[0].title);
             notificationBuilder.setProgress(values[0].max, values[0].progress, values[0].state == ProgressInfo.STATE_INTERMEDIATE);
             notificationManager.notify(1, notificationBuilder.getNotification());

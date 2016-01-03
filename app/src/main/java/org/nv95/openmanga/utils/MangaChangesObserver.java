@@ -1,0 +1,59 @@
+/*
+ * Copyright (C) 2016 Vasily Nikitin
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
+ * If not, see http://www.gnu.org/licenses/.
+ */
+
+package org.nv95.openmanga.utils;
+
+import java.util.Vector;
+
+/**
+ * Created by nv95 on 03.01.16.
+ */
+public class MangaChangesObserver {
+    public static final int CATEGORY_LOCAL = 0;
+    public static final int CATEGORY_FAVOURITES = 1;
+    public static final int CATEGORY_HISTORY = 2;
+
+    private static MangaChangesObserver instance = new MangaChangesObserver();
+    private Vector<OnMangaChangesListener> listeners = new Vector<>();
+    private int queuedChanges[] = {0,0,0};
+
+    public interface OnMangaChangesListener {
+        void onMangaChanged(int category);
+    }
+
+    public static void addListener(OnMangaChangesListener listener) {
+        instance.listeners.add(listener);
+        for (int i=0;i<3;i++) {
+            if (instance.queuedChanges[i] > 0) {
+                listener.onMangaChanged(i);
+                instance.queuedChanges[i] = 0;
+            }
+        }
+    }
+
+    public static void removeListener(OnMangaChangesListener listener) {
+        instance.listeners.remove(listener);
+    }
+
+    public static void emitChanging(int category) {
+        if (instance.listeners.size() == 0) {
+            instance.queuedChanges[category]++;
+        } else {
+            for (OnMangaChangesListener o : instance.listeners) {
+                o.onMangaChanged(category);
+            }
+        }
+    }
+}

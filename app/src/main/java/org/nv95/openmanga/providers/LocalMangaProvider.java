@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -190,6 +191,7 @@ public class LocalMangaProvider extends MangaProvider {
         }
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
+        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
         return true;
     }
 
