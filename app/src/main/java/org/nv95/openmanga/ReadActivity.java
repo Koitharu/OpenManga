@@ -29,7 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.nv95.openmanga.components.AdvancedViewPager;
+import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -52,9 +52,9 @@ import java.util.ArrayList;
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener,
-        NavigationDialog.NavigationListener, AdvancedViewPager.OnScrollListener {
+        NavigationDialog.NavigationListener, MangaPager.OverScrollListener {
     //views
-    private AdvancedViewPager pager;
+    private MangaPager pager;
     private TextView chapterTitleTextView;
     private ProgressBar chapterProgressBar;
     private ImageView oversrollImageView;
@@ -70,7 +70,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
-        pager = (AdvancedViewPager) findViewById(R.id.pager);
+        pager = (MangaPager) findViewById(R.id.pager);
         chapterTitleTextView = (TextView) findViewById(R.id.textView_title);
         chapterProgressBar = (ProgressBar) findViewById(R.id.progressBar_reading);
         oversrollImageView = (ImageView) findViewById(R.id.imageViewOverscroll);
@@ -92,8 +92,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
-        pager.setOnScrollListener(this);
         pager.addOnPageChangeListener(this);
+        pager.setOverScrollListener(this);
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
         if (mangaSummary.getChapters().size() == 0) {
@@ -120,7 +120,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onPause() {
-        HistoryProvider.addToHistory(this, mangaSummary, chapterId, pager.getCurrentItem());
+        HistoryProvider.addToHistory(this, mangaSummary, chapterId, pager.getCurrentPageIndex());
         super.onPause();
     }
 
@@ -150,7 +150,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 showChaptersList();
                 break;
             case R.id.toolbutton_nav:
-                new NavigationDialog(this, pager.getAdapter().getCount(), pager.getCurrentItem())
+                new NavigationDialog(this, pager.getCount(), pager.getCurrentPageIndex())
                         .setNavigationListener(this).show();
                 break;
             case R.id.toolbutton_back:
@@ -194,10 +194,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new ReaderOptionsDialog(this).setOptionsChangedListener(this).show();
                 break;
             case R.id.toolbutton_img:
-                PagerReaderAdapter adapter = (PagerReaderAdapter) pager.getAdapter();
-                if (adapter == null)
-                    break;
-                final MangaPage page = adapter.getItem(pager.getCurrentItem());
+                final MangaPage page = pager.getCurrentPage();
                 PopupMenu popupMenu = new PopupMenu(this,v);
                 popupMenu.inflate(R.menu.popup_image);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -265,16 +262,16 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (scrollWithVolkeys) {
-            int page = pager.getCurrentItem();
+            int page = pager.getCurrentPageIndex();
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                if (page < pager.getAdapter().getCount()) {
-                    pager.setCurrentItem(page + 1, true);
+                if (page < pager.getCount()) {
+                    pager.scrollToPage(page + 1);
                 }
                 return true;
             }
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 if (page > 0) {
-                    pager.setCurrentItem(page - 1, true);
+                    pager.scrollToPage(page - 1);
                 }
                 return true;
             }
@@ -291,8 +288,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onPageSelected(int position) {
-        chapterProgressBar.setProgress(pager.isReverseOrder() ? pager.getAdapter().getCount() - 1 - position : position);
-        pageId = position;
+        pageId = pager.getCurrentPageIndex();
+        chapterProgressBar.setProgress(pageId);
     }
 
     @Override
@@ -316,8 +313,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        pager.setReverseOrder(prefs.getInt("scroll_direction", 0) > 1);
-        pager.setOrientation(prefs.getInt("scroll_direction", 0) % 2 == 0 ? AdvancedViewPager.HORIZONTAL : AdvancedViewPager.VERTICAL);
+        pager.setReverse(prefs.getInt("scroll_direction", 0) > 1);
+        pager.setVertical(prefs.getInt("scroll_direction", 0) == 1);
         if (prefs.getBoolean("keep_screen", false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
@@ -329,26 +326,37 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPageChange(int page) {
         hideToolbars();
-        pager.setCurrentItem(page, false);
+        pager.setCurrentPageIndex(page);
+    }
+
+    private boolean hasNextChapter() {
+        if (pager.isReverse()) {
+            return chapterId > 0;
+        } else {
+            return chapterId < mangaSummary.getChapters().size() - 1;
+        }
+    }
+
+    private boolean hasPrevChapter() {
+        if (pager.isReverse()) {
+            return chapterId < mangaSummary.getChapters().size() - 1;
+        } else {
+            return chapterId > 0;
+        }
     }
 
     @Override
-    public void OnScroll(AdvancedViewPager viewPager, int x, int y, int oldx, int oldy) {
-
-    }
-
-    @Override
-    public boolean OnOverScroll(AdvancedViewPager viewPager, int deltaX, int direction) {
+    public boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction) {
         if (deltaX == 0) {
             FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams)oversrollImageView.getLayoutParams());
-            if (direction == -1 && chapterId > 0) {
+            if (direction == -1 && hasPrevChapter()) {
                 params.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
                 params.leftMargin = -oversrollImageView.getWidth();
                 oversrollImageView.setTranslationX(0);
                 oversrollImageView.setVisibility(View.VISIBLE);
                 oversrollImageView.getParent().requestLayout();
                 return true;
-            } else if (direction == 1 && chapterId < mangaSummary.getChapters().size() - 1) {
+            } else if (direction == 1 && hasNextChapter()) {
                 params.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
                 params.rightMargin = -oversrollImageView.getWidth();
                 oversrollImageView.setTranslationX(0);
@@ -358,14 +366,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             } else if (direction == 0){
                 if (oversrollImageView.getTag() != null) {
                     float scrollFactor = (float) oversrollImageView.getTag();
-                    if (scrollFactor > 0.4) {
+                    if (scrollFactor > 0.3) {
                         new SimpleAnimator(oversrollImageView).forceGravity(Gravity.CENTER).hide();
-                        if (params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT) {
-                            chapterId++;
-                            pageId = 0;
+                        if ((params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT)) {
+                            chapterId += pager.isReverse() ? -1 : 1;
+                            pageId = pager.isReverse() ? -1 : 0;
                         } else {
-                            chapterId--;
-                            pageId = -1;
+                            chapterId += pager.isReverse() ? 1 : -1;
+                            pageId = pager.isReverse() ? 0 : -1;
                         }
                         //TODO::switchpage
                         chapter = mangaSummary.getChapters().get(chapterId);
@@ -424,13 +432,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 }).create().show();
                 return;
             }
-            chapterProgressBar.setMax(mangaPages.size());
+            chapterProgressBar.setMax(mangaPages.size() - 1);
             chapterProgressBar.setProgress(pageId);
-            pager.setAdapter(new PagerReaderAdapter(ReadActivity.this, mangaPages));
             if (pageId == -1) {
                 pageId = mangaPages.size() - 1;
             }
-            pager.setCurrentItem(pageId, false);
+            pager.setPages(mangaPages,pageId);
         }
 
         @Override

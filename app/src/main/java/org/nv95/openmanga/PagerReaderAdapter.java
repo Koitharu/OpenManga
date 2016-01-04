@@ -34,7 +34,6 @@ import java.util.ArrayList;
 public class PagerReaderAdapter extends PagerAdapter implements View.OnClickListener {
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
-    private boolean reversed;
     private final SerialExecutor executor = new SerialExecutor();
 
     @Override
@@ -74,15 +73,6 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         return view.equals(object);
     }
 
-    public boolean isReversed() {
-        return reversed;
-    }
-
-    public void setReversed(boolean reversed) {
-        this.reversed = reversed;
-        notifyDataSetChanged();
-    }
-
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_page, null);
@@ -115,7 +105,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
     }
 
     public MangaPage getItem(int position) {
-        return pages.get(reversed? getCount() - 1 - position : position);
+        return pages.get(position);
     }
 
     public static class PageLoadTask extends AsyncTask<Void,Integer,File> implements SubsamplingScaleImageView.OnImageEventListener {
