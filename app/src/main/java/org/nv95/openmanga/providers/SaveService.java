@@ -84,6 +84,9 @@ public class SaveService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            return 0;
+        }
         int action = intent.getIntExtra("action", SAVE_ADD);
         switch (action) {
             case SAVE_CANCEL:
@@ -99,11 +102,7 @@ public class SaveService extends Service {
                     downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
         }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    public static void Save(Context context, MangaSummary mangaSummary) {
-        context.startService(new Intent(context, SaveService.class).putExtras(mangaSummary.toBundle()));
+        return START_NOT_STICKY;
     }
 
     public static void SaveWithDialog(final Context context, final MangaSummary mangaSummary) {
@@ -181,7 +180,6 @@ public class SaveService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
             stopForeground(true);
             notificationBuilder = new Notification.Builder(SaveService.this);
             notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
@@ -195,8 +193,9 @@ public class SaveService extends Service {
         @Override
         protected void onProgressUpdate(ProgressInfo... values) {
             super.onProgressUpdate(values);
-            if (values[0].state == ProgressInfo.STATE_INTERMEDIATE) {
+            if (values.length == 0) {
                 MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
+                return;
             }
             notificationBuilder.setContentText(values[0].title);
             notificationBuilder.setProgress(values[0].max, values[0].progress, values[0].state == ProgressInfo.STATE_INTERMEDIATE);
@@ -215,6 +214,7 @@ public class SaveService extends Service {
             int chapterId;
             while (!queue.isEmpty()){
                 summary = queue.poll();
+                publishProgress();
                 //preparing
                 publishProgress(new ProgressInfo(0,0,summary.getName(), ProgressInfo.STATE_INTERMEDIATE));
                 try {
@@ -270,6 +270,7 @@ public class SaveService extends Service {
                     }
                 }
             }
+            publishProgress();
             database.close();
             dbHelper.close();
             return null;
@@ -298,11 +299,9 @@ public class SaveService extends Service {
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     return "";
                 }
-                int fileLength = connection.getContentLength();
                 input = connection.getInputStream();
                 output = new FileOutputStream(destination);
                 byte data[] = new byte[4096];
-                long total = 0;
                 int count;
                 while ((count = input.read(data)) != -1) {
                     if (isCancelled()) {
@@ -311,10 +310,6 @@ public class SaveService extends Service {
                         destination.delete();
                         return "";
                     }
-                    total += count;
-                    // publishing the progress....
-                    //if (fileLength > 0) // only if total length is known
-                        //publishProgress((int) (total * 100 / fileLength));
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
