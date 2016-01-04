@@ -97,6 +97,11 @@ public class SimpleAnimator implements Animator.AnimatorListener {
         return this;
     }
 
+    public SimpleAnimator duration(long value) {
+        animator.setDuration(value);
+        return this;
+    }
+
     @Override
     public void onAnimationStart(Animator animation) {
 

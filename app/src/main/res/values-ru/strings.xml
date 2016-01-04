@@ -60,7 +60,7 @@
     <string name="no_saved_manga">Нет сохранённой манги</string>
     <string name="already_saved">Эта манга уже сохранена</string>
     <string name="cache_clearing">Очистка кэша…</string>
-    <string name="cache_size">Размер кэша: %.1f Мб</string>
+    <string name="cache_size" formatted="false">Размер кэша: %.1f Мб</string>
     <string name="action_clear_cache">Очистить кэш изображений</string>
     <string name="size_calculating">Расчет размера…</string>
     <string name="action_histclear">Очистить историю</string>
@@ -77,7 +77,7 @@
     <string name="sort_latest">Новое</string>
     <string name="sort_popular">Популярное</string>
     <string name="sort_updated">Обновлённые</string>
-    <string name="version">Версия: %s</string>
+    <string name="version" formatted="false">Версия: %s</string>
     <string name="alphabetical">По алфавиту</string>
     <string name="rating">По оценкам</string>
     <string name="action_genre">Жанры</string>
@@ -142,4 +142,10 @@
     <string name="downloads_queue">Очередь загрузок</string>
     <string name="no_downloads">Очередь загрузок пуста</string>
     <string name="queue">В очереди</string>
+    <string name="manga_updates">Обновлённая манга</string>
+    <string name="mark_all_viewed">Пометить всё просмотренным</string>
+    <string name="mark_all_viewed_confirm">Пометить все обновления просмотренными?</string>
+    <string name="new_chapters_count" formatted="false">Новых глав: %d</string>
+    <string name="over_wifi_only">Только через WiFi</string>
+    <string name="remove_from_history_confirm" formatted="false">Удалить \"%s\" из истории поиска?</string>
 </resources>

@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -37,7 +38,6 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.MangaSummary;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.utils.SearchHistoryAdapter;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         MangaListFragment.MangaListListener, AbsListView.OnScrollListener, View.OnClickListener, MangaChangesObserver.OnMangaChangesListener {
@@ -133,6 +133,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
                 searchView.setQuery(cursor.getString(1), false);
+            }
+        });
+        listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(String.format(getString(R.string.remove_from_history_confirm), ((TextView)view).getText().toString()))
+                        .setCancelable(true)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                historyAdapter.remove(id);
+                                historyAdapter.update();
+                            }
+                        })
+                        .create().show();
+                return true;
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
