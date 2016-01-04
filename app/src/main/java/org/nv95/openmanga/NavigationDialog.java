@@ -21,7 +21,7 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        textView.setText(String.format(context.getString(R.string.current_pos), pos, progress));
+        textView.setText(String.format(context.getString(R.string.current_pos), pos + 1, progress + 1));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
         textView = (TextView) view.findViewById(R.id.textView);
         ((TextView) view.findViewById(R.id.textView_summary)).setText(String.format(context.getString(R.string.current_summary),  size));
         seekBar.setOnSeekBarChangeListener(this);
-        seekBar.setMax(size);
+        seekBar.setMax(size - 1);
         seekBar.setProgress(pos);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);

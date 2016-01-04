@@ -16,7 +16,7 @@ import org.nv95.openmanga.providers.StorageHelper;
 /**
  * Created by nv95 on 02.01.16.
  */
-public class SearchHistoryAdapter  extends CursorAdapter {
+public class SearchHistoryAdapter extends CursorAdapter {
     //todo use loader
     private static final String TABLE_NAME = "search_history";
     private final int oddColor;
