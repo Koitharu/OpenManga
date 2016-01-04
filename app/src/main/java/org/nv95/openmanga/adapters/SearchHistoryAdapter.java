@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,6 +47,13 @@ public class SearchHistoryAdapter extends CursorAdapter {
         TextView content = (TextView) view;
         content.setBackgroundColor(cursor.getPosition() % 2 == 1 ? oddColor : evenColor);
         content.setText(cursor.getString(1));
+    }
+
+
+    public void remove(long id) {
+        SQLiteDatabase database = new StorageHelper(inflater.getContext()).getWritableDatabase();
+        database.delete(TABLE_NAME, "_id=?", new String[]{String.valueOf(id)});
+        database.close();
     }
 
     public void addToHistory(String query) {

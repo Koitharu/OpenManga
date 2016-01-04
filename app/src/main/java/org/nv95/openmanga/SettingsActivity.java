@@ -20,7 +20,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
-import org.nv95.openmanga.utils.SearchHistoryAdapter;
+import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 
 import java.io.File;
 
