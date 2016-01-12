@@ -1,26 +1,22 @@
 package org.nv95.openmanga;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
-import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 
 import java.io.File;
 
@@ -71,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
                 return true;
             case "about":
-                aboutDialog();
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -198,24 +194,5 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
             preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
             super.onPostExecute(aVoid);
         }
-    }
-
-
-
-    private void aboutDialog() {
-        new AlertDialog.Builder(this)
-                .setMessage(AppHelper.getRawString(this, R.raw.about))
-                .setNegativeButton(R.string.close, null)
-                .setPositiveButton(R.string.check_for_updates, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String url = "https://github.com/nv95/OpenManga/tree/master/builds";
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
-                    }
-                })
-                .setTitle(R.string.app_name)
-                .create().show();
     }
 }

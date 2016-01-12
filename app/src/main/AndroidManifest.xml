@@ -39,6 +39,7 @@
         <activity android:name=".ProviderSelectActivity" android:label="@string/select_sources" />
         <activity android:name=".SettingsActivity" android:label="@string/action_settings" />
         <activity android:name=".WelcomeActivity" />
+        <activity android:name=".AboutActivity" android:label="@string/about" />
         <activity android:name=".UpdatesSettingsActivity"
             android:label="@string/checking_new_chapters">
             <intent-filter>
