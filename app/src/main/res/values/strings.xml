@@ -145,6 +145,7 @@
     <string name="mark_all_viewed">Mark all as viewed</string>
     <string name="mark_all_viewed_confirm">Mark all updated mangas as viewed?</string>
     <string name="remove_from_history_confirm" formatted="false">Delete \"%s\" from search history?</string>
+    <string name="send_mail">Send email</string>
 
     <string-array name="directions">
         <item>Left to right</item>

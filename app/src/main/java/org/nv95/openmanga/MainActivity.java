@@ -183,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    protected void onDestroy() {
+        SearchHistoryAdapter.Recycle(null);
+        super.onDestroy();
+    }
 
     @Override
     protected void onStart() {

@@ -1,9 +1,12 @@
 package org.nv95.openmanga.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,18 +25,38 @@ public class SearchHistoryAdapter extends CursorAdapter {
     private final int oddColor;
     private final int evenColor;
 
+    private static StorageHelper storageHelper;
+    private static SQLiteDatabase database;
+
     private LayoutInflater inflater;
 
     public static SearchHistoryAdapter newInstance(Context context) {
-        StorageHelper storageHelper = new StorageHelper(context);
-        Cursor c = storageHelper.getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
+        storageHelper = new StorageHelper(context);
+        database = storageHelper.getReadableDatabase();
+        @SuppressLint("Recycle")
+        Cursor c = database.query(TABLE_NAME, null, null, null, null, null, null);
         return new SearchHistoryAdapter(context, c);
+    }
+
+    public static void Recycle(@Nullable SearchHistoryAdapter instance) {
+        if (instance != null) {
+            Cursor c = instance.getCursor();
+            if (c != null) {
+                c.close();
+            }
+        }
+        if (database != null) {
+            database.close();
+        }
+        if (storageHelper != null) {
+            storageHelper.close();
+        }
     }
 
     private SearchHistoryAdapter(Context context, Cursor cursor) {
         super(context, cursor, true);
-        oddColor = context.getResources().getColor(R.color.primary_dark);
-        evenColor = context.getResources().getColor(R.color.primary_dark_dark);
+        oddColor = ContextCompat.getColor(context, R.color.primary_dark);
+        evenColor = ContextCompat.getColor(context, R.color.primary_dark_dark);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -78,6 +101,11 @@ public class SearchHistoryAdapter extends CursorAdapter {
     }
 
     public void update() {
-        getCursor().requery();
+        Cursor newCursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+        Cursor oldCursor = getCursor();
+        swapCursor(newCursor);
+        if (oldCursor != null) {
+            oldCursor.close();
+        }
     }
 }

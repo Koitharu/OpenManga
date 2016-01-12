@@ -1,5 +1,4 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer"
     android:layout_width="match_parent"
@@ -11,18 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:elevation="7dp"
-            android:fitsSystemWindows="true"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
-
-            </android.support.v7.widget.Toolbar>
+        <include layout="@layout/toolbar" />
 
         <FrameLayout
             android:id="@+id/block_main"
@@ -43,8 +31,8 @@
                 android:layout_height="@dimen/fab_size"
                 android:layout_gravity="right|bottom"
                 android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
                 android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
                 android:background="@drawable/background_fab"
                 android:elevation="7dp"
                 android:scaleType="center"
@@ -52,15 +40,15 @@
                 android:visibility="visible" />
 
             <ListView
+                android:id="@+id/listView_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/listView_search"
-                android:background="?colorPrimary"
                 android:layout_gravity="top"
-                android:visibility="gone"
+                android:background="?colorPrimary"
                 android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
                 android:drawSelectorOnTop="true"
-                android:dividerHeight="0dp" />
+                android:visibility="gone" />
 
         </FrameLayout>
     </LinearLayout>
