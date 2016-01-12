@@ -43,7 +43,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     private static ListLoadTask taskInstance;
 
     private AbsListView absListView;
-    private boolean grid = false;
+    private boolean grid = true;
     private MangaListAdapter adapter;
     private MangaProvider provider;
     private MangaList list = new MangaList();
@@ -93,7 +93,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
                 }
             }
         };
-        grid = PreferenceManager.getDefaultSharedPreferences(inflater.getContext()).getBoolean("grid",false);
+        grid = PreferenceManager.getDefaultSharedPreferences(inflater.getContext()).getBoolean("grid",true);
         messageBlock = (LinearLayout) view.findViewById(R.id.block_message);
         ListView listView = (ListView) view.findViewById(R.id.listView);
         GridView gridView = (GridView) view.findViewById(R.id.gridView);
