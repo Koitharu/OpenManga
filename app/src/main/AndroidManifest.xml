@@ -29,8 +29,9 @@
             android:label=""
             android:theme="@style/AppTheme.Preview"/>
         <activity android:name=".SearchActivity"
-            android:label="@string/search_results">
-        </activity>
+            android:label="@string/search_results" />
+        <activity android:name=".MultipleSearchActivity"
+            android:label="@string/search_results" />
         <activity android:name=".ReadActivity" />
         <activity android:name=".DownloadsActivity"
             android:label="@string/downloads_queue" android:launchMode="singleInstance" />

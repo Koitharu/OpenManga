@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaInfo;

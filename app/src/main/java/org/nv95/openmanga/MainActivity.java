@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -158,9 +159,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public boolean onQueryTextSubmit(String query) {
                 historyAdapter.addToHistory(query);
-                startActivity(new Intent(MainActivity.this, SearchActivity.class)
-                        .putExtra("query", query)
-                        .putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                    .getBoolean("qsearch", false) && listFragment.getProvider().hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
+                    startActivity(new Intent(MainActivity.this, SearchActivity.class)
+                            .putExtra("query", query)
+                            .putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
+                } else {
+                    startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
+                            .putExtra("query", query));
+                }
                 menu.findItem(R.id.action_search).collapseActionView();
                 return true;
             }
@@ -176,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MangaProvider provider = listFragment.getProvider();
-        menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
+        //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         menu.findItem(R.id.action_sort).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
         menu.findItem(R.id.action_genre).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
         menu.setGroupVisible(R.id.group_history, drawerListView.getCheckedItemPosition() == 2);

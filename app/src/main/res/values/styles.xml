@@ -22,15 +22,13 @@
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
-    <style name="AppTheme.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:logo">@android:color/transparent</item>
-        <item name="android:background">@color/primary_dark</item>
-    </style>
-
-    <style name="AppTheme.ActionBar.Transparent" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:logo">@android:color/transparent</item>
-        <item name="android:background">@drawable/gradient_bacground_details</item>
-        <!--TODO-->
+    <style name="AppTheme.SmallColoredButton" >
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmallInverse</item>
+        <item name="android:background">@drawable/background_accentbutton</item>
     </style>
 
 </resources>
