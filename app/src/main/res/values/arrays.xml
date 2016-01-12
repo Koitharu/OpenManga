@@ -2,13 +2,10 @@
 <resources>
 
     <string-array name="provider_summs">
-        <item>Russian</item>
-        <item>Russian</item>
-        <item>Russian</item>
-        <item>Multilanguage</item>
         <item>English</item>
-        <item>English</item>
+        <item>Russian</item>
         <item>Turkish</item>
+        <item>Multilanguage</item>
     </string-array>
     <string-array name="intervals_hours">
         <item>1</item>

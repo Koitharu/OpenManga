@@ -31,7 +31,7 @@ public class ProviderSelectActivity extends AppCompatActivity implements Adapter
         adapter = providerManager.getAdapter();
         listView.setAdapter(adapter);
         for (int i=0; i<adapter.getCount(); i++) {
-            listView.setItemChecked(i, providerManager.isProviderEnabled(adapter.getItem(i)));
+            listView.setItemChecked(i, providerManager.isProviderEnabled(adapter.getItem(i).name));
         }
         listView.setOnItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,6 +49,6 @@ public class ProviderSelectActivity extends AppCompatActivity implements Adapter
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CheckBox cb = ((CheckBox)view.findViewById(android.R.id.checkbox));
         cb.setChecked(!cb.isChecked());
-        providerManager.setProviderEnabled(adapter.getItem(position), cb.isChecked());
+        providerManager.setProviderEnabled(adapter.getItem(position).name, cb.isChecked());
     }
 }

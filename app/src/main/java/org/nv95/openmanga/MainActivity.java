@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setHomeButtonEnabled(true);
             actionBar.setSubtitle(R.string.local_storage);
         }
+        WelcomeActivity.ShowChangelog(this);
     }
 
     @Override

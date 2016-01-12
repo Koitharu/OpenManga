@@ -1,6 +1,8 @@
 <b>OpenManga - Manga reader for Android.</b><br>
 This application is open-source. You can find source code on <a href="https://github.com/nv95/OpenManga">GitHub</a>
 <p>
+<a href="activity:WelcomeActivity">Changelog</a>
+<p>
 Copyright (C) 2015 Vasily Nikitin
 <br>
 If you have any questions, suggestions or you can help, please,
@@ -9,7 +11,5 @@ If you have any questions, suggestions or you can help, please,
 If you like this app, you also can donate me via Yandex.Money:<br>
 410012543938752
 <p>
-<b>Thanks:</b>
-<ul>
-<li>Turkish translation - Skip
-</ul>
+<b>Thanks:</b><br>
+Turkish translation - Skip
