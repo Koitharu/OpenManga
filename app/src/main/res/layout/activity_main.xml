@@ -36,7 +36,7 @@
                 android:background="@drawable/background_fab"
                 android:elevation="7dp"
                 android:scaleType="center"
-                android:src="@drawable/ic_action_enter_to"
+                android:src="@drawable/ic_fab_read"
                 android:visibility="visible" />
 
             <ListView

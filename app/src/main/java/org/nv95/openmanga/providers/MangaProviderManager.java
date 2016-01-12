@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class MangaProviderManager {
 
     public enum Language {EN,RU,TR, MULTI}
 
-    private static final ProviderSumm[] providers = {
+    public static final ProviderSumm[] providers = {
         new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Language.RU),
         new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
         new ProviderSumm("Манга-тян", MangachanProvider.class, Language.RU),
@@ -68,6 +69,16 @@ public class MangaProviderManager {
         public int hashCode() {
             return aClass.hashCode();
         }
+
+        @Nullable
+        public MangaProvider instance() {
+            try {
+                return (MangaProvider) aClass.newInstance();
+            } catch (Exception e) {
+                ErrorReporter.getInstance().report(e);
+                return null;
+            }
+        }
     }
 
     public MangaProviderManager(Context context) {
@@ -84,6 +95,15 @@ public class MangaProviderManager {
                 enabledProviders.add(o);
             }
         }
+    }
+
+    public int indexOf(ProviderSumm providerSumm) {
+        for (int i=0;i<enabledProviders.size();i++) {
+            if (enabledProviders.get(i).equals(providerSumm)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public MangaProvider getMangaProvider(int index) {
@@ -120,6 +140,10 @@ public class MangaProviderManager {
 
     public static int GetSort(Context context, MangaProvider provider) {
         return context.getSharedPreferences("sort", Context.MODE_PRIVATE).getInt(provider.getName(), 0);
+    }
+
+    public ArrayList<ProviderSumm> getEnabledProviders() {
+        return enabledProviders;
     }
 
     public ProviderSelectAdapter getAdapter() {

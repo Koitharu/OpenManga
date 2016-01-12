@@ -148,6 +148,11 @@
     <string name="send_mail">Send email</string>
     <string name="welcome">Welcome</string>
     <string name="show_at_startup">Show at startup</string>
+    <string name="more">More</string>
+    <string name="prefer_qsearch">Prefer quick search</string>
+    <string name="prefer_qsearch_summ">Search in current source, if possible</string>
+    <string name="search_on_another_sources">Search on another sources</string>
+    <string name="search_more_confirm">No manga found in this source. Search in another?</string>
 
     <string-array name="directions">
         <item>Left to right</item>

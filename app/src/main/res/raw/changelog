@@ -1,4 +1,10 @@
 <h1>Changelog</h1>
 <p>
-    + Бла-бла-бла
+    + Downloads queue<br>
+    + Show updates manga<br>
+    + Removing items from search history<br>
+    + Search in multiple sources
+    + Add Turkish translation<br>
+    * Fix crashes<br>
+    * Right-to-left page scrolling fully works<br>
 </p>
