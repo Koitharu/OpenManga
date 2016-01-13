@@ -14,13 +14,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.AdvancedScrollView;
 import org.nv95.openmanga.components.AsyncImageView;
+import org.nv95.openmanga.components.BottomSheet;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -35,7 +35,7 @@ import org.nv95.openmanga.providers.UpdatesChecker;
  * Created by nv95 on 30.09.15.
  */
 public class MangaPreviewActivity extends AppCompatActivity implements View.OnClickListener,
-        DialogInterface.OnClickListener, AdvancedScrollView.OnScrollListener {
+        AdvancedScrollView.OnScrollListener, DialogInterface.OnClickListener {
 
     protected MangaSummary mangaSummary;
     private AsyncImageView imageView;
@@ -74,41 +74,29 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ab_read:
-                //startActivity(new Intent(this,ReadActivity.class).putExtras(mangaSummary.toBundle()));
-                showChaptersList();
+                showChaptersSheet();
                 break;
         }
     }
 
-    private void showChaptersList() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mangaSummary.getChapters().getNames()), this);
-        builder.setTitle(R.string.chapters_list);
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setPositiveButton(R.string.continue_reading, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
-                intent.putExtras(mangaSummary.toBundle());
-                HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
-                intent.putExtra("chapter", hs.getChapter());
-                intent.putExtra("page", hs.getPage());
-                startActivity(intent);
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        HistoryProvider.addToHistory(this, mangaSummary, which, 0);
-        startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mangaSummary.toBundle()));
+    private void showChaptersSheet() {
+        new BottomSheet(this)
+                .setItems(mangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
+                .setSheetTitle(R.string.chapters_list)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setOnItemClickListener(this)
+                .setPositiveButton(R.string.continue_reading, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
+                                intent.putExtras(mangaSummary.toBundle());
+                                HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
+                                intent.putExtra("chapter", hs.getChapter());
+                                intent.putExtra("page", hs.getPage());
+                                startActivity(intent);
+                            }
+                        }
+                ).show();
     }
 
     @Override
@@ -195,6 +183,13 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     public boolean OnOverScroll(AdvancedScrollView scrollView, int deltaX, int deltaY) {
         //imageView.setPadding(0, deltaY, 0, 0);
         return false;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+        HistoryProvider.addToHistory(this, mangaSummary, which, 0);
+        startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mangaSummary.toBundle()));
     }
 
     private class LoadInfoTask extends AsyncTask<Void,Void,MangaSummary> {
