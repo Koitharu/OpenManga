@@ -15,12 +15,12 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.SparseArray;
 import android.widget.Toast;
 
 import org.nv95.openmanga.DownloadsActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.components.BottomSheet;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -112,22 +112,25 @@ public class SaveService extends Service {
         String[] names = mangaSummary.chapters.getNames();
         boolean[] defs = new boolean[names.length];
         Arrays.fill(defs, false);
-        new AlertDialog.Builder(context)
-                .setMultiChoiceItems(names, defs, new DialogInterface.OnMultiChoiceClickListener() {
+        new BottomSheet(context)
+                .setMultiChoiceItems(names, defs)
+                .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         chapters.put(which, isChecked);
                     }
                 })
-                .setTitle(R.string.chapters_to_save)
+                .setSheetTitle(R.string.chapters_to_save)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setNeutralButton(R.string.all, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        context.startService(new Intent(context, SaveService.class).putExtras(mangaSummary.toBundle()));
+                        ((BottomSheet)dialog).checkAll(true);
+                        for (int i=mangaSummary.chapters.size()-1;i>=0;i--) {
+                            chapters.put(i, true);
+                        }
                     }
                 })
-                .setCancelable(true)
                 .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -138,7 +141,7 @@ public class SaveService extends Service {
                         }
                         context.startService(new Intent(context, SaveService.class).putExtras(summ.toBundle()));
                     }
-                }).create().show();
+                }).show();
     }
 
     @Nullable
