@@ -155,4 +155,22 @@
     <string name="search_on_another_sources">Поиск в других источниках</string>
     <string name="show_at_startup">Показывать при запуске</string>
     <string name="welcome">Добро пожаловать</string>
+    <string name="detective">Детектив</string>
+    <string name="genre_codomo">Кодомо</string>
+    <string name="genre_game">Игра</string>
+    <string name="genre_genderbender">Гендерная интрига</string>
+    <string name="genre_historical">История</string>
+    <string name="genre_josei">Дзёсей</string>
+    <string name="genre_mecha">Меха</string>
+    <string name="genre_natural">Повседневность</string>
+    <string name="genre_psychological">Психология</string>
+    <string name="genre_samurai">Самураи</string>
+    <string name="genre_sci_fi">Научная фантастика</string>
+    <string name="genre_shoujo_ai">Сёдзё-ай</string>
+    <string name="genre_shounen_ai">Сёнен-ай</string>
+    <string name="genre_tragedy">Трагедия</string>
+    <string name="hero_fantasy">Героическое фэнтези</string>
+    <string name="maho_shoujo">Махо-сёдзё</string>
+    <string name="send_mail">Отправить емейл</string>
+    <string name="genre_sports">Спорт</string>
 </resources>
