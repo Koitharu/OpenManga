@@ -97,7 +97,6 @@
     <string name="genre_adventure">Macera</string>
     <string name="genre_comedy">Komedi</string>
     <string name="genre_youkai">Youkai</string>
-    <string name="genre_genderbender">Cinsiyet Değişimi</string>
     <string name="genre_seinen">Seinen</string>
     <string name="genre_yaoi">Yaoi</string>
     <string name="genre_doujinshi">Doujinshi</string>
@@ -107,8 +106,6 @@
     <string name="genre_western">Tarihi</string>
     <string name="genre_gerilim">Gerilim</string>
     <string name="genre_josei">Josei</string>
-    <string name="genre_komedi">Komedi</string>
-    <string name="genre_korku">Korku</string>
     <string name="genre_macera">Macera</string>
     <string name="genre_muzik">Müzik</string>
     <string name="genre_okulhayati">Okul Hayatı</string>
@@ -116,19 +113,16 @@
     <string name="genre_oyun">Oyun</string>
     <string name="genre_parodi">Parodi</string>
     <string name="genre_polisiye">Polisiye</string>
-    <string name="genre_psikolojik">Psikolojik</string>
+    <string name="genre_psychological">Psikolojik</string>
     <string name="genre_robotlar">Robotlar</string>
-    <string name="genre_samuray">Samuray</string>
-    <string name="genre_shoujoai">Shoujo Ai</string>
-    <string name="genre_shounenai">Shounen Ai</string>
+    <string name="genre_samurai">Samuray</string>
     <string name="genre_smut">Smut</string>
-    <string name="genre_spor">Spor</string>
+    <string name="genre_sports">Spor</string>
     <string name="genre_superguc">Süper Güçler</string>
     <string name="genre_seytanlar">Şeytanlar</string>
     <string name="genre_tarihi">Tarihi</string>
-    <string name="genre_trajedi">Trajedi</string>
+    <string name="genre_tragedy">Trajedi</string>
     <string name="genre_uzay">Uzay</string>
-    <string name="genre_vampir">Vampir</string>
     <string name="genre_webtoon">Webtoon</string>
     <string name="genre_yetiskin">Yetişkin</string>
     <string name="genre_nonh">Non-H</string>
@@ -170,4 +164,7 @@
         <item>Yukarıdan aşağıya</item>
         <item>Sağdan Sola[Beta]</item>
     </string-array>
+    <string name="genre_genderbender">Cinsiyet Değişimi</string>
+    <string name="genre_shoujo_ai">Shoujo Ai</string>
+    <string name="genre_shounen_ai">Shounen Ai</string>
 </resources>
