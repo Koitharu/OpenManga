@@ -22,32 +22,32 @@ import java.io.File;
  * Remove directory
  */
 public class FileRemover implements Runnable {
-    private static final SerialExecutor EXECUTOR = new SerialExecutor();
-    private final File file;
+  private static final SerialExecutor EXECUTOR = new SerialExecutor();
+  private final File file;
 
-    public FileRemover(File file) {
-        this.file = file;
-    }
+  public FileRemover(File file) {
+    this.file = file;
+  }
 
-    @Override
-    public void run() {
-        RemoveDir(file);
+  private static void RemoveDir(File dir) {
+    if (!dir.exists()) {
+      return;
     }
+    for (File o : dir.listFiles()) {
+      if (o.isDirectory())
+        RemoveDir(o);
+      else
+        o.delete();
+    }
+    dir.delete();
+  }
 
-    public void runAsync() {
-        EXECUTOR.execute(this);
-    }
+  @Override
+  public void run() {
+    RemoveDir(file);
+  }
 
-    private static void RemoveDir(File dir) {
-        if (!dir.exists()) {
-            return;
-        }
-        for (File o:dir.listFiles()) {
-            if (o.isDirectory())
-                RemoveDir(o);
-            else
-                o.delete();
-        }
-        dir.delete();
-    }
+  public void runAsync() {
+    EXECUTOR.execute(this);
+  }
 }

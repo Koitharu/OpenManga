@@ -11,18 +11,18 @@ import org.nv95.openmanga.utils.ErrorReporter;
  */
 public class OpenMangaApplication extends Application {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ErrorReporter.Init(this);
-        AsyncImageView.IMAGE_HOLDER = getResources().getDrawable(R.drawable.placeholder);
+  public static int getVersion(Context context) {
+    try {
+      return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+    } catch (Exception e) {
+      return -1;
     }
+  }
 
-    public static int getVersion(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (Exception e) {
-            return -1;
-        }
-    }
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    ErrorReporter.Init(this);
+    AsyncImageView.IMAGE_HOLDER = getResources().getDrawable(R.drawable.placeholder);
+  }
 }
