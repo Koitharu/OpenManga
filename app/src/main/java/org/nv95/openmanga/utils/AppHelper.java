@@ -2,8 +2,12 @@ package org.nv95.openmanga.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -39,5 +43,26 @@ public class AppHelper {
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeInMillis(milliseconds);
     return formatter.format(calendar.getTime());
+  }
+
+  @Nullable
+  public static File getFileFromUri(Context context, Uri uri) {
+    if ("content".equalsIgnoreCase(uri.getScheme())) {
+      String[] projection = { "_data" };
+      Cursor cursor = null;
+
+      try {
+        cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        int columnIndex = cursor.getColumnIndexOrThrow("_data");
+        if (cursor.moveToFirst()) {
+          return new File(cursor.getString(columnIndex));
+        }
+      } catch (Exception e) {
+        // Eat it
+      }
+    } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+      return new File(uri.getPath());
+    }
+    return null;
   }
 }

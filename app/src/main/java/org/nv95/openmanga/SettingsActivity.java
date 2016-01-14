@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
@@ -71,10 +72,10 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         startActivity(new Intent(this, AboutActivity.class));
         return true;
       case "backup":
-        BackupHelper.BackupDialog(this);
+        BackupHelper.showBackupDialog(this);
         return true;
       case "restore":
-        BackupHelper.RestoreDialog(this);
+        BackupHelper.showRestoreDialog(this);
         return true;
       case "ccache":
         new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -82,6 +83,24 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       default:
         return false;
     }
+  }
+
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    switch (requestCode) {
+      case BackupHelper.BACKUP_IMPORT_CODE:
+        if (resultCode == RESULT_OK) {
+          File file = AppHelper.getFileFromUri(this, data.getData());
+          if (file != null) {
+            new BackupHelper(this).restore(file);
+          } else {
+            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
+          }
+        }
+        break;
+    }
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override
