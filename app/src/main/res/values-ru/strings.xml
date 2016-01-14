@@ -181,4 +181,7 @@
     <string name="genre_erotica">Эротика</string>
     <string name="restore">Восстановление данных</string>
     <string name="restore_done">Восстановлие данных завершено</string>
+    <string name="select_backup">Выберите резервную копию</string>
+    <string name="import_file">Импорт</string>
+    <string name="export_file">Экспрот</string>
 </resources>

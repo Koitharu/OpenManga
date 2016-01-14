@@ -1,5 +1,6 @@
 package org.nv95.openmanga.utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,9 +28,10 @@ import java.io.OutputStreamWriter;
  * Created by nv95 on 14.01.16.
  */
 public class BackupHelper {
+  public static final int BACKUP_IMPORT_CODE = 72;
   private final Context context;
 
-  public static void BackupDialog(final Context context) {
+  public static void showBackupDialog(final Context context) {
     String[] items = new String[] {
       context.getString(R.string.action_history),
       context.getString(R.string.action_favourites)
@@ -54,7 +56,7 @@ public class BackupHelper {
             .create().show();
   }
 
-  public static void RestoreDialog(final Context context) {
+  public static void showRestoreDialog(final Context context) {
     final File[] files = getExternalBackupDir().listFiles();
     String[] items = new String[files.length];
     String name;
@@ -68,17 +70,32 @@ public class BackupHelper {
         items[i] = name;
       }
     }
-    new AlertDialog.Builder(context)
+    AlertDialog.Builder builder = new AlertDialog.Builder(context)
             .setItems(items, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                 new BackupHelper(context).restore(files[which]);
               }
             })
-            .setTitle(R.string.restore)
+            .setTitle(R.string.select_backup)
             .setNegativeButton(android.R.string.cancel, null)
-            .setCancelable(true)
-            .create().show();
+            .setCancelable(true);
+    if (context instanceof Activity) {
+      final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+      intent.setType("file/*");
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      if (context.getPackageManager().resolveActivity(intent, intent.getFlags()) != null) {
+        builder.setNeutralButton(R.string.import_file, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            ((Activity) context).startActivityForResult(
+                    Intent.createChooser(intent, context.getString(R.string.import_file)),
+                    BACKUP_IMPORT_CODE);
+          }
+        });
+      }
+    }
+    builder.create().show();
   }
 
   public static File getExternalBackupDir() {
@@ -93,7 +110,7 @@ public class BackupHelper {
     return dir;
   }
 
-  private BackupHelper(Context context) {
+  public BackupHelper(Context context) {
     this.context = context;
   }
 
@@ -189,14 +206,14 @@ public class BackupHelper {
                 .setMessage(R.string.backup_done)
                 .setTitle(R.string.backup)
                 .setNegativeButton(R.string.done, null)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.export_file, new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
                     context.startActivity(Intent.createChooser(
                             new Intent(Intent.ACTION_SEND)
                                     .setType("file/*")
                                     .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file)),
-                            context.getString(R.string.export)
+                            context.getString(R.string.export_file)
                     ));
                   }
                 })
@@ -290,6 +307,7 @@ public class BackupHelper {
         }
       }
       storageHelper.close();
+      new FileRemover(dir).run();
       return errors == 0;
     }
 

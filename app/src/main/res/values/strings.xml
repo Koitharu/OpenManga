@@ -188,10 +188,12 @@
     <string name="genre_cyberpunk">Cyberpunk</string>
     <string name="genre_erotica">Erotica</string>
     <string name="backup">Backup data</string>
-    <string name="export">Export</string>
     <string name="backup_done">Backup completed</string>
     <string name="restore">Restore data</string>
     <string name="restore_done">Data was successfully restored</string>
     <string name="done">Done</string>
     <string name="data">Data</string>
+    <string name="select_backup">Select backup</string>
+    <string name="import_file">Import</string>
+    <string name="export_file">Export</string>
 </resources>
