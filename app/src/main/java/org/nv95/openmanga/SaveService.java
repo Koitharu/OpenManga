@@ -202,7 +202,7 @@ public class SaveService extends Service {
       notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_download_done)
               .setContentIntent(null)
               .setContentTitle(getString(R.string.saving_manga))
-              .setContentText(getString(R.string.done));
+              .setContentText(getString(R.string.completed));
       notificationManager.notify(2, notificationBuilder.getNotification());
       stopSelf();
     }

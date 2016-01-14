@@ -65,13 +65,16 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         return true;
       case "csearchhist":
         SearchHistoryAdapter.clearHistory(this);
-        Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.completed, Toast.LENGTH_SHORT).show();
         return true;
       case "about":
         startActivity(new Intent(this, AboutActivity.class));
         return true;
       case "backup":
         BackupHelper.BackupDialog(this);
+        return true;
+      case "restore":
+        BackupHelper.RestoreDialog(this);
         return true;
       case "ccache":
         new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -115,6 +118,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
       findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
       findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
       findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
       Preference p = findPreference("about");

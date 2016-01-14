@@ -37,7 +37,7 @@
     <string name="unable_to_save_image">Unable to save image</string>
     <string name="saving_manga">Saving manga</string>
     <string name="preparing">Preparing…</string>
-    <string name="done">Done</string>
+    <string name="completed">Completed</string>
     <string name="cancelling">Cancelling…</string>
     <string name="disclaimer">All manga, characters and logos belong to their respective copyright owners. This app\'s developers not have any affiliation with the content providers.</string>
     <string name="select_sources">Select manga\'s sources</string>
@@ -190,4 +190,8 @@
     <string name="backup">Backup data</string>
     <string name="export">Export</string>
     <string name="backup_done">Backup completed</string>
+    <string name="restore">Restore data</string>
+    <string name="restore_done">Data was successfully restored</string>
+    <string name="done">Done</string>
+    <string name="data">Data</string>
 </resources>
