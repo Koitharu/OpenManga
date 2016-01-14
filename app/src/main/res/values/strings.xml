@@ -187,4 +187,7 @@
     <string name="genre_bara">Bara</string>
     <string name="genre_cyberpunk">Cyberpunk</string>
     <string name="genre_erotica">Erotica</string>
+    <string name="backup">Backup data</string>
+    <string name="export">Export</string>
+    <string name="backup_done">Backup completed</string>
 </resources>

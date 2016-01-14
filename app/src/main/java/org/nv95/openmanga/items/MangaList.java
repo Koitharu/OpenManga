@@ -9,4 +9,5 @@ public class MangaList extends ArrayList<MangaInfo> {
   public static MangaList Empty() {
     return new MangaList();
   }
+
 }

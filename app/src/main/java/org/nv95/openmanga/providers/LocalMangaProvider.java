@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaChapters;
@@ -226,7 +227,7 @@ public class LocalMangaProvider extends MangaProvider {
     }
     database.close();
     HistoryProvider.getInstacne(context).remove(ids);
-    MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
+    MangaChangesObserver.emitChanging(Constants.CATEGORY_LOCAL);
     return true;
   }
 

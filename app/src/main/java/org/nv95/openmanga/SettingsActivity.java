@@ -1,6 +1,6 @@
 package org.nv95.openmanga;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.BackupHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
 
@@ -69,6 +70,9 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       case "about":
         startActivity(new Intent(this, AboutActivity.class));
         return true;
+      case "backup":
+        BackupHelper.BackupDialog(this);
+        return true;
       case "ccache":
         new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return true;
@@ -105,22 +109,23 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
       super.onActivityCreated(savedInstanceState);
-      Context context = getActivity();
-      findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-      findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-      findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-      findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
-      findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+      Activity activity = getActivity();
+      findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+      findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
       Preference p = findPreference("about");
       p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
       String version;
       try {
-        version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
       } catch (PackageManager.NameNotFoundException e) {
         version = "unknown";
       }
-      p.setSummary(String.format(context.getString(R.string.version), version));
+      p.setSummary(String.format(activity.getString(R.string.version), version));
 
       p = findPreference("mangadir");
       p.setSummary(LocalMangaProvider.getMangaDir(getActivity()).getPath());
