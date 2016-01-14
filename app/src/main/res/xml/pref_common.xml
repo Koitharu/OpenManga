@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         android:key="srcselect"
         android:title="@string/select_sources" />
@@ -7,29 +7,34 @@
         android:key="readeropt"
         android:title="@string/action_reading_options" />
     <Preference
-        android:key="mangadir"
-        android:title="@string/manga_local_dir" />
-    <Preference
         android:key="chupd"
-        android:title="@string/checking_new_chapters" >
+        android:title="@string/checking_new_chapters">
         <intent android:action="org.nv95.openmanga.chupd" />
     </Preference>
     <CheckBoxPreference
+        android:defaultValue="false"
         android:key="qsearch"
-        android:title="@string/prefer_qsearch"
         android:summary="@string/prefer_qsearch_summ"
-        android:widgetLayout="@layout/pref_switchcompat"
-        android:defaultValue="false" />
-    <Preference
-        android:key="csearchhist"
-        android:title="@string/action_clear_search_hist" />
-    <Preference
-        android:key="ccache"
-        android:title="@string/action_clear_cache" />
-    <Preference
-        android:key="backup"
-        android:title="@string/backup" />
-    <PreferenceCategory android:title="@string/help" >
+        android:title="@string/prefer_qsearch"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <PreferenceCategory android:title="@string/data">
+        <Preference
+            android:key="mangadir"
+            android:title="@string/manga_local_dir" />
+        <Preference
+            android:key="csearchhist"
+            android:title="@string/action_clear_search_hist" />
+        <Preference
+            android:key="ccache"
+            android:title="@string/action_clear_cache" />
+        <Preference
+            android:key="backup"
+            android:title="@string/backup" />
+        <Preference
+            android:key="restore"
+            android:title="@string/restore" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/help">
         <Preference
             android:key="about"
             android:title="@string/about" />

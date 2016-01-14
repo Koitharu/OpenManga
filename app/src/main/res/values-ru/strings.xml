@@ -34,7 +34,7 @@
     <string name="scrolling_direction">Направление листания</string>
     <string name="keep_screen">Держать экран включеным</string>
     <string name="cancelling">Отмена…</string>
-    <string name="done">Выполнено</string>
+    <string name="completed">Выполнено</string>
     <string name="image_saved">Изображение сохранено</string>
     <string name="preparing">Подготовка…</string>
     <string name="saving_manga">Сохранение манги</string>

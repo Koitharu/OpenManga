@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by nv95 on 18.12.15.
@@ -29,5 +31,12 @@ public class AppHelper {
     } catch (IOException e) {
       return e.getMessage();
     }
+  }
+
+  public static String getReadableDateTime(long milliseconds) {
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(milliseconds);
+    return formatter.format(calendar.getTime());
   }
 }

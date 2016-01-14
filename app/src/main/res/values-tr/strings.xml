@@ -37,7 +37,7 @@
     <string name="unable_to_save_image">Resim kaydedilemiyor</string>
     <string name="saving_manga">Manga indiriliyor</string>
     <string name="preparing">Hazırlanıyor…</string>
-    <string name="done">Bitti</string>
+    <string name="completed">Bitti</string>
     <string name="cancelling">İptal ediliyor…</string>
     <string name="disclaimer">Bütün manga, karakterler ve logolar hak sahiplerine aittir.</string>
     <string name="select_sources">Manga kaynağı seç</string>
