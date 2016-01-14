@@ -48,9 +48,9 @@
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
         </activity>
-        <service android:name=".providers.SaveService" />
+        <service android:name=".SaveService" />
         <service android:name=".utils.ChaptersSyncService" />
-        <receiver android:name=".utils.UpdateCheckerReceiver">
+        <receiver android:name=".UpdateCheckerReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

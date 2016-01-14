@@ -21,39 +21,39 @@ import java.util.Vector;
  * Created by nv95 on 03.01.16.
  */
 public class MangaChangesObserver {
-    public static final int CATEGORY_LOCAL = 0;
-    public static final int CATEGORY_FAVOURITES = 1;
-    public static final int CATEGORY_HISTORY = 2;
+  public static final int CATEGORY_LOCAL = 0;
+  public static final int CATEGORY_FAVOURITES = 1;
+  public static final int CATEGORY_HISTORY = 2;
 
-    private static MangaChangesObserver instance = new MangaChangesObserver();
-    private Vector<OnMangaChangesListener> listeners = new Vector<>();
-    private int queuedChanges[] = {0,0,0};
+  private static MangaChangesObserver instance = new MangaChangesObserver();
+  private Vector<OnMangaChangesListener> listeners = new Vector<>();
+  private int queuedChanges[] = {0, 0, 0};
 
-    public interface OnMangaChangesListener {
-        void onMangaChanged(int category);
+  public static void addListener(OnMangaChangesListener listener) {
+    instance.listeners.add(listener);
+    for (int i = 0; i < 3; i++) {
+      if (instance.queuedChanges[i] > 0) {
+        listener.onMangaChanged(i);
+        instance.queuedChanges[i] = 0;
+      }
     }
+  }
 
-    public static void addListener(OnMangaChangesListener listener) {
-        instance.listeners.add(listener);
-        for (int i=0;i<3;i++) {
-            if (instance.queuedChanges[i] > 0) {
-                listener.onMangaChanged(i);
-                instance.queuedChanges[i] = 0;
-            }
-        }
-    }
+  public static void removeListener(OnMangaChangesListener listener) {
+    instance.listeners.remove(listener);
+  }
 
-    public static void removeListener(OnMangaChangesListener listener) {
-        instance.listeners.remove(listener);
+  public static void emitChanging(int category) {
+    if (instance.listeners.size() == 0) {
+      instance.queuedChanges[category]++;
+    } else {
+      for (OnMangaChangesListener o : instance.listeners) {
+        o.onMangaChanged(category);
+      }
     }
+  }
 
-    public static void emitChanging(int category) {
-        if (instance.listeners.size() == 0) {
-            instance.queuedChanges[category]++;
-        } else {
-            for (OnMangaChangesListener o : instance.listeners) {
-                o.onMangaChanged(category);
-            }
-        }
-    }
+  public interface OnMangaChangesListener {
+    void onMangaChanged(int category);
+  }
 }

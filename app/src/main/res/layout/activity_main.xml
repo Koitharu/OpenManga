@@ -20,7 +20,7 @@
 
             <fragment
                 android:id="@+id/fragment"
-                android:name="org.nv95.openmanga.MangaListFragment"
+                android:name="org.nv95.openmanga.fragments.MangaListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:layout="@layout/fragment_mangalist" />
