@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -34,7 +35,7 @@ public class AppHelper {
   }
 
   public static String getReadableDateTime(long milliseconds) {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+    DateFormat formatter = SimpleDateFormat.getDateTimeInstance(); //new SimpleDateFormat("dd/MM/yyyy hh:mm");
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeInMillis(milliseconds);
     return formatter.format(calendar.getTime());

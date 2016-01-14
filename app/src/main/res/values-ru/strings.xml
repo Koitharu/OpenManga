@@ -173,4 +173,12 @@
     <string name="maho_shoujo">Махо-сёдзё</string>
     <string name="send_mail">Отправить емейл</string>
     <string name="genre_sports">Спорт</string>
+    <string name="backup">Резервное копирование</string>
+    <string name="backup_done">Резервное копирование завершено</string>
+    <string name="data">Данные</string>
+    <string name="done">Готово</string>
+    <string name="genre_cyberpunk">Киберпанк</string>
+    <string name="genre_erotica">Эротика</string>
+    <string name="restore">Восстановление данных</string>
+    <string name="restore_done">Восстановлие данных завершено</string>
 </resources>
