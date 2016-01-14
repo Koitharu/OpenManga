@@ -211,7 +211,7 @@ public class SaveService extends Service {
     protected void onProgressUpdate(ProgressInfo... values) {
       super.onProgressUpdate(values);
       if (values.length == 0) {
-        MangaChangesObserver.emitChanging(MangaChangesObserver.CATEGORY_LOCAL);
+        MangaChangesObserver.emitChanging(Constants.CATEGORY_LOCAL);
         return;
       }
       notificationBuilder.setContentText(values[0].title);

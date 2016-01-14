@@ -68,7 +68,7 @@ public class DownloadsActivity extends AppCompatActivity implements MangaChanges
 
   @Override
   public void onMangaChanged(int category) {
-    if (category == MangaChangesObserver.CATEGORY_LOCAL) {
+    if (category == Constants.CATEGORY_LOCAL) {
       adapter.notifyDataSetChanged();
     }
   }

@@ -486,7 +486,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         } else {
           provider = (MangaProvider) mangaSummary.getProvider().newInstance();
         }
-        return provider.getPages(chapter.name);
+        return provider.getPages(chapter.readLink);
       } catch (Exception ignored) {
         return null;
       }
