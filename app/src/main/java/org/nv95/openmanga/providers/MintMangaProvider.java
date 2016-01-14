@@ -21,9 +21,26 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class MintMangaProvider extends MangaProvider {
-  protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem, R.string.genre_mystery, R.string.genre_shoujo, R.string.genre_shounen, R.string.genre_horror, R.string.genre_school, R.string.genre_ecchi};
-  protected static final String genreUrls[] = {"art", "action", "martial_arts", "vampires", "harem", "mystery", "shoujo", "shounen", "horror", "school", "ecchi"};
   protected static boolean features[] = {true, true, false, true, true};
+  protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_bara, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
+          R.string.genre_genderbender, R.string.hero_fantasy, R.string.detective, R.string.genre_josei,
+          R.string.genre_doujinshi, R.string.genre_drama, R.string.genre_game, R.string.genre_historical, R.string.genre_cyberpunk,
+          R.string.genre_comedy, R.string.genre_mecha, R.string.genre_mystery,
+          R.string.genre_sci_fi, R.string.genre_natural, R.string.genre_postapocalipse, R.string.genre_adventure,
+          R.string.genre_psychological, R.string.genre_romance, R.string.genre_samurai, R.string.genre_supernatural,
+          R.string.genre_shoujo, R.string.genre_shoujo_ai, R.string.genre_shounen, R.string.genre_shounen_ai,
+          R.string.genre_sports, R.string.genre_seinen, R.string.genre_tragedy, R.string.genre_thriller,
+          R.string.genre_horror, R.string.genre_fantastic, R.string.genre_fantasy,
+          R.string.genre_school, R.string.genre_erotica, R.string.genre_ecchi, R.string.genre_yuri, R.string.genre_yaoi
+  };
+  protected static final String genreUrls[] = {"art", "bara", "action", "martial_arts", "vampires", "harem",
+          "gender_intriga", "heroic_fantasy", "detective", "josei", "doujinshi", "drama", "game",
+          "historical", "cyberpunk", "comedy", "mecha", "mystery",
+          "sci_fi", "natural", "postapocalipse", "adventure", "psychological", "romance", "samurai",
+          "supernatural", "shoujo", "shoujo_ai", "shounen", "shounen_ai", "sports", "seinen",
+          "tragedy", "thriller", "horror", "fantastic", "fantasy",
+          "school", "erotica", "ecchi", "yuri", "yaoi"
+  };
 
   @Override
   public MangaList getList(int page, int sort, int genre) throws Exception {
