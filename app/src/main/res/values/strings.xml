@@ -184,4 +184,7 @@
     <string name="genre_samurai">Samurai</string>
     <string name="genre_tragedy">Tragedy</string>
     <string name="genre_sports">Sports</string>
+    <string name="genre_bara">Bara</string>
+    <string name="genre_cyberpunk">Cyberpunk</string>
+    <string name="genre_erotica">Erotica</string>
 </resources>
