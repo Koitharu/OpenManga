@@ -14,4 +14,5 @@
     <dimen name="inlayout_notify_padding">5dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="overscroll_size">100dp</dimen>
 </resources>
