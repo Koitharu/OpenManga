@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     floatingAb.setTag(true);
     floatingAb.setOnClickListener(this);
     providerManager = new MangaProviderManager(this);
+    int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+        .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
     headers = new TextView[3];
     headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
     headers[0].setText(R.string.local_storage);
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     drawerListView.addHeaderView(headers[1]);
     drawerListView.addHeaderView(headers[2]);
     drawerListView.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
-    drawerListView.setItemChecked(0, true);
+    drawerListView.setItemChecked(3 + defSection, true);
     drawerListView.setOnItemClickListener(this);
     toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
       @Override
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
-      actionBar.setSubtitle(R.string.local_storage);
+      actionBar.setSubtitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
     }
     WelcomeActivity.ShowChangelog(this);
   }

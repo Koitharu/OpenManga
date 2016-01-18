@@ -21,6 +21,9 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class MangaProviderManager {
+  public static final int PROVIDER_LOCAL = -3;
+  public static final int PROVIDER_FAVOURITES = -2;
+  public static final int PROVIDER_HISTORY = -1;
   public static final int FUTURE_MULTIPAGE = 0;
   public static final int FEAUTURE_SEARCH = 1;
   public static final int FEAUTURE_REMOVE = 2;
@@ -76,7 +79,16 @@ public class MangaProviderManager {
 
   public MangaProvider getMangaProvider(int index) {
     try {
-      return (MangaProvider) enabledProviders.get(index).aClass.newInstance();
+      switch (index) {
+        case PROVIDER_LOCAL:
+          return LocalMangaProvider.getInstacne(context);
+        case PROVIDER_FAVOURITES:
+          return FavouritesProvider.getInstacne(context);
+        case PROVIDER_HISTORY:
+          return HistoryProvider.getInstacne(context);
+        default:
+          return (MangaProvider) enabledProviders.get(index).aClass.newInstance();
+      }
     } catch (Exception e) {
       ErrorReporter.getInstance().report(e);
       return null;

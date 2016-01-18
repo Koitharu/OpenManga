@@ -1,5 +1,6 @@
 package org.nv95.openmanga.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,7 +34,6 @@ import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaList;
-import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 
@@ -48,6 +48,7 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
   private boolean grid = true;
   private MangaListAdapter adapter;
   private MangaProvider provider;
+    //listView.addFooterView(endlessScroller.getFooter());
   private MangaList list = new MangaList();
   private ProgressBar progressBar;
   private EndlessScroller endlessScroller;
@@ -103,7 +104,6 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
     gridView.setMultiChoiceModeListener(this);
     listView.setVisibility(grid ? View.GONE : View.VISIBLE);
     gridView.setVisibility(grid ? View.VISIBLE : View.GONE);
-    //listView.addFooterView(endlessScroller.getFooter());
     progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
     absListView = grid ? gridView : listView;
     return view;
@@ -112,16 +112,19 @@ public class MangaListFragment extends Fragment implements AdapterView.OnItemCli
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    if (getActivity() instanceof MangaListListener) {
+    Activity activity = getActivity();
+    if (activity instanceof MangaListListener) {
       listListener = (MangaListListener) getActivity();
     } else {
       throw new NullPointerException("List listener not found");
     }
-    int i = getArguments() == null ? -1 : getArguments().getInt("provider", -1);
-    provider = i == -1 ? LocalMangaProvider.getInstacne(getActivity()) : new MangaProviderManager(getActivity()).getMangaProvider(i);
-    adapter = new MangaListAdapter(getActivity(), list, grid);
-    //((LocalMangaProvider)provider).test();
-
+    int defProvider = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity)
+        .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
+    if (getArguments() != null) {
+      defProvider = getArguments().getInt("provider", MangaProviderManager.PROVIDER_LOCAL);
+    }
+    provider = new MangaProviderManager(activity).getMangaProvider(defProvider);
+    adapter = new MangaListAdapter(activity, list, grid);
     absListView.setAdapter(adapter);
     new ListLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
