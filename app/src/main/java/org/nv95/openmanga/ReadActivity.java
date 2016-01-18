@@ -62,6 +62,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
   private int pageId;
   private boolean toolbars = false;
   private boolean scrollWithVolkeys = false;
+  private int overscrollSize;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
       chapterId = getIntent().getIntExtra("chapter", 0);
       pageId = getIntent().getIntExtra("page", 0);
     }
+    overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
     chapter = mangaSummary.getChapters().get(chapterId);
     pager.setOffscreenPageLimit(3);
     chapterTitleTextView.setText(chapter.name);
@@ -363,7 +365,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
       } else if (direction == 0) {
         if (oversrollImageView.getTag() != null) {
           float scrollFactor = (float) oversrollImageView.getTag();
-          if (scrollFactor > 0.3) {
+          if (scrollFactor >= (float)overscrollSize / viewPager.getWidth()) {
             new SimpleAnimator(oversrollImageView).forceGravity(Gravity.CENTER).hide();
             if ((params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT)) {
               chapterId += pager.isReverse() ? -1 : 1;
