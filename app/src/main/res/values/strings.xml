@@ -153,8 +153,8 @@
     <string name="prefer_qsearch_summ">Search in current source, if possible</string>
     <string name="search_on_another_sources">Search on another sources</string>
     <string name="search_more_confirm">No manga found in this source. Search in another?</string>
-    <string name="hero_fantasy">Heroic fantasy</string>
-    <string name="detective">Detective</string>
+    <string name="genre_hero_fantasy">Heroic fantasy</string>
+    <string name="genre_detective">Detective</string>
     <string name="genre_game">Game</string>
     <string name="genre_historical">Historical</string>
     <string name="genre_codomo">Codomo</string>
@@ -166,20 +166,9 @@
     <string name="genre_shoujo_ai">Shoujo-ai</string>
     <string name="genre_shounen_ai">Shounen-ai</string>
     <string name="genre_thriller">Thriller</string>
-
-    <string-array name="directions">
-        <item>Left to right</item>
-        <item>Top to bottom</item>
-        <item>Right to left</item>
-    </string-array>
-    <string-array name="intervals">
-        <item>Every hour (for testing)</item>
-        <item>Twice a day</item>
-        <item>Every day</item>
-    </string-array>
     <string name="genre_genderbender">Gender bender</string>
     <string name="genre_josei">Josei</string>
-    <string name="genre_muzik"></string>
+    <string name="genre_music">Music</string>
     <string name="genre_psychological">Psychological</string>
     <string name="genre_samurai">Samurai</string>
     <string name="genre_tragedy">Tragedy</string>
@@ -196,4 +185,28 @@
     <string name="select_backup">Select backup</string>
     <string name="import_file">Import</string>
     <string name="export_file">Export</string>
+    <string name="reset">Reset</string>
+
+    <string-array name="directions">
+        <item>Left to right</item>
+        <item>Top to bottom</item>
+        <item>Right to left</item>
+    </string-array>
+    <string-array name="intervals">
+        <item>Every 4 hours</item>
+        <item>Twice a day</item>
+        <item>Every day</item>
+        <item>Every 2 days</item>
+    </string-array>
+    <string name="genre_tension">Tension</string>
+    <string name="genre_yetiskin">Yetişkin</string>
+    <string name="genre_webtoon">Webtoon</string>
+    <string name="genre_uzay">Uzay</string>
+    <string name="genre_seytanlar">Şeytanlar</string>
+    <string name="genre_oneshot">One Shot</string>
+    <string name="genre_parodi">Parodi</string>
+    <string name="genre_polisiye">Polisiye</string>
+    <string name="genre_robotlar">Robotlar</string>
+    <string name="genre_superguc">Süper Güçler</string>
+    <string name="genre_smut">Smut</string>
 </resources>

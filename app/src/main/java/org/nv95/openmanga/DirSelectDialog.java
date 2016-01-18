@@ -37,7 +37,7 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
             .setView(listView)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(android.R.string.ok, this)
-            .setNeutralButton(R.string.def, new DialogInterface.OnClickListener() {
+            .setNeutralButton(R.string.reset, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                 if (dirSelectListener != null) {

@@ -26,7 +26,7 @@ public class ReadmangaRuProvider extends MangaProvider {
   protected static final int sorts[] = {R.string.sort_popular, R.string.sort_updated, R.string.rating};
   protected static final String sortUrls[] = {"popular", "updated", "votes"};
   protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
-          R.string.genre_genderbender, R.string.hero_fantasy, R.string.detective, R.string.genre_josei,
+          R.string.genre_genderbender, R.string.genre_hero_fantasy, R.string.genre_detective, R.string.genre_josei,
           R.string.genre_doujinshi, R.string.genre_drama, R.string.genre_game, R.string.genre_historical,
           R.string.genre_codomo, R.string.genre_comedy, R.string.maho_shoujo, R.string.genre_mecha, R.string.genre_mystery,
           R.string.genre_sci_fi, R.string.genre_natural, R.string.genre_postapocalipse, R.string.genre_adventure,

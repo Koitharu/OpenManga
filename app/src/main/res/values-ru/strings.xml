@@ -124,17 +124,6 @@
     <string name="check_new_chapters">Проверить новые главы</string>
     <string name="checking_frequency">Частота проверки</string>
     <string name="checking_new_chapters">Проверка новых глав</string>
-
-    <string-array name="directions">
-        <item>Слева направо</item>
-        <item>Сверху вниз</item>
-        <item>Справа налево</item>
-    </string-array>
-    <string-array name="intervals">
-        <item>Каждый час (для тестировния)</item>
-        <item>Дважды в день</item>
-        <item>Ежедневно</item>
-    </string-array>
     <string name="def">По умолчанию</string>
     <string name="manga_local_dir">Папка для сохранения</string>
     <string name="retry">Повторить</string>
@@ -155,7 +144,7 @@
     <string name="search_on_another_sources">Поиск в других источниках</string>
     <string name="show_at_startup">Показывать при запуске</string>
     <string name="welcome">Добро пожаловать</string>
-    <string name="detective">Детектив</string>
+    <string name="genre_detective">Детектив</string>
     <string name="genre_codomo">Кодомо</string>
     <string name="genre_game">Игра</string>
     <string name="genre_genderbender">Гендерная интрига</string>
@@ -169,7 +158,7 @@
     <string name="genre_shoujo_ai">Сёдзё-ай</string>
     <string name="genre_shounen_ai">Сёнен-ай</string>
     <string name="genre_tragedy">Трагедия</string>
-    <string name="hero_fantasy">Героическое фэнтези</string>
+    <string name="genre_hero_fantasy">Героическое фэнтези</string>
     <string name="maho_shoujo">Махо-сёдзё</string>
     <string name="send_mail">Отправить емейл</string>
     <string name="genre_sports">Спорт</string>
@@ -184,4 +173,16 @@
     <string name="select_backup">Выберите резервную копию</string>
     <string name="import_file">Импорт</string>
     <string name="export_file">Экспрот</string>
+
+    <string-array name="directions">
+        <item>Слева направо</item>
+        <item>Сверху вниз</item>
+        <item>Справа налево</item>
+    </string-array>
+    <string-array name="intervals">
+        <item>Каждые 4 часа</item>
+        <item>Дважды в день</item>
+        <item>Ежедневно</item>
+        <item>Раз в 2 дня</item>
+    </string-array>
 </resources>
