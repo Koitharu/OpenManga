@@ -104,13 +104,9 @@
     <string name="genre_artistcg">Artist CG</string>
     <string name="genre_gamecg">Game CG</string>
     <string name="genre_western">Tarihi</string>
-    <string name="genre_gerilim">Gerilim</string>
     <string name="genre_josei">Josei</string>
-    <string name="genre_macera">Macera</string>
-    <string name="genre_muzik">Müzik</string>
-    <string name="genre_okulhayati">Okul Hayatı</string>
+    <string name="genre_music">Müzik</string>
     <string name="genre_oneshot">One Shot</string>
-    <string name="genre_oyun">Oyun</string>
     <string name="genre_parodi">Parodi</string>
     <string name="genre_polisiye">Polisiye</string>
     <string name="genre_psychological">Psikolojik</string>
@@ -120,12 +116,10 @@
     <string name="genre_sports">Spor</string>
     <string name="genre_superguc">Süper Güçler</string>
     <string name="genre_seytanlar">Şeytanlar</string>
-    <string name="genre_tarihi">Tarihi</string>
     <string name="genre_tragedy">Trajedi</string>
     <string name="genre_uzay">Uzay</string>
     <string name="genre_webtoon">Webtoon</string>
     <string name="genre_yetiskin">Yetişkin</string>
-    <string name="genre_nonh">Non-H</string>
     <string name="genre_imageset">Resim ayarla</string>
     <string name="genre_misc">Misc</string>
     <string name="genre_asianporn">Asian porn</string>
@@ -153,18 +147,16 @@
     <string name="disabled">Kapalı</string>
     <string name="checking_frequency">Kontrol sıklığı</string>
     <string name="retry">Tekrar dene</string>
-    <string-array name="intervals">
-        <item>Her saat[Beta]</item>
-        <item>Günde iki defa</item>
-        <item>Günde bir defa</item>
-    </string-array>
+    <string name="genre_genderbender">Cinsiyet Değişimi</string>
+    <string name="genre_shoujo_ai">Shoujo Ai</string>
+    <string name="genre_shounen_ai">Shounen Ai</string>
 
     <string-array name="directions">
         <item>Soldan sağa</item>
         <item>Yukarıdan aşağıya</item>
-        <item>Sağdan Sola[Beta]</item>
+        <item>Sağdan Sola</item>
     </string-array>
-    <string name="genre_genderbender">Cinsiyet Değişimi</string>
-    <string name="genre_shoujo_ai">Shoujo Ai</string>
-    <string name="genre_shounen_ai">Shounen Ai</string>
+    <string name="genre_tension">Gerilim</string>
+    <string name="genre_historical">Tarihi</string>
+    <string name="genre_game">Oyun</string>
 </resources>

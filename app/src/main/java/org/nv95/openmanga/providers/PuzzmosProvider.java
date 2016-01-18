@@ -23,13 +23,17 @@ public class PuzzmosProvider extends MangaProvider {
   protected static final int sorts[] = {R.string.sort_popular, R.string.sort_updated, R.string.alphabetical};
   protected static final String sortUrls[] = {"views&sorting-type=DESC", "lastUpdate&sorting-type=DESC", "name"};
   protected static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_military, R.string.genre_sfiction, R.string.genre_magic,
-          R.string.genre_genderch, R.string.genre_supernatural, R.string.genre_doujinshi, R.string.genre_martialarts, R.string.genre_drama, R.string.genre_ecchi,
-          R.string.genre_fantasy, R.string.genre_fantastic, R.string.genre_mystery, R.string.genre_daily, R.string.genre_harem, R.string.genre_shounen,
-          R.string.genre_shoujo, R.string.genre_romance, R.string.genre_yuri, R.string.genre_yaoi};
+          R.string.genre_genderbender, R.string.genre_supernatural, R.string.genre_doujinshi, R.string.genre_martialarts, R.string.genre_drama, R.string.genre_ecchi,
+          R.string.genre_fantasy, R.string.genre_fantastic, R.string.genre_tension, R.string.genre_mystery, R.string.genre_daily, R.string.genre_harem, R.string.genre_josei, R.string.genre_comedy, R.string.genre_horror,
+          R.string.genre_adventure, R.string.genre_music, R.string.genre_school, R.string.genre_oneshot, R.string.genre_game, R.string.genre_parodi, R.string.genre_polisiye, R.string.genre_psychological, R.string.genre_robotlar, R.string.genre_shounen,
+          R.string.genre_shoujo, R.string.genre_romance, R.string.genre_seinen, R.string.genre_smut, R.string.genre_sports,
+          R.string.genre_seytanlar, R.string.genre_historical, R.string.genre_tragedy, R.string.genre_uzay, R.string.genre_vampires, R.string.genre_webtoon, R.string.genre_yetiskin, R.string.genre_yuri, R.string.genre_yaoi};
   protected static final String genreUrls[] = {"aksiyon", "askeri", "bilim+kurgu", "büyü",
           "cinsiyet+değişimi", "doğa+üstü", "doujinshi", "dövüş+sanatları", "dram", "ecchi",
-          "fantezi", "fantastik", "gizem", "günlük+yaşam", "harem", "shounen", "shoujo", "romantizm", "yuri", "yaoi"};
-  //// TODO: 18.12.15
+          "fantezi", "fantastik", "gerilim", "gizem", "günlük+yaşam","harem", "josei", "komedi",
+          "korku", "macera", "müzik", "okul+hayatı", "one+shot", "oyun", "parodi", "polisiye", "psikolojik",
+          "robotlar", "shounen","shoujo","romantizm", "seinen", "smut", "spor", "şeytanlar", "tarihi", "trajedi", "uzay",
+          "vampir", "webtoon", "yetişkin", "yuri", "yaoi"};
 
   @Override
   public MangaList getList(int page, int sort, int genre) throws Exception {

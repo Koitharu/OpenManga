@@ -35,7 +35,7 @@ public class LocalMangaProvider extends MangaProvider {
   public static final String TABLE_PAGES = "local_pages";
   private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);
   StorageHelper dbHelper;
-  private Context context;
+  private final Context context;
 
   @Deprecated
   public LocalMangaProvider(Context context) {
