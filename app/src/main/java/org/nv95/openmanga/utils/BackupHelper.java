@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.nv95.openmanga.Constants;
@@ -50,7 +51,11 @@ public class BackupHelper {
             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-                new BackupHelper(context).backup(checked);
+                if (checked[0] || checked[1]) {
+                  new BackupHelper(context).backup(checked);
+                } else {
+                  Toast.makeText(context, R.string.nothing_selected,Toast.LENGTH_SHORT).show();
+                }
               }
             })
             .create().show();
@@ -99,7 +104,7 @@ public class BackupHelper {
   }
 
   public static File getExternalBackupDir() {
-    File dir = new File(Environment.getExternalStorageDirectory(), ".backups");
+    File dir = new File(Environment.getExternalStorageDirectory(), ".backup");
     if (!dir.exists()) {
       dir.mkdirs();
     }
