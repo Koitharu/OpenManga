@@ -209,4 +209,5 @@
     <string name="genre_robotlar">Robotlar</string>
     <string name="genre_superguc">Süper Güçler</string>
     <string name="genre_smut">Smut</string>
+    <string name="open_on_start">Open on start</string>
 </resources>

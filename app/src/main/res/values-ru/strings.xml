@@ -185,4 +185,6 @@
         <item>Ежедневно</item>
         <item>Раз в 2 дня</item>
     </string-array>
+    <string name="open_on_start">Открывать при запуске</string>
+    <string name="reset">Сброс</string>
 </resources>

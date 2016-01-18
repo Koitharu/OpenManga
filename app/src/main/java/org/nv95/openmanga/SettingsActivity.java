@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
@@ -141,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
       Preference p = findPreference("about");
-      p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) getActivity());
+      p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
       String version;
       try {
         version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
@@ -150,8 +151,11 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       }
       p.setSummary(String.format(activity.getString(R.string.version), version));
 
+      bindPreferenceSummary((ListPreference) findPreference("defsection"));
+
+
       p = findPreference("mangadir");
-      p.setSummary(LocalMangaProvider.getMangaDir(getActivity()).getPath());
+      p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
       p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(final Preference preference) {
@@ -222,5 +226,20 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
       preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
       super.onPostExecute(aVoid);
     }
+  }
+
+  public static void bindPreferenceSummary(ListPreference listPreference) {
+    int index = listPreference.findIndexOfValue(listPreference.getValue());
+    String summ = listPreference.getEntries()[index].toString();
+    listPreference.setSummary(summ);
+    listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override
+      public boolean onPreferenceChange(Preference preference, Object newValue) {
+        int index = ((ListPreference)preference).findIndexOfValue((String) newValue);
+        String summ = ((ListPreference)preference).getEntries()[index].toString();
+        preference.setSummary(summ);
+        return true;
+      }
+    });
   }
 }

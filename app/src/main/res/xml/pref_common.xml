@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="defsection"
+        android:title="@string/open_on_start"
+        android:defaultValue="-3"
+        android:entries="@array/section_names"
+        android:entryValues="@array/sections"/>
     <Preference
         android:key="srcselect"
         android:title="@string/select_sources" />
