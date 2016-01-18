@@ -374,7 +374,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
               chapterId += pager.isReverse() ? 1 : -1;
               pageId = pager.isReverse() ? 0 : -1;
             }
-            //TODO::switchpage
             chapter = mangaSummary.getChapters().get(chapterId);
             chapterTitleTextView.setText(chapter.name);
             hideToolbars();
