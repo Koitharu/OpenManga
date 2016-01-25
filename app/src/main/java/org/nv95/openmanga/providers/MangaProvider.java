@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaList;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 
