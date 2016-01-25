@@ -5,4 +5,9 @@
         android:id="@id/action_search"
         android:icon="@drawable/ic_action_list_plus"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_listmode"
+        android:orderInCategory="100"
+        android:title="@string/view_mode"
+        app:showAsAction="never" />
 </menu>

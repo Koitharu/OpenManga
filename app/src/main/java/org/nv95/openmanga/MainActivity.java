@@ -124,27 +124,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
-  @Override
-  public boolean onCreateOptionsMenu(final Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_main, menu);
-    MenuItem menuItem = menu.findItem(R.id.action_search);
-    final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-    final SearchHistoryAdapter historyAdapter = SearchHistoryAdapter.newInstance(this);
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        final SearchHistoryAdapter historyAdapter = SearchHistoryAdapter.newInstance(this);
 
-      searchView.setSuggestionsAdapter(historyAdapter);
-      searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-          @Override
-          public boolean onSuggestionSelect(int position) {
-              return false;
-          }
+        searchView.setSuggestionsAdapter(historyAdapter);
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
 
-          @Override
-          public boolean onSuggestionClick(int position) {
-              SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
-              searchView.setQuery(cursor.getString(1), false);
-              return true;
-          }
-      });
+            @Override
+            public boolean onSuggestionClick(int position) {
+                SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
+                searchView.setQuery(cursor.getString(1), false);
+                return true;
+            }
+        });
     /*listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
@@ -163,40 +163,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
       }
     });*/
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override
-      public boolean onQueryTextSubmit(String query) {
-        historyAdapter.addToHistory(query);
-        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
-          startActivity(new Intent(MainActivity.this, SearchActivity.class)
-                  .putExtra("query", query)
-                  .putExtra("provider", mDrawerListView.getCheckedItemPosition() - 4));
-        } else {
-          startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
-                  .putExtra("query", query));
-        }
-        menu.findItem(R.id.action_search).collapseActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                historyAdapter.addToHistory(query);
+                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                        .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
+                    startActivity(new Intent(MainActivity.this, SearchActivity.class)
+                            .putExtra("query", query)
+                            .putExtra("provider", mDrawerListView.getCheckedItemPosition() - 4));
+                } else {
+                    startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
+                            .putExtra("query", query));
+                }
+                menu.findItem(R.id.action_search).collapseActionView();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
-      }
+    }
 
-      @Override
-      public boolean onQueryTextChange(String newText) {
-        return false;
-      }
-    });
-    return true;
-  }
-
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
-    menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
-    menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
-    menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
-    menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
-    return super.onPrepareOptionsMenu(menu);
-  }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
+        menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
+        menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
+        menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
+        menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     protected void onDestroy() {
@@ -396,6 +396,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onMangaChanged(int category) {
         if (category == mDrawerListView.getCheckedItemPosition()) {
             mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        }
+    }
+
+    @Override
+    public void onMangaAdded(int category, MangaInfo data) {
+        if (category == mDrawerListView.getCheckedItemPosition()) {
+            mListLoader.addItem(data);
         }
     }
 

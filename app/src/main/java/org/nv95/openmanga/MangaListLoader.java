@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import org.nv95.openmanga.adapters.EndlessAdapter;
 import org.nv95.openmanga.adapters.MangaListAdapter;
+import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 
 /**
@@ -14,8 +15,10 @@ import org.nv95.openmanga.lists.MangaList;
  */
 public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
     private final RecyclerView mRecyclerView;
+    @NonNull
     private final MangaListAdapter mAdapter;
     private final OnContentLoadListener mContentLoadListener;
+    @NonNull
     private final MangaList mList;
     @Nullable
     private LoadContentTask mTaskInstance;
@@ -55,6 +58,12 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         new LoadContentTask(0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void addItem(MangaInfo data) {
+        if (mList.add(data)) {
+            mAdapter.notifyItemInserted(mList.size() - 1);
+        }
+    }
+
     public void cancelLoading() {
         if (mTaskInstance != null && mTaskInstance.getStatus() != AsyncTask.Status.FINISHED) {
             mTaskInstance.cancel(true);
@@ -91,6 +100,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
             super.onPostExecute(list);
             if (list == null) {
                 mList.setHasNext(false);
+                mAdapter.notifyItemChanged(mList.size());
                 mContentLoadListener.onContentLoaded(false);
                 return;
             }

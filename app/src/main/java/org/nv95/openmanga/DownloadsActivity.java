@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.adapters.DownloadsAdapter;
+import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 /**
@@ -71,5 +72,10 @@ public class DownloadsActivity extends AppCompatActivity implements MangaChanges
     if (category == Constants.CATEGORY_LOCAL) {
       adapter.notifyDataSetChanged();
     }
+  }
+
+  @Override
+  public void onMangaAdded(int category, MangaInfo data) {
+
   }
 }
