@@ -15,41 +15,52 @@
 
 package org.nv95.openmanga.utils;
 
+import org.nv95.openmanga.items.MangaInfo;
+
 import java.util.Vector;
 
 /**
  * Created by nv95 on 03.01.16.
  */
 public class MangaChangesObserver {
-  private static MangaChangesObserver instance = new MangaChangesObserver();
-  private Vector<OnMangaChangesListener> listeners = new Vector<>();
-  private int[] queuedChanges = {0, 0, 0};
+    private static MangaChangesObserver instance = new MangaChangesObserver();
+    private Vector<OnMangaChangesListener> listeners = new Vector<>();
+    private int[] queuedChanges = {0, 0, 0};
 
-  public static void addListener(OnMangaChangesListener listener) {
-    instance.listeners.add(listener);
-    for (int i = 0; i < 3; i++) {
-      if (instance.queuedChanges[i] > 0) {
-        listener.onMangaChanged(i);
-        instance.queuedChanges[i] = 0;
-      }
+    public static void addListener(OnMangaChangesListener listener) {
+        instance.listeners.add(listener);
+        for (int i = 0; i < 3; i++) {
+            if (instance.queuedChanges[i] > 0) {
+                listener.onMangaChanged(i);
+                instance.queuedChanges[i] = 0;
+            }
+        }
     }
-  }
 
-  public static void removeListener(OnMangaChangesListener listener) {
-    instance.listeners.remove(listener);
-  }
-
-  public static void emitChanging(int category) {
-    if (instance.listeners.size() == 0) {
-      instance.queuedChanges[category]++;
-    } else {
-      for (OnMangaChangesListener o : instance.listeners) {
-        o.onMangaChanged(category);
-      }
+    public static void removeListener(OnMangaChangesListener listener) {
+        instance.listeners.remove(listener);
     }
-  }
 
-  public interface OnMangaChangesListener {
-    void onMangaChanged(int category);
-  }
+    @Deprecated
+    public static void emitChanging(int category) {
+        if (instance.listeners.size() == 0) {
+            instance.queuedChanges[category]++;
+        } else {
+            for (OnMangaChangesListener o : instance.listeners) {
+                o.onMangaChanged(category);
+            }
+        }
+    }
+
+    public static void emitAdding(int category, MangaInfo what) {
+        for (OnMangaChangesListener o : instance.listeners) {
+            o.onMangaAdded(category, what);
+        }
+    }
+
+    public interface OnMangaChangesListener {
+        @Deprecated
+        void onMangaChanged(int category);
+        void onMangaAdded(int category, MangaInfo data);
+    }
 }
