@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:background="?android:activatedBackgroundIndicator" >
+<org.nv95.openmanga.components.ProportionalFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="8000dp" android:layout_height="8000dp"
+    android:background="?android:selectableItemBackground" >
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="@dimen/cell_width"
-        android:layout_height="@dimen/cell_height">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <org.nv95.openmanga.components.AsyncImageView
-            android:layout_width="@dimen/preview_width_large"
-            android:layout_height="@dimen/preview_height_large"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/imageView"
             android:scaleType="centerCrop"
-            android:padding="1dp" />
+            android:padding="1dp"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Medium Text"
             android:id="@+id/textView_title"
@@ -25,7 +26,7 @@
             android:layout_gravity="bottom"
             android:padding="1dp"
             android:gravity="center_vertical"
-            android:maxLines="2" />
+            android:lines="2" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,4 +51,4 @@
             android:text="Small Text"
             android:id="@+id/textView_summary" />
     </LinearLayout>
-</FrameLayout>
+</org.nv95.openmanga.components.ProportionalFrameLayout>

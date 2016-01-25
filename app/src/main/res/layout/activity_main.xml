@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView_holder"
+            android:textAppearance="?android:textAppearanceMedium"
             android:visibility="gone"
             app:layout_anchor="@id/recyclerView"
             app:layout_anchorGravity="center" />

@@ -17,8 +17,7 @@
     <string name="action_favourite">Favorilere Ekle</string>
     <string name="setting_providers">Uygun Kaynaklar</string>
     <string name="wait">Bekleyin…</string>
-    <string name="switch_to_grid">Grid görünümü</string>
-    <string name="switch_to_list">Liste görünümü</string>
+    <string name="view_mode_list">Liste görünümü</string>
     <string name="action_history">Geçmiş</string>
     <string name="action_remove">Sil</string>
     <string name="selected">Seçili:</string>

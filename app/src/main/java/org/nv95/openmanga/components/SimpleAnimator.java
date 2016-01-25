@@ -110,13 +110,13 @@ public class SimpleAnimator implements Animator.AnimatorListener {
 
   @Override
   public void onAnimationEnd(Animator animation) {
-    /*view.setVisibility(visibility);
+    view.setVisibility(visibility);
     view.clearAnimation();
     view.setTranslationX(0);
     view.setTranslationY(0);
     view.setAlpha(1);
     view.setScaleX(1);
-    view.setScaleY(1);*/
+    view.setScaleY(1);
   }
 
   @Override
