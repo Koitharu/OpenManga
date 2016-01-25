@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,15 +12,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -113,42 +118,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
+        setViewMode(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt("view_mode", 0));
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
-  /*@Override
+  @Override
   public boolean onCreateOptionsMenu(final Menu menu) {
     getMenuInflater().inflate(R.menu.menu_main, menu);
     MenuItem menuItem = menu.findItem(R.id.action_search);
     final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-    final ListView listViewSearch = (ListView) findViewById(R.id.listView_search);
     final SearchHistoryAdapter historyAdapter = SearchHistoryAdapter.newInstance(this);
-    MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
-      @Override
-      public boolean onMenuItemActionExpand(MenuItem item) {
-        historyAdapter.update();
-        listViewSearch.setVisibility(View.VISIBLE);
-        //floatingAb.setVisibility(View.GONE);
-        return true;
-      }
 
-      @Override
-      public boolean onMenuItemActionCollapse(MenuItem item) {
-        listViewSearch.setVisibility(View.GONE);
-        //floatingAb.setVisibility(View.VISIBLE);
-        return true;
-      }
-    });
-    listViewSearch.setAdapter(historyAdapter);
-    listViewSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
-        searchView.setQuery(cursor.getString(1), false);
-      }
-    });
-    listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+      searchView.setSuggestionsAdapter(historyAdapter);
+      searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+          @Override
+          public boolean onSuggestionSelect(int position) {
+              return false;
+          }
+
+          @Override
+          public boolean onSuggestionClick(int position) {
+              SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
+              searchView.setQuery(cursor.getString(1), false);
+              return true;
+          }
+      });
+    /*listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
         new AlertDialog.Builder(MainActivity.this)
@@ -165,16 +162,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .create().show();
         return true;
       }
-    });
+    });*/
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
       public boolean onQueryTextSubmit(String query) {
         historyAdapter.addToHistory(query);
         if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getBoolean("qsearch", false) && listFragment.getProvider().hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
+                .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
           startActivity(new Intent(MainActivity.this, SearchActivity.class)
                   .putExtra("query", query)
-                  .putExtra("provider", drawerListView.getCheckedItemPosition() - 4));
+                  .putExtra("provider", mDrawerListView.getCheckedItemPosition() - 4));
         } else {
           startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
                   .putExtra("query", query));
@@ -193,14 +190,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
-    MangaProvider provider = listFragment.getProvider();
     //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
-    menu.findItem(R.id.action_sort).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
-    menu.findItem(R.id.action_genre).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
-    menu.setGroupVisible(R.id.group_history, drawerListView.getCheckedItemPosition() == 2);
-    menu.setGroupVisible(R.id.group_favourites, drawerListView.getCheckedItemPosition() == 1);
+    menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
+    menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
+    menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
+    menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
     return super.onPrepareOptionsMenu(menu);
-  }*/
+  }
 
     @Override
     protected void onDestroy() {
@@ -286,11 +282,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(new Intent(this, UpdatesActivity.class));
                 return true;
             case R.id.action_listmode:
-                //listFragment.setGridLayout(!listFragment.isGridLayout());
+                viewModeDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void viewModeDialog() {
+        int mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt("view_mode", 0);
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(R.array.view_modes, mode, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setViewMode(which);
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                .edit().putInt("view_mode", which).apply();
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
+    private void setViewMode(int mode) {
+        LinearLayoutManager layoutManager;
+        switch (mode) {
+            case 0:
+                layoutManager = new LinearLayoutManager(MainActivity.this);
+                break;
+            case 1:
+                layoutManager = new GridLayoutManager(MainActivity.this, 4);
+                break;
+            case 2:
+                layoutManager = new GridLayoutManager(MainActivity.this, 3);
+                break;
+            case 3:
+                layoutManager = new GridLayoutManager(MainActivity.this, 2);
+                break;
+            default:
+                return;
+        }
+        mRecyclerView.setLayoutManager(layoutManager);
+        mListLoader.getAdapter().onLayoutManagerChanged(layoutManager);
     }
 
     @Override
@@ -310,7 +344,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mProvider = mProviderManager.getMangaProvider(position - 4);
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
-        getSupportActionBar().setSubtitle(mProvider.getName());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setSubtitle(mProvider.getName());
+        }
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 

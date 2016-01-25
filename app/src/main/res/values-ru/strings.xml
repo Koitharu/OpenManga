@@ -22,8 +22,7 @@
     <string name="setting_providers">Доступные источники</string>
     <string name="start_reading">Читать</string>
     <string name="storages_remote">Онлайн каталоги</string>
-    <string name="switch_to_grid">Отображать таблицей</string>
-    <string name="switch_to_list">Отображать списком</string>
+    <string name="view_mode_list">Отображать списком</string>
     <string name="wait">Подождите…</string>
     <string name="search_results">Результаты поиска</string>
     <string name="action_share">Поделиться</string>

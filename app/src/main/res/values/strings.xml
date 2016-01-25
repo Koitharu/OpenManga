@@ -17,8 +17,10 @@
     <string name="action_favourite">Add to favourites</string>
     <string name="setting_providers">Available sources</string>
     <string name="wait">Wait…</string>
-    <string name="switch_to_grid">Switch to grid</string>
-    <string name="switch_to_list">Switch to list</string>
+    <string name="view_mode_list">List</string>
+    <string name="view_mode_grid_large">Large grid</string>
+    <string name="view_mode_grid_medium">Medium grid</string>
+    <string name="view_mode_grid_small">Small grid</string>
     <string name="action_history">History</string>
     <string name="action_remove">Remove</string>
     <string name="selected">Selected:</string>
@@ -211,4 +213,5 @@
     <string name="genre_smut">Smut</string>
     <string name="open_on_start">Open on start</string>
     <string name="nothing_selected">Nothing selected</string>
+    <string name="view_mode">View mode</string>
 </resources>
