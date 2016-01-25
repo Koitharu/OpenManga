@@ -5,22 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.nv95.openmanga.fragments.MangaListFragment;
-import org.nv95.openmanga.items.MangaList;
-import org.nv95.openmanga.providers.MangaProvider;
-
 /**
  * Created by nv95 on 01.10.15.
  */
 public class SearchActivity extends AppCompatActivity implements
-        MangaListFragment.MangaListListener, DialogInterface.OnClickListener {
-  private MangaListFragment listFragment;
+        DialogInterface.OnClickListener {
+  //private MangaListFragment listFragment;
   private String query;
   @Nullable
   private String title;
@@ -30,9 +25,9 @@ public class SearchActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_search);
     setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-    listFragment = new MangaListFragment();
-    listFragment.setArguments(getIntent().getExtras());
-    getFragmentManager().beginTransaction().add(R.id.frame_main, listFragment).commit();
+    //listFragment = new MangaListFragment();
+    //listFragment.setArguments(getIntent().getExtras());
+    //getFragmentManager().beginTransaction().add(R.id.frame_main, listFragment).commit();
     query = getIntent().getStringExtra("query");
     title = getIntent().getStringExtra("title");
     if (title != null) {
@@ -64,7 +59,7 @@ public class SearchActivity extends AppCompatActivity implements
     return super.onOptionsItemSelected(item);
   }
 
-  @Override
+  /*@Override
   public MangaList onListNeeded(MangaProvider provider, int page) throws Exception {
     return query == null ? MangaList.Empty() : provider.search(query, page);
   }
@@ -80,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements
               .create().show();
     }
     return getString(R.string.no_manga_found);
-  }
+  }*/
 
   @Override
   public void onClick(DialogInterface dialog, int which) {

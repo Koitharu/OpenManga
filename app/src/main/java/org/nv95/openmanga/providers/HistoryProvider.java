@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaList;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.utils.MangaChangesObserver;

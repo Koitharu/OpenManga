@@ -16,7 +16,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaList;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.utils.SerialExecutor;
 

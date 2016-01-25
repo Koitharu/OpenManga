@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaList;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;

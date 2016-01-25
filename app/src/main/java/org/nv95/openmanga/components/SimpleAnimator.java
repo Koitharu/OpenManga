@@ -1,14 +1,15 @@
 package org.nv95.openmanga.components;
 
 import android.animation.Animator;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
-import android.widget.FrameLayout;
 
 /**
  * Created by nv95 on 10.10.15.
  */
+@Deprecated
 public class SimpleAnimator implements Animator.AnimatorListener {
   protected View view;
   protected ViewPropertyAnimator animator;
@@ -20,9 +21,9 @@ public class SimpleAnimator implements Animator.AnimatorListener {
     this.view = view;
     animator = view.animate();
     animator.setListener(this);
-    animator.setDuration(200);
-    if (view.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-      FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams) view.getLayoutParams());
+    animator.setDuration(500);
+    if (view.getLayoutParams() instanceof CoordinatorLayout.LayoutParams) {
+      CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) view.getLayoutParams());
       gravity = params.gravity;
       margins = new int[]{
               params.topMargin,       //0
@@ -37,7 +38,7 @@ public class SimpleAnimator implements Animator.AnimatorListener {
   }
 
   public void hide() {
-    visibility = View.INVISIBLE;
+    visibility = View.GONE;
     switch (gravity) {
       case Gravity.CENTER:
         animator.scaleX(0).scaleY(0);
@@ -109,13 +110,13 @@ public class SimpleAnimator implements Animator.AnimatorListener {
 
   @Override
   public void onAnimationEnd(Animator animation) {
+    /*view.setVisibility(visibility);
     view.clearAnimation();
-    view.setVisibility(visibility);
     view.setTranslationX(0);
     view.setTranslationY(0);
     view.setAlpha(1);
     view.setScaleX(1);
-    view.setScaleY(1);
+    view.setScaleY(1);*/
   }
 
   @Override
