@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private FloatingActionButton mFab;
+    private TextView mTextViewHolder;
+    private ProgressBar mProgressBar;
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
@@ -63,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDrawerListView = (ListView) findViewById(R.id.listView_menu);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         mFab.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -108,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
-
         WelcomeActivity.ShowChangelog(this);
+        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
   /*@Override
@@ -359,8 +364,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onContentLoaded(boolean success) {
+        mProgressBar.setVisibility(View.GONE);
         if (!success) {
-            String holder = null;
+            Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+                        }
+                    })
+                    .show();
+        }
+        if (mListLoader.getContentSize() == 0) {
+            String holder;
             if (mProvider instanceof LocalMangaProvider) {
                 holder = getString(R.string.no_saved_manga);
             } else if (mProvider instanceof FavouritesProvider) {
@@ -370,13 +386,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             } else {
                 holder = getString(R.string.no_manga_found);
             }
-            Snackbar.make(mRecyclerView, holder, Snackbar.LENGTH_SHORT).show();
+            mTextViewHolder.setText(holder);
+            mTextViewHolder.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onLoadingStarts(int page) {
-
+        if (page == 0) {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+        mTextViewHolder.setVisibility(View.GONE);
     }
 
     @Nullable

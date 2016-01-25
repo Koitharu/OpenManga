@@ -28,6 +28,23 @@
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_holder"
+            android:visibility="gone"
+            app:layout_anchor="@id/recyclerView"
+            app:layout_anchorGravity="center" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            style="?android:progressBarStyleLarge"
+            android:visibility="gone"
+            app:layout_anchor="@id/recyclerView"
+            app:layout_anchorGravity="center" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_read"
             android:layout_width="wrap_content"
