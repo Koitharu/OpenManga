@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
 
@@ -71,7 +70,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
         if (mangaSummary.getChapters().size() == 0) {
-            Toast.makeText(this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+            Snackbar.make(mPager, R.string.loading_error, Snackbar.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -145,9 +144,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             //....
                         }
                     });
-            Toast.makeText(ReadActivity.this, R.string.image_saved, Toast.LENGTH_SHORT).show();
+            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(ReadActivity.this, R.string.unable_to_save_image, Toast.LENGTH_SHORT).show();
+            Snackbar.make(mPager, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -354,9 +353,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {
                     SaveService.SaveWithDialog(this, mangaSummary);
                 } else {
-                    Toast toast = Toast.makeText(this, R.string.already_saved, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.action_img_save:
