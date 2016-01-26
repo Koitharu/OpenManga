@@ -32,6 +32,8 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         return mAdapter;
     }
 
+
+
     public interface OnContentLoadListener {
         void onContentLoaded(boolean success);
         void onLoadingStarts(int page);

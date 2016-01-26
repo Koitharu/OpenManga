@@ -1,32 +1,25 @@
 package org.nv95.openmanga.components;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 
 /**
  * Created by nv95 on 25.01.16.
  */
-public class ProportionalFrameLayout extends FrameLayout {
+public class ProportionalCardView extends CardView {
     private static final double ASPECT_RATIO = 5f/3f;
 
-    public ProportionalFrameLayout(Context context) {
+    public ProportionalCardView(Context context) {
         super(context);
     }
 
-    public ProportionalFrameLayout(Context context, AttributeSet attrs) {
+    public ProportionalCardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ProportionalFrameLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProportionalCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProportionalFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

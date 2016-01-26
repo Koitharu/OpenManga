@@ -21,7 +21,6 @@ import org.nv95.openmanga.lists.PagedList;
  */
 public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter.MangaViewHolder> {
     private boolean mGrid;
-
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
     }
@@ -29,15 +28,15 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     @Override
     public void onLayoutManagerChanged(LinearLayoutManager layoutManager) {
         super.onLayoutManagerChanged(layoutManager);
-        boolean grid = layoutManager instanceof GridLayoutManager;
+        boolean grid;
+        if (grid = layoutManager instanceof GridLayoutManager) {
+            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new AutoSpanSizeLookup(
+                    ((GridLayoutManager) layoutManager).getSpanCount()
+            ));
+        }
         if (grid != mGrid) {
             mGrid = grid;
             notifyDataSetChanged();
-        }
-        if (mGrid) {
-            ((GridLayoutManager)layoutManager).setSpanSizeLookup(new AutoSpanSizeLookup(
-                    ((GridLayoutManager)layoutManager).getSpanCount()
-            ));
         }
     }
 
@@ -76,7 +75,12 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         public void fill(MangaInfo data) {
             mData = data;
             textViewTitle.setText(mData.name);
-            textViewSubtitle.setText(mData.subtitle);
+            if (mData.subtitle == null) {
+                textViewSubtitle.setVisibility(View.GONE);
+            } else {
+                textViewSubtitle.setText(mData.subtitle);
+                textViewSubtitle.setVisibility(View.VISIBLE);
+            }
             textViewSummary.setText(mData.summary);
             asyncImageView.setImageAsync(mData.preview, true);
         }
@@ -88,6 +92,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             intent.putExtras(mData.toBundle());
             context.startActivity(intent);
         }
+
     }
 
     private class AutoSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
