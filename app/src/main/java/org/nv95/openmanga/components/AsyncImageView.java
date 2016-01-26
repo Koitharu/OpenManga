@@ -22,7 +22,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -44,247 +44,237 @@ import java.net.URL;
  * Created by nv95 on 10.12.15.
  */
 public class AsyncImageView extends ImageView {
-  private static final SerialExecutor EXECUTOR = new SerialExecutor();
-  public static Drawable IMAGE_HOLDER = new ColorDrawable(Color.TRANSPARENT);
-  private static MemoryCache memoryCache = new MemoryCache();
-  private static FileCache fileCache = null;
-  @Nullable
-  private String url = null;
-  private LoadImageTask loadImageTask = null;
-  private SetImageTask setImageTask = null;
-  private boolean useMemCache = true;
+    private static final SerialExecutor EXECUTOR = new SerialExecutor();
+    public static Drawable IMAGE_HOLDER = new ColorDrawable(Color.TRANSPARENT);
+    private static MemoryCache memoryCache = new MemoryCache();
+    private static FileCache fileCache = null;
+    @Nullable
+    private String url = null;
+    private LoadImageTask loadImageTask = null;
+    private SetImageTask setImageTask = null;
+    private boolean useMemCache = true;
 
-  public AsyncImageView(Context context) {
-    super(context);
-    if (fileCache == null) {
-      fileCache = new FileCache(context);
-    }
-  }
-
-  public AsyncImageView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    if (fileCache == null) {
-      fileCache = new FileCache(context);
-    }
-  }
-
-  public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    if (fileCache == null) {
-      fileCache = new FileCache(context);
-    }
-  }
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    if (fileCache == null) {
-      fileCache = new FileCache(context);
-    }
-  }
-
-  @Override
-  public void setImageBitmap(Bitmap bm) {
-    cancelLoading();
-    //url = null;
-    super.setImageBitmap(bm);
-  }
-
-  @Override
-  public void setImageResource(int resId) {
-    cancelLoading();
-    //url = null;
-    super.setImageResource(resId);
-  }
-
-  @Override
-  public void setImageURI(Uri uri) {
-    cancelLoading();
-    //url = null;
-    super.setImageURI(uri);
-  }
-
-  @Override
-  public void setImageDrawable(Drawable drawable) {
-    cancelLoading();
-    //url = null;
-    super.setImageDrawable(drawable);
-  }
-
-  public void setImageAsync(@Nullable String url) {
-    setImageAsync(url, true);
-  }
-
-  public void setImageAsync(@Nullable String url, boolean useHolder) {
-    if (this.url != null && this.url.equals(url)) {
-      return;
-    }
-    if (useHolder) {
-      setImageDrawable(IMAGE_HOLDER);
-    }
-    cancelLoading();
-    this.url = url;
-    if (url != null) {
-      setImageTask = new SetImageTask();
-      setImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-    }
-  }
-
-  public void useMemoryCache(boolean value) {
-    this.useMemCache = value;
-  }
-
-  public void cancelLoading() {
-    try {
-      if (setImageTask != null && setImageTask.getStatus() != AsyncTask.Status.FINISHED) {
-        setImageTask.cancel(false);
-      }
-      if (loadImageTask != null && loadImageTask.getStatus() != AsyncTask.Status.FINISHED) {
-        loadImageTask.cancel(false);
-      }
-    } catch (Exception ignored) {
-    }
-  }
-
-
-  @Override
-  protected void finalize() throws Throwable {
-    cancelLoading();
-    super.finalize();
-  }
-
-  private static class FileCache {
-    private Context context;
-    private File cacheDir;
-
-    public FileCache(Context context) {
-      this.context = context;
-      cacheDir = context.getExternalCacheDir();
+    public AsyncImageView(Context context) {
+        super(context);
+        if (fileCache == null) {
+            fileCache = new FileCache(context);
+        }
     }
 
-    public void putBitmap(@NonNull String key, @Nullable Bitmap bitmap) {
-      File file = new File(cacheDir, String.valueOf(key.hashCode()));
-      if (bitmap != null && !file.exists()) {
+    public AsyncImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        if (fileCache == null) {
+            fileCache = new FileCache(context);
+        }
+    }
+
+    public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        if (fileCache == null) {
+            fileCache = new FileCache(context);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        if (fileCache == null) {
+            fileCache = new FileCache(context);
+        }
+    }
+
+    public void setImageAsync(@Nullable String url) {
+        setImageAsync(url, true);
+    }
+
+    public void setImageAsync(@Nullable String url, boolean useHolder) {
+        if (this.url != null && this.url.equals(url)) {
+            return;
+        }
+        if (useHolder) {
+            setImageDrawable(IMAGE_HOLDER);
+        }
+        cancelLoading();
+        this.url = url;
+        if (url != null) {
+            setImageTask = new SetImageTask();
+            setImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+        }
+    }
+
+    public void useMemoryCache(boolean value) {
+        this.useMemCache = value;
+    }
+
+    public void cancelLoading() {
         try {
-          OutputStream fOut = new FileOutputStream(file);
-          bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-          fOut.flush();
-          fOut.close();
-        } catch (Exception e) {
-          //TODO:new ErrorReporter(context).report(e);
+            if (setImageTask != null && setImageTask.getStatus() != AsyncTask.Status.FINISHED) {
+                setImageTask.cancel(false);
+            }
+            if (loadImageTask != null && loadImageTask.getStatus() != AsyncTask.Status.FINISHED) {
+                loadImageTask.cancel(false);
+            }
+        } catch (Exception ignored) {
         }
-      }
     }
 
-    @Nullable
-    public Bitmap getBitmap(@NonNull String key) {
-      File file = new File(cacheDir, String.valueOf(key.hashCode()));
-      try {
-        return BitmapFactory.decodeStream(new FileInputStream(file));
-      } catch (Exception e) {
-        return null;
-      }
-    }
-  }
-
-  public static class MemoryCache extends LruCache<String, Bitmap> {
-    public MemoryCache() {
-      super(((int) (Runtime.getRuntime().maxMemory() / 1024) / 8));
-    }
 
     @Override
-    protected int sizeOf(String key, Bitmap bitmap) {
-      return bitmap.getByteCount() / 1024;
+    protected void finalize() throws Throwable {
+        cancelLoading();
+        super.finalize();
     }
 
-    public void putBitmap(@NonNull String key, Bitmap bitmap) {
-      if (bitmap != null && getBitmap(key) == null) {
-        this.put(key, bitmap);
-      }
-    }
+    private static class FileCache {
+        private Context context;
+        private File cacheDir;
 
-    @Nullable
-    public Bitmap getBitmap(String key) {
-      return get(key);
-    }
-  }
-
-  private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-    private final int h, w;
-
-    private LoadImageTask() {
-      h = getLayoutParams().height;
-      w = getLayoutParams().width;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Bitmap doInBackground(String... params) {
-      try {
-        Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(params[0]).getContent());
-        if (useMemCache) {
-          memoryCache.putBitmap(params[0], bitmap);
+        public FileCache(Context context) {
+            this.context = context;
+            cacheDir = context.getExternalCacheDir();
         }
-        fileCache.putBitmap(params[0], bitmap);
-        return bitmap;
-      } catch (Exception e) {
-        return null;
-      }
-    }
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-      super.onPostExecute(bitmap);
-      if (bitmap != null) {
-        AsyncImageView.super.setImageBitmap(bitmap);
-      }
-    }
-
-    @Override
-    protected void onCancelled() {
-      super.onCancelled();
-    }
-  }
-
-  private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
-    private final int h, w;
-
-    private SetImageTask() {
-      h = getLayoutParams().height;
-      w = getLayoutParams().width;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Bitmap doInBackground(String... params) {
-      Bitmap bitmap = memoryCache.getBitmap(url);
-      if (bitmap == null) {
-        if (!params[0].startsWith("http")) {
-          bitmap = BitmapFactory.decodeFile(params[0]);
-        } else {
-          bitmap = fileCache.getBitmap(params[0]);
+        public void putBitmap(@NonNull String key, @Nullable Bitmap bitmap) {
+            File file = new File(cacheDir, String.valueOf(key.hashCode()));
+            if (bitmap != null && !file.exists()) {
+                try {
+                    OutputStream fOut = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (Exception e) {
+                    //TODO:new ErrorReporter(context).report(e);
+                }
+            }
         }
-      }
-      return bitmap;
+
+        @Nullable
+        public Bitmap getBitmap(@NonNull String key) {
+            File file = new File(cacheDir, String.valueOf(key.hashCode()));
+            try {
+                return BitmapFactory.decodeStream(new FileInputStream(file));
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-      super.onPostExecute(bitmap);
-      if (bitmap != null) {
-        AsyncImageView.super.setImageBitmap(bitmap);
-      } else {
-        loadImageTask = new LoadImageTask();
-        loadImageTask.executeOnExecutor(EXECUTOR, url);
-      }
+    public static class MemoryCache extends LruCache<String, Bitmap> {
+        public MemoryCache() {
+            super(((int) (Runtime.getRuntime().maxMemory() / 1024) / 8));
+        }
+
+        @Override
+        protected int sizeOf(String key, Bitmap bitmap) {
+            return bitmap.getByteCount() / 1024;
+        }
+
+        public void putBitmap(@NonNull String key, Bitmap bitmap) {
+            if (bitmap != null && getBitmap(key) == null) {
+                this.put(key, bitmap);
+            }
+        }
+
+        @Nullable
+        public Bitmap getBitmap(String key) {
+            return get(key);
+        }
     }
-  }
+
+    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
+        private final int mWidth, mHeight;
+
+        public LoadImageTask() {
+            mWidth = getWidth();
+            mHeight = getHeight();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(params[0]).getContent());
+                if (bitmap == null) {
+                    return null;
+                }
+                if (useMemCache) {
+                    memoryCache.putBitmap(params[0], bitmap);
+                }
+                fileCache.putBitmap(params[0], bitmap);
+                if (mWidth != 0 && mHeight != 0) {
+                    Bitmap compressed = ThumbnailUtils.extractThumbnail(bitmap, mWidth, mHeight);
+                    bitmap.recycle();
+                    return compressed;
+                } else {
+                    return bitmap;
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (bitmap != null) {
+                AsyncImageView.super.setImageBitmap(bitmap);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
+    private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
+        private final int mWidth, mHeight;
+
+        private SetImageTask() {
+            mWidth = getWidth();
+            mHeight = getHeight();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bitmap = memoryCache.getBitmap(url);
+            if (bitmap == null) {
+                if (!params[0].startsWith("http")) {
+                    bitmap = BitmapFactory.decodeFile(params[0]);
+                } else {
+                    bitmap = fileCache.getBitmap(params[0]);
+                }
+            }
+            if (bitmap == null) {
+                return null;
+            }
+            if (mWidth != 0 && mHeight != 0) {
+                Bitmap compressed = ThumbnailUtils.extractThumbnail(bitmap, mWidth, mHeight);
+                bitmap.recycle();
+                return compressed;
+            } else {
+                return bitmap;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (bitmap != null) {
+                AsyncImageView.super.setImageBitmap(bitmap);
+            } else {
+                loadImageTask = new LoadImageTask();
+                loadImageTask.executeOnExecutor(EXECUTOR, url);
+            }
+        }
+    }
 }

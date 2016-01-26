@@ -47,6 +47,14 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     }
 
     @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof MangaViewHolder) {
+            ((MangaViewHolder) holder).asyncImageView.setImageAsync(null);
+        }
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public long getItemId(MangaInfo data) {
         return data.hashCode();
     }
