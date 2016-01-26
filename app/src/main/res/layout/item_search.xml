@@ -9,7 +9,7 @@
     android:paddingRight="?android:listPreferredItemPaddingRight"
     android:paddingEnd="?android:listPreferredItemPaddingEnd"
     android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
-    android:textColor="?android:textColorPrimaryInverse"
+    android:textColor="?android:textColorPrimary"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:gravity="center_vertical"
     android:drawableLeft="@drawable/ic_search_history"

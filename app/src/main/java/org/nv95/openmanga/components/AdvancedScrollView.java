@@ -9,6 +9,7 @@ import android.widget.ScrollView;
 /**
  * Created by nv95 on 23.10.15.
  */
+@Deprecated
 public class AdvancedScrollView extends ScrollView {
   protected OnScrollListener onScrollListener;
 
