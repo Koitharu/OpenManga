@@ -30,8 +30,8 @@ public class SearchHistoryAdapter extends CursorAdapter {
 
   private SearchHistoryAdapter(Context context, Cursor cursor) {
     super(context, cursor, true);
-    oddColor = ContextCompat.getColor(context, R.color.primary_dark);
-    evenColor = ContextCompat.getColor(context, R.color.primary_dark_dark);
+    oddColor = ContextCompat.getColor(context, R.color.light_background);
+    evenColor = ContextCompat.getColor(context, R.color.light_background_darker);
     inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
   }
 
