@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.nv95.openmanga.components.ProportionalFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="8000dp" android:layout_height="8000dp"
-    android:background="?android:selectableItemBackground" >
+<org.nv95.openmanga.components.ProportionalCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="300dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="3dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="4dp">
 
         <org.nv95.openmanga.components.AsyncImageView
             android:layout_width="match_parent"
@@ -51,4 +58,4 @@
             android:text="Small Text"
             android:id="@+id/textView_summary" />
     </LinearLayout>
-</org.nv95.openmanga.components.ProportionalFrameLayout>
+</org.nv95.openmanga.components.ProportionalCardView>
