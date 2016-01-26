@@ -134,7 +134,7 @@ public class HistoryProvider extends MangaProvider {
       database.insert(TABLE_NAME, null, cv);
     }
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_HISTORY);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
     return true;
   }
 
@@ -142,7 +142,7 @@ public class HistoryProvider extends MangaProvider {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_HISTORY);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
     return true;
   }
 
@@ -157,7 +157,7 @@ public class HistoryProvider extends MangaProvider {
     database.setTransactionSuccessful();
     database.endTransaction();
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_HISTORY);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
     return true;
   }
 
@@ -168,7 +168,7 @@ public class HistoryProvider extends MangaProvider {
     database.setTransactionSuccessful();
     database.endTransaction();
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_HISTORY);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
   }
 
   public boolean has(MangaInfo mangaInfo) {

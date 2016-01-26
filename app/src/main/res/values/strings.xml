@@ -214,4 +214,6 @@
     <string name="open_on_start">Open on start</string>
     <string name="nothing_selected">Nothing selected</string>
     <string name="view_mode">View mode</string>
+    <string name="removed">Item removed</string>
+    <string name="undo">Undo</string>
 </resources>

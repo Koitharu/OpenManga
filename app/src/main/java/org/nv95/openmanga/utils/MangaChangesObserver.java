@@ -41,26 +41,22 @@ public class MangaChangesObserver {
         instance.listeners.remove(listener);
     }
 
-    @Deprecated
-    public static void emitChanging(int category) {
+    public static void queueChanges(int category) {
         if (instance.listeners.size() == 0) {
             instance.queuedChanges[category]++;
-        } else {
-            for (OnMangaChangesListener o : instance.listeners) {
-                o.onMangaChanged(category);
-            }
         }
     }
 
     public static void emitAdding(int category, MangaInfo what) {
+        queueChanges(category);
         for (OnMangaChangesListener o : instance.listeners) {
             o.onMangaAdded(category, what);
         }
     }
 
     public interface OnMangaChangesListener {
-        @Deprecated
         void onMangaChanged(int category);
         void onMangaAdded(int category, MangaInfo data);
     }
+
 }

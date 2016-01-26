@@ -26,7 +26,6 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.FileRemover;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.StorageHelper;
 
 import java.io.File;
@@ -44,6 +43,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by nv95 on 10.10.15.
  */
+@Deprecated
 public class SaveService extends Service {
   public static final int SAVE_ADD = 0;
   public static final int SAVE_CANCEL = 1;
@@ -211,7 +211,7 @@ public class SaveService extends Service {
     protected void onProgressUpdate(ProgressInfo... values) {
       super.onProgressUpdate(values);
       if (values.length == 0) {
-        MangaChangesObserver.emitChanging(Constants.CATEGORY_LOCAL);
+        //MangaChangesObserver.emitChanging(Constants.CATEGORY_LOCAL);
         return;
       }
       notificationBuilder.setContentText(values[0].title);

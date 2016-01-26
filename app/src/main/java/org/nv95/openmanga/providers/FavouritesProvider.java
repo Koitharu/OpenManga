@@ -116,7 +116,7 @@ public class FavouritesProvider extends MangaProvider {
     cv.put("timestamp", new Date().getTime());
     database.insert(TABLE_NAME, null, mangaInfo.toContentValues());
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_FAVOURITES);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
     return true;
   }
 
@@ -124,7 +124,7 @@ public class FavouritesProvider extends MangaProvider {
     SQLiteDatabase database = dbHelper.getWritableDatabase();
     database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_FAVOURITES);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
     return true;
   }
 
@@ -138,7 +138,7 @@ public class FavouritesProvider extends MangaProvider {
     database.setTransactionSuccessful();
     database.endTransaction();
     database.close();
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_FAVOURITES);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
     return true;
   }
 

@@ -330,8 +330,8 @@ public class BackupHelper {
               .setTitle(R.string.restore)
               .setPositiveButton(R.string.close, null)
               .create().show();
-      MangaChangesObserver.emitChanging(Constants.CATEGORY_HISTORY);
-      MangaChangesObserver.emitChanging(Constants.CATEGORY_FAVOURITES);
+      MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
+      MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
     }
 
     @Nullable

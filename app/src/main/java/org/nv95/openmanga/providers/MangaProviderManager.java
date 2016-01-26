@@ -31,9 +31,9 @@ public class MangaProviderManager {
   public static final int FEAUTURE_GENRES = 4;
   public static final ProviderSumm[] providers = {
           new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Language.RU),
-          //new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
-          //new ProviderSumm("Манга-тян", MangachanProvider.class, Language.RU),
-          //new ProviderSumm("E-Hentai", EHentaiProvider.class, Language.MULTI),
+          new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
+          new ProviderSumm("Манга-тян", MangachanProvider.class, Language.RU),
+          new ProviderSumm("E-Hentai", EHentaiProvider.class, Language.MULTI),
           new ProviderSumm("MangaTown", MangaTownProvider.class, Language.EN),
           new ProviderSumm("MangaReader", MangaReaderProvider.class, Language.EN),
           new ProviderSumm("PuzzManga", PuzzmosProvider.class, Language.TR)

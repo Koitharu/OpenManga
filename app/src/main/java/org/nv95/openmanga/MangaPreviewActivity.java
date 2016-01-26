@@ -205,7 +205,6 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
             mTextViewDescription.setText(mangaSummary.getDescription());
             mImageView.setImageAsync(mangaSummary.preview, false);
             if (mangaSummary.getChapters().size() == 0) {
-                mFab.hide();
                 mFab.setEnabled(false);
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
                         .show();

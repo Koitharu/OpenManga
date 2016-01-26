@@ -186,4 +186,9 @@
     </string-array>
     <string name="open_on_start">Открывать при запуске</string>
     <string name="reset">Сброс</string>
+    <string name="nothing_selected">Ничего не выбрано</string>
+    <string name="view_mode">Отображение</string>
+    <string name="view_mode_grid_large">Крупная сетка</string>
+    <string name="view_mode_grid_medium">Средняя сетка</string>
+    <string name="view_mode_grid_small">Мелкая сетка</string>
 </resources>
