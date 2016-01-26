@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 01.10.15.
@@ -163,13 +164,16 @@ public class SearchActivity extends AppCompatActivity implements
                 layoutManager = new LinearLayoutManager(this);
                 break;
             case 1:
-                layoutManager = new GridLayoutManager(this, 4);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 120));
                 break;
             case 2:
-                layoutManager = new GridLayoutManager(this, 3);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 164));
                 break;
             case 3:
-                layoutManager = new GridLayoutManager(this, 2);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 240));
                 break;
             default:
                 return;

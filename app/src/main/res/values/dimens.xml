@@ -15,4 +15,6 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="overscroll_size">100dp</dimen>
+    <dimen name="list_divider_vert">3dp</dimen>
+    <dimen name="list_divider_horz">3dp</dimen>
 </resources>

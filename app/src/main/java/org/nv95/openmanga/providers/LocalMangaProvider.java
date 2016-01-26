@@ -227,7 +227,7 @@ public class LocalMangaProvider extends MangaProvider {
     }
     database.close();
     HistoryProvider.getInstacne(context).remove(ids);
-    MangaChangesObserver.emitChanging(Constants.CATEGORY_LOCAL);
+    MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
     return true;
   }
 

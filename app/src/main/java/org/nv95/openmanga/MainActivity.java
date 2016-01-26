@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteCursor;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -23,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
+    private ItemHelper mItemTouchHelper;
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
@@ -74,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         mFab.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mItemTouchHelper = new ItemHelper();
         mProviderManager = new MangaProviderManager(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListLoader = new MangaListLoader(mRecyclerView, this);
         setViewMode(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getInt("view_mode", 0));
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
@@ -413,16 +417,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onContentLoaded(boolean success) {
         mProgressBar.setVisibility(View.GONE);
-        if (!success) {
-            Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-                        }
-                    })
-                    .show();
-        }
+
         if (mListLoader.getContentSize() == 0) {
             String holder;
             if (mProvider instanceof LocalMangaProvider) {
@@ -436,6 +431,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             mTextViewHolder.setText(holder);
             mTextViewHolder.setVisibility(View.VISIBLE);
+            if (!success) {
+                Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.retry, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+                            }
+                        })
+                        .show();
+            }
         }
     }
 
@@ -516,6 +521,64 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onCancel(DialogInterface dialog) {
             this.cancel(false);
+        }
+    }
+
+    private class ItemHelper extends ItemTouchHelper {
+        private final int mVerticalMargin;
+        private final int mHorizontalMargin;
+
+        public ItemHelper() {
+            super(new ItemCallback());
+            mVerticalMargin = getResources().getDimensionPixelSize(R.dimen.list_divider_vert);
+            mHorizontalMargin = getResources().getDimensionPixelSize(R.dimen.list_divider_horz);
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.left = mHorizontalMargin;
+            outRect.right = mHorizontalMargin;
+            outRect.top = mVerticalMargin;
+        }
+    }
+
+    private class ItemCallback extends ItemTouchHelper.Callback {
+        @Nullable
+        private MangaInfo mLastRemovedItem = null;
+        private int mLastRemovedPosition = 0;
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
+
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return mProvider != null && mProvider instanceof HistoryProvider; //mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            mLastRemovedPosition = viewHolder.getAdapterPosition();
+            mLastRemovedItem = mListLoader.getAdapter().getItem(mLastRemovedPosition);
+            if (mLastRemovedItem != null && mProvider.remove(new long[]{mLastRemovedItem.hashCode()}) &&
+                    (mProvider instanceof HistoryProvider || mProvider instanceof FavouritesProvider)) {
+                mListLoader.removeItem(viewHolder.getAdapterPosition());
+                Snackbar.make(mRecyclerView, R.string.removed, Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 }
