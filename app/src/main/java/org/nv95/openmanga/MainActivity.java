@@ -42,6 +42,7 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
@@ -312,13 +313,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 layoutManager = new LinearLayoutManager(MainActivity.this);
                 break;
             case 1:
-                layoutManager = new GridLayoutManager(MainActivity.this, 4);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 120));
                 break;
             case 2:
-                layoutManager = new GridLayoutManager(MainActivity.this, 3);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 164));
                 break;
             case 3:
-                layoutManager = new GridLayoutManager(MainActivity.this, 2);
+                layoutManager = new GridLayoutManager(this,
+                        LayoutUtils.getOptimalColumnsCount(this, 240));
                 break;
             default:
                 return;
@@ -452,6 +456,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return null;
         }
     }
+
 
     private class OpenLastTask extends AsyncTask<Void, Void, Intent> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;

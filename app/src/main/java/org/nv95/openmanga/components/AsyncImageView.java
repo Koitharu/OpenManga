@@ -22,7 +22,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -182,12 +181,6 @@ public class AsyncImageView extends ImageView {
     }
 
     private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-        private final int mWidth, mHeight;
-
-        public LoadImageTask() {
-            mWidth = getWidth();
-            mHeight = getHeight();
-        }
 
         @Override
         protected void onPreExecute() {
@@ -205,13 +198,7 @@ public class AsyncImageView extends ImageView {
                     memoryCache.putBitmap(params[0], bitmap);
                 }
                 fileCache.putBitmap(params[0], bitmap);
-                if (mWidth != 0 && mHeight != 0) {
-                    Bitmap compressed = ThumbnailUtils.extractThumbnail(bitmap, mWidth, mHeight);
-                    bitmap.recycle();
-                    return compressed;
-                } else {
-                    return bitmap;
-                }
+                return bitmap;
             } catch (Exception e) {
                 return null;
             }
@@ -232,12 +219,6 @@ public class AsyncImageView extends ImageView {
     }
 
     private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
-        private final int mWidth, mHeight;
-
-        private SetImageTask() {
-            mWidth = getWidth();
-            mHeight = getHeight();
-        }
 
         @Override
         protected void onPreExecute() {
@@ -257,13 +238,7 @@ public class AsyncImageView extends ImageView {
             if (bitmap == null) {
                 return null;
             }
-            if (mWidth != 0 && mHeight != 0) {
-                Bitmap compressed = ThumbnailUtils.extractThumbnail(bitmap, mWidth, mHeight);
-                bitmap.recycle();
-                return compressed;
-            } else {
-                return bitmap;
-            }
+            return bitmap;
         }
 
         @Override
