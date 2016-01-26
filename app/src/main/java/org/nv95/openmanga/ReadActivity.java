@@ -125,7 +125,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         .build();
                 if (FavouritesProvider.Has(this, mangaSummary)) {
                     MenuItem item = sheet.getMenu().findItem(R.id.action_favourite);
-                    item.setIcon(R.drawable.ic_action_action_favorite);
+                    item.setIcon(R.drawable.ic_favorite_dark);
                     item.setTitle(R.string.action_unfavourite);
                 }
                 sheet.show();
@@ -332,13 +332,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mangaSummary)) {
                     if (favouritesProvider.remove(mangaSummary)) {
-                        item.setIcon(R.drawable.ic_action_action_favorite_outline);
+                        item.setIcon(R.drawable.ic_favorite_outline_dark);
                         item.setTitle(R.string.action_unfavourite);
                     }
                 } else {
                     if (favouritesProvider.add(mangaSummary)) {
                         UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
-                        item.setIcon(R.drawable.ic_action_action_favorite);
+                        item.setIcon(R.drawable.ic_favorite_dark);
                         item.setTitle(R.string.action_favourite);
                     }
                 }

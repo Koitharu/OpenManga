@@ -22,8 +22,7 @@ import org.nv95.openmanga.R;
 /**
  * Created by nv95 on 13.01.16.
  */
-@Deprecated
-public class BottomSheet extends Dialog implements DialogInterface {
+public class BottomSheetDialog extends Dialog implements DialogInterface {
   private final Context context;
   private final ListView listView;
   private final View buttonbar;
@@ -36,26 +35,26 @@ public class BottomSheet extends Dialog implements DialogInterface {
       switch (v.getId()) {
         case R.id.button_neutral:
           if (clickListeners[0] != null) {
-            clickListeners[0].onClick(BottomSheet.this, BUTTON_NEUTRAL);
+            clickListeners[0].onClick(BottomSheetDialog.this, BUTTON_NEUTRAL);
           }
           break;
         case R.id.button_negative:
           dismiss();
           if (clickListeners[1] != null) {
-            clickListeners[1].onClick(BottomSheet.this, BUTTON_NEGATIVE);
+            clickListeners[1].onClick(BottomSheetDialog.this, BUTTON_NEGATIVE);
           }
           break;
         case R.id.button_positive:
           dismiss();
           if (clickListeners[2] != null) {
-            clickListeners[2].onClick(BottomSheet.this, BUTTON_POSITIVE);
+            clickListeners[2].onClick(BottomSheetDialog.this, BUTTON_POSITIVE);
           }
           break;
       }
     }
   };
 
-  public BottomSheet(Context context) {
+  public BottomSheetDialog(Context context) {
     super(context, R.style.MaterialDialogSheet);
     this.context = context;
     View view = View.inflate(context, R.layout.bottomsheet, null);
@@ -76,7 +75,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     getWindow().setGravity(Gravity.BOTTOM);
   }
 
-  public BottomSheet setPositiveButton(String text, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setPositiveButton(String text, @Nullable OnClickListener onClickListener) {
     buttonbar.setVisibility(View.VISIBLE);
     buttons[2].setVisibility(View.VISIBLE);
     buttons[2].setText(text);
@@ -85,11 +84,11 @@ public class BottomSheet extends Dialog implements DialogInterface {
     return this;
   }
 
-  public BottomSheet setPositiveButton(int textId, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setPositiveButton(int textId, @Nullable OnClickListener onClickListener) {
     return setPositiveButton(context.getString(textId), onClickListener);
   }
 
-  public BottomSheet setNegativeButton(String text, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setNegativeButton(String text, @Nullable OnClickListener onClickListener) {
     buttonbar.setVisibility(View.VISIBLE);
     buttons[1].setVisibility(View.VISIBLE);
     buttons[1].setText(text);
@@ -98,11 +97,11 @@ public class BottomSheet extends Dialog implements DialogInterface {
     return this;
   }
 
-  public BottomSheet setNegativeButton(int textId, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setNegativeButton(int textId, @Nullable OnClickListener onClickListener) {
     return setNegativeButton(context.getString(textId), onClickListener);
   }
 
-  public BottomSheet setNeutralButton(String text, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setNeutralButton(String text, @Nullable OnClickListener onClickListener) {
     buttonbar.setVisibility(View.VISIBLE);
     buttons[0].setVisibility(View.VISIBLE);
     buttons[0].setText(text);
@@ -111,48 +110,48 @@ public class BottomSheet extends Dialog implements DialogInterface {
     return this;
   }
 
-  public BottomSheet setNeutralButton(int textId, @Nullable OnClickListener onClickListener) {
+  public BottomSheetDialog setNeutralButton(int textId, @Nullable OnClickListener onClickListener) {
     return setNeutralButton(context.getString(textId), onClickListener);
   }
 
-  public BottomSheet setAdapter(ListAdapter adapter) {
+  public BottomSheetDialog setAdapter(ListAdapter adapter) {
     listView.setAdapter(adapter);
     return this;
   }
 
-  public BottomSheet setItems(String[] items, @LayoutRes int layoutId) {
+  public BottomSheetDialog setItems(String[] items, @LayoutRes int layoutId) {
     listView.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
     listView.setAdapter(new ArrayAdapter<>(context, layoutId, items));
     return this;
   }
 
-  public BottomSheet setOnItemClickListener(final DialogInterface.OnClickListener listener) {
+  public BottomSheetDialog setOnItemClickListener(final DialogInterface.OnClickListener listener) {
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        listener.onClick(BottomSheet.this, position);
+        listener.onClick(BottomSheetDialog.this, position);
       }
     });
     return this;
   }
 
-  public BottomSheet setOnItemCheckListener(final DialogInterface.OnMultiChoiceClickListener listener) {
+  public BottomSheetDialog setOnItemCheckListener(final DialogInterface.OnMultiChoiceClickListener listener) {
     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        listener.onClick(BottomSheet.this, position, listView.isItemChecked(position));
+        listener.onClick(BottomSheetDialog.this, position, listView.isItemChecked(position));
       }
     });
     return this;
   }
 
-  public BottomSheet setSheetTitle(@StringRes int resId) {
+  public BottomSheetDialog setSheetTitle(@StringRes int resId) {
     textViewTitle.setVisibility(View.VISIBLE);
     textViewTitle.setText(resId);
     return this;
   }
 
-  public BottomSheet setMultiChoiceItems(String[] items, boolean[] checkedItems) {
+  public BottomSheetDialog setMultiChoiceItems(String[] items, boolean[] checkedItems) {
     listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
     listView.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, items));
     for (int i = 0; i < checkedItems.length; i++) {

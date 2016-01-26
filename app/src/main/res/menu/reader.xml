@@ -3,38 +3,38 @@
     <group android:id="@+id/group_navigate">
         <item
             android:id="@+id/action_chapters"
-            android:icon="@drawable/ic_action_list_plus"
+            android:icon="@drawable/ic_list_numbered_dark"
             android:title="@string/chapters_list" />
         <item
             android:id="@+id/action_goto"
-            android:icon="@drawable/ic_editor_wrap_text"
+            android:icon="@drawable/ic_swap_horiz_dark"
             android:title="@string/navigate" />
     </group>
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_action_save"
+        android:icon="@drawable/ic_save_dark"
         android:title="@string/action_save" />
     <item
         android:id="@+id/action_favourite"
-        android:icon="@drawable/ic_action_action_favorite_outline"
+        android:icon="@drawable/ic_favorite_outline_dark"
         android:title="@string/action_favourite" />
 
     <item
         android:id="@+id/action_share"
-        android:icon="@drawable/ic_action_social_share"
+        android:icon="@drawable/ic_share_dark"
         android:title="@string/action_share" />
     <group android:id="@+id/group_image">
         <item
             android:id="@+id/action_img_share"
-            android:icon="@drawable/ic_action_social_share"
+            android:icon="@drawable/ic_share_dark"
             android:title="@string/share_image" />
         <item
             android:id="@+id/action_img_save"
-            android:icon="@drawable/ic_action_save"
+            android:icon="@drawable/ic_save_dark"
             android:title="@string/save_to_gallery" />
     </group>
     <item
         android:id="@+id/action_readprefs"
-        android:icon="@drawable/ic_action_action_settings"
+        android:icon="@drawable/ic_settings_dark"
         android:title="@string/action_reading_options" />
 </menu>
