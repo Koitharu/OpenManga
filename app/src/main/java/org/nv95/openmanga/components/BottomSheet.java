@@ -22,6 +22,7 @@ import org.nv95.openmanga.R;
 /**
  * Created by nv95 on 13.01.16.
  */
+@Deprecated
 public class BottomSheet extends Dialog implements DialogInterface {
   private final Context context;
   private final ListView listView;
