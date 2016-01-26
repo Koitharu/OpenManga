@@ -9,7 +9,6 @@ import android.view.ViewPropertyAnimator;
 /**
  * Created by nv95 on 10.10.15.
  */
-@Deprecated
 public class SimpleAnimator implements Animator.AnimatorListener {
   protected View view;
   protected ViewPropertyAnimator animator;

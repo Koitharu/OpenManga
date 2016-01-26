@@ -59,7 +59,7 @@ public class UpdatesActivity extends AppCompatActivity implements UpdatesChecker
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_updates, menu);
+    getMenuInflater().inflate(R.menu.updates, menu);
     return super.onCreateOptionsMenu(menu);
   }
 

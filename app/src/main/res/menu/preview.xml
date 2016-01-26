@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_favourite" android:title="@string/action_favourite"
-        android:icon="@drawable/ic_action_action_favorite_outline"
+        android:icon="@drawable/ic_favorite_outline_light"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_save" android:title="@string/action_save"
-        android:icon="@drawable/ic_action_save"
+        android:icon="@drawable/ic_save_light"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
     <item android:id="@+id/action_remove" android:title="@string/action_save"
-        android:icon="@drawable/ic_action_action_delete"
+        android:icon="@drawable/ic_delete_light"
         android:visible="false"
         android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>

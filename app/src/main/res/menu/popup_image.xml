@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_img_save"
-        android:title="@string/save_to_gallery" />
-    <item android:id="@+id/action_img_share"
-        android:title="@string/share_image" />
-</menu>

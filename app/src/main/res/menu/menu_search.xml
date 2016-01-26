@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="@string/search_on_another_sources"
         android:id="@id/action_search"
-        android:icon="@drawable/ic_action_list_plus"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_listmode"
         android:orderInCategory="100"

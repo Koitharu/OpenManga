@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.components.AsyncImageView;
-import org.nv95.openmanga.components.BottomSheet;
+import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -94,7 +94,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showChaptersSheet() {
-        new BottomSheet(this)
+        new BottomSheetDialog(this)
                 .setItems(mangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
                 .setSheetTitle(R.string.chapters_list)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -115,13 +115,13 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_preview, menu);
+        getMenuInflater().inflate(R.menu.preview, menu);
         if (LocalMangaProvider.class.equals(mangaSummary.provider)) {
             menu.findItem(R.id.action_save).setVisible(false);
             menu.findItem(R.id.action_remove).setVisible(true);
             menu.findItem(R.id.action_favourite).setVisible(false);
         } else if (FavouritesProvider.Has(this, mangaSummary)) {
-            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_action_action_favorite);
+            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
             menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
         return super.onCreateOptionsMenu(menu);
@@ -134,13 +134,13 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mangaSummary)) {
                     if (favouritesProvider.remove(mangaSummary)) {
-                        item.setIcon(R.drawable.ic_action_action_favorite_outline);
+                        item.setIcon(R.drawable.ic_favorite_outline_light);
                         item.setTitle(R.string.action_favourite);
                     }
                 } else {
                     if (favouritesProvider.add(mangaSummary)) {
                         UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
-                        item.setIcon(R.drawable.ic_action_action_favorite);
+                        item.setIcon(R.drawable.ic_favorite_light);
                         item.setTitle(R.string.action_unfavourite);
                     }
                 }

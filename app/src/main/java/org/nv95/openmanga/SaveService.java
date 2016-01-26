@@ -18,7 +18,7 @@ import android.support.annotation.Nullable;
 import android.util.SparseArray;
 import android.widget.Toast;
 
-import org.nv95.openmanga.components.BottomSheet;
+import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
@@ -61,7 +61,7 @@ public class SaveService extends Service {
     String[] names = mangaSummary.chapters.getNames();
     boolean[] defs = new boolean[names.length];
     Arrays.fill(defs, false);
-    new BottomSheet(context)
+    new BottomSheetDialog(context)
             .setMultiChoiceItems(names, defs)
             .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
               @Override
@@ -74,7 +74,7 @@ public class SaveService extends Service {
             .setNeutralButton(R.string.all, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-                ((BottomSheet) dialog).checkAll(true);
+                ((BottomSheetDialog) dialog).checkAll(true);
                 for (int i = mangaSummary.chapters.size() - 1; i >= 0; i--) {
                   chapters.put(i, true);
                 }
