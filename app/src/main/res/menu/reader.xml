@@ -37,4 +37,8 @@
         android:id="@+id/action_readprefs"
         android:icon="@drawable/ic_settings_dark"
         android:title="@string/action_reading_options" />
+    <item
+        android:id="@android:id/home"
+        android:icon="@drawable/ic_quit_dark"
+        android:title="@string/quit" />
 </menu>

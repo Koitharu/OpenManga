@@ -165,15 +165,15 @@ public class SearchActivity extends AppCompatActivity implements
                 break;
             case 1:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 120));
+                        LayoutUtils.getOptimalColumnsCount(this, 90));
                 break;
             case 2:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 164));
+                        LayoutUtils.getOptimalColumnsCount(this, 120));
                 break;
             case 3:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 240));
+                        LayoutUtils.getOptimalColumnsCount(this, 164));
                 break;
             default:
                 return;

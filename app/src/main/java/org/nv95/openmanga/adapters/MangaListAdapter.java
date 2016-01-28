@@ -2,6 +2,7 @@ package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +22,15 @@ import org.nv95.openmanga.lists.PagedList;
  */
 public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter.MangaViewHolder> {
     private boolean mGrid;
+    @Nullable
+    private OnItemLongClickListener<MangaViewHolder> mOnItemLongClickListener;
+
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener<MangaViewHolder> itemLongClickListener) {
+        mOnItemLongClickListener = itemLongClickListener;
     }
 
     @Override
@@ -43,7 +51,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     @Override
     public MangaViewHolder onCreateHolder(ViewGroup parent) {
         return new MangaViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false));
+                .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), mOnItemLongClickListener);
     }
 
     @Override
@@ -64,20 +72,29 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         viewHolder.fill(data);
     }
 
-    protected static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView textViewTitle;
         private TextView textViewSubtitle;
         private TextView textViewSummary;
         private AsyncImageView asyncImageView;
         private MangaInfo mData;
+        @Nullable
+        private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
 
-        public MangaViewHolder(View itemView) {
+        public MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);
             textViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
             textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
             asyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
+            mLongClickListener = longClickListener;
+            itemView.setOnLongClickListener(this);
+        }
+
+
+        public MangaInfo getData() {
+            return mData;
         }
 
         public void fill(MangaInfo data) {
@@ -101,6 +118,10 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             context.startActivity(intent);
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            return mLongClickListener != null && mLongClickListener.onItemLongClick(this);
+        }
     }
 
     private class AutoSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
@@ -115,4 +136,5 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             return getItemViewType(position) == VIEW_PROGRESS ? mCount : 1;
         }
     }
+
 }
