@@ -35,6 +35,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.utils.ContentShareHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.io.File;
@@ -317,6 +318,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.action_chapters:
                 showChaptersList();
                 return true;
@@ -343,11 +347,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 return true;
             case R.id.action_share:
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, mangaSummary.getReadLink());
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mangaSummary.getName());
-                startActivity(Intent.createChooser(intent, getString(R.string.action_share)));
+                new ContentShareHelper(this).share(mangaSummary);
                 return true;
             case R.id.action_save:
                 if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteCursor;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,10 +20,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +34,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.adapters.MangaListAdapter;
+import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
@@ -44,11 +45,12 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.utils.ContentShareHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
-        View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener {
+        View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener, OnItemLongClickListener<MangaListAdapter.MangaViewHolder> {
     //views
     private RecyclerView mRecyclerView;
     private ListView mDrawerListView;
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
-    private ItemHelper mItemTouchHelper;
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mFab.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mItemTouchHelper = new ItemHelper();
         mProviderManager = new MangaProviderManager(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
+        mListLoader.getAdapter().setOnItemLongClickListener(this);
         setViewMode(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getInt("view_mode", 0));
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
@@ -318,15 +318,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case 1:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 120));
+                        LayoutUtils.getOptimalColumnsCount(this, 90));
                 break;
             case 2:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 164));
+                        LayoutUtils.getOptimalColumnsCount(this, 120));
                 break;
             case 3:
                 layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 240));
+                        LayoutUtils.getOptimalColumnsCount(this, 164));
                 break;
             default:
                 return;
@@ -462,6 +462,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    @Override
+    public boolean onItemLongClick(MangaListAdapter.MangaViewHolder viewHolder) {
+        PopupMenu popupMenu = new PopupMenu(this, viewHolder.itemView);
+        popupMenu.inflate(R.menu.manga_popup);
+        Menu menu = popupMenu.getMenu();
+        menu.findItem(R.id.action_delete).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
+        menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
+        if (!menu.hasVisibleItems()) {
+            return false;
+        }
+        final MangaInfo mangaInfo = viewHolder.getData();
+        final int position = viewHolder.getAdapterPosition();
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_delete:
+                        mProvider.remove(new long[]{mangaInfo.hashCode()});
+                        mListLoader.removeItem(position);
+                        return true;
+                    case R.id.action_share:
+                        new ContentShareHelper(MainActivity.this).share(mangaInfo);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        popupMenu.show();
+        return true;
+    }
+
 
     private class OpenLastTask extends AsyncTask<Void, Void, Intent> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;
@@ -524,61 +556,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private class ItemHelper extends ItemTouchHelper {
-        private final int mVerticalMargin;
-        private final int mHorizontalMargin;
 
-        public ItemHelper() {
-            super(new ItemCallback());
-            mVerticalMargin = getResources().getDimensionPixelSize(R.dimen.list_divider_vert);
-            mHorizontalMargin = getResources().getDimensionPixelSize(R.dimen.list_divider_horz);
-        }
 
-        @Override
-        public void getItemOffsets(Rect outRect, View view,
-                                   RecyclerView parent, RecyclerView.State state) {
-            outRect.left = mHorizontalMargin;
-            outRect.right = mHorizontalMargin;
-            outRect.top = mVerticalMargin;
-        }
-    }
-
-    private class ItemCallback extends ItemTouchHelper.Callback {
-        @Nullable
-        private MangaInfo mLastRemovedItem = null;
-        private int mLastRemovedPosition = 0;
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags, swipeFlags);
-        }
-
-        @Override
-        public boolean isLongPressDragEnabled() {
-            return false;
-        }
-
-        @Override
-        public boolean isItemViewSwipeEnabled() {
-            return mProvider != null && mProvider instanceof HistoryProvider; //mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE);
-        }
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            mLastRemovedPosition = viewHolder.getAdapterPosition();
-            mLastRemovedItem = mListLoader.getAdapter().getItem(mLastRemovedPosition);
-            if (mLastRemovedItem != null && mProvider.remove(new long[]{mLastRemovedItem.hashCode()}) &&
-                    (mProvider instanceof HistoryProvider || mProvider instanceof FavouritesProvider)) {
-                mListLoader.removeItem(viewHolder.getAdapterPosition());
-                Snackbar.make(mRecyclerView, R.string.removed, Snackbar.LENGTH_LONG).show();
-            }
-        }
-    }
 }

@@ -43,15 +43,11 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            app:cardCornerRadius="3dp"
-            app:contentPadding="4dp"
-            android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="520dp"
+            android:layout_height="wrap_content"
+            android:minHeight="520dp"
+            android:background="@color/light_background"
             android:orientation="horizontal">
 
             <org.nv95.openmanga.components.AsyncImageView
@@ -89,8 +85,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+            </LinearLayout>
 
-        </LinearLayout></android.support.v7.widget.CardView>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
