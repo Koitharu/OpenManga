@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -477,8 +478,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 if (!file.exists()) {
                     //// TODO: 26.01.16
                 }
-                File dest = new File(getExternalFilesDir("temp"), params[0].getPath()
-                        .substring(params[0].getPath().lastIndexOf('/') + 1));
+                File dest = new File(getExternalFilesDir("temp"), url.hashCode() + MimeTypeMap.getFileExtensionFromUrl(url));
                 LocalMangaProvider.CopyFile(file, dest);
                 return dest;
             } catch (Exception ignored) {
