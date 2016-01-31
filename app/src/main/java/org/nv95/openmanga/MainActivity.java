@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
+    private SearchHistoryAdapter mSearchAdapter;
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mFab.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mProviderManager = new MangaProviderManager(this);
+        mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
         TextView[] headers = new TextView[3];
@@ -134,9 +135,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        final SearchHistoryAdapter historyAdapter = SearchHistoryAdapter.newInstance(this);
-
-        searchView.setSuggestionsAdapter(historyAdapter);
+        //searchView.setSuggestionsAdapter(mSearchAdapter);
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
@@ -145,11 +144,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public boolean onSuggestionClick(int position) {
-                SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
-                searchView.setQuery(cursor.getString(1), false);
+                //SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
+                //searchView.setQuery(cursor.getString(1), false);
                 return true;
             }
         });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                return false;
+            }
+        });
+
+
     /*listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
@@ -171,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                historyAdapter.addToHistory(query);
+                //historyAdapter.addToHistory(query);
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                         .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
                     startActivity(new Intent(MainActivity.this, SearchActivity.class)
@@ -205,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onDestroy() {
-        SearchHistoryAdapter.Recycle(null);
+        mSearchAdapter.close();
         super.onDestroy();
     }
 
