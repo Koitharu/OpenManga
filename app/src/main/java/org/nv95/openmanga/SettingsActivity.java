@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupHelper;
@@ -66,7 +65,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         ErrorReporter.sendLog(this);
         return true;
       case "csearchhist":
-        SearchHistoryAdapter.clearHistory(this);
+        //SearchHistoryAdapter.clearHistory(this);
         Toast.makeText(this, R.string.completed, Toast.LENGTH_SHORT).show();
         return true;
       case "about":

@@ -217,4 +217,5 @@
     <string name="removed">Item removed</string>
     <string name="undo">Undo</string>
     <string name="quit">Quit</string>
+    <string name="exporting">Exporting...</string>
 </resources>
