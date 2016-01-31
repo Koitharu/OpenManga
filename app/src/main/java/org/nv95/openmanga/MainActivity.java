@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mDrawerListView.addHeaderView(headers[0]);
         mDrawerListView.addHeaderView(headers[1]);
         mDrawerListView.addHeaderView(headers[2]);
-        mDrawerListView.addHeaderView(View.inflate(this, R.layout.drawer_header, null), null, false);
+        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
         mDrawerListView.setItemChecked(3 + defSection, true);
         mDrawerListView.setOnItemClickListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
