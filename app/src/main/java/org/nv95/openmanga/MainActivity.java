@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        //searchView.setSuggestionsAdapter(mSearchAdapter);
+        searchView.setSuggestionsAdapter(mSearchAdapter);
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
@@ -144,47 +144,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public boolean onSuggestionClick(int position) {
-                //SQLiteCursor cursor = (SQLiteCursor) historyAdapter.getItem(position);
-                //searchView.setQuery(cursor.getString(1), false);
+                searchView.setQuery(mSearchAdapter.getString(position), false);
                 return true;
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return false;
-            }
-        });
-
-
-    /*listViewSearch.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-      @Override
-      public boolean onItemLongClick(AdapterView<?> parent, final View view, int position, final long id) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setMessage(String.format(getString(R.string.remove_from_history_confirm), ((TextView) view).getText().toString()))
-                .setCancelable(true)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int which) {
-                    historyAdapter.remove(id);
-                    historyAdapter.update();
-                  }
-                })
-                .create().show();
-        return true;
-      }
-    });*/
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
             public boolean onQueryTextSubmit(String query) {
-                //historyAdapter.addToHistory(query);
+                mSearchAdapter.addToHistory(query);
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                         .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
                     startActivity(new Intent(MainActivity.this, SearchActivity.class)
@@ -200,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                mSearchAdapter.updateContent(newText);
                 return false;
             }
         });
@@ -218,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     protected void onDestroy() {
-        mSearchAdapter.close();
         super.onDestroy();
     }
 
