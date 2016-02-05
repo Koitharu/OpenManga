@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import org.nv95.openmanga.adapters.GroupedAdapter;
 import org.nv95.openmanga.lists.MangaList;
@@ -26,6 +29,8 @@ import java.util.ArrayList;
  * Created by nv95 on 12.01.16.
  */
 public class MultipleSearchActivity extends AppCompatActivity {
+    private ProgressBar mProgressBar;
+    private LinearLayout mMessageBlock;
     private String mQuery;
     private GroupedAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -44,6 +49,8 @@ public class MultipleSearchActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setSubtitle(mQuery);
         }
+        mMessageBlock = (LinearLayout) findViewById(R.id.block_message);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProviderManager = new MangaProviderManager(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -53,6 +60,8 @@ public class MultipleSearchActivity extends AppCompatActivity {
                 .getInt("view_mode", 0));
         mExecutor = new SerialExecutor();
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
+        mProgressBar.setMax(providers.size());
+        mProgressBar.setProgress(0);
         for (MangaProviderManager.ProviderSumm o : providers) {
             new SearchTask(o).executeOnExecutor(mExecutor);
         }
@@ -149,6 +158,10 @@ public class MultipleSearchActivity extends AppCompatActivity {
             super.onPostExecute(mangaInfos);
             if (mangaInfos != null && mangaInfos.size() != 0) {
                 mAdapter.append(mProviderSummary.name, mangaInfos);
+            }
+            mProgressBar.incrementProgressBy(1);
+            if (mProgressBar.getProgress() == mProgressBar.getMax()) {
+                mMessageBlock.setVisibility(View.GONE);
             }
         }
     }

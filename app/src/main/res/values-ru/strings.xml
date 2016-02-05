@@ -191,4 +191,11 @@
     <string name="view_mode_grid_large">Крупная сетка</string>
     <string name="view_mode_grid_medium">Средняя сетка</string>
     <string name="view_mode_grid_small">Мелкая сетка</string>
+    <string name="exporting"></string>
+    <string name="genre_music">Музыка</string>
+    <string name="genre_parodi">Пародия</string>
+    <string name="genre_postapocalipse">Постапокалиптика</string>
+    <string name="quit">Выход</string>
+    <string name="removed">Удалено</string>
+    <string name="undo">Отменить</string>
 </resources>

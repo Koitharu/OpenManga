@@ -43,7 +43,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by nv95 on 10.10.15.
  */
-@Deprecated
 public class SaveService extends Service {
     public static final int SAVE_ADD = 0;
     public static final int SAVE_CANCEL = 1;

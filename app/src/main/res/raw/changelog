@@ -1,7 +1,6 @@
 <h1>Changelog</h1>
 <p>
-    + Backup and restoring favourites and history<br>
-    + Selecting default section<br>
-    * Completed genre list<br>
-    * Small ui enhancements<br>
+    + Add MangaFox source
+    * Reworked UI and some basic functions
+    * Fixed saving images into gallery
 </p>
