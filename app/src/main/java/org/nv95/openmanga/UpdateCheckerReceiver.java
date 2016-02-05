@@ -11,9 +11,9 @@ import org.nv95.openmanga.utils.ChaptersSyncService;
  */
 public class UpdateCheckerReceiver extends BroadcastReceiver {
 
-  @Override
-  public void onReceive(Context context, Intent intent) {
-    ChaptersSyncService.SetScheduledStart(context);
-    context.startService(new Intent(context, ChaptersSyncService.class));
-  }
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        ChaptersSyncService.SetScheduledStart(context);
+        context.startService(new Intent(context, ChaptersSyncService.class));
+    }
 }

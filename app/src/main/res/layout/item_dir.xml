@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:minHeight="?android:listPreferredItemHeightSmall"
-    android:paddingLeft="?android:listPreferredItemPaddingLeft"
-    android:paddingRight="?android:listPreferredItemPaddingRight"
-    android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:paddingEnd="?android:listPreferredItemPaddingEnd"
-    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:drawableLeft="@drawable/ic_file_folder"
     android:drawableStart="@drawable/ic_file_folder"
-    android:maxLines="1" />
+    android:gravity="center_vertical"
+    android:maxLines="1"
+    android:minHeight="?android:listPreferredItemHeightSmall"
+    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+    android:paddingLeft="?android:listPreferredItemPaddingLeft"
+    android:paddingRight="?android:listPreferredItemPaddingRight"
+    android:paddingStart="?android:listPreferredItemPaddingStart" />

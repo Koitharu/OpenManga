@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="?android:windowBackground"
     android:layout_height="wrap_content"
+    android:background="?android:windowBackground"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/textView_title"
+        style="@style/Base.DialogWindowTitle.AppCompat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/Base.DialogWindowTitle.AppCompat"
         android:padding="4dp"
-        android:id="@+id/textView_title"
         android:visibility="gone" />
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/listView"
         android:layout_weight="1"
         android:divider="@android:color/transparent"
         android:fastScrollEnabled="true" />
 
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/buttonbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonbar"
+        android:orientation="horizontal"
         android:visibility="gone">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/button_neutral"
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone" />
 
         <Space
@@ -42,17 +42,17 @@
             android:layout_weight="1" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/button_negative"
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/button_positive"
             style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -35,6 +35,8 @@ import org.nv95.openmanga.utils.UpdatesChecker;
  */
 public class MangaPreviewActivity extends AppCompatActivity implements View.OnClickListener,
         DialogInterface.OnClickListener {
+    //data
+    protected MangaSummary mangaSummary;
     //views
     private FloatingActionButton mFab;
     private AsyncImageView mImageView;
@@ -43,8 +45,6 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     private TextView mTextViewDescription;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private AppBarLayout mAppBarLayout;
-    //data
-    protected MangaSummary mangaSummary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +196,8 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
             mFab.setEnabled(true);
             super.onPostExecute(mangaSummary);
             if (mangaSummary == null) {
-                mFab.hide(); Snackbar.make(mAppBarLayout, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                mFab.hide();
+                Snackbar.make(mAppBarLayout, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.retry, MangaPreviewActivity.this)
                         .show();
                 return;

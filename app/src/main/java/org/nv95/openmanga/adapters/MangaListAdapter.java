@@ -73,13 +73,13 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     }
 
     public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        @Nullable
+        private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
         private TextView textViewTitle;
         private TextView textViewSubtitle;
         private TextView textViewSummary;
         private AsyncImageView asyncImageView;
         private MangaInfo mData;
-        @Nullable
-        private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
 
         public MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);

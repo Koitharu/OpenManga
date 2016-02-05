@@ -28,218 +28,216 @@ import java.io.File;
  * Activity with settings fragments
  */
 public class SettingsActivity extends AppCompatActivity implements Preference.OnPreferenceClickListener {
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_settings);
-    setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) {
-      actionBar.setDisplayHomeAsUpEnabled(true);
+    public static void bindPreferenceSummary(ListPreference listPreference) {
+        int index = listPreference.findIndexOfValue(listPreference.getValue());
+        String summ = listPreference.getEntries()[index].toString();
+        listPreference.setSummary(summ);
+        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
+                String summ = ((ListPreference) preference).getEntries()[index].toString();
+                preference.setSummary(summ);
+                return true;
+            }
+        });
     }
 
-    getFragmentManager().beginTransaction()
-            .replace(R.id.content, new CommonSettingsFragment())
-            .commit();
-
-  }
-
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home && !getFragmentManager().popBackStackImmediate()) {
-      finish();
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public boolean onPreferenceClick(Preference preference) {
-    switch (preference.getKey()) {
-      case "readeropt":
-        new ReaderOptionsDialog(this).show();
-        return true;
-      case "srcselect":
-        startActivity(new Intent(this, ProviderSelectActivity.class));
-        return true;
-      case "bugreport":
-        ErrorReporter.sendLog(this);
-        return true;
-      case "csearchhist":
-        SearchHistoryAdapter.clearHistory(this);
-        Toast.makeText(this, R.string.completed, Toast.LENGTH_SHORT).show();
-        return true;
-      case "about":
-        startActivity(new Intent(this, AboutActivity.class));
-        return true;
-      case "backup":
-        BackupHelper.showBackupDialog(this);
-        return true;
-      case "restore":
-        BackupHelper.showRestoreDialog(this);
-        return true;
-      case "ccache":
-        new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        return true;
-      default:
-        return false;
-    }
-  }
-
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    switch (requestCode) {
-      case BackupHelper.BACKUP_IMPORT_CODE:
-        if (resultCode == RESULT_OK) {
-          File file = AppHelper.getFileFromUri(this, data.getData());
-          if (file != null) {
-            new BackupHelper(this).restore(file);
-          } else {
-            Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
-          }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        break;
-    }
-    super.onActivityResult(requestCode, resultCode, data);
-  }
 
-  @Override
-  public void onBackPressed() {
-    if (!getFragmentManager().popBackStackImmediate()) {
-      super.onBackPressed();
-    }
-  }
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content, new CommonSettingsFragment())
+                .commit();
 
-  public static class CommonSettingsFragment extends PreferenceFragment {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-
-      // Load the preferences from an XML resource
-      addPreferencesFromResource(R.xml.pref_common);
     }
 
     @Override
-    public void onResume() {
-      super.onResume();
-      findPreference("chupd").setSummary(
-              getPreferenceManager().getSharedPreferences().getBoolean("chupd", false) ?
-                      R.string.enabled : R.string.disabled
-      );
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home && !getFragmentManager().popBackStackImmediate()) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-      super.onActivityCreated(savedInstanceState);
-      Activity activity = getActivity();
-      findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+    public boolean onPreferenceClick(Preference preference) {
+        switch (preference.getKey()) {
+            case "readeropt":
+                new ReaderOptionsDialog(this).show();
+                return true;
+            case "srcselect":
+                startActivity(new Intent(this, ProviderSelectActivity.class));
+                return true;
+            case "bugreport":
+                ErrorReporter.sendLog(this);
+                return true;
+            case "csearchhist":
+                SearchHistoryAdapter.clearHistory(this);
+                Toast.makeText(this, R.string.completed, Toast.LENGTH_SHORT).show();
+                return true;
+            case "about":
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case "backup":
+                BackupHelper.showBackupDialog(this);
+                return true;
+            case "restore":
+                BackupHelper.showRestoreDialog(this);
+                return true;
+            case "ccache":
+                new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
+            default:
+                return false;
+        }
+    }
 
-      Preference p = findPreference("about");
-      p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-      String version;
-      try {
-        version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
-      } catch (PackageManager.NameNotFoundException e) {
-        version = "unknown";
-      }
-      p.setSummary(String.format(activity.getString(R.string.version), version));
-
-      bindPreferenceSummary((ListPreference) findPreference("defsection"));
-
-
-      p = findPreference("mangadir");
-      p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
-      p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(final Preference preference) {
-          new DirSelectDialog(getActivity())
-                  .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
-                    @Override
-                    public void onDirSelected(File dir) {
-                      if (!dir.canWrite()) {
-                        Toast.makeText(getActivity(), R.string.dir_no_access, Toast.LENGTH_SHORT).show();
-                      }
-                      preference.setSummary(dir.getPath());
-                      preference.getEditor()
-                              .putString("mangadir", dir.getPath()).apply();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case BackupHelper.BACKUP_IMPORT_CODE:
+                if (resultCode == RESULT_OK) {
+                    File file = AppHelper.getFileFromUri(this, data.getData());
+                    if (file != null) {
+                        new BackupHelper(this).restore(file);
+                    } else {
+                        Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
-                  })
-                  .show();
-          return true;
+                }
+                break;
         }
-      });
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-      new AsyncTask<Void, Void, Float>() {
+    @Override
+    public void onBackPressed() {
+        if (!getFragmentManager().popBackStackImmediate()) {
+            super.onBackPressed();
+        }
+    }
+
+    public static class CommonSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.pref_common);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            findPreference("chupd").setSummary(
+                    getPreferenceManager().getSharedPreferences().getBoolean("chupd", false) ?
+                            R.string.enabled : R.string.disabled
+            );
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            Activity activity = getActivity();
+            findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+
+            Preference p = findPreference("about");
+            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            String version;
+            try {
+                version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                version = "unknown";
+            }
+            p.setSummary(String.format(activity.getString(R.string.version), version));
+
+            bindPreferenceSummary((ListPreference) findPreference("defsection"));
+
+
+            p = findPreference("mangadir");
+            p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
+            p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(final Preference preference) {
+                    new DirSelectDialog(getActivity())
+                            .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
+                                @Override
+                                public void onDirSelected(File dir) {
+                                    if (!dir.canWrite()) {
+                                        Toast.makeText(getActivity(), R.string.dir_no_access, Toast.LENGTH_SHORT).show();
+                                    }
+                                    preference.setSummary(dir.getPath());
+                                    preference.getEditor()
+                                            .putString("mangadir", dir.getPath()).apply();
+                                }
+                            })
+                            .show();
+                    return true;
+                }
+            });
+
+            new AsyncTask<Void, Void, Float>() {
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    findPreference("ccache").setSummary(R.string.size_calculating);
+                }
+
+                @Override
+                protected Float doInBackground(Void... params) {
+                    return LocalMangaProvider.DirSize(getActivity().getExternalCacheDir()) / 1048576f;
+                }
+
+                @Override
+                protected void onPostExecute(Float aFloat) {
+                    super.onPostExecute(aFloat);
+                    Preference preference = findPreference("ccache");
+                    if (preference != null) {
+                        preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), aFloat));
+                    }
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private static class CacheClearTask extends AsyncTask<Void, Void, Void> {
+        private Preference preference;
+
+        public CacheClearTask(Preference preference) {
+            this.preference = preference;
+        }
 
         @Override
         protected void onPreExecute() {
-          super.onPreExecute();
-          findPreference("ccache").setSummary(R.string.size_calculating);
+            preference.setSummary(R.string.cache_clearing);
+            super.onPreExecute();
         }
 
         @Override
-        protected Float doInBackground(Void... params) {
-          return LocalMangaProvider.DirSize(getActivity().getExternalCacheDir()) / 1048576f;
+        protected Void doInBackground(Void... params) {
+            File dir = preference.getContext().getExternalCacheDir();
+            new FileRemover(dir).run();
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Float aFloat) {
-          super.onPostExecute(aFloat);
-          Preference preference = findPreference("ccache");
-          if (preference != null) {
-            preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), aFloat));
-          }
+        protected void onPostExecute(Void aVoid) {
+            preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
+            super.onPostExecute(aVoid);
         }
-      }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-  }
-
-  private static class CacheClearTask extends AsyncTask<Void, Void, Void> {
-    private Preference preference;
-
-    public CacheClearTask(Preference preference) {
-      this.preference = preference;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      preference.setSummary(R.string.cache_clearing);
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-      File dir = preference.getContext().getExternalCacheDir();
-      new FileRemover(dir).run();
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
-      super.onPostExecute(aVoid);
-    }
-  }
-
-  public static void bindPreferenceSummary(ListPreference listPreference) {
-    int index = listPreference.findIndexOfValue(listPreference.getValue());
-    String summ = listPreference.getEntries()[index].toString();
-    listPreference.setSummary(summ);
-    listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override
-      public boolean onPreferenceChange(Preference preference, Object newValue) {
-        int index = ((ListPreference)preference).findIndexOfValue((String) newValue);
-        String summ = ((ListPreference)preference).getEntries()[index].toString();
-        preference.setSummary(summ);
-        return true;
-      }
-    });
-  }
 }

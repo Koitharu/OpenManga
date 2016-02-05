@@ -6,22 +6,22 @@ import android.database.Cursor;
  * Created by nv95 on 30.09.15.
  */
 public class MangaPage {
-  public String path;
-  public Class<?> provider;
+    public String path;
+    public Class<?> provider;
 
-  public MangaPage(String path) {
-    this.path = path;
-  }
+    public MangaPage(String path) {
+        this.path = path;
+    }
 
-  public MangaPage(Cursor cursor) {
-    path = cursor.getString(3);
-  }
+    public MangaPage(Cursor cursor) {
+        path = cursor.getString(3);
+    }
 
-  public String getPath() {
-    return path;
-  }
+    public String getPath() {
+        return path;
+    }
 
-  public Class<?> getProvider() {
-    return provider;
-  }
+    public Class<?> getProvider() {
+        return provider;
+    }
 }

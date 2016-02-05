@@ -19,63 +19,63 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
  * Created by nv95 on 03.01.16.
  */
 public class DownloadsActivity extends AppCompatActivity implements MangaChangesObserver.OnMangaChangesListener {
-  private DownloadsAdapter adapter;
-  private ListView listView;
-  private TextView textViewHolder;
+    private DownloadsAdapter adapter;
+    private ListView listView;
+    private TextView textViewHolder;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_downloads);
-    setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-    ActionBar actionBar = getSupportActionBar();
-    if (actionBar != null) {
-      actionBar.setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_downloads);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        listView = (ListView) findViewById(R.id.listView);
+        textViewHolder = (TextView) findViewById(R.id.textView_holder);
+        adapter = new DownloadsAdapter(this);
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                textViewHolder.setVisibility(adapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+            }
+        });
+        listView.setAdapter(adapter);
     }
-    listView = (ListView) findViewById(R.id.listView);
-    textViewHolder = (TextView) findViewById(R.id.textView_holder);
-    adapter = new DownloadsAdapter(this);
-    adapter.registerDataSetObserver(new DataSetObserver() {
-      @Override
-      public void onChanged() {
-        super.onChanged();
-        textViewHolder.setVisibility(adapter.getCount() == 0 ? View.VISIBLE : View.GONE);
-      }
-    });
-    listView.setAdapter(adapter);
-  }
 
-  @Override
-  protected void onStart() {
-    super.onStart();
-    MangaChangesObserver.addListener(this);
-    adapter.enable();
-  }
-
-  @Override
-  protected void onStop() {
-    MangaChangesObserver.removeListener(this);
-    adapter.disable();
-    super.onStop();
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      finish();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MangaChangesObserver.addListener(this);
+        adapter.enable();
     }
-    return super.onOptionsItemSelected(item);
-  }
 
-  @Override
-  public void onMangaChanged(int category) {
-    if (category == Constants.CATEGORY_LOCAL) {
-      adapter.notifyDataSetChanged();
+    @Override
+    protected void onStop() {
+        MangaChangesObserver.removeListener(this);
+        adapter.disable();
+        super.onStop();
     }
-  }
 
-  @Override
-  public void onMangaAdded(int category, MangaInfo data) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-  }
+    @Override
+    public void onMangaChanged(int category) {
+        if (category == Constants.CATEGORY_LOCAL) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onMangaAdded(int category, MangaInfo data) {
+
+    }
 }

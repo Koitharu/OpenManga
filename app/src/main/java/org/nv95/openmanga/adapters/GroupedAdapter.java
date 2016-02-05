@@ -48,9 +48,9 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
-            ((MangaListAdapter.MangaViewHolder)holder).fill(getItem(position));
+            ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position));
         } else {
-            ((GroupViewHolder)holder).fill((String) mDataset.get(position));
+            ((GroupViewHolder) holder).fill((String) mDataset.get(position));
         }
     }
 
@@ -61,7 +61,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Nullable
     public String getGroup(int position) {
-        for (int i=position;i>0;i--) {
+        for (int i = position; i > 0; i--) {
             if (mDataset.get(i) instanceof String) {
                 return (String) mDataset.get(i);
             }
@@ -93,6 +93,10 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    public interface OnMoreClickListener {
+        void onMoreClick(String group, int groupPosition);
+    }
+
     protected static class GroupViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTextView;
 
@@ -117,9 +121,5 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public int getSpanSize(int position) {
             return getItemViewType(position) == VIEW_HEADER ? mCount : 1;
         }
-    }
-
-    public interface OnMoreClickListener {
-        void onMoreClick(String group, int groupPosition);
     }
 }
