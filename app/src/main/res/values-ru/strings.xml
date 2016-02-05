@@ -77,8 +77,8 @@
     <string name="sort_popular">Популярное</string>
     <string name="sort_updated">Обновлённые</string>
     <string name="version" formatted="false">Версия: %s</string>
-    <string name="alphabetical">По алфавиту</string>
-    <string name="rating">По оценкам</string>
+    <string name="sort_alphabetical">По алфавиту</string>
+    <string name="sort_rating">По оценкам</string>
     <string name="action_genre">Жанры</string>
     <string name="genre_action">Боевик</string>
     <string name="genre_all">Все</string>

@@ -25,7 +25,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
 
     @Override
     public void onLoadMore() {
-        new LoadContentTask(mList.getPagesCount()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadContentTask(mList.getPagesCount(), true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public MangaListAdapter getAdapter() {
@@ -55,7 +55,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         }
         mList.setHasNext(appendable);
         cancelLoading();
-        new LoadContentTask(0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadContentTask(0, appendable).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void addItem(MangaInfo data) {
@@ -87,11 +87,13 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
 
     private class LoadContentTask extends AsyncTask<Void,Void,MangaList> {
         private final int mPage;
+        private final boolean mAppendable;
 
-        public LoadContentTask(int mPage) {
-            this.mPage = mPage;
+        public LoadContentTask(int page, boolean appendable) {
+            this.mPage = page;
             cancelLoading();
             mTaskInstance = this;
+            mAppendable = appendable;
         }
 
         @Override
@@ -117,7 +119,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
             mList.appendPage(list);
             if (list.size() != 0) {
                 mAdapter.notifyItemRangeInserted(mList.size() - 1, mList.size() - list.size());
-                mList.setHasNext(true);
+                mList.setHasNext(mAppendable);
             } else {
                 mList.setHasNext(false);
                 mAdapter.notifyItemChanged(mList.size());

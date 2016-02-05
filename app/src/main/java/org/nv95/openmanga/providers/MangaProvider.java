@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.lists.MangaList;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -29,6 +31,19 @@ public abstract class MangaProvider {
     con.setConnectTimeout(15000);
     InputStream is = con.getInputStream();
     return Jsoup.parse(is, con.getContentEncoding(), url);
+  }
+
+  protected static String getRawPage(String url) throws Exception {
+    HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+    con.setConnectTimeout(15000);
+    BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    StringBuilder out = new StringBuilder();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      out.append(line);
+    }
+    reader.close();
+    return out.toString();
   }
 
   protected static Document getPage(String url, String cookie) throws Exception {

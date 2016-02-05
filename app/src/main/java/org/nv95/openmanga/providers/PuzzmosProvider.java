@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class PuzzmosProvider extends MangaProvider {
   protected static final boolean features[] = {true, true, false, true, true};
-  protected static final int sorts[] = {R.string.sort_popular, R.string.sort_updated, R.string.alphabetical};
+  protected static final int sorts[] = {R.string.sort_popular, R.string.sort_updated, R.string.sort_alphabetical};
   protected static final String sortUrls[] = {"views&sorting-type=DESC", "lastUpdate&sorting-type=DESC", "name"};
   protected static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_military, R.string.genre_sfiction, R.string.genre_magic,
           R.string.genre_genderbender, R.string.genre_supernatural, R.string.genre_doujinshi, R.string.genre_martialarts, R.string.genre_drama, R.string.genre_ecchi,
