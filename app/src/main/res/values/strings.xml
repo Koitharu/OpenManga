@@ -80,8 +80,7 @@
     <string name="sort_popular">Popular</string>
     <string name="sort_latest">Latest</string>
     <string name="action_sort">Sort order</string>
-    <string name="alphabetical">Alphabetical</string>
-    <string name="rating">By rating</string>
+    <string name="sort_rating">By rating</string>
     <string name="genre_all">All</string>
     <string name="action_genre">Genres</string>
     <string name="genre_art">Art</string>
@@ -218,4 +217,8 @@
     <string name="undo">Undo</string>
     <string name="quit">Quit</string>
     <string name="exporting">Exporting...</string>
+    <string name="sort_alphabetical">Alphabetical</string>
+    <string name="genre_adult">Adult</string>
+    <string name="genre_mature">Mature</string>
+    <string name="genre_slice_of_life">Slice of Life</string>
 </resources>

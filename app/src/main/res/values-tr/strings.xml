@@ -77,8 +77,8 @@
     <string name="sort_popular">En Popüler</string>
     <string name="sort_latest">Son eklenen</string>
     <string name="action_sort">Sıralama</string>
-    <string name="alphabetical">A\'dan Z\'ye</string>
-    <string name="rating">Puana göre</string>
+    <string name="sort_alphabetical">A\'dan Z\'ye</string>
+    <string name="sort_rating">Puana göre</string>
     <string name="genre_all">Tümü</string>
     <string name="action_genre">Türler</string>
     <string name="genre_art">Sanat</string>
