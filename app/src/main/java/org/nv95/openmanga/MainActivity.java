@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ((HistoryProvider) mProvider).clear();
+                                    mListLoader.clearItems();
                                 }
                             })
                             .setNegativeButton(android.R.string.cancel, null)
