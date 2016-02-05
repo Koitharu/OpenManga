@@ -19,50 +19,50 @@ import java.util.Calendar;
  */
 public class AppHelper {
 
-  public static String getRawString(Context context, int res) {
-    try {
-      Resources resources = context.getResources();
-      InputStream is = resources.openRawResource(res);
-      String myText;
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      int i = is.read();
-      while (i != -1) {
-        baos.write(i);
-        i = is.read();
-      }
-      myText = baos.toString();
-      is.close();
-      return myText;
-    } catch (IOException e) {
-      return e.getMessage();
-    }
-  }
-
-  public static String getReadableDateTime(long milliseconds) {
-    DateFormat formatter = SimpleDateFormat.getDateTimeInstance(); //new SimpleDateFormat("dd/MM/yyyy hh:mm");
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTimeInMillis(milliseconds);
-    return formatter.format(calendar.getTime());
-  }
-
-  @Nullable
-  public static File getFileFromUri(Context context, Uri uri) {
-    if ("content".equalsIgnoreCase(uri.getScheme())) {
-      String[] projection = { "_data" };
-      Cursor cursor = null;
-
-      try {
-        cursor = context.getContentResolver().query(uri, projection, null, null, null);
-        int columnIndex = cursor.getColumnIndexOrThrow("_data");
-        if (cursor.moveToFirst()) {
-          return new File(cursor.getString(columnIndex));
+    public static String getRawString(Context context, int res) {
+        try {
+            Resources resources = context.getResources();
+            InputStream is = resources.openRawResource(res);
+            String myText;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int i = is.read();
+            while (i != -1) {
+                baos.write(i);
+                i = is.read();
+            }
+            myText = baos.toString();
+            is.close();
+            return myText;
+        } catch (IOException e) {
+            return e.getMessage();
         }
-      } catch (Exception e) {
-        // Eat it
-      }
-    } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-      return new File(uri.getPath());
     }
-    return null;
-  }
+
+    public static String getReadableDateTime(long milliseconds) {
+        DateFormat formatter = SimpleDateFormat.getDateTimeInstance(); //new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        return formatter.format(calendar.getTime());
+    }
+
+    @Nullable
+    public static File getFileFromUri(Context context, Uri uri) {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {"_data"};
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                int columnIndex = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+                    return new File(cursor.getString(columnIndex));
+                }
+            } catch (Exception e) {
+                // Eat it
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return new File(uri.getPath());
+        }
+        return null;
+    }
 }

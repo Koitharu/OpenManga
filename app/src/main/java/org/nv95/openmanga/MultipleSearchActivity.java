@@ -53,7 +53,7 @@ public class MultipleSearchActivity extends AppCompatActivity {
                 .getInt("view_mode", 0));
         mExecutor = new SerialExecutor();
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
-        for (MangaProviderManager.ProviderSumm o:providers) {
+        for (MangaProviderManager.ProviderSumm o : providers) {
             new SearchTask(o).executeOnExecutor(mExecutor);
         }
     }
@@ -128,7 +128,7 @@ public class MultipleSearchActivity extends AppCompatActivity {
                 .putExtra("provider", position));
     }*/
 
-    private class SearchTask extends AsyncTask<Void,Void,MangaList> {
+    private class SearchTask extends AsyncTask<Void, Void, MangaList> {
         private final MangaProviderManager.ProviderSumm mProviderSummary;
 
         private SearchTask(MangaProviderManager.ProviderSumm provider) {

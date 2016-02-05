@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class MangaFoxProvider extends MangaProvider {
     private static final int sorts[] = {R.string.sort_alphabetical, R.string.sort_popular, R.string.sort_rating, R.string.sort_updated};
-    private static final String sortUrls[] = {"?az","" ,"?rating", "?latest"};
+    private static final String sortUrls[] = {"?az", "", "?rating", "?latest"};
     private static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_adult,
             R.string.genre_adventure, R.string.genre_comedy, R.string.genre_doujinshi, R.string.genre_drama,
             R.string.genre_ecchi, R.string.genre_fantasy, R.string.genre_genderbender, R.string.genre_harem,
@@ -45,7 +45,7 @@ public class MangaFoxProvider extends MangaProvider {
         MangaList list = new MangaList();
         Document document = getPage("http://mangafox.me/directory/"
                 + (genre == 0 ? "" : genreUrls[genre - 1] + "/")
-                + (page+1) + ".htm" + sortUrls[sort]);
+                + (page + 1) + ".htm" + sortUrls[sort]);
         MangaInfo manga;
         Element root = document.body().getElementById("mangalist").select("ul.list").first();
         for (Element o : root.select("li")) {
@@ -137,7 +137,7 @@ public class MangaFoxProvider extends MangaProvider {
         JSONArray jsonArray = new JSONArray(getRawPage("http://mangafox.me/ajax/search.php?term=" + query));
         JSONArray o;
         MangaInfo manga;
-        for (int i=0;i<jsonArray.length();i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             o = jsonArray.getJSONArray(i);
             manga = new MangaInfo();
             manga.provider = MangaFoxProvider.class;

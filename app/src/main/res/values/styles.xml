@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryDark">@color/primary_dark_dark</item>
@@ -6,8 +7,7 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppTheme.Preview" parent="AppTheme">
-    </style>
+    <style name="AppTheme.Preview" parent="AppTheme"></style>
 
     <style name="MenuItem">
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
@@ -18,11 +18,11 @@
         <item name="android:paddingRight">3dp</item>
     </style>
 
-    <style name="AppTheme.ToolButton" >
+    <style name="AppTheme.ToolButton">
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
 
-    <style name="AppTheme.SmallColoredButton" >
+    <style name="AppTheme.SmallColoredButton">
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingBottom">2dp</item>

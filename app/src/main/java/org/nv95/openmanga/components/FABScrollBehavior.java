@@ -17,16 +17,16 @@ public class FABScrollBehavior extends FloatingActionButton.Behavior {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
     private boolean mIsAnimatingOut = false;
 
-    public FABScrollBehavior(Context context, AttributeSet attributeSet){
+    public FABScrollBehavior(Context context, AttributeSet attributeSet) {
         super();
     }
 
     @Override
     public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        if(dyConsumed > 0 && !this.mIsAnimatingOut && child.getVisibility() == View.VISIBLE) {
+        if (dyConsumed > 0 && !this.mIsAnimatingOut && child.getVisibility() == View.VISIBLE) {
             animateOut(child);
-        } else if(dyConsumed < 0 && child.getVisibility() == View.GONE) {
+        } else if (dyConsumed < 0 && child.getVisibility() == View.GONE) {
             animateIn(child);
         }
     }
@@ -39,7 +39,7 @@ public class FABScrollBehavior extends FloatingActionButton.Behavior {
     private void animateOut(final FloatingActionButton button) {
         ViewCompat.animate(button)
                 .translationY(button.getMeasuredHeight() +
-                        ((CoordinatorLayout.LayoutParams)button.getLayoutParams()).bottomMargin)
+                        ((CoordinatorLayout.LayoutParams) button.getLayoutParams()).bottomMargin)
                 .setInterpolator(INTERPOLATOR).withLayer()
                 .setListener(new ViewPropertyAnimatorListener() {
                     public void onAnimationStart(View view) {

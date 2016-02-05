@@ -25,13 +25,13 @@ public class LayoutUtils {
 
     public static Float[] getScreenSizeDp(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
-        DisplayMetrics outMetrics = new DisplayMetrics ();
+        DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
-        float density  = activity.getResources().getDisplayMetrics().density;
+        float density = activity.getResources().getDisplayMetrics().density;
         float dpHeight = outMetrics.heightPixels / density;
-        float dpWidth  = outMetrics.widthPixels / density;
-        return new Float[] {dpHeight, dpWidth};
+        float dpWidth = outMetrics.widthPixels / density;
+        return new Float[]{dpHeight, dpWidth};
     }
 
     public static int getOptimalColumnsCount(Activity activity, int sizeDp) {

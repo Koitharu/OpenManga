@@ -7,14 +7,14 @@
     <include layout="@layout/toolbar" />
 
     <org.nv95.openmanga.components.InlayoutNotify
+        android:id="@+id/disclaimer_notify"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/disclaimer_notify" />
+        android:layout_height="wrap_content" />
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listView"
         android:padding="4dp" />
 
 </LinearLayout>

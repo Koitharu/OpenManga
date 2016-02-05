@@ -29,6 +29,16 @@ public class SearchHistoryAdapter extends CursorAdapter {
         updateContent(null);
     }
 
+    public static void clearHistory(Context context) {
+        StorageHelper storageHelper = new StorageHelper(context);
+        SQLiteDatabase database = storageHelper.getWritableDatabase();
+        database.beginTransaction();
+        database.delete(TABLE_NAME, null, null);
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        storageHelper.close();
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return LayoutInflater.from(context)
@@ -37,7 +47,7 @@ public class SearchHistoryAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ((TextView)view).setText(cursor.getString(1));
+        ((TextView) view).setText(cursor.getString(1));
     }
 
     public void updateContent(@Nullable String query) {
@@ -81,15 +91,5 @@ public class SearchHistoryAdapter extends CursorAdapter {
             mStorageHelper.close();
         }
         super.finalize();
-    }
-
-    public static void clearHistory(Context context) {
-        StorageHelper storageHelper = new StorageHelper(context);
-        SQLiteDatabase database = storageHelper.getWritableDatabase();
-        database.beginTransaction();
-        database.delete(TABLE_NAME, null, null);
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        storageHelper.close();
     }
 }

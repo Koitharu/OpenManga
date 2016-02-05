@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/frame_main">
+    android:layout_height="match_parent">
 
     <org.nv95.openmanga.components.MangaPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/pager" />
+        android:layout_height="match_parent" />
 
     <ImageView
+        android:id="@+id/imageViewOverscroll"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
-        android:id="@+id/imageViewOverscroll"
         android:layout_gravity="right|center_vertical"
-        android:background="@drawable/background_fab"
         android:layout_marginRight="0dp"
-        android:src="@drawable/ic_nav_arrow"
+        android:background="@drawable/background_fab"
         android:scaleType="center"
+        android:src="@drawable/ic_nav_arrow"
         android:visibility="invisible" />
 
     <ImageView
+        android:id="@+id/imageView_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView_menu"
         android:layout_gravity="right|bottom"
-        android:src="@drawable/ic_action_navigation_more_vert"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:src="@drawable/ic_action_navigation_more_vert" />
 
 </FrameLayout>

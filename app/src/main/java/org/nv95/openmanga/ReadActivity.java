@@ -118,12 +118,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.imageView_menu:
                 BottomSheet sheet =
-                new BottomSheet.Builder(this)
-                        .sheet(R.menu.reader)
-                        .listener(this)
-                        .title(mangaSummary.getChapters().getNames()[chapterId] +
-                                " (" + mPager.getCurrentPageIndex() + "/" + mPager.getCount() + ")")
-                        .build();
+                        new BottomSheet.Builder(this)
+                                .sheet(R.menu.reader)
+                                .listener(this)
+                                .title(mangaSummary.getChapters().getNames()[chapterId] +
+                                        " (" + mPager.getCurrentPageIndex() + "/" + mPager.getCount() + ")")
+                                .build();
                 if (FavouritesProvider.Has(this, mangaSummary)) {
                     MenuItem item = sheet.getMenu().findItem(R.id.action_favourite);
                     item.setIcon(R.drawable.ic_favorite_dark);
@@ -448,7 +448,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private abstract class GetImageTask extends AsyncTask<MangaPage,Void,File> implements DialogInterface.OnCancelListener {
+    private abstract class GetImageTask extends AsyncTask<MangaPage, Void, File> implements DialogInterface.OnCancelListener {
         private final ProgressDialog mProgressDialog;
 
         public GetImageTask() {

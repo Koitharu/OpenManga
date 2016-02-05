@@ -2,10 +2,10 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MangaPreviewActivity" >
+    tools:context=".MangaPreviewActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_container"
@@ -22,48 +22,48 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/primary_dark"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="pin"
-                android:background="@color/primary_dark" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_marginRight="120dp"
-        android:layout_marginLeft="120dp"
         android:id="@+id/scrollView"
-        app:behavior_overlapTop="64dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="120dp"
+        android:layout_marginRight="120dp"
         android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        app:behavior_overlapTop="64dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="520dp"
             android:background="@color/light_background"
+            android:minHeight="520dp"
             android:orientation="horizontal">
 
             <org.nv95.openmanga.components.AsyncImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:layout_weight="3" />
+                android:layout_weight="3"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:layout_marginLeft="6dp"
-                android:layout_marginStart="6dp"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2">
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -80,12 +80,12 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:layout_marginTop="4dp"
                     android:id="@+id/textView_description"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
             </LinearLayout>
-            </LinearLayout>
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

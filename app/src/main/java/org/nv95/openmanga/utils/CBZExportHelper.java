@@ -23,7 +23,7 @@ public class CBZExportHelper {
         new ExportTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, manga);
     }
 
-    private class ExportTask extends AsyncTask<MangaInfo,Integer,File> {
+    private class ExportTask extends AsyncTask<MangaInfo, Integer, File> {
         private final ProgressDialog mProgressDialog;
 
         public ExportTask() {

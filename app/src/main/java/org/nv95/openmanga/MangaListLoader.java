@@ -23,6 +23,15 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
     @Nullable
     private LoadContentTask mTaskInstance;
 
+    public MangaListLoader(RecyclerView recyclerView, @NonNull OnContentLoadListener listener) {
+        mRecyclerView = recyclerView;
+        mContentLoadListener = listener;
+        mList = new MangaList();
+        mAdapter = new MangaListAdapter(mList, mRecyclerView);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnLoadMoreListener(this);
+    }
+
     @Override
     public void onLoadMore() {
         new LoadContentTask(mList.getPagesCount(), true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -38,22 +47,6 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         if (mContentLoadListener != null) {
             mContentLoadListener.onContentLoaded(true);
         }
-    }
-
-    public interface OnContentLoadListener {
-        void onContentLoaded(boolean success);
-        void onLoadingStarts(int page);
-        @Nullable
-        MangaList onContentNeeded(int page);
-    }
-
-    public MangaListLoader(RecyclerView recyclerView, @NonNull OnContentLoadListener listener) {
-        mRecyclerView = recyclerView;
-        mContentLoadListener = listener;
-        mList = new MangaList();
-        mAdapter = new MangaListAdapter(mList, mRecyclerView);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnLoadMoreListener(this);
     }
 
     public void loadContent(boolean appendable, boolean invalidate) {
@@ -101,8 +94,16 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         return mList.size();
     }
 
+    public interface OnContentLoadListener {
+        void onContentLoaded(boolean success);
 
-    private class LoadContentTask extends AsyncTask<Void,Void,MangaList> {
+        void onLoadingStarts(int page);
+
+        @Nullable
+        MangaList onContentNeeded(int page);
+    }
+
+    private class LoadContentTask extends AsyncTask<Void, Void, MangaList> {
         private final int mPage;
         private final boolean mAppendable;
 

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/action_share" android:id="@+id/action_share" />
-    <item android:title="@string/action_remove" android:id="@+id/action_delete" />
+    <item
+        android:id="@+id/action_share"
+        android:title="@string/action_share" />
+    <item
+        android:id="@+id/action_delete"
+        android:title="@string/action_remove" />
 </menu>

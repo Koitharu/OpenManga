@@ -17,14 +17,12 @@ import org.nv95.openmanga.lists.PagedList;
 public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final int VIEW_ITEM = 1;
     protected static final int VIEW_PROGRESS = 0;
-
+    private final RecyclerView mRecyclerView;
     private PagedList<T> mDataset;
-
     private int visibleThreshold = 2;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
-    private final RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
 
     public EndlessAdapter(PagedList<T> dataset, RecyclerView recyclerView) {
@@ -111,6 +109,16 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
+    private boolean isLoadEnabled() {
+        return mDataset.size() != 0 && mDataset.isHasNext();
+    }
+
+    public abstract VH onCreateHolder(ViewGroup parent);
+
+    public abstract void onBindHolder(VH viewHolder, T data);
+
+    public abstract long getItemId(T data);
+
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
@@ -127,14 +135,4 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
             progressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
     }
-
-    private boolean isLoadEnabled() {
-        return mDataset.size() != 0 && mDataset.isHasNext();
-    }
-
-    public abstract VH onCreateHolder(ViewGroup parent);
-
-    public abstract void onBindHolder(VH viewHolder, T data);
-
-    public abstract long getItemId(T data);
 }

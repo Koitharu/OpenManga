@@ -56,6 +56,7 @@ public class MangaChangesObserver {
 
     public interface OnMangaChangesListener {
         void onMangaChanged(int category);
+
         void onMangaAdded(int category, MangaInfo data);
     }
 
