@@ -5,7 +5,7 @@
     <string name="loading_error">Loading failed</string>
     <string name="close">Close</string>
     <string name="local_storage">Local storage</string>
-    <string name="storages_remote">Remote storages:</string>
+    <string name="storages_remote">Remote storages</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="loading_page">Loading page</string>
@@ -216,7 +216,6 @@
     <string name="removed">Item removed</string>
     <string name="undo">Undo</string>
     <string name="quit">Quit</string>
-    <string name="exporting">Exporting...</string>
     <string name="sort_alphabetical">Alphabetical</string>
     <string name="genre_adult">Adult</string>
     <string name="genre_mature">Mature</string>

@@ -5,7 +5,7 @@
     <string name="loading_error">Yükleme başarısız</string>
     <string name="close">Kapat</string>
     <string name="local_storage">İndirilen Mangalar</string>
-    <string name="storages_remote">Manga Siteleri:</string>
+    <string name="storages_remote">Manga Siteleri</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="loading_page">Sayfa yükleniyor</string>

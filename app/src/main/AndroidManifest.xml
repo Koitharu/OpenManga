@@ -27,7 +27,8 @@
         </activity>
         <activity android:name=".MangaPreviewActivity"
             android:label=""
-            android:theme="@style/AppTheme.Preview"/>
+            android:theme="@style/AppTheme.Preview" >
+        </activity>
         <activity android:name=".SearchActivity"
             android:label="@string/search_results" />
         <activity android:name=".MultipleSearchActivity"

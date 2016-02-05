@@ -73,7 +73,8 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         mTextViewSummary.setText(mangaSummary.summary);
         mFab.setOnClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
-        mImageView.setImageAsync(mangaSummary.preview);
+        mImageView.useMemoryCache(false);
+        mImageView.setImageAsync(mangaSummary.preview, false);
         mImageView.setOnClickListener(this);
         new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

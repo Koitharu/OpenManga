@@ -74,7 +74,7 @@ public class InlayoutNotify extends LinearLayout implements View.OnClickListener
         this.addView(textView);
         imageView = new ImageView(getContext());
         imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        imageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cancel_light));
+        imageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cancel_dark));
         int[] attrs = new int[]{android.R.attr.selectableItemBackground /* index 0 */};
         TypedArray ta = getContext().obtainStyledAttributes(attrs);
         Drawable drawableFromTheme = ta.getDrawable(0 /* index */);
