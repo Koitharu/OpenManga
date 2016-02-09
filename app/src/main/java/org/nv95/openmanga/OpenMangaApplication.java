@@ -28,7 +28,7 @@ public class OpenMangaApplication extends Application {
         ErrorReporter.Init(this);
         AsyncImageView.IMAGE_HOLDER = ContextCompat.getDrawable(this, R.drawable.placeholder);
         final Resources resources = getResources();
-        final float aspectRatio = 5f / 3f;
+        final float aspectRatio = 6f / 4f;
         ThumbSize.THUMB_SIZE_SMALL = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_small), aspectRatio);
         ThumbSize.THUMB_SIZE_MEDIUM = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_medium), aspectRatio);
         ThumbSize.THUMB_SIZE_LARGE = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_large), aspectRatio);

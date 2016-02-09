@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

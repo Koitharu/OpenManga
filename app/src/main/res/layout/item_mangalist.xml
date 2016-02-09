@@ -11,8 +11,8 @@
 
         <org.nv95.openmanga.components.AsyncImageView
             android:id="@+id/imageView"
-            android:layout_width="@dimen/preview_width_small"
-            android:layout_height="@dimen/preview_height_small"
+            android:layout_width="@dimen/thumb_width_list"
+            android:layout_height="@dimen/thumb_height_list"
             android:layout_marginRight="6dp"
             android:scaleType="centerCrop" />
 
