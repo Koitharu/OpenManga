@@ -9,7 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.utils.DirAdapter;
+import org.nv95.openmanga.adapters.DirAdapter;
 
 import java.io.File;
 

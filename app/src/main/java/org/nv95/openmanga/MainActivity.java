@@ -51,6 +51,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>, ListModeDialog.OnListModeListener {
+    private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
     private ListView mDrawerListView;
@@ -181,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
         menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
+        menu.setGroupVisible(R.id.group_local, mDrawerListView.getCheckedItemPosition() == 0);
         menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
         menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
         return super.onPrepareOptionsMenu(menu);
@@ -211,6 +213,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_import:
+                startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
                 return true;
             case R.id.action_histclear:
                 if (mProvider instanceof HistoryProvider) {
