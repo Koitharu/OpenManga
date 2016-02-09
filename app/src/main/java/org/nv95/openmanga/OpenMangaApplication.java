@@ -2,8 +2,11 @@ package org.nv95.openmanga;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 
 import org.nv95.openmanga.components.AsyncImageView;
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.ErrorReporter;
 
 /**
@@ -23,6 +26,11 @@ public class OpenMangaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ErrorReporter.Init(this);
-        AsyncImageView.IMAGE_HOLDER = getResources().getDrawable(R.drawable.placeholder);
+        AsyncImageView.IMAGE_HOLDER = ContextCompat.getDrawable(this, R.drawable.placeholder);
+        final Resources resources = getResources();
+        final float aspectRatio = 5f / 3f;
+        ThumbSize.THUMB_SIZE_SMALL = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_small), aspectRatio);
+        ThumbSize.THUMB_SIZE_MEDIUM = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_medium), aspectRatio);
+        ThumbSize.THUMB_SIZE_LARGE = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_large), aspectRatio);
     }
 }

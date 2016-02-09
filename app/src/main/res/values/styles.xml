@@ -9,28 +9,6 @@
 
     <style name="AppTheme.Preview" parent="AppTheme"></style>
 
-    <style name="MenuItem">
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
-        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
-        <item name="android:background">?android:activatedBackgroundIndicator</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">3dp</item>
-        <item name="android:paddingRight">3dp</item>
-    </style>
-
-    <style name="AppToolButton">
-        <item name="android:background">?android:selectableItemBackground</item>
-    </style>
-
-    <style name="AppSmallColoredButton">
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:paddingBottom">2dp</item>
-        <item name="android:paddingTop">2dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmallInverse</item>
-        <item name="android:background">@drawable/background_accentbutton</item>
-    </style>
-
     <style name="MaterialDialogSheet" parent="Base.Theme.AppCompat.Light.Dialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

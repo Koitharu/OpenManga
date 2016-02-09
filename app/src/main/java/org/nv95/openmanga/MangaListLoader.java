@@ -3,11 +3,13 @@ package org.nv95.openmanga;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import org.nv95.openmanga.adapters.EndlessAdapter;
 import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 
 /**
@@ -103,6 +105,18 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         MangaList onContentNeeded(int page);
     }
 
+    public void updateLayout(boolean grid, int spanCount, ThumbSize thumbSize) {
+        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        int position = layoutManager.findFirstCompletelyVisibleItemPosition();
+        layoutManager.setSpanCount(spanCount);
+        layoutManager.setSpanSizeLookup(new AutoSpanSizeLookup(spanCount));
+        mAdapter.setThumbnailsSize(thumbSize);
+        if (mAdapter.setGrid(grid)) {
+            mRecyclerView.setAdapter(mAdapter);
+        }
+        mRecyclerView.scrollToPosition(position);
+    }
+
     private class LoadContentTask extends AsyncTask<Void, Void, MangaList> {
         private final int mPage;
         private final boolean mAppendable;
@@ -145,6 +159,19 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
             mAdapter.setLoaded();
             mContentLoadListener.onContentLoaded(true);
             mTaskInstance = null;
+        }
+    }
+
+    public class AutoSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+        final int mCount;
+
+        public AutoSpanSizeLookup(int mCount) {
+            this.mCount = mCount;
+        }
+
+        @Override
+        public int getSpanSize(int position) {
+            return mAdapter.getItemViewType(position) == 0 ? mCount : 1;
         }
     }
 }

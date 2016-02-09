@@ -1,7 +1,7 @@
 package org.nv95.openmanga.adapters;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
-    private LinearLayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
 
     public EndlessAdapter(PagedList<T> dataset, RecyclerView recyclerView) {
         mDataset = dataset;
@@ -44,11 +44,11 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
                 }
             }
         });
-        mLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
         onLayoutManagerChanged(mLayoutManager);
     }
 
-    public void onLayoutManagerChanged(LinearLayoutManager layoutManager) {
+    public void onLayoutManagerChanged(GridLayoutManager layoutManager) {
         mLayoutManager = layoutManager;
     }
 

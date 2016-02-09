@@ -14,21 +14,12 @@
     <string name="drawer_open">Открыть меню навигации</string>
     <string name="loading">Загрузка…</string>
     <string name="loading_error">Произошла ошибка</string>
-    <string name="loading_page">Загрузка страницы</string>
     <string name="local_storage">На устройстве</string>
-    <string name="operation_not_supported">Операция не поддерживается для данного источника</string>
-    <string name="search_on">Поиск в</string>
-    <string name="selected">Выбрано:</string>
-    <string name="setting_providers">Доступные источники</string>
-    <string name="start_reading">Читать</string>
     <string name="storages_remote">Онлайн каталоги</string>
     <string name="view_mode_list">Отображать списком</string>
     <string name="wait">Подождите…</string>
     <string name="search_results">Результаты поиска</string>
     <string name="action_share">Поделиться</string>
-    <string name="chapter_next">Следующая глава</string>
-    <string name="chapter_prev">Предыдущая глава</string>
-    <string name="action_image_opts">Изображение</string>
     <string name="action_reading_options">Параметры чтения</string>
     <string name="scrolling_direction">Направление листания</string>
     <string name="keep_screen">Держать экран включеным</string>
@@ -42,7 +33,6 @@
     <string name="select_sources">Источники манги</string>
     <string name="current_pos" formatted="false">Текущая позиция: %d -> %d</string>
     <string name="current_summary" formatted="false">Всего страниц: %d</string>
-    <string name="exception_logged">Произошла ошибка. Пожалуйста, отправьте отчет об ошибке разработчику.</string>
     <string name="log_not_found">Лог не найден!</string>
     <string name="navigate">Перейти</string>
     <string name="send">Отправить</string>
@@ -50,8 +40,6 @@
     <string name="bug_report_summ">Отправить отладочный лог разработчику</string>
     <string name="bug_report_message">Отправив отчёт об ошибке Вы поможете разработчикам. Отладочный лог может содержать адреса некоторых просмотренных страниц.</string>
     <string name="action_unfavourite">Удалить из избранного</string>
-    <string name="check_for_updates">Проверить обновления</string>
-    <string name="download">Скачать</string>
     <string name="help">Помощь</string>
     <string name="history_empty">История пуста</string>
     <string name="no_favourites">Нет избранных</string>
@@ -123,7 +111,6 @@
     <string name="check_new_chapters">Проверить новые главы</string>
     <string name="checking_frequency">Частота проверки</string>
     <string name="checking_new_chapters">Проверка новых глав</string>
-    <string name="def">По умолчанию</string>
     <string name="manga_local_dir">Папка для сохранения</string>
     <string name="retry">Повторить</string>
     <string name="dir_no_access">Выбранный каталог недоступен для записи</string>
@@ -135,11 +122,8 @@
     <string name="mark_all_viewed_confirm">Пометить все обновления просмотренными?</string>
     <string name="new_chapters_count" formatted="false">Новых глав: %d</string>
     <string name="over_wifi_only">Только через WiFi</string>
-    <string name="remove_from_history_confirm" formatted="false">Удалить \"%s\" из истории поиска?</string>
-    <string name="more">Ещё</string>
     <string name="prefer_qsearch">Предпочесть быстрый поиск</string>
     <string name="prefer_qsearch_summ">По возможости искать в текущем источнике</string>
-    <string name="search_more_confirm">В данном источнике ничего не найдено. Искать в других?</string>
     <string name="search_on_another_sources">Поиск в других источниках</string>
     <string name="show_at_startup">Показывать при запуске</string>
     <string name="welcome">Добро пожаловать</string>
@@ -191,11 +175,8 @@
     <string name="view_mode_grid_large">Крупная сетка</string>
     <string name="view_mode_grid_medium">Средняя сетка</string>
     <string name="view_mode_grid_small">Мелкая сетка</string>
-    <string name="exporting"></string>
     <string name="genre_music">Музыка</string>
     <string name="genre_parodi">Пародия</string>
     <string name="genre_postapocalipse">Постапокалиптика</string>
     <string name="quit">Выход</string>
-    <string name="removed">Удалено</string>
-    <string name="undo">Отменить</string>
 </resources>
