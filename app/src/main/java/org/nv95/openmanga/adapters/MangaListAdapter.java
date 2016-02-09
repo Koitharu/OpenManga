@@ -2,9 +2,9 @@ package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +15,7 @@ import org.nv95.openmanga.MangaPreviewActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
 
 /**
@@ -22,6 +23,7 @@ import org.nv95.openmanga.lists.PagedList;
  */
 public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter.MangaViewHolder> {
     private boolean mGrid;
+    private ThumbSize mThumbSize;
     @Nullable
     private OnItemLongClickListener<MangaViewHolder> mOnItemLongClickListener;
 
@@ -33,18 +35,20 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         mOnItemLongClickListener = itemLongClickListener;
     }
 
-    @Override
-    public void onLayoutManagerChanged(LinearLayoutManager layoutManager) {
-        super.onLayoutManagerChanged(layoutManager);
-        boolean grid;
-        if (grid = layoutManager instanceof GridLayoutManager) {
-            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new AutoSpanSizeLookup(
-                    ((GridLayoutManager) layoutManager).getSpanCount()
-            ));
-        }
-        if (grid != mGrid) {
+    public boolean setGrid(boolean grid) {
+        if (mGrid != grid) {
             mGrid = grid;
             notifyDataSetChanged();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setThumbnailsSize(@NonNull ThumbSize size) {
+        if (!size.equals(mThumbSize)) {
+            mThumbSize = size;
+            notifyItemRangeChanged(0, getItemCount());
         }
     }
 
@@ -69,7 +73,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
 
     @Override
     public void onBindHolder(MangaViewHolder viewHolder, MangaInfo data) {
-        viewHolder.fill(data);
+        viewHolder.fill(data, mThumbSize);
     }
 
     public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -97,7 +101,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             return mData;
         }
 
-        public void fill(MangaInfo data) {
+        public void fill(MangaInfo data, ThumbSize thumbSize) {
             mData = data;
             textViewTitle.setText(mData.name);
             if (mData.subtitle == null) {
@@ -107,7 +111,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 textViewSubtitle.setVisibility(View.VISIBLE);
             }
             textViewSummary.setText(mData.summary);
-            asyncImageView.setImageAsync(mData.preview, true);
+            asyncImageView.setImageThumbAsync(mData.preview, thumbSize);
         }
 
         @Override

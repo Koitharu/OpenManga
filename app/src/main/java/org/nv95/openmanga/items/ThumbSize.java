@@ -40,4 +40,11 @@ public class ThumbSize {
     public String toString() {
         return "_" + mHeight + "x" + mWidth;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ThumbSize &&
+                ((ThumbSize)o).mHeight == mHeight &&
+                ((ThumbSize)o).mWidth == mWidth;
+    }
 }

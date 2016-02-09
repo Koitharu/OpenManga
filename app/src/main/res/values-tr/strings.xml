@@ -8,27 +8,18 @@
     <string name="storages_remote">Manga Siteleri</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
-    <string name="loading_page">Sayfa yükleniyor</string>
     <string name="action_search">Ara</string>
-    <string name="search_on">Search on</string>
-    <string name="operation_not_supported">Bu içerik türü desteklenmemektedir</string>
     <string name="chapters_list">Bölüm listesi</string>
     <string name="action_favourites">Favoriler</string>
     <string name="action_favourite">Favorilere Ekle</string>
-    <string name="setting_providers">Uygun Kaynaklar</string>
     <string name="wait">Bekleyin…</string>
     <string name="view_mode_list">Liste görünümü</string>
     <string name="action_history">Geçmiş</string>
     <string name="action_remove">Sil</string>
-    <string name="selected">Seçili:</string>
     <string name="action_save">Kaydet</string>
-    <string name="start_reading">Okumaya Başla</string>
     <string name="continue_reading">Devam et</string>
     <string name="search_results">Arama Sonuçları</string>
     <string name="action_share">Paylaş</string>
-    <string name="chapter_prev">Önceki bölüm</string>
-    <string name="chapter_next">Sonraki bölüm</string>
-    <string name="action_image_opts">Resim</string>
     <string name="action_reading_options">Okuma Ayarları</string>
     <string name="scrolling_direction">Akış yönü</string>
     <string name="keep_screen">Ekranı açık tut</string>
@@ -43,7 +34,6 @@
     <string name="navigate">Git</string>
     <string name="current_pos" formatted="false">Şimdiki sayfa: %d -> %d</string>
     <string name="current_summary" formatted="false">Toplam %d sayfa.</string>
-    <string name="exception_logged">Bir hata oluştu. Lütfen yöneticiye rapor edin.</string>
     <string name="bug_report">Rapor gönder</string>
     <string name="bug_report_summ">Yöneticiye hata bildir.</string>
     <string name="log_not_found">Hata raporu bulunamadı!</string>
@@ -54,8 +44,6 @@
     <string name="no_manga_found">Manga bulunamadı</string>
     <string name="history_empty">Geçmiş boş</string>
     <string name="no_favourites">Favori manga bulunamadı</string>
-    <string name="download">İndir</string>
-    <string name="check_for_updates">Güncelleme kontrol et</string>
     <string name="help">Yardım</string>
     <string name="already_saved">Bu mangayı zaten indirmişsin</string>
     <string name="action_clear_cache">Önbelleği temizle</string>
@@ -113,7 +101,6 @@
     <string name="genre_samurai">Samuray</string>
     <string name="genre_smut">Smut</string>
     <string name="genre_sports">Spor</string>
-    <string name="genre_superguc">Süper Güçler</string>
     <string name="genre_seytanlar">Şeytanlar</string>
     <string name="genre_tragedy">Trajedi</string>
     <string name="genre_uzay">Uzay</string>

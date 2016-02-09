@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -38,6 +37,7 @@ import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -49,7 +49,8 @@ import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
-        View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener, OnItemLongClickListener<MangaListAdapter.MangaViewHolder> {
+        View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
+        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>, ListModeDialog.OnListModeListener {
     //views
     private RecyclerView mRecyclerView;
     private ListView mDrawerListView;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mFab.setOnClickListener(this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
         mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
@@ -124,8 +125,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
-        setViewMode(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0));
+        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt("view_mode", 0);
+        onListModeChanged(viewMode != 0, viewMode - 1);
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
@@ -268,52 +270,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(new Intent(this, UpdatesActivity.class));
                 return true;
             case R.id.action_listmode:
-                viewModeDialog();
+                new ListModeDialog(this).show(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void viewModeDialog() {
-        int mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        new AlertDialog.Builder(this)
-                .setSingleChoiceItems(R.array.view_modes, mode, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setViewMode(which);
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                                .edit().putInt("view_mode", which).apply();
-                        dialog.dismiss();
-                    }
-                })
-                .create().show();
-    }
-
-    private void setViewMode(int mode) {
-        LinearLayoutManager layoutManager;
-        switch (mode) {
-            case 0:
-                layoutManager = new LinearLayoutManager(MainActivity.this);
-                break;
-            case 1:
-                layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 90));
-                break;
-            case 2:
-                layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 120));
-                break;
-            case 3:
-                layoutManager = new GridLayoutManager(this,
-                        LayoutUtils.getOptimalColumnsCount(this, 164));
-                break;
-            default:
-                return;
-        }
-        mRecyclerView.setLayoutManager(layoutManager);
-        mListLoader.getAdapter().onLayoutManagerChanged(layoutManager);
     }
 
     @Override
@@ -473,6 +434,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         popupMenu.show();
         return true;
+    }
+
+    @Override
+    public void onListModeChanged(boolean grid, int sizeMode) {
+        int spans;
+        ThumbSize thumbSize;
+        switch (sizeMode) {
+            case -1:
+                spans = 1;
+                thumbSize = ThumbSize.THUMB_SIZE_SMALL;
+                break;
+            case 0:
+                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_SMALL);
+                break;
+            case 1:
+                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_MEDIUM);
+                break;
+            case 2:
+                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_LARGE);
+                break;
+            default:
+                return;
+        }
+        mListLoader.updateLayout(grid, spans, thumbSize);
     }
 
 
