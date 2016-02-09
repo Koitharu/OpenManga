@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import android.util.AttributeSet;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.SerialExecutor;
 
 import java.io.File;
@@ -48,7 +50,9 @@ public class AsyncImageView extends ImageView {
     private static MemoryCache memoryCache = new MemoryCache();
     private static FileCache fileCache = null;
     @Nullable
-    private String url = null;
+    private String mUrl = null;
+    @Nullable
+    private ThumbSize mThumbSize = null;
     private LoadImageTask loadImageTask = null;
     private SetImageTask setImageTask = null;
     private boolean useMemCache = true;
@@ -83,18 +87,27 @@ public class AsyncImageView extends ImageView {
     }
 
     public void setImageAsync(@Nullable String url) {
-        setImageAsync(url, true);
+        setImageThumbAsync(url, null, true);
     }
 
     public void setImageAsync(@Nullable String url, boolean useHolder) {
-        if (this.url != null && this.url.equals(url)) {
+        setImageThumbAsync(url, null, useHolder);
+    }
+
+    public void setImageThumbAsync(@Nullable String url, @Nullable ThumbSize size) {
+        setImageThumbAsync(url, size, true);
+    }
+
+    public void setImageThumbAsync(@Nullable String url, @Nullable ThumbSize size, boolean useHolder) {
+        if (mUrl != null && mUrl.equals(url)) {
             return;
         }
         if (useHolder) {
             setImageDrawable(IMAGE_HOLDER);
         }
         cancelLoading();
-        this.url = url;
+        mUrl = url;
+        mThumbSize = size;
         if (url != null) {
             setImageTask = new SetImageTask();
             setImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
@@ -125,16 +138,14 @@ public class AsyncImageView extends ImageView {
     }
 
     private static class FileCache {
-        private Context context;
-        private File cacheDir;
+        private final File mCacheDir;
 
         public FileCache(Context context) {
-            this.context = context;
-            cacheDir = context.getExternalCacheDir();
+            mCacheDir = context.getExternalCacheDir();
         }
 
-        public void putBitmap(@NonNull String key, @Nullable Bitmap bitmap) {
-            File file = new File(cacheDir, String.valueOf(key.hashCode()));
+        public void putBitmap(@NonNull String key, @Nullable Bitmap bitmap, @Nullable ThumbSize size) {
+            File file = new File(mCacheDir, String.valueOf(key.hashCode()) + (size == null ? "" : size.toString()));
             if (bitmap != null && !file.exists()) {
                 try {
                     OutputStream fOut = new FileOutputStream(file);
@@ -148,8 +159,8 @@ public class AsyncImageView extends ImageView {
         }
 
         @Nullable
-        public Bitmap getBitmap(@NonNull String key) {
-            File file = new File(cacheDir, String.valueOf(key.hashCode()));
+        public Bitmap getBitmap(@NonNull String key, @Nullable ThumbSize size) {
+            File file = new File(mCacheDir, String.valueOf(key.hashCode()) + (size == null ? "" : size.toString()));
             try {
                 return BitmapFactory.decodeStream(new FileInputStream(file));
             } catch (Exception e) {
@@ -168,15 +179,15 @@ public class AsyncImageView extends ImageView {
             return bitmap.getByteCount() / 1024;
         }
 
-        public void putBitmap(@NonNull String key, Bitmap bitmap) {
-            if (bitmap != null && getBitmap(key) == null) {
-                this.put(key, bitmap);
+        public void putBitmap(@NonNull String key, Bitmap bitmap, @Nullable ThumbSize size) {
+            if (bitmap != null && getBitmap(key, size) == null) {
+                this.put(size == null ? key : key + size.toString(), bitmap);
             }
         }
 
         @Nullable
-        public Bitmap getBitmap(String key) {
-            return get(key);
+        public Bitmap getBitmap(String key,  @Nullable ThumbSize size) {
+            return get(size == null ? key : key + size.toString());
         }
     }
 
@@ -194,10 +205,14 @@ public class AsyncImageView extends ImageView {
                 if (bitmap == null) {
                     return null;
                 }
-                if (useMemCache) {
-                    memoryCache.putBitmap(params[0], bitmap);
+                if (mThumbSize != null) {
+                    bitmap = ThumbnailUtils.extractThumbnail(bitmap, mThumbSize.getWidth(),
+                            mThumbSize.getHeight(), ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
                 }
-                fileCache.putBitmap(params[0], bitmap);
+                if (useMemCache) {
+                    memoryCache.putBitmap(params[0], bitmap, mThumbSize);
+                }
+                fileCache.putBitmap(params[0], bitmap, mThumbSize);
                 return bitmap;
             } catch (Exception e) {
                 return null;
@@ -221,18 +236,13 @@ public class AsyncImageView extends ImageView {
     private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = memoryCache.getBitmap(url);
+            Bitmap bitmap = memoryCache.getBitmap(params[0], mThumbSize);
             if (bitmap == null) {
                 if (!params[0].startsWith("http")) {
                     bitmap = BitmapFactory.decodeFile(params[0]);
                 } else {
-                    bitmap = fileCache.getBitmap(params[0]);
+                    bitmap = fileCache.getBitmap(params[0], mThumbSize);
                 }
             }
             if (bitmap == null) {
@@ -248,7 +258,7 @@ public class AsyncImageView extends ImageView {
                 AsyncImageView.super.setImageBitmap(bitmap);
             } else {
                 loadImageTask = new LoadImageTask();
-                loadImageTask.executeOnExecutor(EXECUTOR, url);
+                loadImageTask.executeOnExecutor(EXECUTOR, mUrl);
             }
         }
     }

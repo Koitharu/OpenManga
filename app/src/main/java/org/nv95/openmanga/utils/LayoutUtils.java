@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
+import org.nv95.openmanga.items.ThumbSize;
+
 /**
  * Created by nv95 on 26.01.16.
  */
@@ -34,9 +36,17 @@ public class LayoutUtils {
         return new Float[]{dpHeight, dpWidth};
     }
 
+    @Deprecated
     public static int getOptimalColumnsCount(Activity activity, int sizeDp) {
         float width = LayoutUtils.getScreenSizeDp(activity)[1];
         int count = (int) (width / sizeDp);
         return count == 0 ? 1 : count;
     }
+
+    public static int getOptimalColumnsCount(Activity activity, ThumbSize thumbSize) {
+        float width = LayoutUtils.getScreenSizeDp(activity)[1];
+        int count = Math.round(width / thumbSize.getWidth());
+        return count == 0 ? 1 : count;
+    }
+
 }
