@@ -5,6 +5,12 @@
     <dimen name="details_margin_top">380dp</dimen>
     <dimen name="drawer_size">280dp</dimen>
     <dimen name="inlayout_notify_padding">5dp</dimen>
-    <dimen name="fab_size">56dp</dimen>
     <dimen name="overscroll_size">100dp</dimen>
+
+    <dimen name="thumb_width_list">64dp</dimen>
+    <dimen name="thumb_height_list">82dp</dimen>
+
+    <dimen name="thumb_width_small">48dp</dimen>
+    <dimen name="thumb_width_medium">68dp</dimen>
+    <dimen name="thumb_width_large">92dp</dimen>
 </resources>

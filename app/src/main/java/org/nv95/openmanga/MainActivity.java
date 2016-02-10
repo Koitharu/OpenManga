@@ -433,8 +433,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        mProvider.remove(new long[]{mangaInfo.hashCode()});
-                        mListLoader.removeItem(position);
+                        if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
+                            mListLoader.removeItem(position);
+                        }
                         return true;
                     case R.id.action_share:
                         new ContentShareHelper(MainActivity.this).share(mangaInfo);

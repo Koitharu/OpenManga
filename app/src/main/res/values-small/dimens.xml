@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="thumb_width_list">64dp</dimen>
+    <dimen name="thumb_height_list">82dp</dimen>
+
+    <dimen name="thumb_width_small">112dp</dimen>
+    <dimen name="thumb_width_medium">124dp</dimen>
+    <dimen name="thumb_width_large">162dp</dimen>
+</resources>

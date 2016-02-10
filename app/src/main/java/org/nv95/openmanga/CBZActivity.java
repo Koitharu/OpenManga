@@ -149,10 +149,10 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 cv.put("name", "default");
                 database.insert(LocalMangaProvider.TABLE_CHAPTERS, null, cv);
                 cv = new ContentValues();
-                cv.put("id", mangaId);
+                cv.put("id", String.valueOf(mangaId).hashCode());
                 cv.put("name", name);
                 cv.put("summary", "Imported from " + new File(params[0]).getName());
-                cv.put("path", String.valueOf(mangaId));
+                cv.put("path", mangaId);
                 cv.put("preview", preview);
                 cv.put("provider", LocalMangaProvider.class.getName());
                 cv.put("subtitle", "");
@@ -219,6 +219,7 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
             onProgressUpdate(getString(R.string.cancelled), null);
             mButton.setText(R.string.close);
             mWakeLock.release();
