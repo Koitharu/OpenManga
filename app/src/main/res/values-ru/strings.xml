@@ -181,5 +181,7 @@
     <string name="quit">Выход</string>
     <string name="select_file">Выброр файла</string>
     <string name="more">Ещё</string>
-    <string name="import_progress" formatted="false" >Импортировано страниц; %d из %d</string>
+    <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
+    <string name="cancelled">Отменено</string>
+    <string name="import_complete">Завершено</string>
 </resources>

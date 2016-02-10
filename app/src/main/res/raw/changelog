@@ -1,6 +1,8 @@
 <h1>Changelog</h1>
 <p>
-    + Add MangaFox source
-    * Reworked UI and some basic functions
-    * Fixed saving images into gallery
+    + Add MangaFox source<br>
+    + Import from CBZ files (beta)<br>
+    * Reworked UI and some basic functions<br>
+    * Fixed saving images into gallery<br>
+    * Optimized thumbnails<br>
 </p>
