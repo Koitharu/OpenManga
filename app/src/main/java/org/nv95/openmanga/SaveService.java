@@ -232,9 +232,9 @@ public class SaveService extends Service {
                 summary = queue.poll();
                 publishProgress();
                 //preparing
-                publishProgress(new ProgressInfo(0, 0, summary.getName(), ProgressInfo.STATE_INTERMEDIATE));
+                publishProgress(new ProgressInfo(0, 0, summary.name, ProgressInfo.STATE_INTERMEDIATE));
                 try {
-                    provider = (MangaProvider) summary.getProvider().newInstance();
+                    provider = (MangaProvider) summary.provider.newInstance();
                 } catch (Exception e) {
                     ErrorReporter.getInstance().report(e);
                     continue;
@@ -253,7 +253,7 @@ public class SaveService extends Service {
                 ArrayList<MangaPage> pages;
                 int i = 0;
                 for (MangaChapter o : summary.getChapters()) {
-                    publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100, summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
+                    publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100, summary.name + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     chapt = new File(dest, String.valueOf(o.readLink.hashCode()));
                     chapt.mkdir();
 
@@ -271,7 +271,7 @@ public class SaveService extends Service {
                         }
                         database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
                         k++;
-                        publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100 + k * 100 / pages.size(), summary.getName() + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
+                        publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100 + k * 100 / pages.size(), summary.name + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     }
                     if (isCancelled()) {
                         new FileRemover(chapt).run();

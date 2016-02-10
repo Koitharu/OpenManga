@@ -58,14 +58,15 @@
             </intent-filter>
         </receiver>
         <activity android:name=".FileSelectActivity" android:label="@string/select_file" />
-        <activity android:name=".CBZActivity">
-            <intent-filter>
+        <activity android:name=".CBZActivity" android:theme="@style/AppTheme.Dialog"
+            android:label="@string/import_file" >
+            <!--intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="file" />
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.cbz" />
-            </intent-filter>
+            </intent-filter-->
         </activity>
     </application>
 

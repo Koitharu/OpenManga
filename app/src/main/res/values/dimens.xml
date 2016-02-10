@@ -12,6 +12,6 @@
     <dimen name="thumb_height_list">82dp</dimen>
 
     <dimen name="thumb_width_small">32dp</dimen>
-    <dimen name="thumb_width_medium">54dp</dimen>
+    <dimen name="thumb_width_medium">48dp</dimen>
     <dimen name="thumb_width_large">72dp</dimen>
 </resources>
