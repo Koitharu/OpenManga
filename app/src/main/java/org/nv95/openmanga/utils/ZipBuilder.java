@@ -1,5 +1,6 @@
 package org.nv95.openmanga.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
@@ -7,7 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -24,8 +27,20 @@ public class ZipBuilder {
 
     }
 
+    @NonNull
+    public static ZipEntry[] enumerateEntries(String zipFile) throws Exception {
+        ArrayList<ZipEntry> entryList = new ArrayList<>();
+        ZipFile file = new ZipFile(zipFile);
+        Enumeration<? extends ZipEntry> entries = file.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry o = entries.nextElement();
+            entryList.add(o);
+        }
+        return entryList.toArray(new ZipEntry[entryList.size()]);
+    }
+
     @Nullable
-    public static File[] UnzipFile(File file, File outputDir) {
+    public static File[] unzipFiles(File file, File outputDir) {
         final byte[] buffer = new byte[1024];
         if (!outputDir.exists() && !outputDir.mkdirs()) {
             return null;

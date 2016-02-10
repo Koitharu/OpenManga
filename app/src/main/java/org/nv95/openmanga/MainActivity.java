@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //menu.findItem(R.id.action_search).setVisible(provider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH));
         menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
         menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
         menu.setGroupVisible(R.id.group_local, mDrawerListView.getCheckedItemPosition() == 0);
@@ -203,6 +202,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onStop() {
         MangaChangesObserver.removeListener(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
+            startActivity(new Intent(this, CBZActivity.class).putExtras(data));
+        }
     }
 
     @Override

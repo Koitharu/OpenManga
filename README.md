@@ -6,14 +6,15 @@ Current version isn't stable<br>
 [Download latest build](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-1.0-rc1.apk?raw=true)
 
 ## Features
+ - 8 online manga's catalogues
  - Local storage
  - Simple and convenient user interface
  - Online catalogues with search
- - Image viewer with zoom and preloading (as in the gallery)
  - Favourites and history with remembering last viewed chapter and page
  - Selecting sort order
  - Filter by genre
  - Checking for new chapters for favourites
+ - Importing from CBZ files (beta)
 
 You can help translate this app and add online catalogues.
 

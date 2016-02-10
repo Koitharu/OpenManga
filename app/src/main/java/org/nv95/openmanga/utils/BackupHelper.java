@@ -279,7 +279,7 @@ public class BackupHelper {
             } catch (IOException e) {
                 return false;
             }
-            if (ZipBuilder.UnzipFile(file, dir) == null) {
+            if (ZipBuilder.unzipFiles(file, dir) == null) {
                 new FileRemover(dir).run();
                 return null;
             }
