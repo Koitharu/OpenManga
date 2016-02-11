@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private FloatingActionButton mFab;
     private TextView mTextViewHolder;
     private ProgressBar mProgressBar;
+    private TextView mTextViewTitle;
+    private TextView mTextViewSubtitle;
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
@@ -119,10 +121,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            actionBar.setSubtitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
+            //actionBar.setSubtitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
         }
+        mTextViewTitle = (TextView) findViewById(R.id.textView_title);
+        mTextViewSubtitle = (TextView) findViewById(R.id.textView_subtitle);
+        setTitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
+        findViewById(R.id.title).setOnClickListener(this);
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
@@ -131,6 +138,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         onListModeChanged(viewMode != 0, viewMode - 1);
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+        mTextViewTitle.setText(title);
     }
 
     @Override
@@ -179,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_sort).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT));
-        menu.findItem(R.id.action_genre).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES));
         menu.setGroupVisible(R.id.group_local, mDrawerListView.getCheckedItemPosition() == 0);
         menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
         menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
@@ -202,6 +213,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onStop() {
         MangaChangesObserver.removeListener(this);
         super.onStop();
+    }
+
+    public void setSubtitle(@Nullable String subtitle) {
+        if (subtitle == null) {
+            mTextViewSubtitle.setVisibility(View.GONE);
+        } else {
+            mTextViewSubtitle.setVisibility(View.VISIBLE);
+            mTextViewSubtitle.setText(subtitle);
+        }
     }
 
     @Override
@@ -240,30 +260,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             .create().show();
                 }
                 return true;
-            case R.id.action_sort:
-                FilterSortDialog dialog = new FilterSortDialog(this, this);
-                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
-                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
-                            getString(mProvider instanceof FavouritesProvider
-                                    ? R.string.action_category : R.string.action_genre));
-                }
-                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
-                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
-                }
-                dialog.show(0);
-                return true;
-            case R.id.action_genre:
-                dialog = new FilterSortDialog(this, this);
-                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
-                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
-                            getString(mProvider instanceof FavouritesProvider
-                                    ? R.string.action_category : R.string.action_genre));
-                }
-                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
-                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
-                }
-                dialog.show(0);
-                return true;
             case R.id.action_updates:
                 startActivity(new Intent(this, UpdatesActivity.class));
                 return true;
@@ -277,8 +273,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     @Override
-    public void onApply(int genre, int sort) {
+    public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
         mGenre = genre;
+        setSubtitle(genreName);
         MangaProviderManager.SetSort(MainActivity.this, mProvider, sort);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
@@ -286,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mGenre = 0;
+        setSubtitle(null);
         switch (position) {
             case 0:
                 mProvider = LocalMangaProvider.getInstacne(this);
@@ -300,10 +298,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mProvider = mProviderManager.getMangaProvider(position - 4);
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setSubtitle(mProvider.getName());
-        }
+        setTitle(mProvider.getName());
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
@@ -344,6 +339,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         switch (v.getId()) {
             case R.id.fab_read:
                 new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                break;
+            case R.id.title:
+                if (mProvider == null) {
+                    return;
+                }
+                FilterSortDialog dialog = new FilterSortDialog(this, this);
+                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
+                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
+                            getString(mProvider instanceof FavouritesProvider
+                                    ? R.string.action_category : R.string.action_genre));
+                }
+                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
+                }
+                dialog.show();
                 break;
         }
     }
