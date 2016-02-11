@@ -17,9 +17,10 @@ import java.util.Iterator;
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
+    private static final int DB_VERSION = 9;
 
     public StorageHelper(Context context) {
-        super(context, "localmanga", null, 9);
+        super(context, "localmanga", null, DB_VERSION);
     }
 
 
@@ -27,14 +28,14 @@ public class StorageHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS favourites");
         db.execSQL("CREATE TABLE favourites ("
-                + "id INTEGER PRIMARY KEY,"   //0
+                + "id INTEGER PRIMARY KEY,"                 //0
                 + "name TEXT,"                              //1
                 + "subtitle TEXT,"                          //2
                 + "summary TEXT,"                           //3
                 + "preview TEXT,"                           //4
                 + "provider TEXT,"                          //5
-                + "path TEXT,"                               //6
-                + "timestamp INTEGER"                         //7
+                + "path TEXT,"                              //6
+                + "timestamp INTEGER"                       //7
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS history");
         db.execSQL("CREATE TABLE history ("
@@ -44,37 +45,37 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "summary TEXT,"                           //3
                 + "preview TEXT,"                           //4
                 + "provider TEXT,"                          //5
-                + "path TEXT,"                               //6
+                + "path TEXT,"                              //6
                 + "timestamp INTEGER,"                      //7
-                + "chapter INTEGER,"                       //8
-                + "page INTEGER,"                       //8
-                + "size INTEGER"                       //8
+                + "chapter INTEGER,"                        //8
+                + "page INTEGER,"                           //9
+                + "size INTEGER"                            //10
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS local_storage");
         db.execSQL("CREATE TABLE local_storage ("       //менять нельзя ничего
-                + "id INTEGER PRIMARY KEY,"             //0
+                + "id INTEGER PRIMARY KEY,"                 //0
                 + "name TEXT,"                              //1
                 + "subtitle TEXT,"                          //2
                 + "summary TEXT,"                           //3
                 + "preview TEXT,"                           //4
                 + "provider TEXT,"                          //5
-                + "path TEXT,"                               //6 - хеш readlink-а - путь и id
-                + "description TEXT,"                           //7
-                + "timestamp INTEGER"                          //8
+                + "path TEXT,"                              //6 - хеш readlink-а - путь и id
+                + "description TEXT,"                       //7
+                + "timestamp INTEGER"                       //8
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS local_chapters");
         db.execSQL("CREATE TABLE local_chapters ("
                 + "number INTEGER PRIMARY KEY,"                 //0
                 + "id INTEGER,"                                 //1 - хеш readlink-а
-                + "mangaId INTEGER,"                        //2 - dir - соответствует path из storage
-                + "name TEXT"                              //3
+                + "mangaId INTEGER,"                            //2 - dir - соответствует path из storage
+                + "name TEXT"                                   //3
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS local_pages");
         db.execSQL("CREATE TABLE local_pages ("
                 + "number INTEGER PRIMARY KEY,"                 //0
-                + "id INTEGER,"
-                + "chapterId INTEGER,"                             //1 - dir
-                + "path TEXT"
+                + "id INTEGER,"                                 //1
+                + "chapterId INTEGER,"                          //2
+                + "path TEXT"                                   //3
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS search_history");
         db.execSQL("CREATE TABLE search_history ("

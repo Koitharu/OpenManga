@@ -25,7 +25,9 @@ import java.util.Date;
  */
 public class HistoryProvider extends MangaProvider {
     private static final String TABLE_NAME = "history";
-    protected static boolean features[] = {false, false, true, false, false};
+    protected static boolean features[] = {false, false, true, true, false};
+    private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
+    private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<HistoryProvider> instanceReference = new WeakReference<HistoryProvider>(null);
     StorageHelper dbHelper;
     private Context context;
@@ -84,11 +86,11 @@ public class HistoryProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, "timestamp");
+            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    list.add(0, manga);
+                    list.add(manga);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -209,5 +211,10 @@ public class HistoryProvider extends MangaProvider {
         public long getTime() {
             return time;
         }
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 }
