@@ -95,16 +95,16 @@ public class MultipleSearchActivity extends AppCompatActivity implements ListMod
         switch (sizeMode) {
             case -1:
                 spans = 1;
-                thumbSize = ThumbSize.THUMB_SIZE_SMALL;
+                thumbSize = ThumbSize.THUMB_SIZE_LIST;
                 break;
             case 0:
-                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_SMALL);
+                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_SMALL);
                 break;
             case 1:
-                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_MEDIUM);
+                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_MEDIUM);
                 break;
             case 2:
-                spans = LayoutUtils.getOptimalColumnsCount(this, thumbSize = ThumbSize.THUMB_SIZE_LARGE);
+                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_LARGE);
                 break;
             default:
                 return;

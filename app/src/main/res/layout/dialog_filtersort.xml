@@ -12,7 +12,8 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -23,13 +24,15 @@
                 android:id="@+id/listView_genre"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:choiceMode="singleChoice" />
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent" />
 
             <ListView
                 android:id="@+id/listView_sort"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:choiceMode="singleChoice" />
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent" />
 
         </FrameLayout>
     </LinearLayout>
