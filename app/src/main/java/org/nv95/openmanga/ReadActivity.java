@@ -134,8 +134,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void SaveImage(File file, MangaPage page) {
-        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), page.getPath().substring(page.getPath().lastIndexOf('/') + 1));
+    private void SaveImage(File file) {
+        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
         try {
             LocalMangaProvider.CopyFile(file, dest);
             MediaScannerConnection.scanFile(ReadActivity.this,
@@ -365,7 +365,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     protected void onFileReady(@Nullable File file) {
                         if (file != null) {
-                            SaveImage(file, mPager.getCurrentPage());
+                            SaveImage(file);
                         } else {
                             Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
                         }
@@ -380,7 +380,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             Intent shareIntent = new Intent();
                             shareIntent.setAction(Intent.ACTION_SEND);
                             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                            shareIntent.setType("image/jpeg");
+                            shareIntent.setType("image/*");
                             startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
                         } else {
                             Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
@@ -480,8 +480,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 File file = new File(getExternalCacheDir(), String.valueOf(url.hashCode()));
                 if (!file.exists()) {
                     //// TODO: 26.01.16
+                    return null;
                 }
-                File dest = new File(getExternalFilesDir("temp"), url.hashCode() + MimeTypeMap.getFileExtensionFromUrl(url));
+                File dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
                 LocalMangaProvider.CopyFile(file, dest);
                 return dest;
             } catch (Exception ignored) {
