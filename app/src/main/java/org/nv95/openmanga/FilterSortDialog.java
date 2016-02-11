@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,17 @@ public class FilterSortDialog {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        int genre = mListView[TAB_GENRES].getCheckedItemPosition();
+                        int sort = mListView[TAB_SORT].getCheckedItemPosition();
+                        String genreName = genre <= 0 ?
+                                null :
+                                (String) mListView[TAB_GENRES].getItemAtPosition(genre);
+                        String sortName = sort == -1 ?
+                                null :
+                                (String) mListView[TAB_SORT].getItemAtPosition(sort);
                         mCallback.onApply(
-                                mListView[TAB_GENRES].getCheckedItemPosition(),
-                                mListView[TAB_SORT].getCheckedItemPosition()
+                                genre, sort,
+                                genreName, sortName
                         );
                     }
                 })
@@ -85,6 +94,6 @@ public class FilterSortDialog {
     }
 
     public interface Callback {
-        void onApply(int genre, int sort);
+        void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName);
     }
 }

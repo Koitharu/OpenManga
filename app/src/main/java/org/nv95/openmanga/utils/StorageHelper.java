@@ -34,8 +34,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "preview TEXT,"                           //4
                 + "provider TEXT,"                          //5
                 + "path TEXT,"                              //6
-                + "timestamp INTEGER"                       //7
-                + "category INTEGER"                        //8
+                + "timestamp INTEGER,"                      //7
+                + "category INTEGER DEFAULT 0"              //8
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS history");
         db.execSQL("CREATE TABLE history ("
@@ -101,9 +101,8 @@ public class StorageHelper extends SQLiteOpenHelper {
             case 9:
                 db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
                 break;
-            default: {
+            default:
                 onCreate(db);
-            }
         }
     }
 

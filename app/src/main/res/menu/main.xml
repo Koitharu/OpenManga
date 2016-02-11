@@ -36,17 +36,6 @@
             app:showAsAction="never" />
     </group>
     <item
-        android:id="@+id/action_genre"
-        android:orderInCategory="100"
-        android:title="@string/action_genre"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sort"
-        android:orderInCategory="100"
-        android:title="@string/action_sort"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
