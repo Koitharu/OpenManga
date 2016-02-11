@@ -210,4 +210,5 @@
     <string name="favourites_categories">Favourites categories</string>
     <string name="favourites_categories_description">Enter splitted by \',\'</string>
     <string name="category_no">No category</string>
+    <string name="action_category">Category</string>
 </resources>
