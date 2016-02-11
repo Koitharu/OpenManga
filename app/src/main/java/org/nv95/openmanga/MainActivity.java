@@ -50,7 +50,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
-        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>, ListModeDialog.OnListModeListener {
+        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>, ListModeDialog.OnListModeListener, FilterSortDialog.Callback {
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
@@ -241,42 +241,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 return true;
             case R.id.action_sort:
-                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
-                    new AlertDialog.Builder(this)
-                            .setSingleChoiceItems(mProvider.getSortTitles(this),
-                                    MangaProviderManager.GetSort(this, mProvider),
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            MangaProviderManager.SetSort(MainActivity.this, mProvider, which);
-                                            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-                                            dialog.dismiss();
-                                        }
-                                    })
-                            .setCancelable(true)
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .setTitle(R.string.action_sort)
-                            .create().show();
+                FilterSortDialog dialog = new FilterSortDialog(this, this);
+                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
+                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
+                            getString(mProvider instanceof FavouritesProvider
+                                    ? R.string.action_category : R.string.action_genre));
                 }
+                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
+                }
+                dialog.show(0);
                 return true;
             case R.id.action_genre:
+                dialog = new FilterSortDialog(this, this);
                 if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
-                    new AlertDialog.Builder(this)
-                            .setSingleChoiceItems(mProvider.getGenresTitles(this),
-                                    mGenre,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mGenre = which;
-                                            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-                                            dialog.dismiss();
-                                        }
-                                    })
-                            .setCancelable(true)
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .setTitle(R.string.action_genre)
-                            .create().show();
+                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
+                            getString(mProvider instanceof FavouritesProvider
+                                    ? R.string.action_category : R.string.action_genre));
                 }
+                if (mProvider != null && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
+                }
+                dialog.show(0);
                 return true;
             case R.id.action_updates:
                 startActivity(new Intent(this, UpdatesActivity.class));
@@ -287,6 +273,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    @Override
+    public void onApply(int genre, int sort) {
+        mGenre = genre;
+        MangaProviderManager.SetSort(MainActivity.this, mProvider, sort);
+        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
     @Override
