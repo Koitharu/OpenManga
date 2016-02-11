@@ -16,7 +16,8 @@ public class OpenMangaApplication extends Application {
 
     public static int getVersion(Context context) {
         try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0)
+                    .versionCode;
         } catch (Exception e) {
             return -1;
         }
@@ -29,8 +30,21 @@ public class OpenMangaApplication extends Application {
         AsyncImageView.IMAGE_HOLDER = ContextCompat.getDrawable(this, R.drawable.placeholder);
         final Resources resources = getResources();
         final float aspectRatio = 6f / 4f;
-        ThumbSize.THUMB_SIZE_SMALL = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_small), aspectRatio);
-        ThumbSize.THUMB_SIZE_MEDIUM = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_medium), aspectRatio);
-        ThumbSize.THUMB_SIZE_LARGE = new ThumbSize(resources.getDimensionPixelSize(R.dimen.thumb_width_large), aspectRatio);
+        ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
+                resources.getDimensionPixelSize(R.dimen.thumb_width_list),
+                resources.getDimensionPixelSize(R.dimen.thumb_height_list)
+        );
+        ThumbSize.THUMB_SIZE_SMALL = new ThumbSize(
+                resources.getDimensionPixelSize(R.dimen.thumb_width_small),
+                aspectRatio
+        );
+        ThumbSize.THUMB_SIZE_MEDIUM = new ThumbSize(
+                resources.getDimensionPixelSize(R.dimen.thumb_width_medium),
+                aspectRatio
+        );
+        ThumbSize.THUMB_SIZE_LARGE = new ThumbSize(
+                resources.getDimensionPixelSize(R.dimen.thumb_width_large),
+                aspectRatio
+        );
     }
 }

@@ -3,6 +3,7 @@ package org.nv95.openmanga.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
@@ -36,6 +37,11 @@ public class LayoutUtils {
         return new Float[]{dpHeight, dpWidth};
     }
 
+    public static int DpToPx(Resources res, float dp) {
+        float density = res.getDisplayMetrics().density;
+        return (int) (dp * density);
+    }
+
     @Deprecated
     public static int getOptimalColumnsCount(Activity activity, int sizeDp) {
         float width = LayoutUtils.getScreenSizeDp(activity)[1];
@@ -43,9 +49,9 @@ public class LayoutUtils {
         return count == 0 ? 1 : count;
     }
 
-    public static int getOptimalColumnsCount(Activity activity, ThumbSize thumbSize) {
-        float width = LayoutUtils.getScreenSizeDp(activity)[1];
-        int count = Math.round(width / thumbSize.getWidth());
+    public static int getOptimalColumnsCount(Resources resources, ThumbSize thumbSize) {
+        float width = resources.getDisplayMetrics().widthPixels;
+        int count = Math.round(width / (thumbSize.getWidth() + DpToPx(resources, 8)));
         return count == 0 ? 1 : count;
     }
 
