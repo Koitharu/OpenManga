@@ -17,12 +17,11 @@ import java.util.Iterator;
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 9;
+    private static final int DB_VERSION = 10;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -36,6 +35,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "provider TEXT,"                          //5
                 + "path TEXT,"                              //6
                 + "timestamp INTEGER"                       //7
+                + "category INTEGER"                        //8
                 + ");");
         db.execSQL("DROP TABLE IF EXISTS history");
         db.execSQL("CREATE TABLE history ("
@@ -98,6 +98,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                         + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
                         + "chapters INTEGER"
                         + ");");
+            case 9:
+                db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
                 break;
             default: {
                 onCreate(db);
