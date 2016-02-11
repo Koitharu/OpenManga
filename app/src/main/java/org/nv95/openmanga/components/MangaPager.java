@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import org.nv95.openmanga.PagerReaderAdapter;
+import org.nv95.openmanga.adapters.PagerReaderAdapter;
 import org.nv95.openmanga.items.MangaPage;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;

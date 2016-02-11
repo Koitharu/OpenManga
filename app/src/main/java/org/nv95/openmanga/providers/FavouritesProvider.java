@@ -24,7 +24,9 @@ import java.util.Date;
  */
 public class FavouritesProvider extends MangaProvider {
     private static final String TABLE_NAME = "favourites";
-    protected static boolean features[] = {false, false, true, false, false};
+    private static boolean features[] = {false, false, true, true, false};
+    private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
+    private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
     StorageHelper dbHelper;
     private Context context;
@@ -71,11 +73,11 @@ public class FavouritesProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, "timestamp");
+            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    list.add(0, manga);
+                    list.add(manga);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -148,5 +150,10 @@ public class FavouritesProvider extends MangaProvider {
         res = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null).getCount() > 0;
         database.close();
         return res;
+    }
+
+    @Override
+    public String[] getSortTitles(Context context) {
+        return super.getTitles(context, sorts);
     }
 }
