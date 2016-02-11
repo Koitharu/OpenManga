@@ -184,4 +184,9 @@
     <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
     <string name="cancelled">Отменено</string>
     <string name="import_complete">Завершено</string>
+    <string name="action_category">Раздел</string>
+    <string name="category_no">Без метки</string>
+    <string name="favourites_categories">Разделы избранного</string>
+    <string name="favourites_categories_default">В процессе, Прочесть позже</string>
+    <string name="favourites_categories_description">Введите названия, разделяя их запятой</string>
 </resources>
