@@ -129,7 +129,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
@@ -139,11 +139,14 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                         item.setTitle(R.string.action_favourite);
                     }
                 } else {
-                    if (favouritesProvider.add(mangaSummary)) {
-                        UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
-                        item.setIcon(R.drawable.ic_favorite_light);
-                        item.setTitle(R.string.action_unfavourite);
-                    }
+                    FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UpdatesChecker.rememberChaptersCount(MangaPreviewActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            item.setIcon(R.drawable.ic_favorite_light);
+                            item.setTitle(R.string.action_unfavourite);
+                        }
+                    }, mangaSummary);
                 }
                 return true;
             case R.id.action_save:

@@ -206,4 +206,8 @@
     <string name="import_progress" formatted="false">Pages imported: %d from %d</string>
     <string name="cancelled">Cancelled</string>
     <string name="import_complete">Importing completed</string>
+    <string name="favourites_categories_default">Reading now, Read later</string>
+    <string name="favourites_categories">Favourites categories</string>
+    <string name="favourites_categories_description">Enter splitted by \',\'</string>
+    <string name="category_no">No category</string>
 </resources>

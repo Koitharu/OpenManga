@@ -317,7 +317,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -340,11 +340,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         item.setTitle(R.string.action_unfavourite);
                     }
                 } else {
-                    if (favouritesProvider.add(mangaSummary)) {
-                        UpdatesChecker.rememberChaptersCount(this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
-                        item.setIcon(R.drawable.ic_favorite_dark);
-                        item.setTitle(R.string.action_favourite);
-                    }
+                    FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UpdatesChecker.rememberChaptersCount(ReadActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            item.setIcon(R.drawable.ic_favorite_dark);
+                            item.setTitle(R.string.action_unfavourite);
+                        }
+                    }, mangaSummary);
                 }
                 return true;
             case R.id.action_share:

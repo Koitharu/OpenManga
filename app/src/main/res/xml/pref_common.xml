@@ -23,6 +23,11 @@
         android:summary="@string/prefer_qsearch_summ"
         android:title="@string/prefer_qsearch"
         android:widgetLayout="@layout/pref_switchcompat" />
+    <EditTextPreference
+        android:key="fav.categories"
+        android:title="@string/favourites_categories"
+        android:dialogMessage="@string/favourites_categories_description"
+        android:defaultValue="@string/favourites_categories_default" />
     <PreferenceCategory android:title="@string/data">
         <Preference
             android:key="mangadir"
