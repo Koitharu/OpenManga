@@ -18,6 +18,20 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
+    <style name="FlatMenuButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="FlatMenuButton.Horizontal" >
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:gravity">center_vertical|start|right</item>
+    </style>
+
     <style name="MaterialDialogSheet" parent="Base.Theme.AppCompat.Light.Dialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

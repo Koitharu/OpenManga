@@ -12,6 +12,7 @@ import android.widget.Spinner;
 /**
  * Created by nv95 on 10.10.15.
  */
+@Deprecated
 public class ReaderOptionsDialog implements DialogInterface.OnClickListener {
     protected AlertDialog dialog;
     protected OnOptionsChangedListener optionsChangedListener;

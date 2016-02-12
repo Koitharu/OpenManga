@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -24,8 +23,6 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
-import com.cocosw.bottomsheet.BottomSheet;
 
 import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.SimpleAnimator;
@@ -48,7 +45,7 @@ import java.util.ArrayList;
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener,
-        NavigationDialog.NavigationListener, MangaPager.OverScrollListener, MenuItem.OnMenuItemClickListener {
+        NavigationDialog.NavigationListener, MangaPager.OverScrollListener {
     //views
     private MangaPager mPager;
     private ImageView mOversrollImageView;
@@ -97,7 +94,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return onMenuItemClick(item) || super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -110,31 +110,77 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageView_menu:
-                BottomSheet sheet =
-                        new BottomSheet.Builder(this)
-                                .sheet(R.menu.reader)
-                                .listener(this)
-                                .title(mangaSummary.getChapters().getNames()[chapterId] +
-                                        " (" + mPager.getCurrentPageIndex() + "/" + mPager.getCount() + ")")
-                                .build();
-                if (FavouritesProvider.Has(this, mangaSummary)) {
-                    MenuItem item = sheet.getMenu().findItem(R.id.action_favourite);
-                    item.setIcon(R.drawable.ic_favorite_dark);
-                    item.setTitle(R.string.action_unfavourite);
+                int favId = FavouritesProvider.getInstacne(this)
+                        .getCategory(mangaSummary);
+                String fav;
+                switch (favId) {
+                    case -1:
+                        fav = null;
+                        break;
+                    case 0:
+                        fav = getString(R.string.category_no);
+                        break;
+                    default:
+                        String[] titles = FavouritesProvider.getInstacne(this)
+                                .getGenresTitles(this);
+                        fav = (titles != null && favId < titles.length) ?
+                                titles[favId] : getString(R.string.category_no);
+                        break;
                 }
-                sheet.show();
+                new ReaderMenuDialog(this)
+                        .callback(this)
+                        .favourites(fav)
+                        .chapter(mangaSummary.getChapters().get(chapterId).name)
+                        .title(mangaSummary.name)
+                        .show();
+                break;
+            case R.id.button_save:
+                if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {
+                    SaveService.SaveWithDialog(this, mangaSummary);
+                } else {
+                    Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.button_fav:
+                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
+                if (favouritesProvider.has(mangaSummary)) {
+                    if (favouritesProvider.remove(mangaSummary)) {
+                        Snackbar.make(mPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+                    }
+                } else {
+                    FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UpdatesChecker.rememberChaptersCount(ReadActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+
+                        }
+                    }, mangaSummary);
+                }
+                break;
+            case R.id.button_share:
+                new ContentShareHelper(this).share(mangaSummary);
+                break;
+            case R.id.button_img:
+                new SaveImageTask()
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mPager.getCurrentPage());
+                break;
+            case R.id.block_title:
+                showChaptersList();
+                break;
+            case R.id.imageButton_goto:
+                new NavigationDialog(this, mPager.getCount(), mPager.getCurrentPageIndex())
+                        .setNavigationListener(this).show();
                 break;
         }
     }
 
-    private void SaveImage(File file) {
+    private void SaveImage(final File file) {
         File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
         try {
             LocalMangaProvider.CopyFile(file, dest);
@@ -146,7 +192,18 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             //....
                         }
                     });
-            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.action_share, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent shareIntent = new Intent();
+                            shareIntent.setAction(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                            shareIntent.setType("image/*");
+                            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+                        }
+                    })
+                    .show();
         } catch (IOException e) {
             Snackbar.make(mPager, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
         }
@@ -316,83 +373,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         builder.create().show();
     }
 
-    @Override
-    public boolean onMenuItemClick(final MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_chapters:
-                showChaptersList();
-                return true;
-            case R.id.action_readprefs:
-                new ReaderOptionsDialog(this).setOptionsChangedListener(this).show();
-                return true;
-            case R.id.action_goto:
-                new NavigationDialog(this, mPager.getCount(), mPager.getCurrentPageIndex())
-                        .setNavigationListener(this).show();
-                return true;
-            case R.id.action_favourite:
-                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
-                if (favouritesProvider.has(mangaSummary)) {
-                    if (favouritesProvider.remove(mangaSummary)) {
-                        item.setIcon(R.drawable.ic_favorite_outline_dark);
-                        item.setTitle(R.string.action_unfavourite);
-                    }
-                } else {
-                    FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            UpdatesChecker.rememberChaptersCount(ReadActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
-                            item.setIcon(R.drawable.ic_favorite_dark);
-                            item.setTitle(R.string.action_unfavourite);
-                        }
-                    }, mangaSummary);
-                }
-                return true;
-            case R.id.action_share:
-                new ContentShareHelper(this).share(mangaSummary);
-                return true;
-            case R.id.action_save:
-                if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {
-                    SaveService.SaveWithDialog(this, mangaSummary);
-                } else {
-                    Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
-                }
-                return true;
-            case R.id.action_img_save:
-                new GetImageTask() {
-                    @Override
-                    protected void onFileReady(@Nullable File file) {
-                        if (file != null) {
-                            SaveImage(file);
-                        } else {
-                            Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mPager.getCurrentPage());
-                return true;
-            case R.id.action_img_share:
-                new GetImageTask() {
-                    @Override
-                    protected void onFileReady(@Nullable File file) {
-                        if (file != null) {
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                            shareIntent.setType("image/*");
-                            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
-                        } else {
-                            Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mPager.getCurrentPage());
-                return true;
-            default:
-                return false;
-        }
-    }
-
     private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
         private ProgressDialog progressDialog;
 
@@ -451,10 +431,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private abstract class GetImageTask extends AsyncTask<MangaPage, Void, File> implements DialogInterface.OnCancelListener {
+    private class SaveImageTask extends AsyncTask<MangaPage, Void, File> implements DialogInterface.OnCancelListener {
         private final ProgressDialog mProgressDialog;
 
-        public GetImageTask() {
+        public SaveImageTask() {
             mProgressDialog = new ProgressDialog(ReadActivity.this);
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setCancelable(true);
@@ -494,10 +474,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
             mProgressDialog.dismiss();
-            onFileReady(file);
-        }
+            if (file != null) {
+                SaveImage(file);
+            } else {
+                Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
+            }
 
-        protected abstract void onFileReady(@Nullable File file);
+        }
 
         @Override
         public void onCancel(DialogInterface dialog) {

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/block_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:background="?selectableItemBackground"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="Medium Text"
+                    android:id="@+id/textView_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:text="Small Text"
+                    android:id="@+id/textView_subtitle" />
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minWidth="42dp"
+                android:id="@+id/imageButton_goto"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/ic_swap_horiz_dark" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/action_favourite"
+            style="@style/FlatMenuButton.Horizontal"
+            android:id="@+id/button_fav"
+            android:drawableStart="@drawable/ic_favorite_outline_dark"
+            android:drawableLeft="@drawable/ic_favorite_outline_dark" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_save"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_save"
+                android:drawableStart="@drawable/ic_save_dark"
+                android:drawableLeft="@drawable/ic_save_dark"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_share"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_share"
+                android:drawableStart="@drawable/ic_share_dark"
+                android:drawableLeft="@drawable/ic_share_dark"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_image"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_img"
+                android:drawableStart="@drawable/ic_image_dark"
+                android:drawableLeft="@drawable/ic_image_dark"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_options"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_opt"
+                android:drawableStart="@drawable/ic_settings_dark"
+                android:drawableLeft="@drawable/ic_settings_dark"
+                android:drawableEnd="@drawable/ic_drop_down_dark"
+                android:drawableRight="@drawable/ic_drop_down_dark"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/block_options"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/view"
+                android:text="@string/adjust_brightness" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBar2" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -63,6 +63,7 @@ public class FavouritesProvider extends MangaProvider {
         return FavouritesProvider.getInstacne(context).remove(mangaInfo);
     }
 
+    @Deprecated
     public static boolean Has(Context context, MangaInfo mangaInfo) {
         return FavouritesProvider.getInstacne(context).has(mangaInfo);
     }
@@ -160,11 +161,34 @@ public class FavouritesProvider extends MangaProvider {
         return true;
     }
 
+
+    @Deprecated
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         res = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null).getCount() > 0;
         database.close();
+        return res;
+    }
+
+    public int getCategory(MangaInfo mangaInfo) {
+        int res = -1;
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = dbHelper.getWritableDatabase();
+            cursor = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);
+            if (cursor.moveToFirst()) {
+                res = cursor.getInt(cursor.getColumnIndex("category"));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
         return res;
     }
 
@@ -189,6 +213,7 @@ public class FavouritesProvider extends MangaProvider {
                         .getString("fav.categories", context.getString(R.string.favourites_categories_default)))
                 .replaceAll(", ", ",").split(",");
         new AlertDialog.Builder(context)
+                .setTitle(R.string.action_favourite)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setCancelable(true)
                 .setSingleChoiceItems(categories, 0, new DialogInterface.OnClickListener() {
