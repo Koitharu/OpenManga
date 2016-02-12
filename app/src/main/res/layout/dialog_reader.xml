@@ -140,7 +140,7 @@
             android:id="@+id/block_options"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -167,15 +167,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/switch_brightness"
-                android:visibility="gone"
                 android:text="@string/adjust_brightness" />
 
-            <android.support.v7.widget.AppCompatSeekBar
-                android:enabled="false"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:id="@+id/seekBar_brightness" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_brightness_darker" />
+
+                <android.support.v7.widget.AppCompatSeekBar
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seekBar_brightness"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
 
             <android.support.v7.widget.SwitchCompat
                 android:minHeight="?android:listPreferredItemHeightSmall"

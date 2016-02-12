@@ -7,18 +7,22 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.nv95.openmanga.utils.BrightnessHelper;
 
 /**
  * Created by nv95 on 12.02.16.
  */
-public class ReaderMenuDialog implements View.OnClickListener {
+public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     private final Dialog mDialog;
     private final TextView mTextViewTitle;
     private final TextView mTextViewSubtitle;
@@ -35,9 +39,12 @@ public class ReaderMenuDialog implements View.OnClickListener {
     private final SwitchCompat mSwitchBrightness;
     private final SwitchCompat mSwitchKeepscreen;
     private final SwitchCompat mSwitchScrollvolume;
+    private final AppCompatSeekBar mSeekBarBrightness;
     private final AppCompatSpinner mSpinnerDirection;
     @Nullable
     private View.OnClickListener mCallback;
+    @Nullable
+    private BrightnessHelper mBrightnessHelper;
 
     @SuppressLint("InflateParams")
     public ReaderMenuDialog(Context context) {
@@ -68,6 +75,11 @@ public class ReaderMenuDialog implements View.OnClickListener {
         mSwitchKeepscreen.setChecked(prefs.getBoolean("keep_screen", true));
         mSwitchBrightness = (SwitchCompat) view.findViewById(R.id.switch_brightness);
         mSwitchBrightness.setChecked(prefs.getBoolean("brightness", false));
+        mSwitchBrightness.setOnClickListener(this);
+        mSeekBarBrightness = (AppCompatSeekBar) view.findViewById(R.id.seekBar_brightness);
+        mSeekBarBrightness.setProgress(prefs.getInt("brightness_value", 20));
+        mSeekBarBrightness.setEnabled(mSwitchBrightness.isChecked());
+        mSeekBarBrightness.setOnSeekBarChangeListener(this);
         mSpinnerDirection = (AppCompatSpinner) view.findViewById(R.id.spinner_direction);
         mSpinnerDirection.setSelection(Integer.parseInt(prefs.getString("direction","0")));
         mOptionsBlock = view.findViewById(R.id.block_options);
@@ -111,6 +123,11 @@ public class ReaderMenuDialog implements View.OnClickListener {
         return this;
     }
 
+    public ReaderMenuDialog brightnessHelper(BrightnessHelper helper) {
+        mBrightnessHelper = helper;
+        return this;
+    }
+
     public void show() {
         mDialog.show();
     }
@@ -131,11 +148,26 @@ public class ReaderMenuDialog implements View.OnClickListener {
                     );
                 }
                 break;
+            case R.id.switch_brightness:
+                if (mSwitchBrightness.isChecked()) {
+                    mSeekBarBrightness.setEnabled(true);
+                    if (mBrightnessHelper != null) {
+                        mBrightnessHelper.setBrightness(mSeekBarBrightness.getProgress());
+                    }
+                } else {
+                    mSeekBarBrightness.setEnabled(false);
+                    if (mBrightnessHelper != null) {
+                        mBrightnessHelper.reset();
+                    }
+                }
+                break;
             case R.id.button_positive:
                 PreferenceManager.getDefaultSharedPreferences(v.getContext()).edit()
                         .putString("direction", String.valueOf(mSpinnerDirection.getSelectedItemPosition()))
                         .putBoolean("keep_screen", mSwitchKeepscreen.isChecked())
                         .putBoolean("volkeyscroll", mSwitchScrollvolume.isChecked())
+                        .putBoolean("brightness", mSwitchBrightness.isChecked())
+                        .putInt("brightness_value", mSeekBarBrightness.getProgress())
                         .commit();
             default:
                 if (mCallback != null) {
@@ -143,5 +175,22 @@ public class ReaderMenuDialog implements View.OnClickListener {
                 }
                 mDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (mBrightnessHelper != null) {
+            mBrightnessHelper.setBrightness(progress);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

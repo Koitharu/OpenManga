@@ -214,4 +214,5 @@
     <string name="adjust_brightness">Adjust brightness</string>
     <string name="unfavourited">Removed from favourites</string>
     <string name="apply">Apply</string>
+    <string name="brightness_value">Brightness value</string>
 </resources>
