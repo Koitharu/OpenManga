@@ -211,4 +211,8 @@
     <string name="favourites_categories_description">Enter splitted by \',\'</string>
     <string name="category_no">No category</string>
     <string name="action_category">Category</string>
+    <string name="save_image">Save image</string>
+    <string name="action_options">Options</string>
+    <string name="adjust_brightness">Adjust brightness</string>
+    <string name="unfavourited">Removed from favourites</string>
 </resources>
