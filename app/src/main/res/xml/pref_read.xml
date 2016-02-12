@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         android:title="@string/scrolling_direction"
         android:key="direction"
@@ -16,4 +17,18 @@
         android:key="volkeyscroll"
         android:title="@string/scroll_by_volkeys"
         android:widgetLayout="@layout/pref_switchcompat" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="brightness"
+        android:title="@string/adjust_brightness"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <org.nv95.openmanga.components.SeekBarPreference
+        android:dependency="brightness"
+        android:title="@string/brightness_value"
+        android:key="brightness_value"
+        app:iconDrawable="@drawable/ic_brightness_darker"
+        app:currentValue="20"
+        app:max="100" />
+
 </PreferenceScreen>

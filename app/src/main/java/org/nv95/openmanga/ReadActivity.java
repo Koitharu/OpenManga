@@ -33,6 +33,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.utils.BrightnessHelper;
 import org.nv95.openmanga.utils.ContentShareHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
@@ -56,11 +57,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private int pageId;
     private boolean scrollWithVolkeys = false;
     private int overscrollSize;
+    private BrightnessHelper mBrightnessHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
+        mBrightnessHelper = new BrightnessHelper(getWindow());
         mPager = (MangaPager) findViewById(R.id.pager);
         mOversrollImageView = (ImageView) findViewById(R.id.imageViewOverscroll);
         findViewById(R.id.imageView_menu).setOnClickListener(this);
@@ -136,6 +139,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new ReaderMenuDialog(this)
                         .callback(this)
                         .favourites(fav)
+                        .brightnessHelper(mBrightnessHelper)
                         .progress(
                                 mPager.getCurrentPageIndex(),
                                 mPager.getCount()
@@ -280,6 +284,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
         scrollWithVolkeys = prefs.getBoolean("volkeyscroll", false);
+        if (prefs.getBoolean("brightness", false)) {
+            mBrightnessHelper.setBrightness(prefs.getInt("brightness_value", 20));
+        } else {
+            mBrightnessHelper.reset();
+        }
+
     }
 
     @Override
