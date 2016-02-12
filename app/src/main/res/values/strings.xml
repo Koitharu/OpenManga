@@ -56,8 +56,6 @@
     <string name="action_histclear">Clear history</string>
     <string name="history_will_cleared">History will be erased</string>
     <string name="file_not_found">File not found</string>
-    <string name="save_to_gallery">Save to gallery</string>
-    <string name="share_image">Share image</string>
     <string name="error">An error has occurred</string>
     <string name="manga_delete_confirm">This manga will be deleted from local storage</string>
     <string name="saving_cancelled">Saving was cancelled</string>
@@ -194,7 +192,6 @@
     <string name="open_on_start">Open on start</string>
     <string name="nothing_selected">Nothing selected</string>
     <string name="view_mode">View mode</string>
-    <string name="quit">Quit</string>
     <string name="sort_alphabetical">Alphabetical</string>
     <string name="genre_adult">Adult</string>
     <string name="genre_mature">Mature</string>
