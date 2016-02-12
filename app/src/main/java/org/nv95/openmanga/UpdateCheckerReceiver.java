@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import org.nv95.openmanga.utils.ChaptersSyncService;
-
 /**
  * Created by nv95 on 19.12.15.
  */

@@ -15,6 +15,8 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 
 import java.io.BufferedReader;
@@ -28,11 +30,11 @@ import java.io.OutputStreamWriter;
 /**
  * Created by nv95 on 14.01.16.
  */
-public class BackupHelper {
+public class BackupRestoreUtil {
     public static final int BACKUP_IMPORT_CODE = 72;
     private final Context context;
 
-    public BackupHelper(Context context) {
+    public BackupRestoreUtil(Context context) {
         this.context = context;
     }
 
@@ -56,7 +58,7 @@ public class BackupHelper {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (checked[0] || checked[1]) {
-                            new BackupHelper(context).backup(checked);
+                            new BackupRestoreUtil(context).backup(checked);
                         } else {
                             Toast.makeText(context, R.string.nothing_selected, Toast.LENGTH_SHORT).show();
                         }
@@ -83,7 +85,7 @@ public class BackupHelper {
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new BackupHelper(context).restore(files[which]);
+                        new BackupRestoreUtil(context).restore(files[which]);
                     }
                 })
                 .setTitle(R.string.select_backup)
@@ -154,7 +156,7 @@ public class BackupHelper {
                 return null;
             }
             if (dir.exists()) {
-                new FileRemover(dir).run();
+                new DirRemoveHelper(dir).run();
             }
             dir.mkdir();
             File file;
@@ -192,7 +194,7 @@ public class BackupHelper {
             } catch (IOException e) {
                 file = null;
             }
-            new FileRemover(dir).run();
+            new DirRemoveHelper(dir).run();
             return file;
         }
 
@@ -270,7 +272,7 @@ public class BackupHelper {
                 return null;
             }
             if (dir.exists()) {
-                new FileRemover(dir).run();
+                new DirRemoveHelper(dir).run();
             }
             dir.mkdir();
             File file = new File(dir, "backup.zip");
@@ -280,7 +282,7 @@ public class BackupHelper {
                 return false;
             }
             if (ZipBuilder.unzipFiles(file, dir) == null) {
-                new FileRemover(dir).run();
+                new DirRemoveHelper(dir).run();
                 return null;
             }
             StorageHelper storageHelper = new StorageHelper(context);
@@ -312,7 +314,7 @@ public class BackupHelper {
                 }
             }
             storageHelper.close();
-            new FileRemover(dir).run();
+            new DirRemoveHelper(dir).run();
             return errors == 0;
         }
 

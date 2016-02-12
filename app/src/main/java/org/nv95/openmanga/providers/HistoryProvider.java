@@ -12,7 +12,7 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,8 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.nv95.openmanga.utils.ChaptersSyncService;
-
 /**
  * Created by nv95 on 19.12.15.
  */

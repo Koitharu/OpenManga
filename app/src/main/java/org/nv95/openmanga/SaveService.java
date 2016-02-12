@@ -25,8 +25,8 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
-import org.nv95.openmanga.utils.FileRemover;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -274,7 +274,7 @@ public class SaveService extends Service {
                         publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100 + k * 100 / pages.size(), summary.name + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     }
                     if (isCancelled()) {
-                        new FileRemover(chapt).run();
+                        new DirRemoveHelper(chapt).run();
                         break;
                     } else {
                         cv = new ContentValues();

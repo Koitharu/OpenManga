@@ -44,10 +44,10 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
-import org.nv95.openmanga.utils.ContentShareHelper;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.utils.UndoHelper;
+import org.nv95.openmanga.helpers.UndoHelper;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,

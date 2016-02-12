@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 
 /**
  * Created by nv95 on 02.01.16.

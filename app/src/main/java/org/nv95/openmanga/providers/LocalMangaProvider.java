@@ -13,9 +13,9 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.FileRemover;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -226,7 +226,7 @@ public class LocalMangaProvider extends MangaProvider {
             cursor1.close();
             database.delete(TABLE_CHAPTERS, "mangaId=" + mangaId, null);
             database.delete(TABLE_STORAGE, "id=" + id, null);
-            new FileRemover(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId))).runAsync();
+            new DirRemoveHelper(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId))).runAsync();
         }
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
