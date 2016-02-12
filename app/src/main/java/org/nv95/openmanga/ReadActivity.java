@@ -44,8 +44,8 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, ReaderOptionsDialog.OnOptionsChangedListener,
-        NavigationDialog.NavigationListener, MangaPager.OverScrollListener {
+        ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
+        MangaPager.OverScrollListener {
     //views
     private MangaPager mPager;
     private ImageView mOversrollImageView;
@@ -136,6 +136,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new ReaderMenuDialog(this)
                         .callback(this)
                         .favourites(fav)
+                        .progress(
+                                mPager.getCurrentPageIndex(),
+                                mPager.getCount()
+                        )
                         .chapter(mangaSummary.getChapters().get(chapterId).name)
                         .title(mangaSummary.name)
                         .show();
@@ -177,6 +181,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new NavigationDialog(this, mPager.getCount(), mPager.getCurrentPageIndex())
                         .setNavigationListener(this).show();
                 break;
+            case R.id.button_positive:
+                onOptionsChanged();
+                break;
         }
     }
 
@@ -192,7 +199,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             //....
                         }
                     });
-            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_SHORT)
+            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.action_share, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -262,11 +269,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
     public void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mPager.setReverse(prefs.getInt("scroll_direction", 0) > 1);
-        mPager.setVertical(prefs.getInt("scroll_direction", 0) == 1);
+        int direction = Integer.parseInt(prefs.getString("direction", "0"));
+        mPager.setReverse(direction > 1);
+        mPager.setVertical(direction == 1);
         if (prefs.getBoolean("keep_screen", false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {

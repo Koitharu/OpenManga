@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="6dp"
@@ -12,10 +13,14 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingLeft="6dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:ignore="RtlSymmetry">
 
             <LinearLayout
+                android:layout_marginTop="4dp"
                 android:orientation="vertical"
                 android:id="@+id/block_title"
                 android:layout_width="0dp"
@@ -29,23 +34,35 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Medium Text"
+                    android:maxLines="1"
                     android:id="@+id/textView_title" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:text="Small Text"
+                    android:text="SmallText"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_drop_down_dark"
+                    android:drawableRight="@drawable/ic_drop_down_dark"
+                    android:maxLines="2"
                     android:id="@+id/textView_subtitle" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:indeterminate="false" />
             </LinearLayout>
 
-            <ImageButton
+            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:minWidth="42dp"
+                android:layout_height="wrap_content"
+                style="@style/FlatMenuButton"
                 android:id="@+id/imageButton_goto"
-                android:background="?selectableItemBackground"
-                android:src="@drawable/ic_swap_horiz_dark" />
+                android:text="0/0"
+                android:drawableTop="@drawable/ic_swap_horiz_dark" />
 
         </LinearLayout>
 
@@ -121,6 +138,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/block_options"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:visibility="gone">
 
             <ImageView
@@ -130,16 +149,58 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp" />
 
-            <Switch
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/view"
-                android:text="@string/adjust_brightness" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/scrolling_direction" />
 
-            <SeekBar
+            <android.support.v7.widget.AppCompatSpinner
+                android:minHeight="?android:listPreferredItemHeightSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/seekBar2" />
+                android:id="@+id/spinner_direction"
+                android:entries="@array/directions" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_brightness"
+                android:visibility="gone"
+                android:text="@string/adjust_brightness" />
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:enabled="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/seekBar_brightness" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/keep_screen"
+                android:id="@+id/switch_keepscreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/scroll_by_volkeys"
+                android:id="@+id/switch_volkeyscroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+
+            <Button
+                style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/apply"
+                android:id="@+id/button_positive"
+                android:layout_gravity="end|right" />
         </LinearLayout>
 
     </LinearLayout>

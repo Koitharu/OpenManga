@@ -58,7 +58,10 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "readeropt":
-                new ReaderOptionsDialog(this).show();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content, new ReadSettingsFragment())
+                        .addToBackStack("main")
+                        .commit();
                 return true;
             case "srcselect":
                 startActivity(new Intent(this, ProviderSelectActivity.class));
@@ -133,6 +136,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             Activity activity = getActivity();
+            activity.setTitle(R.string.action_settings);
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -199,6 +203,22 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                     }
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    public static class ReadSettingsFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_read);
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            Activity activity = getActivity();
+            activity.setTitle(R.string.action_reading_options);
+            bindPreferenceSummary((ListPreference) findPreference("direction"));
         }
     }
 

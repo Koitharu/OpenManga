@@ -156,18 +156,13 @@
     <string name="select_backup">Выберите резервную копию</string>
     <string name="import_file">Импорт</string>
     <string name="export_file">Экспрот</string>
-
-    <string-array name="directions">
-        <item>Слева направо</item>
-        <item>Сверху вниз</item>
-        <item>Справа налево</item>
-    </string-array>
-    <string-array name="intervals">
-        <item>Каждые 4 часа</item>
-        <item>Дважды в день</item>
-        <item>Ежедневно</item>
-        <item>Раз в 2 дня</item>
-    </string-array>
+    <string name="direction_ltr">Слева направо</string>
+    <string name="direction_ttb">Сверху вниз</string>
+    <string name="direction_rtl">Справа налево</string>
+    <string name="interval_4hours">Каждые 4 часа</string>
+    <string name="interval_twice_day">Дважды в день</string>
+    <string name="interval_once_day">Каждый день</string>
+    <string name="interval_two_days">Каждые два дня</string>
     <string name="open_on_start">Открывать при запуске</string>
     <string name="reset">Сброс</string>
     <string name="nothing_selected">Ничего не выбрано</string>

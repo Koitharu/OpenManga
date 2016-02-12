@@ -29,4 +29,20 @@
         <item>@string/view_mode_grid_medium</item>
         <item>@string/view_mode_grid_large</item>
     </string-array>
+    <string-array name="directions_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="directions">
+        <item>@string/direction_ltr</item>
+        <item>@string/direction_ttb</item>
+        <item>@string/direction_rtl</item>
+    </string-array>
+    <string-array name="intervals">
+        <item>@string/interval_4hours</item>
+        <item>@string/interval_twice_day</item>
+        <item>@string/interval_once_day</item>
+        <item>@string/interval_two_days</item>
+    </string-array>
 </resources>
