@@ -35,6 +35,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.ThumbSize;
@@ -44,10 +45,8 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
-import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.helpers.UndoHelper;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
@@ -438,10 +437,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        /*if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
+                        if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
                             mListLoader.removeItem(position);
-                        }*/
-                        new RemoveHelper(position).remove();
+                        }
+                        //new RemoveHelper(position).remove();
                         return true;
                     case R.id.action_share:
                         new ContentShareHelper(MainActivity.this).share(mangaInfo);
@@ -542,12 +541,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    private class RemoveHelper extends UndoHelper {
+    /*private class RemoveHelper extends UndoHelper {
         private final MangaInfo mManga;
         private final int mPosition;
 
         public RemoveHelper(int position) {
-            super(true);
+            super(false);
             mPosition = position;
             mManga = mListLoader.getAdapter().getItem(position);
         }
@@ -566,5 +565,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         public void run() {
             mProvider.remove(new long[]{mManga.hashCode()});
         }
-    }
+    }*/
 }
