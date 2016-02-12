@@ -65,6 +65,7 @@ public class MangaInfo {
         return bundle;
     }
 
+    @Deprecated
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
         cv.put("id", path.hashCode());

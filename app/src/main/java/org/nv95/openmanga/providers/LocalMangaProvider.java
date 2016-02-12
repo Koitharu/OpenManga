@@ -38,7 +38,7 @@ public class LocalMangaProvider extends MangaProvider {
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);
     private final Context context;
-    StorageHelper dbHelper;
+    private final StorageHelper dbHelper;
 
     @Deprecated
     public LocalMangaProvider(Context context) {

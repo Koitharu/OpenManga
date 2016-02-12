@@ -4,11 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -19,14 +17,12 @@ import android.util.SparseArray;
 import android.widget.Toast;
 
 import org.nv95.openmanga.components.BottomSheetDialog;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
-import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
-import org.nv95.openmanga.helpers.DirRemoveHelper;
-import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -220,14 +215,13 @@ public class SaveService extends Service {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            StorageHelper dbHelper = new StorageHelper(SaveService.this);
-            SQLiteDatabase database = dbHelper.getWritableDatabase();
+            MangaSaveHelper mangaSaveHelper = new MangaSaveHelper(SaveService.this);
+
             MangaSummary summary;
-            File dest;
             MangaProvider provider;
-            ContentValues cv;
-            int mangaId;
-            int chapterId;
+            MangaSaveHelper.MangaSaveBuilder mangaSaveBuilder;
+            MangaSaveHelper.MangaSaveBuilder.ChapterSaveBuilder chapterSaveBuilder;
+
             while (!queue.isEmpty()) {
                 summary = queue.poll();
                 publishProgress();
@@ -239,56 +233,45 @@ public class SaveService extends Service {
                     ErrorReporter.getInstance().report(e);
                     continue;
                 }
-                dest = new File(LocalMangaProvider.getMangaDir(SaveService.this), String.valueOf(mangaId = summary.getReadLink().hashCode()));
-                dest.mkdirs();
-                summary.preview = downloadFile(summary.preview, dest);
-                //loading lists
-
-                summary.path = String.valueOf(mangaId);
-                cv = summary.toContentValues();
-                cv.put("description", summary.description);
-                cv.put("timestamp", new Date().getTime());
-                database.insert(LocalMangaProvider.TABLE_STORAGE, null, cv);
-                File chapt; //dir for chapter
+                summary.path = String.valueOf(summary.readLink.hashCode());
+                mangaSaveBuilder = mangaSaveHelper.newManga(summary.path.hashCode())
+                        .name(summary.name)
+                        .description(summary.description)
+                        .provider(summary.provider)
+                        .downloadPreview(summary.preview)
+                        .now();
                 ArrayList<MangaPage> pages;
                 int i = 0;
                 for (MangaChapter o : summary.getChapters()) {
                     publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100, summary.name + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
-                    chapt = new File(dest, String.valueOf(o.readLink.hashCode()));
-                    chapt.mkdir();
-
-                    chapterId = o.readLink.hashCode();
+                    chapterSaveBuilder = mangaSaveBuilder.newChapter(o.readLink.hashCode());
 
                     pages = provider.getPages(o.readLink);
                     int k = 0;
                     for (MangaPage o1 : pages) {
-                        cv = new ContentValues();
-                        cv.put("id", o1.path.hashCode());
-                        cv.put("chapterId", chapterId);
-                        cv.put("path", downloadFile(provider.getPageImage(o1), chapt));
+                        chapterSaveBuilder.newPage(o1.path.hashCode())
+                                .downloadPage(provider.getPageImage(o1))
+                                .commit();
                         if (isCancelled()) {
                             break;
                         }
-                        database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
                         k++;
                         publishProgress(new ProgressInfo(summary.chapters.size() * 100, i * 100 + k * 100 / pages.size(), summary.name + " [" + i + "/" + summary.chapters.size() + "]", ProgressInfo.STATE_PROGRESS));
                     }
                     if (isCancelled()) {
-                        new DirRemoveHelper(chapt).run();
+                        chapterSaveBuilder.dissmiss();
                         break;
                     } else {
-                        cv = new ContentValues();
-                        cv.put("id", chapterId);
-                        cv.put("mangaId", mangaId);
-                        cv.put("name", o.name);
-                        database.insert(LocalMangaProvider.TABLE_CHAPTERS, null, cv);
+                        chapterSaveBuilder
+                                .name(o.name)
+                                .commit();
                         i++;
                     }
                 }
+                mangaSaveBuilder.commit();
             }
             publishProgress();
-            database.close();
-            dbHelper.close();
+            mangaSaveHelper.close();
             return null;
         }
 
