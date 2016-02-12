@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.util.Iterator;
 

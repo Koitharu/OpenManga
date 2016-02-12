@@ -22,7 +22,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.adapters.UpdatesAdapter;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.SerialExecutor;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.util.ArrayList;

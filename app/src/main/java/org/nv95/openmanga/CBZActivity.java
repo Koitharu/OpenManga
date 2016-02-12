@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.utils.StorageHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.utils.ZipBuilder;
 
 import java.io.File;

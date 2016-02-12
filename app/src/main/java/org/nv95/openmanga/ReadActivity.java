@@ -33,8 +33,8 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.utils.BrightnessHelper;
-import org.nv95.openmanga.utils.ContentShareHelper;
+import org.nv95.openmanga.helpers.BrightnessHelper;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.io.File;

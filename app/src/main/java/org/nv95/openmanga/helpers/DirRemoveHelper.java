@@ -13,7 +13,9 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.helpers;
+
+import org.nv95.openmanga.utils.SerialExecutor;
 
 import java.io.File;
 
@@ -21,11 +23,11 @@ import java.io.File;
  * Created by nv95 on 03.01.16.
  * Remove directory
  */
-public class FileRemover implements Runnable {
+public class DirRemoveHelper implements Runnable {
     private static final SerialExecutor EXECUTOR = new SerialExecutor();
     private final File file;
 
-    public FileRemover(File file) {
+    public DirRemoveHelper(File file) {
         this.file = file;
     }
 

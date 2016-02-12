@@ -18,9 +18,9 @@ import android.widget.Toast;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.BackupHelper;
+import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.ErrorReporter;
-import org.nv95.openmanga.utils.FileRemover;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
 
 import java.io.File;
 
@@ -77,10 +77,10 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case "backup":
-                BackupHelper.showBackupDialog(this);
+                BackupRestoreUtil.showBackupDialog(this);
                 return true;
             case "restore":
-                BackupHelper.showRestoreDialog(this);
+                BackupRestoreUtil.showRestoreDialog(this);
                 return true;
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -93,11 +93,11 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case BackupHelper.BACKUP_IMPORT_CODE:
+            case BackupRestoreUtil.BACKUP_IMPORT_CODE:
                 if (resultCode == RESULT_OK) {
                     File file = AppHelper.getFileFromUri(this, data.getData());
                     if (file != null) {
-                        new BackupHelper(this).restore(file);
+                        new BackupRestoreUtil(this).restore(file);
                     } else {
                         Toast.makeText(this, R.string.error, Toast.LENGTH_SHORT).show();
                     }
@@ -238,7 +238,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
         @Override
         protected Void doInBackground(Void... params) {
             File dir = preference.getContext().getExternalCacheDir();
-            new FileRemover(dir).run();
+            new DirRemoveHelper(dir).run();
             return null;
         }
 

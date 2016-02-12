@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.utils.BrightnessHelper;
+import org.nv95.openmanga.helpers.BrightnessHelper;
 
 /**
  * Created by nv95 on 12.02.16.
