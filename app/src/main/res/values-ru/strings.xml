@@ -55,9 +55,7 @@
     <string name="file_not_found">Файл не найден</string>
     <string name="history_will_cleared">История будет очищена</string>
     <string name="manga_delete_confirm">Манга будет удалена с устройства</string>
-    <string name="save_to_gallery">Сохранить в галлерею</string>
     <string name="saving_cancelled">Сохранение отменено</string>
-    <string name="share_image">Поделиться изображением</string>
     <string name="action_clear_search_hist">Очистить историю поиска</string>
     <string name="action_sort">Сортировка</string>
     <string name="about">О программе</string>
@@ -173,7 +171,6 @@
     <string name="genre_music">Музыка</string>
     <string name="genre_parodi">Пародия</string>
     <string name="genre_postapocalipse">Постапокалиптика</string>
-    <string name="quit">Выход</string>
     <string name="select_file">Выброр файла</string>
     <string name="more">Ещё</string>
     <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
@@ -184,4 +181,11 @@
     <string name="favourites_categories">Разделы избранного</string>
     <string name="favourites_categories_default">В процессе, Прочесть позже</string>
     <string name="favourites_categories_description">Введите названия, разделяя их запятой</string>
+    <string name="adjust_brightness">Установить яркость</string>
+    <string name="action_options">Параметры</string>
+    <string name="app_name" translatable="false"></string>
+    <string name="apply">Применить</string>
+    <string name="brightness_value">Яркость экрана</string>
+    <string name="save_image">Сохранить изображение</string>
+    <string name="unfavourited">Удалено из избранного</string>
 </resources>

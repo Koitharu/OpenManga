@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingLeft="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="RtlSymmetry">
+
+            <LinearLayout
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                android:id="@+id/block_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:background="?selectableItemBackground"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="Medium Text"
+                    android:maxLines="1"
+                    android:id="@+id/textView_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:text="SmallText"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_drop_down_dark"
+                    android:drawableRight="@drawable/ic_drop_down_dark"
+                    android:maxLines="2"
+                    android:id="@+id/textView_subtitle" />
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:indeterminate="false" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/FlatMenuButton"
+                android:id="@+id/imageButton_goto"
+                android:text="0/0"
+                android:drawableTop="@drawable/ic_swap_horiz_dark" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/action_favourite"
+            style="@style/FlatMenuButton.Horizontal"
+            android:id="@+id/button_fav"
+            android:drawableStart="@drawable/ic_favorite_outline_dark"
+            android:drawableLeft="@drawable/ic_favorite_outline_dark" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_save"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_save"
+                android:drawableStart="@drawable/ic_save_dark"
+                android:drawableLeft="@drawable/ic_save_dark"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_share"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_share"
+                android:drawableStart="@drawable/ic_share_dark"
+                android:drawableLeft="@drawable/ic_share_dark"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_image"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_img"
+                android:drawableStart="@drawable/ic_image_dark"
+                android:drawableLeft="@drawable/ic_image_dark"
+                android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_options"
+                style="@style/FlatMenuButton.Horizontal"
+                android:id="@+id/button_opt"
+                android:drawableStart="@drawable/ic_settings_dark"
+                android:drawableLeft="@drawable/ic_settings_dark"
+                android:drawableEnd="@drawable/ic_drop_down_dark"
+                android:drawableRight="@drawable/ic_drop_down_dark"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/block_options"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/scrolling_direction" />
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_direction"
+                android:entries="@array/directions" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/keep_screen"
+                android:id="@+id/switch_keepscreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/scroll_by_volkeys"
+                android:id="@+id/switch_volkeyscroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_brightness"
+                android:text="@string/adjust_brightness" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_brightness_darker"
+                    android:contentDescription="@string/brightness_value" />
+
+                <android.support.v7.widget.AppCompatSeekBar
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/seekBar_brightness"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <Button
+                style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/apply"
+                android:id="@+id/button_positive"
+                android:layout_gravity="end|right" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -53,8 +53,6 @@
     <string name="action_histclear">Geçmişi temizle</string>
     <string name="history_will_cleared">Geçmiş temizlendi</string>
     <string name="file_not_found">Dosya bulunamadı</string>
-    <string name="save_to_gallery">Galeriye kaydet</string>
-    <string name="share_image">Resmi paylaş</string>
     <string name="error">Bir hata oluştu</string>
     <string name="manga_delete_confirm">Bu manga cihazınızdan silinecektir.</string>
     <string name="saving_cancelled">İndirme iptal edildi</string>
