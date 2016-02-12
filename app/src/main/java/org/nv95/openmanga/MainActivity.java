@@ -47,6 +47,7 @@ import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.utils.ContentShareHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
+import org.nv95.openmanga.utils.UndoHelper;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
@@ -437,9 +438,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
+                        /*if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
                             mListLoader.removeItem(position);
-                        }
+                        }*/
+                        new RemoveHelper(position).remove();
                         return true;
                     case R.id.action_share:
                         new ContentShareHelper(MainActivity.this).share(mangaInfo);
@@ -540,4 +542,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    private class RemoveHelper extends UndoHelper {
+        private final MangaInfo mManga;
+        private final int mPosition;
+
+        public RemoveHelper(int position) {
+            super(true);
+            mPosition = position;
+            mManga = mListLoader.getAdapter().getItem(position);
+        }
+
+        public void remove() {
+            mListLoader.removeItem(mPosition);
+            super.snackbar(mRecyclerView, R.string.manga_removed, Snackbar.LENGTH_LONG);
+        }
+
+        @Override
+        public void onUndo() {
+            mListLoader.addItem(mManga, mPosition);
+        }
+
+        @Override
+        public void run() {
+            mProvider.remove(new long[]{mManga.hashCode()});
+        }
+    }
 }

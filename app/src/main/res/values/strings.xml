@@ -212,4 +212,6 @@
     <string name="unfavourited">Removed from favourites</string>
     <string name="apply">Apply</string>
     <string name="brightness_value">Brightness value</string>
+    <string name="undo">Undo</string>
+    <string name="manga_removed">Removed</string>
 </resources>

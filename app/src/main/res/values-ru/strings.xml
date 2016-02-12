@@ -188,4 +188,6 @@
     <string name="brightness_value">Яркость экрана</string>
     <string name="save_image">Сохранить изображение</string>
     <string name="unfavourited">Удалено из избранного</string>
+    <string name="undo">Отмена</string>
+    <string name="manga_removed">Манга удалена</string>
 </resources>
