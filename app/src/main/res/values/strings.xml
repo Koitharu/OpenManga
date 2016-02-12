@@ -172,17 +172,15 @@
     <string name="export_file">Export</string>
     <string name="reset">Reset</string>
 
-    <string-array name="directions">
-        <item>Left to right</item>
-        <item>Top to bottom</item>
-        <item>Right to left</item>
-    </string-array>
-    <string-array name="intervals">
-        <item>Every 4 hours</item>
-        <item>Twice a day</item>
-        <item>Every day</item>
-        <item>Every 2 days</item>
-    </string-array>
+    <string name="direction_ltr">Left to right</string>
+    <string name="direction_ttb">Top to bottom</string>
+    <string name="direction_rtl">Right to left</string>
+
+    <string name="interval_4hours">Every 4 hours</string>
+    <string name="interval_twice_day">Twice a day</string>
+    <string name="interval_once_day">Every day</string>
+    <string name="interval_two_days">Every 2 days</string>
+
     <string name="genre_tension">Tension</string>
     <string name="genre_yetiskin">Yetişkin</string>
     <string name="genre_webtoon">Webtoon</string>
@@ -215,4 +213,5 @@
     <string name="action_options">Options</string>
     <string name="adjust_brightness">Adjust brightness</string>
     <string name="unfavourited">Removed from favourites</string>
+    <string name="apply">Apply</string>
 </resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:title="@string/scrolling_direction"
+        android:key="direction"
+        android:defaultValue="0"
+        android:entries="@array/directions"
+        android:entryValues="@array/directions_values" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="keep_screen"
+        android:title="@string/keep_screen"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="volkeyscroll"
+        android:title="@string/scroll_by_volkeys"
+        android:widgetLayout="@layout/pref_switchcompat" />
+</PreferenceScreen>

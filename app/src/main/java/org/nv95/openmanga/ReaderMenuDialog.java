@@ -3,12 +3,16 @@ package org.nv95.openmanga;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -23,9 +27,15 @@ public class ReaderMenuDialog implements View.OnClickListener {
     private final Button mButtonShare;
     private final Button mButtonOpts;
     private final Button mButtonImg;
-    private final ImageButton mImageButtonNav;
+    private final Button mButtonNav;
     private final View mOptionsBlock;
     private final View mTitleBlock;
+    private final ProgressBar mProgressBar;
+
+    private final SwitchCompat mSwitchBrightness;
+    private final SwitchCompat mSwitchKeepscreen;
+    private final SwitchCompat mSwitchScrollvolume;
+    private final AppCompatSpinner mSpinnerDirection;
     @Nullable
     private View.OnClickListener mCallback;
 
@@ -45,11 +55,23 @@ public class ReaderMenuDialog implements View.OnClickListener {
         mButtonOpts.setOnClickListener(this);
         mButtonImg = (Button) view.findViewById(R.id.button_img);
         mButtonImg.setOnClickListener(this);
-        mImageButtonNav = (ImageButton) view.findViewById(R.id.imageButton_goto);
-        mImageButtonNav.setOnClickListener(this);
+        mButtonNav = (Button) view.findViewById(R.id.imageButton_goto);
+        mButtonNav.setOnClickListener(this);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mTitleBlock = view.findViewById(R.id.block_title);
         mTitleBlock.setOnClickListener(this);
+        //preferences
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mSwitchScrollvolume = (SwitchCompat) view.findViewById(R.id.switch_volkeyscroll);
+        mSwitchScrollvolume.setChecked(prefs.getBoolean("volkeyscroll", false));
+        mSwitchKeepscreen = (SwitchCompat) view.findViewById(R.id.switch_keepscreen);
+        mSwitchKeepscreen.setChecked(prefs.getBoolean("keep_screen", true));
+        mSwitchBrightness = (SwitchCompat) view.findViewById(R.id.switch_brightness);
+        mSwitchBrightness.setChecked(prefs.getBoolean("brightness", false));
+        mSpinnerDirection = (AppCompatSpinner) view.findViewById(R.id.spinner_direction);
+        mSpinnerDirection.setSelection(Integer.parseInt(prefs.getString("direction","0")));
         mOptionsBlock = view.findViewById(R.id.block_options);
+        view.findViewById(R.id.button_positive).setOnClickListener(this);
         mDialog = new AlertDialog.Builder(context)
                 .setView(view)
                 .setCancelable(true)
@@ -81,6 +103,14 @@ public class ReaderMenuDialog implements View.OnClickListener {
         return this;
     }
 
+    @SuppressLint("SetTextI18n")
+    public ReaderMenuDialog progress(int progress, int max) {
+        mProgressBar.setMax(max);
+        mProgressBar.setProgress(progress);
+        mButtonNav.setText((progress+1) + "/" + max);
+        return this;
+    }
+
     public void show() {
         mDialog.show();
     }
@@ -101,11 +131,17 @@ public class ReaderMenuDialog implements View.OnClickListener {
                     );
                 }
                 break;
+            case R.id.button_positive:
+                PreferenceManager.getDefaultSharedPreferences(v.getContext()).edit()
+                        .putString("direction", String.valueOf(mSpinnerDirection.getSelectedItemPosition()))
+                        .putBoolean("keep_screen", mSwitchKeepscreen.isChecked())
+                        .putBoolean("volkeyscroll", mSwitchScrollvolume.isChecked())
+                        .commit();
             default:
-                mDialog.dismiss();
                 if (mCallback != null) {
                     mCallback.onClick(v);
                 }
+                mDialog.dismiss();
         }
     }
 }

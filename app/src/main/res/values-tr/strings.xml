@@ -136,12 +136,6 @@
     <string name="genre_genderbender">Cinsiyet Değişimi</string>
     <string name="genre_shoujo_ai">Shoujo Ai</string>
     <string name="genre_shounen_ai">Shounen Ai</string>
-
-    <string-array name="directions">
-        <item>Soldan sağa</item>
-        <item>Yukarıdan aşağıya</item>
-        <item>Sağdan Sola</item>
-    </string-array>
     <string name="genre_tension">Gerilim</string>
     <string name="genre_historical">Tarihi</string>
     <string name="genre_game">Oyun</string>
