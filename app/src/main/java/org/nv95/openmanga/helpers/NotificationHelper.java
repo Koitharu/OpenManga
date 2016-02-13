@@ -63,6 +63,11 @@ public class NotificationHelper {
         return this;
     }
 
+    public NotificationHelper noProgress() {
+        mNotificationBuilder.setProgress(0, 0, false);
+        return this;
+    }
+
     public void update(int id) {
         mNotificationManager.notify(id, notification());
     }

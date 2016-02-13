@@ -50,6 +50,7 @@
         </intent-filter>
         </activity>
         <service android:name=".SaveService" />
+        <service android:name=".DownloadService" />
         <service android:name=".ChaptersSyncService" />
         <receiver android:name=".UpdateCheckerReceiver">
             <intent-filter>
