@@ -19,7 +19,7 @@
         android:widgetLayout="@layout/pref_switchcompat" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="brightness"
         android:title="@string/adjust_brightness"
         android:widgetLayout="@layout/pref_switchcompat" />
