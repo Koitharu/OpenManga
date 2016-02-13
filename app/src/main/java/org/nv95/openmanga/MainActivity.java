@@ -460,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ThumbSize thumbSize;
         switch (sizeMode) {
             case -1:
-                spans = 1;
+                spans = LayoutUtils.isTabletLandscape(this) ? 2 : 1;
                 thumbSize = ThumbSize.THUMB_SIZE_LIST;
                 break;
             case 0:
