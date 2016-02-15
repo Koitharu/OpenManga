@@ -7,6 +7,7 @@ import android.support.annotation.WorkerThread;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -19,8 +20,8 @@ public abstract class Downloader<T> {
     private static final int MESSAGE_PROGRESS = 33;
     private ConcurrentLinkedQueue<T> mQueue;
     private final Thread[] mThreads;
-    private boolean mLoadedCalled;
-    private boolean mCancelled;
+    private int mLoadedCalled = 0;
+    private final AtomicBoolean mCancelled = new AtomicBoolean(false);
     private int mInitialSize = 0;
     private final Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -38,8 +39,8 @@ public abstract class Downloader<T> {
                     onMajorProgressChanged(mInitialSize, mQueue.size());
                     break;
                 case MESSAGE_FINISHED_ALL:
-                    if (mQueue.isEmpty() && !mLoadedCalled) {
-                        mLoadedCalled = true;
+                    mLoadedCalled++;
+                    if (mLoadedCalled >= mThreads.length) {
                         onAllLoaded();
                     }
                     break;
@@ -85,16 +86,16 @@ public abstract class Downloader<T> {
     }
 
     public synchronized boolean isCancelled() {
-        return mCancelled;
+        return mCancelled.get();
     }
 
     public void cancel() {
-        mCancelled = true;
+        mCancelled.set(true);
     }
 
     public void start() {
-        mCancelled = false;
-        mLoadedCalled = false;
+        mCancelled.set(false);
+        mLoadedCalled = 0;
         new PrepareThread().start();
     }
 

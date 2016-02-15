@@ -123,6 +123,8 @@ public class DownloadService extends Service {
                         .update(NOTIFY_ID);
                 if (mDownloader != null) {
                     mDownloader.cancel();
+                } else {
+                    stopSelf();
                 }
                 break;
         }
@@ -147,6 +149,9 @@ public class DownloadService extends Service {
                 .putExtra("action", ACTION_CANCEL));
     }
 
+    /**
+     * пока юзать не стоит, т.к. оно пишет главы в бд в случайном порядке
+     */
     private class MangaDownloader extends Downloader<MangaChapter> {
         private final MangaSaveHelper mSaveHelper;
         private final MangaSummary mManga;
