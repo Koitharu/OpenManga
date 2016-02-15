@@ -20,6 +20,7 @@ public abstract class Downloader<T> {
     private ConcurrentLinkedQueue<T> mQueue;
     private final Thread[] mThreads;
     private boolean mLoadedCalled;
+    private boolean mCancelled;
     private int mInitialSize = 0;
     private final Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -83,7 +84,16 @@ public abstract class Downloader<T> {
 
     }
 
+    public synchronized boolean isCancelled() {
+        return mCancelled;
+    }
+
+    public void cancel() {
+        mCancelled = true;
+    }
+
     public void start() {
+        mCancelled = false;
         mLoadedCalled = false;
         new PrepareThread().start();
     }
@@ -106,7 +116,7 @@ public abstract class Downloader<T> {
         @Override
         public void run() {
             T item;
-            while (!mQueue.isEmpty()) {
+            while (!mQueue.isEmpty() && !isCancelled()) {
                 item = mQueue.poll();
                 if (item != null) {
                     try {   //чтоб не падал весь поток

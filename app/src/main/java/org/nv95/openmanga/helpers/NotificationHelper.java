@@ -5,8 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.support.v4.app.NotificationCompat;
 
 import org.nv95.openmanga.DownloadsActivity;
 import org.nv95.openmanga.R;
@@ -17,13 +18,13 @@ import org.nv95.openmanga.R;
 public class NotificationHelper {
     private final Context mContext;
     private final NotificationManager mNotificationManager;
-    private final Notification.Builder mNotificationBuilder;
+    private final NotificationCompat.Builder mNotificationBuilder;
 
     public NotificationHelper(Context context) {
         mContext = context;
         mNotificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new Notification.Builder(mContext)
+        mNotificationBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
                 .setContentTitle(mContext.getString(R.string.saving_manga))
@@ -35,6 +36,18 @@ public class NotificationHelper {
                 ));
     }
 
+    public NotificationHelper noActions() {
+        mNotificationBuilder.mActions.clear();
+        return this;
+    }
+
+    public NotificationHelper actionCancel(PendingIntent intent) {
+        mNotificationBuilder.addAction(R.drawable.sym_cancel,
+                mContext.getString(android.R.string.cancel),
+                intent);
+        return this;
+    }
+
     public NotificationHelper title(String title) {
         mNotificationBuilder.setContentTitle(title);
         return this;
@@ -42,6 +55,11 @@ public class NotificationHelper {
 
     public NotificationHelper title(@StringRes int title) {
         return title(mContext.getString(title));
+    }
+
+    public NotificationHelper icon(@DrawableRes int icon) {
+        mNotificationBuilder.setSmallIcon(icon);
+        return this;
     }
 
     public NotificationHelper text(String text) {
@@ -73,10 +91,6 @@ public class NotificationHelper {
     }
 
     public Notification notification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return mNotificationBuilder.build();
-        } else {
-            return mNotificationBuilder.getNotification();
-        }
+        return mNotificationBuilder.build();
     }
 }

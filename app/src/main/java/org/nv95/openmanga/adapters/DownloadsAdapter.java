@@ -27,11 +27,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.nv95.openmanga.DownloadService;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.SaveService;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaSummary;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -39,24 +38,23 @@ import org.nv95.openmanga.items.MangaSummary;
 public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
     private final Intent intent;// = new Intent("org.nv95.openmanga.SaveService");
     @Nullable
-    private SaveService saveService;
+    private DownloadService.DownloadBinder mBinder;
     private LayoutInflater inflater;
 
     public DownloadsAdapter(Context context) {
-        intent = new Intent(context, SaveService.class);
-        saveService = null;
+        intent = new Intent(context, DownloadService.class);
+        mBinder = null;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return saveService == null ? 0 : saveService.getQueue().size();
+        return mBinder == null ? 0 : mBinder.getQueueSize();
     }
 
     @Override
     public MangaInfo getItem(int position) {
-        // TODO: 03.01.16
-        return saveService == null ? null : saveService.getQueue().toArray(new MangaSummary[getCount()])[position];
+        return mBinder == null ? null : mBinder.getQueue()[position];
     }
 
     @Override
@@ -93,13 +91,13 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        saveService = ((SaveService.SaveBinder) service).getService();
+        mBinder = (DownloadService.DownloadBinder) service;
         notifyDataSetChanged();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        saveService = null;
+        mBinder = null;
         notifyDataSetInvalidated();
     }
 
