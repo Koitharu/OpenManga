@@ -4,15 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class HistoryProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         MangaList list;
         MangaInfo manga;
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
             Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, sortUrls[sort]);
@@ -181,11 +183,13 @@ public class HistoryProvider extends MangaProvider {
         return res;
     }
 
+    @Nullable
     public HistorySummary get(MangaInfo mangaInfo) {
-        HistorySummary res = new HistorySummary();
+        HistorySummary res = null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         Cursor c = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);
         if (c.moveToFirst()) {
+            res = new HistorySummary();
             res.time = c.getLong(c.getColumnIndex("timestamp"));
             res.chapter = c.getInt(c.getColumnIndex("chapter"));
             res.page = c.getInt(c.getColumnIndex("page"));

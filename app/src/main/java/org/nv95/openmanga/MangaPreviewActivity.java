@@ -95,23 +95,28 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void showChaptersSheet() {
-        new BottomSheetDialog(this)
-                .setItems(mangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
-                .setSheetTitle(R.string.chapters_list)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setOnItemClickListener(this)
-                .setPositiveButton(R.string.continue_reading, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
-                                intent.putExtras(mangaSummary.toBundle());
-                                HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
-                                intent.putExtra("chapter", hs.getChapter());
-                                intent.putExtra("page", hs.getPage());
-                                startActivity(intent);
-                            }
+        final HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mangaSummary);
+        BottomSheetDialog sheet = new BottomSheetDialog(this);
+        if (lastChapter != null) {
+            sheet.addHeader(
+                    mangaSummary.chapters.get(lastChapter.getChapter()).name,
+                    R.string.continue_reading, 0, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
+                            intent.putExtras(mangaSummary.toBundle());
+                            HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
+                            intent.putExtra("chapter", hs.getChapter());
+                            intent.putExtra("page", hs.getPage());
+                            startActivity(intent);
                         }
-                ).show();
+                    }
+            );
+        }
+        sheet.setItems(mangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
+                .setSheetTitle(R.string.chapters_list)
+                .setOnItemClickListener(this)
+                .show();
     }
 
     @Override
