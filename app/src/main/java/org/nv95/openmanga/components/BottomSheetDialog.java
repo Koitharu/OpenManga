@@ -57,8 +57,20 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
     public BottomSheetDialog(Context context) {
         super(context, R.style.MaterialDialogSheet);
         this.context = context;
-        View view = View.inflate(context, R.layout.bottomsheet, null);
-        listView = (ListView) view.findViewById(R.id.listView);
+        ClosableSlidingLayout view = (ClosableSlidingLayout) View.inflate(context, R.layout.bottomsheet, null);
+
+        view.setSlideListener(new ClosableSlidingLayout.SlideListener() {
+            @Override
+            public void onClosed() {
+                BottomSheetDialog.this.dismiss();
+            }
+
+            @Override
+            public void onOpened() {
+                //showFullItems();
+            }
+        });
+        view.mTarget = listView = (ListView) view.findViewById(R.id.listView);
         buttonbar = view.findViewById(R.id.buttonbar);
         textViewTitle = (TextView) view.findViewById(R.id.textView_title);
         buttons = new Button[]{
