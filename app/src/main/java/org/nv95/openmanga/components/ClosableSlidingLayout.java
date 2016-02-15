@@ -160,6 +160,10 @@ class ClosableSlidingLayout extends LinearLayout {
         this.collapsible = collapsible;
     }
 
+    public void collapse() {
+
+    }
+
     private void expand(View releasedChild, float yvel) {
         if (mListener != null) {
             mListener.onOpened();

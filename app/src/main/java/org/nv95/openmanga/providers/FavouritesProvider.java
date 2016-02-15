@@ -63,7 +63,6 @@ public class FavouritesProvider extends MangaProvider {
         return FavouritesProvider.getInstacne(context).remove(mangaInfo);
     }
 
-    @Deprecated
     public static boolean Has(Context context, MangaInfo mangaInfo) {
         return FavouritesProvider.getInstacne(context).has(mangaInfo);
     }

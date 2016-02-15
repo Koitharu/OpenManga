@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -28,6 +29,7 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
     private final View buttonbar;
     private final TextView textViewTitle;
     private final Button[] buttons;
+    private int mHeaders;
     private final OnClickListener[] clickListeners;
     private View.OnClickListener onButtonClick = new View.OnClickListener() {
         @Override
@@ -56,6 +58,7 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
 
     public BottomSheetDialog(Context context) {
         super(context, R.style.MaterialDialogSheet);
+        mHeaders = 0;
         this.context = context;
         ClosableSlidingLayout view = (ClosableSlidingLayout) View.inflate(context, R.layout.bottomsheet, null);
 
@@ -67,7 +70,7 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
 
             @Override
             public void onOpened() {
-                //showFullItems();
+                
             }
         });
         view.mTarget = listView = (ListView) view.findViewById(R.id.listView);
@@ -141,7 +144,7 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onClick(BottomSheetDialog.this, position);
+                listener.onClick(BottomSheetDialog.this, position - mHeaders);
             }
         });
         return this;
@@ -151,7 +154,7 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listener.onClick(BottomSheetDialog.this, position, listView.isItemChecked(position));
+                listener.onClick(BottomSheetDialog.this, position - mHeaders, listView.isItemChecked(position));
             }
         });
         return this;
@@ -166,15 +169,55 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
     public BottomSheetDialog setMultiChoiceItems(String[] items, boolean[] checkedItems) {
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, items));
-        for (int i = 0; i < checkedItems.length; i++) {
+        for (int i = mHeaders; i < checkedItems.length + mHeaders; i++) {
             listView.setItemChecked(i, checkedItems[i]);
         }
         return this;
     }
 
     public void checkAll(boolean checked) {
-        for (int i = listView.getCount() - 1; i >= 0; i--) {
+        for (int i = listView.getCount() - 1; i >= mHeaders; i--) {
             listView.setItemChecked(i, checked);
         }
+    }
+
+    public BottomSheetDialog addHeader(String itemTitle, @Nullable String buttonPositive,
+                                       @Nullable String buttonNeutral, final OnClickListener callback) {
+        View view = LayoutInflater.from(context).inflate(R.layout.bottomsheet_header, listView, false);
+        ((TextView)view.findViewById(android.R.id.text1)).setText(itemTitle);
+        Button button;
+        if (buttonPositive != null) {
+            button = (Button) view.findViewById(R.id.button_positive);
+            button.setVisibility(View.VISIBLE);
+            button.setText(buttonPositive);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick(BottomSheetDialog.this, BUTTON_POSITIVE);
+                }
+            });
+        }
+        if (buttonNeutral != null) {
+            button = (Button) view.findViewById(R.id.button_neutral);
+            button.setVisibility(View.VISIBLE);
+            button.setText(buttonNeutral);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onClick(BottomSheetDialog.this, BUTTON_NEUTRAL);
+                }
+            });
+        }
+        listView.addHeaderView(view);
+        mHeaders++;
+        return this;
+    }
+
+    public BottomSheetDialog addHeader(String itemTitle, @StringRes int buttonPositive,
+                                       @StringRes int buttonNeutral, OnClickListener callback) {
+        return addHeader(itemTitle,
+                buttonPositive == 0 ? null : context.getString(buttonPositive),
+                buttonNeutral == 0 ? null : context.getString(buttonNeutral),
+                callback);
     }
 }
