@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 33
-        versionName "2016-02-13 nightly"
+        versionCode 34
+        versionName "2016-02-15 nightly"
     }
     buildTypes {
         release {
