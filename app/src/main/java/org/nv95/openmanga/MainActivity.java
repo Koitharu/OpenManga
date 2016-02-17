@@ -312,6 +312,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
+        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt("view_mode", 0);
+        onListModeChanged(viewMode != 0, viewMode - 1);
     }
 
     @Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.nv95.openmanga" >
+    package="org.nv95.openmanga">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -15,52 +15,70 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/app_name" >
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MangaPreviewActivity"
+        <activity
+            android:name=".MangaPreviewActivity"
             android:label=""
-            android:theme="@style/AppTheme.Preview" >
-        </activity>
-        <activity android:name=".SearchActivity"
+            android:theme="@style/AppTheme.Preview"/>
+        <activity
+            android:name=".SearchActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
-        <activity android:name=".MultipleSearchActivity"
+        <activity
+            android:name=".MultipleSearchActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity android:name=".ReadActivity" />
-        <activity android:name=".DownloadsActivity"
-            android:label="@string/downloads_queue" android:launchMode="singleInstance" />
-        <activity android:name=".UpdatesActivity"
+        <activity
+            android:name=".DownloadsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/downloads_queue"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".UpdatesActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/manga_updates" />
-        <activity android:name=".ProviderSelectActivity" android:label="@string/select_sources" />
-        <activity android:name=".SettingsActivity" android:label="@string/action_settings" />
-        <activity android:name=".WelcomeActivity" android:label="@string/welcome"/>
-        <activity android:name=".AboutActivity" android:label="@string/about" />
-        <activity android:name=".UpdatesSettingsActivity"
+        <activity
+            android:name=".ProviderSelectActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/select_sources" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/action_settings" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:label="@string/welcome" />
+        <activity
+            android:name=".AboutActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/about" />
+        <activity
+            android:name=".UpdatesSettingsActivity"
             android:label="@string/checking_new_chapters">
             <intent-filter>
-            <action android:name="org.nv95.openmanga.chupd" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-        </activity>
-        <service android:name=".SaveService" />
-        <service android:name=".DownloadService" />
-        <service android:name=".ChaptersSyncService" />
-        <receiver android:name=".UpdateCheckerReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="org.nv95.openmanga.chupd" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </receiver>
-        <activity android:name=".FileSelectActivity" android:label="@string/select_file" />
-        <activity android:name=".CBZActivity" android:theme="@style/AppTheme.Dialog"
-            android:label="@string/import_file" >
+        </activity>
+        <activity
+            android:name=".FileSelectActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/select_file" />
+        <activity
+            android:name=".CBZActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/import_file"
+            android:theme="@style/AppTheme.Dialog">
             <!--intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -69,6 +87,18 @@
                 <data android:pathPattern=".*\\.cbz" />
             </intent-filter-->
         </activity>
+
+        <service android:name=".SaveService" />
+        <service android:name=".DownloadService" />
+        <service android:name=".ChaptersSyncService" />
+
+        <receiver android:name=".UpdateCheckerReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

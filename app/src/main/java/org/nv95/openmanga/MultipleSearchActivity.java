@@ -1,5 +1,6 @@
 package org.nv95.openmanga;
 
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -73,6 +74,13 @@ public class MultipleSearchActivity extends AppCompatActivity implements ListMod
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getInt("view_mode", 0);
+        onListModeChanged(viewMode != 0, viewMode - 1);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
