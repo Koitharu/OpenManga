@@ -17,33 +17,17 @@ package org.nv95.openmanga.components;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.utils.SerialExecutor;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -99,7 +83,7 @@ public class AsyncImageView extends ImageView {
         if (useHolder) {
             setImageDrawable(IMAGE_HOLDER);
         }
-        mUrl = url;
+        mUrl = (url != null && url.charAt(0) == '/') ? "file://" + url : url;
         ImageLoader.getInstance().displayImage(mUrl, this);
     }
 
