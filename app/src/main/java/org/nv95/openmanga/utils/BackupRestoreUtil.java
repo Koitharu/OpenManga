@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -216,12 +216,7 @@ public class BackupRestoreUtil {
                         .setPositiveButton(R.string.export_file, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                context.startActivity(Intent.createChooser(
-                                        new Intent(Intent.ACTION_SEND)
-                                                .setType("file/*")
-                                                .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file)),
-                                        context.getString(R.string.export_file)
-                                ));
+                                new ContentShareHelper(context).exportFile(file);
                             }
                         })
                         .create().show();
