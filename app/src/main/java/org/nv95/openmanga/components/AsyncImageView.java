@@ -25,6 +25,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
@@ -84,7 +85,11 @@ public class AsyncImageView extends ImageView {
             setImageDrawable(IMAGE_HOLDER);
         }
         mUrl = (url != null && url.charAt(0) == '/') ? "file://" + url : url;
-        ImageLoader.getInstance().displayImage(mUrl, this);
+        if (size != null && getMeasuredWidth() == 0) {
+            ImageLoader.getInstance().displayImage(mUrl, this, new ImageSize(size.getWidth(), size.getHeight()));
+        } else {
+            ImageLoader.getInstance().displayImage(mUrl, this);
+        }
     }
 
     public void useMemoryCache(boolean b) {
