@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/padding8"
-    android:layout_marginBottom="@dimen/padding8"
-    card:cardBackgroundColor="@android:color/white">
+    android:layout_marginBottom="@dimen/padding8" >
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        >
+        android:background="?attr/selectableItemBackground" >
 
         <org.nv95.openmanga.components.AsyncImageView
             android:id="@+id/imageView"
@@ -57,4 +54,4 @@
             android:textColor="@color/black_owerlay_90" />
 
     </RelativeLayout>
-</android.support.v7.widget.CardView>
+</FrameLayout>
