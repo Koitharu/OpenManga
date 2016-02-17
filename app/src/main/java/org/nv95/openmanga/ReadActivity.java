@@ -2,7 +2,6 @@ package org.nv95.openmanga;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
@@ -208,11 +207,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     .setAction(R.string.action_share, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                            shareIntent.setType("image/*");
-                            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+                            new ContentShareHelper(ReadActivity.this).shareImage(file);
                         }
                     })
                     .show();
