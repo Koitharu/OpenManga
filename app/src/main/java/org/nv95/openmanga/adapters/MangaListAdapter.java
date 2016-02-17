@@ -2,6 +2,7 @@ package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -112,6 +113,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             }
             textViewSummary.setText(mData.summary);
             asyncImageView.setImageThumbAsync(mData.preview, thumbSize);
+            textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
         }
 
         @Override

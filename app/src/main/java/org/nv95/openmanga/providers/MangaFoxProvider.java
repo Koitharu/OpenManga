@@ -64,6 +64,9 @@ public class MangaFoxProvider extends MangaProvider {
                 manga.preview = "";
             }
             manga.provider = MangaFoxProvider.class;
+            if (!o.select("em.tag_completed").isEmpty()) {
+                manga.status = MangaInfo.STATUS_COMPLETED;
+            }
             list.add(manga);
         }
         return list;
