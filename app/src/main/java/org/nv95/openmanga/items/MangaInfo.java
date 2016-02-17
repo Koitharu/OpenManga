@@ -10,18 +10,24 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
  * Created by nv95 on 30.09.15.
  */
 public class MangaInfo {
+    public static final int STATUS_UNKNOWN = 0;
+    public static final int STATUS_COMPLETED = 1;
+    public static final int STATUS_ONGOING = 2;
+
     public String name;
     public String subtitle;
     public String summary;
     public String path;
     public String preview;
     public Class<?> provider;
+    public int status;
 
     public MangaInfo(String name, String summary, String path, String preview) {
         this.name = name;
         this.summary = summary;
         this.path = path;
         this.preview = preview;
+        this.status = STATUS_UNKNOWN;
     }
 
     public MangaInfo(Cursor cursor) {
@@ -48,10 +54,11 @@ public class MangaInfo {
         } catch (ClassNotFoundException e) {
             provider = LocalMangaProvider.class;
         }
+        status = bundle.getInt("status", 0);
     }
 
     public MangaInfo() {
-
+        status = STATUS_UNKNOWN;
     }
 
     public Bundle toBundle() {
@@ -62,6 +69,7 @@ public class MangaInfo {
         bundle.putString("preview", preview);
         bundle.putString("subtitle", subtitle);
         bundle.putString("provider", provider.getName());
+        bundle.putInt("status", status);
         return bundle;
     }
 
@@ -75,6 +83,7 @@ public class MangaInfo {
         cv.put("preview", preview);
         cv.put("subtitle", subtitle);
         cv.put("provider", provider.getName());
+        cv.put("status", status);
         return cv;
     }
 
@@ -106,6 +115,10 @@ public class MangaInfo {
     @Deprecated
     public Class<?> getProvider() {
         return provider;
+    }
+
+    public boolean isCompleted() {
+        return status == STATUS_COMPLETED;
     }
 
     @Override

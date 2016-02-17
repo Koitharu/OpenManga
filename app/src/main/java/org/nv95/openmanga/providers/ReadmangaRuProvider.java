@@ -23,8 +23,8 @@ import java.util.ArrayList;
  */
 public class ReadmangaRuProvider extends MangaProvider {
     protected static final boolean features[] = {true, true, false, true, true};
-    protected static final int sorts[] = {R.string.sort_popular, R.string.sort_updated, R.string.sort_rating};
-    protected static final String sortUrls[] = {"popular", "updated", "votes"};
+    protected static final int sorts[] = {R.string.sort_popular, R.string.sort_latest, R.string.sort_updated, R.string.sort_rating};
+    protected static final String sortUrls[] = {"popular","created", "updated", "votes"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
             R.string.genre_genderbender, R.string.genre_hero_fantasy, R.string.genre_detective, R.string.genre_josei,
             R.string.genre_doujinshi, R.string.genre_drama, R.string.genre_game, R.string.genre_historical,
@@ -74,6 +74,9 @@ public class ReadmangaRuProvider extends MangaProvider {
                 manga.preview = "";
             }
             manga.provider = ReadmangaRuProvider.class;
+            if (!o.select("span.mangaCompleted").isEmpty()) {
+                manga.status = MangaInfo.STATUS_COMPLETED;
+            }
             list.add(manga);
         }
         return list;

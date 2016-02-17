@@ -67,6 +67,9 @@ public class MintMangaProvider extends MangaProvider {
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = MintMangaProvider.class;
+            if (!o.select("span.mangaCompleted").isEmpty()) {
+                manga.status = MangaInfo.STATUS_COMPLETED;
+            }
             list.add(manga);
         }
         return list;
