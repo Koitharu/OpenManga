@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:padding="4dp">
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/padding8"
+    android:layout_marginBottom="@dimen/padding8"
+    card:cardBackgroundColor="@android:color/white">
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        >
 
         <org.nv95.openmanga.components.AsyncImageView
             android:id="@+id/imageView"
             android:layout_width="@dimen/thumb_width_list"
             android:layout_height="@dimen/thumb_height_list"
-            android:layout_marginRight="6dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:scaleType="centerCrop" />
 
         <TextView
@@ -23,7 +30,8 @@
             android:layout_toRightOf="@+id/imageView"
             android:maxLines="1"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black_owerlay_90" />
 
         <TextView
             android:id="@+id/textView_subtitle"
@@ -33,18 +41,20 @@
             android:layout_toRightOf="@+id/imageView"
             android:maxLines="1"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black_owerlay_60" />
 
         <TextView
             android:id="@+id/textView_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_subtitle"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_toRightOf="@+id/imageView"
             android:maxLines="1"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black_owerlay_90" />
 
     </RelativeLayout>
-</FrameLayout>
+</android.support.v7.widget.CardView>

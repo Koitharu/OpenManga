@@ -15,26 +15,27 @@ import android.util.AttributeSet;
 public class TopCropImageView extends AsyncImageView {
 
     public TopCropImageView(Context context) {
-        super(context);
-        setScaleType(ScaleType.MATRIX);
-        useMemoryCache(false);
+        this(context, null);
     }
 
     public TopCropImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setScaleType(ScaleType.MATRIX);
-        useMemoryCache(false);
+        this(context, attrs, 0);
     }
 
     public TopCropImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setScaleType(ScaleType.MATRIX);
-        useMemoryCache(false);
+        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public TopCropImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    @Override
+    protected void init(){
+        super.init();
         setScaleType(ScaleType.MATRIX);
         useMemoryCache(false);
     }

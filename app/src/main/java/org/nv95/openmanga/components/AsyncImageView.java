@@ -27,10 +27,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.SerialExecutor;
 
@@ -45,45 +49,35 @@ import java.net.URL;
  * Created by nv95 on 10.12.15.
  */
 public class AsyncImageView extends ImageView {
-    private static final SerialExecutor EXECUTOR = new SerialExecutor();
-    public static Drawable IMAGE_HOLDER = new ColorDrawable(Color.TRANSPARENT);
-    private static MemoryCache memoryCache = new MemoryCache();
-    private static FileCache fileCache = null;
+    public static Drawable IMAGE_HOLDER;
     @Nullable
     private String mUrl = null;
-    @Nullable
-    private ThumbSize mThumbSize = null;
-    private LoadImageTask loadImageTask = null;
-    private SetImageTask setImageTask = null;
-    private boolean useMemCache = true;
 
     public AsyncImageView(Context context) {
-        super(context);
-        if (fileCache == null) {
-            fileCache = new FileCache(context);
-        }
+        this(context, null);
     }
 
     public AsyncImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        if (fileCache == null) {
-            fileCache = new FileCache(context);
-        }
+        this(context, attrs, 0);
     }
 
     public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (fileCache == null) {
-            fileCache = new FileCache(context);
-        }
+        init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public AsyncImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        if (fileCache == null) {
-            fileCache = new FileCache(context);
-        }
+        init();
+    }
+
+    protected void init(){
+        if(IMAGE_HOLDER == null)
+            IMAGE_HOLDER = ContextCompat.getDrawable(getContext(), R.drawable.placeholder);
+//        if (fileCache == null) {
+//            fileCache = new FileCache(getContext());
+//        }
     }
 
     public void setImageAsync(@Nullable String url) {
@@ -105,161 +99,11 @@ public class AsyncImageView extends ImageView {
         if (useHolder) {
             setImageDrawable(IMAGE_HOLDER);
         }
-        cancelLoading();
         mUrl = url;
-        mThumbSize = size;
-        if (url != null) {
-            setImageTask = new SetImageTask();
-            setImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-        }
+        ImageLoader.getInstance().displayImage(mUrl, this);
     }
 
-    public void useMemoryCache(boolean value) {
-        this.useMemCache = value;
-    }
+    public void useMemoryCache(boolean b) {
 
-    public void cancelLoading() {
-        try {
-            if (setImageTask != null && setImageTask.getStatus() != AsyncTask.Status.FINISHED) {
-                setImageTask.cancel(false);
-            }
-            if (loadImageTask != null && loadImageTask.getStatus() != AsyncTask.Status.FINISHED) {
-                loadImageTask.cancel(false);
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-
-    @Override
-    protected void finalize() throws Throwable {
-        cancelLoading();
-        super.finalize();
-    }
-
-    private static class FileCache {
-        private final File mCacheDir;
-
-        public FileCache(Context context) {
-            mCacheDir = context.getExternalCacheDir();
-        }
-
-        public void putBitmap(@NonNull String key, @Nullable Bitmap bitmap, @Nullable ThumbSize size) {
-            File file = new File(mCacheDir, String.valueOf(key.hashCode()) + (size == null ? "" : size.toString()));
-            if (bitmap != null && !file.exists()) {
-                try {
-                    OutputStream fOut = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-                    fOut.flush();
-                    fOut.close();
-                } catch (Exception e) {
-                    //TODO:new ErrorReporter(context).report(e);
-                }
-            }
-        }
-
-        @Nullable
-        public Bitmap getBitmap(@NonNull String key, @Nullable ThumbSize size) {
-            File file = new File(mCacheDir, String.valueOf(key.hashCode()) + (size == null ? "" : size.toString()));
-            try {
-                return BitmapFactory.decodeStream(new FileInputStream(file));
-            } catch (Exception e) {
-                return null;
-            }
-        }
-    }
-
-    public static class MemoryCache extends LruCache<String, Bitmap> {
-        public MemoryCache() {
-            super(((int) (Runtime.getRuntime().maxMemory() / 1024) / 8));
-        }
-
-        @Override
-        protected int sizeOf(String key, Bitmap bitmap) {
-            return bitmap.getByteCount() / 1024;
-        }
-
-        public void putBitmap(@NonNull String key, Bitmap bitmap, @Nullable ThumbSize size) {
-            if (bitmap != null && getBitmap(key, size) == null) {
-                this.put(size == null ? key : key + size.toString(), bitmap);
-            }
-        }
-
-        @Nullable
-        public Bitmap getBitmap(String key,  @Nullable ThumbSize size) {
-            return get(size == null ? key : key + size.toString());
-        }
-    }
-
-    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            try {
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(params[0]).getContent());
-                if (bitmap == null) {
-                    return null;
-                }
-                if (mThumbSize != null) {
-                    bitmap = ThumbnailUtils.extractThumbnail(bitmap, mThumbSize.getWidth(),
-                            mThumbSize.getHeight(), ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-                }
-                if (useMemCache) {
-                    memoryCache.putBitmap(params[0], bitmap, mThumbSize);
-                }
-                fileCache.putBitmap(params[0], bitmap, mThumbSize);
-                return bitmap;
-            } catch (Exception e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                AsyncImageView.super.setImageBitmap(bitmap);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-    }
-
-    private class SetImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = memoryCache.getBitmap(params[0], mThumbSize);
-            if (bitmap == null) {
-                if (!params[0].startsWith("http")) {
-                    bitmap = BitmapFactory.decodeFile(params[0]);
-                } else {
-                    bitmap = fileCache.getBitmap(params[0], mThumbSize);
-                }
-            }
-            if (bitmap == null) {
-                return null;
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                AsyncImageView.super.setImageBitmap(bitmap);
-            } else {
-                loadImageTask = new LoadImageTask();
-                loadImageTask.executeOnExecutor(EXECUTOR, mUrl);
-            }
-        }
     }
 }
