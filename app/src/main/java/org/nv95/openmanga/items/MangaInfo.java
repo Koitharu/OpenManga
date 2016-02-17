@@ -3,6 +3,7 @@ package org.nv95.openmanga.items;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
 
@@ -21,6 +22,8 @@ public class MangaInfo {
     public String preview;
     public Class<?> provider;
     public int status;
+    @Nullable
+    public String extra;
 
     public MangaInfo(String name, String summary, String path, String preview) {
         this.name = name;
@@ -28,6 +31,7 @@ public class MangaInfo {
         this.path = path;
         this.preview = preview;
         this.status = STATUS_UNKNOWN;
+        this.extra = null;
     }
 
     public MangaInfo(Cursor cursor) {
@@ -41,6 +45,8 @@ public class MangaInfo {
             provider = LocalMangaProvider.class;
         }
         path = cursor.getString(6);
+        this.status = STATUS_UNKNOWN;
+        this.extra = null;
     }
 
     public MangaInfo(Bundle bundle) {
@@ -55,10 +61,12 @@ public class MangaInfo {
             provider = LocalMangaProvider.class;
         }
         status = bundle.getInt("status", 0);
+        extra = bundle.getString("extra");
     }
 
     public MangaInfo() {
-        status = STATUS_UNKNOWN;
+        this.status = STATUS_UNKNOWN;
+        this.extra = null;
     }
 
     public Bundle toBundle() {
@@ -70,6 +78,7 @@ public class MangaInfo {
         bundle.putString("subtitle", subtitle);
         bundle.putString("provider", provider.getName());
         bundle.putInt("status", status);
+        bundle.putString("extra", extra);
         return bundle;
     }
 
@@ -84,6 +93,7 @@ public class MangaInfo {
         cv.put("subtitle", subtitle);
         cv.put("provider", provider.getName());
         cv.put("status", status);
+        cv.put("extra", extra);
         return cv;
     }
 
