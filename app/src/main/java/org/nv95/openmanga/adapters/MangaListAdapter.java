@@ -2,7 +2,6 @@ package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -83,6 +82,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private TextView textViewTitle;
         private TextView textViewSubtitle;
         private TextView textViewSummary;
+        private TextView textViewBadge;
         private AsyncImageView asyncImageView;
         private MangaInfo mData;
 
@@ -91,6 +91,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             textViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
             textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
+            textViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
             asyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
@@ -113,7 +114,14 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             }
             textViewSummary.setText(mData.summary);
             asyncImageView.setImageThumbAsync(mData.preview, thumbSize);
-            textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            // TODO: 17.02.16
+            //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            if (mData.extra == null) {
+                textViewBadge.setVisibility(View.GONE);
+            } else {
+                textViewBadge.setText(mData.extra);
+                textViewBadge.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override

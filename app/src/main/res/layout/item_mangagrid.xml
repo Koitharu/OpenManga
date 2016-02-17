@@ -53,4 +53,15 @@
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone"
+        android:layout_margin="2dp"
+        android:background="@drawable/background_badge"
+        android:id="@+id/textView_badge"
+        android:textColor="@color/white_overlay_85" />
 </org.nv95.openmanga.components.ProportionalLayout>
