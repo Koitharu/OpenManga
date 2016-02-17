@@ -22,7 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public static void ShowChangelog(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(WelcomeActivity.class.getName(), MODE_PRIVATE);
-        int version = OpenMangaApplication.getVersion(context);
+        int version = OpenMangaApplication.getVersion();
         int lastVersion = prefs.getInt("version", -1);
         if (lastVersion < version) {
             if (lastVersion != -1 && version % 10 == 0 && prefs.getBoolean("showChangelog", true)) {

@@ -5,6 +5,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.ErrorReporter;
@@ -14,20 +20,14 @@ import org.nv95.openmanga.utils.ErrorReporter;
  */
 public class OpenMangaApplication extends Application {
 
-    public static int getVersion(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0)
-                    .versionCode;
-        } catch (Exception e) {
-            return -1;
-        }
+    public static int getVersion() {
+        return BuildConfig.VERSION_CODE;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         ErrorReporter.Init(this);
-        AsyncImageView.IMAGE_HOLDER = ContextCompat.getDrawable(this, R.drawable.placeholder);
         final Resources resources = getResources();
         final float aspectRatio = 6f / 4f;
         ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
@@ -46,5 +46,35 @@ public class OpenMangaApplication extends Application {
                 resources.getDimensionPixelSize(R.dimen.thumb_width_large),
                 aspectRatio
         );
+
+        initImageLoader(this);
+
+    }
+
+    public static ImageLoader initImageLoader(Context c) {
+        if (ImageLoader.getInstance().isInited())
+            return ImageLoader.getInstance();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(c)
+                .defaultDisplayImageOptions(getImageLoaderOptions())
+                .diskCacheSize(50 * 1024 * 1024)
+                .diskCacheFileCount(100)
+                .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
+                .build();
+
+        ImageLoader.getInstance().init(config);
+        return ImageLoader.getInstance();
+    }
+
+    public static DisplayImageOptions getImageLoaderOptions() {
+        return getImageLoaderOptionsBuilder().build();
+    }
+
+    public static DisplayImageOptions.Builder getImageLoaderOptionsBuilder() {
+        return new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .resetViewBeforeLoading(false)
+                .displayer(new FadeInBitmapDisplayer(400, true, true, false));
     }
 }

@@ -14,4 +14,10 @@
     <dimen name="thumb_width_small">86dp</dimen>
     <dimen name="thumb_width_medium">118dp</dimen>
     <dimen name="thumb_width_large">148dp</dimen>
+
+    <dimen name="padding8">8dp</dimen>
+    <dimen name="padding24">24dp</dimen>
+    <dimen name="padding32">32dp</dimen>
+    <dimen name="padding48">48dp</dimen>
+
 </resources>
