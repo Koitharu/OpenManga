@@ -92,8 +92,8 @@ public class MangaInfo {
         cv.put("preview", preview);
         cv.put("subtitle", subtitle);
         cv.put("provider", provider.getName());
-        cv.put("status", status);
-        cv.put("extra", extra);
+        //cv.put("status", status);
+        //cv.put("extra", extra);
         return cv;
     }
 
