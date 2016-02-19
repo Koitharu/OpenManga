@@ -214,4 +214,6 @@
     <string name="brightness_value">Brightness value</string>
     <string name="undo">Undo</string>
     <string name="manga_removed">Removed</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="update">Update</string>
 </resources>
