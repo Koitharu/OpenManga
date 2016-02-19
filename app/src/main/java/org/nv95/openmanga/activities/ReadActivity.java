@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,6 +23,10 @@ import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import org.nv95.openmanga.NavigationDialog;
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.ReaderMenuDialog;
+import org.nv95.openmanga.SaveService;
 import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.helpers.BrightnessHelper;

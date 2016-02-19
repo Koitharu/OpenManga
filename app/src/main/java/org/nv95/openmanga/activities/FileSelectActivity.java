@@ -1,16 +1,16 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
+import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.FileSelectAdapter;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import java.io.File;
 /**
  * Created by nv95 on 09.02.16.
  */
-public class FileSelectActivity extends AppCompatActivity implements DirSelectDialog.OnDirSelectListener {
+public class FileSelectActivity extends BaseAppActivity implements DirSelectDialog.OnDirSelectListener {
     private FileSelectAdapter mAdapter;
 
     @Override
@@ -33,11 +33,8 @@ public class FileSelectActivity extends AppCompatActivity implements DirSelectDi
         mAdapter = new FileSelectAdapter(dir == null ? Environment.getExternalStorageDirectory()
                 : new File(dir), ".cbz", this);
         recyclerView.setAdapter(mAdapter);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setSubtitle(mAdapter.getCurrentDir().getPath());
-        }
+        enableHomeAsUp();
+        setSubtitle(mAdapter.getCurrentDir().getPath());
     }
 
     @Override
@@ -57,15 +54,6 @@ public class FileSelectActivity extends AppCompatActivity implements DirSelectDi
             setResult(RESULT_OK, data);
             finish();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

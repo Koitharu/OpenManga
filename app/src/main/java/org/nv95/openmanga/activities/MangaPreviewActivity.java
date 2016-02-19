@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +19,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.SaveService;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.items.MangaInfo;
@@ -33,7 +34,7 @@ import org.nv95.openmanga.utils.UpdatesChecker;
 /**
  * Created by nv95 on 30.09.15.
  */
-public class MangaPreviewActivity extends AppCompatActivity implements View.OnClickListener,
+public class MangaPreviewActivity extends BaseAppActivity implements View.OnClickListener,
         DialogInterface.OnClickListener {
     //data
     protected MangaSummary mangaSummary;
@@ -52,10 +53,7 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_preview);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
+        enableHomeAsUp();
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -177,9 +175,6 @@ public class MangaPreviewActivity extends AppCompatActivity implements View.OnCl
                         .setMessage(R.string.manga_delete_confirm)
                         .create().show();
 
-                return true;
-            case android.R.id.home:
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

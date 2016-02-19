@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.Constants;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.helpers.StorageHelper;

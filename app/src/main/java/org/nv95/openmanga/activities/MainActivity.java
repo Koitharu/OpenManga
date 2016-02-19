@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -32,6 +32,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.FilterSortDialog;
+import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.MangaListLoader;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;

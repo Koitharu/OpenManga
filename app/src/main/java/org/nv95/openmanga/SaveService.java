@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.util.SparseArray;
 import android.widget.Toast;
 
+import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.MangaChapter;

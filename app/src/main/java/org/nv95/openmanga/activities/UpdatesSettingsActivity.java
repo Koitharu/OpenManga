@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,17 +7,18 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.nv95.openmanga.ChaptersSyncService;
+import org.nv95.openmanga.R;
+
 /**
  * Created by nv95 on 19.12.15.
  */
-public class UpdatesSettingsActivity extends AppCompatActivity implements View.OnClickListener,
+public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnClickListener,
         Preference.OnPreferenceChangeListener {
     private SettingsFragment settingsFragment;
 
@@ -26,10 +27,7 @@ public class UpdatesSettingsActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updsettings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        enableHomeAsUp();
         SwitchCompat toggle = (SwitchCompat) findViewById(R.id.switch_toggle);
         toggle.setChecked(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("chupd", false));
         toggle.setOnClickListener(this);

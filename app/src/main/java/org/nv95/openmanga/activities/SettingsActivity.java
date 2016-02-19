@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,18 +9,18 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.ErrorReporter;
-import org.nv95.openmanga.helpers.DirRemoveHelper;
 
 import java.io.File;
 
@@ -28,17 +28,14 @@ import java.io.File;
  * Created by nv95 on 03.10.15.
  * Activity with settings fragments
  */
-public class SettingsActivity extends AppCompatActivity implements Preference.OnPreferenceClickListener {
+public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        enableHomeAsUp();
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.content, new CommonSettingsFragment())
@@ -50,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity implements Preference.On
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home && !getFragmentManager().popBackStackImmediate()) {
             finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

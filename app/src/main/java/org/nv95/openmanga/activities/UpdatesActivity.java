@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +17,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.UpdatesAdapter;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.SerialExecutor;
-import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import java.util.Collections;
 /**
  * Created by nv95 on 03.01.16.
  */
-public class UpdatesActivity extends AppCompatActivity implements UpdatesChecker.OnMangaUpdatedListener, AdapterView.OnItemClickListener {
+public class UpdatesActivity extends BaseAppActivity implements UpdatesChecker.OnMangaUpdatedListener, AdapterView.OnItemClickListener {
     private final ArrayList<UpdatesChecker.MangaUpdate> list = new ArrayList<>();
     private final SerialExecutor serialExecutor = new SerialExecutor();
     private UpdatesAdapter adapter;
@@ -44,10 +43,7 @@ public class UpdatesActivity extends AppCompatActivity implements UpdatesChecker
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updates);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        enableHomeAsUp();
         listView = (ListView) findViewById(R.id.listView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         textViewHolder = (TextView) findViewById(R.id.textView_holder);
@@ -66,9 +62,6 @@ public class UpdatesActivity extends AppCompatActivity implements UpdatesChecker
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.action_checkall:
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.mark_all_viewed_confirm)

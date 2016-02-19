@@ -1,12 +1,10 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +14,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.GroupedAdapter;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 12.01.16.
  */
-public class MultipleSearchActivity extends AppCompatActivity implements ListModeDialog.OnListModeListener {
+public class MultipleSearchActivity extends BaseAppActivity implements ListModeDialog.OnListModeListener {
     private ProgressBar mProgressBar;
     private LinearLayout mMessageBlock;
     private String mQuery;
@@ -43,12 +43,8 @@ public class MultipleSearchActivity extends AppCompatActivity implements ListMod
         setContentView(R.layout.activity_multisearch);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         mQuery = getIntent().getStringExtra("query");
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setSubtitle(mQuery);
-        }
+        enableHomeAsUp();
+        setSubtitle(mQuery);
         mMessageBlock = (LinearLayout) findViewById(R.id.block_message);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProviderManager = new MangaProviderManager(this);
@@ -85,9 +81,6 @@ public class MultipleSearchActivity extends AppCompatActivity implements ListMod
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.action_listmode:
                 new ListModeDialog(this).show(this);
                 return true;
