@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +15,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.MangaListLoader;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
@@ -26,7 +27,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
 /**
  * Created by nv95 on 01.10.15.
  */
-public class SearchActivity extends AppCompatActivity implements
+public class SearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
         ListModeDialog.OnListModeListener {
     //views
@@ -61,12 +62,8 @@ public class SearchActivity extends AppCompatActivity implements
         if (title != null) {
             setTitle(query);
         }
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setSubtitle(title == null ? query : title);
-        }
+        enableHomeAsUp();
+        setSubtitle(title == null ? query : title);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mLoader = new MangaListLoader(mRecyclerView, this);
         int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
@@ -93,9 +90,6 @@ public class SearchActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.action_listmode:
                 new ListModeDialog(this).show(this);
                 return true;

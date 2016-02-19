@@ -9,7 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
-import org.nv95.openmanga.DownloadsActivity;
+import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.R;
 
 /**

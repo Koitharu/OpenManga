@@ -1,22 +1,23 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.TextView;
 
+import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.AppHelper;
 
 /**
  * Created by nv95 on 18.10.15.
  */
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BaseAppActivity {
     private static final int WELCOME_CHANGELOG = 1;
     private static final int WELCOME_LANGS = 2;
 

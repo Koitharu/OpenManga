@@ -1,10 +1,8 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.activities;
 
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +10,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.Constants;
+import org.nv95.openmanga.DownloadService;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DownloadsAdapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -19,7 +20,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
 /**
  * Created by nv95 on 03.01.16.
  */
-public class DownloadsActivity extends AppCompatActivity implements MangaChangesObserver.OnMangaChangesListener {
+public class DownloadsActivity extends BaseAppActivity implements MangaChangesObserver.OnMangaChangesListener {
     private DownloadsAdapter adapter;
     private ListView listView;
     private TextView textViewHolder;
@@ -29,10 +30,7 @@ public class DownloadsActivity extends AppCompatActivity implements MangaChanges
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloads);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        enableHomeAsUp();
         listView = (ListView) findViewById(R.id.listView);
         textViewHolder = (TextView) findViewById(R.id.textView_holder);
         adapter = new DownloadsAdapter(this);
@@ -69,14 +67,12 @@ public class DownloadsActivity extends AppCompatActivity implements MangaChanges
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
             case R.id.action_cancel:
                 DownloadService.cancel(this);
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
