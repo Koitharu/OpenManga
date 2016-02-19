@@ -1,22 +1,25 @@
 package org.nv95.openmanga.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
@@ -83,6 +86,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
+            case "update":
+                new CheckUpdatesTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
             default:
                 return false;
         }
@@ -142,16 +148,12 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("update").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
             Preference p = findPreference("about");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-            String version;
-            try {
-                version = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                version = "unknown";
-            }
-            p.setSummary(String.format(activity.getString(R.string.version), version));
+            p.setSummary(String.format(activity.getString(R.string.version),
+                    OpenMangaApplication.getVersionName()));
 
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
             bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
@@ -272,5 +274,53 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 return true;
             }
         });
+    }
+
+    private class CheckUpdatesTask extends AsyncTask<Void,Void,AppUpdatesProvider> {
+        private final Preference mPreference;
+
+        public CheckUpdatesTask(Preference preference) {
+            super();
+            mPreference = preference;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mPreference.setSummary(R.string.wait);
+        }
+
+        @Override
+        protected AppUpdatesProvider doInBackground(Void... params) {
+            return new AppUpdatesProvider();
+        }
+
+        @Override
+        protected void onPostExecute(AppUpdatesProvider appUpdatesProvider) {
+            super.onPostExecute(appUpdatesProvider);
+            if (appUpdatesProvider.isSuccess()) {
+                mPreference.setSummary(null);
+                final AppUpdatesProvider.AppUpdateInfo release = appUpdatesProvider.getLatestRelease();
+                final AppUpdatesProvider.AppUpdateInfo beta = appUpdatesProvider.getLatestBeta();
+                final boolean hasNewRelease = release != null && release.isActual();
+                final boolean hasNewBeta = beta != null && beta.isActual();
+                if (!hasNewBeta && !hasNewRelease) {
+                    return;
+                }
+                new AlertDialog.Builder(SettingsActivity.this)
+                        .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: 19.02.16  
+                            }
+                        })
+                        .setMessage(hasNewRelease ? release.versionName : beta.versionName)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setCancelable(true)
+                        .create().show();
+            } else {
+                mPreference.setSummary(R.string.error);
+            }
+        }
     }
 }

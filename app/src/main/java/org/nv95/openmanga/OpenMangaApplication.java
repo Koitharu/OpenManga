@@ -3,7 +3,6 @@ package org.nv95.openmanga;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -11,7 +10,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.ErrorReporter;
 
@@ -22,6 +20,10 @@ public class OpenMangaApplication extends Application {
 
     public static int getVersion() {
         return BuildConfig.VERSION_CODE;
+    }
+
+    public static String getVersionName() {
+        return BuildConfig.VERSION_NAME;
     }
 
     @Override

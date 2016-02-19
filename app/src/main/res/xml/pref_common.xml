@@ -50,6 +50,9 @@
             android:key="about"
             android:title="@string/about" />
         <Preference
+            android:key="update"
+            android:title="@string/check_updates" />
+        <Preference
             android:key="bugreport"
             android:summary="@string/bug_report_summ"
             android:title="@string/bug_report" />
