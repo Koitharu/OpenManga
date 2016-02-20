@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,6 +44,11 @@ public class AppHelper {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
         return formatter.format(calendar.getTime());
+    }
+
+    public static String getReadableDateTimeRelative(long milliseconds) {
+        return DateUtils.getRelativeTimeSpanString(milliseconds, System.currentTimeMillis(), 0L,
+                DateUtils.FORMAT_ABBREV_ALL).toString();
     }
 
     @Nullable

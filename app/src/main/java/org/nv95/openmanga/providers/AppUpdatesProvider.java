@@ -1,11 +1,15 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.OpenMangaApplication;
+
+import java.util.ArrayList;
 
 /**
  * Created by nv95 on 19.02.16.
@@ -34,6 +38,23 @@ public class AppUpdatesProvider {
         }
     }
 
+    public AppUpdateInfo[] getLatestUpdates() {
+        final ArrayList<AppUpdateInfo> updates = new ArrayList<>();
+        if (mResponse != null) {
+            AppUpdateInfo update = getLatestRelease();
+            if (update != null && update.isActual()) {
+                update.versionName = "Latest release: v" + update.versionName;
+                updates.add(update);
+            }
+            update = getLatestBeta();
+            if (update != null && update.isActual()) {
+                update.versionName = "Latest beta: v" + update.versionName;
+                updates.add(update);
+            }
+        }
+        return updates.toArray(new AppUpdateInfo[updates.size()]);
+    }
+
     @Nullable
     public AppUpdateInfo getLatest(String branch) {
         if (mResponse == null) {
@@ -57,9 +78,21 @@ public class AppUpdatesProvider {
     }
 
     public static class AppUpdateInfo {
-        public final String versionName;
-        public final int versionCode;
-        public final String url;
+        protected String versionName;
+        protected int versionCode;
+        protected String url;
+
+        public String getVersionName() {
+            return versionName;
+        }
+
+        public int getVersionCode() {
+            return versionCode;
+        }
+
+        public String getUrl() {
+            return url;
+        }
 
         protected AppUpdateInfo(JSONObject jsonObject) throws JSONException {
             this.versionName = jsonObject.getString("version_name");
@@ -70,5 +103,17 @@ public class AppUpdatesProvider {
         public boolean isActual() {
             return versionCode > OpenMangaApplication.getVersion();
         }
+    }
+
+    public static void setLastCheckTime(Context context, long date) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putLong("last_update", date)
+                .apply();
+    }
+
+    public static long getLastCheckTime(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getLong("last_update", -1);
     }
 }

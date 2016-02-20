@@ -189,4 +189,10 @@
     <string name="unfavourited">Удалено из избранного</string>
     <string name="undo">Отмена</string>
     <string name="manga_removed">Манга удалена</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="update">Обновление</string>
+    <string name="no_app_updates">Обновлений не найдено</string>
+    <string name="last_update_check" formatted="false">Последняя проверка: %s</string>
+    <string name="click_to_install">Нажмите для установки</string>
+    <string name="check_updates">Проверить обновления</string>
 </resources>

@@ -21,11 +21,13 @@ import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.services.UpdateService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.File;
+import java.util.Date;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -148,9 +150,14 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-            findPreference("update").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
-            Preference p = findPreference("about");
+            Preference p = findPreference("update");
+            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            long lastCheck = AppUpdatesProvider.getLastCheckTime(activity.getApplicationContext());
+            p.setSummary(getString(R.string.last_update_check,
+                    lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
+
+            p = findPreference("about");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             p.setSummary(String.format(activity.getString(R.string.version),
                     OpenMangaApplication.getVersionName()));
@@ -299,22 +306,27 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         protected void onPostExecute(AppUpdatesProvider appUpdatesProvider) {
             super.onPostExecute(appUpdatesProvider);
             if (appUpdatesProvider.isSuccess()) {
-                mPreference.setSummary(null);
-                final AppUpdatesProvider.AppUpdateInfo release = appUpdatesProvider.getLatestRelease();
-                final AppUpdatesProvider.AppUpdateInfo beta = appUpdatesProvider.getLatestBeta();
-                final boolean hasNewRelease = release != null && release.isActual();
-                final boolean hasNewBeta = beta != null && beta.isActual();
-                if (!hasNewBeta && !hasNewRelease) {
+                long lastCheck = new Date().getTime();
+                AppUpdatesProvider.setLastCheckTime(getApplicationContext(), lastCheck);
+                mPreference.setSummary(getString(R.string.last_update_check,
+                        lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
+                final AppUpdatesProvider.AppUpdateInfo[] updates = appUpdatesProvider.getLatestUpdates();
+                if (updates.length == 0) {
+                    Toast.makeText(SettingsActivity.this, R.string.no_app_updates, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                final String[] titles = new String[updates.length];
+                for (int i = 0; i < titles.length; i++) {
+                    titles[i] = updates[i].getVersionName();
+                }
                 new AlertDialog.Builder(SettingsActivity.this)
-                        .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.update)
+                        .setItems(titles, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // TODO: 19.02.16  
+                                UpdateService.start(getApplicationContext(), updates[which].getUrl());
                             }
                         })
-                        .setMessage(hasNewRelease ? release.versionName : beta.versionName)
                         .setNegativeButton(android.R.string.cancel, null)
                         .setCancelable(true)
                         .create().show();
