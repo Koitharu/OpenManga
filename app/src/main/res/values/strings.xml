@@ -216,4 +216,8 @@
     <string name="manga_removed">Removed</string>
     <string name="check_updates">Check for updates</string>
     <string name="update">Update</string>
+    <string name="unknown">Unknown</string>
+    <string name="last_update_check" formatted="false">Last check: %s</string>
+    <string name="no_app_updates">No updates found</string>
+    <string name="click_to_install">Click to install</string>
 </resources>

@@ -5,11 +5,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
-import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.R;
 
 /**
@@ -24,16 +25,22 @@ public class NotificationHelper {
         mContext = context;
         mNotificationManager = (NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(android.R.drawable.stat_sys_download)
-                .setProgress(0, 0, true)
-                .setContentTitle(mContext.getString(R.string.saving_manga))
-                .setContentIntent(PendingIntent.getActivity(
-                        mContext,
-                        0,
-                        new Intent(mContext, DownloadsActivity.class),
-                        0
-                ));
+        mNotificationBuilder = new NotificationCompat.Builder(context);
+    }
+
+    public NotificationHelper intentActivity(Intent intent) {
+        mNotificationBuilder.setContentIntent(PendingIntent.getActivity(
+                mContext,
+                0,
+                intent,
+                0
+        ));
+        return this;
+    }
+
+    public NotificationHelper hightPriority() {
+        mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        return this;
     }
 
     public NotificationHelper noActions() {
@@ -62,6 +69,11 @@ public class NotificationHelper {
         return this;
     }
 
+    public NotificationHelper image(@DrawableRes int image) {
+        mNotificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), image));
+        return this;
+    }
+
     public NotificationHelper text(String text) {
         mNotificationBuilder.setContentText(text);
         return this;
@@ -87,6 +99,15 @@ public class NotificationHelper {
     }
 
     public void update(int id) {
+        update(id, null);
+    }
+
+    public void update(int id, @StringRes int ticker) {
+        update(id, mContext.getString(ticker));
+    }
+
+    public void update(int id, @Nullable String ticker) {
+        mNotificationBuilder.setTicker(ticker);
         mNotificationManager.notify(id, notification());
     }
 
