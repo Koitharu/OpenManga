@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name=".activities.MangaPreviewActivity"
-            android:label=""
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Preview"/>
         <activity
             android:name=".activities.SearchActivity"
@@ -38,7 +38,9 @@
             android:name=".activities.MultipleSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
-        <activity android:name=".activities.ReadActivity" />
+        <activity
+            android:name=".activities.ReadActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"
@@ -54,9 +56,11 @@
             android:label="@string/select_sources" />
         <activity
             android:name=".activities.SettingsActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/action_settings" />
         <activity
             android:name=".activities.WelcomeActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/welcome" />
         <activity
             android:name=".activities.AboutActivity"
