@@ -72,6 +72,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         holder.position = position;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
+        holder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
         holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
