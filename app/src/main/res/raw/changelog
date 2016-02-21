@@ -1,8 +1,8 @@
 <h1>Changelog</h1>
 <p>
-    + Add MangaFox source<br>
-    + Import from CBZ files (beta)<br>
-    * Reworked UI and some basic functions<br>
-    * Fixed saving images into gallery<br>
-    * Optimized thumbnails<br>
+    + Changing brightness<br>
+    + Categories for favourites<br>
+    + Checking for app's updates<br>
+    * Small ui enhances<br>
+    * Optimization<br>
 </p>

@@ -1,5 +1,6 @@
 package org.nv95.openmanga.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -66,13 +67,13 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = inflater.inflate(R.layout.item_page, null);
+        View view = inflater.inflate(R.layout.item_page, container, false);
         MangaPage page = getItem(position);
         ViewHolder holder = new ViewHolder();
         holder.position = position;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
-        holder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+        //todo holder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
         holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
@@ -90,8 +91,11 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         }
         View view = (View) object;
         ViewHolder holder = (ViewHolder) view.getTag();
-        if (holder != null && holder.loadTask != null && holder.loadTask.getStatus() == AsyncTask.Status.RUNNING) {
-            holder.loadTask.cancel(false);
+        if (holder != null) {
+            if (holder.loadTask != null && holder.loadTask.getStatus() == AsyncTask.Status.RUNNING) {
+                holder.loadTask.cancel(false);
+            }
+            holder.ssiv.recycle();
         }
         container.removeView(view);
     }
@@ -152,10 +156,12 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         protected void onCancelled(File file) {
             super.onCancelled(file);
             if (file != null && file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
@@ -170,21 +176,18 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
                 URL url = new URL(source);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
-
                 // expect HTTP 200 OK, so we don't mistakenly save error report
                 // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    //
+                    connection.disconnect();
+                    return;
                 }
-
                 // this will be useful to display download percentage
                 // might be -1: server did not report the length
                 int fileLength = connection.getContentLength();
-
                 // download the file
                 input = connection.getInputStream();
                 output = new FileOutputStream(destination);
-
                 byte data[] = new byte[4096];
                 long total = 0;
                 int count;
@@ -193,6 +196,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
                     if (isCancelled()) {
                         input.close();
                         output.close();
+                        //noinspection ResultOfMethodCallIgnored
                         new File(destination).delete();
                         return;
                     }
@@ -203,6 +207,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
                     output.write(data, 0, count);
                 }
             } catch (Exception e) {
+                //noinspection ResultOfMethodCallIgnored
                 new File(destination).delete();
             } finally {
                 try {
@@ -212,7 +217,6 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
                         input.close();
                 } catch (IOException ignored) {
                 }
-
                 if (connection != null)
                     connection.disconnect();
             }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import org.nv95.openmanga.helpers.BrightnessHelper;
  */
 public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     private final Dialog mDialog;
+    private final ScrollView mScrollView;
     private final TextView mTextViewTitle;
     private final TextView mTextViewSubtitle;
     private final Button mButtonFav;
@@ -35,6 +37,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private final View mOptionsBlock;
     private final View mTitleBlock;
     private final ProgressBar mProgressBar;
+    private final Button mButtonApply;
 
     private final SwitchCompat mSwitchBrightness;
     private final SwitchCompat mSwitchKeepscreen;
@@ -48,44 +51,45 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
 
     @SuppressLint("InflateParams")
     public ReaderMenuDialog(Context context) {
-        final View view = LayoutInflater.from(context)
+        mScrollView = (ScrollView) LayoutInflater.from(context)
                 .inflate(R.layout.dialog_reader, null);
-        mTextViewTitle = (TextView) view.findViewById(R.id.textView_title);
-        mTextViewSubtitle = (TextView) view.findViewById(R.id.textView_subtitle);
-        mButtonFav = (Button) view.findViewById(R.id.button_fav);
+        mTextViewTitle = (TextView) mScrollView.findViewById(R.id.textView_title);
+        mTextViewSubtitle = (TextView) mScrollView.findViewById(R.id.textView_subtitle);
+        mButtonFav = (Button) mScrollView.findViewById(R.id.button_fav);
         mButtonFav.setOnClickListener(this);
-        mButtonSave = (Button) view.findViewById(R.id.button_save);
+        mButtonSave = (Button) mScrollView.findViewById(R.id.button_save);
         mButtonSave.setOnClickListener(this);
-        mButtonShare = (Button) view.findViewById(R.id.button_share);
+        mButtonShare = (Button) mScrollView.findViewById(R.id.button_share);
         mButtonShare.setOnClickListener(this);
-        mButtonOpts = (Button) view.findViewById(R.id.button_opt);
+        mButtonOpts = (Button) mScrollView.findViewById(R.id.button_opt);
         mButtonOpts.setOnClickListener(this);
-        mButtonImg = (Button) view.findViewById(R.id.button_img);
+        mButtonImg = (Button) mScrollView.findViewById(R.id.button_img);
         mButtonImg.setOnClickListener(this);
-        mButtonNav = (Button) view.findViewById(R.id.imageButton_goto);
+        mButtonNav = (Button) mScrollView.findViewById(R.id.imageButton_goto);
         mButtonNav.setOnClickListener(this);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mTitleBlock = view.findViewById(R.id.block_title);
+        mProgressBar = (ProgressBar) mScrollView.findViewById(R.id.progressBar);
+        mTitleBlock = mScrollView.findViewById(R.id.block_title);
         mTitleBlock.setOnClickListener(this);
         //preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        mSwitchScrollvolume = (SwitchCompat) view.findViewById(R.id.switch_volkeyscroll);
+        mSwitchScrollvolume = (SwitchCompat) mScrollView.findViewById(R.id.switch_volkeyscroll);
         mSwitchScrollvolume.setChecked(prefs.getBoolean("volkeyscroll", false));
-        mSwitchKeepscreen = (SwitchCompat) view.findViewById(R.id.switch_keepscreen);
+        mSwitchKeepscreen = (SwitchCompat) mScrollView.findViewById(R.id.switch_keepscreen);
         mSwitchKeepscreen.setChecked(prefs.getBoolean("keep_screen", true));
-        mSwitchBrightness = (SwitchCompat) view.findViewById(R.id.switch_brightness);
+        mSwitchBrightness = (SwitchCompat) mScrollView.findViewById(R.id.switch_brightness);
         mSwitchBrightness.setChecked(prefs.getBoolean("brightness", false));
         mSwitchBrightness.setOnClickListener(this);
-        mSeekBarBrightness = (AppCompatSeekBar) view.findViewById(R.id.seekBar_brightness);
+        mSeekBarBrightness = (AppCompatSeekBar) mScrollView.findViewById(R.id.seekBar_brightness);
         mSeekBarBrightness.setProgress(prefs.getInt("brightness_value", 20));
         mSeekBarBrightness.setEnabled(mSwitchBrightness.isChecked());
         mSeekBarBrightness.setOnSeekBarChangeListener(this);
-        mSpinnerDirection = (AppCompatSpinner) view.findViewById(R.id.spinner_direction);
+        mSpinnerDirection = (AppCompatSpinner) mScrollView.findViewById(R.id.spinner_direction);
         mSpinnerDirection.setSelection(Integer.parseInt(prefs.getString("direction","0")));
-        mOptionsBlock = view.findViewById(R.id.block_options);
-        view.findViewById(R.id.button_positive).setOnClickListener(this);
+        mOptionsBlock = mScrollView.findViewById(R.id.block_options);
+        mButtonApply = (Button) mScrollView.findViewById(R.id.button_positive);
+        mButtonApply.setOnClickListener(this);
         mDialog = new AlertDialog.Builder(context)
-                .setView(view)
+                .setView(mScrollView)
                 .setCancelable(true)
                 .create();
     }
@@ -146,6 +150,12 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
                     mButtonOpts.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_settings_dark, 0, R.drawable.ic_drop_up_dark, 0
                     );
+                    mScrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mScrollView.scrollTo(0, mButtonApply.getBottom());
+                        }
+                    });
                 }
                 break;
             case R.id.switch_brightness:
