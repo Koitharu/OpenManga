@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
  * Project: gradle
  * Created by LiaoKai(soarcn) on 2014/11/25.
  */
-class ClosableSlidingLayout extends LinearLayout {
+public class ClosableSlidingLayout extends LinearLayout {
 
     private static final int INVALID_POINTER = -1;
     private final float MINVEL;

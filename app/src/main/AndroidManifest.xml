@@ -28,7 +28,6 @@
         </activity>
         <activity
             android:name=".activities.MangaPreviewActivity"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Preview"/>
         <activity
             android:name=".activities.SearchActivity"

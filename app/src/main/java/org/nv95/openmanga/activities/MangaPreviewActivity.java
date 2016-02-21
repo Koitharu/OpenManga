@@ -10,7 +10,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -52,7 +51,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
         enableHomeAsUp();
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(
@@ -74,7 +72,30 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mImageView.useMemoryCache(false);
         mImageView.setImageAsync(mangaSummary.preview, false);
         mImageView.setOnClickListener(this);
-        new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("readlink")) {
+            mangaSummary = new MangaSummary(savedInstanceState);
+            mProgressBar.setVisibility(View.GONE);
+            mTextViewDescription.setText(mangaSummary.getDescription());
+            mImageView.setImageAsync(mangaSummary.preview, false);
+            if (mangaSummary.getChapters().size() == 0) {
+                mFab.setEnabled(false);
+                Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
+                        .show();
+            } else {
+                mFab.setEnabled(true);
+            }
+        } else {
+            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mangaSummary != null) {
+            outState.putAll(mangaSummary.toBundle());
+        }
     }
 
     @Override
@@ -101,6 +122,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                     R.string.continue_reading, 0, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                             Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
                             intent.putExtras(mangaSummary.toBundle());
                             HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
