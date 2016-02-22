@@ -9,20 +9,9 @@
     <color name="light_background">#f4f4f4</color>
     <color name="preview_filter">#35000000</color>
 
-    <color name="black_owerlay_5">#0D000000</color>
-    <color name="black_owerlay_10">#1A000000</color>
-    <color name="black_owerlay_20">#33000000</color>
     <color name="black_owerlay_40">#66000000</color>
     <color name="black_owerlay_60">#99000000</color>
-    <color name="black_owerlay_80">#CC000000</color>
     <color name="black_owerlay_90">#E6000000</color>
 
-    <color name="white_overlay_5">#0Dffffff</color>
-    <color name="white_overlay_10">#1Affffff</color>
-    <color name="white_overlay_20">#33ffffff</color>
-    <color name="white_overlay_40">#66ffffff</color>
-    <color name="white_overlay_60">#99ffffff</color>
-    <color name="white_overlay_80">#CCffffff</color>
     <color name="white_overlay_85">#d9ffffff</color>
-    <color name="white_overlay_90">#E6ffffff</color>
 </resources>
