@@ -3,7 +3,6 @@ package org.nv95.openmanga.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -52,11 +51,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         setContentView(R.layout.activity_preview);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        enableTransparentStatusBar(0);
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_container);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);

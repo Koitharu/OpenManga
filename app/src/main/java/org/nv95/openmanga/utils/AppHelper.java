@@ -1,11 +1,17 @@
 package org.nv95.openmanga.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.text.format.DateUtils;
+import android.view.View;
+
+import org.nv95.openmanga.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -70,5 +76,25 @@ public class AppHelper {
             return new File(uri.getPath());
         }
         return null;
+    }
+
+    public static boolean showTip(View view, @StringRes int textId) {
+        return showTip(view, view.getContext().getString(textId), "tip" + textId);
+    }
+
+    public static boolean showTip(View view, String text, final String key) {
+        final SharedPreferences prefs = view.getContext().getSharedPreferences("tips", Context.MODE_PRIVATE);
+        if (!prefs.getBoolean(key, false)) {
+            Snackbar.make(view, text, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.got_it, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            prefs.edit().putBoolean(key, true).apply();
+                        }
+                    }).show();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
