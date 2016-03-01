@@ -207,7 +207,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                             //....
                         }
                     });
-            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mPager, R.string.image_saved, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action_share, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
