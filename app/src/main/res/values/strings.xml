@@ -181,12 +181,12 @@
 
     <string name="genre_tension">Tension</string>
     <string name="genre_yetiskin">Yetişkin</string>
-    <string name="genre_webtoon">Webtoon</string>
+    <string name="web">Webt</string>
     <string name="genre_uzay">Uzay</string>
     <string name="genre_seytanlar">Şeytanlar</string>
     <string name="genre_oneshot">One Shot</string>
     <string name="genre_parodi">Parodi</string>
-    <string name="genre_polisiye">Polisiye</string>
+    <string name="genre_police">Polisiye</string>
     <string name="genre_robotlar">Robotlar</string>
     <string name="genre_smut">Smut</string>
     <string name="open_on_start">Open on start</string>
@@ -220,4 +220,7 @@
     <string name="no_app_updates">No updates found</string>
     <string name="click_to_install">Click to install</string>
     <string name="got_it">Got it</string>
+    <string name="menu">Menu</string>
+    <string name="genre_superpower">Super power</string>
+    <string name="genre_hentai">Hentai</string>
 </resources>

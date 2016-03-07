@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,11 +12,11 @@
         android:layout_height="match_parent" />
 
     <ImageView
+        tools:ignore="ContentDescription"
         android:id="@+id/imageViewOverscroll"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="right|center_vertical"
-        android:layout_marginRight="0dp"
         android:background="@drawable/background_fab"
         android:scaleType="center"
         android:src="@drawable/ic_nav_arrow"
@@ -27,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:padding="5dp"
-        android:src="@drawable/ic_action_navigation_more_vert" />
+        android:src="@drawable/ic_action_navigation_more_vert"
+        android:contentDescription="@string/menu"/>
 
 </android.support.design.widget.CoordinatorLayout>

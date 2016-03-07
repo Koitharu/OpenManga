@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import org.nv95.openmanga.NavigationDialog;
@@ -316,7 +316,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction) {
         if (deltaX == 0) {
-            FrameLayout.LayoutParams params = ((FrameLayout.LayoutParams) mOversrollImageView.getLayoutParams());
+            CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) mOversrollImageView.getLayoutParams());
             if (direction == -1 && hasPrevChapter()) {
                 params.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
                 params.leftMargin = -mOversrollImageView.getWidth();
