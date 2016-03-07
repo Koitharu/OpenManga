@@ -223,4 +223,7 @@
     <string name="menu">Menu</string>
     <string name="genre_superpower">Super power</string>
     <string name="genre_hentai">Hentai</string>
+    <string name="tip_genre_sort">Tap on title to filter mangas by genre and select sort order</string>
+    <string name="tip_reader_menu">Click to open menu</string>
+    <string name="tip_chapter_checking">Enable automatic checking and receive notifications about new chapters for favourite mangas</string>
 </resources>

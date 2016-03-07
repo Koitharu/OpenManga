@@ -49,6 +49,7 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
@@ -310,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mToggle.syncState();
+        AppHelper.showcaseTip(this, R.id.title, R.string.tip_genre_sort, "genresort");
     }
 
     @Override
