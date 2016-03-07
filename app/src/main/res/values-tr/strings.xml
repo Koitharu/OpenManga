@@ -93,7 +93,7 @@
     <string name="genre_music">Müzik</string>
     <string name="genre_oneshot">One Shot</string>
     <string name="genre_parodi">Parodi</string>
-    <string name="genre_polisiye">Polisiye</string>
+    <string name="genre_police">Polisiye</string>
     <string name="genre_psychological">Psikolojik</string>
     <string name="genre_robotlar">Robotlar</string>
     <string name="genre_samurai">Samuray</string>
@@ -102,7 +102,7 @@
     <string name="genre_seytanlar">Şeytanlar</string>
     <string name="genre_tragedy">Trajedi</string>
     <string name="genre_uzay">Uzay</string>
-    <string name="genre_webtoon">Webtoon</string>
+    <string name="web">Webtoon</string>
     <string name="genre_yetiskin">Yetişkin</string>
     <string name="genre_imageset">Resim ayarla</string>
     <string name="genre_misc">Misc</string>

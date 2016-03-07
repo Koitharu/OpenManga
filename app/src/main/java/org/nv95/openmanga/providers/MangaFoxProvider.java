@@ -30,7 +30,7 @@ public class MangaFoxProvider extends MangaProvider {
             R.string.genre_psychological, R.string.genre_romance, R.string.genre_school, R.string.genre_sci_fi,
             R.string.genre_seinen, R.string.genre_shoujo, R.string.genre_shoujo_ai, R.string.genre_shounen, R.string.genre_shounen_ai,
             R.string.genre_slice_of_life, R.string.genre_smut, R.string.genre_sports, R.string.genre_supernatural,
-            R.string.genre_tragedy, R.string.genre_webtoon, R.string.genre_yaoi, R.string.genre_yuri
+            R.string.genre_tragedy, R.string.web, R.string.genre_yaoi, R.string.genre_yuri
     };
     private static final String genreUrls[] = {"action", "adult", "adventure", "comedy", "doujinshi",
             "drama", "ecchi", "fantasy", "gender-bender", "harem", "historical", "horror", "josei", "martial-arts",

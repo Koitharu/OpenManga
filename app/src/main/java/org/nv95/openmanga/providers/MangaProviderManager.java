@@ -33,6 +33,7 @@ public class MangaProviderManager {
             new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Language.RU),
             new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
             new ProviderSumm("Манга-тян", MangachanProvider.class, Language.RU),
+            new ProviderSumm("Desu.me", DesuMeProvider.class, Language.RU),
             new ProviderSumm("MangaFox", MangaFoxProvider.class, Language.EN),
             new ProviderSumm("E-Hentai", EHentaiProvider.class, Language.MULTI),
             new ProviderSumm("MangaTown", MangaTownProvider.class, Language.EN),

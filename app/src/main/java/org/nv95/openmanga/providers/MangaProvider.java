@@ -46,6 +46,33 @@ public abstract class MangaProvider {
         return out.toString();
     }
 
+    protected static String postRawPage(String url, String[] data) throws Exception {
+        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+        con.setConnectTimeout(15000);
+        con.setRequestMethod("POST");
+        if (data != null) {
+            con.setDoOutput(true);
+            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            String query = "";
+            for (int i = 0; i < data.length; i = i + 2) {
+                query += URLEncoder.encode(data[i], "UTF-8") + "=" + URLEncoder.encode(data[i + 1], "UTF-8");
+                query += "&";
+            }
+            if (query.length() > 1) query = query.substring(0, query.length() - 1);
+            out.writeBytes(query);
+            out.flush();
+            out.close();
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            out.append(line);
+        }
+        reader.close();
+        return out.toString();
+    }
+
     protected static Document getPage(String url, String cookie) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setDoOutput(true);
