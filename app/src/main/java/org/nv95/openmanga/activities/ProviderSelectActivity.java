@@ -8,7 +8,6 @@ import android.widget.ListView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.MangaProviderManager;
-import org.nv95.openmanga.utils.AppHelper;
 
 /**
  * Selecting used manga providers
@@ -24,7 +23,8 @@ public class ProviderSelectActivity extends BaseAppActivity implements AdapterVi
         setContentView(R.layout.activity_provselect);
         setSupportActionBar(R.id.toolbar);
         ListView listView = (ListView) findViewById(R.id.listView);
-        AppHelper.showTip(listView, R.string.disclaimer);
+        View footerDisclaimer = getLayoutInflater().inflate(R.layout.footer_disclaimer, listView, false);
+        listView.addFooterView(footerDisclaimer, null, false);
         mProviderManager = new MangaProviderManager(this);
         mAdapter = mProviderManager.getAdapter();
         listView.setAdapter(mAdapter);

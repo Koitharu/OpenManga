@@ -38,6 +38,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.io.File;
@@ -422,6 +423,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 pageId = mangaPages.size() - 1;
             }
             mPager.setPages(mangaPages, pageId);
+            AppHelper.showcaseTip(ReadActivity.this, R.id.imageView_menu, R.string.tip_reader_menu, "readermenu");
         }
 
         @Override

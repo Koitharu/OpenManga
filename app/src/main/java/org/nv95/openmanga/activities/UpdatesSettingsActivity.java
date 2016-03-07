@@ -14,6 +14,7 @@ import android.view.View;
 
 import org.nv95.openmanga.ChaptersSyncService;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.AppHelper;
 
 /**
  * Created by nv95 on 19.12.15.
@@ -28,7 +29,7 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
         setContentView(R.layout.activity_updsettings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
-        SwitchCompat toggle = (SwitchCompat) findViewById(R.id.switch_toggle);
+        final SwitchCompat toggle = (SwitchCompat) findViewById(R.id.switch_toggle);
         toggle.setChecked(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("chupd", false));
         toggle.setOnClickListener(this);
 
@@ -38,6 +39,8 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
                     .add(R.id.content, settingsFragment)
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
+        } else {
+            AppHelper.showcaseTip(this, toggle, R.string.tip_chapter_checking, "chaptercheck");
         }
     }
 
