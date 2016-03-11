@@ -181,12 +181,12 @@
 
     <string name="genre_tension">Tension</string>
     <string name="genre_yetiskin">Yetişkin</string>
-    <string name="web">Webt</string>
+    <string name="web">Web</string>
     <string name="genre_uzay">Uzay</string>
     <string name="genre_seytanlar">Şeytanlar</string>
     <string name="genre_oneshot">One Shot</string>
     <string name="genre_parodi">Parodi</string>
-    <string name="genre_police">Polisiye</string>
+    <string name="genre_police">Police</string>
     <string name="genre_robotlar">Robotlar</string>
     <string name="genre_smut">Smut</string>
     <string name="open_on_start">Open on start</string>

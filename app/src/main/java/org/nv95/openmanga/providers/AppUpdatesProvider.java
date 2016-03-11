@@ -116,4 +116,11 @@ public class AppUpdatesProvider {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getLong("last_update", -1);
     }
+
+    public static int getLastCheckHoursDelay(Context context) {
+        long delay = System.currentTimeMillis();
+        delay -= getLastCheckTime(context);
+        delay /= 3600000;
+        return (int) delay;
+    }
 }
