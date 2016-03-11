@@ -8,12 +8,12 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,6 +24,8 @@ import org.nv95.openmanga.helpers.BrightnessHelper;
  * Created by nv95 on 12.02.16.
  */
 public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+    private static final int[] checkIds = new int[] {R.id.check_ltr, R.id.check_ttb, R.id.check_rtl};
+
     private final Dialog mDialog;
     private final ScrollView mScrollView;
     private final TextView mTextViewTitle;
@@ -43,7 +45,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private final SwitchCompat mSwitchKeepscreen;
     private final SwitchCompat mSwitchScrollvolume;
     private final AppCompatSeekBar mSeekBarBrightness;
-    private final AppCompatSpinner mSpinnerDirection;
+    private final RadioGroup mRadioGroupDirections;
     @Nullable
     private View.OnClickListener mCallback;
     @Nullable
@@ -83,8 +85,12 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         mSeekBarBrightness.setProgress(prefs.getInt("brightness_value", 20));
         mSeekBarBrightness.setEnabled(mSwitchBrightness.isChecked());
         mSeekBarBrightness.setOnSeekBarChangeListener(this);
-        mSpinnerDirection = (AppCompatSpinner) mScrollView.findViewById(R.id.spinner_direction);
-        mSpinnerDirection.setSelection(Integer.parseInt(prefs.getString("direction","0")));
+        mRadioGroupDirections = (RadioGroup) mScrollView.findViewById(R.id.radioGroup_direction);
+        int id = Integer.parseInt(prefs.getString("direction","0"));
+        if (id < 0 || id > 2)  {
+            id = 0;
+        }
+        mRadioGroupDirections.check(checkIds[id]);
         mOptionsBlock = mScrollView.findViewById(R.id.block_options);
         mButtonApply = (Button) mScrollView.findViewById(R.id.button_positive);
         mButtonApply.setOnClickListener(this);
@@ -173,7 +179,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
                 break;
             case R.id.button_positive:
                 PreferenceManager.getDefaultSharedPreferences(v.getContext()).edit()
-                        .putString("direction", String.valueOf(mSpinnerDirection.getSelectedItemPosition()))
+                        .putString("direction", (String) mScrollView.findViewById(mRadioGroupDirections.getCheckedRadioButtonId()).getTag())
                         .putBoolean("keep_screen", mSwitchKeepscreen.isChecked())
                         .putBoolean("volkeyscroll", mSwitchScrollvolume.isChecked())
                         .putBoolean("brightness", mSwitchBrightness.isChecked())
