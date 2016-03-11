@@ -198,7 +198,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         }
     }
 
-
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();

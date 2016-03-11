@@ -194,4 +194,12 @@
     <string name="last_update_check" formatted="false">Последняя проверка: %s</string>
     <string name="click_to_install">Нажмите для установки</string>
     <string name="check_updates">Проверить обновления</string>
+    <string name="genre_genderch">Смена пола</string>
+    <string name="genre_hentai">Хентай</string>
+    <string name="genre_slice_of_life">Повседневность</string>
+    <string name="got_it">Понятно</string>
+    <string name="menu">Меню</string>
+    <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
+    <string name="tip_genre_sort">Нажмите на заголовок, чтобы выбрать жанр и порядок сортировки</string>
+    <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
 </resources>
