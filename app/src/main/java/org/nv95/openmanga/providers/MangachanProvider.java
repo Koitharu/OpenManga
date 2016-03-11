@@ -55,15 +55,16 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            Document document = getPage(mangaInfo.getPath());
+            final Document document = getPage(mangaInfo.getPath());
             Element e = document.body();
             summary.readLink = summary.path;
 
             summary.description = e.getElementById("description").text();
             summary.preview = "http://mangachan.ru" + e.getElementById("cover").attr("src");
             MangaChapter chapter;
-            e = e.select("table.table_cha").first();
-            for (Element o : e.select("a")) {
+            Elements els = e.select("table.table_cha");
+            els = els.select("a");
+            for (Element o : els) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://mangachan.ru" + o.attr("href");
