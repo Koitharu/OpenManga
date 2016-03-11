@@ -155,12 +155,54 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/scrolling_direction" />
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:minHeight="?android:listPreferredItemHeightSmall"
+            <RadioGroup
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_direction"
-                android:entries="@array/directions" />
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                android:id="@+id/radioGroup_direction"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:button="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/check_ltr"
+                    android:text="@string/direction_ltr"
+                    android:checked="true"
+                    android:tag="0"
+                    android:drawableTop="@drawable/ic_paging_ltr"
+                    android:background="@drawable/background_chechable"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="6dp" />
+
+                <RadioButton
+                    android:button="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/check_rtl"
+                    android:text="@string/direction_rtl"
+                    android:drawableTop="@drawable/ic_paging_rtl"
+                    android:background="@drawable/background_chechable"
+                    android:layout_weight="1"
+                    android:tag="2"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="6dp" />
+
+                <RadioButton
+                    android:button="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/check_ttb"
+                    android:text="@string/direction_ttb"
+                    android:background="@drawable/background_chechable"
+                    android:drawableTop="@drawable/ic_paging_ttb"
+                    android:layout_weight="1"
+                    android:tag="1"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="6dp" />
+
+            </RadioGroup>
 
             <android.support.v7.widget.SwitchCompat
                 android:minHeight="?android:listPreferredItemHeightSmall"
