@@ -47,7 +47,7 @@ public class UpdatesAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_download, null);
             viewHolder = new ViewHolder();
             viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.textView_title);
-            viewHolder.textViewStatus = (TextView) convertView.findViewById(R.id.textView_status);
+            viewHolder.textViewStatus = (TextView) convertView.findViewById(R.id.textView_state);
             viewHolder.asyncImageView = (AsyncImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(viewHolder);
         } else {

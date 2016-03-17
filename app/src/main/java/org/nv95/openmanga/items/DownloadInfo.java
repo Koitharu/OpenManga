@@ -19,7 +19,7 @@ public class DownloadInfo extends MangaInfo {
     public final AtomicInteger max;
     public final AtomicInteger pos = new AtomicInteger(0);
     public final AtomicInteger state = new AtomicInteger(STATE_IDLE);
-    public final ArrayList<Pair<MangaChapter,AtomicInteger>> chapters = new ArrayList<>();
+    public final ArrayList<Pair<MangaChapter,ProgressInfo>> chapters = new ArrayList<>();
 
     public DownloadInfo(MangaSummary mangaSummary) {
         this.id = new AtomicInteger(mangaSummary.hashCode());
@@ -32,7 +32,7 @@ public class DownloadInfo extends MangaInfo {
         this.description = mangaSummary.description;
         this.readLink = mangaSummary.readLink;
         for (MangaChapter o:mangaSummary.getChapters()) {
-            this.chapters.add(new Pair<>(o, new AtomicInteger(0)));
+            this.chapters.add(new Pair<>(o, new ProgressInfo()));
         }
         this.max = new AtomicInteger(chapters.size());
     }

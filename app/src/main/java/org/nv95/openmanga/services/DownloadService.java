@@ -23,6 +23,7 @@ import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.items.ProgressInfo;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -32,7 +33,6 @@ import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -184,16 +184,17 @@ public class DownloadService extends Service {
                     .now();
             //собственно, скачивание
             ArrayList<MangaPage> pages;
-            Pair<MangaChapter,AtomicInteger> o;
+            Pair<MangaChapter,ProgressInfo> o;
             for (int i=0; i<mDownload.max.get(); i++) {
                 o = mDownload.chapters.get(i);
                 chapterSaveBuilder = mangaSaveBuilder.newChapter(o.first.readLink.hashCode());
                 pages = provider.getPages(o.first.readLink);
+                o.second.max.set(pages.size());
                 for (MangaPage o1 : pages) {
                     chapterSaveBuilder.newPage(o1.path.hashCode())
                             .downloadPage(provider.getPageImage(o1))
                             .commit();
-                    publishProgress(o.second.incrementAndGet() * 100 / pages.size());
+                    publishProgress(o.second.progress.incrementAndGet() * 100 / pages.size());
                     if (isCancelled()) {
                         break;
                     }
