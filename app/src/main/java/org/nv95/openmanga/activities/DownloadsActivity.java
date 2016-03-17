@@ -1,20 +1,20 @@
 package org.nv95.openmanga.activities;
 
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DownloadsAdapter;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 /**
@@ -22,7 +22,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
  */
 public class DownloadsActivity extends BaseAppActivity implements MangaChangesObserver.OnMangaChangesListener {
     private DownloadsAdapter adapter;
-    private ListView listView;
+    private RecyclerView mRecyclerView;
     private TextView textViewHolder;
 
     @Override
@@ -31,17 +31,18 @@ public class DownloadsActivity extends BaseAppActivity implements MangaChangesOb
         setContentView(R.layout.activity_downloads);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
-        listView = (ListView) findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         textViewHolder = (TextView) findViewById(R.id.textView_holder);
         adapter = new DownloadsAdapter(this);
-        adapter.registerDataSetObserver(new DataSetObserver() {
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
-                textViewHolder.setVisibility(adapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+                textViewHolder.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
             }
         });
-        listView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
