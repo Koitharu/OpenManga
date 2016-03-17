@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements
         Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
         String[] names = mProviderManager.getNames();
         for (int i = 0; i < names.length; i++) {
-            navMenu.add(R.id.groupRemote, i, i, names[i]);
+            navMenu.add(R.id.groupRemote, i, i, names[i]).setCheckable(true);
         }
     }
 
@@ -287,9 +287,6 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
                 return true;
@@ -358,6 +355,9 @@ public class MainActivity extends AppCompatActivity implements
         setSubtitle(null);
 
         switch (selectedItem) {
+            case R.id.nav_action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
                 break;
@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-        return false;
+        return true;
     }
 
         @Override
