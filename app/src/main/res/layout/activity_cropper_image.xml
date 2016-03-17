@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <include
+        android:id="@+id/iToolbar"
+        layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/iToolbar"
+        android:orientation="vertical">
+
+        <com.edmodo.cropper.CropImageView
+            android:id="@+id/CropImageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/activity_horizontal_margin">
+
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bGetImage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/get_image"
+                android:layout_weight="1"
+                android:theme="@style/AppTheme"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/done"
+                android:theme="@style/AppTheme"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
