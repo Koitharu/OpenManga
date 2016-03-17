@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -28,10 +29,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
 import org.nv95.openmanga.ListModeDialog;
 import org.nv95.openmanga.MangaListLoader;
@@ -50,16 +55,19 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.DrawerHeaderImageTool;
+import org.nv95.openmanga.utils.ImageCreator;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+public class MainActivity extends AppCompatActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
-        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>, ListModeDialog.OnListModeListener, FilterSortDialog.Callback {
+        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
+        ListModeDialog.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
-    private ListView mDrawerListView;
+//    private ListView mDrawerListView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private FloatingActionButton mFab;
@@ -74,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
+    private NavigationView mNavigationView;
+    private int selectedItem;
+    private ImageCreator imageCreator;
+    private DrawerHeaderImageTool drawerHeaderTool;
+//    private int remoteSelectedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,34 +94,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mDrawerListView = (ListView) findViewById(R.id.listView_menu);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         mFab.setOnClickListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
         mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
-        TextView[] headers = new TextView[3];
-        headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-        headers[0].setText(R.string.local_storage);
-        headers[0].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_device_storage, 0, 0, 0);
-        headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-        headers[1].setText(R.string.action_favourites);
-        headers[1].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_toggle_star_half, 0, 0, 0);
-        headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-        headers[2].setText(R.string.action_history);
-        headers[2].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_history, 0, 0, 0);
-        mDrawerListView.addHeaderView(headers[0]);
-        mDrawerListView.addHeaderView(headers[1]);
-        mDrawerListView.addHeaderView(headers[2]);
-        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
-        mDrawerListView.setItemChecked(3 + defSection, true);
-        mDrawerListView.setOnItemClickListener(this);
+//        TextView[] headers = new TextView[3];
+//        headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
+//        headers[0].setText(R.string.local_storage);
+//        headers[0].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_device_storage, 0, 0, 0);
+//        headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
+//        headers[1].setText(R.string.action_favourites);
+//        headers[1].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_toggle_star_half, 0, 0, 0);
+//        headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
+//        headers[2].setText(R.string.action_history);
+//        headers[2].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_history, 0, 0, 0);
+//        mDrawerListView.addHeaderView(headers[0]);
+//        mDrawerListView.addHeaderView(headers[1]);
+//        mDrawerListView.addHeaderView(headers[2]);
+//        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
+//        mDrawerListView.setItemChecked(3 + defSection, true);
+//        mDrawerListView.setOnItemClickListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -131,6 +146,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setHomeButtonEnabled(true);
             //actionBar.setSubtitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
         }
+
+        initDrawerRemoteProviders();
+
+
         mTextViewTitle = (TextView) findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) findViewById(R.id.textView_subtitle);
         setTitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
@@ -143,6 +162,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         onListModeChanged(viewMode != 0, viewMode - 1);
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+
+        //Load saved image in drawer head
+        drawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
+        drawerHeaderTool.initDrawerImage();
+    }
+
+    /**
+     * Добавляем remote providers в левое меню
+     */
+    private void initDrawerRemoteProviders() {
+        Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+        String[] names = mProviderManager.getNames();
+        for (int i = 0; i < names.length; i++) {
+            navMenu.add(R.id.groupRemote, i, i, names[i]).setCheckable(true);
+        }
     }
 
     @Override
@@ -177,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
                     startActivity(new Intent(MainActivity.this, SearchActivity.class)
                             .putExtra("query", query)
-                            .putExtra("provider", mDrawerListView.getCheckedItemPosition() - 4));
+                            .putExtra("provider", getMenuItemPosition()));
                 } else {
                     startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
                             .putExtra("query", query));
@@ -195,11 +229,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    int getMenuItemPosition(){
+        switch (selectedItem){
+            case R.id.nav_local_storage: return 0;
+            case R.id.nav_action_favourites: return 1;
+            case R.id.nav_action_history: return 2;
+            default: return selectedItem;
+        }
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.setGroupVisible(R.id.group_local, mDrawerListView.getCheckedItemPosition() == 0);
-        menu.setGroupVisible(R.id.group_history, mDrawerListView.getCheckedItemPosition() == 2);
-        menu.setGroupVisible(R.id.group_favourites, mDrawerListView.getCheckedItemPosition() == 1);
+        menu.setGroupVisible(R.id.group_local, selectedItem == R.id.nav_local_storage);
+        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_favourites);
+        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_history);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -232,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        drawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
             startActivity(new Intent(this, CBZActivity.class).putExtras(data));
         }
@@ -243,9 +287,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
                 return true;
@@ -285,29 +326,65 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
+//    @Override
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        mGenre = 0;
+//        setSubtitle(null);
+//        switch (position) {
+//            case 0:
+//                mProvider = LocalMangaProvider.getInstacne(this);
+//                break;
+//            case 1:
+//                mProvider = FavouritesProvider.getInstacne(this);
+//                break;
+//            case 2:
+//                mProvider = HistoryProvider.getInstacne(this);
+//                break;
+//            default:
+//                mProvider = mProviderManager.getMangaProvider(position - 4);
+//        }
+//        mDrawerLayout.closeDrawer(GravityCompat.START);
+//        setTitle(mProvider.getName());
+//        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+//    }
+
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onNavigationItemSelected(MenuItem item) {
+        selectedItem = item.getItemId();
         mGenre = 0;
         setSubtitle(null);
-        switch (position) {
-            case 0:
+
+        switch (selectedItem) {
+            case R.id.nav_action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
                 break;
-            case 1:
+            case R.id.nav_action_favourites:
                 mProvider = FavouritesProvider.getInstacne(this);
                 break;
-            case 2:
+            case R.id.nav_action_history:
                 mProvider = HistoryProvider.getInstacne(this);
                 break;
             default:
-                mProvider = mProviderManager.getMangaProvider(position - 4);
+//                Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+//                remoteSelectedPosition = 0;
+//                for(int i=0; i<navMenu.size(); i++){
+//                    if(item.getItemId() == navMenu.getItem(i).getItemId()){
+//                        remoteSelectedPosition = 0;
+//                    }
+//                }
+                mProvider = mProviderManager.getMangaProvider(selectedItem);
+                break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        return true;
     }
 
-    @Override
+        @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mToggle.syncState();
@@ -326,11 +403,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        if (mProviderManager != null && mDrawerListView != null) {
+        if (mProviderManager != null && mNavigationView != null) {
             mProviderManager.update();
-            int ci = mDrawerListView.getCheckedItemPosition();
-            mDrawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, mProviderManager.getNames()));
-            mDrawerListView.setItemChecked(ci, true);
+
+//            int ci = mDrawerListView.getCheckedItemPosition();
+//            mDrawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, mProviderManager.getNames()));
+//            mDrawerListView.setItemChecked(ci, true);
         }
     }
 
@@ -369,14 +447,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onMangaChanged(int category) {
-        if (category == mDrawerListView.getCheckedItemPosition()) {
+        if (category == getMenuItemPosition()) {
             mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
         }
     }
 
     @Override
     public void onMangaAdded(int category, MangaInfo data) {
-        if (category == mDrawerListView.getCheckedItemPosition()) {
+        if (category == getMenuItemPosition()) {
             mListLoader.addItem(data);
         }
     }
@@ -486,6 +564,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mListLoader.updateLayout(grid, spans, thumbSize);
     }
+
 
 
     private class OpenLastTask extends AsyncTask<Void, Void, Intent> implements DialogInterface.OnCancelListener {

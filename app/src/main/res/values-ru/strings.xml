@@ -202,4 +202,11 @@
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
     <string name="tip_genre_sort">Нажмите на заголовок, чтобы выбрать жанр и порядок сортировки</string>
     <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
+    <string name="select_image">Выберите картинку</string>
+    <string name="error_open_image_choser">Не удается найти приложения для работы с картинками</string>
+    <string name="getFromGallery">Выбрать из галереи</string>
+    <string name="getPicture">Сфотать</string>
+    <string name="error_crop_image">Ошибка сохранения изображения</string>
+    <string name="get_image">Выбрать другое изображение</string>
+    <string name="avatar_title">Аватар</string>
 </resources>
