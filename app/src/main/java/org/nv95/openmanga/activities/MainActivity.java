@@ -27,16 +27,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
 import org.nv95.openmanga.ListModeDialog;
 import org.nv95.openmanga.MangaListLoader;
@@ -124,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
 //        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
 //        mDrawerListView.setItemChecked(3 + defSection, true);
 //        mDrawerListView.setOnItemClickListener(this);
+        mNavigationView.getMenu().getItem(3 + defSection).setChecked(true);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
