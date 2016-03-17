@@ -81,6 +81,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         T item = getItem(position);
         if (item != null) {
+            //noinspection unchecked
             onBindHolder((VH) holder, item);
         } else if (holder instanceof ProgressViewHolder) {
             ((ProgressViewHolder) holder).setVisible(isLoadEnabled());

@@ -182,7 +182,7 @@
     <string name="favourites_categories_default">В процессе, Прочесть позже</string>
     <string name="favourites_categories_description">Введите названия, разделяя их запятой</string>
     <string name="adjust_brightness">Установить яркость</string>
-    <string name="action_options">Параметры</string>
+    <string name="action_options">Опции</string>
     <string name="apply">Применить</string>
     <string name="brightness_value">Яркость экрана</string>
     <string name="save_image">Сохранить изображение</string>
