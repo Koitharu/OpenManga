@@ -85,7 +85,7 @@ public class DesuMeProvider extends MangaProvider {
             summary.readLink = summary.path;
 
             summary.description = e.select("div.prgrph").first().text();
-            summary.preview = "http://desu.me" + e.select("img").first().attr("src");
+            summary.preview = e.select("img").first().attr("src");
             MangaChapter chapter;
             e = e.select("ul.chlist").first();
             for (Element o : e.select("a.tips")) {
