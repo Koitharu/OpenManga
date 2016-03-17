@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_local_storage"
+            android:icon="@drawable/ic_device_storage"
+            android:title="@string/local_storage" />
+        <item
+            android:id="@+id/nav_action_favourites"
+            android:icon="@drawable/ic_toggle_star_half"
+            android:title="@string/action_favourites" />
+        <item
+            android:id="@+id/nav_action_history"
+            android:icon="@drawable/ic_action_history"
+            android:title="@string/action_history" />
+    </group>
+
+    <item android:id="@+id/nav_remote_storage"  android:title="@string/storages_remote">
+        <menu>
+            <group android:id="@+id/groupRemote" android:checkableBehavior="single" />
+        </menu>
+    </item>
+
+</menu>

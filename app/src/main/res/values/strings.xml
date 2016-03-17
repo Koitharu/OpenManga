@@ -226,4 +226,11 @@
     <string name="tip_genre_sort">Tap on title to filter mangas by genre and select sort order</string>
     <string name="tip_reader_menu">Click to open menu</string>
     <string name="tip_chapter_checking">Enable automatic checking and receive notifications about new chapters for favourite mangas</string>
+    <string name="select_image">Select image</string>
+    <string name="error_open_image_choser">Can not find the application to work with pictures</string>
+    <string name="getFromGallery">Chose from gallery</string>
+    <string name="getPicture">Make picture</string>
+    <string name="error_crop_image">Can not crop image</string>
+    <string name="get_image">Load another image</string>
+    <string name="avatar_title">Avatar</string>
 </resources>
