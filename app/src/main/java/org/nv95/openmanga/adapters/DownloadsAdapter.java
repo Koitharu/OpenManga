@@ -27,10 +27,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.nv95.openmanga.DownloadService;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.items.DownloadInfo;
+import org.nv95.openmanga.services.DownloadService;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -49,12 +49,12 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
 
     @Override
     public int getCount() {
-        return mBinder == null ? 0 : mBinder.getQueueSize();
+        return mBinder == null ? 0 : mBinder.getCount();
     }
 
     @Override
-    public MangaInfo getItem(int position) {
-        return mBinder == null ? null : mBinder.getQueue()[position];
+    public DownloadInfo getItem(int position) {
+        return mBinder == null ? null : mBinder.getItem(position);
     }
 
     @Override
@@ -75,9 +75,9 @@ public class DownloadsAdapter extends BaseAdapter implements ServiceConnection {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        MangaInfo info = getItem(position);
-        viewHolder.textViewTitle.setText(info.getName());
-        viewHolder.asyncImageView.setImageAsync(info.getPreview());
+        DownloadInfo info = getItem(position);
+        viewHolder.textViewTitle.setText(info.name);
+        viewHolder.asyncImageView.setImageAsync(info.preview);
         return convertView;
     }
 

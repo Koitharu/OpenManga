@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.DownloadService;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DownloadsAdapter;
 import org.nv95.openmanga.items.MangaInfo;

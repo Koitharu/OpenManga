@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.SaveService;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.items.MangaInfo;
@@ -27,6 +26,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
 /**
@@ -170,8 +170,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 }
                 return true;
             case R.id.action_save:
-                SaveService.SaveWithDialog(this, mangaSummary);
-                //DownloadService.start(this, mangaSummary);
+                //SaveService.SaveWithDialog(this, mangaSummary);
+                DownloadService.start(this, mangaSummary);
                 return true;
             case R.id.action_remove:
                 new AlertDialog.Builder(MangaPreviewActivity.this)
