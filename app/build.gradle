@@ -35,4 +35,5 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.6'
+    compile 'com.edmodo:cropper:1.0.+'
 }
