@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import org.nv95.openmanga.NavigationDialog;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ReaderMenuDialog;
-import org.nv95.openmanga.SaveService;
 import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.SimpleAnimator;
 import org.nv95.openmanga.helpers.BrightnessHelper;
@@ -38,6 +37,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.UpdatesChecker;
 
@@ -154,8 +154,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_save:
                 if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {
-                    SaveService.SaveWithDialog(this, mangaSummary);
-                    //DownloadService.start(this, mangaSummary);
+                    //SaveService.SaveWithDialog(this, mangaSummary);
+                    DownloadService.start(this, mangaSummary);
                 } else {
                     Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
                 }
