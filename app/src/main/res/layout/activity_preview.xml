@@ -93,8 +93,6 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_anchor="@+id/appbar_container"
-                app:layout_anchorGravity="bottom"
                 android:indeterminate="true" />
 
             <TextView
