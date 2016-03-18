@@ -65,11 +65,7 @@ public class MangaPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (checkForOverscroll(ev)) {
-            return false;
-        }
-        ;
-        return super.onTouchEvent(mVertical ? swapXY(ev) : ev);
+        return !checkForOverscroll(ev) && super.onTouchEvent(mVertical ? swapXY(ev) : ev);
     }
 
     public int getCurrentPageIndex() {

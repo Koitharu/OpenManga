@@ -6,17 +6,21 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.MainActivity;
 import org.nv95.openmanga.helpers.NotificationHelper;
+import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
@@ -25,6 +29,12 @@ import org.nv95.openmanga.providers.NewChaptersProvider;
  * Created by nv95 on 18.03.16.
  */
 public class ScheduledService extends Service {
+    private ScheduleHelper mScheduleHelper;
+    private static final int INTERVAL_CHECK_APP_UPDATE = 12;
+    private boolean mChaptersCheckEnabled;
+    private int mChaptersCheckInterval;
+    private boolean mChapterCheckWifiOnly;
+    private boolean mAutoUpdate;
 
     public static boolean internetConnectionIsValid(Context context, boolean wifi_only) {
         ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -34,8 +44,19 @@ public class ScheduledService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        mScheduleHelper = new ScheduleHelper(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mChaptersCheckEnabled = prefs.getBoolean("chupd", false);
+        mChaptersCheckInterval = Integer.parseInt(prefs.getString("chupd.interval", "12"));
+        mChapterCheckWifiOnly = prefs.getBoolean("chupd.wifionly", false);
+        mAutoUpdate = prefs.getBoolean("autoupdate", true);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (internetConnectionIsValid(this, false)) {
+        if (internetConnectionIsValid(this, mChapterCheckWifiOnly)) {
             new BackgroundTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             stopSelf();
@@ -53,12 +74,23 @@ public class ScheduledService extends Service {
         @Override
         protected MangaUpdateInfo[] doInBackground(Void... params) {
             try {
-                publishProgress(new AppUpdatesProvider().getLatestAny());
+                int delay = mScheduleHelper.getActionIntervalHours(Constants.ACTION_CHECK_APP_UPDATES);
+                if (mAutoUpdate && (delay < 0 || delay >= INTERVAL_CHECK_APP_UPDATE)) {
+                    publishProgress(new AppUpdatesProvider().getLatestAny());
+                    mScheduleHelper.actionDone(Constants.ACTION_CHECK_APP_UPDATES);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                return NewChaptersProvider.getInstance(ScheduledService.this).checkForNewChapters();
+                int delay = mScheduleHelper.getActionIntervalHours(Constants.ACTION_CHECK_NEW_CHAPTERS);
+                if (mChaptersCheckEnabled && (delay < 0 || delay >= mChaptersCheckInterval)) {
+                    MangaUpdateInfo[] res = NewChaptersProvider.getInstance(ScheduledService.this).checkForNewChapters();
+                    mScheduleHelper.actionDone(Constants.ACTION_CHECK_NEW_CHAPTERS);
+                    return res;
+                } else {
+                    return null;
+                }
             } catch (Exception e) {
                 return null;
             }
@@ -67,8 +99,7 @@ public class ScheduledService extends Service {
         @Override
         protected void onPostExecute(MangaUpdateInfo[] mangaUpdates) {
             super.onPostExecute(mangaUpdates);
-
-            if (mangaUpdates.length != 0) {
+            if (mangaUpdates != null && mangaUpdates.length != 0) {
                 int sum = 0;
                 for (MangaUpdateInfo o : mangaUpdates) {
                     sum += (o.chapters - o.lastChapters);

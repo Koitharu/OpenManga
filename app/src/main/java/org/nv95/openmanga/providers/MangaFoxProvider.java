@@ -123,7 +123,7 @@ public class MangaFoxProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.getPath());
+            Document document = getPage(mangaPage.path);
             return document.body().getElementById("image").attr("src");
         } catch (Exception e) {
             return null;

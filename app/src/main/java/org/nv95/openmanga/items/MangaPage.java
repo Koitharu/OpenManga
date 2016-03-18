@@ -16,12 +16,4 @@ public class MangaPage {
     public MangaPage(Cursor cursor) {
         path = cursor.getString(3);
     }
-
-    public String getPath() {
-        return path;
-    }
-
-    public Class<?> getProvider() {
-        return provider;
-    }
 }

@@ -92,7 +92,6 @@ public class DesuMeProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://desu.me/" + o.attr("href");
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }

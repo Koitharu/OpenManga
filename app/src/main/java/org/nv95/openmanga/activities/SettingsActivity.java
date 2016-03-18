@@ -13,11 +13,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.DirSelectDialog;
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.services.UpdateService;
@@ -26,7 +28,6 @@ import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.ErrorReporter;
 
 import java.io.File;
-import java.util.Date;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -140,7 +141,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
-            Activity activity = getActivity();
+            final Activity activity = getActivity();
             activity.setTitle(R.string.action_settings);
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -152,7 +153,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
             Preference p = findPreference("update");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-            long lastCheck = AppUpdatesProvider.getLastCheckTime(activity.getApplicationContext());
+            long lastCheck = new ScheduleHelper(activity).getActionRawTime(Constants.ACTION_CHECK_APP_UPDATES);
             p.setSummary(getString(R.string.last_update_check,
                     lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
 
@@ -305,8 +306,8 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         protected void onPostExecute(AppUpdatesProvider appUpdatesProvider) {
             super.onPostExecute(appUpdatesProvider);
             if (appUpdatesProvider.isSuccess()) {
-                long lastCheck = new Date().getTime();
-                AppUpdatesProvider.setLastCheckTime(getApplicationContext(), lastCheck);
+                long lastCheck = System.currentTimeMillis();
+                new ScheduleHelper(SettingsActivity.this).actionDone(Constants.ACTION_CHECK_APP_UPDATES);
                 mPreference.setSummary(getString(R.string.last_update_check,
                         lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
                 final AppUpdatesProvider.AppUpdateInfo[] updates = appUpdatesProvider.getLatestUpdates();

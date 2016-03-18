@@ -191,7 +191,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.getPath();
+        return mangaPage.path;
     }
 
     @Override
