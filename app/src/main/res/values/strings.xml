@@ -233,4 +233,6 @@
     <string name="error_crop_image">Can not crop image</string>
     <string name="get_image">Load another image</string>
     <string name="avatar_title">Avatar</string>
+    <string name="genre">Genre</string>
+    <string name="description">Description</string>
 </resources>
