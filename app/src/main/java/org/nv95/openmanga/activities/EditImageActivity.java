@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Surface;
@@ -68,14 +67,8 @@ public class EditImageActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_cropper_image);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.iToolbar);
         findViewById(R.id.bGetImage).setOnClickListener(this);
         findViewById(R.id.bDone).setOnClickListener(this);
-
-        setSupportActionBar(toolbar);
-
-        toolbar.setTitle(R.string.avatar_title);
 
         imgUrl = getIntent().getStringExtra(IMAGE_URL);
 

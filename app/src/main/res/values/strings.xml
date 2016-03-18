@@ -229,10 +229,9 @@
     <string name="select_image">Select image</string>
     <string name="error_open_image_choser">Can not find the application to work with pictures</string>
     <string name="getFromGallery">Chose from gallery</string>
-    <string name="getPicture">Make picture</string>
+    <string name="getPicture">From camera</string>
     <string name="error_crop_image">Can not crop image</string>
-    <string name="get_image">Load another image</string>
-    <string name="avatar_title">Avatar</string>
+    <string name="select">Select</string>
     <string name="genre">Genre</string>
     <string name="description">Description</string>
     <string name="app_update_avaliable">App\'s update available</string>
