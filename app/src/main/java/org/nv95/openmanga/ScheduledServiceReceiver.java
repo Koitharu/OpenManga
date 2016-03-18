@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 
 import org.nv95.openmanga.services.ScheduledService;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 /**
  * Created by nv95 on 19.12.15.
@@ -29,14 +29,14 @@ public class ScheduledServiceReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
                 enable(context);
-                ErrorReporter.getInstance().report("--ScheduledServiceReceiver ACTION_BOOT_COMPLETED");
+                FileLogger.getInstance().report("--ScheduledServiceReceiver ACTION_BOOT_COMPLETED");
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
                 context.startService(new Intent(context, ScheduledService.class));
-                ErrorReporter.getInstance().report("--ScheduledServiceReceiver CONNECTIVITY_ACTION");
+                FileLogger.getInstance().report("--ScheduledServiceReceiver CONNECTIVITY_ACTION");
                 break;
             default:
-                ErrorReporter.getInstance().report("--ScheduledServiceReceiver unknown action");
+                FileLogger.getInstance().report("--ScheduledServiceReceiver unknown action");
         }
     }
 }

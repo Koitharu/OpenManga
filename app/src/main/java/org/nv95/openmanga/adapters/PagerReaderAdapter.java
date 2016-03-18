@@ -18,7 +18,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.SerialExecutor;
 
 import java.io.File;
@@ -274,7 +274,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.textView.setVisibility(View.GONE);
             viewHolder.buttonRetry.setVisibility(View.VISIBLE);
-            ErrorReporter.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
+            FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
         }
 
         @Override
@@ -282,7 +282,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.textView.setVisibility(View.GONE);
             viewHolder.buttonRetry.setVisibility(View.VISIBLE);
-            ErrorReporter.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.path);
+            FileLogger.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.path);
         }
     }
 }

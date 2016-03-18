@@ -8,7 +8,7 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 41
+        versionCode 42
         versionName "1.2 beta"
     }
 
@@ -40,13 +40,11 @@ android {
             maven { url "https://jitpack.io" }
         }
     }
-
-    //develop
 }
 
 dependencies {
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1' //в более новой версии были проблемы
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'

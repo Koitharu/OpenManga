@@ -13,7 +13,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
 
@@ -103,7 +103,7 @@ public class MangachanProvider extends MangaProvider {
                 }
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         }
         return null;
     }

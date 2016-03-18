@@ -11,7 +11,7 @@ import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class NewChaptersProvider {
             cv.put("chapters", chaptersCount);
             database.update("updates", cv, "id=?", new String[]{String.valueOf(mangaId)});
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (database != null) {
                 database.close();
@@ -70,7 +70,7 @@ public class NewChaptersProvider {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -94,7 +94,7 @@ public class NewChaptersProvider {
                 database.insert("updates", null, cv);
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (database != null) {
                 database.close();
@@ -116,7 +116,7 @@ public class NewChaptersProvider {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -156,7 +156,7 @@ public class NewChaptersProvider {
                         }
                     }
                 } catch (Exception e) {
-                    ErrorReporter.getInstance().report(e);
+                    FileLogger.getInstance().report(e);
                 }
             }
             return updates.toArray(new MangaUpdateInfo[updates.size()]);
