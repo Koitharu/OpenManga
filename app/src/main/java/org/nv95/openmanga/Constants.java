@@ -8,4 +8,5 @@ public abstract class Constants {
     public static final int CATEGORY_FAVOURITES = 1;
     public static final int CATEGORY_HISTORY = 2;
     public static final String SAVED_IMAGE_HEAD = "saved_image_head";
+    public static final int SETTINGS_REQUEST_ID = 5;
 }

@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
 import org.nv95.openmanga.ListModeDialog;
 import org.nv95.openmanga.MangaListLoader;
@@ -167,10 +168,12 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void initDrawerRemoteProviders() {
         Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+        navMenu.removeGroup(R.id.groupRemote);
         String[] names = mProviderManager.getNames();
         for (int i = 0; i < names.length; i++) {
             navMenu.add(R.id.groupRemote, i, i, names[i]).setCheckable(true);
         }
+        navMenu.setGroupCheckable(R.id.groupRemote, true, true);
     }
 
     @Override
@@ -272,6 +275,10 @@ public class MainActivity extends AppCompatActivity implements
         drawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
             startActivity(new Intent(this, CBZActivity.class).putExtras(data));
+        } else if (requestCode == Constants.SETTINGS_REQUEST_ID
+                && mProviderManager != null && mNavigationView != null){
+            mProviderManager.update();
+            initDrawerRemoteProviders();
         }
     }
 
@@ -350,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (selectedItem) {
             case R.id.nav_action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), Constants.SETTINGS_REQUEST_ID);
                 return true;
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
@@ -392,18 +399,6 @@ public class MainActivity extends AppCompatActivity implements
         int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getInt("view_mode", 0);
         onListModeChanged(viewMode != 0, viewMode - 1);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mProviderManager != null && mNavigationView != null) {
-            mProviderManager.update();
-
-//            int ci = mDrawerListView.getCheckedItemPosition();
-//            mDrawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, mProviderManager.getNames()));
-//            mDrawerListView.setItemChecked(ci, true);
-        }
     }
 
     @Override
