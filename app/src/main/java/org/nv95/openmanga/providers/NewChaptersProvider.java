@@ -25,7 +25,7 @@ public class NewChaptersProvider {
     private final StorageHelper mStorageHelper;
     private static WeakReference<NewChaptersProvider> instanceReference = new WeakReference<>(null);
 
-    public static NewChaptersProvider getInstacne(Context context) {
+    public static NewChaptersProvider getInstance(Context context) {
         NewChaptersProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new NewChaptersProvider(context);
@@ -39,8 +39,21 @@ public class NewChaptersProvider {
         mStorageHelper = new StorageHelper(mContext);
     }
 
-    public void markAsViewed(int mangaId) {
-        // TODO: 18.03.16
+    public void markAsViewed(int mangaId, int chaptersCount) {
+        SQLiteDatabase database = null;
+        try {
+            database = mStorageHelper.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put("id", mangaId);
+            cv.put("chapters", chaptersCount);
+            database.update("updates", cv, "id=?", new String[]{String.valueOf(mangaId)});
+        } catch (Exception e) {
+            ErrorReporter.getInstance().report(e);
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+        }
     }
 
     @NonNull
@@ -69,7 +82,7 @@ public class NewChaptersProvider {
         return map;
     }
 
-    private void storeChaptersCount(int mangaId, int chapters, int unread) {
+    public void storeChaptersCount(int mangaId, int chapters, int unread) {
         SQLiteDatabase database = null;
         try {
             database = mStorageHelper.getWritableDatabase();
@@ -129,9 +142,10 @@ public class NewChaptersProvider {
                     continue;
                 }
                 try {
-                    provider = (MangaProvider) o.getProvider().newInstance();
+                    provider = (MangaProvider) o.provider.newInstance();
                     key = o.hashCode();
                     MangaUpdateInfo upd = new MangaUpdateInfo(key);
+                    upd.mangaName = o.name;
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
                     if (upd.chapters > upd.lastChapters) {

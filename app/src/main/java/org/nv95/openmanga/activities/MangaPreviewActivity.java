@@ -27,8 +27,8 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
-import org.nv95.openmanga.utils.UpdatesChecker;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -171,7 +171,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                     FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            UpdatesChecker.rememberChaptersCount(MangaPreviewActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            NewChaptersProvider.getInstance(MangaPreviewActivity.this).markAsViewed(mangaSummary.hashCode(), mangaSummary.getChapters().size());
                             item.setIcon(R.drawable.ic_favorite_light);
                             item.setTitle(R.string.action_unfavourite);
                         }

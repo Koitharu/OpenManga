@@ -5,6 +5,7 @@ package org.nv95.openmanga.items;
  */
 public class MangaUpdateInfo {
     public int mangaId;
+    public String mangaName;
 
     public int lastChapters;
     public int chapters;

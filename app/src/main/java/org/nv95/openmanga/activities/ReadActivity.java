@@ -37,9 +37,9 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -170,7 +170,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            UpdatesChecker.rememberChaptersCount(ReadActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            NewChaptersProvider.getInstance(ReadActivity.this)
+                                    .storeChaptersCount(mangaSummary.hashCode(), mangaSummary.getChapters().size(), 0);
 
                         }
                     }, mangaSummary);

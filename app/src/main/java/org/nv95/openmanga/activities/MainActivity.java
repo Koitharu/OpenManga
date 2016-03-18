@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 return true;
             case R.id.action_updates:
-                startActivity(new Intent(this, UpdatesActivity.class));
+                // TODO: 18.03.16  
                 return true;
             case R.id.action_listmode:
                 new ListModeDialog(this).show(this);
@@ -333,13 +333,13 @@ public class MainActivity extends AppCompatActivity implements
 //        setSubtitle(null);
 //        switch (position) {
 //            case 0:
-//                mProvider = LocalMangaProvider.getInstacne(this);
+//                mProvider = LocalMangaProvider.getInstance(this);
 //                break;
 //            case 1:
-//                mProvider = FavouritesProvider.getInstacne(this);
+//                mProvider = FavouritesProvider.getInstance(this);
 //                break;
 //            case 2:
-//                mProvider = HistoryProvider.getInstacne(this);
+//                mProvider = HistoryProvider.getInstance(this);
 //                break;
 //            default:
 //                mProvider = mProviderManager.getMangaProvider(position - 4);
