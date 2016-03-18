@@ -48,6 +48,7 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.ImageCreator;
@@ -102,23 +103,9 @@ public class MainActivity extends AppCompatActivity implements
         mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
-//        TextView[] headers = new TextView[3];
-//        headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[0].setText(R.string.local_storage);
-//        headers[0].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_device_storage, 0, 0, 0);
-//        headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[1].setText(R.string.action_favourites);
-//        headers[1].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_toggle_star_half, 0, 0, 0);
-//        headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[2].setText(R.string.action_history);
-//        headers[2].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_history, 0, 0, 0);
-//        mDrawerListView.addHeaderView(headers[0]);
-//        mDrawerListView.addHeaderView(headers[1]);
-//        mDrawerListView.addHeaderView(headers[2]);
-//        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
-//        mDrawerListView.setItemChecked(3 + defSection, true);
-//        mDrawerListView.setOnItemClickListener(this);
-        mNavigationView.getMenu().getItem(3 + defSection).setChecked(true);
+        final MenuItem menuItem = mNavigationView.getMenu().getItem(3 + defSection);
+        menuItem.setChecked(true);
+        selectedItem = menuItem.getItemId();
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -228,9 +215,9 @@ public class MainActivity extends AppCompatActivity implements
 
     int getMenuItemPosition(){
         switch (selectedItem){
-            case R.id.nav_local_storage: return 0;
-            case R.id.nav_action_favourites: return 1;
-            case R.id.nav_action_history: return 2;
+            case R.id.nav_local_storage: return Constants.CATEGORY_LOCAL;
+            case R.id.nav_action_favourites: return Constants.CATEGORY_FAVOURITES;
+            case R.id.nav_action_history: return Constants.CATEGORY_HISTORY;
             default: return selectedItem;
         }
     }
@@ -238,8 +225,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.setGroupVisible(R.id.group_local, selectedItem == R.id.nav_local_storage);
-        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_favourites);
-        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_history);
+        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_history);
+        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_favourites);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -308,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 return true;
             case R.id.action_updates:
-                // TODO: 18.03.16  
+                new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             case R.id.action_listmode:
                 new ListModeDialog(this).show(this);
@@ -318,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-
     @Override
     public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
         mGenre = genre;
@@ -326,28 +312,6 @@ public class MainActivity extends AppCompatActivity implements
         MangaProviderManager.SetSort(MainActivity.this, mProvider, sort);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
-
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        mGenre = 0;
-//        setSubtitle(null);
-//        switch (position) {
-//            case 0:
-//                mProvider = LocalMangaProvider.getInstance(this);
-//                break;
-//            case 1:
-//                mProvider = FavouritesProvider.getInstance(this);
-//                break;
-//            case 2:
-//                mProvider = HistoryProvider.getInstance(this);
-//                break;
-//            default:
-//                mProvider = mProviderManager.getMangaProvider(position - 4);
-//        }
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-//        setTitle(mProvider.getName());
-//        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-//    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -618,29 +582,44 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /*private class RemoveHelper extends UndoHelper {
-        private final MangaInfo mManga;
-        private final int mPosition;
+    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Void> implements DialogInterface.OnCancelListener {
+        private final ProgressDialog mProgressDialog;
 
-        public RemoveHelper(int position) {
-            super(false);
-            mPosition = position;
-            mManga = mListLoader.getAdapter().getItem(position);
-        }
-
-        public void remove() {
-            mListLoader.removeItem(mPosition);
-            super.snackbar(mRecyclerView, R.string.manga_removed, Snackbar.LENGTH_LONG);
+        public ChaptersUpdateChecker() {
+            mProgressDialog = new ProgressDialog(MainActivity.this);
+            mProgressDialog.setMessage(getString(R.string.checking_new_chapters));
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setOnCancelListener(this);
+            mProgressDialog.setIndeterminate(true);
         }
 
         @Override
-        public void onUndo() {
-            mListLoader.addItem(mManga, mPosition);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
         }
 
         @Override
-        public void run() {
-            mProvider.remove(new long[]{mManga.hashCode()});
+        protected Void doInBackground(Void... params) {
+            try {
+                NewChaptersProvider.getInstance(MainActivity.this)
+                        .checkForNewChapters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-    }*/
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mProgressDialog.dismiss();
+            onMangaChanged(Constants.CATEGORY_FAVOURITES);
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            this.cancel(false);
+        }
+    }
 }
