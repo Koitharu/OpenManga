@@ -7,7 +7,6 @@ import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.nv95.openmanga.OpenMangaApplication;
 
 import java.util.ArrayList;
 
@@ -53,6 +52,12 @@ public class AppUpdatesProvider {
             }
         }
         return updates.toArray(new AppUpdateInfo[updates.size()]);
+    }
+
+    public AppUpdateInfo getLatestAny() {
+        AppUpdateInfo beta = getLatestBeta();
+        AppUpdateInfo release = getLatestRelease();
+        return beta != null && release != null && beta.versionCode > release.versionCode ? beta : release;
     }
 
     @Nullable
@@ -101,7 +106,7 @@ public class AppUpdatesProvider {
         }
 
         public boolean isActual() {
-            return versionCode > OpenMangaApplication.getVersion();
+            return true;//versionCode > OpenMangaApplication.getVersion();
         }
     }
 

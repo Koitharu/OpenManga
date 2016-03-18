@@ -11,7 +11,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
 
 /**
@@ -51,9 +50,7 @@ public class OpenMangaApplication extends Application {
         );
 
         initImageLoader(this);
-        if (AppUpdatesProvider.getLastCheckHoursDelay(this) >= 24) {
-
-        }
+        ScheduledServiceReceiver.enable(this);
     }
 
     public static ImageLoader initImageLoader(Context c) {

@@ -241,6 +241,7 @@ public class DownloadService extends Service {
                 mNotificationHelper
                         .noActions()
                         .noProgress()
+                        .autoCancel()
                         .icon(android.R.drawable.stat_sys_download_done)
                         .text(R.string.done)
                         .update(NOTIFY_ID);

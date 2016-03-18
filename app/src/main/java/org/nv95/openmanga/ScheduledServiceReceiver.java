@@ -32,6 +32,7 @@ public class ScheduledServiceReceiver extends BroadcastReceiver {
                 ErrorReporter.getInstance().report("--ScheduledServiceReceiver ACTION_BOOT_COMPLETED");
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
+                context.startService(new Intent(context, ScheduledService.class));
                 ErrorReporter.getInstance().report("--ScheduledServiceReceiver CONNECTIVITY_ACTION");
                 break;
             default:
