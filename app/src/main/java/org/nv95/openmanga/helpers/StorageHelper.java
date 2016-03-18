@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.Iterator;
 
@@ -145,7 +145,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             jsonArray = null;
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -195,7 +195,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             success = false;
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (database != null) {
                 database.close();

@@ -24,7 +24,7 @@ import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.lang.ref.WeakReference;
@@ -180,7 +180,7 @@ public class DownloadService extends Service {
             try {
                 provider = (MangaProvider) mDownload.provider.newInstance();
             } catch (Exception e) {
-                ErrorReporter.getInstance().report(e);
+                FileLogger.getInstance().report(e);
                 return null;
             }
             String path = String.valueOf(mDownload.readLink.hashCode());

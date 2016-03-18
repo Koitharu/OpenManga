@@ -25,7 +25,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.services.UpdateService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.io.File;
 
@@ -70,7 +70,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 startActivity(new Intent(this, ProviderSelectActivity.class));
                 return true;
             case "bugreport":
-                ErrorReporter.sendLog(this);
+                FileLogger.sendLog(this);
                 return true;
             case "csearchhist":
                 SearchHistoryAdapter.clearHistory(this);
