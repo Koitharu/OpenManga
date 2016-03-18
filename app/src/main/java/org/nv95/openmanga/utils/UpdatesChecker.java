@@ -20,6 +20,7 @@ import java.util.HashMap;
 /**
  * Created by nv95 on 19.12.15.
  */
+@Deprecated
 public class UpdatesChecker extends AsyncTask<Void, Void, UpdatesChecker.MangaUpdate[]> {
     private final Context context;
 
