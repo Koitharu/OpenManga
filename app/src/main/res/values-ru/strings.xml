@@ -209,4 +209,6 @@
     <string name="error_crop_image">Ошибка сохранения изображения</string>
     <string name="get_image">Выбрать другое изображение</string>
     <string name="avatar_title">Аватар</string>
+    <string name="genre">Жанр</string>
+    <string name="description">Описание</string>
 </resources>
