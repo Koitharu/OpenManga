@@ -95,7 +95,6 @@
             </intent-filter-->
         </activity>
 
-        <service android:name=".SaveService" />
         <service android:name=".services.DownloadService" />
         <service android:name=".ChaptersSyncService" />
         <service android:name=".services.UpdateService" />
