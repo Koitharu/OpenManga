@@ -1,12 +1,11 @@
 package org.nv95.openmanga.providers;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.nv95.openmanga.OpenMangaApplication;
 
 import java.util.ArrayList;
 
@@ -106,26 +105,7 @@ public class AppUpdatesProvider {
         }
 
         public boolean isActual() {
-            return true;//versionCode > OpenMangaApplication.getVersion();
+            return versionCode > OpenMangaApplication.getVersion();
         }
-    }
-
-    public static void setLastCheckTime(Context context, long date) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putLong("last_update", date)
-                .apply();
-    }
-
-    public static long getLastCheckTime(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-                .getLong("last_update", -1);
-    }
-
-    public static int getLastCheckHoursDelay(Context context) {
-        long delay = System.currentTimeMillis();
-        delay -= getLastCheckTime(context);
-        delay /= 3600000;
-        return (int) delay;
     }
 }

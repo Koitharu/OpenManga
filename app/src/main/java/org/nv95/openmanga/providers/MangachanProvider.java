@@ -55,7 +55,7 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            final Document document = getPage(mangaInfo.getPath());
+            final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = summary.path;
 
@@ -68,7 +68,6 @@ public class MangachanProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://mangachan.ru" + o.attr("href");
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -111,7 +110,7 @@ public class MangachanProvider extends MangaProvider {
 
     @Override
     public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.getPath();
+        return mangaPage.path;
     }
 
     @Override

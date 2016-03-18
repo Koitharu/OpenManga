@@ -86,10 +86,9 @@ public class ReadmangaRuProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            Document document = getPage(mangaInfo.getPath());
+            Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = "http://readmanga.me" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
-            ;
             String descr = e.select("div.manga-description").first().html();
             int p = descr.indexOf("<a h");
             if (p > 0)
@@ -102,7 +101,6 @@ public class ReadmangaRuProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://readmanga.me" + o.attr("href") + "?mature=1";
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -148,7 +146,7 @@ public class ReadmangaRuProvider extends MangaProvider {
 
     @Override
     public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.getPath();
+        return mangaPage.path;
     }
 
     @Override

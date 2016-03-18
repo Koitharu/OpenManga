@@ -227,9 +227,9 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             String path;
             publishProgress(0);
             try {
-                path = ((MangaProvider) page.getProvider().newInstance()).getPageImage(page);
+                path = ((MangaProvider) page.provider.newInstance()).getPageImage(page);
             } catch (Exception e) {
-                path = page.getPath();
+                path = page.path;
             }
             if (path == null) {
                 return null;
@@ -274,7 +274,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.textView.setVisibility(View.GONE);
             viewHolder.buttonRetry.setVisibility(View.VISIBLE);
-            ErrorReporter.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.getPath());
+            ErrorReporter.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
         }
 
         @Override
@@ -282,7 +282,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.textView.setVisibility(View.GONE);
             viewHolder.buttonRetry.setVisibility(View.VISIBLE);
-            ErrorReporter.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.getPath());
+            ErrorReporter.getInstance().report("# PageLoadTask.onTileLoadError\n page.path: " + page.path);
         }
     }
 }

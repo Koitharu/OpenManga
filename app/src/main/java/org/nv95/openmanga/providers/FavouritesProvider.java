@@ -54,11 +54,6 @@ public class FavouritesProvider extends MangaProvider {
         return instance;
     }
 
-    @Deprecated
-    public static boolean AddToFavourites(Context context, MangaInfo mangaInfo) {
-        return FavouritesProvider.getInstacne(context).add(mangaInfo);
-    }
-
     public static boolean AddToFavourites(Context context, MangaInfo mangaInfo, int category) {
         return FavouritesProvider.getInstacne(context).add(mangaInfo, category);
     }
