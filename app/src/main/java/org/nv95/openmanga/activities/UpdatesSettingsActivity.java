@@ -12,8 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.nv95.openmanga.ChaptersSyncService;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.ScheduledServiceReceiver;
 import org.nv95.openmanga.utils.AppHelper;
 
 /**
@@ -66,7 +66,7 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
     @Override
     protected void onStop() {
         super.onStop();
-        ChaptersSyncService.SetScheduledStart(this);
+        ScheduledServiceReceiver.enable(this);
     }
 
     @Override
