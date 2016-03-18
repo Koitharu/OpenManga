@@ -11,10 +11,31 @@ android {
         versionCode 41
         versionName "nightly 2016.03.11"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("debug.jks")
+            storePassword 'develop'
+            keyAlias "develop"
+            keyPassword "develop"
+        }
+        debug {
+            storeFile file("debug.jks")
+            storePassword 'develop'
+            keyAlias "develop"
+            keyPassword "develop"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     lintOptions {
@@ -26,6 +47,8 @@ android {
             maven { url "https://jitpack.io" }
         }
     }
+
+    //develop
 }
 
 dependencies {
