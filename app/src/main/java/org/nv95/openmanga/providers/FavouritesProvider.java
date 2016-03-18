@@ -11,17 +11,18 @@ import android.support.v7.app.AlertDialog;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -34,11 +35,13 @@ public class FavouritesProvider extends MangaProvider {
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
     private final StorageHelper dbHelper;
     private final Context context;
+    private final NewChaptersProvider mNewChaptersProvider;
 
     @Deprecated
     public FavouritesProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
+        mNewChaptersProvider = NewChaptersProvider.getInstacne(context);
     }
 
     public static FavouritesProvider getInstacne(Context context) {
@@ -80,6 +83,7 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         MangaList list;
         MangaInfo manga;
+        HashMap<Integer, Integer> updatesMap = mNewChaptersProvider.getLastUpdates();
         try {
             list = new MangaList();
             Cursor cursor = database.query(TABLE_NAME, null,
@@ -87,6 +91,8 @@ public class FavouritesProvider extends MangaProvider {
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
+                    int upd = updatesMap.get(manga.hashCode());
+                    manga.extra = upd == 0 ? null : String.valueOf(upd);
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
