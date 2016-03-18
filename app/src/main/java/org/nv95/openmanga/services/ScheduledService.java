@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.MainActivity;
+import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
@@ -52,7 +53,7 @@ public class ScheduledService extends Service {
         @Override
         protected MangaUpdateInfo[] doInBackground(Void... params) {
             try {
-                publishProgress(new AppUpdatesProvider().getLatestUpdates());
+                publishProgress(new AppUpdatesProvider().getLatestAny());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,7 +101,17 @@ public class ScheduledService extends Service {
         @Override
         protected void onProgressUpdate(AppUpdatesProvider.AppUpdateInfo... values) {
             super.onProgressUpdate(values);
-            // TODO: 18.03.16  
+            if (values[0] == null || !values[0].isActual()) {
+                return;
+            }
+            new NotificationHelper(ScheduledService.this)
+                    .title(R.string.app_update_avaliable)
+                    .text(getString(R.string.app_name) + " " + values[0].getVersionName())
+                    .icon(R.drawable.ic_stat_update)
+                    .autoCancel()
+                    .image(R.mipmap.ic_launcher)
+                    .intentService(new Intent(ScheduledService.this, UpdateService.class).putExtra("url", values[0].getUrl()))
+                    .update(555, R.string.app_update_avaliable);
         }
 
     }
