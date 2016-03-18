@@ -9,8 +9,8 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.Constants;
@@ -23,16 +23,14 @@ import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
-import org.nv95.openmanga.items.ProgressInfo;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -41,14 +39,13 @@ public class DownloadService extends Service {
     public static final int ACTION_ADD = 50;
     public static final int ACTION_CANCEL = 51;
     private static final int NOTIFY_ID = 532;
-    private static final int THREADS_COUNT = 1;
     private NotificationHelper mNotificationHelper;
     private PowerManager.WakeLock mWakeLock;
     //-----------------------------------------
     private final ArrayList<DownloadInfo> mDownloads = new ArrayList<>();
-    private final ThreadPoolExecutor mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_COUNT);
     private final Vector<OnProgressUpdateListener> mProgressListeners = new Vector<>();
-
+    @NonNull
+    private WeakReference<DownloadTask> mTaskReference = new WeakReference<>(null);
 
     public static void start(final Context context, final MangaSummary manga) {
         final int len = manga.chapters.size();
@@ -116,10 +113,22 @@ public class DownloadService extends Service {
                 MangaSummary mangaSummary = new MangaSummary(intent.getExtras());
                 final DownloadInfo download = new DownloadInfo(mangaSummary);
                 mDownloads.add(download);
-                new DownloadTask(download).executeOnExecutor(mExecutor);
+                if (mTaskReference.get() == null) {
+                    new DownloadTask(download).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 break;
             case ACTION_CANCEL:
-                mExecutor.shutdown();
+                DownloadTask task = mTaskReference.get();
+                if (task != null) {
+                    mNotificationHelper
+                            .noActions()
+                            .indeterminate()
+                            .text(R.string.cancelling)
+                            .update(NOTIFY_ID);
+                    task.cancel(true);
+                } else {
+                    stopSelf();
+                }
                 break;
         }
         return super.onStartCommand(intent, flags, startId);
@@ -129,12 +138,6 @@ public class DownloadService extends Service {
     public void onDestroy() {
         mWakeLock.release();
         stopForeground(false);
-        mNotificationHelper
-                .noActions()
-                .noProgress()
-                .icon(android.R.drawable.stat_sys_download_done)
-                .text(R.string.done)
-                .update(NOTIFY_ID);
         super.onDestroy();
     }
 
@@ -144,10 +147,13 @@ public class DownloadService extends Service {
     }
 
     private class DownloadTask extends AsyncTask<Void,Integer,Integer> {
+        protected static final int PROGRESS_PRIMARY = 0;
+        protected static final int PROGRESS_SECONDARY = 1;
         private final DownloadInfo mDownload;
 
         public DownloadTask(DownloadInfo download) {
             this.mDownload = download;
+            mTaskReference = new WeakReference<>(this);
         }
 
         @Override
@@ -159,6 +165,10 @@ public class DownloadService extends Service {
                     .title(R.string.saving_manga)
                     .text(mDownload.name)
                     .update(NOTIFY_ID, getString(R.string.saving_manga) + ": " + mDownload.name);
+            mDownload.state = DownloadInfo.STATE_RUNNING;
+            for (OnProgressUpdateListener o:mProgressListeners) {
+                o.onDataUpdated();
+            }
         }
 
         @Override
@@ -184,32 +194,34 @@ public class DownloadService extends Service {
                     .now();
             //собственно, скачивание
             ArrayList<MangaPage> pages;
-            Pair<MangaChapter,ProgressInfo> o;
-            for (int i=0; i<mDownload.max.get(); i++) {
+            MangaChapter o;
+            MangaPage o1;
+            for (int i=0; i<mDownload.max; i++) {
                 o = mDownload.chapters.get(i);
-                chapterSaveBuilder = mangaSaveBuilder.newChapter(o.first.readLink.hashCode());
-                pages = provider.getPages(o.first.readLink);
-                o.second.max.set(pages.size());
-                for (MangaPage o1 : pages) {
+                chapterSaveBuilder = mangaSaveBuilder.newChapter(o.readLink.hashCode());
+                pages = provider.getPages(o.readLink);
+                publishProgress(PROGRESS_PRIMARY, i, pages.size());
+                for (int j=0; j<pages.size(); j++) {
+                    o1 = pages.get(j);
                     chapterSaveBuilder.newPage(o1.path.hashCode())
                             .downloadPage(provider.getPageImage(o1))
                             .commit();
-                    publishProgress(o.second.progress.incrementAndGet() * 100 / pages.size());
+                    publishProgress(PROGRESS_SECONDARY, j);
                     if (isCancelled()) {
                         break;
                     }
                 }
+                publishProgress(PROGRESS_SECONDARY, pages.size());
                 if (isCancelled()) {
                     chapterSaveBuilder.dissmiss();
                     break;
                 } else {
                     chapterSaveBuilder
-                            .name(o.first.name)
+                            .name(o.name)
                             .commit();
-                    mDownload.pos.incrementAndGet();
-                    publishProgress(0);
                 }
             }
+            publishProgress(PROGRESS_PRIMARY, mDownload.max);
             mangaSaveBuilder.commit();
             mangaSaveHelper.close();
             return null;
@@ -219,25 +231,58 @@ public class DownloadService extends Service {
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
             MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
-            if (mExecutor.getQueue().isEmpty()) {
+            mDownload.state = DownloadInfo.STATE_FINISHED;
+            for (OnProgressUpdateListener o:mProgressListeners) {
+                o.onDataUpdated();
+            }
+            final int pos = mDownloads.indexOf(mDownload);
+            if (pos == mDownloads.size() - 1) {
                 stopSelf();
+                mNotificationHelper
+                        .noActions()
+                        .noProgress()
+                        .icon(android.R.drawable.stat_sys_download_done)
+                        .text(R.string.done)
+                        .update(NOTIFY_ID);
+            } else {
+                new DownloadTask(mDownloads.get(pos + 1)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mNotificationHelper
-                    .progress(mDownload.pos.get() * 100 + values[0], mDownload.max.get() * 100)
-                    .update(NOTIFY_ID);
-            for (OnProgressUpdateListener o:mProgressListeners) {
-                o.onProgressUpdated(mDownload.id.get());
+            if (values[0] == PROGRESS_PRIMARY) {
+                mDownload.pos = values[1];
+                if (values.length > 2) {
+                    mDownload.chaptersSizes[values[1]] = values[2];
+                }
+            } else if (values[0] == PROGRESS_SECONDARY) {
+                mDownload.chaptersProgresses[mDownload.pos] = values[1];
             }
+            mNotificationHelper
+                    .progress(mDownload.pos * 100 + mDownload.getChapterProgressPercent(), mDownload.max * 100)
+                    .update(NOTIFY_ID);
+            final int pos = mDownloads.indexOf(mDownload);
+            for (OnProgressUpdateListener o:mProgressListeners) {
+                o.onProgressUpdated(pos);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mDownload.state = DownloadInfo.STATE_IDLE;
+            for (OnProgressUpdateListener o:mProgressListeners) {
+                o.onDataUpdated();
+            }
+            stopSelf();
         }
     }
 
     public interface OnProgressUpdateListener {
-        void onProgressUpdated(int itemId);
+        void onProgressUpdated(int position);
+        void onDataUpdated();
     }
 
     @Nullable

@@ -30,6 +30,7 @@ import java.util.Collections;
 /**
  * Created by nv95 on 03.01.16.
  */
+@Deprecated
 public class UpdatesActivity extends BaseAppActivity implements UpdatesChecker.OnMangaUpdatedListener, AdapterView.OnItemClickListener {
     private final ArrayList<UpdatesChecker.MangaUpdate> list = new ArrayList<>();
     private final SerialExecutor serialExecutor = new SerialExecutor();
