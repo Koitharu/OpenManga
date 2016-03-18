@@ -1,14 +1,23 @@
 package org.nv95.openmanga.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.MainActivity;
+import org.nv95.openmanga.items.MangaUpdateInfo;
+import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 
 /**
@@ -25,23 +34,75 @@ public class ScheduledService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        if (internetConnectionIsValid(this, false)) {
+            new BackgroundTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            stopSelf();
+        }
         return START_NOT_STICKY;
     }
 
-    private class BackgroundTask extends AsyncTask<Void,Void,Void> {
+    private class BackgroundTask extends AsyncTask<Void,AppUpdatesProvider.AppUpdateInfo,MangaUpdateInfo[]> {
 
         @Override
-        protected Void doInBackground(Void... params) {
-            NewChaptersProvider.getInstacne(ScheduledService.this).checkForNewChapters();
-            return null;
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            stopSelf();
+        protected MangaUpdateInfo[] doInBackground(Void... params) {
+            try {
+                publishProgress(new AppUpdatesProvider().getLatestUpdates());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                return NewChaptersProvider.getInstance(ScheduledService.this).checkForNewChapters();
+            } catch (Exception e) {
+                return null;
+            }
         }
+
+        @Override
+        protected void onPostExecute(MangaUpdateInfo[] mangaUpdates) {
+            super.onPostExecute(mangaUpdates);
+
+            if (mangaUpdates.length != 0) {
+                int sum = 0;
+                for (MangaUpdateInfo o : mangaUpdates) {
+                    sum += (o.chapters - o.lastChapters);
+                }
+
+                Notification.Builder builder = new Notification.Builder(ScheduledService.this)
+                        .setSmallIcon(R.drawable.ic_stat_star)
+                        .setContentTitle(getString(R.string.new_chapters))
+                        .setContentIntent(PendingIntent.getActivity(ScheduledService.this, 1,
+                                new Intent(ScheduledService.this, MainActivity.class), 0))
+                        .setTicker(getString(R.string.new_chapters))
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                        .setContentText(String.format(getString(R.string.new_chapters_count), sum));
+                Notification notification;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    Notification.InboxStyle inboxStyle = new Notification.InboxStyle(builder);
+                    for (MangaUpdateInfo o : mangaUpdates) {
+                        inboxStyle.addLine((o.chapters - o.lastChapters) + " - " + o.mangaName);
+                    }
+                    inboxStyle.setSummaryText(String.format(getString(R.string.new_chapters_count), sum));
+                    notification = inboxStyle.build();
+                } else {
+                    notification = builder.getNotification();
+                }
+                notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(678, notification);
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(AppUpdatesProvider.AppUpdateInfo... values) {
+            super.onProgressUpdate(values);
+            // TODO: 18.03.16  
+        }
+
     }
 
     @Nullable

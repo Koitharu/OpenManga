@@ -16,6 +16,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.ErrorReporter;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class FavouritesProvider extends MangaProvider {
     public FavouritesProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
-        mNewChaptersProvider = NewChaptersProvider.getInstacne(context);
+        mNewChaptersProvider = NewChaptersProvider.getInstance(context);
     }
 
     public static FavouritesProvider getInstacne(Context context) {
@@ -81,9 +82,10 @@ public class FavouritesProvider extends MangaProvider {
         if (page > 0)
             return null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        MangaList list;
+        MangaList list = null;
         MangaInfo manga;
         HashMap<Integer, Integer> updatesMap = mNewChaptersProvider.getLastUpdates();
+        //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
             Cursor cursor = database.query(TABLE_NAME, null,
@@ -91,12 +93,14 @@ public class FavouritesProvider extends MangaProvider {
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    int upd = updatesMap.get(manga.hashCode());
-                    manga.extra = upd == 0 ? null : String.valueOf(upd);
+                    Integer upd = updatesMap.get(manga.hashCode());
+                    manga.extra = (upd == null || upd == 0) ? null : "+" + upd;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
             cursor.close();
+        } catch (Exception e) {
+            ErrorReporter.getInstance().report(e);
         } finally {
             database.close();
         }
