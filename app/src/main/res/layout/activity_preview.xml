@@ -66,6 +66,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvGenreTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/genre"
@@ -78,13 +79,13 @@
                 android:layout_height="wrap_content"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:textColor="@android:color/black"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/accent_light"/>
 
