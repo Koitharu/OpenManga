@@ -16,6 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 03.01.16.
  */
+@Deprecated
 public class UpdatesAdapter extends BaseAdapter {
     private final ArrayList<UpdatesChecker.MangaUpdate> list;
     private LayoutInflater inflater;
