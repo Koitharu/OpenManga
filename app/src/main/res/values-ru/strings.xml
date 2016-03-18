@@ -205,10 +205,11 @@
     <string name="select_image">Выберите картинку</string>
     <string name="error_open_image_choser">Не удается найти приложения для работы с картинками</string>
     <string name="getFromGallery">Выбрать из галереи</string>
-    <string name="getPicture">Сфотать</string>
+    <string name="getPicture">Сделать фото</string>
     <string name="error_crop_image">Ошибка сохранения изображения</string>
-    <string name="get_image">Выбрать другое изображение</string>
-    <string name="avatar_title">Аватар</string>
+    <string name="select">Выбрать</string>
     <string name="genre">Жанр</string>
     <string name="description">Описание</string>
+    <string name="app_update_avaliable">Доступно обновление приложения</string>
+    <string name="check_updates_auto">Автоматическая проверка обновлений</string>
 </resources>

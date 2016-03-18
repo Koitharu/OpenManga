@@ -40,6 +40,8 @@
             android:label="@string/search_results" />
         <activity
             android:name=".activities.EditImageActivity"
+            android:theme="@style/AppTheme.Dialog"
+            android:label="@string/select_image"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".activities.ReadActivity"
