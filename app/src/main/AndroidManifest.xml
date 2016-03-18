@@ -95,12 +95,11 @@
             </intent-filter-->
         </activity>
 
-        <service android:name=".SaveService" />
         <service android:name=".services.DownloadService" />
-        <service android:name=".ChaptersSyncService" />
+        <service android:name=".services.ScheduledService" />
         <service android:name=".services.UpdateService" />
 
-        <receiver android:name=".UpdateCheckerReceiver">
+        <receiver android:name=".ScheduledServiceReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

@@ -16,7 +16,6 @@
 package org.nv95.openmanga.adapters;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -25,11 +24,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
-import org.nv95.openmanga.components.ProgressGroup;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.services.DownloadService;
@@ -39,26 +38,26 @@ import org.nv95.openmanga.services.DownloadService;
  */
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadHolder>
         implements ServiceConnection, DownloadService.OnProgressUpdateListener {
-    private final Intent intent;// = new Intent("org.nv95.openmanga.SaveService");
+    private final Intent intent;
     @Nullable
     private DownloadService.DownloadBinder mBinder;
-    private LayoutInflater inflater;
+    private final RecyclerView mRecyclerView;
 
-    public DownloadsAdapter(Context context) {
-        intent = new Intent(context, DownloadService.class);
+    public DownloadsAdapter(RecyclerView recyclerView) {
+        intent = new Intent(recyclerView.getContext(), DownloadService.class);
         mBinder = null;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRecyclerView = recyclerView;
     }
 
     public void enable() {
-        inflater.getContext().bindService(intent, this, 0);
+        mRecyclerView.getContext().bindService(intent, this, 0);
     }
 
     public void disable() {
         if (mBinder != null) {
             mBinder.removeListener(this);
         }
-        inflater.getContext().unbindService(this);
+        mRecyclerView.getContext().unbindService(this);
     }
 
     @Override
@@ -76,7 +75,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     @Override
     public DownloadHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new DownloadHolder(inflater.inflate(R.layout.item_download, parent, false));
+        return new DownloadHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_download, parent, false));
     }
 
     @Override
@@ -92,33 +92,63 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     }
 
     @Override
-    public void onProgressUpdated(int itemId) {
+    public void onProgressUpdated(int position) {
+        RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
+        if (mBinder != null && holder != null && holder instanceof DownloadHolder) {
+            DownloadInfo item = mBinder.getItem(position);
+            ((DownloadHolder)holder).updateProgress(item.pos, item.max,
+                            item.chaptersProgresses[item.pos], item.chaptersSizes[item.pos],
+                            item.chapters.get(item.pos).name);
+        }
+    }
+
+    @Override
+    public void onDataUpdated() {
         notifyDataSetChanged();
     }
 
     protected static class DownloadHolder extends RecyclerView.ViewHolder {
         private final AsyncImageView mAsyncImageView;
         private final TextView mTextViewTitle;
+        private final TextView mTextViewSubtitle;
         private final TextView mTextViewState;
-        private final ProgressGroup mProgressGroup;
+        private final ProgressBar mProgressBarPrimary;
+        private final ProgressBar mProgressBarSecondary;
 
         public DownloadHolder(View itemView) {
             super(itemView);
             mAsyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
             mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
+            mTextViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             mTextViewState = (TextView) itemView.findViewById(R.id.textView_state);
-            mProgressGroup = (ProgressGroup) itemView.findViewById(R.id.progressGroup);
+            mProgressBarPrimary = (ProgressBar) itemView.findViewById(R.id.progressBar_primary);
+            mProgressBarSecondary = (ProgressBar) itemView.findViewById(R.id.progressBar_secondary);
         }
 
         public void fill(DownloadInfo data) {
             mTextViewTitle.setText(data.name);
             mAsyncImageView.setImageThumbAsync(data.preview, ThumbSize.THUMB_SIZE_LIST);
-            mTextViewState.setText(data.state.get() == DownloadInfo.STATE_RUNNING ? R.string.saving_manga : R.string.queue);
-            final int sz = data.max.get();
-            mProgressGroup.setProgressCount(sz);
-            for (int i=0;i<sz;i++) {
-                mProgressGroup.setProgress(i, data.chapters.get(i).second.progress.get(), data.chapters.get(i).second.max.get());
+            switch (data.state) {
+                case DownloadInfo.STATE_IDLE:
+                    mTextViewState.setText(R.string.queue);
+                    break;
+                case DownloadInfo.STATE_FINISHED:
+                    mTextViewState.setText(R.string.completed);
+                    break;
+                case DownloadInfo.STATE_RUNNING:
+                    mTextViewState.setText(R.string.saving_manga);
+                    break;
             }
+            updateProgress(data.pos, data.max, data.chaptersProgresses[data.pos], data.chaptersSizes[data.pos],
+                    data.chapters.get(data.pos).name);
+        }
+
+        public void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
+            mProgressBarPrimary.setMax(tMax);
+            mProgressBarPrimary.setProgress(tPos);
+            mProgressBarSecondary.setMax(cMax);
+            mProgressBarSecondary.setProgress(cPos);
+            mTextViewSubtitle.setText(subtitle);
         }
     }
 }
