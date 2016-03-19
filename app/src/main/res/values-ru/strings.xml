@@ -212,4 +212,6 @@
     <string name="description">Описание</string>
     <string name="app_update_avaliable">Доступно обновление приложения</string>
     <string name="check_updates_auto">Автоматическая проверка обновлений</string>
+    <string name="chapters_total" formatted="false">Всего глав: %d</string>
+    <string name="check_all">Выбрать все</string>
 </resources>

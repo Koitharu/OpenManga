@@ -168,9 +168,9 @@ public class BottomSheetDialog extends Dialog implements DialogInterface {
 
     public BottomSheetDialog setMultiChoiceItems(String[] items, boolean[] checkedItems) {
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        listView.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, items));
-        for (int i = mHeaders; i < checkedItems.length + mHeaders; i++) {
-            listView.setItemChecked(i, checkedItems[i]);
+        listView.setAdapter(new ArrayAdapter<>(context, R.layout.item_multiple_choice, items));
+        for (int i = 0; i < checkedItems.length; i++) {
+            listView.setItemChecked(i + mHeaders, checkedItems[i]);
         }
         return this;
     }

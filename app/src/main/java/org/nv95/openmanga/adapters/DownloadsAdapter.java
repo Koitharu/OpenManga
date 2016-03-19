@@ -144,8 +144,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         }
 
         public void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
-            mProgressBarPrimary.setMax(tMax);
-            mProgressBarPrimary.setProgress(tPos);
+            mProgressBarPrimary.setMax(tMax * 100);
+            mProgressBarPrimary.setProgress(tPos* 100 + (cPos*100/cMax));
             mProgressBarSecondary.setMax(cMax);
             mProgressBarSecondary.setProgress(cPos);
             mTextViewSubtitle.setText(subtitle);

@@ -55,6 +55,16 @@ public class DownloadService extends Service {
         boolean[] defs = new boolean[len];
         Arrays.fill(defs, false);
         new BottomSheetDialog(context)
+                .addHeader(context.getString(R.string.chapters_total, manga.chapters.size()),
+                        R.string.check_all, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((BottomSheetDialog) dialog).checkAll(true);
+                                for (int i = 0;i < len;i++) {
+                                    checked.put(i, true);
+                                }
+                            }
+                        })
                 .setMultiChoiceItems(manga.chapters.getNames(), defs)
                 .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -64,15 +74,6 @@ public class DownloadService extends Service {
                 })
                 .setSheetTitle(R.string.chapters_to_save)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setNeutralButton(R.string.all, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((BottomSheetDialog) dialog).checkAll(true);
-                        for (int i = 0;i < len;i++) {
-                            checked.put(i, true);
-                        }
-                    }
-                })
                 .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
