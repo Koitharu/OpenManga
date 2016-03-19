@@ -167,7 +167,11 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
 
             p = findPreference("mangadir");
-            p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
+            try {
+                p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
+            } catch (Exception e) {
+                p.setSummary(R.string.unknown);
+            }
             p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(final Preference preference) {
@@ -198,7 +202,11 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
                 @Override
                 protected Float doInBackground(Void... params) {
-                    return LocalMangaProvider.DirSize(getActivity().getExternalCacheDir()) / 1048576f;
+                    try {
+                        return LocalMangaProvider.DirSize(getActivity().getExternalCacheDir()) / 1048576f;
+                    } catch (Exception e) {
+                        return null;
+                    }
                 }
 
                 @Override
@@ -206,7 +214,8 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     super.onPostExecute(aFloat);
                     Preference preference = findPreference("ccache");
                     if (preference != null) {
-                        preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), aFloat));
+                        preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size),
+                                aFloat == null ? 0 : aFloat));
                     }
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

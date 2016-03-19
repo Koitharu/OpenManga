@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
@@ -315,11 +316,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        selectedItem = item.getItemId();
-        mGenre = 0;
-        setSubtitle(null);
-
-        switch (selectedItem) {
+        switch (item.getItemId()) {
             case R.id.nav_action_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class), Constants.SETTINGS_REQUEST_ID);
                 return true;
@@ -333,16 +330,12 @@ public class MainActivity extends AppCompatActivity implements
                 mProvider = HistoryProvider.getInstacne(this);
                 break;
             default:
-//                Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
-//                remoteSelectedPosition = 0;
-//                for(int i=0; i<navMenu.size(); i++){
-//                    if(item.getItemId() == navMenu.getItem(i).getItemId()){
-//                        remoteSelectedPosition = 0;
-//                    }
-//                }
-                mProvider = mProviderManager.getMangaProvider(selectedItem);
+                mProvider = mProviderManager.getMangaProvider(item.getItemId());
                 break;
         }
+        selectedItem = item.getItemId();
+        mGenre = 0;
+        setSubtitle(null);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
@@ -582,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Void> implements DialogInterface.OnCancelListener {
+    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Boolean> implements DialogInterface.OnCancelListener {
         private final ProgressDialog mProgressDialog;
 
         public ChaptersUpdateChecker() {
@@ -600,21 +593,26 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             try {
-                NewChaptersProvider.getInstance(MainActivity.this)
-                        .checkForNewChapters();
+                return NewChaptersProvider.getInstance(MainActivity.this)
+                        .checkForNewChapters().length > 0;
             } catch (Exception e) {
-                e.printStackTrace();
+                return null;
             }
-            return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
             mProgressDialog.dismiss();
-            onMangaChanged(Constants.CATEGORY_FAVOURITES);
+            if (Boolean.TRUE.equals(aBoolean)) {
+                onMangaChanged(Constants.CATEGORY_FAVOURITES);
+            } else if (Boolean.FALSE.equals(aBoolean)) {
+                Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
+            } else if (aBoolean == null) {
+                Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override

@@ -179,7 +179,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 }
                 return true;
             case R.id.action_save:
-                //SaveService.SaveWithDialog(this, mangaSummary);
                 DownloadService.start(this, mangaSummary);
                 return true;
             case R.id.action_remove:
