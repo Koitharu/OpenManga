@@ -229,6 +229,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            onClick(findViewById(R.id.imageView_menu));
+            return super.onKeyDown(keyCode, event);
+        }
         if (scrollWithVolkeys) {
             int page = mPager.getCurrentPageIndex();
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
@@ -247,7 +251,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
+        @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         return scrollWithVolkeys &&
                 (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) ||

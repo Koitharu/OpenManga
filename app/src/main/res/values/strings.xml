@@ -236,4 +236,7 @@
     <string name="description">Description</string>
     <string name="app_update_avaliable">App\'s update available</string>
     <string name="check_updates_auto">Automatic check for updates</string>
+    <string name="chapters_total" formatted="false">Total chapters: %d</string>
+    <string name="check_all">Check all</string>
+    <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
 </resources>
