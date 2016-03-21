@@ -25,7 +25,7 @@ import java.util.Vector;
 public class MangaChangesObserver {
     private static MangaChangesObserver instance = new MangaChangesObserver();
     private Vector<OnMangaChangesListener> listeners = new Vector<>();
-    private int[] queuedChanges = {0, 0, 0};
+    private int[] queuedChanges = {0, 0, 0, 0};
 
     public static void addListener(OnMangaChangesListener listener) {
         instance.listeners.add(listener);
