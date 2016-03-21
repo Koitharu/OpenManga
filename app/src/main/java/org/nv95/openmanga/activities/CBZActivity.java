@@ -153,12 +153,12 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 cv = new ContentValues();
                 cv.put("id", String.valueOf(mangaId).hashCode());
                 cv.put("name", name);
-                cv.put("summary", "Imported from " + new File(params[0]).getName());
+                cv.put("summary", "");
                 cv.put("path", mangaId);
                 cv.put("preview", preview);
                 cv.put("provider", LocalMangaProvider.class.getName());
                 cv.put("subtitle", "");
-                cv.put("description", "");
+                cv.put("description", "Imported from " + new File(params[0]).getName());
                 cv.put("timestamp", new Date().getTime());
                 database.insert(LocalMangaProvider.TABLE_STORAGE, null, cv);
             } catch (Exception e) {
