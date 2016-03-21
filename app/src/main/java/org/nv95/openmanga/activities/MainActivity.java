@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
-import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.MangaListAdapter;
@@ -59,7 +59,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
-        ListModeDialog.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
+        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
     private SearchHistoryAdapter mSearchAdapter;
+    private ListModeHelper mListModeHelper;
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
@@ -140,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
+        mListModeHelper = new ListModeHelper(this, this);
+        mListModeHelper.applyCurrent();
+        mListModeHelper.enable();
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
+        mListModeHelper.disable();
         super.onDestroy();
     }
 
@@ -299,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements
                 new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             case R.id.action_listmode:
-                new ListModeDialog(this).show(this);
+                mListModeHelper.showDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
