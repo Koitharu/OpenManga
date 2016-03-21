@@ -214,4 +214,6 @@
     <string name="check_updates_auto">Автоматическая проверка обновлений</string>
     <string name="chapters_total" formatted="false">Всего глав: %d</string>
     <string name="check_all">Выбрать все</string>
+    <string name="action_recommendations">Рекомендации</string>
+    <string name="no_options_available">Нет доступных опций</string>
 </resources>
