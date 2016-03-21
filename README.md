@@ -8,7 +8,7 @@ OpenManga - Manga reader for Android with simple user-friendly interface and onl
 [Previous build (nightly)](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-20160215-nightly.apk?raw=true) - from 2016-02-15
 
 ## Features
- - 8 online manga's catalogues with search
+ - 9 online manga's catalogues with search
  - Local storage
  - Simple and convenient user interface
  - Favourites and history with remembering last viewed chapter and page
