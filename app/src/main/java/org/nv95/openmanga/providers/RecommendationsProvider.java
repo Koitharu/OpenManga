@@ -104,18 +104,19 @@ public class RecommendationsProvider extends MangaProvider {
         final Random random = new Random();
         final int groupCount = Math.min(providers.size(), 4);
         final int groupSize = 20 / groupCount;
-        MangaProvider provider;
         MangaList tempList;
         MangaInfo manga;
-        for (int i=0; i<groupCount; i++) {
+        for (int i=0; i<groupCount && mangas.size()<=20; i++) {
             try {
                 //noinspection ConstantConditions
                 tempList = providers.get(i).instance().getList(random.nextInt(10), 0, 0);
                 Collections.shuffle(tempList);
-                for (int j=0; j<tempList.size() && j<groupSize;j++) {
+                int k=0;
+                for (int j=0; j<tempList.size() && k<=groupSize;j++) {
                     manga = tempList.get(j);
                     if (checkGenres(manga.summary, genres) >= 50) {
                         mangas.add(manga);
+                        k++;
                     }
                 }
             } catch (Exception e) {
