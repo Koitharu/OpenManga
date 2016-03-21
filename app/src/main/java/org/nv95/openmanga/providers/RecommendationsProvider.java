@@ -1,9 +1,12 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
@@ -23,10 +26,12 @@ public class RecommendationsProvider extends MangaProvider {
     private static WeakReference<RecommendationsProvider> instanceReference = new WeakReference<>(null);
     private final MangaProviderManager mProviderManager;
     private final Context mContext;
+    private final StorageHelper mStorageHelper;
 
     public RecommendationsProvider(Context context) {
         mContext = context;
-        mProviderManager = new MangaProviderManager(context);
+        mProviderManager = new MangaProviderManager(mContext);
+        mStorageHelper = new StorageHelper(mContext);
     }
 
     public static RecommendationsProvider getInstacne(Context context) {
@@ -38,8 +43,62 @@ public class RecommendationsProvider extends MangaProvider {
         return instance;
     }
 
+    private ArrayList<String> getStatGenres() {
+        final ArrayList<String> genres = new ArrayList<>();
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        try {
+            database = mStorageHelper.getReadableDatabase();
+            cursor = database.query("favourites",  new String[]{"summary"}, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String s = cursor.getString(0);
+                    if (s != null && s.length() != 0) {
+                        Collections.addAll(genres, s.split("[,]?\\s"));
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            cursor = database.query("history",  new String[]{"summary"}, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    String s = cursor.getString(0);
+                    if (s != null && s.length() != 0) {
+                        Collections.addAll(genres, s.toLowerCase().split("[,]?\\s"));
+                    }
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        return genres;
+    }
+
+    private int checkGenres(String summary, ArrayList<String> genres) {
+        if (summary == null || summary.length() == 0) {
+            return 0;
+        }
+        if (genres.isEmpty()) {
+            return 100;
+        }
+        String[] parsed = summary.toLowerCase().split("[,]?\\s");
+        int coincidences = 0;
+        for (String o: parsed) {
+            if (genres.contains(o)) {
+                coincidences++;
+            }
+        }
+        return coincidences * 100 / parsed.length;
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
+        final ArrayList<String> genres = getStatGenres();
         final ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
@@ -47,19 +106,30 @@ public class RecommendationsProvider extends MangaProvider {
         final int groupSize = 20 / groupCount;
         MangaProvider provider;
         MangaList tempList;
+        MangaInfo manga;
         for (int i=0; i<groupCount; i++) {
             try {
-                provider = providers.get(i).instance();
-                tempList = provider.getList(random.nextInt(10), 0, 0);
+                //noinspection ConstantConditions
+                tempList = providers.get(i).instance().getList(random.nextInt(10), 0, 0);
                 Collections.shuffle(tempList);
-                tempList = tempList.subList(groupSize);
-                mangas.addAll(tempList);
+                for (int j=0; j<tempList.size() && j<groupSize;j++) {
+                    manga = tempList.get(j);
+                    if (checkGenres(manga.summary, genres) >= 50) {
+                        mangas.add(manga);
+                    }
+                }
             } catch (Exception e) {
-                continue;
+                //ы
             }
         }
         Collections.shuffle(mangas);
         return mangas;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mStorageHelper.close();
+        super.finalize();
     }
 
     @Override
