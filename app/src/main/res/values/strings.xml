@@ -239,4 +239,6 @@
     <string name="chapters_total" formatted="false">Total chapters: %d</string>
     <string name="check_all">Check all</string>
     <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
+    <string name="action_recommendations">Recommendations</string>
+    <string name="no_options_available">No options available</string>
 </resources>

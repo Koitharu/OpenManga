@@ -23,7 +23,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +49,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.ImageCreator;
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
-        final MenuItem menuItem = mNavigationView.getMenu().getItem(3 + defSection);
+        final MenuItem menuItem = mNavigationView.getMenu().getItem(4 + defSection);
         menuItem.setChecked(true);
         selectedItem = menuItem.getItemId();
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mTextViewTitle = (TextView) findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) findViewById(R.id.textView_subtitle);
-        setTitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
+        setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
         findViewById(R.id.title).setOnClickListener(this);
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
@@ -325,6 +325,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
                 break;
+            case R.id.nav_action_recommendations:
+                mProvider = RecommendationsProvider.getInstacne(this);
+                break;
             case R.id.nav_action_favourites:
                 mProvider = FavouritesProvider.getInstacne(this);
                 break;
@@ -355,15 +358,13 @@ public class MainActivity extends AppCompatActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
+        mListModeHelper.applyCurrent();
     }
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -379,13 +380,22 @@ public class MainActivity extends AppCompatActivity implements
                 if (mProvider == null) {
                     return;
                 }
+                final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
+                final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
+                if (!hasGenres && !hasSort) {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.no_options_available)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .create().show();
+                    return;
+                }
                 FilterSortDialog dialog = new FilterSortDialog(this, this);
-                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
+                if (hasGenres) {
                     dialog.genres(mProvider.getGenresTitles(this), mGenre,
                             getString(mProvider instanceof FavouritesProvider
                                     ? R.string.action_category : R.string.action_genre));
                 }
-                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                if (hasSort) {
                     dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
                 }
                 dialog.show();
