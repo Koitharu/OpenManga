@@ -2,6 +2,7 @@ package org.nv95.openmanga.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
@@ -78,11 +81,36 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
         holder.textView = (TextView) view.findViewById(R.id.textView_progress);
+
+        // Работаю над отображением не трогай
+//        String path;
+//        try {
+//            path = ((MangaProvider) page.provider.newInstance()).getPageImage(page);
+//        } catch (Exception e) {
+//            path = page.path;
+//        }
+//        holder.ssiv.setParallelLoadingEnabled(true);
+//        ImageLoader.getInstance().loadImage(path, new LoaderImage(holder));
         holder.loadTask = new PageLoadTask(inflater.getContext(), holder, page);
         holder.loadTask.executeOnExecutor(executor);
         container.addView(view, 0);
         return view;
     }
+
+   class LoaderImage extends SimpleImageLoadingListener {
+       private ViewHolder holder;
+
+       public LoaderImage(ViewHolder holder) {
+           this.holder = holder;
+       }
+
+       @Override
+       public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+           ImageSource source = ImageSource.bitmap(loadedImage).tilingEnabled();
+           holder.ssiv.setImage(source);
+           holder.progressBar.setVisibility(View.GONE);
+       }
+   }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
