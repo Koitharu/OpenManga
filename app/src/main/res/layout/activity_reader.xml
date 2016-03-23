@@ -31,4 +31,20 @@
         android:src="@drawable/ic_action_navigation_more_vert"
         android:contentDescription="@string/menu"/>
 
+    <FrameLayout
+        android:id="@+id/loader"
+        android:background="@color/black_owerlay_60"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/progressBarStyle"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>
