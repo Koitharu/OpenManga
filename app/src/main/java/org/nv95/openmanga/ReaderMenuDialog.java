@@ -3,6 +3,7 @@ package org.nv95.openmanga;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -23,7 +24,7 @@ import org.nv95.openmanga.helpers.BrightnessHelper;
 /**
  * Created by nv95 on 12.02.16.
  */
-public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     private static final int[] checkIds = new int[] {R.id.check_ltr, R.id.check_ttb, R.id.check_rtl};
 
     private final Dialog mDialog;
@@ -50,6 +51,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private View.OnClickListener mCallback;
     @Nullable
     private BrightnessHelper mBrightnessHelper;
+    private OnDismissListener onDismissListener;
 
     @SuppressLint("InflateParams")
     public ReaderMenuDialog(Context context) {
@@ -97,6 +99,8 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         mDialog = new AlertDialog.Builder(context)
                 .setView(mScrollView)
                 .setCancelable(true)
+                .setOnDismissListener(this)
+                .setOnCancelListener(this)
                 .create();
     }
 
@@ -200,6 +204,11 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         }
     }
 
+    public ReaderMenuDialog setOnDismissListener(OnDismissListener onDismissListener){
+        this.onDismissListener = onDismissListener;
+        return this;
+    }
+
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -208,5 +217,21 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if(onDismissListener !=null)
+            onDismissListener.settingsDialogDismiss();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if(onDismissListener !=null)
+            onDismissListener.settingsDialogDismiss();
+    }
+
+    public interface OnDismissListener {
+        void settingsDialogDismiss();
     }
 }

@@ -45,6 +45,7 @@
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".activities.ReadActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".activities.DownloadsActivity"
