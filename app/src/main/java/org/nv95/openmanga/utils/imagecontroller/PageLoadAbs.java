@@ -34,6 +34,9 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
             path = page.path;
         }
         if (path != null) {
+            if (path.startsWith("/")) {
+                path = "file://" + path;
+            }
             ImageLoader.getInstance().displayImage(path, view, null, this, this);
         } else {
             onLoadingFailed(null, null, null);
