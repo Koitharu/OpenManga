@@ -68,7 +68,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
-        holder.textView = (TextView) view.findViewById(R.id.textView_progress);
+//        holder.textView = (TextView) view.findViewById(R.id.textView_progress);
 
         // Работаю над отображением не трогай
 //        String path;
@@ -110,7 +110,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
     private static class ViewHolder {
         ProgressBar progressBar;
         SubsamplingScaleImageView ssiv;
-        TextView textView;
+//        TextView textView;
         Button buttonRetry;
         @Nullable
         PageLoad loadTask;
@@ -128,28 +128,36 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         @Override
         protected void preLoad(){
             viewHolder.progressBar.setVisibility(View.VISIBLE);
-            viewHolder.textView.setText("0%");
-            viewHolder.textView.setVisibility(View.VISIBLE);
+            viewHolder.progressBar.setIndeterminate(true);
+//            viewHolder.textView.setText("0%");
+//            viewHolder.textView.setVisibility(View.VISIBLE);
             viewHolder.buttonRetry.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            super.onLoadingStarted(imageUri, view);
+            viewHolder.progressBar.setIndeterminate(false);
         }
 
         @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.textView.setVisibility(View.GONE);
+//            viewHolder.textView.setVisibility(View.GONE);
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.textView.setVisibility(View.GONE);
+//            viewHolder.textView.setVisibility(View.GONE);
             viewHolder.buttonRetry.setVisibility(View.VISIBLE);
             FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
         }
 
         @Override
         public void onProgressUpdate(String imageUri, View view, int current, int total) {
-            viewHolder.textView.setText(String.format("%d%s", (current * 100 / total), "%"));
+            int progress = (current * 100 / total);
+            viewHolder.progressBar.setProgress(progress);
         }
     }
 
