@@ -30,7 +30,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
     private final SerialExecutor executor = new SerialExecutor();
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = LayoutInflater.from(context);
         pages = mangaPages;
     }
 
