@@ -36,8 +36,20 @@
     </style>
 
     <style name="FlatMenuButton.Horizontal" >
-        <item name="android:drawablePadding">6dp</item>
+        <item name="android:drawablePadding">@dimen/activity_horizontal_margin</item>
         <item name="android:gravity">center_vertical|start|right</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="FlatMenuButtonSimple" >
+        <item name="android:drawablePadding">24dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingTop">@dimen/padding8</item>
+        <item name="android:paddingBottom">@dimen/padding8</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="MaterialDialogSheet" parent="Base.Theme.AppCompat.Light.Dialog">
