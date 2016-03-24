@@ -91,7 +91,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
         chapter = mangaSummary.getChapters().get(chapterId);
-//        mPager.setOffscreenPageLimit(3);
+        mPager.setOffscreenPageLimit(3);
         new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

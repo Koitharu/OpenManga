@@ -11,19 +11,19 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:indeterminate="true" />
 
-    <TextView
-        android:id="@+id/textView_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <!--<TextView-->
+        <!--android:id="@+id/textView_progress"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
 
     <Button
         android:id="@+id/button_retry"
