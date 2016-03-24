@@ -25,6 +25,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -156,11 +157,12 @@ public class MainActivity extends AppCompatActivity implements
      * Добавляем remote providers в левое меню
      */
     private void initDrawerRemoteProviders() {
-        Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+
+        SubMenu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
         navMenu.removeGroup(R.id.groupRemote);
         String[] names = mProviderManager.getNames();
         for (int i = 0; i < names.length; i++) {
-            navMenu.add(R.id.groupRemote, i, i, names[i]).setCheckable(true);
+            navMenu.add(R.id.groupRemote, i, i, names[i]);
         }
         navMenu.setGroupCheckable(R.id.groupRemote, true, true);
     }
@@ -269,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements
                 && mProviderManager != null && mNavigationView != null){
             mProviderManager.update();
             initDrawerRemoteProviders();
+            mNavigationView.setCheckedItem(selectedItem);
         }
     }
 
