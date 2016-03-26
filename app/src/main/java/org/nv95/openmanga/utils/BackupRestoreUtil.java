@@ -122,7 +122,8 @@ public class BackupRestoreUtil {
     }
 
     public void backup(boolean[] what) {
-        new BackupTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false, what[0], what[1]);
+        new BackupTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false, false,
+                what[0], what[1]);
     }
 
     public void restore(File what) {

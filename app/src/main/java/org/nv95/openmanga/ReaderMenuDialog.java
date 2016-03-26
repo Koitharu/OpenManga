@@ -38,7 +38,6 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private final TextView mButtonImg;
     private final TextView mButtonNav;
     private final View mOptionsBlock;
-    private final View mTitleBlock;
     private final ProgressBar mProgressBar;
     private final Button mButtonApply;
 
@@ -59,6 +58,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
                 .inflate(R.layout.dialog_reader, null);
         mTextViewTitle = (TextView) mScrollView.findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) mScrollView.findViewById(R.id.textView_subtitle);
+        mTextViewSubtitle.setOnClickListener(this);
         mButtonFav = (TextView) mScrollView.findViewById(R.id.button_fav);
         mButtonFav.setOnClickListener(this);
         mButtonSave = (TextView) mScrollView.findViewById(R.id.button_save);
@@ -69,11 +69,9 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         mButtonOpts.setOnClickListener(this);
         mButtonImg = (TextView) mScrollView.findViewById(R.id.button_img);
         mButtonImg.setOnClickListener(this);
-        mButtonNav = (TextView) mScrollView.findViewById(R.id.imageButton_goto);
+        mButtonNav = (TextView) mScrollView.findViewById(R.id.textView_goto);
         mButtonNav.setOnClickListener(this);
         mProgressBar = (ProgressBar) mScrollView.findViewById(R.id.progressBar);
-        mTitleBlock = mScrollView.findViewById(R.id.block_title);
-        mTitleBlock.setOnClickListener(this);
         //preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         mSwitchScrollvolume = (SwitchCompat) mScrollView.findViewById(R.id.switch_volkeyscroll);

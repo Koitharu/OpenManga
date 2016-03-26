@@ -58,7 +58,6 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         if (parentDir == null || !parentDir.canRead()) {
             return false;
         }
-        notifyItemsExclusiveRemoved(0);
         files.clear();
         File[] list = parentDir.listFiles();
         for (File o : list) {
@@ -70,9 +69,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         files.add(0, new File(parentDir, ".."));
         int position = files.indexOf(mCurrentDir);
         mCurrentDir = parentDir;
-        notifyItemRangeInserted(0, position);
-        notifyItemChanged(position);
-        notifyItemRangeInserted(position + 1, files.size() - position - 1);
+        notifyDataSetChanged();
         return true;
     }
 
@@ -88,7 +85,6 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         if (directory.getName().equals("..")) {
             return toParentDir();
         }
-        notifyItemsExclusiveRemoved(position);
         files.clear();
         File[] list = directory.listFiles();
         for (File o : list) {
@@ -98,9 +94,8 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         }
         Collections.sort(files, new FileSortComparator());
         files.add(0, new File(directory, ".."));
-        notifyItemChanged(0);
-        notifyItemRangeInserted(1, files.size() - 2);
         mCurrentDir = directory;
+        notifyDataSetChanged();
         return true;
     }
 
@@ -118,11 +113,6 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
     @Override
     public int getItemCount() {
         return files.size();
-    }
-
-    public final void notifyItemsExclusiveRemoved(int position) {
-        notifyItemRangeRemoved(position + 1, getItemCount() - position);
-        notifyItemRangeRemoved(0, position);
     }
 
     @Override

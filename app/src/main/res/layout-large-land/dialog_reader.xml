@@ -2,158 +2,194 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingLeft="6dp"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="RtlSymmetry">
+            android:orientation="vertical"
+            android:paddingTop="4dp" >
 
-            <LinearLayout
-                android:layout_marginTop="4dp"
-                android:orientation="vertical"
-                android:id="@+id/block_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:background="?selectableItemBackground"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:text="Medium Text"
-                    android:maxLines="1"
-                    android:id="@+id/textView_title" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:text="SmallText"
-                    android:gravity="center_vertical"
-                    android:drawableEnd="@drawable/ic_drop_down_dark"
-                    android:drawableRight="@drawable/ic_drop_down_dark"
-                    android:maxLines="2"
-                    android:id="@+id/textView_subtitle" />
-
-                <ProgressBar
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progressBar"
-                    android:indeterminate="false" />
-            </LinearLayout>
-
-            <Button
+            <TextView
+                android:id="@+id/textView_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/FlatMenuButton"
-                android:id="@+id/imageButton_goto"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="Manga title"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black_owerlay_60"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/textView_goto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_swap_horiz_dark"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:text="0/0"
-                android:drawableTop="@drawable/ic_swap_horiz_dark" />
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:clickable="true"
+                android:background="?selectableItemBackground"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/textView_subtitle"
+                android:layout_alignTop="@+id/textView_title"
+                android:gravity="center_vertical" />
 
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/action_favourite"
-            style="@style/FlatMenuButton.Horizontal"
-            android:id="@+id/button_fav"
-            android:drawableStart="@drawable/ic_favorite_outline_dark"
-            android:drawableLeft="@drawable/ic_favorite_outline_dark" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-            <Button
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView_subtitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action_save"
-                style="@style/FlatMenuButton.Horizontal"
-                android:id="@+id/button_save"
-                android:drawableStart="@drawable/ic_save_dark"
-                android:drawableLeft="@drawable/ic_save_dark"
-                android:layout_weight="1" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_share"
-                style="@style/FlatMenuButton.Horizontal"
-                android:id="@+id/button_share"
-                android:drawableStart="@drawable/ic_share_dark"
-                android:drawableLeft="@drawable/ic_share_dark"
-                android:layout_weight="1" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/save_image"
-                style="@style/FlatMenuButton.Horizontal"
-                android:id="@+id/button_img"
-                android:drawableStart="@drawable/ic_image_dark"
-                android:drawableLeft="@drawable/ic_image_dark"
-                android:layout_weight="1" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_options"
-                style="@style/FlatMenuButton.Horizontal"
-                android:id="@+id/button_opt"
-                android:drawableStart="@drawable/ic_settings_dark"
-                android:drawableLeft="@drawable/ic_settings_dark"
                 android:drawableEnd="@drawable/ic_drop_down_dark"
                 android:drawableRight="@drawable/ic_drop_down_dark"
-                android:layout_weight="1" />
-        </LinearLayout>
+                android:gravity="center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:maxLines="1"
+                android:text="Chapter name"
+                android:clickable="true"
+                android:ellipsize="middle"
+                android:background="?selectableItemBackground"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:layout_below="@+id/textView_title"
+                android:layout_toLeftOf="@+id/textView_goto"
+                android:layout_toStartOf="@+id/textView_goto"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" />
 
-        <LinearLayout
-            android:orientation="vertical"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/textView_subtitle" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="2dp"
+            android:background="@android:color/darker_gray" />
+
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/block_options"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:visibility="gone">
+            android:columnCount="2"
+            android:rowCount="3">
 
-            <ImageView
+            <TextView
+                android:id="@+id/button_fav"
+                style="@style/FlatMenuButtonSimple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_favorite_outline_dark"
+                android:drawableStart="@drawable/ic_favorite_outline_dark"
+                android:text="@string/action_favourite"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal" />
+
+            <TextView
+                android:id="@+id/button_share"
+                style="@style/FlatMenuButtonSimple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_share_dark"
+                android:drawableStart="@drawable/ic_share_dark"
+                android:text="@string/action_share"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_columnWeight="1" />
+
+            <TextView
+                android:id="@+id/button_save"
+                style="@style/FlatMenuButtonSimple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_save_dark"
+                android:drawableStart="@drawable/ic_save_dark"
+                android:text="@string/action_save"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_columnWeight="1" />
+
+            <TextView
+                android:id="@+id/button_img"
+                style="@style/FlatMenuButtonSimple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_image_dark"
+                android:drawableStart="@drawable/ic_image_dark"
+                android:text="@string/save_image"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:layout_gravity="fill_horizontal"
+                android:layout_columnWeight="1" />
+
+            <TextView
+                android:id="@+id/button_opt"
+                style="@style/FlatMenuButtonSimple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_drop_down_dark"
+                android:drawableLeft="@drawable/ic_settings_dark"
+                android:drawableRight="@drawable/ic_drop_down_dark"
+                android:drawableStart="@drawable/ic_settings_dark"
+                android:layout_marginBottom="@dimen/padding8"
+                android:text="@string/action_options"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_columnWeight="1" />
+        </GridLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/block_options"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="@dimen/padding8"
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/scrolling_direction" />
+                android:text="@string/scrolling_direction"
+                android:layout_marginBottom="@dimen/padding8"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -170,67 +206,67 @@
                     android:text="@string/direction_ltr"
                     android:checked="true"
                     android:tag="0"
+                    android:padding="@dimen/padding8"
                     android:drawableTop="@drawable/ic_paging_ltr"
                     android:background="@drawable/background_chechable"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="6dp" />
+                    android:gravity="center_horizontal" />
 
                 <RadioButton
                     android:button="@null"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/check_rtl"
+                    android:padding="@dimen/padding8"
                     android:text="@string/direction_rtl"
                     android:drawableTop="@drawable/ic_paging_rtl"
                     android:background="@drawable/background_chechable"
                     android:layout_weight="1"
                     android:tag="2"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="6dp" />
+                    android:gravity="center_horizontal" />
 
                 <RadioButton
                     android:button="@null"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/check_ttb"
+                    android:padding="@dimen/padding8"
                     android:text="@string/direction_ttb"
                     android:background="@drawable/background_chechable"
                     android:drawableTop="@drawable/ic_paging_ttb"
                     android:layout_weight="1"
                     android:tag="1"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="6dp" />
+                    android:gravity="center_horizontal" />
 
             </RadioGroup>
 
             <android.support.v7.widget.SwitchCompat
-                android:minHeight="?android:listPreferredItemHeightSmall"
-                android:text="@string/keep_screen"
                 android:id="@+id/switch_keepscreen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true" />
+                android:checked="true"
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/keep_screen" />
 
             <android.support.v7.widget.SwitchCompat
-                android:minHeight="?android:listPreferredItemHeightSmall"
-                android:text="@string/scroll_by_volkeys"
                 android:id="@+id/switch_volkeyscroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false" />
+                android:checked="false"
+                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:text="@string/scroll_by_volkeys" />
 
             <android.support.v7.widget.SwitchCompat
-                android:minHeight="?android:listPreferredItemHeightSmall"
+                android:id="@+id/switch_brightness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch_brightness"
+                android:minHeight="?android:listPreferredItemHeightSmall"
                 android:text="@string/adjust_brightness" />
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -239,20 +275,20 @@
                     android:contentDescription="@string/brightness_value" />
 
                 <android.support.v7.widget.AppCompatSeekBar
-                    android:enabled="false"
+                    android:id="@+id/seekBar_brightness"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/seekBar_brightness"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:enabled="false" />
             </LinearLayout>
 
             <Button
+                android:id="@+id/button_positive"
                 style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/apply"
-                android:id="@+id/button_positive"
-                android:layout_gravity="end|right" />
+                android:layout_gravity="end|right"
+                android:text="@string/apply" />
         </LinearLayout>
 
     </LinearLayout>

@@ -12,7 +12,7 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        tools:ignore="ContentDescription"
+        tools:ignore="ContentDescription,RtlHardcoded"
         android:id="@+id/imageViewOverscroll"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"

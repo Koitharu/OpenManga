@@ -59,7 +59,7 @@ public class OpenMangaApplication extends Application {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(c)
                 .defaultDisplayImageOptions(getImageLoaderOptions())
-                .diskCacheSize(50 * 1024 * 1024)
+                .diskCacheSize(50 * 1024 * 1024)        //50 Mb
                 .diskCacheFileCount(100)
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
                 .build();
