@@ -28,7 +28,6 @@ import org.nv95.openmanga.utils.ImageCreator;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Random;
 
 /**
  * Created by Владимир on 03.02.2015.
@@ -170,14 +169,9 @@ public class EditImageActivity extends AppCompatActivity implements View.OnClick
         cropImageView.setImageResource(0);
         System.gc();
 
-        File myDir = new File(getExternalCacheDir().getAbsolutePath() + "/saved_images");
+        File myDir = getExternalFilesDir("temp");
         myDir.mkdirs();
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
-
-        File file = new File(myDir, fname);
+        File file = new File(myDir, "header.jpg");
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);
