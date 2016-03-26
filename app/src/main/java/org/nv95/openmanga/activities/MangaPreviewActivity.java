@@ -233,7 +233,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             }
             MangaPreviewActivity.this.mangaSummary = mangaSummary;
             mTextViewDescription.setText(mangaSummary.getDescription());
-            mImageView.setImageAsync(mangaSummary.preview, false);
+            mImageView.updateImageAsync(mangaSummary.preview);
             if (mangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)

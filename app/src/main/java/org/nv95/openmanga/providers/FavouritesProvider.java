@@ -166,7 +166,6 @@ public class FavouritesProvider extends MangaProvider {
     }
 
 
-    @Deprecated
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = dbHelper.getWritableDatabase();

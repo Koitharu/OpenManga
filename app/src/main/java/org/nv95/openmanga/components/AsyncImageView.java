@@ -26,7 +26,9 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
+import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
 
@@ -58,11 +60,9 @@ public class AsyncImageView extends ImageView {
     }
 
     protected void init(){
-        if(IMAGE_HOLDER == null)
+        if(IMAGE_HOLDER == null) {
             IMAGE_HOLDER = ContextCompat.getDrawable(getContext(), R.drawable.placeholder);
-//        if (fileCache == null) {
-//            fileCache = new FileCache(getContext());
-//        }
+        }
     }
 
     public void setImageAsync(@Nullable String url) {
@@ -94,5 +94,16 @@ public class AsyncImageView extends ImageView {
 
     public void useMemoryCache(boolean b) {
 
+    }
+
+    public void updateImageAsync(String url) {
+        if (mUrl != null && mUrl.equals(url)) {
+            return;
+        }
+        mUrl = (url != null && url.charAt(0) == '/') ? "file://" + url : url;
+        ImageLoader.getInstance().displayImage(mUrl, this, OpenMangaApplication
+                .getImageLoaderOptionsBuilder()
+                .displayer(new SimpleBitmapDisplayer())
+        .build());
     }
 }

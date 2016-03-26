@@ -151,6 +151,7 @@ public class UpdateService extends Service {
                         .icon(R.drawable.ic_stat_update)
                         .text(R.string.click_to_install)
                         .intentActivity(intent)
+                        .autoCancel()
                         .update(NOTIFY_ID, R.string.done);
             } else {
                 mNotificationHelper
