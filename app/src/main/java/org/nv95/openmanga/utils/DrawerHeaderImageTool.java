@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.nv95.openmanga.Constants;
+import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.CBZActivity;
 import org.nv95.openmanga.activities.EditImageActivity;
 
 /**
@@ -45,7 +45,8 @@ public class DrawerHeaderImageTool implements View.OnClickListener {
             if(!imageUrl.startsWith("http") && !imageUrl.startsWith("file"))
                 imageUrl = "file://" + imageUrl;
 
-            ImageLoader.getInstance().displayImage(imageUrl, imageView);
+            ImageLoader.getInstance().displayImage(imageUrl, imageView, OpenMangaApplication
+                    .getImageLoaderOptionsBuilder().cacheOnDisk(false).cacheInMemory(false).build());
             textView.setVisibility(View.GONE);
         } else {
             imageView.setImageResource(R.drawable.side_nav_bar);
@@ -66,6 +67,7 @@ public class DrawerHeaderImageTool implements View.OnClickListener {
                     .edit()
                     .putString(Constants.SAVED_IMAGE_HEAD, imageUrl)
                     .apply();
+            imageView.setImageResource(R.drawable.side_nav_bar);
             initDrawerImage();
         }
     }
