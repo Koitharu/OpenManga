@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.nv95.openmanga.components.ProportionalLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="8000dp"
-    android:layout_height="8000dp"
+<org.nv95.openmanga.components.AutoHeightLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
     android:padding="4dp">
 
@@ -64,4 +64,4 @@
         android:background="@drawable/background_badge"
         android:id="@+id/textView_badge"
         android:textColor="@color/white_overlay_85" />
-</org.nv95.openmanga.components.ProportionalLayout>
+</org.nv95.openmanga.components.AutoHeightLayout>
