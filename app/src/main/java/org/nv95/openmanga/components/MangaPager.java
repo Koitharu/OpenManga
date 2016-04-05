@@ -140,7 +140,7 @@ public class MangaPager extends ViewPager implements GestureDetector.OnGestureLi
         return ev;
     }
 
-    private int getState(){
+    public int getState(){
         if (getCurrentItem() == 0) {
             return -1;
         } else if (getCurrentItem() == getAdapter().getCount() - 1) {
@@ -211,8 +211,8 @@ public class MangaPager extends ViewPager implements GestureDetector.OnGestureLi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        Log.d("gesturemanga onScroll", "scroll sum: "+(e1.getX() - e2.getX()));
-        Log.d("gesturemanga onScroll", "scroll"+distanceX);
+//        Log.d("gesturemanga onScroll", "scroll sum: "+(e1.getX() - e2.getX()));
+//        Log.d("gesturemanga onScroll", "scroll"+distanceX);
 
         int distance = (int) (e2.getX() - e1.getX());
 
@@ -226,10 +226,11 @@ public class MangaPager extends ViewPager implements GestureDetector.OnGestureLi
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.d("gesturemanga onFling", ""+velocityX);
+//        Log.d("gesturemanga onFling", ""+velocityX);
 //        int distance = (int) (e1.getX() - e2.getX());
+        int distance = (int) (e2.getX() - e1.getX());
 
-        return mOverScrollListener.OnOverScroll(this, 0, 0, true);
+        return mOverScrollListener.OnOverScroll(this, getMaxScrool(distance), distance == 0 ? 0 : 0, true);
     }
 
     public interface OverScrollListener {

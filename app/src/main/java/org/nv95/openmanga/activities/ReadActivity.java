@@ -360,7 +360,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         if(isFly)
             mOversrollImageView.setTranslationX(overscrollSize);
 
-        if (deltaX == 0 || isFly) {
+        if (deltaX == 0) {
             CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) mOversrollImageView.getLayoutParams());
             if (direction == -1 && hasPrevChapter()) {
                 setArrowPosition(params, GravityCompat.START);
@@ -370,7 +370,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             } else if (direction == 0) {
                     float scrollFactor = (float) mOversrollImageView.getTag();
-                    if (Math.abs(scrollFactor) >= .9f || isFly) {
+                    if (Math.abs(scrollFactor) >= .9f) {
+
                         new SimpleAnimator(mOversrollImageView).forceGravity(Gravity.CENTER).hide();
                         if ((params.gravity == Gravity.CENTER_VERTICAL + GravityCompat.END)) {
                             if(hasNextChapter()){
