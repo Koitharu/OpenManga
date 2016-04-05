@@ -402,7 +402,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         mOversrollImageView.setColorFilter(Color.argb((int) (255 * -Math.abs(scrollFactor)), 183, 28, 28));
 
-        mOversrollImageView.setRotation(scrollFactor * 180);
+        mOversrollImageView.setRotation(scrollFactor * 270);
         mOversrollImageView.setTag(scrollFactor);
         return true;
     }

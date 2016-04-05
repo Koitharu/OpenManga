@@ -156,7 +156,9 @@ public class MangaPager extends ViewPager implements GestureDetector.OnGestureLi
         if (getState() == 0)
             return false;
 
-        if(!this.mDetector.onTouchEvent(event)){
+        boolean ev = this.mDetector.onTouchEvent(event);
+
+        if(!ev){
             switch (event.getAction()){
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
