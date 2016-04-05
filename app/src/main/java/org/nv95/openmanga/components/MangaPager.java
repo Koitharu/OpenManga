@@ -230,7 +230,7 @@ public class MangaPager extends ViewPager implements GestureDetector.OnGestureLi
 //        int distance = (int) (e1.getX() - e2.getX());
         int distance = (int) (e2.getX() - e1.getX());
 
-        return mOverScrollListener.OnOverScroll(this, getMaxScrool(distance), distance == 0 ? 0 : 0, true);
+        return mOverScrollListener.OnOverScroll(this, 0, 0, true);
     }
 
     public interface OverScrollListener {
