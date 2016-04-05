@@ -19,7 +19,7 @@
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/background_fab"
         android:scaleType="center"
-        android:src="@drawable/ic_nav_arrow"
+        android:src="@drawable/ic_arrow_back_black_24dp"
         android:visibility="invisible" />
 
     <ImageView

@@ -11,9 +11,12 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -63,6 +66,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private boolean scrollWithVolkeys = false;
     private int overscrollSize;
     private BrightnessHelper mBrightnessHelper;
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +86,17 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             return;
         }
-        if (savedInstanceState != null) {
-            chapterId = savedInstanceState.getInt("chapter");
-            pageId = savedInstanceState.getInt("page");
-        } else {
-            chapterId = getIntent().getIntExtra("chapter", 0);
-            pageId = getIntent().getIntExtra("page", 0);
-        }
+
+        initParams(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
         chapter = mangaSummary.getChapters().get(chapterId);
         mPager.setOffscreenPageLimit(3);
         new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void initParams(Bundle b){
+        chapterId = b.getInt("chapter", 0);
+        pageId = b.getInt("page", 0);
     }
 
     @Override
@@ -333,55 +337,72 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    void setArrowPosition(CoordinatorLayout.LayoutParams params, int gravity){
+        params.gravity = Gravity.CENTER_VERTICAL | gravity;
+        params.leftMargin = gravity == GravityCompat.START ? -mOversrollImageView.getWidth() : 0;
+        params.rightMargin = gravity == GravityCompat.START ? 0 : -mOversrollImageView.getWidth();
+        mOversrollImageView.setTranslationX(0);
+        mOversrollImageView.setVisibility(View.VISIBLE);
+        mOversrollImageView.getParent().requestLayout();
+    }
+
+    void loadChapter(){
+        chapter = mangaSummary.getChapters().get(chapterId);
+        new LoadPagesTask().execute();
+    }
+
     @Override
-    public boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction) {
-        if (deltaX == 0) {
+    public boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction, boolean isFly) {
+
+        if(mLoader.getVisibility() == View.VISIBLE)
+            return true;
+
+        if(isFly)
+            mOversrollImageView.setTranslationX(overscrollSize);
+
+        if (deltaX == 0 || isFly) {
             CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) mOversrollImageView.getLayoutParams());
             if (direction == -1 && hasPrevChapter()) {
-                params.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
-                params.leftMargin = -mOversrollImageView.getWidth();
-                mOversrollImageView.setTranslationX(0);
-                mOversrollImageView.setVisibility(View.VISIBLE);
-                mOversrollImageView.getParent().requestLayout();
+                setArrowPosition(params, GravityCompat.START);
                 return true;
             } else if (direction == 1 && hasNextChapter()) {
-                params.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-                params.rightMargin = -mOversrollImageView.getWidth();
-                mOversrollImageView.setTranslationX(0);
-                mOversrollImageView.setVisibility(View.VISIBLE);
-                mOversrollImageView.getParent().requestLayout();
+                setArrowPosition(params, GravityCompat.END);
                 return true;
             } else if (direction == 0) {
-                if (mOversrollImageView.getTag() != null) {
                     float scrollFactor = (float) mOversrollImageView.getTag();
-                    if (scrollFactor >= (float) overscrollSize / viewPager.getWidth()) {
+                    if (Math.abs(scrollFactor) >= .9f || isFly) {
                         new SimpleAnimator(mOversrollImageView).forceGravity(Gravity.CENTER).hide();
-                        if ((params.gravity == Gravity.CENTER_VERTICAL + Gravity.RIGHT)) {
-                            chapterId += mPager.isReverse() ? -1 : 1;
-                            pageId = mPager.isReverse() ? -1 : 0;
+                        if ((params.gravity == Gravity.CENTER_VERTICAL + GravityCompat.END)) {
+                            if(hasNextChapter()){
+                                chapterId += mPager.isReverse() ? -1 : 1;
+                                pageId = mPager.isReverse() ? -1 : 0;
+                                loadChapter();
+                            }
                         } else {
-                            chapterId += mPager.isReverse() ? 1 : -1;
-                            pageId = mPager.isReverse() ? 0 : -1;
+                            if (hasPrevChapter()){
+                                chapterId += mPager.isReverse() ? 1 : -1;
+                                pageId = mPager.isReverse() ? 0 : -1;
+                                loadChapter();
+                            }
                         }
-                        chapter = mangaSummary.getChapters().get(chapterId);
-                        new LoadPagesTask().execute();
                         return true;
                     }
-                }
                 new SimpleAnimator(mOversrollImageView).hide();
                 return false;
             } else {
                 return false;
             }
         }
-        float scrollFactor = deltaX / 2;
-        mOversrollImageView.setTranslationX(-direction * scrollFactor);
-        scrollFactor = scrollFactor / viewPager.getWidth() + 0.1f;
-        if (scrollFactor > 0.5f) {
-            scrollFactor = 0.5f;
-        }
-        mOversrollImageView.setColorFilter(Color.argb((int) (500 * (0.5f - scrollFactor)), 183, 28, 28));
-        mOversrollImageView.setRotation(scrollFactor * 360 - (direction == 1 ? 180 : 0));
+
+        Log.d("gesturemanga onScroll", "rezult: " + deltaX + " / "+direction);
+
+
+        float scrollFactor = (float) deltaX / (viewPager.getWidth() / 2);
+        mOversrollImageView.setTranslationX(scrollFactor * overscrollSize);
+
+        mOversrollImageView.setColorFilter(Color.argb((int) (255 * -Math.abs(scrollFactor)), 183, 28, 28));
+
+        mOversrollImageView.setRotation(scrollFactor * 180);
         mOversrollImageView.setTag(scrollFactor);
         return true;
     }
