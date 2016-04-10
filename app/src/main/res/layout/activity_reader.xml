@@ -20,6 +20,27 @@
         android:src="@drawable/ic_action_navigation_more_vert"
         android:contentDescription="@string/menu"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:weightSum="2"
+        android:layout_height="60dp" android:orientation="horizontal">
+
+        <View
+            android:id="@+id/ibPrev"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground" />
+
+        <View
+            android:id="@+id/ibNext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/loader"
         android:background="@color/black_owerlay_60"
@@ -61,6 +82,7 @@
             android:id="@+id/imageView_arrow"
             android:layout_gravity="center"
             android:src="@drawable/ic_arrow" />
+
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
