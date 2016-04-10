@@ -80,6 +80,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         mSwipeFrame = findViewById(R.id.swipeFrame);
         mTextViewNext = (TextView) findViewById(R.id.textView_title);
         mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
+        //noinspection ConstantConditions
         findViewById(R.id.imageView_menu).setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
         mPager.setOverScrollListener(this);
@@ -90,6 +91,26 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             return;
         }
+        //noinspection ConstantConditions
+        findViewById(R.id.ibNext).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int item = mPager.getCurrentItem();
+                if (item < mPager.getCount()) {
+                    mPager.setCurrentItem(item + 1);
+                }
+            }
+        });
+        //noinspection ConstantConditions
+        findViewById(R.id.ibPrev).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int item = mPager.getCurrentItem();
+                if (item > 0) {
+                    mPager.setCurrentItem(item - 1);
+                }
+            }
+        });
 
         initParams(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
