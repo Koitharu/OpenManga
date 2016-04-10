@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
 import org.nv95.openmanga.items.MangaPage;
 
@@ -50,6 +51,20 @@ public class MangaPager extends ViewPager {
                 mOverScrollListener.onOverScrollDone(direction);
             }
         }
+
+        @Override
+        public void onPreOverscroll(int direction) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onPreOverScroll(direction);
+            }
+        }
+
+        @Override
+        public void onCancelled(int direction) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onCancelled(direction);
+            }
+        }
     };
 
     public MangaPager(Context context) {
@@ -66,6 +81,7 @@ public class MangaPager extends ViewPager {
         mList = new ArrayList<>();
         mAdapter = new PagerReaderAdapter(context, mList);
         setOverScrollMode(OVER_SCROLL_NEVER);
+        mDetector.setSensitivityDone(context.getResources().getDimensionPixelSize(R.dimen.overscroll_size));
         super.setAdapter(mAdapter);
     }
 
@@ -176,8 +192,11 @@ public class MangaPager extends ViewPager {
         void onOverScrollDone(int direction);
         void onFly(int direction, float deltaX, float deltaY);
         boolean canOverScroll(int direction);
+        void onPreOverScroll(int direction);
+        void onCancelled(int direction);
     }
 
+    //это что и зачем?
     int getMaxScroll(int distance){
         int maxScroll = getWidth() / 2;
         if(Math.abs(distance) > maxScroll)

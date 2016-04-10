@@ -12,17 +12,6 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        tools:ignore="ContentDescription,RtlHardcoded"
-        android:id="@+id/imageViewOverscroll"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:layout_gravity="right|center_vertical"
-        android:background="@drawable/background_fab"
-        android:scaleType="center"
-        android:src="@drawable/ic_arrow_back_black_24dp"
-        android:visibility="invisible" />
-
-    <ImageView
         android:id="@+id/imageView_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,6 +35,32 @@
             android:layout_gravity="center"
             />
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeFrame"
+        android:background="@color/black_owerlay_40"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:visibility="gone"
+        android:paddingTop="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView_title"
+            android:layout_gravity="top"
+            android:gravity="center_horizontal" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView_arrow"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow" />
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
