@@ -2,7 +2,6 @@ package org.nv95.openmanga.activities;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,7 +15,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -29,7 +27,7 @@ import org.nv95.openmanga.NavigationDialog;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ReaderMenuDialog;
 import org.nv95.openmanga.components.MangaPager;
-import org.nv95.openmanga.components.SimpleAnimator;
+import org.nv95.openmanga.components.OverScrollDetector;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.items.MangaChapter;
@@ -351,63 +349,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         new LoadPagesTask().execute();
     }
 
-    @Override
-    public boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction, boolean isFly) {
-
-        if(mLoader.getVisibility() == View.VISIBLE)
-            return true;
-
-        if(isFly)
-            mOversrollImageView.setTranslationX(overscrollSize);
-
-        if (deltaX == 0) {
-            CoordinatorLayout.LayoutParams params = ((CoordinatorLayout.LayoutParams) mOversrollImageView.getLayoutParams());
-            if (direction == -1 && hasPrevChapter()) {
-                setArrowPosition(params, GravityCompat.START);
-                return true;
-            } else if (direction == 1 && hasNextChapter()) {
-                setArrowPosition(params, GravityCompat.END);
-                return true;
-            } else if (direction == 0) {
-                    float scrollFactor = (float) mOversrollImageView.getTag();
-                    if (Math.abs(scrollFactor) >= .9f) {
-
-                        new SimpleAnimator(mOversrollImageView).forceGravity(Gravity.CENTER).hide();
-                        if ((params.gravity == Gravity.CENTER_VERTICAL + GravityCompat.END)) {
-                            if(hasNextChapter()){
-                                chapterId += mPager.isReverse() ? -1 : 1;
-                                pageId = mPager.isReverse() ? -1 : 0;
-                                loadChapter();
-                            }
-                        } else {
-                            if (hasPrevChapter()){
-                                chapterId += mPager.isReverse() ? 1 : -1;
-                                pageId = mPager.isReverse() ? 0 : -1;
-                                loadChapter();
-                            }
-                        }
-                        return true;
-                    }
-                new SimpleAnimator(mOversrollImageView).hide();
-                return false;
-            } else {
-                return false;
-            }
-        }
-
-        Log.d("gesturemanga onScroll", "rezult: " + deltaX + " / "+direction);
-
-
-        float scrollFactor = (float) deltaX / (viewPager.getWidth() / 2);
-        mOversrollImageView.setTranslationX(scrollFactor * overscrollSize);
-
-        mOversrollImageView.setColorFilter(Color.argb((int) (255 * -Math.abs(scrollFactor)), 183, 28, 28));
-
-        mOversrollImageView.setRotation(scrollFactor * 270);
-        mOversrollImageView.setTag(scrollFactor);
-        return true;
-    }
-
     private void showChaptersList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setSingleChoiceItems(mangaSummary.getChapters().getNames(), chapterId, new DialogInterface.OnClickListener() {
@@ -430,15 +371,44 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         builder.create().show();
     }
 
-    private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
-
-        public LoadPagesTask() {
-            // любой диалог сбразывает full screen
-//            progressDialog = new ProgressDialog(ReadActivity.this);
-//            progressDialog.setMessage(getString(R.string.loading));
-//            progressDialog.setCancelable(true);
-//            progressDialog.setOnCancelListener(this);
+    @Override
+    public void onOverScrollDone(int direction) {
+        switch (direction) {
+            case OverScrollDetector.DIRECTION_LEFT:
+                if (hasPrevChapter()){
+                    chapterId += mPager.isReverse() ? 1 : -1;
+                    pageId = mPager.isReverse() ? 0 : -1;
+                    loadChapter();
+                }
+                break;
+            case OverScrollDetector.DIRECTION_RIGHT:
+                if(hasNextChapter()){
+                    chapterId += mPager.isReverse() ? -1 : 1;
+                    pageId = mPager.isReverse() ? -1 : 0;
+                    loadChapter();
+                }
+                break;
         }
+    }
+
+    @Override
+    public void onFly(int direction, float deltaX, float deltaY) {
+
+    }
+
+    @Override
+    public boolean canOverScroll(int direction) {
+        switch (direction) {
+            case OverScrollDetector.DIRECTION_LEFT:
+                return hasPrevChapter();
+            case OverScrollDetector.DIRECTION_RIGHT:
+                return hasNextChapter();
+            default:
+                return false;
+        }
+    }
+
+    private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
 
         @Override
         protected void onPreExecute() {
