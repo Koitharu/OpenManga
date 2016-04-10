@@ -241,4 +241,6 @@
     <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
     <string name="action_recommendations">Recommendations</string>
     <string name="no_options_available">No options available</string>
+    <string name="next_chapter">Next chapter\n\n%s</string>
+    <string name="prev_chapter">Previous chapter\n\n%s</string>
 </resources>

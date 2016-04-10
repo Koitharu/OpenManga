@@ -1,6 +1,5 @@
 package org.nv95.openmanga.components;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,8 +12,8 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
     public static final int DIRECTION_RIGHT = 1;
     public static final int DIRECTION_TOP = 2;
     public static final int DIRECTION_BOTTOM = 3;
-    public static final float SENSITIVITY_BEGIN = 10f;
-    public static final float SENSITIVITY_DONE = 300f;
+    public static final float SENSITIVITY_BEGIN = 20f;
+    public float mSensitivityDone = 300f;
 
     private boolean mDown;
     private boolean mFly;
@@ -41,7 +40,7 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
                     if (mFly) {
                         onFly(direction, dx, dy);
                     } else if (direction != DIRECTION_NONE && canOverScroll(direction)) {
-                        Log.d("OVERSCROLL", String.valueOf(direction));
+                        onPreOverscroll(direction);
                         mFly = true;
                         return true;
                     }
@@ -49,13 +48,22 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mFly) {
-                    onOverScrolled(getDirection(SENSITIVITY_DONE, mStartX - event.getX(), mStartY - event.getY()));
+                    onOverScrolled(getDirection(mSensitivityDone, mStartX - event.getX(), mStartY - event.getY()));
                 }
-            case MotionEvent.ACTION_CANCEL:
                 mDown = false;
                 mFly = false;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                onCancelled(getDirection(SENSITIVITY_BEGIN, mStartX - event.getX(), mStartY - event.getY()));
+                mDown = false;
+                mFly = false;
+                break;
         }
         return true;
+    }
+
+    public void setSensitivityDone(float value) {
+        mSensitivityDone = value;
     }
 
     private int getDirection(float sensitivity, float deltaX, float deltaY) {
@@ -79,4 +87,8 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
     public abstract void onFly(int direction, float deltaX, float deltaY);
 
     public abstract void onOverScrolled(int direction);
+
+    public abstract void onPreOverscroll(int direction);
+
+    public abstract void onCancelled(int direction);
 }

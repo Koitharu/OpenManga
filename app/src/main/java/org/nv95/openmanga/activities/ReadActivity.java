@@ -1,16 +1,17 @@
 package org.nv95.openmanga.activities;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.nv95.openmanga.NavigationDialog;
 import org.nv95.openmanga.R;
@@ -51,11 +54,13 @@ import java.util.ArrayList;
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
-        MangaPager.OverScrollListener {
+        MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener {
     //views
     private MangaPager mPager;
-    private ImageView mOversrollImageView;
     private View mLoader;
+    private View mSwipeFrame;
+    private TextView mTextViewNext;
+    private ImageView mImageViewArrow;
     //data
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -64,7 +69,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private boolean scrollWithVolkeys = false;
     private int overscrollSize;
     private BrightnessHelper mBrightnessHelper;
-    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         mLoader = findViewById(R.id.loader);
         mBrightnessHelper = new BrightnessHelper(getWindow());
         mPager = (MangaPager) findViewById(R.id.pager);
-        mOversrollImageView = (ImageView) findViewById(R.id.imageViewOverscroll);
+        mSwipeFrame = findViewById(R.id.swipeFrame);
+        mTextViewNext = (TextView) findViewById(R.id.textView_title);
+        mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
         findViewById(R.id.imageView_menu).setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
         mPager.setOverScrollListener(this);
@@ -335,13 +341,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    void setArrowPosition(CoordinatorLayout.LayoutParams params, int gravity){
+    void setArrowPosition(int gravity){
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mImageViewArrow.getLayoutParams();
         params.gravity = Gravity.CENTER_VERTICAL | gravity;
-        params.leftMargin = gravity == GravityCompat.START ? -mOversrollImageView.getWidth() : 0;
-        params.rightMargin = gravity == GravityCompat.START ? 0 : -mOversrollImageView.getWidth();
-        mOversrollImageView.setTranslationX(0);
-        mOversrollImageView.setVisibility(View.VISIBLE);
-        mOversrollImageView.getParent().requestLayout();
+        params.leftMargin = gravity == GravityCompat.START ? -mImageViewArrow.getWidth() : 0;
+        params.rightMargin = gravity == GravityCompat.START ? 0 : -mImageViewArrow.getWidth();
+        mImageViewArrow.setTranslationX(0);
+        mImageViewArrow.setVisibility(View.VISIBLE);
+        mImageViewArrow.getParent().requestLayout();
     }
 
     void loadChapter(){
@@ -373,6 +380,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onOverScrollDone(int direction) {
+        onCancelled(direction);
         switch (direction) {
             case OverScrollDetector.DIRECTION_LEFT:
                 if (hasPrevChapter()){
@@ -388,12 +396,29 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     loadChapter();
                 }
                 break;
+            default:
+                return;
         }
     }
 
     @Override
     public void onFly(int direction, float deltaX, float deltaY) {
-
+        switch (direction) {
+            case OverScrollDetector.DIRECTION_LEFT:
+                mImageViewArrow.setTranslationX(Math.abs(deltaX) < overscrollSize ? -deltaX : overscrollSize);
+                break;
+            case OverScrollDetector.DIRECTION_RIGHT:
+                mImageViewArrow.setTranslationX(Math.abs(deltaX) < overscrollSize ? -deltaX : -overscrollSize);
+                break;
+            default:
+                return;
+        }
+        double delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        delta = delta * overscrollSize / 240;
+        if (delta > 180) {
+            delta = 180;
+        }
+        mSwipeFrame.setBackgroundColor(Color.argb((int) delta, 0, 0, 0));
     }
 
     @Override
@@ -406,6 +431,64 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void onPreOverScroll(int direction) {
+        switch (direction) {
+            case OverScrollDetector.DIRECTION_LEFT:
+                setArrowPosition(Gravity.LEFT);
+                mImageViewArrow.setRotation(-90);
+                mTextViewNext.setText(getString(mPager.isReverse() ? R.string.next_chapter : R.string.prev_chapter,
+                        mangaSummary.chapters.get(chapterId + (mPager.isReverse() ? 1 : -1)).name));
+                break;
+            case OverScrollDetector.DIRECTION_RIGHT:
+                setArrowPosition(Gravity.RIGHT);
+                mImageViewArrow.setRotation(90);
+                mTextViewNext.setText(getString(mPager.isReverse() ? R.string.prev_chapter : R.string.next_chapter,
+                        mangaSummary.chapters.get(chapterId + (mPager.isReverse() ? -1 : 1)).name));
+                break;
+            default:
+                return;
+        }
+        mSwipeFrame.setAlpha(1);
+        mSwipeFrame.setBackgroundColor(Color.TRANSPARENT);
+        mSwipeFrame.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onCancelled(int direction) {
+        final ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
+        animator.addUpdateListener(this);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSwipeFrame.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animator.setRepeatCount(0);
+        animator.setDuration(300);
+        animator.start();
+    }
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        mSwipeFrame.setAlpha((Float) animation.getAnimatedValue());
     }
 
     private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
