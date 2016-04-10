@@ -28,7 +28,8 @@
             android:padding="1dp"
             android:singleLine="false"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black_owerlay_90"/>
     </LinearLayout>
 
     <LinearLayout
