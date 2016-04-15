@@ -1,9 +1,6 @@
 package org.nv95.openmanga.items;
 
-import android.util.Pair;
-
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Arrays;
 
 /**
  * Created by nv95 on 12.03.16.
@@ -15,14 +12,16 @@ public class DownloadInfo extends MangaInfo {
 
     public String readLink;
     public String description;
-    public final AtomicInteger id;
-    public final AtomicInteger max;
-    public final AtomicInteger pos = new AtomicInteger(0);
-    public final AtomicInteger state = new AtomicInteger(STATE_IDLE);
-    public final ArrayList<Pair<MangaChapter,ProgressInfo>> chapters = new ArrayList<>();
+    public final int id;
+    public final int max;
+    public int pos;
+    public int state;
+    public final MangaChapters chapters;
+    public final int[] chaptersProgresses;
+    public final int[] chaptersSizes;
 
     public DownloadInfo(MangaSummary mangaSummary) {
-        this.id = new AtomicInteger(mangaSummary.hashCode());
+        this.id = mangaSummary.hashCode();
         this.name = mangaSummary.name;
         this.summary = mangaSummary.summary;
         this.path = mangaSummary.path;
@@ -31,9 +30,33 @@ public class DownloadInfo extends MangaInfo {
         this.provider = mangaSummary.provider;
         this.description = mangaSummary.description;
         this.readLink = mangaSummary.readLink;
-        for (MangaChapter o:mangaSummary.getChapters()) {
-            this.chapters.add(new Pair<>(o, new ProgressInfo()));
+        this.chapters = mangaSummary.chapters;
+        this.max = chapters.size();
+        chaptersProgresses = new int[max];
+        Arrays.fill(chaptersProgresses, 0); //надо ли?
+        chaptersSizes = new int[max];
+        Arrays.fill(chaptersSizes, 0);
+        this.state = STATE_IDLE;
+    }
+
+    public int getChapterProgressPercent() {
+        if (pos >= max) {
+            return 100;
+        } else if (chaptersSizes[pos] == 0) {
+            return 0;
+        } else {
+            return chaptersProgresses[pos] * 100 / chaptersSizes[pos];
         }
-        this.max = new AtomicInteger(chapters.size());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof DownloadInfo &&
+                ((DownloadInfo)o).id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

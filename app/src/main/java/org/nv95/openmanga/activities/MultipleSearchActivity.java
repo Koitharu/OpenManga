@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.ListModeHelper;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.GroupedAdapter;
 import org.nv95.openmanga.items.ThumbSize;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 12.01.16.
  */
-public class MultipleSearchActivity extends BaseAppActivity implements ListModeDialog.OnListModeListener {
+public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener {
     private ProgressBar mProgressBar;
     private LinearLayout mMessageBlock;
     private String mQuery;
@@ -36,6 +36,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeD
     private RecyclerView mRecyclerView;
     private MangaProviderManager mProviderManager;
     private SerialExecutor mExecutor;
+    private ListModeHelper mListModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +53,9 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeD
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mAdapter = new GroupedAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
+        mListModeHelper = new ListModeHelper(this, this);
+        mListModeHelper.applyCurrent();
+        mListModeHelper.enable();
         mExecutor = new SerialExecutor();
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         mProgressBar.setMax(providers.size());
@@ -82,7 +83,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeD
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_listmode:
-                new ListModeDialog(this).show(this);
+                mListModeHelper.showDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -129,6 +130,12 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeD
                 .putExtra("title", mAdapter.getGroup(position))
                 .putExtra("provider", position));
     }*/
+
+    @Override
+    protected void onDestroy() {
+        mListModeHelper.disable();
+        super.onDestroy();
+    }
 
     private class SearchTask extends AsyncTask<Void, Void, MangaList> {
         private final MangaProviderManager.ProviderSumm mProviderSummary;

@@ -4,22 +4,33 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_local_storage"
-            android:icon="@drawable/ic_device_storage"
+            android:icon="@drawable/ic_nav_storage"
             android:title="@string/local_storage" />
         <item
+            android:id="@+id/nav_action_recommendations"
+            android:icon="@drawable/ic_nav_recommend"
+            android:title="@string/action_recommendations" />
+        <item
             android:id="@+id/nav_action_favourites"
-            android:icon="@drawable/ic_toggle_star_half"
+            android:icon="@drawable/ic_nav_favourites"
             android:title="@string/action_favourites" />
         <item
             android:id="@+id/nav_action_history"
-            android:icon="@drawable/ic_action_history"
+            android:icon="@drawable/ic_nav_history"
             android:title="@string/action_history" />
     </group>
 
+
     <item android:id="@+id/nav_remote_storage"  android:title="@string/storages_remote">
         <menu>
-            <group android:id="@+id/groupRemote" android:checkableBehavior="single" />
+            <group android:id="@+id/groupRemote"  android:checkableBehavior="single" />
         </menu>
     </item>
 
+    <group android:id="@+id/group_options" android:checkableBehavior="none" >
+        <item
+            android:id="@+id/nav_action_settings"
+            android:icon="@drawable/ic_nav_settings"
+            android:title="@string/action_settings"/>
+    </group>
 </menu>

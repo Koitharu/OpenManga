@@ -54,7 +54,7 @@ public class EHentaiProvider extends MangaProvider {
         MangaSummary summary = new MangaSummary(mangaInfo);
         summary.readLink = summary.path;
         try {
-            Document document = getPage(mangaInfo.getPath(), DEF_COOKIE);
+            Document document = getPage(mangaInfo.path, DEF_COOKIE);
             StringBuilder builder = new StringBuilder();
             for (Element o : document.body().getElementById("taglist").select("tr")) {
                 builder.append(o.text()).append('\n');
@@ -100,7 +100,7 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.getPath(), DEF_COOKIE);
+            Document document = getPage(mangaPage.path, DEF_COOKIE);
             return document.body().getElementById("img").attr("src");
         } catch (Exception e) {
             return null;

@@ -1,7 +1,9 @@
 package org.nv95.openmanga.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,19 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DownloadsAdapter;
-import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.services.DownloadService;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 
 /**
  * Created by nv95 on 03.01.16.
  */
-public class DownloadsActivity extends BaseAppActivity implements MangaChangesObserver.OnMangaChangesListener {
+public class DownloadsActivity extends BaseAppActivity {
     private DownloadsAdapter adapter;
-    private RecyclerView mRecyclerView;
     private TextView textViewHolder;
 
     @Override
@@ -31,10 +29,10 @@ public class DownloadsActivity extends BaseAppActivity implements MangaChangesOb
         setContentView(R.layout.activity_downloads);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         textViewHolder = (TextView) findViewById(R.id.textView_holder);
-        adapter = new DownloadsAdapter(this);
+        adapter = new DownloadsAdapter(mRecyclerView);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -48,13 +46,11 @@ public class DownloadsActivity extends BaseAppActivity implements MangaChangesOb
     @Override
     protected void onStart() {
         super.onStart();
-        MangaChangesObserver.addListener(this);
         adapter.enable();
     }
 
     @Override
     protected void onStop() {
-        MangaChangesObserver.removeListener(this);
         adapter.disable();
         super.onStop();
     }
@@ -69,22 +65,19 @@ public class DownloadsActivity extends BaseAppActivity implements MangaChangesOb
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_cancel:
-                DownloadService.cancel(this);
+                new AlertDialog.Builder(this)
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DownloadService.cancel(DownloadsActivity.this);
+                            }
+                        })
+                        .setMessage(R.string.downloads_cancel_confirm)
+                        .create().show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onMangaChanged(int category) {
-        if (category == Constants.CATEGORY_LOCAL) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onMangaAdded(int category, MangaInfo data) {
-
     }
 }

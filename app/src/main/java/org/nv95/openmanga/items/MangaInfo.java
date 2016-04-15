@@ -97,36 +97,6 @@ public class MangaInfo {
         return cv;
     }
 
-    @Deprecated
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    @Deprecated
-    public String getName() {
-        return name;
-    }
-
-    @Deprecated
-    public String getSummary() {
-        return summary;
-    }
-
-    @Deprecated
-    public String getPath() {
-        return path;
-    }
-
-    @Deprecated
-    public String getPreview() {
-        return preview;
-    }
-
-    @Deprecated
-    public Class<?> getProvider() {
-        return provider;
-    }
-
     public boolean isCompleted() {
         return status == STATUS_COMPLETED;
     }

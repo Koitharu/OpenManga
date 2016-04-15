@@ -99,7 +99,7 @@
     <string name="genre_cosplay">Cosplay</string>
     <string name="sort_random">Random</string>
     <string name="scroll_by_volkeys">Scroll by volume keys</string>
-    <string name="chapters_to_save">Chapters to save</string>
+    <string name="chapters_to_save">Save manga</string>
     <string name="all">All</string>
     <string name="no_chapters_found">No chapters found</string>
     <string name="genre_yuri">Yuri</string>
@@ -229,8 +229,16 @@
     <string name="select_image">Select image</string>
     <string name="error_open_image_choser">Can not find the application to work with pictures</string>
     <string name="getFromGallery">Chose from gallery</string>
-    <string name="getPicture">Make picture</string>
+    <string name="getPicture">From camera</string>
     <string name="error_crop_image">Can not crop image</string>
-    <string name="get_image">Load another image</string>
-    <string name="avatar_title">Avatar</string>
+    <string name="select">Select</string>
+    <string name="genre">Genre</string>
+    <string name="description">Description</string>
+    <string name="app_update_avaliable">App\'s update available</string>
+    <string name="check_updates_auto">Automatic check for updates</string>
+    <string name="chapters_total" formatted="false">Total chapters: %d</string>
+    <string name="check_all">Check all</string>
+    <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
+    <string name="action_recommendations">Recommendations</string>
+    <string name="no_options_available">No options available</string>
 </resources>

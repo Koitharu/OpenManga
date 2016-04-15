@@ -73,7 +73,7 @@ public class PuzzmosProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            Document document = getPage(mangaInfo.getPath());
+            Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = summary.path;
             summary.description = e.select("p").first().text();
@@ -117,7 +117,7 @@ public class PuzzmosProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.getPath());
+            Document document = getPage(mangaPage.path);
             return document.body().select("img").first().attr("src");
         } catch (Exception e) {
             return null;

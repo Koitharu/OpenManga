@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
@@ -28,7 +28,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
  */
 public class SearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
-        ListModeDialog.OnListModeListener {
+        ListModeHelper.OnListModeListener {
     //views
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
@@ -36,6 +36,7 @@ public class SearchActivity extends BaseAppActivity implements
     //utils
     private MangaListLoader mLoader;
     private MangaProvider mProvider;
+    private ListModeHelper mListModeHelper;
     //data
     private String query;
     @Nullable
@@ -65,9 +66,9 @@ public class SearchActivity extends BaseAppActivity implements
         setSubtitle(title == null ? query : title);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mLoader = new MangaListLoader(mRecyclerView, this);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
+        mListModeHelper = new ListModeHelper(this, this);
+        mListModeHelper.applyCurrent();
+        mListModeHelper.enable();
         mLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
@@ -87,10 +88,16 @@ public class SearchActivity extends BaseAppActivity implements
     }
 
     @Override
+    protected void onDestroy() {
+        mListModeHelper.disable();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_listmode:
-                new ListModeDialog(this).show(this);
+                mListModeHelper.showDialog();
                 return true;
             case R.id.action_search:
                 onClick(null);

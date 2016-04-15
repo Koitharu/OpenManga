@@ -13,7 +13,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
 
@@ -55,7 +55,7 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            final Document document = getPage(mangaInfo.getPath());
+            final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = summary.path;
 
@@ -68,7 +68,6 @@ public class MangachanProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://mangachan.ru" + o.attr("href");
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -104,14 +103,14 @@ public class MangachanProvider extends MangaProvider {
                 }
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         }
         return null;
     }
 
     @Override
     public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.getPath();
+        return mangaPage.path;
     }
 
     @Override

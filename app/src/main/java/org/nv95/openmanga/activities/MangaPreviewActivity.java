@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +27,8 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
-import org.nv95.openmanga.utils.UpdatesChecker;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -44,6 +45,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     private TextView mTextViewDescription;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private AppBarLayout mAppBarLayout;
+    private View tvGenreTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,10 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mTextViewSummary = (TextView) findViewById(R.id.textView_summary);
+        tvGenreTitle = findViewById(R.id.tvGenreTitle);
         mTextViewDescription = (TextView) findViewById(R.id.textView_description);
         mCollapsingToolbarLayout.setTitle(mangaSummary.name);
-        mTextViewSummary.setText(mangaSummary.summary);
+
         mFab.setOnClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
         mImageView.useMemoryCache(false);
@@ -83,6 +86,12 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         } else {
             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+
+        if(TextUtils.isEmpty(mangaSummary.summary)){
+            tvGenreTitle.setVisibility(View.GONE);
+            mTextViewSummary.setVisibility(View.GONE);
+        } else
+            mTextViewSummary.setText(mangaSummary.summary);
     }
 
     @Override
@@ -162,7 +171,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                     FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            UpdatesChecker.rememberChaptersCount(MangaPreviewActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            NewChaptersProvider.getInstance(MangaPreviewActivity.this).markAsViewed(mangaSummary.hashCode(), mangaSummary.getChapters().size());
                             item.setIcon(R.drawable.ic_favorite_light);
                             item.setTitle(R.string.action_unfavourite);
                         }
@@ -170,7 +179,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 }
                 return true;
             case R.id.action_save:
-                //SaveService.SaveWithDialog(this, mangaSummary);
                 DownloadService.start(this, mangaSummary);
                 return true;
             case R.id.action_remove:
@@ -225,7 +233,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             }
             MangaPreviewActivity.this.mangaSummary = mangaSummary;
             mTextViewDescription.setText(mangaSummary.getDescription());
-            mImageView.setImageAsync(mangaSummary.preview, false);
+            mImageView.updateImageAsync(mangaSummary.preview);
             if (mangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)

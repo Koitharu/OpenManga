@@ -38,6 +38,16 @@ public class NotificationHelper {
         return this;
     }
 
+    public NotificationHelper intentService(Intent intent) {
+        mNotificationBuilder.setContentIntent(PendingIntent.getService(
+                mContext,
+                0,
+                intent,
+                0
+        ));
+        return this;
+    }
+
     public NotificationHelper hightPriority() {
         mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         return this;
@@ -113,5 +123,10 @@ public class NotificationHelper {
 
     public Notification notification() {
         return mNotificationBuilder.build();
+    }
+
+    public NotificationHelper autoCancel() {
+        mNotificationBuilder.setAutoCancel(true);
+        return this;
     }
 }

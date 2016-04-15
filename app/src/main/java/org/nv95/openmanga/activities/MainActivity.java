@@ -23,22 +23,17 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
+import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
-import org.nv95.openmanga.ListModeDialog;
+import org.nv95.openmanga.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.MangaListAdapter;
@@ -54,6 +49,8 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.ImageCreator;
@@ -63,7 +60,7 @@ import org.nv95.openmanga.utils.MangaChangesObserver;
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
-        ListModeDialog.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
+        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
@@ -79,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
     private SearchHistoryAdapter mSearchAdapter;
+    private ListModeHelper mListModeHelper;
     //data
     private MangaProvider mProvider;
     private int mGenre = 0;
@@ -108,22 +106,9 @@ public class MainActivity extends AppCompatActivity implements
         mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
-//        TextView[] headers = new TextView[3];
-//        headers[0] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[0].setText(R.string.local_storage);
-//        headers[0].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_device_storage, 0, 0, 0);
-//        headers[1] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[1].setText(R.string.action_favourites);
-//        headers[1].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_toggle_star_half, 0, 0, 0);
-//        headers[2] = (TextView) View.inflate(this, R.layout.menu_list_item, null);
-//        headers[2].setText(R.string.action_history);
-//        headers[2].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_history, 0, 0, 0);
-//        mDrawerListView.addHeaderView(headers[0]);
-//        mDrawerListView.addHeaderView(headers[1]);
-//        mDrawerListView.addHeaderView(headers[2]);
-//        mDrawerListView.addHeaderView(View.inflate(this, R.layout.header_group, null), null, false);
-//        mDrawerListView.setItemChecked(3 + defSection, true);
-//        mDrawerListView.setOnItemClickListener(this);
+        final MenuItem menuItem = mNavigationView.getMenu().getItem(4 + defSection);
+        menuItem.setChecked(true);
+        selectedItem = menuItem.getItemId();
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -152,14 +137,14 @@ public class MainActivity extends AppCompatActivity implements
 
         mTextViewTitle = (TextView) findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) findViewById(R.id.textView_subtitle);
-        setTitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
+        setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
         findViewById(R.id.title).setOnClickListener(this);
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
+        mListModeHelper = new ListModeHelper(this, this);
+        mListModeHelper.applyCurrent();
+        mListModeHelper.enable();
         WelcomeActivity.ShowChangelog(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
@@ -172,11 +157,14 @@ public class MainActivity extends AppCompatActivity implements
      * Добавляем remote providers в левое меню
      */
     private void initDrawerRemoteProviders() {
-        Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+
+        SubMenu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
+        navMenu.removeGroup(R.id.groupRemote);
         String[] names = mProviderManager.getNames();
         for (int i = 0; i < names.length; i++) {
             navMenu.add(R.id.groupRemote, i, i, names[i]);
         }
+        navMenu.setGroupCheckable(R.id.groupRemote, true, true);
     }
 
     @Override
@@ -231,9 +219,9 @@ public class MainActivity extends AppCompatActivity implements
 
     int getMenuItemPosition(){
         switch (selectedItem){
-            case R.id.nav_local_storage: return 0;
-            case R.id.nav_action_favourites: return 1;
-            case R.id.nav_action_history: return 2;
+            case R.id.nav_local_storage: return Constants.CATEGORY_LOCAL;
+            case R.id.nav_action_favourites: return Constants.CATEGORY_FAVOURITES;
+            case R.id.nav_action_history: return Constants.CATEGORY_HISTORY;
             default: return selectedItem;
         }
     }
@@ -241,13 +229,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.setGroupVisible(R.id.group_local, selectedItem == R.id.nav_local_storage);
-        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_favourites);
-        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_history);
+        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_history);
+        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_favourites);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     protected void onDestroy() {
+        mListModeHelper.disable();
         super.onDestroy();
     }
 
@@ -278,6 +267,11 @@ public class MainActivity extends AppCompatActivity implements
         drawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
             startActivity(new Intent(this, CBZActivity.class).putExtras(data));
+        } else if (requestCode == Constants.SETTINGS_REQUEST_ID
+                && mProviderManager != null && mNavigationView != null){
+            mProviderManager.update();
+            initDrawerRemoteProviders();
+            mNavigationView.setCheckedItem(selectedItem);
         }
     }
 
@@ -287,9 +281,6 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         }
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
                 return true;
@@ -310,16 +301,15 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 return true;
             case R.id.action_updates:
-                startActivity(new Intent(this, UpdatesActivity.class));
+                new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             case R.id.action_listmode:
-                new ListModeDialog(this).show(this);
+                mListModeHelper.showDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
@@ -329,37 +319,17 @@ public class MainActivity extends AppCompatActivity implements
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
-//    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        mGenre = 0;
-//        setSubtitle(null);
-//        switch (position) {
-//            case 0:
-//                mProvider = LocalMangaProvider.getInstacne(this);
-//                break;
-//            case 1:
-//                mProvider = FavouritesProvider.getInstacne(this);
-//                break;
-//            case 2:
-//                mProvider = HistoryProvider.getInstacne(this);
-//                break;
-//            default:
-//                mProvider = mProviderManager.getMangaProvider(position - 4);
-//        }
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-//        setTitle(mProvider.getName());
-//        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-//    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        selectedItem = item.getItemId();
-        mGenre = 0;
-        setSubtitle(null);
-
-        switch (selectedItem) {
+        switch (item.getItemId()) {
+            case R.id.nav_action_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class), Constants.SETTINGS_REQUEST_ID);
+                return true;
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
+                break;
+            case R.id.nav_action_recommendations:
+                mProvider = RecommendationsProvider.getInstacne(this);
                 break;
             case R.id.nav_action_favourites:
                 mProvider = FavouritesProvider.getInstacne(this);
@@ -368,20 +338,16 @@ public class MainActivity extends AppCompatActivity implements
                 mProvider = HistoryProvider.getInstacne(this);
                 break;
             default:
-//                Menu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
-//                remoteSelectedPosition = 0;
-//                for(int i=0; i<navMenu.size(); i++){
-//                    if(item.getItemId() == navMenu.getItem(i).getItemId()){
-//                        remoteSelectedPosition = 0;
-//                    }
-//                }
-                mProvider = mProviderManager.getMangaProvider(selectedItem);
+                mProvider = mProviderManager.getMangaProvider(item.getItemId());
                 break;
         }
+        selectedItem = item.getItemId();
+        mGenre = 0;
+        setSubtitle(null);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-        return false;
+        return true;
     }
 
         @Override
@@ -395,27 +361,13 @@ public class MainActivity extends AppCompatActivity implements
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
-        int viewMode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getInt("view_mode", 0);
-        onListModeChanged(viewMode != 0, viewMode - 1);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mProviderManager != null && mNavigationView != null) {
-            mProviderManager.update();
-
-//            int ci = mDrawerListView.getCheckedItemPosition();
-//            mDrawerListView.setAdapter(new ArrayAdapter<>(this, R.layout.menu_list_item, mProviderManager.getNames()));
-//            mDrawerListView.setItemChecked(ci, true);
-        }
+        mListModeHelper.applyCurrent();
     }
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -431,13 +383,22 @@ public class MainActivity extends AppCompatActivity implements
                 if (mProvider == null) {
                     return;
                 }
+                final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
+                final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
+                if (!hasGenres && !hasSort) {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.no_options_available)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .create().show();
+                    return;
+                }
                 FilterSortDialog dialog = new FilterSortDialog(this, this);
-                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES)) {
+                if (hasGenres) {
                     dialog.genres(mProvider.getGenresTitles(this), mGenre,
                             getString(mProvider instanceof FavouritesProvider
                                     ? R.string.action_category : R.string.action_genre));
                 }
-                if (mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT)) {
+                if (hasSort) {
                     dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
                 }
                 dialog.show();
@@ -629,29 +590,49 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    /*private class RemoveHelper extends UndoHelper {
-        private final MangaInfo mManga;
-        private final int mPosition;
+    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Boolean> implements DialogInterface.OnCancelListener {
+        private final ProgressDialog mProgressDialog;
 
-        public RemoveHelper(int position) {
-            super(false);
-            mPosition = position;
-            mManga = mListLoader.getAdapter().getItem(position);
-        }
-
-        public void remove() {
-            mListLoader.removeItem(mPosition);
-            super.snackbar(mRecyclerView, R.string.manga_removed, Snackbar.LENGTH_LONG);
+        public ChaptersUpdateChecker() {
+            mProgressDialog = new ProgressDialog(MainActivity.this);
+            mProgressDialog.setMessage(getString(R.string.checking_new_chapters));
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setOnCancelListener(this);
+            mProgressDialog.setIndeterminate(true);
         }
 
         @Override
-        public void onUndo() {
-            mListLoader.addItem(mManga, mPosition);
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
         }
 
         @Override
-        public void run() {
-            mProvider.remove(new long[]{mManga.hashCode()});
+        protected Boolean doInBackground(Void... params) {
+            try {
+                return NewChaptersProvider.getInstance(MainActivity.this)
+                        .checkForNewChapters().length > 0;
+            } catch (Exception e) {
+                return null;
+            }
         }
-    }*/
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            mProgressDialog.dismiss();
+            if (Boolean.TRUE.equals(aBoolean)) {
+                onMangaChanged(Constants.CATEGORY_FAVOURITES);
+            } else if (Boolean.FALSE.equals(aBoolean)) {
+                Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
+            } else if (aBoolean == null) {
+                Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            this.cancel(false);
+        }
+    }
 }

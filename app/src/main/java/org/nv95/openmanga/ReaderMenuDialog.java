@@ -3,6 +3,7 @@ package org.nv95.openmanga;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -23,21 +24,20 @@ import org.nv95.openmanga.helpers.BrightnessHelper;
 /**
  * Created by nv95 on 12.02.16.
  */
-public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     private static final int[] checkIds = new int[] {R.id.check_ltr, R.id.check_ttb, R.id.check_rtl};
 
     private final Dialog mDialog;
     private final ScrollView mScrollView;
     private final TextView mTextViewTitle;
     private final TextView mTextViewSubtitle;
-    private final Button mButtonFav;
-    private final Button mButtonSave;
-    private final Button mButtonShare;
-    private final Button mButtonOpts;
-    private final Button mButtonImg;
-    private final Button mButtonNav;
+    private final TextView mButtonFav;
+    private final TextView mButtonSave;
+    private final TextView mButtonShare;
+    private final TextView mButtonOpts;
+    private final TextView mButtonImg;
+    private final TextView mButtonNav;
     private final View mOptionsBlock;
-    private final View mTitleBlock;
     private final ProgressBar mProgressBar;
     private final Button mButtonApply;
 
@@ -50,6 +50,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private View.OnClickListener mCallback;
     @Nullable
     private BrightnessHelper mBrightnessHelper;
+    private OnDismissListener onDismissListener;
 
     @SuppressLint("InflateParams")
     public ReaderMenuDialog(Context context) {
@@ -57,21 +58,20 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
                 .inflate(R.layout.dialog_reader, null);
         mTextViewTitle = (TextView) mScrollView.findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) mScrollView.findViewById(R.id.textView_subtitle);
-        mButtonFav = (Button) mScrollView.findViewById(R.id.button_fav);
+        mTextViewSubtitle.setOnClickListener(this);
+        mButtonFav = (TextView) mScrollView.findViewById(R.id.button_fav);
         mButtonFav.setOnClickListener(this);
-        mButtonSave = (Button) mScrollView.findViewById(R.id.button_save);
+        mButtonSave = (TextView) mScrollView.findViewById(R.id.button_save);
         mButtonSave.setOnClickListener(this);
-        mButtonShare = (Button) mScrollView.findViewById(R.id.button_share);
+        mButtonShare = (TextView) mScrollView.findViewById(R.id.button_share);
         mButtonShare.setOnClickListener(this);
-        mButtonOpts = (Button) mScrollView.findViewById(R.id.button_opt);
+        mButtonOpts = (TextView) mScrollView.findViewById(R.id.button_opt);
         mButtonOpts.setOnClickListener(this);
-        mButtonImg = (Button) mScrollView.findViewById(R.id.button_img);
+        mButtonImg = (TextView) mScrollView.findViewById(R.id.button_img);
         mButtonImg.setOnClickListener(this);
-        mButtonNav = (Button) mScrollView.findViewById(R.id.imageButton_goto);
+        mButtonNav = (TextView) mScrollView.findViewById(R.id.textView_goto);
         mButtonNav.setOnClickListener(this);
         mProgressBar = (ProgressBar) mScrollView.findViewById(R.id.progressBar);
-        mTitleBlock = mScrollView.findViewById(R.id.block_title);
-        mTitleBlock.setOnClickListener(this);
         //preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         mSwitchScrollvolume = (SwitchCompat) mScrollView.findViewById(R.id.switch_volkeyscroll);
@@ -97,6 +97,8 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         mDialog = new AlertDialog.Builder(context)
                 .setView(mScrollView)
                 .setCancelable(true)
+                .setOnDismissListener(this)
+                .setOnCancelListener(this)
                 .create();
     }
 
@@ -200,6 +202,11 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         }
     }
 
+    public ReaderMenuDialog setOnDismissListener(OnDismissListener onDismissListener){
+        this.onDismissListener = onDismissListener;
+        return this;
+    }
+
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -208,5 +215,21 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if(onDismissListener !=null)
+            onDismissListener.settingsDialogDismiss();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if(onDismissListener !=null)
+            onDismissListener.settingsDialogDismiss();
+    }
+
+    public interface OnDismissListener {
+        void settingsDialogDismiss();
     }
 }

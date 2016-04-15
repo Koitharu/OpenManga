@@ -66,7 +66,7 @@ public class HistoryProvider extends MangaProvider {
 
     public static MangaInfo GetLast(Context context) {
         try {
-            return HistoryProvider.getInstacne(context).getList(0).get(0);
+            return HistoryProvider.getInstacne(context).getList(0, 0, 0).get(0);
         } catch (Exception e) {
             return null;
         }

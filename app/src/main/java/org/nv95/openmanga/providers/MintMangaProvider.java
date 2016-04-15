@@ -13,7 +13,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
 
@@ -79,7 +79,7 @@ public class MintMangaProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            Document document = getPage(mangaInfo.getPath());
+            Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = "http://mintmanga.com" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
             String descr = e.select("div.manga-description").first().html();
@@ -133,14 +133,14 @@ public class MintMangaProvider extends MangaProvider {
                 }
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         }
         return null;
     }
 
     @Override
     public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.getPath();
+        return mangaPage.path;
     }
 
     @Override

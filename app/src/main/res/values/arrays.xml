@@ -14,12 +14,14 @@
         <item>48</item>
     </string-array>
     <string-array name="sections">
+        <item>-4</item>
         <item>-3</item>
         <item>-2</item>
         <item>-1</item>
     </string-array>
     <string-array name="section_names">
         <item>@string/local_storage</item>
+        <item>@string/action_recommendations</item>
         <item>@string/action_favourites</item>
         <item>@string/action_history</item>
     </string-array>

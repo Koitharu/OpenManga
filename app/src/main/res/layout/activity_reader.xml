@@ -12,7 +12,7 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        tools:ignore="ContentDescription"
+        tools:ignore="ContentDescription,RtlHardcoded"
         android:id="@+id/imageViewOverscroll"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
@@ -30,5 +30,22 @@
         android:padding="5dp"
         android:src="@drawable/ic_action_navigation_more_vert"
         android:contentDescription="@string/menu"/>
+
+    <FrameLayout
+        android:id="@+id/loader"
+        android:background="@color/black_owerlay_60"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/progressBarStyle"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
