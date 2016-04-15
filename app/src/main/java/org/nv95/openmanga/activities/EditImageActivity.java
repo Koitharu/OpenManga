@@ -172,6 +172,12 @@ public class EditImageActivity extends AppCompatActivity implements View.OnClick
         File myDir = getExternalFilesDir("temp");
         myDir.mkdirs();
         File file = new File(myDir, "header.jpg");
+        for (int i=0;i<999;i++) {
+            file = new File(myDir, "header" + i + ".jpg");
+            if (!file.exists()) {
+                break;
+            }
+        }
         if (file.exists()) file.delete();
         try {
             FileOutputStream out = new FileOutputStream(file);

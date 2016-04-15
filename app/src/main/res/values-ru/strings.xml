@@ -216,4 +216,7 @@
     <string name="check_all">Выбрать все</string>
     <string name="action_recommendations">Рекомендации</string>
     <string name="no_options_available">Нет доступных опций</string>
+    <string name="downloads_cancel_confirm">Все загрузки будут отменены. Вы уверены?</string>
+    <string name="next_chapter">Следующая глава\n\n%s</string>
+    <string name="prev_chapter">Предыдущая глава\n\n%s</string>
 </resources>

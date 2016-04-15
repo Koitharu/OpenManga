@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
 import org.nv95.openmanga.items.MangaPage;
 
@@ -22,6 +23,49 @@ public class MangaPager extends ViewPager {
     private boolean mVertical = false;
     private OverScrollListener mOverScrollListener;
     private int lastX = -1;
+    // touch detector
+    private OverScrollDetector mDetector = new OverScrollDetector() {
+        @Override
+        public boolean canOverScroll(int direction) {
+            if (direction == DIRECTION_LEFT) {
+                return getCurrentItem() == 0 &&
+                        (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
+            } else if (direction == DIRECTION_RIGHT) {
+                return getCurrentItem() == getCount() - 1 &&
+                        (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public void onFly(int direction, float deltaX, float deltaY) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onFly(direction, deltaX, deltaY);
+            }
+        }
+
+        @Override
+        public void onOverScrolled(int direction) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onOverScrollDone(direction);
+            }
+        }
+
+        @Override
+        public void onPreOverscroll(int direction) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onPreOverScroll(direction);
+            }
+        }
+
+        @Override
+        public void onCancelled(int direction) {
+            if (mOverScrollListener != null) {
+                mOverScrollListener.onCancelled(direction);
+            }
+        }
+    };
 
     public MangaPager(Context context) {
         super(context);
@@ -37,6 +81,7 @@ public class MangaPager extends ViewPager {
         mList = new ArrayList<>();
         mAdapter = new PagerReaderAdapter(context, mList);
         setOverScrollMode(OVER_SCROLL_NEVER);
+        mDetector.setSensitivityDone(context.getResources().getDimensionPixelSize(R.dimen.overscroll_size));
         super.setAdapter(mAdapter);
     }
 
@@ -54,8 +99,7 @@ public class MangaPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (checkForOverscroll(ev))
-            return false;
+        mDetector.onTouch(this, ev);
         boolean intercepted = super.onInterceptTouchEvent(mVertical ? swapXY(ev) : ev);
         if (mVertical) {
             swapXY(ev);
@@ -65,7 +109,8 @@ public class MangaPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return !checkForOverscroll(ev) && super.onTouchEvent(mVertical ? swapXY(ev) : ev);
+        mDetector.onTouch(this, ev);
+        return super.onTouchEvent(mVertical ? swapXY(ev) : ev);
     }
 
     public int getCurrentPageIndex() {
@@ -134,47 +179,28 @@ public class MangaPager extends ViewPager {
         return ev;
     }
 
-    protected boolean checkForOverscroll(MotionEvent event) {
-        if (mOverScrollListener == null) {
-            return false;
-        }
-        int state = 0;
+    public int getState(){
         if (getCurrentItem() == 0) {
-            state = -1;
+            return -1;
         } else if (getCurrentItem() == getAdapter().getCount() - 1) {
-            state = 1;
+            return 1;
         }
-        if (state == 0) {
-            return false;
-        }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                lastX = mOverScrollListener.OnOverScroll(this, 0, state) ? (int) event.getX() : -1;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (lastX == -1) {
-                    return false;
-                }
-                int deltaX = (int) (event.getX() - lastX);
-                if (state == -1 && deltaX > 0) {
-                    return mOverScrollListener.OnOverScroll(this, deltaX, state);
-                } else if (state == 1 && deltaX < 0) {
-                    return mOverScrollListener.OnOverScroll(this, -deltaX, state);
-                } else {
-                    lastX = -1;
-                }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if (lastX != -1) {
-                    mOverScrollListener.OnOverScroll(this, 0, 0);
-                }
-                lastX = -1;
-                break;
-        }
-        return false;
+        return 0;
     }
 
     public interface OverScrollListener {
-        boolean OnOverScroll(MangaPager viewPager, int deltaX, int direction);
+        void onOverScrollDone(int direction);
+        void onFly(int direction, float deltaX, float deltaY);
+        boolean canOverScroll(int direction);
+        void onPreOverScroll(int direction);
+        void onCancelled(int direction);
+    }
+
+    //это что и зачем?
+    int getMaxScroll(int distance){
+        int maxScroll = getWidth() / 2;
+        if(Math.abs(distance) > maxScroll)
+            return distance > 0 ? maxScroll : -maxScroll;
+        return distance;
     }
 }
