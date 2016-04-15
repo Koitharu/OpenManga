@@ -57,7 +57,7 @@ public class MangaTownProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         try {
-            Document document = getPage(mangaInfo.getPath());
+            Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = Html.fromHtml(e.getElementById("show").html()).toString();
             summary.preview = e.select("img").first().attr("src");
@@ -100,7 +100,7 @@ public class MangaTownProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.getPath());
+            Document document = getPage(mangaPage.path);
             return document.body().getElementById("image").attr("src");
         } catch (Exception e) {
             return null;

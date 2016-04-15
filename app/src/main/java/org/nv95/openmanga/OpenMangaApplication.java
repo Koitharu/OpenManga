@@ -11,8 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.providers.AppUpdatesProvider;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -30,7 +29,7 @@ public class OpenMangaApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ErrorReporter.Init(this);
+        FileLogger.init(this);
         final Resources resources = getResources();
         final float aspectRatio = 6f / 4f;
         ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
@@ -51,9 +50,7 @@ public class OpenMangaApplication extends Application {
         );
 
         initImageLoader(this);
-        if (AppUpdatesProvider.getLastCheckHoursDelay(this) >= 24) {
-
-        }
+        ScheduledServiceReceiver.enable(this);
     }
 
     public static ImageLoader initImageLoader(Context c) {
@@ -62,7 +59,7 @@ public class OpenMangaApplication extends Application {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(c)
                 .defaultDisplayImageOptions(getImageLoaderOptions())
-                .diskCacheSize(50 * 1024 * 1024)
+                .diskCacheSize(50 * 1024 * 1024)        //50 Mb
                 .diskCacheFileCount(100)
                 .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
                 .build();

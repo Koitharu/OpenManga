@@ -5,7 +5,11 @@ package org.nv95.openmanga;
  */
 public abstract class Constants {
     public static final int CATEGORY_LOCAL = 0;
-    public static final int CATEGORY_FAVOURITES = 1;
-    public static final int CATEGORY_HISTORY = 2;
+    public static final int CATEGORY_FAVOURITES = 2;
+    public static final int CATEGORY_HISTORY = 3;
     public static final String SAVED_IMAGE_HEAD = "saved_image_head";
+    public static final int SETTINGS_REQUEST_ID = 5;
+
+    public static final String ACTION_CHECK_APP_UPDATES = "app_update";
+    public static final String ACTION_CHECK_NEW_CHAPTERS = "new_chapters";
 }

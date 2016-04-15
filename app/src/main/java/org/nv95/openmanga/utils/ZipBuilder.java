@@ -66,7 +66,7 @@ public class ZipBuilder {
             zipInputStream.close();
             return files.toArray(new File[files.size()]);
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
             return null;
         }
     }

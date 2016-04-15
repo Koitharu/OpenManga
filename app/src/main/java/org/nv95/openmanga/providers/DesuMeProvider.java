@@ -14,7 +14,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
 
@@ -92,7 +92,6 @@ public class DesuMeProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://desu.me/" + o.attr("href");
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -132,7 +131,7 @@ public class DesuMeProvider extends MangaProvider {
                 }
             }
         } catch (Exception e) {
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         }
         return null;
     }

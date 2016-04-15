@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:defaultValue="-3"
+        android:defaultValue="-4"
         android:entries="@array/section_names"
         android:entryValues="@array/sections"
         android:key="defsection"
@@ -52,6 +52,10 @@
         <Preference
             android:key="update"
             android:title="@string/check_updates" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autoupdate"
+            android:title="@string/check_updates_auto" />
         <Preference
             android:key="bugreport"
             android:summary="@string/bug_report_summ"

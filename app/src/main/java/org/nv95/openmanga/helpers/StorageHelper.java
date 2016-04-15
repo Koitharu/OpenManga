@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.nv95.openmanga.utils.ErrorReporter;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.Iterator;
 
@@ -18,7 +18,7 @@ import java.util.Iterator;
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 10;
+    private static final int DB_VERSION = 11;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -87,6 +87,7 @@ public class StorageHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE updates ("
                 + "id INTEGER PRIMARY KEY,"                 //0
                 + "chapters INTEGER"
+                + "unread INTEGER DEFAULT 0"
                 + ");");
     }
 
@@ -101,6 +102,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                         + ");");
             case 9:
                 db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
+            case 10:
+                db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
                 break;
             default:
                 onCreate(db);
@@ -142,7 +145,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             jsonArray = null;
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -192,7 +195,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             success = false;
-            ErrorReporter.getInstance().report(e);
+            FileLogger.getInstance().report(e);
         } finally {
             if (database != null) {
                 database.close();

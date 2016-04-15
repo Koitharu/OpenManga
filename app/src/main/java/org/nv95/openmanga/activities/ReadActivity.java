@@ -1,6 +1,5 @@
 package org.nv95.openmanga.activities;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -33,13 +32,14 @@ import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.items.SimpleDownload;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.UpdatesChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +54,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     //views
     private MangaPager mPager;
     private ImageView mOversrollImageView;
+    private View mLoader;
     //data
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -67,6 +68,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
+        mLoader = findViewById(R.id.loader);
         mBrightnessHelper = new BrightnessHelper(getWindow());
         mPager = (MangaPager) findViewById(R.id.pager);
         mOversrollImageView = (ImageView) findViewById(R.id.imageViewOverscroll);
@@ -143,6 +145,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new ReaderMenuDialog(this)
                         .callback(this)
                         .favourites(fav)
+                        .setOnDismissListener(new ReaderMenuDialog.OnDismissListener() {
+                            @Override
+                            public void settingsDialogDismiss() {
+                                setFullScreen();
+                            }
+                        })
                         .brightnessHelper(mBrightnessHelper)
                         .progress(
                                 mPager.getCurrentPageIndex(),
@@ -154,7 +162,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_save:
                 if (!LocalMangaProvider.class.equals(mangaSummary.provider)) {
-                    //SaveService.SaveWithDialog(this, mangaSummary);
                     DownloadService.start(this, mangaSummary);
                 } else {
                     Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
@@ -170,7 +177,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            UpdatesChecker.rememberChaptersCount(ReadActivity.this, mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            NewChaptersProvider.getInstance(ReadActivity.this)
+                                    .storeChaptersCount(mangaSummary.hashCode(), mangaSummary.getChapters().size(), 0);
 
                         }
                     }, mangaSummary);
@@ -183,10 +191,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 new SaveImageTask()
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mPager.getCurrentPage());
                 break;
-            case R.id.block_title:
+            case R.id.textView_subtitle:
                 showChaptersList();
                 break;
-            case R.id.imageButton_goto:
+            case R.id.textView_goto:
                 new NavigationDialog(this, mPager.getCount(), mPager.getCurrentPageIndex())
                         .setNavigationListener(this).show();
                 break;
@@ -228,6 +236,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            onClick(findViewById(R.id.imageView_menu));
+            return super.onKeyDown(keyCode, event);
+        }
         if (scrollWithVolkeys) {
             int page = mPager.getCurrentPageIndex();
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
@@ -246,7 +258,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
+        @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         return scrollWithVolkeys &&
                 (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) ||
@@ -263,15 +275,22 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    void setFullScreen(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        }
+        setFullScreen();
     }
 
     public void onOptionsChanged() {
@@ -390,25 +409,25 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
-        private ProgressDialog progressDialog;
 
         public LoadPagesTask() {
-            progressDialog = new ProgressDialog(ReadActivity.this);
-            progressDialog.setMessage(getString(R.string.loading));
-            progressDialog.setCancelable(true);
-            progressDialog.setOnCancelListener(this);
+            // любой диалог сбразывает full screen
+//            progressDialog = new ProgressDialog(ReadActivity.this);
+//            progressDialog.setMessage(getString(R.string.loading));
+//            progressDialog.setCancelable(true);
+//            progressDialog.setOnCancelListener(this);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
+            mLoader.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(ArrayList<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
-            progressDialog.dismiss();
+            mLoader.setVisibility(View.GONE);
             if (mangaPages == null) {
                 new AlertDialog.Builder(ReadActivity.this).setMessage(R.string.loading_error).setTitle(R.string.app_name)
                         .setOnCancelListener(this).setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
@@ -448,20 +467,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private class SaveImageTask extends AsyncTask<MangaPage, Void, File> implements DialogInterface.OnCancelListener {
-        private final ProgressDialog mProgressDialog;
-
-        public SaveImageTask() {
-            mProgressDialog = new ProgressDialog(ReadActivity.this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setOnCancelListener(this);
-        }
+    private class SaveImageTask extends AsyncTask<MangaPage, Void, File> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog.show();
+            mLoader.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -474,14 +485,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     provider = (MangaProvider) mangaSummary.provider.newInstance();
                 }
                 String url = provider.getPageImage(params[0]);
-                File file = new File(getExternalCacheDir(), String.valueOf(url.hashCode()));
-                if (!file.exists()) {
-                    //// TODO: 26.01.16
-                    return null;
-                }
                 File dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
-                LocalMangaProvider.CopyFile(file, dest);
-                return dest;
+                final SimpleDownload dload = new SimpleDownload(url, dest);
+                dload.run();
+                return dload.isSuccess() ? dest : null;
             } catch (Exception ignored) {
                 return null;
             }
@@ -490,18 +497,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            mProgressDialog.dismiss();
+            mLoader.setVisibility(View.GONE);
             if (file != null) {
                 SaveImage(file);
             } else {
                 Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
             }
 
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            this.cancel(true);
         }
     }
 }

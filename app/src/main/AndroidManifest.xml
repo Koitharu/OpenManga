@@ -40,19 +40,18 @@
             android:label="@string/search_results" />
         <activity
             android:name=".activities.EditImageActivity"
+            android:theme="@style/AppTheme.Dialog"
+            android:label="@string/select_image"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".activities.ReadActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/downloads_queue"
             android:launchMode="singleInstance" />
-        <activity
-            android:name=".activities.UpdatesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/manga_updates" />
         <activity
             android:name=".activities.ProviderSelectActivity"
             android:configChanges="orientation|screenSize"
@@ -95,15 +94,16 @@
             </intent-filter-->
         </activity>
 
-        <service android:name=".SaveService" />
         <service android:name=".services.DownloadService" />
-        <service android:name=".ChaptersSyncService" />
+        <service android:name=".services.ScheduledService" />
         <service android:name=".services.UpdateService" />
 
-        <receiver android:name=".UpdateCheckerReceiver">
+        <receiver android:name=".ScheduledServiceReceiver"
+            android:enabled="true" android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 

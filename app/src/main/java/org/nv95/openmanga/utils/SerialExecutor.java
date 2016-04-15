@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayDeque;
 import java.util.concurrent.Executor;
 
+@Deprecated
 public class SerialExecutor implements Executor {
     final ArrayDeque<Runnable> mTasks = new ArrayDeque<>();
     Runnable mActive;

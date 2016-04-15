@@ -13,45 +13,64 @@
   ~ If not, see http://www.gnu.org/licenses/.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:activatedBackgroundIndicator"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="12dp">
 
     <org.nv95.openmanga.components.AsyncImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/thumb_width_list"
-        android:layout_height="@dimen/thumb_height_list"
-        android:scaleType="centerCrop" />
+        android:layout_width="122dp"
+        android:layout_height="164dp"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="8dp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_toRightOf="@+id/imageView" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar_primary"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_below="@+id/textView_title"
+        android:indeterminate="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/textView_subtitle"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_below="@+id/progressBar_primary" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:id="@+id/progressBar_secondary"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_below="@+id/textView_subtitle"
+        android:indeterminate="false" />
 
-        <TextView
-            android:id="@+id/textView_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:id="@+id/textView_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/queue"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/progressBar_secondary"
+        android:layout_alignRight="@+id/progressBar_secondary"
+        android:layout_alignEnd="@+id/progressBar_secondary" />
 
-        <org.nv95.openmanga.components.ProgressGroup
-            android:orientation="vertical"
-            android:id="@+id/progressGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/textView_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/queue"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
