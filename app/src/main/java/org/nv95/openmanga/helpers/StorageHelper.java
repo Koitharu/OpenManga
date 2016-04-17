@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -93,22 +95,39 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case 8: //после этой версии была добавлена проверка обновлений
-                db.execSQL("DROP TABLE IF EXISTS updates");
-                db.execSQL("CREATE TABLE updates ("
-                        + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
-                        + "chapters INTEGER"
-                        + ");");
-            case 9:
-                db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
-            case 10:
-            case 11:
-                db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
-                break;
-            default:
-                onCreate(db);
+
+        CopyOnWriteArraySet<String> tables = getTableNames(db);
+        if(!tables.contains("updates")){
+            db.execSQL("CREATE TABLE updates ("
+                    + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
+                    + "chapters INTEGER"
+                    + ");");
         }
+
+        CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
+        if(!columnsFavourites.contains("category"))
+            db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
+
+        CopyOnWriteArraySet<String> columnsUpdates = getColumsNames(db, "updates");
+        if(!columnsUpdates.contains("unread"))
+            db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
+
+//        switch (oldVersion) {
+//            case 8: //после этой версии была добавлена проверка обновлений
+//                db.execSQL("DROP TABLE IF EXISTS updates");
+//                db.execSQL("CREATE TABLE updates ("
+//                        + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
+//                        + "chapters INTEGER"
+//                        + ");");
+//            case 9:
+//                db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
+//            case 10:
+//            case 11:
+//                db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
+//                break;
+//            default:
+//                onCreate(db); // нет в этом необходимости
+//        }
     }
 
     @Nullable
@@ -203,5 +222,41 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         }
         return success;
+    }
+
+    public static CopyOnWriteArraySet<String> getColumsNames(SQLiteDatabase db, String table) {
+        CopyOnWriteArraySet<String> names = new CopyOnWriteArraySet<>();
+        Cursor ti = db.rawQuery("PRAGMA table_info(" + table + ")", null);
+        if (ti.moveToFirst()) {
+            do {
+                names.add(ti.getString(1));
+            } while (ti.moveToNext());
+        }
+        ti.close();
+        return names;
+    }
+
+
+    public static CopyOnWriteArraySet<String> getTableNames(SQLiteDatabase db) {
+        CopyOnWriteArraySet<String> result = new CopyOnWriteArraySet<>();
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append("SELECT name FROM sqlite_master ");
+            sb.append("WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ");
+            sb.append("UNION ALL ");
+            sb.append("SELECT name FROM sqlite_temp_master ");
+            sb.append("WHERE type IN ('table','view') ");
+            sb.append("ORDER BY 1");
+
+            Cursor c = db.rawQuery(sb.toString(), null);
+            c.moveToFirst();
+
+            while (c.moveToNext()) {
+                result.add(c.getString(c.getColumnIndex("name")));
+            }
+            c.close();
+        } catch (SQLiteException e) {
+        }
+        return result;
     }
 }
