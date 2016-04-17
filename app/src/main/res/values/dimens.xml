@@ -5,7 +5,7 @@
     <dimen name="details_margin_top">260dp</dimen>
     <dimen name="drawer_size">280dp</dimen>
     <dimen name="fab_size">56dp</dimen>
-    <dimen name="overscroll_size">100dp</dimen>
+    <dimen name="overscroll_size">140dp</dimen>
 
     <dimen name="thumb_width_list">64dp</dimen>
     <dimen name="thumb_height_list">82dp</dimen>

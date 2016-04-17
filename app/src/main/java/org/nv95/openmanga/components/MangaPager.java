@@ -25,6 +25,7 @@ public class MangaPager extends ViewPager {
     private int lastX = -1;
     // touch detector
     private OverScrollDetector mDetector = new OverScrollDetector() {
+        @SuppressWarnings("SimplifiableIfStatement")
         @Override
         public boolean canOverScroll(int direction) {
             if (direction == DIRECTION_LEFT) {
@@ -104,7 +105,7 @@ public class MangaPager extends ViewPager {
         if (mVertical) {
             swapXY(ev);
         }
-        return intercepted;
+        return intercepted && !mDetector.isOnFly();
     }
 
     @Override
