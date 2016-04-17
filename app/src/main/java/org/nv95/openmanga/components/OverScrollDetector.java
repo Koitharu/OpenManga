@@ -62,6 +62,10 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
         return true;
     }
 
+    public boolean isOnFly() {
+        return mFly;
+    }
+
     public void setSensitivityDone(float value) {
         mSensitivityDone = value;
     }
