@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 50
-        versionName "1.2"
+        versionCode 51
+        versionName "1.2.1"
     }
 
     signingConfigs {
@@ -43,8 +43,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1' //в более новой версии были проблемы
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0' //в более новой версии были проблемы
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
