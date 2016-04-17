@@ -46,7 +46,10 @@ public class NewChaptersProvider {
             ContentValues cv = new ContentValues();
             cv.put("id", mangaId);
             cv.put("chapters", chaptersCount);
-            database.update("updates", cv, "id=?", new String[]{String.valueOf(mangaId)});
+            cv.put("unread", 0);
+            if (database.update("updates", cv, "id=?", new String[]{String.valueOf(mangaId)}) == 0) {
+                database.insert("updates", null, cv);
+            }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
         } finally {
@@ -56,9 +59,74 @@ public class NewChaptersProvider {
         }
     }
 
+    public void markAsViewed(int mangaId) {
+        int chapters = -1;
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStorageHelper.getReadableDatabase();
+            cursor = database.query("updates", null, "id=?", new String[]{String.valueOf(mangaId)}, null, null, null);
+            if (cursor.moveToFirst()) {
+                chapters = cursor.getInt(2) + cursor.getInt(1);
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        if (chapters != -1) {
+            markAsViewed(mangaId, chapters);
+        }
+    }
+
+    public void markAllAsViewed() {
+        final HashMap<Integer, Integer> map = new HashMap<>();
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStorageHelper.getReadableDatabase();
+            cursor = database.query("updates", null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    map.put(cursor.getInt(0), cursor.getInt(2));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            cursor = null;
+            database.close();
+            database = mStorageHelper.getWritableDatabase();
+            database.beginTransaction();
+            for (Integer o:map.keySet()) {
+                ContentValues cv = new ContentValues();
+                cv.put("id", o);
+                cv.put("chapters", map.get(o));
+                cv.put("unread", 0);
+                if (database.update("updates", cv, "id=?", new String[]{String.valueOf(o)}) == 0) {
+                    database.insert("updates", null, cv);
+                }
+            }
+            database.setTransactionSuccessful();
+            database.endTransaction();
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+    }
+
     @NonNull
     public HashMap<Integer, Integer> getLastUpdates() {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        final HashMap<Integer, Integer> map = new HashMap<>();
         Cursor cursor = null;
         SQLiteDatabase database = null;
         try {
@@ -128,6 +196,34 @@ public class NewChaptersProvider {
         return map;
     }
 
+    public boolean hasStoredUpdates() {
+        boolean res = false;
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStorageHelper.getReadableDatabase();
+            cursor = database.query("updates", null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    if (cursor.getInt(2) != 0) {
+                        res = true;
+                        break;
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        return res;
+    }
+
     @WorkerThread
     public MangaUpdateInfo[] checkForNewChapters() {
         FavouritesProvider favs = FavouritesProvider.getInstacne(mContext);
@@ -149,11 +245,10 @@ public class NewChaptersProvider {
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
                     if (upd.chapters > upd.lastChapters) {
-                        if (upd.lastChapters != -1) {
-                            updates.add(upd);
-                        } else {
-                            storeChaptersCount(key, upd.chapters, upd.getNewChapters());
+                        if (upd.lastChapters == -1) {
+                            upd.lastChapters = upd.chapters;
                         }
+                        storeChaptersCount(key, upd.chapters, upd.getNewChapters());
                     }
                 } catch (Exception e) {
                     FileLogger.getInstance().report(e);
@@ -161,6 +256,7 @@ public class NewChaptersProvider {
             }
             return updates.toArray(new MangaUpdateInfo[updates.size()]);
         } catch (Exception e) {
+            FileLogger.getInstance().report(e);
             return null;
         }
     }

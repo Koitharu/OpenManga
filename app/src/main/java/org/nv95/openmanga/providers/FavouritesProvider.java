@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -36,13 +35,11 @@ public class FavouritesProvider extends MangaProvider {
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
     private final StorageHelper dbHelper;
     private final Context context;
-    private final NewChaptersProvider mNewChaptersProvider;
 
     @Deprecated
     public FavouritesProvider(Context context) {
         this.context = context;
         dbHelper = new StorageHelper(context);
-        mNewChaptersProvider = NewChaptersProvider.getInstance(context);
     }
 
     public static FavouritesProvider getInstacne(Context context) {
@@ -79,7 +76,6 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = dbHelper.getReadableDatabase();
         MangaList list = null;
         MangaInfo manga;
-        HashMap<Integer, Integer> updatesMap = mNewChaptersProvider.getLastUpdates();
         //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
@@ -88,8 +84,6 @@ public class FavouritesProvider extends MangaProvider {
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo(cursor);
-                    Integer upd = updatesMap.get(manga.hashCode());
-                    manga.extra = (upd == null || upd == 0) ? null : "+" + upd;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
