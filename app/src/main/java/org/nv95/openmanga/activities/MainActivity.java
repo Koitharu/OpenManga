@@ -29,7 +29,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.FilterSortDialog;
@@ -84,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
     private int selectedItem;
     private ImageCreator imageCreator;
     private DrawerHeaderImageTool drawerHeaderTool;
+    private boolean mUpdatesChecked = false;
 //    private int remoteSelectedPosition;
 
     @Override
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 return true;
             case R.id.action_updates:
-                new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                startActivity(new Intent(this, NewChaptersActivity.class));
                 return true;
             case R.id.action_listmode:
                 mListModeHelper.showDialog();
@@ -448,6 +448,10 @@ public class MainActivity extends AppCompatActivity implements
                         .show();
             }
         }
+
+        if (!mUpdatesChecked && mProvider instanceof FavouritesProvider) {
+            new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override
@@ -590,28 +594,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Boolean> implements DialogInterface.OnCancelListener {
-        private final ProgressDialog mProgressDialog;
-
-        public ChaptersUpdateChecker() {
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setMessage(getString(R.string.checking_new_chapters));
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setOnCancelListener(this);
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog.show();
-        }
+    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 return NewChaptersProvider.getInstance(MainActivity.this)
-                        .checkForNewChapters().length > 0;
+                        .hasStoredUpdates();
             } catch (Exception e) {
                 return null;
             }
@@ -620,19 +609,16 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            mProgressDialog.dismiss();
-            if (Boolean.TRUE.equals(aBoolean)) {
-                onMangaChanged(Constants.CATEGORY_FAVOURITES);
-            } else if (Boolean.FALSE.equals(aBoolean)) {
-                Toast.makeText(MainActivity.this, R.string.no_new_chapters, Toast.LENGTH_SHORT).show();
-            } else if (aBoolean == null) {
-                Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+            mUpdatesChecked = true;
+            if (aBoolean) {
+                Snackbar.make(mRecyclerView, R.string.new_chapters, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.more, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(MainActivity.this, NewChaptersActivity.class));
+                            }
+                        }).show();
             }
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            this.cancel(false);
         }
     }
 }
