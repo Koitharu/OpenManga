@@ -15,16 +15,16 @@
 
 package org.nv95.openmanga.helpers;
 
-import org.nv95.openmanga.utils.SerialExecutor;
-
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by nv95 on 03.01.16.
  * Remove directory
  */
 public class DirRemoveHelper implements Runnable {
-    private static final SerialExecutor EXECUTOR = new SerialExecutor();
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
     private final File file;
 
     public DirRemoveHelper(File file) {

@@ -18,7 +18,7 @@ import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.MainActivity;
+import org.nv95.openmanga.activities.NewChaptersActivity;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.items.MangaUpdateInfo;
@@ -109,7 +109,7 @@ public class ScheduledService extends Service {
                         .setSmallIcon(R.drawable.ic_stat_star)
                         .setContentTitle(getString(R.string.new_chapters))
                         .setContentIntent(PendingIntent.getActivity(ScheduledService.this, 1,
-                                new Intent(ScheduledService.this, MainActivity.class), 0))
+                                new Intent(ScheduledService.this, NewChaptersActivity.class), 0))
                         .setTicker(getString(R.string.new_chapters))
                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                         .setContentText(String.format(getString(R.string.new_chapters_count), sum));
@@ -122,6 +122,7 @@ public class ScheduledService extends Service {
                     inboxStyle.setSummaryText(String.format(getString(R.string.new_chapters_count), sum));
                     notification = inboxStyle.build();
                 } else {
+                    //noinspection deprecation
                     notification = builder.getNotification();
                 }
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;

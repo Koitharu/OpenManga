@@ -65,6 +65,7 @@ public class NewChaptersActivity extends BaseAppActivity {
                         .markAsViewed(o.hashCode());
                 mList.remove(pos);
                 mAdapter.notifyItemRemoved(pos);
+                mTextViewHolder.setVisibility(mList.size() == 0 ? View.VISIBLE : View.GONE);
             }
         }).attachToRecyclerView(mRecyclerView);
 
