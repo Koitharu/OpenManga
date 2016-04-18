@@ -17,7 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -50,13 +49,12 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
-import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.ImageCreator;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
@@ -69,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements
     private FloatingActionButton mFab;
     private TextView mTextViewHolder;
     private ProgressBar mProgressBar;
-    private TextView mTextViewTitle;
-    private TextView mTextViewSubtitle;
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
@@ -122,23 +118,16 @@ public class MainActivity extends AppCompatActivity implements
                 invalidateOptionsMenu();
             }
         };
-        mDrawerLayout.setDrawerListener(mToggle);
+        mDrawerLayout.addDrawerListener(mToggle);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-            //actionBar.setSubtitle(getResources().getStringArray(R.array.section_names)[3 + defSection]);
         }
 
         initDrawerRemoteProviders();
 
-
-        mTextViewTitle = (TextView) findViewById(R.id.textView_title);
-        mTextViewSubtitle = (TextView) findViewById(R.id.textView_subtitle);
         setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
-        findViewById(R.id.title).setOnClickListener(this);
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
@@ -165,12 +154,6 @@ public class MainActivity extends AppCompatActivity implements
             navMenu.add(R.id.groupRemote, i, i, names[i]);
         }
         navMenu.setGroupCheckable(R.id.groupRemote, true, true);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-        mTextViewTitle.setText(title);
     }
 
     @Override
@@ -252,15 +235,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-    public void setSubtitle(@Nullable String subtitle) {
-        if (subtitle == null) {
-            mTextViewSubtitle.setVisibility(View.GONE);
-        } else {
-            mTextViewSubtitle.setVisibility(View.VISIBLE);
-            mTextViewSubtitle.setText(subtitle);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -283,6 +257,30 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
+                return true;
+            case R.id.action_filter:
+                if (mProvider == null) {
+                    return true;
+                }
+                final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
+                final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
+                if (!hasGenres && !hasSort) {
+                    new AlertDialog.Builder(this)
+                            .setMessage(R.string.no_options_available)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .create().show();
+                    return true;
+                }
+                FilterSortDialog dialog = new FilterSortDialog(this, this);
+                if (hasGenres) {
+                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
+                            getString(mProvider instanceof FavouritesProvider
+                                    ? R.string.action_category : R.string.action_genre));
+                }
+                if (hasSort) {
+                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
+                }
+                dialog.show();
                 return true;
             case R.id.action_histclear:
                 if (mProvider instanceof HistoryProvider) {
@@ -354,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mToggle.syncState();
-        AppHelper.showcaseTip(this, R.id.title, R.string.tip_genre_sort, "genresort");
     }
 
     @Override
@@ -378,30 +375,6 @@ public class MainActivity extends AppCompatActivity implements
         switch (v.getId()) {
             case R.id.fab_read:
                 new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                break;
-            case R.id.title:
-                if (mProvider == null) {
-                    return;
-                }
-                final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
-                final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
-                if (!hasGenres && !hasSort) {
-                    new AlertDialog.Builder(this)
-                            .setMessage(R.string.no_options_available)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .create().show();
-                    return;
-                }
-                FilterSortDialog dialog = new FilterSortDialog(this, this);
-                if (hasGenres) {
-                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
-                            getString(mProvider instanceof FavouritesProvider
-                                    ? R.string.action_category : R.string.action_genre));
-                }
-                if (hasSort) {
-                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
-                }
-                dialog.show();
                 break;
         }
     }
