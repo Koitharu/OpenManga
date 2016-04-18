@@ -244,4 +244,5 @@
     <string name="next_chapter">Next chapter\n\n%s</string>
     <string name="prev_chapter">Previous chapter\n\n%s</string>
     <string name="tip_mark_read">Swipe item to mark all new chapters as viewed</string>
+    <string name="filter">Фильтр</string>
 </resources>
