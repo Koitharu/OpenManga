@@ -207,7 +207,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(ReadActivity.this)
-                                    .storeChaptersCount(mangaSummary.hashCode(), mangaSummary.getChapters().size(), 0);
+                                    .storeChaptersCount(mangaSummary.hashCode(), mangaSummary.getChapters().size());
 
                         }
                     }, mangaSummary);

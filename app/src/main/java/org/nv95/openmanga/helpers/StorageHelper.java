@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 12;
+    private static final int DB_VERSION = 13;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -28,7 +28,7 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS favourites");
+        //db.execSQL("DROP TABLE IF EXISTS favourites");
         db.execSQL("CREATE TABLE favourites ("
                 + "id INTEGER PRIMARY KEY,"                 //0
                 + "name TEXT,"                              //1
@@ -40,7 +40,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "timestamp INTEGER,"                      //7
                 + "category INTEGER DEFAULT 0"              //8
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS history");
+        //db.execSQL("DROP TABLE IF EXISTS history");
         db.execSQL("CREATE TABLE history ("
                 + "id INTEGER PRIMARY KEY,"                 //0
                 + "name TEXT,"                              //1
@@ -54,7 +54,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "page INTEGER,"                           //9
                 + "size INTEGER"                            //10
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS local_storage");
+        //db.execSQL("DROP TABLE IF EXISTS local_storage");
         db.execSQL("CREATE TABLE local_storage ("       //менять нельзя ничего
                 + "id INTEGER PRIMARY KEY,"                 //0
                 + "name TEXT,"                              //1
@@ -66,30 +66,35 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "description TEXT,"                       //7
                 + "timestamp INTEGER"                       //8
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS local_chapters");
+        //db.execSQL("DROP TABLE IF EXISTS local_chapters");
         db.execSQL("CREATE TABLE local_chapters ("
                 + "number INTEGER PRIMARY KEY,"                 //0
                 + "id INTEGER,"                                 //1 - хеш readlink-а
                 + "mangaId INTEGER,"                            //2 - dir - соответствует path из storage
                 + "name TEXT"                                   //3
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS local_pages");
+        //db.execSQL("DROP TABLE IF EXISTS local_pages");
         db.execSQL("CREATE TABLE local_pages ("
                 + "number INTEGER PRIMARY KEY,"                 //0
                 + "id INTEGER,"                                 //1
                 + "chapterId INTEGER,"                          //2
                 + "path TEXT"                                   //3
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS search_history");
+        //db.execSQL("DROP TABLE IF EXISTS search_history");
         db.execSQL("CREATE TABLE search_history ("
                 + "_id INTEGER PRIMARY KEY,"                 //0
                 + "query TEXT"
                 + ");");
-        db.execSQL("DROP TABLE IF EXISTS updates");
+        /*db.execSQL("DROP TABLE IF EXISTS updates");
         db.execSQL("CREATE TABLE updates ("
                 + "id INTEGER PRIMARY KEY,"                 //0
                 + "chapters INTEGER,"
                 + "unread INTEGER DEFAULT 0"
+                + ");");*/
+        db.execSQL("CREATE TABLE new_chapters ("
+                + "id INTEGER PRIMARY KEY,"                 //0
+                + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
+                + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
                 + ");");
     }
 
@@ -97,9 +102,10 @@ public class StorageHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         CopyOnWriteArraySet<String> tables = getTableNames(db);
-        if(!tables.contains("updates")){
-            db.execSQL("CREATE TABLE updates ("
-                    + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
+        if(!tables.contains("new_chapters")){
+            db.execSQL("CREATE TABLE new_chapters ("
+                    + "id INTEGER PRIMARY KEY,"                 //0
+                    + "chapters_last INTEGER,"
                     + "chapters INTEGER"
                     + ");");
         }
@@ -108,26 +114,9 @@ public class StorageHelper extends SQLiteOpenHelper {
         if(!columnsFavourites.contains("category"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
 
-        CopyOnWriteArraySet<String> columnsUpdates = getColumsNames(db, "updates");
+        /*CopyOnWriteArraySet<String> columnsUpdates = getColumsNames(db, "updates");
         if(!columnsUpdates.contains("unread"))
-            db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
-
-//        switch (oldVersion) {
-//            case 8: //после этой версии была добавлена проверка обновлений
-//                db.execSQL("DROP TABLE IF EXISTS updates");
-//                db.execSQL("CREATE TABLE updates ("
-//                        + "id INTEGER PRIMARY KEY,"                 //хеш readlink-а
-//                        + "chapters INTEGER"
-//                        + ");");
-//            case 9:
-//                db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
-//            case 10:
-//            case 11:
-//                db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");
-//                break;
-//            default:
-//                onCreate(db); // нет в этом необходимости
-//        }
+            db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");*/
     }
 
     @Nullable
