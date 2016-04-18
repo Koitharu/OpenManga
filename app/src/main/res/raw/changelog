@@ -1,11 +1,6 @@
 <h1>Changelog</h1>
 <p>
-    + Show counters of new chapters in list<br>
-    + Add source Desu.me<br>
-    + Automatic checking for updates<br>
-    + Show recommendations<br>
-    * Improved downloading of manga<br>
-    * UI enhancements<br>
-    * Optimized loading pages<br>
-    * Fixes<br>
+    + Add invisible scroll buttons on bottom of reader<br/>
+    * Fix checking for new chapters<br/>
+    * Small fixes and enhancements<br/>
 </p>

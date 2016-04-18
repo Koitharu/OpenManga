@@ -118,6 +118,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     }
 
     private void showChaptersSheet() {
+        if (mangaSummary.getChapters().size() == 0) {
+            return;
+        }
         final HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mangaSummary);
         BottomSheetDialog sheet = new BottomSheetDialog(this);
         if (lastChapter != null) {
