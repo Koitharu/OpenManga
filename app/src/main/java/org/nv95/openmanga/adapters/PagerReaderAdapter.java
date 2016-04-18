@@ -15,10 +15,11 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.SerialExecutor;
 import org.nv95.openmanga.utils.imagecontroller.PageLoadAbs;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class PagerReaderAdapter extends PagerAdapter implements View.OnClickListener {
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
-    private final SerialExecutor executor = new SerialExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);

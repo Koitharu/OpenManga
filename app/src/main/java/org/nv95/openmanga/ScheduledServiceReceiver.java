@@ -29,11 +29,9 @@ public class ScheduledServiceReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
                 enable(context);
-                FileLogger.getInstance().report("--ScheduledServiceReceiver ACTION_BOOT_COMPLETED");
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
                 context.startService(new Intent(context, ScheduledService.class));
-                FileLogger.getInstance().report("--ScheduledServiceReceiver CONNECTIVITY_ACTION");
                 break;
             default:
                 FileLogger.getInstance().report("--ScheduledServiceReceiver unknown action");

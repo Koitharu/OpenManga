@@ -21,9 +21,10 @@ import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.SerialExecutor;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by nv95 on 12.01.16.
@@ -35,7 +36,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
     private GroupedAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private MangaProviderManager mProviderManager;
-    private SerialExecutor mExecutor;
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private ListModeHelper mListModeHelper;
 
     @Override
@@ -56,7 +57,6 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        mExecutor = new SerialExecutor();
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         mProgressBar.setMax(providers.size());
         mProgressBar.setProgress(0);
