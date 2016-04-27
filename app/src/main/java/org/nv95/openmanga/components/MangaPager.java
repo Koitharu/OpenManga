@@ -1,9 +1,12 @@
 package org.nv95.openmanga.components;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.Surface;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
@@ -203,5 +206,32 @@ public class MangaPager extends ViewPager {
         if(Math.abs(distance) > maxScroll)
             return distance > 0 ? maxScroll : -maxScroll;
         return distance;
+    }
+
+    public void onConfigurationChange(Activity activity){
+        mAdapter.setIsLandOrientation(getOrientation(activity) == Configuration.ORIENTATION_LANDSCAPE);
+    }
+
+    public static int getOrientation(Activity mContext){
+        final int orientation = mContext.getResources().getConfiguration().orientation;
+        final int rotation = mContext.getWindowManager().getDefaultDisplay().getOrientation();
+
+        if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                return Configuration.ORIENTATION_PORTRAIT;
+            }
+            else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                return Configuration.ORIENTATION_LANDSCAPE;
+            }
+        }
+        else if (rotation == Surface.ROTATION_180 || rotation == Surface.ROTATION_270) {
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                return Configuration.ORIENTATION_PORTRAIT;
+            }
+            else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                return Configuration.ORIENTATION_LANDSCAPE;
+            }
+        }
+        return Configuration.ORIENTATION_LANDSCAPE;
     }
 }

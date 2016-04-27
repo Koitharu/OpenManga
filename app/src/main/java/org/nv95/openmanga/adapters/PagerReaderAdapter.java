@@ -1,8 +1,10 @@
 package org.nv95.openmanga.adapters;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private boolean isLandOrientation;
+    SparseArray<ViewHolder> views = new SparseArray<>();
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -46,6 +50,11 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         holder.loadTask.load();
     }
 
+    public void setIsLandOrientation(boolean isLandOrientation) {
+        this.isLandOrientation = isLandOrientation;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return pages.size();
@@ -62,9 +71,14 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         MangaPage page = getItem(position);
         ViewHolder holder = new ViewHolder();
         holder.position = position;
+        holder.isLand = isLandOrientation;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
-        //todo holder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+//        holder.ssiv.setMinimumScaleType(
+//                isLandOrientation ? SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
+//                         : SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
+//        );
+        holder.ssiv.setScaleAndCenter(isLandOrientation ? holder.ssiv.getMaxScale() -.2f : holder.ssiv.getMinScale(), new PointF(0,0));
         holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
         holder.buttonRetry.setTag(holder);
         holder.buttonRetry.setOnClickListener(this);
@@ -83,6 +97,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
 //        holder.loadTask.executeOnExecutor(executor);
         holder.loadTask = new PageLoad(holder, page);
         holder.loadTask.load();
+        views.append(position, holder);
         container.addView(view, 0);
         return view;
     }
@@ -100,6 +115,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             }
             holder.ssiv.recycle();
         }
+        views.remove(position);
         container.removeView(view);
     }
 
@@ -115,6 +131,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         @Nullable
         PageLoad loadTask;
         int position;
+        boolean isLand;
     }
 
     static class PageLoad extends PageLoadAbs {
@@ -141,6 +158,8 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
+            viewHolder.ssiv.setScaleAndCenter(viewHolder.isLand ?
+                    viewHolder.ssiv.getMaxScale() -.2f : viewHolder.ssiv.getMinScale(), new PointF(0,0));
         }
 
         @Override
@@ -155,5 +174,22 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
             int progress = (current * 100 / total);
             viewHolder.progressBar.setProgress(progress);
         }
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        for(int i = 0; i < views.size(); i++) {
+            ViewHolder view = views.get(i);
+            if(view!= null && view.ssiv!=null) {
+//                view.ssiv.setMinimumScaleType(
+//                        isLandOrientation ? SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
+//                                : SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
+//                );
+                view.isLand = isLandOrientation;
+//                view.ssiv.resetScaleAndCenter();
+                view.ssiv.setScaleAndCenter(isLandOrientation ? view.ssiv.getMaxScale() -.2f: view.ssiv.getMinScale(), new PointF(0,0));
+            }
+        }
+        super.notifyDataSetChanged();
     }
 }
