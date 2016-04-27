@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -84,6 +85,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.imageView_menu).setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
         mPager.setOverScrollListener(this);
+        mPager.onConfigurationChange(this);
         onOptionsChanged();
         mangaSummary = new MangaSummary(getIntent().getExtras());
         if (mangaSummary.getChapters().size() == 0) {
@@ -601,5 +603,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPager.onConfigurationChange(this);
     }
 }

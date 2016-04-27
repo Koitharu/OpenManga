@@ -26,34 +26,53 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
 
     protected abstract void onLoadingComplete();
 
-    private class PrepareTask extends AsyncTask<Void,Void,String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return ((MangaProvider) page.provider.newInstance()).getPageImage(page);
-            } catch (Exception e) {
-                return page.path;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String path) {
-            super.onPostExecute(path);
-            if (path != null) {
-                if (path.startsWith("/")) {
-                    path = "file://" + path;
-                }
-                ImageLoader.getInstance().displayImage(path, view, null, PageLoadAbs.this, PageLoadAbs.this);
-            } else {
-                onLoadingFailed(null, null, null);
-            }
-        }
-    }
+//    private class PrepareTask extends AsyncTask<Void,Void,String> {
+//
+//        @Override
+//        protected String doInBackground(Void... params) {
+//            try {
+//                return ((MangaProvider) page.provider.newInstance()).getPageImage(page);
+//            } catch (Exception e) {
+//                return page.path;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String path) {
+//            super.onPostExecute(path);
+//            if (path != null) {
+//                if (path.startsWith("/")) {
+//                    path = "file://" + path;
+//                }
+//                ImageLoader.getInstance().displayImage(path, view, null, PageLoadAbs.this, PageLoadAbs.this);
+//            } else {
+//                onLoadingFailed(null, null, null);
+//            }
+//        }
+//    }
+//
+//    public void load() {
+//        preLoad();
+//        new PrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//    }
 
     public void load() {
         preLoad();
-        new PrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String path;
+        try {
+            path = ((MangaProvider) page.provider.newInstance()).getPageImage(page);
+        } catch (Exception e) {
+            path = page.path;
+        }
+        if (path != null) {
+            if (path.startsWith("/")) {
+                path = "file://" + path;
+            }
+            ImageLoader.getInstance().displayImage(path, view, null, this, this);
+        } else {
+            onLoadingFailed(null, null, null);
+        }
+
     }
 
     public void cancel(){
