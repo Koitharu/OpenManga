@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -7,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 
 import org.nv95.openmanga.DirSelectDialog;
 import org.nv95.openmanga.R;
@@ -20,20 +20,30 @@ import java.io.File;
  */
 public class FileSelectActivity extends BaseAppActivity implements DirSelectDialog.OnDirSelectListener {
     private FileSelectAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private File mDir;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_importfile);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setSupportActionBar(R.id.toolbar);
+        enableHomeAsUp();
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         String dir = getSharedPreferences(this.getLocalClassName(), MODE_PRIVATE)
                 .getString("dir", null);
-        mAdapter = new FileSelectAdapter(dir == null ? Environment.getExternalStorageDirectory()
-                : new File(dir), ".cbz", this);
-        recyclerView.setAdapter(mAdapter);
-        enableHomeAsUp();
+        mDir = dir == null ? Environment.getExternalStorageDirectory()
+                : new File(dir);
+        if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+           onPermissionGranted(null);
+        }
+    }
+
+    @Override
+    protected void onPermissionGranted(String permission) {
+        mAdapter = new FileSelectAdapter(mDir, ".cbz", this);
+        mRecyclerView.setAdapter(mAdapter);
         setSubtitle(mAdapter.getCurrentDir().getPath());
     }
 
