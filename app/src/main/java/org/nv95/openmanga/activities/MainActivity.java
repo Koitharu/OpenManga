@@ -264,13 +264,6 @@ public class MainActivity extends BaseAppActivity implements
                 }
                 final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
                 final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
-                if (!hasGenres && !hasSort) {
-                    new AlertDialog.Builder(this)
-                            .setMessage(R.string.no_options_available)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .create().show();
-                    return true;
-                }
                 FilterSortDialog dialog = new FilterSortDialog(this, this);
                 if (hasGenres) {
                     dialog.genres(mProvider.getGenresTitles(this), mGenre,
