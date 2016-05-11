@@ -1,10 +1,13 @@
 package org.nv95.openmanga.activities;
 
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 /**
  * Created by nv95 on 19.02.16.
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
+    private static final int REQEST_PERMISSION = 112;
     private boolean mActionBarVisible = false;
     private boolean mHomeAsUpEnabled = false;
 
@@ -107,5 +113,49 @@ public abstract class BaseAppActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void keepScreenOn() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    protected boolean checkPermission(String permission) {
+        if (ContextCompat.checkSelfPermission(this,
+                permission) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{permission},
+                    REQEST_PERMISSION);
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (requestCode == REQEST_PERMISSION) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionGranted(permissions[i]);
+                }
+            }
+        }
+    }
+
+    protected void onPermissionGranted(String permission) {
+
+    }
+
+    public void showToast(CharSequence text, int gravity, int delay) {
+        final Toast toast = Toast.makeText(this, text, delay);
+        toast.setGravity(gravity, 0, 0);
+        toast.show();
+    }
+
+    public void showToast(@StringRes int text, int gravity, int delay) {
+        showToast(getString(text), gravity, delay);
     }
 }
