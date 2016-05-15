@@ -9,6 +9,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -152,11 +153,8 @@ public abstract class MangaProvider {
         return null;
     }
 
+    @Deprecated
     protected final String[] getTitles(Context context, int[] ids) {
-        String[] res = new String[ids.length];
-        for (int i = 0; i < ids.length; i++) {
-            res[i] = context.getString(ids[i]);
-        }
-        return res;
+        return (String[]) AppHelper.getTextArray(context, ids);
     }
 }
