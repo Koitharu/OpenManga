@@ -38,14 +38,14 @@ public class ActionAreasGrid extends LinearLayout {
     private void init(Context context) {
         LayoutInflater.from(context)
                 .inflate(R.layout.grid_clickable, this, true);
-        mAreas[0] = (TextView) findViewById(R.id.textView_0);
-        mAreas[1] = (TextView) findViewById(R.id.textView_1);
-        mAreas[2] = (TextView) findViewById(R.id.textView_2);
-        mAreas[3] = (TextView) findViewById(R.id.textView_3);
-        mAreas[4] = (TextView) findViewById(R.id.textView_4);
-        mAreas[5] = (TextView) findViewById(R.id.textView_5);
-        mAreas[6] = (TextView) findViewById(R.id.textView_6);
-        mAreas[7] = (TextView) findViewById(R.id.textView_7);
-        mAreas[8] = (TextView) findViewById(R.id.textView_8);
+//        mAreas[0] = (TextView) findViewById(R.id.textView_0);
+//        mAreas[1] = (TextView) findViewById(R.id.textView_1);
+//        mAreas[2] = (TextView) findViewById(R.id.textView_2);
+//        mAreas[3] = (TextView) findViewById(R.id.textView_3);
+//        mAreas[4] = (TextView) findViewById(R.id.textView_4);
+//        mAreas[5] = (TextView) findViewById(R.id.textView_5);
+//        mAreas[6] = (TextView) findViewById(R.id.textView_6);
+//        mAreas[7] = (TextView) findViewById(R.id.textView_7);
+//        mAreas[8] = (TextView) findViewById(R.id.textView_8);
     }
 }
