@@ -34,6 +34,13 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
 //                    .postProcessor(new BitmapProcessor() {
 //                        @Override
 //                        public Bitmap process(Bitmap bitmap) {
+
+                // TODO как то придумать как вставлять разрезанную картинку в pager
+                // напримаер
+        //        Bitmap bm1 = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), (bitmap.getHeight() / 2));
+        //        Bitmap bm2 = Bitmap.createBitmap(bitmap, 0, (bitmap.getHeight() / 2), bitmap.getWidth(), (bitmap.getHeight() / 2));
+
+
 //                            int width = 0, height = 0;
 //                            float videoAspectRatio = bitmap.getWidth() / (float)bitmap.getHeight();
 //                            if(bitmap.getHeight() > GL10.GL_MAX_TEXTURE_SIZE) {
