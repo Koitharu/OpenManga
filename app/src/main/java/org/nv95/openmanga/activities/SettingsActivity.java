@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,7 +59,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public boolean onPreferenceClick(final Preference preference) {
         switch (preference.getKey()) {
             case "readeropt":
                 getFragmentManager().beginTransaction()
@@ -87,6 +88,26 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 return true;
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
+            case "mangadir":
+                if (!checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    return true;
+                }
+                new DirSelectDialog(this)
+                        .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
+                            @Override
+                            public void onDirSelected(File dir) {
+                                if (!dir.canWrite()) {
+                                    Toast.makeText(SettingsActivity.this, R.string.dir_no_access,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                preference.setSummary(dir.getPath());
+                                preference.getEditor()
+                                        .putString("mangadir", dir.getPath()).apply();
+                                checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            }
+                        })
+                        .show();
                 return true;
             case "update":
                 new CheckUpdatesTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -172,25 +193,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             } catch (Exception e) {
                 p.setSummary(R.string.unknown);
             }
-            p.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(final Preference preference) {
-                    new DirSelectDialog(getActivity())
-                            .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
-                                @Override
-                                public void onDirSelected(File dir) {
-                                    if (!dir.canWrite()) {
-                                        Toast.makeText(getActivity(), R.string.dir_no_access, Toast.LENGTH_SHORT).show();
-                                    }
-                                    preference.setSummary(dir.getPath());
-                                    preference.getEditor()
-                                            .putString("mangadir", dir.getPath()).apply();
-                                }
-                            })
-                            .show();
-                    return true;
-                }
-            });
+            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
             new AsyncTask<Void, Void, Float>() {
 

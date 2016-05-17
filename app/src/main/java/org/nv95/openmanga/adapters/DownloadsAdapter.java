@@ -96,6 +96,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
         if (mBinder != null && holder != null && holder instanceof DownloadHolder) {
             DownloadInfo item = mBinder.getItem(position);
+            if (item.pos == item.max) {
+                // TODO: 11.05.16
+                return;
+            }
             ((DownloadHolder)holder).updateProgress(item.pos, item.max,
                             item.chaptersProgresses[item.pos], item.chaptersSizes[item.pos],
                             item.chapters.get(item.pos).name);
@@ -144,8 +148,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         }
 
         public void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
-            mProgressBarPrimary.setMax(tMax * 100);
-            mProgressBarPrimary.setProgress(tPos* 100 + (cPos*100/cMax));
+            if (cMax == 0) {
+                mProgressBarPrimary.setProgress(0);
+            } else {
+                mProgressBarPrimary.setMax(tMax * 100);
+                mProgressBarPrimary.setProgress(tPos* 100 + (cPos*100/cMax));
+            }
             mProgressBarSecondary.setMax(cMax);
             mProgressBarSecondary.setProgress(cPos);
             mTextViewSubtitle.setText(subtitle);

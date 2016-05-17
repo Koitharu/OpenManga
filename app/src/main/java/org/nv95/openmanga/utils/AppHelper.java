@@ -99,4 +99,12 @@ public class AppHelper {
                 .setDismissTextColor(ContextCompat.getColor(activity, R.color.accent_light))
                 .show();
     }
+
+    public static CharSequence[] getTextArray(Context context, int[] ids) {
+        CharSequence[] res = new CharSequence[ids.length];
+        for (int i = 0; i < ids.length; i++) {
+            res[i] = context.getText(ids[i]);
+        }
+        return res;
+    }
 }

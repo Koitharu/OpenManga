@@ -116,6 +116,10 @@ public class DownloadService extends Service {
                 mDownloads.add(download);
                 if (mTaskReference.get() == null) {
                     new DownloadTask(download).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    for (OnProgressUpdateListener o:mProgressListeners) {
+                        o.onDataUpdated();
+                    }
                 }
                 break;
             case ACTION_CANCEL:
