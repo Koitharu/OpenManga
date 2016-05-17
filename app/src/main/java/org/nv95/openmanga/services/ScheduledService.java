@@ -128,6 +128,7 @@ public class ScheduledService extends Service {
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(678, notification);
             }
+            stopSelf();
         }
 
         @Override
