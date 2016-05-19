@@ -11,13 +11,10 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
-
-import javax.microedition.khronos.opengles.GL10;
 
 public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingProgressListener {
     protected final MangaPage page;
@@ -31,6 +28,7 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
 
         options = OpenMangaApplication.getImageLoaderOptionsBuilder()
                     .imageScaleType(ImageScaleType.NONE_SAFE)
+                    .postProcessor(new ImageShifter())
 //                    .postProcessor(new BitmapProcessor() {
 //                        @Override
 //                        public Bitmap process(Bitmap bitmap) {
