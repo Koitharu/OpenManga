@@ -28,7 +28,7 @@ public class FileSelectActivity extends BaseAppActivity implements DirSelectDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_importfile);
         setSupportActionBar(R.id.toolbar);
-        enableHomeAsUp();
+        enableHomeAsClose();
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         String dir = getSharedPreferences(this.getLocalClassName(), MODE_PRIVATE)

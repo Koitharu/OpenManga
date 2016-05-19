@@ -18,6 +18,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import org.nv95.openmanga.R;
+
 /**
  * Created by nv95 on 19.02.16.
  */
@@ -30,6 +32,15 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && !mHomeAsUpEnabled) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            mHomeAsUpEnabled = true;
+        }
+    }
+
+    public void enableHomeAsClose() {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && !mHomeAsUpEnabled) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_light);
             mHomeAsUpEnabled = true;
         }
     }
