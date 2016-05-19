@@ -2,9 +2,8 @@
 
 OpenManga - Manga reader for Android with simple user-friendly interface and online catalogues.
 
-## Download 
-[Latest beta](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-1.2.2-beta.apk?raw=true) - v1.2.2 beta  
-[Latest release](https://github.com/nv95/OpenManga/blob/master/builds/openmanga-1.2-release.apk?raw=true) - v1.2  
+## Download
+[Latest release](http://anibreak.ru/uploads/apps/openmanga/openmanga_1.2.1.apk) - v1.2.1
 
 ## Features
  - 9 online manga's catalogues with search
