@@ -2,7 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="details_margin_top">260dp</dimen>
+    <dimen name="details_margin_top">280dp</dimen>
     <dimen name="drawer_size">280dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="overscroll_size">140dp</dimen>

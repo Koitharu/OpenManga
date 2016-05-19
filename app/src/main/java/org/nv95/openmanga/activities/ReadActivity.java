@@ -93,26 +93,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             return;
         }
-        //noinspection ConstantConditions
-        findViewById(R.id.ibNext).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int item = mPager.getCurrentItem();
-                if (item < mPager.getCount()) {
-                    mPager.setCurrentItem(item + 1);
-                }
-            }
-        });
-        //noinspection ConstantConditions
-        findViewById(R.id.ibPrev).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int item = mPager.getCurrentItem();
-                if (item > 0) {
-                    mPager.setCurrentItem(item - 1);
-                }
-            }
-        });
 
         initParams(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);

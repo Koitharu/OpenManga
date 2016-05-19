@@ -10,28 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <View
-            android:id="@+id/ibPrev"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?selectableItemBackground" />
-
-        <View
-            android:id="@+id/ibNext"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?selectableItemBackground" />
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/loader"
         android:layout_width="match_parent"
