@@ -130,6 +130,7 @@ public class DownloadService extends Service {
                             .indeterminate()
                             .text(R.string.cancelling)
                             .update(NOTIFY_ID);
+                    mDownloads.clear();
                     task.cancel(true);
                 } else {
                     stopSelf();
@@ -152,7 +153,9 @@ public class DownloadService extends Service {
     }
 
     private class DownloadTask extends AsyncTask<Void,Integer,Integer> {
+        //прогресс по главам
         protected static final int PROGRESS_PRIMARY = 0;
+        //прогресс по страницам
         protected static final int PROGRESS_SECONDARY = 1;
         private final DownloadInfo mDownload;
 
@@ -205,18 +208,18 @@ public class DownloadService extends Service {
                 o = mDownload.chapters.get(i);
                 chapterSaveBuilder = mangaSaveBuilder.newChapter(o.readLink.hashCode());
                 pages = provider.getPages(o.readLink);
-                publishProgress(PROGRESS_PRIMARY, i, pages.size());
+                publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
                 for (int j=0; j<pages.size(); j++) {
                     o1 = pages.get(j);
                     chapterSaveBuilder.newPage(o1.path.hashCode())
                             .downloadPage(provider.getPageImage(o1))
                             .commit();
-                    publishProgress(PROGRESS_SECONDARY, j);
+                    publishProgress(PROGRESS_SECONDARY, j, pages.size());
                     if (isCancelled()) {
                         break;
                     }
                 }
-                publishProgress(PROGRESS_SECONDARY, pages.size());
+                publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
                 if (isCancelled()) {
                     chapterSaveBuilder.dissmiss();
                     break;
@@ -226,7 +229,7 @@ public class DownloadService extends Service {
                             .commit();
                 }
             }
-            publishProgress(PROGRESS_PRIMARY, mDownload.max);
+            publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
             mangaSaveBuilder.commit();
             mangaSaveHelper.close();
             return null;
@@ -255,15 +258,19 @@ public class DownloadService extends Service {
             }
         }
 
+        /**
+         * @param values
+         * [0] - #PROGRESS_PRIMARY or #PROGRESS_SECONDARY
+         * [1] - progress
+         * [2] - max
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             if (values[0] == PROGRESS_PRIMARY) {
                 mDownload.pos = values[1];
-                if (values.length > 2) {
-                    mDownload.chaptersSizes[values[1]] = values[2];
-                }
             } else if (values[0] == PROGRESS_SECONDARY) {
+                mDownload.chaptersSizes[mDownload.pos] = values[2];
                 mDownload.chaptersProgresses[mDownload.pos] = values[1];
             }
             mNotificationHelper

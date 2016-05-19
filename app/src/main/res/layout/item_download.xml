@@ -64,6 +64,16 @@
         android:indeterminate="false" />
 
     <TextView
+        android:id="@+id/textView_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/progressBar_secondary"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_alignBaseline="@+id/textView_state" />
+
+    <TextView
         android:id="@+id/textView_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

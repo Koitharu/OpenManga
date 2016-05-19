@@ -15,6 +15,7 @@
 
 package org.nv95.openmanga.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -96,13 +97,17 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
         if (mBinder != null && holder != null && holder instanceof DownloadHolder) {
             DownloadInfo item = mBinder.getItem(position);
-            if (item.pos == item.max) {
-                // TODO: 11.05.16
-                return;
+            if (item.pos < item.max) {
+                ((DownloadHolder) holder).updateProgress(
+                        item.pos * 100 + item.getChapterProgressPercent(),
+                        item.max * 100,
+                        item.chaptersProgresses[item.pos],
+                        item.chaptersSizes[item.pos],
+                        item.chapters.get(item.pos).name
+                );
+            } else {
+                notifyItemChanged(position);
             }
-            ((DownloadHolder)holder).updateProgress(item.pos, item.max,
-                            item.chaptersProgresses[item.pos], item.chaptersSizes[item.pos],
-                            item.chapters.get(item.pos).name);
         }
     }
 
@@ -116,6 +121,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         private final TextView mTextViewTitle;
         private final TextView mTextViewSubtitle;
         private final TextView mTextViewState;
+        private final TextView mTextViewPercent;
         private final ProgressBar mProgressBarPrimary;
         private final ProgressBar mProgressBarSecondary;
 
@@ -127,8 +133,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             mTextViewState = (TextView) itemView.findViewById(R.id.textView_state);
             mProgressBarPrimary = (ProgressBar) itemView.findViewById(R.id.progressBar_primary);
             mProgressBarSecondary = (ProgressBar) itemView.findViewById(R.id.progressBar_secondary);
+            mTextViewPercent = (TextView) itemView.findViewById(R.id.textView_percent);
         }
 
+        @SuppressLint("SetTextI18n")
         public void fill(DownloadInfo data) {
             mTextViewTitle.setText(data.name);
             mAsyncImageView.setImageThumbAsync(data.preview, ThumbSize.THUMB_SIZE_LIST);
@@ -143,20 +151,33 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                     mTextViewState.setText(R.string.saving_manga);
                     break;
             }
-            updateProgress(data.pos, data.max, data.chaptersProgresses[data.pos], data.chaptersSizes[data.pos],
-                    data.chapters.get(data.pos).name);
+            if (data.pos < data.max) {
+                updateProgress(data.pos, data.max, data.chaptersProgresses[data.pos], data.chaptersSizes[data.pos],
+                        data.chapters.get(data.pos).name);
+            } else {
+                mProgressBarPrimary.setProgress(mProgressBarPrimary.getMax());
+                mProgressBarSecondary.setProgress(mProgressBarSecondary.getMax());
+                mTextViewPercent.setText("100%");
+                mTextViewSubtitle.setText(itemView.getContext().getString(R.string.chapters_total, data.max));
+            }
         }
 
+        /**
+         *
+         * @param tPos current chapter
+         * @param tMax chapters count
+         * @param cPos current page
+         * @param cMax pages count
+         * @param subtitle chapter name
+         */
+        @SuppressLint("SetTextI18n")
         public void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
-            if (cMax == 0) {
-                mProgressBarPrimary.setProgress(0);
-            } else {
-                mProgressBarPrimary.setMax(tMax * 100);
-                mProgressBarPrimary.setProgress(tPos* 100 + (cPos*100/cMax));
-            }
+            mProgressBarPrimary.setMax(tMax);
+            mProgressBarPrimary.setProgress(tPos);
             mProgressBarSecondary.setMax(cMax);
             mProgressBarSecondary.setProgress(cPos);
             mTextViewSubtitle.setText(subtitle);
+            mTextViewPercent.setText((tMax == 0 ? 0 : tPos * 100 / tMax) + "%");
         }
     }
 }
