@@ -134,10 +134,10 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         boolean isLand;
     }
 
-    static class PageLoad extends PageLoadAbs {
+    private static class PageLoad extends PageLoadAbs {
         private final ViewHolder viewHolder;
 
-        public PageLoad (ViewHolder viewHolder, MangaPage page){
+        PageLoad(ViewHolder viewHolder, MangaPage page){
             super(page, viewHolder.ssiv);
             this.viewHolder = viewHolder;
         }
