@@ -1,5 +1,6 @@
 package org.nv95.openmanga.utils.imagecontroller;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -13,16 +14,27 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by admin on 19.05.16.
  */
-public class ImageShifter implements BitmapProcessor {
-    private final int mSpace;
+public class ImageShifter implements BitmapProcessor, SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final ImageShifter instance = new ImageShifter();
+    private int mSpace;
+    private boolean mShift;
 
-    public ImageShifter(int spacePx) {
+    public static ImageShifter getInstance() {
+        return instance;
+    }
+
+    private ImageShifter() {
+        mShift = false;
+    }
+
+    public ImageShifter setSpace(int spacePx) {
         mSpace = spacePx;
+        return this;
     }
 
     @Override
     public Bitmap process(Bitmap bitmap) {
-        if (bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
+        if (!mShift || bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
             return scaleBitmap(bitmap);
         }
         final int count = Math.max((int) Math.sqrt(bitmap.getHeight() / bitmap.getWidth()) - 1, 2);
@@ -67,5 +79,14 @@ public class ImageShifter implements BitmapProcessor {
         Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         bitmap.recycle();
         return newBitmap;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case "shifts":
+                mShift = sharedPreferences.getBoolean("shifts", false);
+                break;
+        }
     }
 }

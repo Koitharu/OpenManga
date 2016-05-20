@@ -2,11 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
-        android:title="@string/scrolling_direction"
-        android:key="direction"
         android:defaultValue="0"
         android:entries="@array/directions"
-        android:entryValues="@array/directions_values" />
+        android:entryValues="@array/directions_values"
+        android:key="direction"
+        android:title="@string/scrolling_direction" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="keep_screen"
@@ -17,7 +17,6 @@
         android:key="volkeyscroll"
         android:title="@string/scroll_by_volkeys"
         android:widgetLayout="@layout/pref_switchcompat" />
-
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="brightness"
@@ -25,10 +24,16 @@
         android:widgetLayout="@layout/pref_switchcompat" />
     <org.nv95.openmanga.components.SeekBarPreference
         android:dependency="brightness"
-        android:title="@string/brightness_value"
         android:key="brightness_value"
-        app:iconDrawable="@drawable/ic_brightness_darker"
+        android:title="@string/brightness_value"
         app:currentValue="20"
+        app:iconDrawable="@drawable/ic_brightness_darker"
         app:max="100" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="shifts"
+        android:title="@string/wrap_long_pages"
+        android:summary="TESTING! useful if page has non standard proportions"
+        android:widgetLayout="@layout/pref_switchcompat" />
 
 </PreferenceScreen>
