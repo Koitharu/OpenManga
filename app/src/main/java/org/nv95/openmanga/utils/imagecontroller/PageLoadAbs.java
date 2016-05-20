@@ -27,7 +27,7 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
         this.view = new PageImageAvare(view);
 
         options = OpenMangaApplication.getImageLoaderOptionsBuilder()
-                    .imageScaleType(ImageScaleType.NONE_SAFE)
+                    .imageScaleType(ImageScaleType.NONE)
                     .postProcessor(new ImageShifter())
 //                    .postProcessor(new BitmapProcessor() {
 //                        @Override
