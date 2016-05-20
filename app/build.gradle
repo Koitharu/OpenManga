@@ -8,7 +8,7 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 53
+        versionCode 60
         versionName "1.3 beta"
     }
 
