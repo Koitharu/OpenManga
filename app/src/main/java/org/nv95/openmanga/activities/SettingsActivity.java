@@ -51,8 +51,10 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home && !getFragmentManager().popBackStackImmediate()) {
-            finish();
+        if (item.getItemId() == android.R.id.home) {
+            if (!getFragmentManager().popBackStackImmediate()) {
+                finish();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
