@@ -25,7 +25,7 @@ public class PageImageAvare extends ViewAware {
 
     @Override
     protected void setImageBitmapInto(Bitmap bitmap, View view) {
-        ImageSource source = ImageSource.cachedBitmap(bitmap).tilingEnabled();
+        ImageSource source = ImageSource.cachedBitmap(bitmap).tilingDisabled();
         ((SubsamplingScaleImageView)view).setImage(source);
     }
 }

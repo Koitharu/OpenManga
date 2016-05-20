@@ -14,24 +14,28 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by admin on 19.05.16.
  */
 public class ImageShifter implements BitmapProcessor {
-    private static final int SPACE = 8;
+    private final int mSpace;
+
+    public ImageShifter(int spacePx) {
+        mSpace = spacePx;
+    }
 
     @Override
     public Bitmap process(Bitmap bitmap) {
-        if (bitmap.getHeight() <= bitmap.getWidth() * 3) {
+        if (bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
             return scaleBitmap(bitmap);
         }
+        final int count = Math.max((int) Math.sqrt(bitmap.getHeight() / bitmap.getWidth()) - 1, 2);
+        final int sectHeight = bitmap.getHeight() / count + 1;
         final Paint paint = new Paint();
-        final Bitmap res = Bitmap.createBitmap(bitmap.getWidth() * 2 + SPACE, bitmap.getHeight() / 2, bitmap.getConfig());
+        final Bitmap res = Bitmap.createBitmap((bitmap.getWidth() + mSpace) * count - mSpace, sectHeight, bitmap.getConfig());
         final Canvas canvas = new Canvas(res);
-        canvas.drawBitmap(bitmap,
-                new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight() / 2),
-                new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight() / 2),
-                paint);
-        canvas.drawBitmap(bitmap,
-                new Rect(0, bitmap.getHeight() / 2, bitmap.getWidth(), bitmap.getHeight()),
-                new RectF(bitmap.getWidth() + SPACE, 0, bitmap.getWidth() * 2 + SPACE, bitmap.getHeight() / 2),
-                paint);
+        for (int i=0;i<count;i++) {
+            canvas.drawBitmap(bitmap,
+                    new Rect(0, sectHeight * i, bitmap.getWidth(), sectHeight * (i+1)),     /*source*/
+                    new RectF((bitmap.getWidth() + mSpace) * i, 0, (bitmap.getWidth() + mSpace) * i + bitmap.getWidth(), sectHeight),    /*destination*/
+                    paint);
+        }
         bitmap.recycle();
         return scaleBitmap(res);
     }
