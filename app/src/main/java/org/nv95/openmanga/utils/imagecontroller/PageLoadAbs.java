@@ -13,6 +13,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 
@@ -28,7 +29,8 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
         if (options == null) {
             options = OpenMangaApplication.getImageLoaderOptionsBuilder()
                     .imageScaleType(ImageScaleType.NONE)
-                    .preProcessor(new ImageShifter())
+                    .preProcessor(new ImageShifter(view.getContext().getResources()
+                            .getDimensionPixelSize(R.dimen.padding8)))
                     .build();
         }
     }
