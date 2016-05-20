@@ -1,6 +1,5 @@
 <h1>Changelog</h1>
 <p>
-    + Add invisible scroll buttons on bottom of reader<br/>
-    * Fix checking for new chapters<br/>
-    * Small fixes and enhancements<br/>
+    + Experimental: wrap long images (useful if page has non standard proportions)<br/>
+    * Fixes<br/>
 </p>
