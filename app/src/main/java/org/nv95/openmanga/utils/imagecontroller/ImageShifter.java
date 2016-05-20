@@ -25,7 +25,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     }
 
     private ImageShifter() {
-        mShift = false;
+        mShift = true;
         rtl = false;
     }
 
@@ -89,7 +89,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case "shifts":
-                mShift = sharedPreferences.getBoolean("shifts", false);
+                mShift = sharedPreferences.getBoolean("shifts", true);
                 break;
             case "direction":
                 rtl = "2".equals(sharedPreferences.getString("direction", "0"));
