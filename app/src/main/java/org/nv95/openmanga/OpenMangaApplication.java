@@ -57,6 +57,7 @@ public class OpenMangaApplication extends Application {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(ImageShifter.getInstance());
         ImageShifter.getInstance().onSharedPreferenceChanged(prefs, "shifts");
+        ImageShifter.getInstance().onSharedPreferenceChanged(prefs, "direction");
     }
 
     @Override

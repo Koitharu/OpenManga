@@ -18,6 +18,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     private static final ImageShifter instance = new ImageShifter();
     private int mSpace;
     private boolean mShift;
+    private boolean rtl;
 
     public static ImageShifter getInstance() {
         return instance;
@@ -25,6 +26,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
 
     private ImageShifter() {
         mShift = false;
+        rtl = false;
     }
 
     public ImageShifter setSpace(int spacePx) {
@@ -45,7 +47,9 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
         for (int i=0;i<count;i++) {
             canvas.drawBitmap(bitmap,
                     new Rect(0, sectHeight * i, bitmap.getWidth(), sectHeight * (i+1)),     /*source*/
-                    new RectF((bitmap.getWidth() + mSpace) * i, 0, (bitmap.getWidth() + mSpace) * i + bitmap.getWidth(), sectHeight),    /*destination*/
+                    !rtl ?                                                                   /*destination*/
+                    new RectF((bitmap.getWidth() + mSpace) * i, 0, (bitmap.getWidth() + mSpace) * i + bitmap.getWidth(), sectHeight) :
+                            new RectF((bitmap.getWidth() + mSpace) * (count - i - 1), 0, (bitmap.getWidth() + mSpace) * (count - i) - mSpace, sectHeight),
                     paint);
         }
         bitmap.recycle();
@@ -87,6 +91,8 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
             case "shifts":
                 mShift = sharedPreferences.getBoolean("shifts", false);
                 break;
+            case "direction":
+                rtl = "2".equals(sharedPreferences.getString("direction", "0"));
         }
     }
 }
