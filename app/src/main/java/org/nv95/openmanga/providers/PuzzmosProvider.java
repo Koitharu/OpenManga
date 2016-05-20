@@ -13,6 +13,7 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -134,7 +135,7 @@ public class PuzzmosProvider extends MangaProvider {
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://puzzmos.com/directory?q=" +
-                query
+                URLEncoder.encode(query, "UTF-8")
                 + "&Sayfa=" + page + 1);
         MangaInfo manga;
         Element t;
