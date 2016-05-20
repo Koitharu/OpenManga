@@ -18,57 +18,20 @@ import org.nv95.openmanga.providers.MangaProvider;
 
 public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingProgressListener {
     protected final MangaPage page;
-    private DisplayImageOptions options;
+    private static DisplayImageOptions options = null;
     private PageImageAvare view;
     private AsyncTask<Void, Void, String> task;
 
     public PageLoadAbs(MangaPage page, SubsamplingScaleImageView view) {
         this.page = page;
         this.view = new PageImageAvare(view);
-
-        options = OpenMangaApplication.getImageLoaderOptionsBuilder()
+        if (options == null) {
+            options = OpenMangaApplication.getImageLoaderOptionsBuilder()
                     .imageScaleType(ImageScaleType.NONE)
-                    .postProcessor(new ImageShifter())
-//                    .postProcessor(new BitmapProcessor() {
-//                        @Override
-//                        public Bitmap process(Bitmap bitmap) {
-
-                // TODO как то придумать как вставлять разрезанную картинку в pager
-                // напримаер
-        //        Bitmap bm1 = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), (bitmap.getHeight() / 2));
-        //        Bitmap bm2 = Bitmap.createBitmap(bitmap, 0, (bitmap.getHeight() / 2), bitmap.getWidth(), (bitmap.getHeight() / 2));
-
-
-//                            int width = 0, height = 0;
-//                            float videoAspectRatio = bitmap.getWidth() / (float)bitmap.getHeight();
-//                            if(bitmap.getHeight() > GL10.GL_MAX_TEXTURE_SIZE) {
-//                                height = GL10.GL_MAX_TEXTURE_SIZE;
-////                                viewWidthToBitmapWidthRatio = bitmap.getWidth() / (float)bitmap.getHeight();
-//                                if (videoAspectRatio > 1) {
-//                                    width = (int) (height / videoAspectRatio);
-//                                } else {
-//                                    width = (int) (height * videoAspectRatio);
-//                                }
-//                            }
-//                            if(bitmap.getWidth() > GL10.GL_MAX_TEXTURE_SIZE) {
-//                                width = GL10.GL_MAX_TEXTURE_SIZE;
-//                                if (videoAspectRatio > 1) {
-//                                    height = (int) (width / videoAspectRatio);
-//                                } else {
-//                                    height = (int) (width * videoAspectRatio);
-//                                }
-//                            }
-//
-//                            if(width == 0 || height == 0)
-//                                return bitmap;
-//
-//                            return Bitmap.createScaledBitmap(bitmap, width, height, false);
-//                        }
-//                    })
+                    .preProcessor(new ImageShifter())
                     .build();
+        }
     }
-
-
 
     protected abstract void preLoad();
 
