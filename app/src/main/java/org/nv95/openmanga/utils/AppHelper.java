@@ -100,10 +100,10 @@ public class AppHelper {
                 .show();
     }
 
-    public static CharSequence[] getTextArray(Context context, int[] ids) {
-        CharSequence[] res = new CharSequence[ids.length];
+    public static String[] getTextArray(Context context, int[] ids) {
+        String[] res = new String[ids.length];
         for (int i = 0; i < ids.length; i++) {
-            res[i] = context.getText(ids[i]);
+            res[i] = context.getString(ids[i]);
         }
         return res;
     }

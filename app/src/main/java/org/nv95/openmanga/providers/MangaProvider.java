@@ -155,6 +155,6 @@ public abstract class MangaProvider {
 
     @Deprecated
     protected final String[] getTitles(Context context, int[] ids) {
-        return (String[]) AppHelper.getTextArray(context, ids);
+        return AppHelper.getTextArray(context, ids);
     }
 }
