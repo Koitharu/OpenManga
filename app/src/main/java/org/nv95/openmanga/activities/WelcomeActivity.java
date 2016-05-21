@@ -26,7 +26,7 @@ public class WelcomeActivity extends BaseAppActivity {
         int version = OpenMangaApplication.getVersion();
         int lastVersion = prefs.getInt("version", -1);
         if (lastVersion < version) {
-            if (lastVersion != -1 && version % 10 == 0 && prefs.getBoolean("showChangelog", true)) {
+            if (lastVersion != -1 && version % 2 == 0 && prefs.getBoolean("showChangelog", true)) {
                 context.startActivity(
                         new Intent(context, WelcomeActivity.class)
                                 .putExtra("mode", WELCOME_CHANGELOG)

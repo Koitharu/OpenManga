@@ -33,7 +33,7 @@
         android:defaultValue="true"
         android:key="shifts"
         android:title="@string/wrap_long_pages"
-        android:summary="TESTING! useful if page has non standard proportions"
+        android:summary="@string/image_shifting_summary"
         android:widgetLayout="@layout/pref_switchcompat" />
 
 </PreferenceScreen>
