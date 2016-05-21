@@ -219,4 +219,9 @@
     <string name="downloads_cancel_confirm">Все загрузки будут отменены. Вы уверены?</string>
     <string name="next_chapter">Следующая глава\n\n%s</string>
     <string name="prev_chapter">Предыдущая глава\n\n%s</string>
+    <string name="filter">Фильтр</string>
+    <string name="tip_mark_read">Смахните, чтобы пометить все новые главы как просмотренные</string>
+    <string name="web"></string>
+    <string name="wrap_long_pages">Переносить длинные изображения</string>
+    <string name="image_shifting_summary">Полезно для страниц нестандартного размера</string>
 </resources>
