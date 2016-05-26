@@ -36,7 +36,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
 
     @Override
     public Bitmap process(Bitmap bitmap) {
-        if (!mShift || bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
+        if (!mShift || bitmap.getHeight() < GL10.GL_MAX_TEXTURE_SIZE || bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
             return scaleBitmap(bitmap);
         }
         final int count = Math.max((int) Math.sqrt(bitmap.getHeight() / bitmap.getWidth()) - 1, 2);
