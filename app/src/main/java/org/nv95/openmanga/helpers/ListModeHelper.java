@@ -1,10 +1,12 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.helpers;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+
+import org.nv95.openmanga.R;
 
 /**
  * Created by nv95 on 09.02.16.

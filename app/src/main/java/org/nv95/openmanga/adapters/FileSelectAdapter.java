@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.R;
 
 import java.io.File;

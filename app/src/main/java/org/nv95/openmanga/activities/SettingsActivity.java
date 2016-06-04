@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;

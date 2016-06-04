@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import org.nv95.openmanga.R;
 
 /**
  * Created by nv95 on 11.02.16.
