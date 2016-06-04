@@ -202,6 +202,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
+        return mStore.dropMangas(ids);
         /*SQLiteDatabase database = dbHelper.getWritableDatabase();
         for (long id : ids) {
             String filename;
@@ -227,7 +228,6 @@ public class LocalMangaProvider extends MangaProvider {
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
         MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);*/
-        return false;
     }
 
     @Override

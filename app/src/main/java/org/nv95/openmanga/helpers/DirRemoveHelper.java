@@ -16,8 +16,10 @@
 package org.nv95.openmanga.helpers;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -25,10 +27,24 @@ import java.util.concurrent.Executors;
  */
 public class DirRemoveHelper implements Runnable {
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
-    private final File file;
+    private final File[] mFiles;
 
     public DirRemoveHelper(File file) {
-        this.file = file;
+        mFiles = new File[]{file};
+    }
+
+    public DirRemoveHelper(File files[]) {
+        mFiles = files;
+    }
+
+    public DirRemoveHelper(File dir, String regexp) {
+        final Pattern pattern = Pattern.compile(regexp);
+        mFiles = dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return pattern.matcher(filename).matches();
+            }
+        });
     }
 
     private static void RemoveDir(File dir) {
@@ -46,7 +62,9 @@ public class DirRemoveHelper implements Runnable {
 
     @Override
     public void run() {
-        RemoveDir(file);
+        for (File file : mFiles) {
+            RemoveDir(file);
+        }
     }
 
     public void runAsync() {
