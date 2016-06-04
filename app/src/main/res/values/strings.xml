@@ -247,4 +247,5 @@
     <string name="filter">Filter</string>
     <string name="wrap_long_pages">Wraps long page images</string>
     <string name="image_shifting_summary">Useful if page has non standard proportions</string>
+    <string name="delete_manga">Delete manga</string>
 </resources>

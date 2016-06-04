@@ -27,6 +27,7 @@ import org.nv95.openmanga.services.UpdateService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
 
@@ -191,7 +192,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
             p = findPreference("mangadir");
             try {
-                p.setSummary(LocalMangaProvider.getMangaDir(activity).getPath());
+                p.setSummary(MangaStore.getMangasDir(activity).getPath());
             } catch (Exception e) {
                 p.setSummary(R.string.unknown);
             }

@@ -9,6 +9,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
  * Created by nv95 on 02.10.15.
  */
 public class MangaChapter {
+    public int id;
     public String name;
     public Class<?> provider;
     public String readLink;
@@ -17,8 +18,9 @@ public class MangaChapter {
     }
 
     public MangaChapter(Bundle bundle) {
-        this.name = bundle.getString("name");
-        this.readLink = bundle.getString("readLink");
+        id = bundle.getInt("id");
+        name = bundle.getString("name");
+        readLink = bundle.getString("readLink");
         try {
             provider = Class.forName(bundle.getString("provider"));
         } catch (ClassNotFoundException e) {
@@ -26,6 +28,7 @@ public class MangaChapter {
         }
     }
 
+    @Deprecated
     public MangaChapter(Cursor cursor) {
         name = cursor.getString(3);
         readLink = cursor.getString(1);
@@ -33,6 +36,7 @@ public class MangaChapter {
 
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
         bundle.putString("name", name);
         bundle.putString("readLink", readLink);
         bundle.putString("provider", provider.getName());

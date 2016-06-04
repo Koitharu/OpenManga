@@ -17,7 +17,6 @@ import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.components.BottomSheetDialog;
-import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
@@ -26,6 +25,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaChangesObserver;
+import org.nv95.openmanga.utils.MangaStore;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -182,56 +182,34 @@ public class DownloadService extends Service {
         @Override
         protected Integer doInBackground(Void... params) {
             MangaProvider provider;
-            MangaSaveHelper mangaSaveHelper = new MangaSaveHelper(DownloadService.this);
-            MangaSaveHelper.MangaSaveBuilder mangaSaveBuilder;
-            MangaSaveHelper.MangaSaveBuilder.ChapterSaveBuilder chapterSaveBuilder;
+            final MangaStore store = new MangaStore(DownloadService.this);
             try {
                 provider = (MangaProvider) mDownload.provider.newInstance();
             } catch (Exception e) {
                 FileLogger.getInstance().report(e);
                 return null;
             }
-            String path = String.valueOf(mDownload.readLink.hashCode());
-            mangaSaveBuilder = mangaSaveHelper.newManga(path.hashCode())
-                    .name(mDownload.name)
-                    .subtitle(mDownload.subtitle)
-                    .summary(mDownload.summary)
-                    .description(mDownload.description)
-                    .provider(mDownload.provider)
-                    .downloadPreview(mDownload.preview)
-                    .now();
+            final int mangaId = store.pushManga(mDownload);
             //собственно, скачивание
             ArrayList<MangaPage> pages;
             MangaChapter o;
             MangaPage o1;
             for (int i=0; i<mDownload.max; i++) {
                 o = mDownload.chapters.get(i);
-                chapterSaveBuilder = mangaSaveBuilder.newChapter(o.readLink.hashCode());
+                o.id = store.pushChapter(o, mangaId);
                 pages = provider.getPages(o.readLink);
                 publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
                 for (int j=0; j<pages.size(); j++) {
                     o1 = pages.get(j);
-                    chapterSaveBuilder.newPage(o1.path.hashCode())
-                            .downloadPage(provider.getPageImage(o1))
-                            .commit();
+                    o1.id = store.pushPage(o1, mangaId, o.id);
                     publishProgress(PROGRESS_SECONDARY, j, pages.size());
                     if (isCancelled()) {
                         break;
                     }
                 }
                 publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
-                if (isCancelled()) {
-                    chapterSaveBuilder.dissmiss();
-                    break;
-                } else {
-                    chapterSaveBuilder
-                            .name(o.name)
-                            .commit();
-                }
             }
             publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
-            mangaSaveBuilder.commit();
-            mangaSaveHelper.close();
             return null;
         }
 
