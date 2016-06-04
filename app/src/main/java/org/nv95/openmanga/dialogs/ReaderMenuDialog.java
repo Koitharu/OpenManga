@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 
 /**

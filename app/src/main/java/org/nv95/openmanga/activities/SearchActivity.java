@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.ListModeHelper;
+import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;

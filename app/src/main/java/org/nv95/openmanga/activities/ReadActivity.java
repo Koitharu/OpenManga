@@ -27,9 +27,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.nv95.openmanga.NavigationDialog;
+import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.ReaderMenuDialog;
+import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.OverScrollDetector;
 import org.nv95.openmanga.helpers.BrightnessHelper;

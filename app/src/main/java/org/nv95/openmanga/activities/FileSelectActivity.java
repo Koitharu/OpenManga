@@ -9,7 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import org.nv95.openmanga.DirSelectDialog;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.FileSelectAdapter;
 

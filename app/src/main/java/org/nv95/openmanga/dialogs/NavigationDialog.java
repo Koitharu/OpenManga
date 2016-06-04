@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.nv95.openmanga.R;
 
 /**
  * Created by nv95 on 16.10.15.

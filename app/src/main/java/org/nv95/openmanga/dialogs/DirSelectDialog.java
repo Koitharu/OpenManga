@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.adapters.DirAdapter;
 
