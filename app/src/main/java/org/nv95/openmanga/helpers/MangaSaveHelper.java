@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.nv95.openmanga.items.SimpleDownload;
-import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
 import java.util.Date;
@@ -13,10 +13,11 @@ import java.util.Date;
 /**
  * Created by nv95 on 12.02.16.
  */
+@Deprecated
 public class MangaSaveHelper {
-    public static final String TABLE_STORAGE = "local_storage";
-    public static final String TABLE_CHAPTERS = "local_chapters";
-    public static final String TABLE_PAGES = "local_pages";
+    private static final String TABLE_STORAGE = "local_storage";
+    private static final String TABLE_CHAPTERS = "local_chapters";
+    private static final String TABLE_PAGES = "local_pages";
 
     private final StorageHelper mStorageHelper;
     private final SQLiteDatabase mDatabase;
@@ -25,7 +26,7 @@ public class MangaSaveHelper {
     public MangaSaveHelper(Context context) {
         mStorageHelper = new StorageHelper(context);
         mDatabase = mStorageHelper.getWritableDatabase();
-        mStorageDir = LocalMangaProvider.getMangaDir(context);
+        mStorageDir = MangaStore.getMangasDir(context);
     }
 
     public void close() {
@@ -100,7 +101,7 @@ public class MangaSaveHelper {
         }
 
         public void commit() {
-            mDatabase.insert(LocalMangaProvider.TABLE_STORAGE, null, mContentValues);
+            mDatabase.insert(TABLE_STORAGE, null, mContentValues);
         }
 
         public void dismiss() {
@@ -132,7 +133,7 @@ public class MangaSaveHelper {
             }
 
             public void commit() {
-                mDatabase.insert(LocalMangaProvider.TABLE_CHAPTERS, null, mContentValues);
+                mDatabase.insert(TABLE_CHAPTERS, null, mContentValues);
             }
 
             public void dissmiss() {
@@ -166,7 +167,7 @@ public class MangaSaveHelper {
                 }
 
                 public void commit() {
-                    mDatabase.insert(LocalMangaProvider.TABLE_PAGES, null, mContentValues);
+                    mDatabase.insert(TABLE_PAGES, null, mContentValues);
                 }
             }
         }

@@ -3,9 +3,7 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaChapters;
@@ -13,9 +11,8 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.helpers.DirRemoveHelper;
-import org.nv95.openmanga.utils.MangaChangesObserver;
-import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,24 +23,23 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
+
 /**
  * Created by nv95 on 30.09.15.
  */
 public class LocalMangaProvider extends MangaProvider {
-    public static final String TABLE_STORAGE = "local_storage";
-    public static final String TABLE_CHAPTERS = "local_chapters";
-    public static final String TABLE_PAGES = "local_pages";
     private static boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);
     private final Context context;
-    private final StorageHelper dbHelper;
+    private final MangaStore mStore;
 
     @Deprecated
     public LocalMangaProvider(Context context) {
         this.context = context;
-        dbHelper = new StorageHelper(context);
+        mStore = new MangaStore(context);
     }
 
     public static LocalMangaProvider getInstacne(Context context) {
@@ -80,30 +76,25 @@ public class LocalMangaProvider extends MangaProvider {
         return size;
     }
 
-    public static File getMangaDir(Context context) {
-        String dir = PreferenceManager.getDefaultSharedPreferences(context).getString("mangadir", "");
-        return dir.length() == 0 ? context.getExternalFilesDir("saved") : new File(dir);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        dbHelper.close();
-        super.finalize();
-    }
-
     @Override
     public MangaList getList(int page, int sort, int genre) {
         if (page > 0)
             return null;
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStore.getReadableDatabase();
         MangaList list;
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_STORAGE, null, null, null, null, null, sortUrls[sort]);
+            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir"}, null, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
-                    manga = new MangaInfo(cursor);
+                    manga = new MangaInfo();
+                    manga.id = cursor.getInt(0);
+                    manga.name = cursor.getString(1);
+                    manga.subtitle = cursor.getString(2);
+                    manga.summary = cursor.getString(3);
+                    manga.path = cursor.getString(4);
+                    manga.preview = manga.path + "/cover";
                     manga.provider = LocalMangaProvider.class;
                     list.add(manga);
                 } while (cursor.moveToNext());
@@ -120,8 +111,8 @@ public class LocalMangaProvider extends MangaProvider {
         Cursor cursor = null;
         int res = 0;
         try {
-            database = dbHelper.getReadableDatabase();
-            cursor = database.query(TABLE_STORAGE, null, null, null, null, null, null);
+            database = mStore.getReadableDatabase();
+            cursor = database.query(MangaStore.TABLE_MANGAS, null, null, null, null, null, null);
             res = cursor.getCount();
         } catch (Exception e) {
             res = -1;
@@ -139,20 +130,23 @@ public class LocalMangaProvider extends MangaProvider {
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStore.getReadableDatabase();
         MangaChapters list = new MangaChapters();
         MangaChapter chapter;
 
         try {
-            Cursor cursor = database.query(TABLE_STORAGE, null, "path=" + mangaInfo.path, null, null, null, null);
+            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"description"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
-                summary.description = cursor.getString(7);
+                summary.description = cursor.getString(0);
             }
             cursor.close();
-            cursor = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaInfo.path, null, null, null, "number");
+            cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
             if (cursor.moveToFirst()) {
                 do {
-                    chapter = new MangaChapter(cursor);
+                    chapter = new MangaChapter();
+                    chapter.id = cursor.getInt(0);
+                    chapter.name = cursor.getString(1);
+                    chapter.readLink = String.valueOf(chapter.id) + "\n" + mangaInfo.path;
                     chapter.provider = LocalMangaProvider.class;
                     list.add(chapter);
                 } while (cursor.moveToNext());
@@ -160,7 +154,6 @@ public class LocalMangaProvider extends MangaProvider {
             cursor.close();
         } finally {
             database.close();
-            dbHelper.close();
         }
         summary.chapters = list;
         return summary;
@@ -168,15 +161,19 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public ArrayList<MangaPage> getPages(String readLink) {
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStore.getReadableDatabase();
         ArrayList<MangaPage> list = new ArrayList<>();
         MangaPage page;
+        final String[] data = readLink.split("\n");
+        final String dir = data[1] + "/";
         //
         try {
-            Cursor cursor = database.query(TABLE_PAGES, null, "chapterId=" + readLink, null, null, null, "number");
+            Cursor cursor = database.query(TABLE_PAGES, new String[]{"id", "file"}, "chapterid=" + data[0], null, null, null, "number");
             if (cursor.moveToFirst()) {
                 do {
-                    page = new MangaPage(cursor);
+                    page = new MangaPage();
+                    page.id = cursor.getInt(0);
+                    page.path = dir + cursor.getString(1);
                     page.provider = LocalMangaProvider.class;
                     list.add(page);
                 } while (cursor.moveToNext());
@@ -184,7 +181,6 @@ public class LocalMangaProvider extends MangaProvider {
             cursor.close();
         } finally {
             database.close();
-            dbHelper.close();
         }
         return list;
     }
@@ -206,7 +202,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        /*SQLiteDatabase database = dbHelper.getWritableDatabase();
         for (long id : ids) {
             String filename;
             Cursor cursor1 = database.query(TABLE_STORAGE, null, "id=" + id, null, null, null, null);
@@ -230,12 +226,13 @@ public class LocalMangaProvider extends MangaProvider {
         }
         database.close();
         HistoryProvider.getInstacne(context).remove(ids);
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
-        return true;
+        MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);*/
+        return false;
     }
 
     @Override
     public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
+
 }

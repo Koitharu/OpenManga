@@ -9,9 +9,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +29,8 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
+
+import java.util.Arrays;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -185,7 +187,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 DownloadService.start(this, mangaSummary);
                 return true;
             case R.id.action_remove:
-                new AlertDialog.Builder(MangaPreviewActivity.this)
+                /*new AlertDialog.Builder(MangaPreviewActivity.this)
                         .setCancelable(true)
                         .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
                             @Override
@@ -201,12 +203,50 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         })
                         .setNegativeButton(android.R.string.cancel, null)
                         .setMessage(R.string.manga_delete_confirm)
-                        .create().show();
-
+                        .create().show();*/
+                deleteDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void deleteDialog() {
+        final int len = mangaSummary.chapters.size();
+        final SparseBooleanArray checked = new SparseBooleanArray(len);
+        boolean[] defs = new boolean[len];
+        Arrays.fill(defs, false);
+        new BottomSheetDialog(this)
+                .addHeader(getString(R.string.chapters_total, mangaSummary.chapters.size()),
+                        R.string.check_all, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((BottomSheetDialog) dialog).checkAll(true);
+                                for (int i = 0;i < len;i++) {
+                                    checked.put(i, true);
+                                }
+                            }
+                        })
+                .setMultiChoiceItems(mangaSummary.chapters.getNames(), defs)
+                .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checked.put(which, isChecked);
+                    }
+                })
+                .setSheetTitle(R.string.delete_manga)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0;i < len;i++) {
+                            if (checked.get(i, false)) {
+                                //mangaCopy.chapters.add(mangaSummary.chapters.get(i));
+                            }
+                        }
+                        // TODO: 04.06.16
+                    }
+                }).show();
     }
 
     @Override

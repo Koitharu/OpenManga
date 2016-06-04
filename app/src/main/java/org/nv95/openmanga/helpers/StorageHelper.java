@@ -248,4 +248,14 @@ public class StorageHelper extends SQLiteOpenHelper {
         }
         return result;
     }
+
+    public static int getColumnCount(SQLiteDatabase database, String table, @Nullable String where) {
+        Cursor cursor = database.rawQuery("select count(*) from "
+                + table
+                + (where == null ? "" : " where " + where), null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
+    }
 }

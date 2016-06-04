@@ -100,7 +100,7 @@ public class AppHelper {
                 .show();
     }
 
-    public static String[] getTextArray(Context context, int[] ids) {
+    public static String[] getStringArray(Context context, int[] ids) {
         String[] res = new String[ids.length];
         for (int i = 0; i < ids.length; i++) {
             res[i] = context.getString(ids[i]);

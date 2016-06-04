@@ -15,6 +15,7 @@ public class MangaInfo {
     public static final int STATUS_COMPLETED = 1;
     public static final int STATUS_ONGOING = 2;
 
+    public int id;
     public String name;
     public String subtitle;
     public String summary;
@@ -34,6 +35,7 @@ public class MangaInfo {
         this.extra = null;
     }
 
+    @Deprecated
     public MangaInfo(Cursor cursor) {
         name = cursor.getString(1);
         subtitle = cursor.getString(2);
@@ -50,6 +52,7 @@ public class MangaInfo {
     }
 
     public MangaInfo(Bundle bundle) {
+        id = bundle.getInt("id");
         name = bundle.getString("name");
         summary = bundle.getString("summary");
         path = bundle.getString("path");
@@ -71,6 +74,7 @@ public class MangaInfo {
 
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
         bundle.putString("name", name);
         bundle.putString("summary", summary);
         bundle.putString("path", path);

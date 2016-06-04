@@ -18,6 +18,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.ZipBuilder;
 
 import java.io.File;
@@ -27,6 +28,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static org.nv95.openmanga.utils.MangaStore.TABLE_CHAPTERS;
+import static org.nv95.openmanga.utils.MangaStore.TABLE_MANGAS;
+import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
 
 /**
  * Created by nv95 on 05.02.16.
@@ -102,7 +107,7 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 int pageId;
                 String preview = null;
                 zipInputStream = new ZipInputStream(new FileInputStream(params[0]));
-                final File dest = new File(LocalMangaProvider.getMangaDir(CBZActivity.this),
+                final File dest = new File(MangaStore.getMangasDir(CBZActivity.this),
                         String.valueOf(mangaId = params[0].hashCode()));
                 final byte[] buffer = new byte[1024];
                 publishProgress(false);
@@ -134,7 +139,7 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                             cv.put("id", pageId);
                             cv.put("chapterId", chapterId);
                             cv.put("path", outFile.getPath());
-                            database.insert(LocalMangaProvider.TABLE_PAGES, null, cv);
+                            database.insert(TABLE_PAGES, null, cv);
                             pages++;
                             publishProgress(pages, total);
                             publishProgress(null, String.format(mProgressInfo, pages, total));
@@ -149,7 +154,7 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 cv.put("id", chapterId);
                 cv.put("mangaId", mangaId);
                 cv.put("name", "default");
-                database.insert(LocalMangaProvider.TABLE_CHAPTERS, null, cv);
+                database.insert(TABLE_CHAPTERS, null, cv);
                 cv = new ContentValues();
                 cv.put("id", String.valueOf(mangaId).hashCode());
                 cv.put("name", name);
@@ -160,7 +165,7 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 cv.put("subtitle", "");
                 cv.put("description", "Imported from " + new File(params[0]).getName());
                 cv.put("timestamp", new Date().getTime());
-                database.insert(LocalMangaProvider.TABLE_STORAGE, null, cv);
+                database.insert(TABLE_MANGAS, null, cv);
             } catch (Exception e) {
                 pages = -1;
             } finally {
