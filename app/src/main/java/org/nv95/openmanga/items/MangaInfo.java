@@ -120,6 +120,6 @@ public class MangaInfo {
 
     @Override
     public int hashCode() {
-        return path != null ? path.hashCode() : 0;
+        return id == 0 ? id : (path != null ? path.hashCode() : 0);
     }
 }

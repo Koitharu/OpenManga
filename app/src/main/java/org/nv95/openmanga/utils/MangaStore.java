@@ -2,11 +2,14 @@ package org.nv95.openmanga.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
+import android.support.annotation.MainThread;
 import android.support.annotation.WorkerThread;
 
+import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
@@ -135,6 +138,82 @@ public class MangaStore {
             }
         }
         return id;
+    }
+
+    /**
+     * Delete mangas from database and files
+     * @param ids array of manga's id
+     * @return #true if no errors
+     */
+    @MainThread
+    public boolean dropMangas(long[] ids) {
+        SQLiteDatabase database = null;
+        boolean result = true;
+        Cursor cursor = null;
+        int id;
+        final File[] dirs = new File[ids.length];
+        try {
+            database = mDatabaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            for (int i = 0;i < ids.length;i++) {
+                id = (int) ids[i];
+                cursor = database.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
+                if (cursor.moveToFirst()) {
+                    dirs[i] = new File(cursor.getString(0));
+                }
+                cursor = database.query(TABLE_CHAPTERS, new String[]{"id"}, "mangaid=" + id, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        database.delete(TABLE_PAGES, "chapterid=?", new String[]{String.valueOf(cursor.getInt(0))});
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+                cursor = null;
+                database.delete(TABLE_CHAPTERS, "mangaid=?", new String[]{String.valueOf(id)});
+                database.delete(TABLE_MANGAS, "id=?", new String[]{String.valueOf(id)});
+            }
+            database.setTransactionSuccessful();
+            new DirRemoveHelper(dirs).runAsync();
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+            result = false;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.endTransaction();
+                database.close();
+            }
+        }
+        return result;
+    }
+
+    @MainThread
+    public boolean dropChapters(int mangaId, long[] ids) {
+        SQLiteDatabase database = null;
+        boolean result = true;
+        final File[] dirs = new File[ids.length];
+        try {
+            database = mDatabaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            for (long id : ids) {
+                database.delete(TABLE_PAGES, "chapterid=?", new String[]{String.valueOf(id)});
+                database.delete(TABLE_CHAPTERS, "id=?", new String[]{String.valueOf(id)});
+                new DirRemoveHelper(getMangaDir(mContext, mangaId), id + "_*").runAsync();
+            }
+            database.setTransactionSuccessful();
+            new DirRemoveHelper(dirs).runAsync();
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+            result = false;
+        } finally {
+            if (database != null) {
+                database.endTransaction();
+                database.close();
+            }
+        }
+        return result;
     }
 
     public SQLiteDatabase getReadableDatabase() {

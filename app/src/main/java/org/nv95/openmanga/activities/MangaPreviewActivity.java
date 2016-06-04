@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
@@ -29,7 +30,10 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.utils.MangaChangesObserver;
+import org.nv95.openmanga.utils.MangaStore;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -187,23 +191,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 DownloadService.start(this, mangaSummary);
                 return true;
             case R.id.action_remove:
-                /*new AlertDialog.Builder(MangaPreviewActivity.this)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (LocalMangaProvider.getInstacne(MangaPreviewActivity.this)
-                                        .remove(new long[]{mangaSummary.path.hashCode()})) {
-                                    finish();
-                                } else {
-                                    Snackbar.make(mAppBarLayout, R.string.error, Snackbar.LENGTH_SHORT)
-                                            .show();
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setMessage(R.string.manga_delete_confirm)
-                        .create().show();*/
                 deleteDialog();
                 return true;
             default:
@@ -239,12 +226,24 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        final ArrayList<Long> idlist = new ArrayList<Long>();
                         for (int i = 0;i < len;i++) {
                             if (checked.get(i, false)) {
-                                //mangaCopy.chapters.add(mangaSummary.chapters.get(i));
+                                idlist.add((long) mangaSummary.chapters.get(i).id);
                             }
                         }
-                        // TODO: 04.06.16
+                        if (idlist.size() == len) {
+                            new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mangaSummary.id});
+                            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+                            finish();
+                        } else {
+                            final long[] ids = new long[idlist.size()];
+                            for (int i = 0;i < idlist.size();i++) {
+                                ids[i] = idlist.get(i);
+                            }
+                            new MangaStore(MangaPreviewActivity.this).dropChapters(mangaSummary.id, ids);
+                            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
                     }
                 }).show();
     }
@@ -260,6 +259,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
