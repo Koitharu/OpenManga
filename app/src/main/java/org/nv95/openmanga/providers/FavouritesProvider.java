@@ -139,7 +139,7 @@ public class FavouritesProvider extends MangaProvider {
 
     public boolean remove(MangaInfo mangaInfo) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-        database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
+        database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
         MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
         return true;
@@ -163,7 +163,7 @@ public class FavouritesProvider extends MangaProvider {
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-        res = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null).getCount() > 0;
+        res = database.query(TABLE_NAME, null, "id=" + mangaInfo.id, null, null, null, null).getCount() > 0;
         database.close();
         return res;
     }
@@ -174,7 +174,7 @@ public class FavouritesProvider extends MangaProvider {
         Cursor cursor = null;
         try {
             database = dbHelper.getWritableDatabase();
-            cursor = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);
+            cursor = database.query(TABLE_NAME, null, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
                 res = cursor.getInt(cursor.getColumnIndex("category"));
             }
@@ -199,8 +199,7 @@ public class FavouritesProvider extends MangaProvider {
     public String[] getGenresTitles(Context context) {
         return (context.getString(R.string.genre_all) + "," +
                 PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
-                        .getString("fav.categories", context.getString(R.string.favourites_categories_default)))
-                .replaceAll(", ", ",").split(",");
+                        .getString("fav.categories", context.getString(R.string.favourites_categories_default))).split(",\\s*");
     }
 
     public static void AddDialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {

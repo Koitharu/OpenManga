@@ -65,6 +65,7 @@ public class PuzzmosProvider extends MangaProvider {
                 manga.preview = "";
             }
             manga.provider = PuzzmosProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -160,6 +161,7 @@ public class PuzzmosProvider extends MangaProvider {
                 manga.preview = "";
             }
             manga.provider = PuzzmosProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

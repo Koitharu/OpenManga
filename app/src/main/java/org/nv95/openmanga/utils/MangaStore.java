@@ -123,6 +123,7 @@ public class MangaStore {
             id = page.path.hashCode();
             cv.put("id", id);
             cv.put("chapterid", chapterId);
+            cv.put("mangaid", mangaId);
             File dest = new File(getMangaDir(mContext, mangaId), chapterId + "_" + id);
             new SimpleDownload(page.path, dest).run();
             cv.put("file", dest.getName());
@@ -162,13 +163,9 @@ public class MangaStore {
                     dirs[i] = new File(cursor.getString(0));
                 }
                 cursor = database.query(TABLE_CHAPTERS, new String[]{"id"}, "mangaid=" + id, null, null, null, null);
-                if (cursor.moveToFirst()) {
-                    do {
-                        database.delete(TABLE_PAGES, "chapterid=?", new String[]{String.valueOf(cursor.getInt(0))});
-                    } while (cursor.moveToNext());
-                }
                 cursor.close();
                 cursor = null;
+                database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(id)});
                 database.delete(TABLE_CHAPTERS, "mangaid=?", new String[]{String.valueOf(id)});
                 database.delete(TABLE_MANGAS, "id=?", new String[]{String.valueOf(id)});
             }
@@ -198,7 +195,7 @@ public class MangaStore {
             database = mDatabaseHelper.getWritableDatabase();
             database.beginTransaction();
             for (long id : ids) {
-                database.delete(TABLE_PAGES, "chapterid=?", new String[]{String.valueOf(id)});
+                database.delete(TABLE_PAGES, "chapterid=? AND mangaid=?", new String[]{String.valueOf(id), String.valueOf(mangaId)});
                 database.delete(TABLE_CHAPTERS, "id=?", new String[]{String.valueOf(id)});
                 new DirRemoveHelper(getMangaDir(mContext, mangaId), id + "_*").runAsync();
             }
@@ -250,6 +247,7 @@ public class MangaStore {
             db.execSQL("CREATE TABLE " + TABLE_PAGES + " ("
                     + "id INTEGER PRIMARY KEY,"
                     + "chapterid INTEGER,"
+                    + "mangaid INTEGER,"
                     + "file TEXT,"           //name of file, without path
                     + "number INTEGER"     //use for true order
                     + ");");

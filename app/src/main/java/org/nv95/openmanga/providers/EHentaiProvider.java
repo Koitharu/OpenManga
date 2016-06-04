@@ -44,6 +44,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.path = o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -131,6 +132,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.path = o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

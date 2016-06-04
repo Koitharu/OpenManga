@@ -70,6 +70,7 @@ public class MintMangaProvider extends MangaProvider {
             if (!o.select("span.mangaCompleted").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -185,6 +186,7 @@ public class MintMangaProvider extends MangaProvider {
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = MintMangaProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

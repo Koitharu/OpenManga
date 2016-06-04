@@ -77,6 +77,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             if (!o.select("span.mangaCompleted").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -188,6 +189,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = ReadmangaRuProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

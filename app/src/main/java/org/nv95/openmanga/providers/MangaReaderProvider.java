@@ -43,6 +43,7 @@ public class MangaReaderProvider extends MangaProvider {
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
             manga.provider = MangaReaderProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -139,6 +140,7 @@ public class MangaReaderProvider extends MangaProvider {
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
             manga.provider = MangaReaderProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

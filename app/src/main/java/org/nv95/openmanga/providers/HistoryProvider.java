@@ -13,13 +13,15 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
 
 /**
  * Created by nv95 on 05.10.15.
@@ -88,10 +90,23 @@ public class HistoryProvider extends MangaProvider {
         //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, sortUrls[sort]);
+            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
-                    manga = new MangaInfo(cursor);
+                    manga = new MangaInfo();
+                    manga.id = cursor.getInt(0);
+                    manga.name = cursor.getString(1);
+                    manga.subtitle = cursor.getString(2);
+                    manga.summary = cursor.getString(3);
+                    manga.preview = cursor.getString(4);
+                    manga.path = cursor.getString(5);
+                    try {
+                        manga.provider = Class.forName(cursor.getString(6));
+                    } catch (ClassNotFoundException e) {
+                        manga.provider = LocalMangaProvider.class;
+                    }
+                    manga.status = STATUS_UNKNOWN;
+                    manga.extra = null;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
@@ -130,10 +145,11 @@ public class HistoryProvider extends MangaProvider {
     public boolean add(MangaInfo mangaInfo, int chapter, int page) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues cv = mangaInfo.toContentValues();
+        cv.put("id", mangaInfo.id);
         cv.put("timestamp", new Date().getTime());
         cv.put("chapter", chapter);
         cv.put("page", page);
-        int updCount = database.update(TABLE_NAME, cv, "id=" + mangaInfo.path.hashCode(), null);
+        int updCount = database.update(TABLE_NAME, cv, "id=" + mangaInfo.id, null);
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
@@ -144,7 +160,7 @@ public class HistoryProvider extends MangaProvider {
 
     public boolean remove(MangaInfo mangaInfo) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-        database.delete(TABLE_NAME, "id=" + mangaInfo.path.hashCode(), null);
+        database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
         MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
         return true;
@@ -154,7 +170,6 @@ public class HistoryProvider extends MangaProvider {
     public boolean remove(long[] ids) {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.beginTransaction();
-        File cacheDir = context.getExternalCacheDir();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
         }
@@ -178,7 +193,7 @@ public class HistoryProvider extends MangaProvider {
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        res = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null).getCount() > 0;
+        res = database.query(TABLE_NAME, null, "id=" + mangaInfo.id, null, null, null, null).getCount() > 0;
         database.close();
         return res;
     }
@@ -187,12 +202,12 @@ public class HistoryProvider extends MangaProvider {
     public HistorySummary get(MangaInfo mangaInfo) {
         HistorySummary res = null;
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor c = database.query(TABLE_NAME, null, "id=" + mangaInfo.path.hashCode(), null, null, null, null);
+        Cursor c = database.query(TABLE_NAME, new String[]{"timestamp", "chapter", "page"}, "id=" + mangaInfo.id, null, null, null, null);
         if (c.moveToFirst()) {
             res = new HistorySummary();
-            res.time = c.getLong(c.getColumnIndex("timestamp"));
-            res.chapter = c.getInt(c.getColumnIndex("chapter"));
-            res.page = c.getInt(c.getColumnIndex("page"));
+            res.time = c.getLong(0);
+            res.chapter = c.getInt(1);
+            res.page = c.getInt(2);
         }
         c.close();
         database.close();
@@ -219,6 +234,6 @@ public class HistoryProvider extends MangaProvider {
 
     @Override
     public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
 }

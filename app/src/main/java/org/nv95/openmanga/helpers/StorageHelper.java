@@ -28,32 +28,44 @@ public class StorageHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //db.execSQL("DROP TABLE IF EXISTS favourites");
+
         db.execSQL("CREATE TABLE favourites ("
-                + "id INTEGER PRIMARY KEY,"                 //0
-                + "name TEXT,"                              //1
-                + "subtitle TEXT,"                          //2
-                + "summary TEXT,"                           //3
-                + "preview TEXT,"                           //4
-                + "provider TEXT,"                          //5
-                + "path TEXT,"                              //6
-                + "timestamp INTEGER,"                      //7
-                + "category INTEGER DEFAULT 0"              //8
+                + "id INTEGER PRIMARY KEY,"
+                + "name TEXT,"
+                + "subtitle TEXT,"
+                + "summary TEXT,"
+                + "preview TEXT,"
+                + "provider TEXT,"
+                + "path TEXT,"
+                + "timestamp INTEGER,"
+                + "category INTEGER DEFAULT 0"
                 + ");");
-        //db.execSQL("DROP TABLE IF EXISTS history");
+
         db.execSQL("CREATE TABLE history ("
-                + "id INTEGER PRIMARY KEY,"                 //0
-                + "name TEXT,"                              //1
-                + "subtitle TEXT,"                          //2
-                + "summary TEXT,"                           //3
-                + "preview TEXT,"                           //4
-                + "provider TEXT,"                          //5
-                + "path TEXT,"                              //6
-                + "timestamp INTEGER,"                      //7
-                + "chapter INTEGER,"                        //8
-                + "page INTEGER,"                           //9
-                + "size INTEGER"                            //10
+                + "id INTEGER PRIMARY KEY,"
+                + "name TEXT,"
+                + "subtitle TEXT,"
+                + "summary TEXT,"
+                + "preview TEXT,"
+                + "provider TEXT,"
+                + "path TEXT,"
+                + "timestamp INTEGER,"
+                + "chapter INTEGER,"
+                + "page INTEGER,"
+                + "size INTEGER"
                 + ");");
+
+        db.execSQL("CREATE TABLE search_history ("
+                + "_id INTEGER PRIMARY KEY,"
+                + "query TEXT"
+                + ");");
+
+        db.execSQL("CREATE TABLE new_chapters ("
+                + "id INTEGER PRIMARY KEY,"                 //0
+                + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
+                + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
+                + ");");
+        /*
         //db.execSQL("DROP TABLE IF EXISTS local_storage");
         db.execSQL("CREATE TABLE local_storage ("       //менять нельзя ничего
                 + "id INTEGER PRIMARY KEY,"                 //0
@@ -66,42 +78,27 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "description TEXT,"                       //7
                 + "timestamp INTEGER"                       //8
                 + ");");
-        //db.execSQL("DROP TABLE IF EXISTS local_chapters");
+
         db.execSQL("CREATE TABLE local_chapters ("
                 + "number INTEGER PRIMARY KEY,"                 //0
                 + "id INTEGER,"                                 //1 - хеш readlink-а
                 + "mangaId INTEGER,"                            //2 - dir - соответствует path из storage
                 + "name TEXT"                                   //3
                 + ");");
-        //db.execSQL("DROP TABLE IF EXISTS local_pages");
+
         db.execSQL("CREATE TABLE local_pages ("
                 + "number INTEGER PRIMARY KEY,"                 //0
                 + "id INTEGER,"                                 //1
                 + "chapterId INTEGER,"                          //2
                 + "path TEXT"                                   //3
                 + ");");
-        //db.execSQL("DROP TABLE IF EXISTS search_history");
-        db.execSQL("CREATE TABLE search_history ("
-                + "_id INTEGER PRIMARY KEY,"                 //0
-                + "query TEXT"
-                + ");");
-        /*db.execSQL("DROP TABLE IF EXISTS updates");
-        db.execSQL("CREATE TABLE updates ("
-                + "id INTEGER PRIMARY KEY,"                 //0
-                + "chapters INTEGER,"
-                + "unread INTEGER DEFAULT 0"
-                + ");");*/
-        db.execSQL("CREATE TABLE new_chapters ("
-                + "id INTEGER PRIMARY KEY,"                 //0
-                + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
-                + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
-                + ");");
+        */
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        CopyOnWriteArraySet<String> tables = getTableNames(db);
+        final CopyOnWriteArraySet<String> tables = getTableNames(db);
         if(!tables.contains("new_chapters")){
             db.execSQL("CREATE TABLE new_chapters ("
                     + "id INTEGER PRIMARY KEY,"                 //0
@@ -110,13 +107,9 @@ public class StorageHelper extends SQLiteOpenHelper {
                     + ");");
         }
 
-        CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
+        final CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
         if(!columnsFavourites.contains("category"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
-
-        /*CopyOnWriteArraySet<String> columnsUpdates = getColumsNames(db, "updates");
-        if(!columnsUpdates.contains("unread"))
-            db.execSQL("ALTER TABLE updates ADD COLUMN unread INTEGER DEFAULT 0");*/
     }
 
     @Nullable

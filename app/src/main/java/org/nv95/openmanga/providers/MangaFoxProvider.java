@@ -67,6 +67,7 @@ public class MangaFoxProvider extends MangaProvider {
             if (!o.select("em.tag_completed").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -149,6 +150,7 @@ public class MangaFoxProvider extends MangaProvider {
             manga.path = "http://mangafox.me/manga/" + o.getString(2);
             manga.subtitle = null;
             manga.summary = o.getString(3);
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
