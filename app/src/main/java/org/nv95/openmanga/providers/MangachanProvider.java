@@ -46,6 +46,7 @@ public class MangachanProvider extends MangaProvider {
                 manga.summary = t.text();
             }
             manga.provider = MangachanProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
@@ -153,6 +154,7 @@ public class MangachanProvider extends MangaProvider {
                 manga.summary = t.text();
             }
             manga.provider = MangachanProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

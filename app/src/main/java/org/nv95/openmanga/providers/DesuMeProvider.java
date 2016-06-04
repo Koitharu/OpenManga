@@ -71,6 +71,7 @@ public class DesuMeProvider extends MangaProvider {
                 manga.summary = t.text();
             }
             manga.provider = DesuMeProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

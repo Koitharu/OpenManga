@@ -48,6 +48,7 @@ public class MangaTownProvider extends MangaProvider {
                 manga.preview = "";
             }
             manga.provider = MangaTownProvider.class;
+            manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;

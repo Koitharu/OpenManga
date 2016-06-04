@@ -89,7 +89,7 @@ public class MangaInfo {
     @Deprecated
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
-        cv.put("id", path.hashCode());
+        cv.put("id", id);
         cv.put("name", name);
         cv.put("summary", summary);
         cv.put("path", path);
