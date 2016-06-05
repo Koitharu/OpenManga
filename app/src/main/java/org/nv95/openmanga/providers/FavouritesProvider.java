@@ -16,6 +16,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 
@@ -23,6 +24,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
 
 /**
  * Created by nv95 on 03.10.15.
@@ -73,17 +76,30 @@ public class FavouritesProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        final SQLiteDatabase database = dbHelper.getReadableDatabase();
         MangaList list = null;
         MangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, null,
+            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"},
                     genre == 0 ? null : "category=" + genre, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
-                    manga = new MangaInfo(cursor);
+                    manga = new MangaInfo();
+                    manga.id = cursor.getInt(0);
+                    manga.name = cursor.getString(1);
+                    manga.subtitle = cursor.getString(2);
+                    manga.summary = cursor.getString(3);
+                    manga.preview = cursor.getString(4);
+                    manga.path = cursor.getString(5);
+                    try {
+                        manga.provider = Class.forName(cursor.getString(6));
+                    } catch (ClassNotFoundException e) {
+                        manga.provider = LocalMangaProvider.class;
+                    }
+                    manga.status = STATUS_UNKNOWN;
+                    manga.extra = null;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
@@ -127,10 +143,17 @@ public class FavouritesProvider extends MangaProvider {
     }
 
     public boolean add(MangaInfo mangaInfo, int category) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        ContentValues cv = mangaInfo.toContentValues();
+        final ContentValues cv = new ContentValues();
+        cv.put("id", mangaInfo.id);
+        cv.put("name", mangaInfo.name);
+        cv.put("subtitle", mangaInfo.subtitle);
+        cv.put("summary", mangaInfo.summary);
+        cv.put("preview", mangaInfo.preview);
+        cv.put("provider", mangaInfo.provider.getName());
+        cv.put("path", mangaInfo.path);
         cv.put("timestamp", new Date().getTime());
         cv.put("category", category);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.insert(TABLE_NAME, null, cv);
         database.close();
         MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
@@ -138,7 +161,7 @@ public class FavouritesProvider extends MangaProvider {
     }
 
     public boolean remove(MangaInfo mangaInfo) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
         MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
@@ -147,7 +170,7 @@ public class FavouritesProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = dbHelper.getWritableDatabase();
         database.beginTransaction();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
@@ -162,8 +185,8 @@ public class FavouritesProvider extends MangaProvider {
 
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        res = database.query(TABLE_NAME, null, "id=" + mangaInfo.id, null, null, null, null).getCount() > 0;
+        final SQLiteDatabase database = dbHelper.getReadableDatabase();
+        res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
         database.close();
         return res;
     }
@@ -173,10 +196,10 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
-            database = dbHelper.getWritableDatabase();
-            cursor = database.query(TABLE_NAME, null, "id=" + mangaInfo.id, null, null, null, null);
+            database = dbHelper.getReadableDatabase();
+            cursor = database.query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
-                res = cursor.getInt(cursor.getColumnIndex("category"));
+                res = cursor.getInt(0);
             }
         } finally {
             if (cursor != null) {
@@ -191,7 +214,7 @@ public class FavouritesProvider extends MangaProvider {
 
     @Override
     public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
 
     @Nullable

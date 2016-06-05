@@ -1,7 +1,5 @@
 package org.nv95.openmanga.items;
 
-import android.database.Cursor;
-
 /**
  * Created by nv95 on 30.09.15.
  */
@@ -16,10 +14,5 @@ public class MangaPage {
     @Deprecated
     public MangaPage(String path) {
         this.path = path;
-    }
-
-    @Deprecated
-    public MangaPage(Cursor cursor) {
-        path = cursor.getString(3);
     }
 }
