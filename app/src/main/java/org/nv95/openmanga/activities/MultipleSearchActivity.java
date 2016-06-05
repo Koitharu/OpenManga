@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +15,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.GroupedAdapter;
+import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProviderManager;
@@ -29,7 +30,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by nv95 on 12.01.16.
  */
-public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener {
+public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener, GroupedAdapter.OnMoreClickListener {
     private ProgressBar mProgressBar;
     private LinearLayout mMessageBlock;
     private String mQuery;
@@ -52,7 +53,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mProviderManager = new MangaProviderManager(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new GroupedAdapter();
+        mAdapter = new GroupedAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
@@ -123,18 +124,18 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mRecyclerView.scrollToPosition(position);
     }
 
-    /*@Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(MultipleSearchActivity.this, SearchActivity.class)
-                .putExtra("query", mQuery)
-                .putExtra("title", mAdapter.getGroup(position))
-                .putExtra("provider", position));
-    }*/
-
     @Override
     protected void onDestroy() {
         mListModeHelper.disable();
         super.onDestroy();
+    }
+
+    @Override
+    public void onMoreClick(String title, MangaProviderManager.ProviderSumm provider) {
+        startActivity(new Intent(MultipleSearchActivity.this, SearchActivity.class)
+                .putExtra("query", mQuery)
+                .putExtra("title", title)
+                .putExtra("provider", mProviderManager.indexOf(provider)));
     }
 
     private class SearchTask extends AsyncTask<Void, Void, MangaList> {
@@ -157,7 +158,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         protected void onPostExecute(MangaList mangaInfos) {
             super.onPostExecute(mangaInfos);
             if (mangaInfos != null && mangaInfos.size() != 0) {
-                mAdapter.append(mProviderSummary.name, mangaInfos);
+                mAdapter.append(mProviderSummary, mangaInfos);
             }
             mProgressBar.incrementProgressBy(1);
             if (mProgressBar.getProgress() == mProgressBar.getMax()) {

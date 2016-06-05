@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
+import org.nv95.openmanga.providers.MangaProviderManager;
 
 import java.util.ArrayList;
 
@@ -24,9 +25,11 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ArrayList<Object> mDataset;
     private boolean mGrid;
     private ThumbSize mThumbSize;
+    private final OnMoreClickListener mOnMoreClickListener;
 
-    public GroupedAdapter() {
+    public GroupedAdapter(OnMoreClickListener moreClickListener) {
         mDataset = new ArrayList<>();
+        mOnMoreClickListener = moreClickListener;
         mGrid = false;
     }
 
@@ -47,7 +50,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public void append(String group, ArrayList<MangaInfo> data) {
+    public void append(MangaProviderManager.ProviderSumm group, ArrayList<MangaInfo> data) {
         int last = mDataset.size();
         mDataset.add(group);
         mDataset.addAll(data);
@@ -58,7 +61,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return viewType == VIEW_HEADER ?
-                new GroupViewHolder(inflater.inflate(R.layout.header_group, parent, false)) :
+                new GroupViewHolder(inflater.inflate(R.layout.header_group, parent, false), mOnMoreClickListener) :
                 new MangaListAdapter.MangaViewHolder(inflater
                         .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), null);
     }
@@ -68,7 +71,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
             ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position), mThumbSize);
         } else {
-            ((GroupViewHolder) holder).fill((String) mDataset.get(position));
+            ((GroupViewHolder) holder).fill((MangaProviderManager.ProviderSumm) mDataset.get(position));
         }
     }
 
@@ -78,10 +81,10 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Nullable
-    public String getGroup(int position) {
+    public MangaProviderManager.ProviderSumm getGroup(int position) {
         for (int i = position; i > 0; i--) {
-            if (mDataset.get(i) instanceof String) {
-                return (String) mDataset.get(i);
+            if (mDataset.get(i) instanceof MangaProviderManager.ProviderSumm) {
+                return (MangaProviderManager.ProviderSumm) mDataset.get(i);
             }
         }
         return null;
@@ -106,19 +109,29 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnMoreClickListener {
-        void onMoreClick(String group, int groupPosition);
+        void onMoreClick(String title, MangaProviderManager.ProviderSumm provider);
     }
 
-    protected static class GroupViewHolder extends RecyclerView.ViewHolder {
+    protected static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextView;
+        private final OnMoreClickListener mMoreClickListener;
+        private MangaProviderManager.ProviderSumm mData;
 
-        public GroupViewHolder(View itemView) {
+        public GroupViewHolder(View itemView, OnMoreClickListener moreClickListener) {
             super(itemView);
             mTextView = (TextView) itemView.findViewById(R.id.textView);
+            itemView.setOnClickListener(this);
+            mMoreClickListener = moreClickListener;
         }
 
-        public void fill(String data) {
-            mTextView.setText(data);
+        public void fill(MangaProviderManager.ProviderSumm data) {
+            mData = data;
+            mTextView.setText(data.name);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mMoreClickListener.onMoreClick(mData.name, mData);
         }
     }
 }
