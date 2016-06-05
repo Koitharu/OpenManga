@@ -162,7 +162,6 @@ public class MangaStore {
                 if (cursor.moveToFirst()) {
                     dirs[i] = new File(cursor.getString(0));
                 }
-                cursor = database.query(TABLE_CHAPTERS, new String[]{"id"}, "mangaid=" + id, null, null, null, null);
                 cursor.close();
                 cursor = null;
                 database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(id)});
@@ -190,7 +189,6 @@ public class MangaStore {
     public boolean dropChapters(int mangaId, long[] ids) {
         SQLiteDatabase database = null;
         boolean result = true;
-        final File[] dirs = new File[ids.length];
         try {
             database = mDatabaseHelper.getWritableDatabase();
             database.beginTransaction();
@@ -200,7 +198,6 @@ public class MangaStore {
                 new DirRemoveHelper(getMangaDir(mContext, mangaId), id + "_*").runAsync();
             }
             database.setTransactionSuccessful();
-            new DirRemoveHelper(dirs).runAsync();
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
             result = false;

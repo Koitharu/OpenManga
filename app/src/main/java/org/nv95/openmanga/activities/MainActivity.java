@@ -457,7 +457,7 @@ public class MainActivity extends BaseAppActivity implements
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_delete:
-                        if (mProvider.remove(new long[]{mangaInfo.hashCode()})) {
+                        if (mProvider.remove(new long[]{mangaInfo.id})) {
                             mListLoader.removeItem(position);
                         }
                         //new RemoveHelper(position).remove();

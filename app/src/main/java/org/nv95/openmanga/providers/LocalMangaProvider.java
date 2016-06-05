@@ -146,7 +146,7 @@ public class LocalMangaProvider extends MangaProvider {
                     chapter = new MangaChapter();
                     chapter.id = cursor.getInt(0);
                     chapter.name = cursor.getString(1);
-                    chapter.readLink = String.valueOf(chapter.id) + "\n" + mangaInfo.path;
+                    chapter.readLink = String.valueOf(chapter.id) + "\n" + String.valueOf(mangaInfo.id) + "\n" + mangaInfo.path;
                     chapter.provider = LocalMangaProvider.class;
                     list.add(chapter);
                 } while (cursor.moveToNext());
@@ -165,10 +165,10 @@ public class LocalMangaProvider extends MangaProvider {
         ArrayList<MangaPage> list = new ArrayList<>();
         MangaPage page;
         final String[] data = readLink.split("\n");
-        final String dir = data[1] + "/";
+        final String dir = data[2] + "/";
         //
         try {
-            Cursor cursor = database.query(TABLE_PAGES, new String[]{"id", "file"}, "chapterid=" + data[0], null, null, null, "number");
+            Cursor cursor = database.query(TABLE_PAGES, new String[]{"id", "file"}, "chapterid=? AND mangaid=?", new String[]{data[0], data[1]}, null, null, "number");
             if (cursor.moveToFirst()) {
                 do {
                     page = new MangaPage();
@@ -202,32 +202,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
-        return mStore.dropMangas(ids);
-        /*SQLiteDatabase database = dbHelper.getWritableDatabase();
-        for (long id : ids) {
-            String filename;
-            Cursor cursor1 = database.query(TABLE_STORAGE, null, "id=" + id, null, null, null, null);
-            String mangaId = String.valueOf(id);
-            if (cursor1.moveToFirst()) {
-                mangaId = cursor1.getString(6);
-            }
-            cursor1.close();
-            cursor1 = database.query(TABLE_CHAPTERS, null, "mangaId=" + mangaId, null, null, null, null);
-            if (cursor1.moveToFirst()) {
-                int chapterId;
-                do {
-                    chapterId = cursor1.getInt(1);
-                    database.delete(TABLE_PAGES, "chapterId=" + chapterId, null);
-                } while (cursor1.moveToNext());
-            }
-            cursor1.close();
-            database.delete(TABLE_CHAPTERS, "mangaId=" + mangaId, null);
-            database.delete(TABLE_STORAGE, "id=" + id, null);
-            new DirRemoveHelper(new File(LocalMangaProvider.getMangaDir(context), String.valueOf(mangaId))).runAsync();
-        }
-        database.close();
-        HistoryProvider.getInstacne(context).remove(ids);
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);*/
+        return mStore.dropMangas(ids) && HistoryProvider.getInstacne(context).remove(ids);
     }
 
     @Override
