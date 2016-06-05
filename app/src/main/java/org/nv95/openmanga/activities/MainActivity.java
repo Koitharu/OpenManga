@@ -53,6 +53,7 @@ import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.ImageCreator;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
+import org.nv95.openmanga.utils.StorageUpgradeTask;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
@@ -135,6 +136,7 @@ public class MainActivity extends BaseAppActivity implements
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
         WelcomeActivity.ShowChangelog(this);
+        StorageUpgradeTask.doUpgrade(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
         //Load saved image in drawer head

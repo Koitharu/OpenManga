@@ -80,7 +80,7 @@ public class LocalMangaProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) {
         if (page > 0)
             return null;
-        SQLiteDatabase database = mStore.getReadableDatabase();
+        SQLiteDatabase database = mStore.getDatabase(false);
         MangaList list;
         MangaInfo manga;
         try {
@@ -111,7 +111,7 @@ public class LocalMangaProvider extends MangaProvider {
         Cursor cursor = null;
         int res = 0;
         try {
-            database = mStore.getReadableDatabase();
+            database = mStore.getDatabase(false);
             cursor = database.query(MangaStore.TABLE_MANGAS, null, null, null, null, null, null);
             res = cursor.getCount();
         } catch (Exception e) {
@@ -130,7 +130,7 @@ public class LocalMangaProvider extends MangaProvider {
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
-        SQLiteDatabase database = mStore.getReadableDatabase();
+        SQLiteDatabase database = mStore.getDatabase(false);
         MangaChapters list = new MangaChapters();
         MangaChapter chapter;
 
@@ -161,7 +161,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public ArrayList<MangaPage> getPages(String readLink) {
-        SQLiteDatabase database = mStore.getReadableDatabase();
+        SQLiteDatabase database = mStore.getDatabase(false);
         ArrayList<MangaPage> list = new ArrayList<>();
         MangaPage page;
         final String[] data = readLink.split("\n");
