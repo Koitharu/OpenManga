@@ -15,8 +15,9 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.ZipBuilder;
@@ -87,7 +88,6 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
 
         @Override
         protected Integer doInBackground(String... params) {
-            StorageHelper dbHelper = null;
             SQLiteDatabase database = null;
             ZipInputStream zipInputStream = null;
             int pages = 0;
@@ -109,13 +109,16 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 zipInputStream = new ZipInputStream(new FileInputStream(params[0]));
                 final File dest = new File(MangaStore.getMangasDir(CBZActivity.this),
                         String.valueOf(mangaId = params[0].hashCode()));
+                if (dest.exists()) {
+                    new DirRemoveHelper(dest).run();
+                }
+                dest.mkdirs();
                 final byte[] buffer = new byte[1024];
                 publishProgress(false);
                 publishProgress(name, null);
                 publishProgress(0, entries.length);
                 //importing
-                dbHelper = new StorageHelper(CBZActivity.this);
-                database = dbHelper.getWritableDatabase();
+                database = new MangaStore(CBZActivity.this).getDatabase(true);
                 ContentValues cv;
                 //all pages
                 chapterId = 0;
@@ -150,6 +153,17 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                         }
                     }
                 }
+                if (isCancelled()) {
+                    //remove all
+                    database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(mangaId)});
+                    new DirRemoveHelper(dest).run();
+                    database.close();
+                    try {
+                        zipInputStream.close();
+                    } catch (IOException ignored) {
+                    }
+                    return null;
+                }
                 //save chapter
                 cv = new ContentValues();
                 cv.put("id", chapterId);
@@ -159,22 +173,20 @@ public class CBZActivity extends AppCompatActivity implements View.OnClickListen
                 database.insert(TABLE_CHAPTERS, null, cv);
                 //save manga
                 cv = new ContentValues();
-                cv.put("id", String.valueOf(mangaId).hashCode());
+                cv.put("id", mangaId);
                 cv.put("name", name);
                 cv.put("subtitle", "");
                 cv.put("summary", "");
-                cv.put("description", "Imported from " + new File(params[0]).getName());
+                cv.put("description", getString(R.string.imported_from, new File(params[0]).getName()));
                 cv.put("dir", MangaStore.getMangaDir(CBZActivity.this, mangaId).getPath());
                 cv.put("timestamp", new Date().getTime());
                 database.insert(TABLE_MANGAS, null, cv);
             } catch (Exception e) {
+                FileLogger.getInstance().report(e);
                 pages = -1;
             } finally {
                 if (database != null) {
                     database.close();
-                }
-                if (dbHelper != null) {
-                    dbHelper.close();
                 }
                 if (zipInputStream != null) {
                     try {
