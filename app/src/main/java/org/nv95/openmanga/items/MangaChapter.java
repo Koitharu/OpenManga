@@ -1,6 +1,5 @@
 package org.nv95.openmanga.items;
 
-import android.database.Cursor;
 import android.os.Bundle;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -26,12 +25,6 @@ public class MangaChapter {
         } catch (ClassNotFoundException e) {
             provider = LocalMangaProvider.class;
         }
-    }
-
-    @Deprecated
-    public MangaChapter(Cursor cursor) {
-        name = cursor.getString(3);
-        readLink = cursor.getString(1);
     }
 
     public Bundle toBundle() {

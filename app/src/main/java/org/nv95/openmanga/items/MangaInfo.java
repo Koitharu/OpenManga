@@ -1,7 +1,5 @@
 package org.nv95.openmanga.items;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -31,22 +29,6 @@ public class MangaInfo {
         this.summary = summary;
         this.path = path;
         this.preview = preview;
-        this.status = STATUS_UNKNOWN;
-        this.extra = null;
-    }
-
-    @Deprecated
-    public MangaInfo(Cursor cursor) {
-        name = cursor.getString(1);
-        subtitle = cursor.getString(2);
-        summary = cursor.getString(3);
-        preview = cursor.getString(4);
-        try {
-            provider = Class.forName(cursor.getString(5));
-        } catch (ClassNotFoundException e) {
-            provider = LocalMangaProvider.class;
-        }
-        path = cursor.getString(6);
         this.status = STATUS_UNKNOWN;
         this.extra = null;
     }
@@ -84,21 +66,6 @@ public class MangaInfo {
         bundle.putInt("status", status);
         bundle.putString("extra", extra);
         return bundle;
-    }
-
-    @Deprecated
-    public ContentValues toContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put("id", id);
-        cv.put("name", name);
-        cv.put("summary", summary);
-        cv.put("path", path);
-        cv.put("preview", preview);
-        cv.put("subtitle", subtitle);
-        cv.put("provider", provider.getName());
-        //cv.put("status", status);
-        //cv.put("extra", extra);
-        return cv;
     }
 
     public boolean isCompleted() {
