@@ -213,8 +213,8 @@ public class MangaStore {
         return result;
     }
 
-    public SQLiteDatabase getReadableDatabase() {
-        return mDatabaseHelper.getReadableDatabase();
+    public SQLiteDatabase getDatabase(boolean writable) {
+        return writable ? mDatabaseHelper.getWritableDatabase() : mDatabaseHelper.getReadableDatabase();
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
