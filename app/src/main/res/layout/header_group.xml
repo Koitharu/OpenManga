@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/textView"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="@string/storages_remote"
     android:paddingTop="@dimen/padding8"
@@ -9,4 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:textColor="@color/accent_light" />
+    android:background="?selectableItemBackground"
+    android:drawableEnd="@drawable/ic_arrow_more"
+    android:textColor="#6d6d6d"
+    android:drawableRight="@drawable/ic_arrow_more" />
