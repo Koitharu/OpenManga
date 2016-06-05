@@ -201,6 +201,7 @@ public class DownloadService extends Service {
                 publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
                 for (int j=0; j<pages.size(); j++) {
                     o1 = pages.get(j);
+                    o1.path = provider.getPageImage(o1);
                     o1.id = store.pushPage(o1, mangaId, o.id);
                     publishProgress(PROGRESS_SECONDARY, j, pages.size());
                     if (isCancelled()) {
@@ -216,7 +217,7 @@ public class DownloadService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+            MangaChangesObserver.emitAdding(Constants.CATEGORY_LOCAL, mDownload);
             mDownload.state = DownloadInfo.STATE_FINISHED;
             for (OnProgressUpdateListener o:mProgressListeners) {
                 o.onDataUpdated();
