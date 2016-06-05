@@ -233,7 +233,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             }
                         }
                         if (idlist.size() == len) {
-                            new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mangaSummary.id});
+                            if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mangaSummary.id})) {
+                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mangaSummary.id});
+                            }
                             MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
                             finish();
                         } else {
@@ -241,7 +243,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             for (int i = 0;i < idlist.size();i++) {
                                 ids[i] = idlist.get(i);
                             }
-                            new MangaStore(MangaPreviewActivity.this).dropChapters(mangaSummary.id, ids);
+                            if (new MangaStore(MangaPreviewActivity.this).dropChapters(mangaSummary.id, ids)) {
+                                Snackbar.make(mTextViewDescription, getString(R.string.chapters_removed, ids.length), Snackbar.LENGTH_SHORT).show();
+                            }
                             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }

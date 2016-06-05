@@ -48,7 +48,7 @@ public class DirRemoveHelper implements Runnable {
     }
 
     private static void RemoveDir(File dir) {
-        if (!dir.exists()) {
+        if (dir == null || !dir.exists()) {
             return;
         }
         for (File o : dir.listFiles()) {
