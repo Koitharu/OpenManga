@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
  * Created by nv95 on 25.01.16.
  */
 public class AutoHeightLayout extends FrameLayout {
-    private static final double ASPECT_RATIO = 5f / 3f;
+    private static final double ASPECT_RATIO = 1.3f;
 
     public AutoHeightLayout(Context context) {
         super(context);

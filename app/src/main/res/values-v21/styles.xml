@@ -9,6 +9,6 @@
     </style>
 
     <style name="AppTheme.Preview" parent="AppTheme">
-        <item name="android:statusBarColor">@color/transparent_dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

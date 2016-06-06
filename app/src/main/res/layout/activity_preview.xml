@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@drawable/toolbarshadowbig"
+                app:layout_collapseMode="pin"
                 android:fitsSystemWindows="true" />
 
             <android.support.v7.widget.Toolbar
