@@ -1,5 +1,5 @@
 <h1>Changelog</h1>
 <p>
-    + Wrap long images (useful if page has non standard proportions)<br/>
+    + Remove selected chapters from local storage<br/>
     * Fixes<br/>
 </p>
