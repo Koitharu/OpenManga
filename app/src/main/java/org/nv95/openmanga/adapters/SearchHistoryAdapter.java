@@ -52,8 +52,8 @@ public class SearchHistoryAdapter extends CursorAdapter {
 
     public void updateContent(@Nullable String query) {
         Cursor newCursor = mDatabase.query(TABLE_NAME, null,
-                query == null ? null : "query LIKE '" + query + "%'",
-                null, null, null, null);
+                query == null ? null : "query LIKE ?",
+                query == null ? null : new String[] {query + "%"}, null, null, null); // исключает неправельные символы в запросе
         Cursor oldCursor = swapCursor(newCursor);
         if (oldCursor != null) {
             oldCursor.close();

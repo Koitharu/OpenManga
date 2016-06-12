@@ -40,7 +40,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
             return scaleBitmap(bitmap);
         }
         final int count = Math.max((int) Math.sqrt(bitmap.getHeight() / bitmap.getWidth()) - 1, 2);
-        final int sectHeight = bitmap.getHeight() / count + 1;
+        final int sectHeight = bitmap.getHeight() / count;
         final Paint paint = new Paint();
         final Bitmap res = Bitmap.createBitmap((bitmap.getWidth() + mSpace) * count - mSpace, sectHeight, bitmap.getConfig());
         final Canvas canvas = new Canvas(res);
@@ -58,22 +58,23 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
 
     private Bitmap scaleBitmap (Bitmap bitmap) {
         int width = 0, height = 0;
-        float videoAspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
-        if (bitmap.getHeight() > GL10.GL_MAX_TEXTURE_SIZE) {
+        float imageAspectRatio = bitmap.getWidth() / (float) bitmap.getHeight();
+        int maxSize = GL10.GL_MAX_TEXTURE_SIZE;
+        if (bitmap.getHeight() > maxSize) {
 
-            height = GL10.GL_MAX_TEXTURE_SIZE;
-            if (videoAspectRatio > 1) {
-                width = (int) (height / videoAspectRatio);
+            height = maxSize;
+            if (imageAspectRatio > 1) {
+                width = (int) (height / imageAspectRatio);
             } else {
-                width = (int) (height * videoAspectRatio);
+                width = (int) (height * imageAspectRatio);
             }
         }
-        if (bitmap.getWidth() > GL10.GL_MAX_TEXTURE_SIZE) {
-            width = GL10.GL_MAX_TEXTURE_SIZE;
-            if (videoAspectRatio > 1) {
-                height = (int) (width / videoAspectRatio);
+        if (bitmap.getWidth() > maxSize) {
+            width = maxSize;
+            if (imageAspectRatio > 1) {
+                height = (int) (width / imageAspectRatio);
             } else {
-                height = (int) (width * videoAspectRatio);
+                height = (int) (width * imageAspectRatio);
             }
         }
 

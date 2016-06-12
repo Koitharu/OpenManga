@@ -22,8 +22,7 @@ public class MangaPager extends ViewPager {
 
     private PagerReaderAdapter mAdapter;
     private ArrayList<MangaPage> mList;
-    private boolean mReverse = false;
-    private boolean mVertical = false;
+    private boolean mReverse, mVertical;
     private OverScrollListener mOverScrollListener;
     private int lastX = -1;
     // touch detector
