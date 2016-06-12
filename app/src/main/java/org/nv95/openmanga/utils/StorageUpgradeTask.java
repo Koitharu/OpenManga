@@ -56,6 +56,12 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
         File cover;
         //enum old saved manga
         try {
+            if (!StorageHelper.isTableExists(oldDatabase, "local_storage")) {
+                newDatabase.close();
+                oldDatabase.close();
+                storageHelper.close();
+                return true;
+            }
             cursor = oldDatabase.query("local_storage", null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {

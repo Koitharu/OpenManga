@@ -242,6 +242,11 @@ public class StorageHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public static boolean isTableExists(SQLiteDatabase database, String tableName) {
+        CopyOnWriteArraySet<String> tables = getTableNames(database);
+        return tables.contains(tableName);
+    }
+
     public static int getColumnCount(SQLiteDatabase database, String table, @Nullable String where) {
         Cursor cursor = database.rawQuery("select count(*) from "
                 + table
