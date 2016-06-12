@@ -40,7 +40,10 @@ public class MangachanProvider extends MangaProvider {
             manga.name = t.text();
             manga.path = "http://mangachan.ru" + t.attr("href");
             t = o.select("img").first();
-            manga.preview = "http://mangachan.ru" + t.attr("src");
+            manga.preview = t.attr("src");
+            if (manga.preview != null && !manga.preview.startsWith("http://")) {
+                manga.preview = "http://mangachan.ru" + manga.preview;
+            }
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.summary = t.text();
