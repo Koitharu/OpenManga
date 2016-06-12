@@ -3,6 +3,7 @@
 OpenManga - Manga reader for Android with simple user-friendly interface and online catalogues.
 
 ## Download
+[Latest beta](http://anibreak.ru/uploads/apps/openmanga/openmanga_1.4_beta.apk) - v1.4 beta  
 [Latest release](http://anibreak.ru/uploads/apps/openmanga/openmanga_1.3.apk) - v1.3
 
 ## Features
@@ -27,6 +28,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
 
+----
 
-
-This app also uses [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view) licensed under the Apache License, Version 2.0.
+If you want to use this app or parts of it, please, add link to this repo and DO NOT include ads or any paid options.
