@@ -42,7 +42,7 @@ public class PuzzmosProvider extends MangaProvider {
         Document document = getPage("http://puzzmos.com/directory?sorting=" +
                 sortUrls[sort] +
                 (genre == 0 ? "" : "&genre=" + genreUrls[genre - 1])
-                + "&Sayfa=" + page + 1);
+                + "&Sayfa=" + (page + 1));
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.media");
