@@ -102,7 +102,7 @@ public class EHentaiProvider extends MangaProvider {
     public String getPageImage(MangaPage mangaPage) {
         try {
             Document document = getPage(mangaPage.path, DEF_COOKIE);
-            return document.body().getElementById("img").attr("src");
+            return document.body().select("img").get(4).attr("src");
         } catch (Exception e) {
             return null;
         }
