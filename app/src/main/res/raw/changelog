@@ -1,5 +1,4 @@
 <h1>Changelog</h1>
 <p>
-    + Remove selected chapters from local storage<br/>
-    * Fixes<br/>
+    * Fix upgrading from old versions<br/>
 </p>
