@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Created by nv95 on 03.10.15.
  */
 public class StorageHelper extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 13;
+    private static final int DB_VERSION = 14;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -101,13 +101,21 @@ public class StorageHelper extends SQLiteOpenHelper {
         final CopyOnWriteArraySet<String> tables = getTableNames(db);
         if(!tables.contains("new_chapters")){
             db.execSQL("CREATE TABLE new_chapters ("
-                    + "id INTEGER PRIMARY KEY,"                 //0
+                    + "id INTEGER PRIMARY KEY,"
                     + "chapters_last INTEGER,"
                     + "chapters INTEGER"
                     + ");");
         }
+        if (!tables.contains("search_history")) {
+            db.execSQL("CREATE TABLE search_history ("
+                    + "_id INTEGER PRIMARY KEY,"
+                    + "query TEXT"
+                    + ");");
+        }
 
         final CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
+        if(!columnsFavourites.contains("timestamp"))
+            db.execSQL("ALTER TABLE favourites ADD COLUMN timestamp INTEGER DEFAULT 0");
         if(!columnsFavourites.contains("category"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
     }

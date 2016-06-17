@@ -43,8 +43,9 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
     protected Boolean doInBackground(Void... params) {
         boolean errors = false;
         final StorageHelper storageHelper = new StorageHelper(mContext);
-        final SQLiteDatabase newDatabase = new MangaStore(mContext).getDatabase(true);
+        final MangaStore newStore = new MangaStore(mContext);
         final SQLiteDatabase oldDatabase = storageHelper.getReadableDatabase();
+        SQLiteDatabase newDatabase = null;
         Cursor cursor = null;
         Cursor cursor1 = null;
         Cursor cursor2 = null;
@@ -57,13 +58,13 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
         //enum old saved manga
         try {
             if (!StorageHelper.isTableExists(oldDatabase, "local_storage")) {
-                newDatabase.close();
                 oldDatabase.close();
                 storageHelper.close();
                 return true;
             }
             cursor = oldDatabase.query("local_storage", null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
+                boolean hasTimestamp = cursor.getColumnIndex("timestamp") != -1;
                 do {
                     //copy manga to new database
                     cv = new ContentValues();
@@ -77,10 +78,11 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
                     //noinspection ResultOfMethodCallIgnored
                     cover.renameTo(new File(cover.getParentFile(), "cover"));
                     cv.put("dir", cover.getParent());
-                    cv.put("timestamp", cursor.getInt(8));
+                    cv.put("timestamp", hasTimestamp ? cursor.getInt(8) : 0);
+                    newDatabase = newStore.getDatabase(true);
                     newDatabase.insert(MangaStore.TABLE_MANGAS, null, cv);
                     //copy all chapters
-                    cursor1 = oldDatabase.query("local_chapters", null, "mangaId=" + mangaId, null, null, null, null);
+                    cursor1 = oldDatabase.query("local_chapters", null, "mangaId=" + cursor.getString(6), null, null, null, null);
                     if (cursor1.moveToFirst()) {
                         do {
                             //copy chapter to new database
@@ -89,6 +91,9 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
                             cv1.put("mangaid", mangaId);
                             cv1.put("name", cursor1.getString(3));
                             cv1.put("number", cursor1.getInt(0));
+                            if (!newDatabase.isOpen()) {
+                                newDatabase = newStore.getDatabase(true);
+                            }
                             newDatabase.insert(MangaStore.TABLE_CHAPTERS, null, cv1);
                             //enum all pages
                             cursor2 = oldDatabase.query("local_pages", null, "chapterId=" + chapterId, null, null, null, null);
@@ -101,8 +106,11 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
                                     cv2.put("mangaid", mangaId);
                                     cv2.put("file", chapterId + "/" + new File(cursor2.getString(3)).getName());
                                     cv2.put("number", cursor2.getInt(0));
+                                    if (!newDatabase.isOpen()) {
+                                        newDatabase = newStore.getDatabase(true);
+                                    }
                                     newDatabase.insert(MangaStore.TABLE_PAGES, null, cv2);
-                                } while (cursor1.moveToNext());
+                                } while (cursor2.moveToNext());
                             }
                             cursor2.close();
                             cursor2 = null;
@@ -129,7 +137,9 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
                 cursor2.close();
             }
         }
-        newDatabase.close();
+        if (newDatabase != null && newDatabase.isOpen()) {
+            newDatabase.close();
+        }
         oldDatabase.close();
         storageHelper.close();
         return !errors;
