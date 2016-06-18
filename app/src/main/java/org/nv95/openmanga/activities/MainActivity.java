@@ -29,6 +29,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
+
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
 import org.nv95.openmanga.helpers.ListModeHelper;
@@ -86,6 +88,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OneSignal.startInit(this).init();
         setContentView(R.layout.activity_main);
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
