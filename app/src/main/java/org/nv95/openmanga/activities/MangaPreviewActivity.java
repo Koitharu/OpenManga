@@ -347,7 +347,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         .show();
             } else {
                 sourceManga.chapters = newChapters;
-                DownloadService.start(MangaPreviewActivity.this, sourceManga);
+                DownloadService.start(MangaPreviewActivity.this, sourceManga, R.string.action_save_add);
             }
         }
 
