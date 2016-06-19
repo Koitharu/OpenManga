@@ -3,6 +3,8 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
@@ -12,6 +14,7 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
@@ -28,6 +31,7 @@ import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
 /**
  * Created by nv95 on 30.09.15.
  */
+@SuppressWarnings("TryFinallyCanBeTryWithResources")
 public class LocalMangaProvider extends MangaProvider {
     private static boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
@@ -210,4 +214,43 @@ public class LocalMangaProvider extends MangaProvider {
         return AppHelper.getStringArray(context, sorts);
     }
 
+    @WorkerThread
+    @Nullable
+    public MangaSummary getSource(MangaInfo manga) {
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStore.getDatabase(false);
+            cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"provider", "source"}, "id=?", new String[]{String.valueOf(manga.id)}, null, null, null);
+            if (cursor.moveToFirst()) {
+                String providerName = cursor.getString(0);
+                if (providerName != null && providerName.length() != 0) {
+                    MangaProvider provider = MangaProviderManager.createProvider(providerName);
+                    if (provider != null) {
+                        String link = cursor.getString(1);
+                        MangaInfo mi = new MangaInfo();
+                        mi.name = manga.name;
+                        mi.provider = provider.getClass();
+                        mi.preview = manga.preview;
+                        mi.subtitle = manga.subtitle;
+                        mi.id = manga.id;
+                        mi.status = manga.status;
+                        mi.summary = manga.summary;
+                        mi.path = link;
+                        return provider.getDetailedInfo(mi);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        return null;
+    }
 }
