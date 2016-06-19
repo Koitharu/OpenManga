@@ -22,6 +22,6 @@ public class AboutActivity extends BaseAppActivity {
         enableHomeAsUp();
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText(Html.fromHtml(AppHelper.getRawString(this, R.raw.about)));
-        textView.setMovementMethod(InternalLinkMovement.getInstance());
+        textView.setMovementMethod(new InternalLinkMovement(null));
     }
 }

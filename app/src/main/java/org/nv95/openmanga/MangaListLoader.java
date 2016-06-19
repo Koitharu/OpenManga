@@ -44,8 +44,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
     }
 
     public void clearItems() {
-        mList.clear();
-        mAdapter.notifyDataSetChanged();
+        clearItemsLazy();
         if (mContentLoadListener != null) {
             mContentLoadListener.onContentLoaded(true);
         }
@@ -94,6 +93,11 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
 
     public int getContentSize() {
         return mList.size();
+    }
+
+    public void clearItemsLazy() {
+        mList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     public interface OnContentLoadListener {

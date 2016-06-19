@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by nv95 on 12.01.16.
  */
-public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener, GroupedAdapter.OnMoreClickListener {
+public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener, GroupedAdapter.OnMoreClickListener, DialogInterface.OnDismissListener {
     private ProgressBar mProgressBar;
     private LinearLayout mMessageBlock;
     private String mQuery;
@@ -61,8 +62,12 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         mProgressBar.setMax(providers.size());
         mProgressBar.setProgress(0);
-        for (MangaProviderManager.ProviderSumm o : providers) {
-            new SearchTask(o).executeOnExecutor(mExecutor);
+        if (checkConnectionWithDialog(this)) {
+            for (MangaProviderManager.ProviderSumm o : providers) {
+                new SearchTask(o).executeOnExecutor(mExecutor);
+            }
+        } else {
+            mMessageBlock.setVisibility(View.GONE);
         }
     }
 
@@ -136,6 +141,11 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
                 .putExtra("query", mQuery)
                 .putExtra("title", title)
                 .putExtra("provider", mProviderManager.indexOf(provider)));
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        finish();
     }
 
     private class SearchTask extends AsyncTask<Void, Void, MangaList> {

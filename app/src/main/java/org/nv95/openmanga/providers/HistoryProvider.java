@@ -66,12 +66,38 @@ public class HistoryProvider extends MangaProvider {
         return HistoryProvider.getInstacne(context).get(mangaInfo);
     }
 
-    public static MangaInfo GetLast(Context context) {
+    public MangaInfo getLast() {
+        SQLiteDatabase database = null;
+        Cursor cursor = null;
+        MangaInfo last = null;
         try {
-            return HistoryProvider.getInstacne(context).getList(0, 0, 0).get(0);
-        } catch (Exception e) {
-            return null;
+            database = dbHelper.getReadableDatabase();
+            cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[0]);
+            if (cursor.moveToFirst()) {
+                last = new MangaInfo();
+                last.id = cursor.getInt(0);
+                last.name = cursor.getString(1);
+                last.subtitle = cursor.getString(2);
+                last.summary = cursor.getString(3);
+                last.preview = cursor.getString(4);
+                last.path = cursor.getString(5);
+                try {
+                    last.provider = Class.forName(cursor.getString(6));
+                } catch (ClassNotFoundException e) {
+                    last.provider = LocalMangaProvider.class;
+                }
+                last.status = STATUS_UNKNOWN;
+                last.extra = null;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
         }
+        return last;
     }
 
     @Override
