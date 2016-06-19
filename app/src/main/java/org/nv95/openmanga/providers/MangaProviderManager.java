@@ -108,6 +108,17 @@ public class MangaProviderManager {
         return res;
     }
 
+    @Nullable
+    public static MangaProvider createProvider(String className) {
+        try {
+            Class aClass = Class.forName(className);
+            return (MangaProvider) aClass.newInstance();
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+            return null;
+        }
+    }
+
     public void setProviderEnabled(String name, boolean enabled) {
         context.getSharedPreferences("providers", Context.MODE_PRIVATE).edit().putBoolean(name, enabled).apply();
     }

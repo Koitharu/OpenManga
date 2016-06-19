@@ -39,4 +39,22 @@ public class MangaChapters extends ArrayList<MangaChapter> {
         }
         return res;
     }
+
+    public MangaChapters complementByName(MangaChapters list) {
+        MangaChapters res = new MangaChapters();
+        boolean exists;
+        for (MangaChapter o:this) {
+            exists = false;
+            for (MangaChapter o1:list) {
+                if (o.name != null && o.name.equals(o1.name)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                res.add(o);
+            }
+        }
+        return res;
+    }
 }

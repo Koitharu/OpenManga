@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
+import org.nv95.openmanga.items.MangaChapters;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -158,6 +160,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         if (LocalMangaProvider.class.equals(mangaSummary.provider)) {
             menu.findItem(R.id.action_save).setVisible(false);
             menu.findItem(R.id.action_remove).setVisible(true);
+            menu.findItem(R.id.action_save_more).setVisible(true);
             menu.findItem(R.id.action_favourite).setVisible(false);
         } else if (FavouritesProvider.Has(this, mangaSummary)) {
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
@@ -192,6 +195,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 return true;
             case R.id.action_remove:
                 deleteDialog();
+                return true;
+            case R.id.action_save_more:
+                new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangaSummary);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -301,6 +307,53 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             } catch (Exception e) {
                 return null;
             }
+        }
+    }
+
+    private class LoadSourceTask extends AsyncTask<MangaInfo,Void,MangaSummary> implements DialogInterface.OnCancelListener {
+        private final ProgressDialog mProgressDialog;
+
+        public LoadSourceTask() {
+            mProgressDialog = new ProgressDialog(MangaPreviewActivity.this);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setOnCancelListener(this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected MangaSummary doInBackground(MangaInfo... params) {
+            return LocalMangaProvider.getInstacne(MangaPreviewActivity.this)
+                    .getSource(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(MangaSummary sourceManga) {
+            super.onPostExecute(sourceManga);
+            mProgressDialog.dismiss();
+            if (sourceManga == null) {
+                Snackbar.make(mAppBarLayout, R.string.loading_error, Snackbar.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+            MangaChapters newChapters = sourceManga.chapters.complementByName(mangaSummary.chapters);
+            if (sourceManga.chapters.size() <= mangaSummary.chapters.size()) {
+                Snackbar.make(mAppBarLayout, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                sourceManga.chapters = newChapters;
+                DownloadService.start(MangaPreviewActivity.this, sourceManga);
+            }
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            this.cancel(true);
         }
     }
 }

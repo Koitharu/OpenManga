@@ -18,6 +18,7 @@ import org.nv95.openmanga.items.SimpleDownload;
 
 import java.io.File;
 import java.util.Date;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Created by nv95 on 04.06.16.
@@ -62,6 +63,8 @@ public class MangaStore {
             new SimpleDownload(manga.preview, new File(dest, "cover")).run();
             cv.put("description", manga.description);
             cv.put("timestamp", new Date().getTime());
+            cv.put("provider", manga.provider.getName());
+            cv.put("source", manga.path);
             if (database.update(TABLE_MANGAS,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_MANGAS, null, cv);
             }
@@ -236,7 +239,7 @@ public class MangaStore {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DB_VERSION = 1;
+        private static final int DB_VERSION = 2;
 
         DatabaseHelper(Context context) {
             super(context, "mangastore", null, DB_VERSION);
@@ -251,7 +254,9 @@ public class MangaStore {
                     + "summary TEXT,"
                     + "description TEXT,"
                     + "dir TEXT,"             //каталог с файлами
-                    + "timestamp INTEGER"
+                    + "timestamp INTEGER,"
+                    + "source TEXT,"        //link to source manga
+                    + "provider TEXT"       //source provider
                     + ");");
 
             db.execSQL("CREATE TABLE " + TABLE_CHAPTERS + " ("
@@ -272,7 +277,13 @@ public class MangaStore {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            CopyOnWriteArraySet<String> tables = StorageHelper.getColumsNames(db, TABLE_MANGAS);
+            if (!tables.contains("source")) {
+                db.execSQL("ALTER TABLE " + TABLE_MANGAS + " ADD COLUMN source TEXT");
+            }
+            if (!tables.contains("provider")) {
+                db.execSQL("ALTER TABLE " + TABLE_MANGAS + " ADD COLUMN provider TEXT");
+            }
         }
     }
 }
