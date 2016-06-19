@@ -15,10 +15,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
@@ -300,6 +300,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
     private class CheckUpdatesTask extends AsyncTask<Void,Void,AppUpdatesProvider> {
         private final Preference mPreference;
+        private int mSelected = 0;
 
         public CheckUpdatesTask(Preference preference) {
             super();
@@ -336,13 +337,19 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 }
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setTitle(R.string.update)
-                        .setItems(titles, new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(titles, 0, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UpdateService.start(getApplicationContext(), updates[which].getUrl());
+                                mSelected = which;
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                UpdateService.start(getApplicationContext(), updates[mSelected].getUrl());
+                            }
+                        })
                         .setCancelable(true)
                         .create().show();
             } else {

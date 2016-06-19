@@ -251,4 +251,5 @@
     <string name="storage_upgrading">Upgrading local database…</string>
     <string name="chapters_removed" formatted="false">Removed %d chapters</string>
     <string name="imported_from" formatted="false">Imported from %s</string>
+    <string name="download">Download</string>
 </resources>
