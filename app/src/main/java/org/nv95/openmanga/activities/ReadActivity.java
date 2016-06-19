@@ -16,7 +16,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -27,11 +26,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.components.MangaPager;
 import org.nv95.openmanga.components.OverScrollDetector;
+import org.nv95.openmanga.dialogs.NavigationDialog;
+import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.items.MangaChapter;
@@ -53,9 +52,9 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 30.09.15.
  */
-public class ReadActivity extends AppCompatActivity implements View.OnClickListener,
+public class ReadActivity extends BaseAppActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
-        MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener {
+        MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener, DialogInterface.OnDismissListener {
     //views
     private MangaPager mPager;
     private View mLoader;
@@ -98,7 +97,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
         chapter = mangaSummary.getChapters().get(chapterId);
         mPager.setOffscreenPageLimit(3);
-        new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (checkConnectionWithDialog(this)) {
+            new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     private void initParams(Bundle b){
@@ -492,6 +493,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
         mSwipeFrame.setAlpha((Float) animation.getAnimatedValue());
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        finish();
     }
 
     private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {

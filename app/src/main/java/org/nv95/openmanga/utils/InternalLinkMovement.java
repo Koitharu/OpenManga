@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
@@ -11,7 +13,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 
@@ -20,12 +21,11 @@ import org.nv95.openmanga.R;
  */
 public class InternalLinkMovement extends LinkMovementMethod {
 
-    private static InternalLinkMovement sInstance;
+    @Nullable
+    private final OnLinkClickListener mLinkClickListener;
 
-    public static InternalLinkMovement getInstance() {
-        if (sInstance == null)
-            sInstance = new InternalLinkMovement();
-        return sInstance;
+    public InternalLinkMovement(@Nullable OnLinkClickListener linkClickListener) {
+        this.mLinkClickListener = linkClickListener;
     }
 
     @Override
@@ -71,6 +71,10 @@ public class InternalLinkMovement extends LinkMovementMethod {
 
     private void processClick(Context context, String url) {
         String[] parts = url.split(":");
+        if (parts.length != 2) {
+            FileLogger.getInstance().report("Invalid link: " + url);
+            return;
+        }
         switch (parts[0]) {
             case "activity":
                 String packageName = context.getPackageName();
@@ -89,8 +93,24 @@ public class InternalLinkMovement extends LinkMovementMethod {
                         {parts[1]});
                 context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_mail)));
                 break;
+            case "settings":
+                switch (parts[1]) {
+                    case "wifi":
+                        context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        break;
+                    case "network":
+                        context.startActivity(new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS));
+                        break;
+                }
+                break;
             default:
-                Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
+                if (mLinkClickListener != null) {
+                    mLinkClickListener.onLinkClicked(parts[0], parts[1]);
+                }
         }
+    }
+
+    public interface OnLinkClickListener {
+        void onLinkClicked(String scheme, String url);
     }
 }

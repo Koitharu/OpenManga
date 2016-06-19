@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -30,14 +32,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.dialogs.FilterSortDialog;
-import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.dialogs.FilterSortDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
+import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.ThumbSize;
@@ -50,7 +52,9 @@ import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageCreator;
+import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
@@ -58,7 +62,7 @@ import org.nv95.openmanga.utils.StorageUpgradeTask;
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
-        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener {
+        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener, InternalLinkMovement.OnLinkClickListener {
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
@@ -96,6 +100,7 @@ public class MainActivity extends BaseAppActivity implements
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         mFab.setOnClickListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -202,7 +207,7 @@ public class MainActivity extends BaseAppActivity implements
         return true;
     }
 
-    int getMenuItemPosition(){
+    private int getMenuItemPosition(){
         switch (selectedItem){
             case R.id.nav_local_storage: return Constants.CATEGORY_LOCAL;
             case R.id.nav_action_favourites: return Constants.CATEGORY_FAVOURITES;
@@ -339,7 +344,7 @@ public class MainActivity extends BaseAppActivity implements
         setSubtitle(null);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
-        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        updateContent();
         return true;
     }
 
@@ -377,7 +382,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public void onMangaChanged(int category) {
         if (category == getMenuItemPosition()) {
-            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+            updateContent();
         }
     }
 
@@ -410,7 +415,7 @@ public class MainActivity extends BaseAppActivity implements
                         .setAction(R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+                                updateContent();
                             }
                         })
                         .show();
@@ -498,12 +503,32 @@ public class MainActivity extends BaseAppActivity implements
         mListLoader.updateLayout(grid, spans, thumbSize);
     }
 
+    @Override
+    public void onLinkClicked(String scheme, String url) {
+        switch (url) {
+            case "update":
+                updateContent();
+                break;
+        }
+    }
 
+    private void updateContent() {
+        if (selectedItem == R.id.nav_local_storage
+                || selectedItem == R.id.nav_action_favourites
+                || selectedItem == R.id.nav_action_history
+                || checkConnection()) {
+            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        } else {
+            mListLoader.clearItemsLazy();
+            mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
+            mTextViewHolder.setVisibility(View.VISIBLE);
+        }
+    }
 
-    private class OpenLastTask extends AsyncTask<Void, Void, Intent> implements DialogInterface.OnCancelListener {
+    private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;
 
-        public OpenLastTask() {
+        OpenLastTask() {
             pd = new ProgressDialog(MainActivity.this);
             pd.setIndeterminate(true);
             pd.setCancelable(true);
@@ -518,14 +543,20 @@ public class MainActivity extends BaseAppActivity implements
         }
 
         @Override
-        protected Intent doInBackground(Void... params) {
+        protected Pair<Integer, Intent> doInBackground(Void... params) {
             try {
                 HistoryProvider historyProvider = HistoryProvider.getInstacne(MainActivity.this);
-                MangaInfo info = historyProvider.getList(0, 0, 0).get(0);
+                MangaInfo info = historyProvider.getLast();
+                if (info == null) {
+                    return new Pair<>(2, null);
+                }
                 MangaProvider provider;
                 if (info.provider.equals(LocalMangaProvider.class)) {
                     provider = LocalMangaProvider.getInstacne(MainActivity.this);
                 } else {
+                    if (!checkConnection()) {
+                        return new Pair<>(1, null);
+                    }
                     provider = (MangaProvider) info.provider.newInstance();
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
@@ -534,25 +565,37 @@ public class MainActivity extends BaseAppActivity implements
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
                 intent.putExtra("chapter", hs.getChapter());
                 intent.putExtra("page", hs.getPage());
-                return intent;
+                return new Pair<>(0, intent);
             } catch (Exception e) {
-                return null;
+                FileLogger.getInstance().report(e);
+                return new Pair<>(3, null);
             }
         }
 
         @Override
-        protected void onPostExecute(Intent intent) {
-            super.onPostExecute(intent);
+        protected void onPostExecute(Pair<Integer,Intent> result) {
+            super.onPostExecute(result);
             pd.dismiss();
-            if (intent != null) {
-                startActivity(intent);
-            } else {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setCancelable(true)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setMessage(R.string.history_empty)
-                        .create().show();
+            int msg;
+            switch (result.first) {
+                case 0:
+                    startActivity(result.second);
+                    return;
+                case 1:
+                    msg = R.string.no_network_connection;
+                    break;
+                case 2:
+                    msg = R.string.history_empty;
+                    break;
+                default:
+                    msg = R.string.error;
+                    break;
             }
+            new AlertDialog.Builder(MainActivity.this)
+                    .setCancelable(true)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .setMessage(getString(msg))
+                    .create().show();
         }
 
         @Override

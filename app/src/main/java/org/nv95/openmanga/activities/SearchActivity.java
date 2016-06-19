@@ -8,19 +8,21 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
@@ -28,7 +30,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
  */
 public class SearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
-        ListModeHelper.OnListModeListener {
+        ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener {
     //views
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
@@ -50,6 +52,7 @@ public class SearchActivity extends BaseAppActivity implements
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
+        mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         Bundle extras = getIntent().getExtras();
         query = extras.getString("query");
         title = extras.getString("title");
@@ -69,7 +72,7 @@ public class SearchActivity extends BaseAppActivity implements
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        mLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        updateContent();
     }
 
     @Override
@@ -165,4 +168,22 @@ public class SearchActivity extends BaseAppActivity implements
         mLoader.updateLayout(grid, spans, thumbSize);
     }
 
+    @Override
+    public void onLinkClicked(String scheme, String url) {
+        switch (url) {
+            case "update":
+                updateContent();
+                break;
+        }
+    }
+
+    private void updateContent() {
+        if (checkConnection()) {
+            mLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        } else {
+            mLoader.clearItemsLazy();
+            mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
+            mTextViewHolder.setVisibility(View.VISIBLE);
+        }
+    }
 }

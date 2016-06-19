@@ -1,15 +1,21 @@
 package org.nv95.openmanga.activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -168,5 +174,56 @@ public abstract class BaseAppActivity extends AppCompatActivity {
 
     public void showToast(@StringRes int text, int gravity, int delay) {
         showToast(getString(text), gravity, delay);
+    }
+
+    public boolean checkConnection() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        return ni != null && ni.isAvailable() && ni.isConnected();
+    }
+
+    public boolean checkConnectionWithToast() {
+        if (checkConnection()) {
+            return true;
+        } else {
+            Toast.makeText(this, R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    public boolean checkConnectionWithSnackbar(View view) {
+        if (checkConnection()) {
+            return true;
+        } else {
+            Snackbar.make(view, R.string.no_network_connection, Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    public boolean checkConnectionWithSnackbar(View view, View.OnClickListener callback) {
+        if (checkConnection()) {
+            return true;
+        } else {
+            Snackbar.make(view, R.string.no_network_connection, Snackbar.LENGTH_SHORT)
+                    .setAction(R.string.retry, callback)
+                    .show();
+            return false;
+        }
+    }
+
+
+    public boolean checkConnectionWithDialog(DialogInterface.OnDismissListener onDismissListener) {
+        if (checkConnection()) {
+            return true;
+        } else {
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.no_network_connection)
+                    .setTitle(R.string.error)
+                    .setNegativeButton(R.string.close, null)
+                    .setOnDismissListener(onDismissListener)
+                    .setCancelable(true)
+                    .create().show();
+            return false;
+        }
     }
 }

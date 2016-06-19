@@ -92,7 +92,11 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 mFab.setEnabled(true);
             }
         } else {
-            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (checkConnectionWithSnackbar(mAppBarLayout, this)) {
+                new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                mProgressBar.setVisibility(View.GONE);
+            }
         }
 
         if(TextUtils.isEmpty(mangaSummary.summary)){
@@ -120,7 +124,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 // TODO: 26.01.16
                 break;
             case R.id.snackbar_action:
-                new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if (checkConnectionWithSnackbar(mAppBarLayout, this)) {
+                    new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
                 break;
         }
     }
