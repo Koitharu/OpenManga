@@ -1,7 +1,6 @@
 package org.nv95.openmanga.services;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -24,6 +23,7 @@ import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.utils.OneShotNotifier;
 
 /**
  * Created by nv95 on 18.03.16.
@@ -126,7 +126,7 @@ public class ScheduledService extends Service {
                     notification = builder.getNotification();
                 }
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
-                ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(678, notification);
+                new OneShotNotifier(ScheduledService.this).notify(678, notification);
             }
             stopSelf();
         }
@@ -144,7 +144,7 @@ public class ScheduledService extends Service {
                     .autoCancel()
                     .image(R.mipmap.ic_launcher)
                     .intentService(new Intent(ScheduledService.this, UpdateService.class).putExtra("url", values[0].getUrl()))
-                    .update(555, R.string.app_update_avaliable);
+                    .notifyOnce(555, R.string.app_update_avaliable, values[0].getVersionCode());
         }
 
     }
