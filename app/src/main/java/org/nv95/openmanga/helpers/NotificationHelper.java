@@ -1,7 +1,6 @@
 package org.nv95.openmanga.helpers;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,19 +11,19 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.OneShotNotifier;
 
 /**
  * Created by nv95 on 13.02.16.
  */
 public class NotificationHelper {
     private final Context mContext;
-    private final NotificationManager mNotificationManager;
+    private final OneShotNotifier mNotifier;
     private final NotificationCompat.Builder mNotificationBuilder;
 
     public NotificationHelper(Context context) {
         mContext = context;
-        mNotificationManager = (NotificationManager) mContext
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotifier = new OneShotNotifier(mContext);
         mNotificationBuilder = new NotificationCompat.Builder(context);
     }
 
@@ -118,7 +117,16 @@ public class NotificationHelper {
 
     public void update(int id, @Nullable String ticker) {
         mNotificationBuilder.setTicker(ticker);
-        mNotificationManager.notify(id, notification());
+        mNotifier.notify(id, notification());
+    }
+
+    public void notifyOnce(int id, @StringRes int ticker, int version) {
+        notifyOnce(id, mContext.getString(ticker), version);
+    }
+
+    public void notifyOnce(int id, String ticker, int version) {
+        mNotificationBuilder.setTicker(ticker);
+        mNotifier.notifyOnce(id, notification(), version);
     }
 
     public Notification notification() {

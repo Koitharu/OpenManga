@@ -214,6 +214,26 @@ public class MangaStore {
         return writable ? mDatabaseHelper.getWritableDatabase() : mDatabaseHelper.getReadableDatabase();
     }
 
+    public static File getMangasDir(Context context) {
+        final String dir = PreferenceManager.getDefaultSharedPreferences(context).getString("mangadir", "");
+        final File res = dir.length() == 0 ? context.getExternalFilesDir("saved") : new File(dir);
+        assert res != null;
+        if (!res.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            res.mkdirs();
+        }
+        return res;
+    }
+
+    public static File getMangaDir(Context context, int id) {
+        final File res = new File(getMangasDir(context), String.valueOf(id));
+        if (!res.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            res.mkdirs();
+        }
+        return res;
+    }
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         private static final int DB_VERSION = 1;
@@ -254,25 +274,5 @@ public class MangaStore {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         }
-    }
-
-    public static File getMangasDir(Context context) {
-        final String dir = PreferenceManager.getDefaultSharedPreferences(context).getString("mangadir", "");
-        final File res = dir.length() == 0 ? context.getExternalFilesDir("saved") : new File(dir);
-        assert res != null;
-        if (!res.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            res.mkdirs();
-        }
-        return res;
-    }
-
-    public static File getMangaDir(Context context, int id) {
-        final File res = new File(getMangasDir(context), String.valueOf(id));
-        if (!res.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            res.mkdirs();
-        }
-        return res;
     }
 }
