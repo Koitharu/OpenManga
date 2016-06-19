@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.Constants;
@@ -48,6 +49,10 @@ public class DownloadService extends Service {
     private WeakReference<DownloadTask> mTaskReference = new WeakReference<>(null);
 
     public static void start(final Context context, final MangaSummary manga) {
+        start(context, manga, R.string.chapters_to_save);
+    }
+
+    public static void start(final Context context, final MangaSummary manga, @StringRes int dialogTitle) {
         final int len = manga.chapters.size();
         final MangaSummary mangaCopy = new MangaSummary(manga);
         mangaCopy.chapters.clear();
@@ -72,7 +77,7 @@ public class DownloadService extends Service {
                         checked.put(which, isChecked);
                     }
                 })
-                .setSheetTitle(R.string.chapters_to_save)
+                .setSheetTitle(dialogTitle)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
                     @Override
