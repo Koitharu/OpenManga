@@ -169,7 +169,7 @@ public class SearchActivity extends BaseAppActivity implements
     }
 
     @Override
-    public void onLinkClicked(String scheme, String url) {
+    public void onLinkClicked(TextView view, String scheme, String url) {
         switch (url) {
             case "update":
                 updateContent();

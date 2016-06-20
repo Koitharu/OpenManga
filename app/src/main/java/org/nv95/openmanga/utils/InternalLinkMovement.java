@@ -53,7 +53,7 @@ public class InternalLinkMovement extends LinkMovementMethod {
             if (link.length != 0) {
                 if (action == MotionEvent.ACTION_UP) {
                     Selection.removeSelection(buffer);
-                    processClick(widget.getContext(), link[0].getURL());
+                    processClick(widget.getContext(), link[0].getURL(), widget);
                 } else {
                     Selection.setSelection(buffer,
                             buffer.getSpanStart(link[0]),
@@ -69,7 +69,7 @@ public class InternalLinkMovement extends LinkMovementMethod {
         return super.onTouchEvent(widget, buffer, event);
     }
 
-    private void processClick(Context context, String url) {
+    private void processClick(Context context, String url, TextView textView) {
         String[] parts = url.split(":");
         if (parts.length != 2) {
             FileLogger.getInstance().report("Invalid link: " + url);
@@ -105,12 +105,12 @@ public class InternalLinkMovement extends LinkMovementMethod {
                 break;
             default:
                 if (mLinkClickListener != null) {
-                    mLinkClickListener.onLinkClicked(parts[0], parts[1]);
+                    mLinkClickListener.onLinkClicked(textView, parts[0], parts[1]);
                 }
         }
     }
 
     public interface OnLinkClickListener {
-        void onLinkClicked(String scheme, String url);
+        void onLinkClicked(TextView view, String scheme, String url);
     }
 }
