@@ -16,6 +16,8 @@ import org.nv95.openmanga.R;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Created by nv95 on 16.10.15.
@@ -90,7 +92,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
         }).create().show();
     }
 
-    public void report(String msg) {
+    public synchronized void report(String msg) {
         try {
             File file = getLogFile(context);
             FileOutputStream ostream = new FileOutputStream(file, true);
@@ -105,7 +107,9 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
     }
 
     public void report(Exception e) {
-        report(e.getMessage());
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        report(e.getMessage() + "\n\tStack trace:\n" + sw.toString());
     }
 
     @Override
