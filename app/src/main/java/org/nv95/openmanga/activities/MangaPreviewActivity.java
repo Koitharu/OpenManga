@@ -92,11 +92,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 mFab.setEnabled(true);
             }
         } else {
-            if (checkConnectionWithSnackbar(mAppBarLayout, this)) {
-                new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            } else {
-                mProgressBar.setVisibility(View.GONE);
-            }
+            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         if(TextUtils.isEmpty(mangaSummary.summary)){
@@ -124,9 +120,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 // TODO: 26.01.16
                 break;
             case R.id.snackbar_action:
-                if (checkConnectionWithSnackbar(mAppBarLayout, this)) {
-                    new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+                new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
         }
     }
@@ -285,7 +279,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             super.onPostExecute(mangaSummary);
             if (mangaSummary == null) {
                 mFab.hide();
-                Snackbar.make(mAppBarLayout, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mAppBarLayout, checkConnection() ? R.string.loading_error : R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.retry, MangaPreviewActivity.this)
                         .show();
                 return;
