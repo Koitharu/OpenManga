@@ -32,8 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|top"
+        android:background="?selectableItemBackground"
         android:contentDescription="@string/menu"
-        android:padding="5dp"
+        android:minHeight="?actionBarSize"
+        android:minWidth="?actionBarSize"
+        android:scaleType="center"
         android:src="@drawable/ic_action_navigation_more_vert" />
 
     <FrameLayout
@@ -64,8 +67,8 @@
     </FrameLayout>
 
     <org.nv95.openmanga.utils.imagecontroller.StatusBarChecker
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </android.support.design.widget.CoordinatorLayout>

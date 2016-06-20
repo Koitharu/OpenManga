@@ -130,7 +130,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
 
     @SuppressLint("SetTextI18n")
     public ReaderMenuDialog progress(int progress, int max) {
-        mProgressBar.setMax(max);
+        mProgressBar.setMax(max - 1);
         mProgressBar.setProgress(progress);
         mButtonNav.setText((progress+1) + "/" + max);
         return this;
