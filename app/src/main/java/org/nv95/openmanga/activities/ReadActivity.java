@@ -107,8 +107,12 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     @Override
     protected void onPause() {
-        HistoryProvider.addToHistory(this, mangaSummary, chapterId, mPager.getCurrentPageIndex());
+        saveHistory();
         super.onPause();
+    }
+
+    private void saveHistory() {
+        HistoryProvider.getInstacne(this).add(mangaSummary, chapterId, mPager.getCurrentPageIndex());
     }
 
     @Override
@@ -135,6 +139,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageView_menu:
+                saveHistory();
                 int favId = FavouritesProvider.getInstacne(this)
                         .getCategory(mangaSummary);
                 String fav;
@@ -285,7 +290,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     }
 
-    void setFullScreen(){
+    private void setFullScreen(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
