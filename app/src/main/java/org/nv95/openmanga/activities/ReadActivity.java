@@ -54,7 +54,7 @@ import java.util.ArrayList;
  */
 public class ReadActivity extends BaseAppActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
-        MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener, DialogInterface.OnDismissListener {
+        MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener {
     //views
     private MangaPager mPager;
     private View mLoader;
@@ -97,9 +97,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
         chapter = mangaSummary.getChapters().get(chapterId);
         mPager.setOffscreenPageLimit(3);
-        if (checkConnectionWithDialog(this)) {
-            new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void initParams(Bundle b){
@@ -345,7 +343,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         }
     }
 
-    void setArrowPosition(int gravity){
+    private void setArrowPosition(int gravity){
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mImageViewArrow.getLayoutParams();
         params.gravity = Gravity.CENTER_VERTICAL | gravity;
         params.leftMargin = gravity == GravityCompat.START ? -mImageViewArrow.getWidth() : 0;
@@ -355,7 +353,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mImageViewArrow.getParent().requestLayout();
     }
 
-    void loadChapter(){
+    private void loadChapter(){
         chapter = mangaSummary.getChapters().get(chapterId);
         new LoadPagesTask().execute();
     }
@@ -495,11 +493,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mSwipeFrame.setAlpha((Float) animation.getAnimatedValue());
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        finish();
-    }
-
     private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
 
         @Override
@@ -513,13 +506,15 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             super.onPostExecute(mangaPages);
             mLoader.setVisibility(View.GONE);
             if (mangaPages == null) {
-                new AlertDialog.Builder(ReadActivity.this).setMessage(R.string.loading_error).setTitle(R.string.app_name)
-                        .setOnCancelListener(this).setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ReadActivity.this.finish();
-                    }
-                }).create().show();
+                new AlertDialog.Builder(ReadActivity.this).setMessage(checkConnection() ? R.string.loading_error : R.string.no_network_connection)
+                        .setTitle(R.string.app_name)
+                        .setOnCancelListener(this)
+                        .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ReadActivity.this.finish();
+                            }
+                        }).create().show();
                 return;
             }
             if (pageId == -1) {
