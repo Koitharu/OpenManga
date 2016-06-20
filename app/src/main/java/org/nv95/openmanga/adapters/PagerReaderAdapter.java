@@ -4,12 +4,13 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -17,37 +18,25 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.imagecontroller.PageLoadAbs;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by nv95 on 30.09.15.
  */
-public class PagerReaderAdapter extends PagerAdapter implements View.OnClickListener {
+public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMovement.OnLinkClickListener {
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean isLandOrientation;
-    SparseArray<ViewHolder> views = new SparseArray<>();
+    private SparseArray<ViewHolder> views = new SparseArray<>();
+    private final InternalLinkMovement mLinkMovement;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
         pages = mangaPages;
-    }
-
-    @Override
-    public void onClick(View v) {
-        Object tag = v.getTag();
-        if (tag == null || !(tag instanceof ViewHolder)) {
-            return;
-        }
-        ViewHolder holder = (ViewHolder) tag;
-        MangaPage page = pages.get(holder.position);
-        holder.loadTask = new PageLoad(holder, page);
-        holder.loadTask.load();
+        mLinkMovement = new InternalLinkMovement(this);
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
@@ -79,9 +68,9 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
 //                         : SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
 //        );
         holder.ssiv.setScaleAndCenter(isLandOrientation ? holder.ssiv.getMaxScale() -.2f : holder.ssiv.getMinScale(), new PointF(0,0));
-        holder.buttonRetry = (Button) view.findViewById(R.id.button_retry);
-        holder.buttonRetry.setTag(holder);
-        holder.buttonRetry.setOnClickListener(this);
+        holder.textView = (TextView) view.findViewById(R.id.textView_holder);
+        holder.textView.setMovementMethod(mLinkMovement);
+        holder.textView.setTag(holder);
 //        holder.textView = (TextView) view.findViewById(R.id.textView_progress);
 
         // Работаю над отображением не трогай
@@ -123,11 +112,26 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         return pages.get(position);
     }
 
+    @Override
+    public void onLinkClicked(TextView view, String scheme, String url) {
+        switch (url) {
+            case "retry":
+                Object tag = view.getTag();
+                if (tag == null || !(tag instanceof ViewHolder)) {
+                    return;
+                }
+                final ViewHolder holder = (ViewHolder) tag;
+                MangaPage page = pages.get(holder.position);
+                holder.loadTask = new PageLoad(holder, page);
+                holder.loadTask.load();
+                break;
+        }
+    }
+
     private static class ViewHolder {
         ProgressBar progressBar;
         SubsamplingScaleImageView ssiv;
-//        TextView textView;
-        Button buttonRetry;
+        TextView textView;
         @Nullable
         PageLoad loadTask;
         int position;
@@ -146,7 +150,7 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         protected void preLoad(){
             viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setIndeterminate(true);
-            viewHolder.buttonRetry.setVisibility(View.GONE);
+            viewHolder.textView.setVisibility(View.GONE);
         }
 
         @Override
@@ -165,7 +169,15 @@ public class PagerReaderAdapter extends PagerAdapter implements View.OnClickList
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.buttonRetry.setVisibility(View.VISIBLE);
+            viewHolder.textView.setVisibility(View.VISIBLE);
+            viewHolder.textView.setText(
+                    Html.fromHtml(
+                            view.getContext().getString(
+                                    R.string.error_loadimage_html,
+                                    failReason.getCause().getMessage()
+                            )
+                    )
+            );
             FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
         }
 
