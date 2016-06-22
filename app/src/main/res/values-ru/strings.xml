@@ -223,4 +223,7 @@
     <string name="storage_upgrading">Обновление локальных данных…</string>
     <string name="no_network_connection">Подключение к сети отсутствует</string>
     <string name="no_network_connection_html"><![CDATA[Подключение к сети отсутствует.<br/>Включите <a href=\"settings:network\">передачу данных</a> или <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><a href=\"app:update\">Попробовать снова</a>]]></string>
+    <string name="delete_manga">Удалить мангу</string>
+    <string name="full_match">Полное соответствие</string>
+    <string name="sources">Источники</string>
 </resources>

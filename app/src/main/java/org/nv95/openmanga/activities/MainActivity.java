@@ -38,6 +38,7 @@ import org.nv95.openmanga.adapters.MangaListAdapter;
 import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
+import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.MangaInfo;
@@ -269,18 +270,22 @@ public class MainActivity extends BaseAppActivity implements
                 if (mProvider == null) {
                     return true;
                 }
-                final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
-                final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
-                FilterSortDialog dialog = new FilterSortDialog(this, this);
-                if (hasGenres) {
-                    dialog.genres(mProvider.getGenresTitles(this), mGenre,
-                            getString(mProvider instanceof FavouritesProvider
-                                    ? R.string.action_category : R.string.action_genre));
+                if (mProvider instanceof RecommendationsProvider) {
+                    new RecommendationsPrefDialog(this, this).show();
+                } else {
+                    final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
+                    final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
+                    FilterSortDialog dialog = new FilterSortDialog(this, this);
+                    if (hasGenres) {
+                        dialog.genres(mProvider.getGenresTitles(this), mGenre,
+                                getString(mProvider instanceof FavouritesProvider
+                                        ? R.string.action_category : R.string.action_genre));
+                    }
+                    if (hasSort) {
+                        dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.getSort(this, mProvider));
+                    }
+                    dialog.show();
                 }
-                if (hasSort) {
-                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.getSort(this, mProvider));
-                }
-                dialog.show();
                 return true;
             case R.id.action_histclear:
                 if (mProvider instanceof HistoryProvider) {
@@ -314,7 +319,7 @@ public class MainActivity extends BaseAppActivity implements
         mGenre = genre;
         setSubtitle(genreName);
         MangaProviderManager.setSort(MainActivity.this, mProvider, sort);
-        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        updateContent();
     }
 
     @Override
