@@ -40,7 +40,7 @@
         android:layout_below="@android:id/text1"
         android:visibility="gone" />
 
-    <ImageView
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/divider"

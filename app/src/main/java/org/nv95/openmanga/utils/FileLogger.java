@@ -24,11 +24,11 @@ import java.io.StringWriter;
  */
 public class FileLogger implements Thread.UncaughtExceptionHandler {
     private static FileLogger instance;
-    private Context context;
     private Thread.UncaughtExceptionHandler oldHandler;
+    private final File mLogFile;
 
     private FileLogger(Context context) {
-        this.context = context;
+        mLogFile = getLogFile(context);
     }
 
     public static FileLogger getInstance() {
@@ -49,9 +49,8 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     private void upgrade() {
         try {
-            File file = getLogFile(context);
-            file.delete();
-            FileOutputStream ostream = new FileOutputStream(file, true);
+            mLogFile.delete();
+            FileOutputStream ostream = new FileOutputStream(mLogFile, true);
             ostream.write(("Init logger: " + AppHelper.getReadableDateTime(System.currentTimeMillis())
                     + "\nApp version: " + OpenMangaApplication.getVersion()
                     + " (" + OpenMangaApplication.getVersionName()
@@ -94,8 +93,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     public synchronized void report(String msg) {
         try {
-            File file = getLogFile(context);
-            FileOutputStream ostream = new FileOutputStream(file, true);
+            FileOutputStream ostream = new FileOutputStream(mLogFile, true);
             msg += "\n **************** \n";
             ostream.write(msg.getBytes());
             ostream.flush();
@@ -119,7 +117,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
             oldHandler.uncaughtException(thread, ex);
     }
 
-    protected static File getLogFile(Context context) {
+    private static File getLogFile(Context context) {
         return new File(context.getExternalFilesDir("debug"), "log.txt");
     }
 }

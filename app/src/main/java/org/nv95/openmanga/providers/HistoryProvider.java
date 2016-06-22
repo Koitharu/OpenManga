@@ -31,7 +31,7 @@ public class HistoryProvider extends MangaProvider {
     protected static boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
-    private static WeakReference<HistoryProvider> instanceReference = new WeakReference<HistoryProvider>(null);
+    private static WeakReference<HistoryProvider> instanceReference = new WeakReference<>(null);
     StorageHelper dbHelper;
     private Context context;
 
@@ -45,7 +45,7 @@ public class HistoryProvider extends MangaProvider {
         HistoryProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new HistoryProvider(context);
-            instanceReference = new WeakReference<HistoryProvider>(instance);
+            instanceReference = new WeakReference<>(instance);
         }
         return instance;
     }
@@ -78,7 +78,7 @@ public class HistoryProvider extends MangaProvider {
                 last.id = cursor.getInt(0);
                 last.name = cursor.getString(1);
                 last.subtitle = cursor.getString(2);
-                last.summary = cursor.getString(3);
+                last.genres = cursor.getString(3);
                 last.preview = cursor.getString(4);
                 last.path = cursor.getString(5);
                 try {
@@ -123,7 +123,7 @@ public class HistoryProvider extends MangaProvider {
                     manga.id = cursor.getInt(0);
                     manga.name = cursor.getString(1);
                     manga.subtitle = cursor.getString(2);
-                    manga.summary = cursor.getString(3);
+                    manga.genres = cursor.getString(3);
                     manga.preview = cursor.getString(4);
                     manga.path = cursor.getString(5);
                     try {
@@ -173,7 +173,7 @@ public class HistoryProvider extends MangaProvider {
         cv.put("id", mangaInfo.id);
         cv.put("name", mangaInfo.name);
         cv.put("subtitle", mangaInfo.subtitle);
-        cv.put("summary", mangaInfo.summary);
+        cv.put("summary", mangaInfo.genres);
         cv.put("preview", mangaInfo.preview);
         cv.put("provider", mangaInfo.provider.getName());
         cv.put("path", mangaInfo.path);

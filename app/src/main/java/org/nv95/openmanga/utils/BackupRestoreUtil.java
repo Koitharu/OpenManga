@@ -95,7 +95,7 @@ public class BackupRestoreUtil {
             final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            if (context.getPackageManager().resolveActivity(intent, intent.getFlags()) != null) {
+            if (context.getPackageManager().resolveActivity(intent, 0) != null) {
                 builder.setNeutralButton(R.string.import_file, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -21,6 +21,7 @@ public class AboutActivity extends BaseAppActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
         TextView textView = (TextView) findViewById(R.id.textView);
+        assert textView != null;
         textView.setText(Html.fromHtml(AppHelper.getRawString(this, R.raw.about)));
         textView.setMovementMethod(new InternalLinkMovement(null));
     }

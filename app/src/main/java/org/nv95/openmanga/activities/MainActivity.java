@@ -278,7 +278,7 @@ public class MainActivity extends BaseAppActivity implements
                                     ? R.string.action_category : R.string.action_genre));
                 }
                 if (hasSort) {
-                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.GetSort(this, mProvider));
+                    dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.getSort(this, mProvider));
                 }
                 dialog.show();
                 return true;
@@ -313,7 +313,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
         mGenre = genre;
         setSubtitle(genreName);
-        MangaProviderManager.SetSort(MainActivity.this, mProvider, sort);
+        MangaProviderManager.setSort(MainActivity.this, mProvider, sort);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
@@ -439,7 +439,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public MangaList onContentNeeded(int page) {
         try {
-            return mProvider.getList(page, MangaProviderManager.GetSort(this, mProvider), mGenre);
+            return mProvider.getList(page, MangaProviderManager.getSort(this, mProvider), mGenre);
         } catch (Exception e) {
             return null;
         }

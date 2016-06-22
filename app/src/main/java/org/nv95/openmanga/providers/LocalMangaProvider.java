@@ -96,7 +96,7 @@ public class LocalMangaProvider extends MangaProvider {
                     manga.id = cursor.getInt(0);
                     manga.name = cursor.getString(1);
                     manga.subtitle = cursor.getString(2);
-                    manga.summary = cursor.getString(3);
+                    manga.genres = cursor.getString(3);
                     manga.path = cursor.getString(4);
                     manga.preview = manga.path + "/cover";
                     manga.provider = LocalMangaProvider.class;
@@ -235,7 +235,7 @@ public class LocalMangaProvider extends MangaProvider {
                         mi.subtitle = manga.subtitle;
                         mi.id = manga.id;
                         mi.status = manga.status;
-                        mi.summary = manga.summary;
+                        mi.genres = manga.genres;
                         mi.path = link;
                         return provider.getDetailedInfo(mi);
                     }

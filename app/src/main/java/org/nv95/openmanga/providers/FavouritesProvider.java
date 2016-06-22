@@ -35,7 +35,7 @@ public class FavouritesProvider extends MangaProvider {
     private static boolean features[] = {false, false, true, true, true};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
-    private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<FavouritesProvider>(null);
+    private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<>(null);
     private final StorageHelper dbHelper;
     private final Context context;
 
@@ -90,7 +90,7 @@ public class FavouritesProvider extends MangaProvider {
                     manga.id = cursor.getInt(0);
                     manga.name = cursor.getString(1);
                     manga.subtitle = cursor.getString(2);
-                    manga.summary = cursor.getString(3);
+                    manga.genres = cursor.getString(3);
                     manga.preview = cursor.getString(4);
                     manga.path = cursor.getString(5);
                     try {
@@ -147,7 +147,7 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("id", mangaInfo.id);
         cv.put("name", mangaInfo.name);
         cv.put("subtitle", mangaInfo.subtitle);
-        cv.put("summary", mangaInfo.summary);
+        cv.put("summary", mangaInfo.genres);
         cv.put("preview", mangaInfo.preview);
         cv.put("provider", mangaInfo.provider.getName());
         cv.put("path", mangaInfo.path);

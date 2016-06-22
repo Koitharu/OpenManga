@@ -66,7 +66,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.subtitle = "";
             }
-            manga.summary = o.select("a.element-link").text();
+            manga.genres = o.select("a.element-link").text();
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
             try {
                 manga.preview = o.select("img").first().attr("src");
@@ -108,7 +108,7 @@ public class ReadmangaRuProvider extends MangaProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //summary.addDefaultChapter();
+        //genres.addDefaultChapter();
         return summary;
     }
 
@@ -185,7 +185,7 @@ public class ReadmangaRuProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
-            manga.summary = o.select("a.element-link").text();
+            manga.genres = o.select("a.element-link").text();
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = ReadmangaRuProvider.class;

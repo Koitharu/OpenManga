@@ -31,10 +31,10 @@
         android:id="@+id/textView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_toRightOf="@+id/imageView" />
+        android:layout_toRightOf="@+id/imageView"
+        android:maxLines="1" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"

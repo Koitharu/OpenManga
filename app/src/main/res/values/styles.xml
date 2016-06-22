@@ -27,21 +27,6 @@
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
-    <style name="FlatMenuButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:drawablePadding">4dp</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
-
-    <style name="FlatMenuButton.Horizontal" >
-        <item name="android:drawablePadding">@dimen/activity_horizontal_margin</item>
-        <item name="android:gravity">center_vertical|start|right</item>
-        <item name="android:layout_margin">0dp</item>
-        <item name="android:padding">@dimen/activity_horizontal_margin</item>
-    </style>
-
     <style name="FlatMenuButtonSimple" >
         <item name="android:drawablePadding">24dp</item>
         <item name="android:gravity">center_vertical</item>

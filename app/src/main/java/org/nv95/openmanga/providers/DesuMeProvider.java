@@ -68,7 +68,7 @@ public class DesuMeProvider extends MangaProvider {
             manga.subtitle = o.select("span.userTitle").first().text();
             t = o.select("dd").first();
             if (t != null) {
-                manga.summary = t.text();
+                manga.genres = t.text();
             }
             manga.provider = DesuMeProvider.class;
             manga.id = manga.path.hashCode();

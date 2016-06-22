@@ -23,7 +23,7 @@ public class DownloadInfo extends MangaInfo {
     public DownloadInfo(MangaSummary mangaSummary) {
         this.id = mangaSummary.hashCode();
         this.name = mangaSummary.name;
-        this.summary = mangaSummary.summary;
+        this.genres = mangaSummary.genres;
         this.path = mangaSummary.path;
         this.preview = mangaSummary.preview;
         this.subtitle = mangaSummary.subtitle;

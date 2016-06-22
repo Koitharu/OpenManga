@@ -65,15 +65,22 @@ public class AppHelper {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = {"_data"};
             Cursor cursor = null;
-
+            String res = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, null, null, null);
                 int columnIndex = cursor.getColumnIndexOrThrow("_data");
                 if (cursor.moveToFirst()) {
-                    return new File(cursor.getString(columnIndex));
+                    res = cursor.getString(columnIndex);
                 }
             } catch (Exception e) {
                 // Eat it
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+            if (res != null) {
+                return new File(res);
             }
         } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return new File(uri.getPath());

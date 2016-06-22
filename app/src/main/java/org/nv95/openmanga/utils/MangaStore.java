@@ -57,7 +57,7 @@ public class MangaStore {
             cv.put("id", id);
             cv.put("name", manga.name);
             cv.put("subtitle", manga.subtitle);
-            cv.put("summary", manga.summary);
+            cv.put("summary", manga.genres);
             final File dest = getMangaDir(mContext, id);
             cv.put("dir", dest.getPath());
             new SimpleDownload(manga.preview, new File(dest, "cover")).run();

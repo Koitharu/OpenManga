@@ -112,7 +112,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 textViewSubtitle.setText(mData.subtitle);
                 textViewSubtitle.setVisibility(View.VISIBLE);
             }
-            textViewSummary.setText(mData.summary);
+            textViewSummary.setText(mData.genres);
             asyncImageView.setImageThumbAsync(mData.preview, thumbSize);
             // TODO: 17.02.16
             //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);

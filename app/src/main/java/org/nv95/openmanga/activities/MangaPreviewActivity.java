@@ -95,11 +95,11 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-        if(TextUtils.isEmpty(mangaSummary.summary)){
+        if(TextUtils.isEmpty(mangaSummary.genres)){
             tvGenreTitle.setVisibility(View.GONE);
             mTextViewSummary.setVisibility(View.GONE);
         } else
-            mTextViewSummary.setText(mangaSummary.summary);
+            mTextViewSummary.setText(mangaSummary.genres);
     }
 
     @Override
@@ -232,7 +232,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final ArrayList<Long> idlist = new ArrayList<Long>();
+                        final ArrayList<Long> idlist = new ArrayList<>();
                         for (int i = 0;i < len;i++) {
                             if (checked.get(i, false)) {
                                 idlist.add((long) mangaSummary.chapters.get(i).id);

@@ -40,7 +40,7 @@ public class EHentaiProvider extends MangaProvider {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
             manga.subtitle = "";
-            manga.summary = "";
+            manga.genres = "";
             manga.path = o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
@@ -128,7 +128,7 @@ public class EHentaiProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
-            manga.summary = "";
+            manga.genres = "";
             manga.path = o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;

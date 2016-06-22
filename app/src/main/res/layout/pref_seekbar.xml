@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
-    android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:paddingLeft="?android:listPreferredItemPaddingLeft"
+    android:orientation="vertical"
     android:paddingEnd="?android:listPreferredItemPaddingEnd"
-    android:paddingRight="?android:listPreferredItemPaddingRight" >
+    android:paddingLeft="?android:listPreferredItemPaddingLeft"
+    android:paddingRight="?android:listPreferredItemPaddingRight"
+    android:paddingStart="?android:listPreferredItemPaddingStart"
+    android:paddingTop="4dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/title"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
             android:id="@+id/value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_gravity="center"
+            android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:visibility="gone"
-            android:id="@+id/icon" />
+            tools:ignore="ContentDescription" />
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekBar"

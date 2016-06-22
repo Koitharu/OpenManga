@@ -187,7 +187,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
                         .putBoolean("volkeyscroll", mSwitchScrollvolume.isChecked())
                         .putBoolean("brightness", mSwitchBrightness.isChecked())
                         .putInt("brightness_value", mSeekBarBrightness.getProgress())
-                        .commit();
+                        .apply();
             default:
                 if (mCallback != null) {
                     mCallback.onClick(v);

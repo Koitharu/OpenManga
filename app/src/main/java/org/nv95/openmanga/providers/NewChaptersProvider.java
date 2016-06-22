@@ -100,7 +100,7 @@ public class NewChaptersProvider {
     }
 
     public void markAllAsViewed() {
-        final HashMap<Integer, Integer> map = new HashMap<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
         Cursor cursor = null;
         SQLiteDatabase database = null;
         try {

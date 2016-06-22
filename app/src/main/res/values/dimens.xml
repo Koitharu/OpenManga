@@ -3,8 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="details_margin_top">280dp</dimen>
-    <dimen name="drawer_size">280dp</dimen>
-    <dimen name="fab_size">56dp</dimen>
     <dimen name="overscroll_size">140dp</dimen>
 
     <dimen name="thumb_width_list">64dp</dimen>
@@ -15,7 +13,6 @@
     <dimen name="thumb_width_large">148dp</dimen>
 
     <dimen name="padding8">8dp</dimen>
-    <dimen name="padding48">48dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="status_bar_height">25dp</dimen>
 
