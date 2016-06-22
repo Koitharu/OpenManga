@@ -2,10 +2,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/padding8"
-        android:layout_marginBottom="@dimen/padding8"
+        android:layout_margin="@dimen/padding8"
         android:background="?attr/selectableItemBackground" >
 
         <org.nv95.openmanga.components.AsyncImageView
