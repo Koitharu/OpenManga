@@ -51,25 +51,32 @@ public class RecommendationsProvider extends MangaProvider {
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
-            cursor = database.query("favourites",  new String[]{"summary"}, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    String s = cursor.getString(0);
-                    if (s != null && s.length() != 0) {
-                        Collections.addAll(genres, s.split("[,]?\\s"));
-                    }
-                } while (cursor.moveToNext());
+            if (fav) {
+                database = mStorageHelper.getReadableDatabase();
+                cursor = database.query("favourites",  new String[]{"summary"}, null, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        String s = cursor.getString(0);
+                        if (s != null && s.length() != 0) {
+                            Collections.addAll(genres, s.split("[,]?\\s"));
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+                cursor = null;
             }
-            cursor.close();
-            cursor = database.query("history",  new String[]{"summary"}, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                do {
-                    String s = cursor.getString(0);
-                    if (s != null && s.length() != 0) {
-                        Collections.addAll(genres, s.toLowerCase().split("[,]?\\s"));
-                    }
-                } while (cursor.moveToNext());
+            if (hist) {
+                cursor = database.query("history",  new String[]{"summary"}, null, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        String s = cursor.getString(0);
+                        if (s != null && s.length() != 0) {
+                            Collections.addAll(genres, s.toLowerCase().split("[,]?\\s"));
+                        }
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+                cursor = null;
             }
         } finally {
             if (cursor != null) {
