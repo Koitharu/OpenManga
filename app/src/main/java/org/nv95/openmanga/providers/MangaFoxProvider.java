@@ -91,6 +91,7 @@ public class MangaFoxProvider extends MangaProvider {
                 summary.chapters.add(0, chapter);
             }
             summary.readLink = summary.chapters.get(0).readLink;
+            summary.chapters.enumerate();
         } catch (Exception e) {
             e.printStackTrace();
         }

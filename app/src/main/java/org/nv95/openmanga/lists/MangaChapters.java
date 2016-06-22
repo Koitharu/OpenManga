@@ -1,6 +1,8 @@
-package org.nv95.openmanga.items;
+package org.nv95.openmanga.lists;
 
 import android.os.Bundle;
+
+import org.nv95.openmanga.items.MangaChapter;
 
 import java.util.ArrayList;
 
@@ -56,5 +58,11 @@ public class MangaChapters extends ArrayList<MangaChapter> {
             }
         }
         return res;
+    }
+
+    public void enumerate() {
+        for (int i=0;i<size();i++) {
+            get(i).number = i;
+        }
     }
 }

@@ -10,16 +10,19 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 public class MangaChapter {
     public int id;
     public String name;
-    public Class<?> provider;
+    public int number;
     public String readLink;
+    public Class<?> provider;
 
     public MangaChapter() {
+        number = -1;
     }
 
     public MangaChapter(Bundle bundle) {
         id = bundle.getInt("id");
         name = bundle.getString("name");
         readLink = bundle.getString("readLink");
+        number = bundle.getInt("number");
         try {
             provider = Class.forName(bundle.getString("provider"));
         } catch (ClassNotFoundException e) {
@@ -32,6 +35,7 @@ public class MangaChapter {
         bundle.putInt("id", id);
         bundle.putString("name", name);
         bundle.putString("readLink", readLink);
+        bundle.putInt("number", number);
         bundle.putString("provider", provider.getName());
         return bundle;
     }

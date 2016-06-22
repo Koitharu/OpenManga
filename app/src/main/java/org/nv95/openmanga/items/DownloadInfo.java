@@ -1,5 +1,7 @@
 package org.nv95.openmanga.items;
 
+import org.nv95.openmanga.lists.MangaChapters;
+
 import java.util.Arrays;
 
 /**

@@ -8,7 +8,7 @@ import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaChapters;
+import org.nv95.openmanga.lists.MangaChapters;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
@@ -144,12 +144,13 @@ public class LocalMangaProvider extends MangaProvider {
                 summary.description = cursor.getString(0);
             }
             cursor.close();
-            cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
+            cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
             if (cursor.moveToFirst()) {
                 do {
                     chapter = new MangaChapter();
                     chapter.id = cursor.getInt(0);
                     chapter.name = cursor.getString(1);
+                    chapter.number = cursor.getInt(2);
                     chapter.readLink = String.valueOf(chapter.id) + "\n" + String.valueOf(mangaInfo.id) + "\n" + mangaInfo.path;
                     chapter.provider = LocalMangaProvider.class;
                     list.add(chapter);
