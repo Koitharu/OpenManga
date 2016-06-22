@@ -56,6 +56,12 @@ public class DownloadsActivity extends BaseAppActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.downloads, menu);
         return super.onCreateOptionsMenu(menu);
