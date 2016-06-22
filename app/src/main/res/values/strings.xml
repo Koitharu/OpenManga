@@ -250,4 +250,6 @@
     <string name="no_network_connection">No network connection</string>
     <string name="no_network_connection_html"><![CDATA[No network connection available.<br/>Turn on <a href=\"settings:network\">mobile data</a> or <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><a href=\"app:update\">Try again</a>]]></string>
     <string name="error_loadimage_html" formatted="false"><![CDATA[Failed to load image<br/><h3><a href=\"app:retry\">Try again</a></h3><br/><br/>Details:<br/>%s]]></string>
+    <string name="sources">Sources</string>
+    <string name="full_match">Full match</string>
 </resources>

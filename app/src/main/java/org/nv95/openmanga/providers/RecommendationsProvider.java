@@ -1,6 +1,7 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ public class RecommendationsProvider extends MangaProvider {
     private final MangaProviderManager mProviderManager;
     private final Context mContext;
     private final StorageHelper mStorageHelper;
+    private final boolean[] config = new boolean[3];
 
     public RecommendationsProvider(Context context) {
         mContext = context;
@@ -40,10 +42,11 @@ public class RecommendationsProvider extends MangaProvider {
             instance = new RecommendationsProvider(context);
             instanceReference = new WeakReference<>(instance);
         }
+        instance.updateConfig();
         return instance;
     }
 
-    private ArrayList<String> getStatGenres() {
+    private ArrayList<String> getStatGenres(boolean fav, boolean hist) {
         final ArrayList<String> genres = new ArrayList<>();
         SQLiteDatabase database = null;
         Cursor cursor = null;
@@ -98,7 +101,7 @@ public class RecommendationsProvider extends MangaProvider {
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
-        final ArrayList<String> genres = getStatGenres();
+        final ArrayList<String> genres = getStatGenres(config[0], config[1]);
         final ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
@@ -114,7 +117,7 @@ public class RecommendationsProvider extends MangaProvider {
                 int k=0;
                 for (int j=0; j<tempList.size() && k<=groupSize;j++) {
                     manga = tempList.get(j);
-                    if (checkGenres(manga.genres, genres) >= 50) {
+                    if (checkGenres(manga.genres, genres) >= (config[2] ? 100 : 50)) {
                         mangas.add(manga);
                         k++;
                     }
@@ -156,5 +159,12 @@ public class RecommendationsProvider extends MangaProvider {
     @Override
     public boolean hasFeature(int feature) {
         return features[feature];
+    }
+
+    public void updateConfig() {
+        SharedPreferences prefs = mContext.getSharedPreferences("recommendations", Context.MODE_PRIVATE);
+        config[0] = prefs.getBoolean("fav", true);
+        config[1] = prefs.getBoolean("hist", true);
+        config[2] = prefs.getBoolean("match", false);
     }
 }
