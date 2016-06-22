@@ -50,14 +50,14 @@ public class MangaProviderManager {
         update();
     }
 
-    public static void SetSort(Context context, MangaProvider provider, int sort) {
+    public static void setSort(Context context, MangaProvider provider, int sort) {
         context.getSharedPreferences("sort", Context.MODE_PRIVATE)
                 .edit()
                 .putInt(provider.getName(), sort)
-                .commit();
+                .apply();
     }
 
-    public static int GetSort(Context context, MangaProvider provider) {
+    public static int getSort(Context context, MangaProvider provider) {
         return context.getSharedPreferences("sort", Context.MODE_PRIVATE).getInt(provider.getName(), 0);
     }
 
@@ -135,7 +135,7 @@ public class MangaProviderManager {
         return new ProviderSelectAdapter();
     }
 
-    public enum Language {EN, RU, TR, MULTI}
+    private enum Language {EN, RU, TR, MULTI, JP}
 
     public static class ProviderSumm {
         public String name;

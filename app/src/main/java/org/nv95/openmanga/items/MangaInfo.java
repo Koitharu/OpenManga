@@ -16,7 +16,7 @@ public class MangaInfo {
     public int id;
     public String name;
     public String subtitle;
-    public String summary;
+    public String genres;
     public String path;
     public String preview;
     public Class<?> provider;
@@ -24,9 +24,9 @@ public class MangaInfo {
     @Nullable
     public String extra;
 
-    public MangaInfo(String name, String summary, String path, String preview) {
+    public MangaInfo(String name, String genres, String path, String preview) {
         this.name = name;
-        this.summary = summary;
+        this.genres = genres;
         this.path = path;
         this.preview = preview;
         this.status = STATUS_UNKNOWN;
@@ -36,7 +36,7 @@ public class MangaInfo {
     public MangaInfo(Bundle bundle) {
         id = bundle.getInt("id");
         name = bundle.getString("name");
-        summary = bundle.getString("summary");
+        genres = bundle.getString("genres");
         path = bundle.getString("path");
         preview = bundle.getString("preview");
         subtitle = bundle.getString("subtitle");
@@ -58,7 +58,7 @@ public class MangaInfo {
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         bundle.putString("name", name);
-        bundle.putString("summary", summary);
+        bundle.putString("genres", genres);
         bundle.putString("path", path);
         bundle.putString("preview", preview);
         bundle.putString("subtitle", subtitle);

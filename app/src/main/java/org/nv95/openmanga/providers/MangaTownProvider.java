@@ -37,9 +37,9 @@ public class MangaTownProvider extends MangaProvider {
             manga.name = o.select("p.title").first().text();
             manga.subtitle = "";
             try {
-                manga.summary = o.select("p").get(1).text();
+                manga.genres = o.select("p").get(1).text();
             } catch (Exception e) {
-                manga.summary = "";
+                manga.genres = "";
             }
             manga.path = o.select("a").first().attr("href");
             try {
@@ -75,7 +75,7 @@ public class MangaTownProvider extends MangaProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //summary.addDefaultChapter();
+        //genres.addDefaultChapter();
         return summary;
     }
 

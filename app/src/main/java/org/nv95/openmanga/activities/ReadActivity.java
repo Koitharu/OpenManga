@@ -44,6 +44,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.imagecontroller.TouchGridDetector;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private View mSwipeFrame;
     private TextView mTextViewNext;
     private ImageView mImageViewArrow;
+    private TouchGridDetector mGridDetector;
     //data
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -80,6 +82,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mSwipeFrame = findViewById(R.id.swipeFrame);
         mTextViewNext = (TextView) findViewById(R.id.textView_title);
         mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
+        mGridDetector = (TouchGridDetector) findViewById(R.id.gridDetector);
         //noinspection ConstantConditions
         findViewById(R.id.imageView_menu).setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
@@ -313,7 +316,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         int direction = Integer.parseInt(prefs.getString("direction", "0"));
         mPager.setReverse(direction > 1);
         mPager.setVertical(direction == 1);
-        if (prefs.getBoolean("keep_screen", false)) {
+        if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -403,8 +406,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                     loadChapter();
                 }
                 break;
-            default:
-                return;
         }
     }
 

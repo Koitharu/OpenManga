@@ -51,17 +51,15 @@
     <string name="already_saved">This manga is already saved on your device</string>
     <string name="action_clear_cache">Clear image cache</string>
     <string name="cache_clearing">Clearing cache…</string>
-    <string name="cache_size">Cache size: %.1f Mb</string>
+    <string name="cache_size" formatted="false">Cache size: %.1f Mb</string>
     <string name="size_calculating">Calculating size…</string>
     <string name="action_histclear">Clear history</string>
     <string name="history_will_cleared">History will be erased</string>
     <string name="file_not_found">File not found</string>
     <string name="error">An error has occurred</string>
-    <string name="manga_delete_confirm">This manga will be deleted from local storage</string>
-    <string name="saving_cancelled">Saving was cancelled</string>
     <string name="action_clear_search_hist">Clear search history</string>
     <string name="about">About</string>
-    <string name="version">Version: %s</string>
+    <string name="version" formatted="false">Version: %s</string>
     <string name="sort_updated">Updated</string>
     <string name="sort_popular">Popular</string>
     <string name="sort_latest">Latest</string>
@@ -100,7 +98,6 @@
     <string name="sort_random">Random</string>
     <string name="scroll_by_volkeys">Scroll by volume keys</string>
     <string name="chapters_to_save">Save manga</string>
-    <string name="all">All</string>
     <string name="no_chapters_found">No chapters found</string>
     <string name="genre_yuri">Yuri</string>
     <string name="genre_fantasy">Fantasy</string>
@@ -212,7 +209,6 @@
     <string name="unfavourited">Removed from favourites</string>
     <string name="apply">Apply</string>
     <string name="brightness_value">Brightness value</string>
-    <string name="undo">Undo</string>
     <string name="check_updates">Check for updates</string>
     <string name="update">Update</string>
     <string name="unknown">Unknown</string>
@@ -223,7 +219,6 @@
     <string name="menu">Menu</string>
     <string name="genre_superpower">Super power</string>
     <string name="genre_hentai">Hentai</string>
-    <string name="tip_genre_sort">Tap on title to filter mangas by genre and select sort order</string>
     <string name="tip_reader_menu">Click to open menu</string>
     <string name="tip_chapter_checking">Enable automatic checking and receive notifications about new chapters for favourite mangas</string>
     <string name="select_image">Select image</string>
@@ -241,9 +236,8 @@
     <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
     <string name="action_recommendations">Recommendations</string>
     <string name="no_options_available">No options available</string>
-    <string name="next_chapter">Next chapter\n\n%s</string>
-    <string name="prev_chapter">Previous chapter\n\n%s</string>
-    <string name="tip_mark_read">Swipe item to mark all new chapters as viewed</string>
+    <string name="next_chapter" formatted="false">Next chapter\n\n%s</string>
+    <string name="prev_chapter" formatted="false">Previous chapter\n\n%s</string>
     <string name="filter">Filter</string>
     <string name="wrap_long_pages">Wraps long page images</string>
     <string name="image_shifting_summary">Useful if page has non standard proportions</string>

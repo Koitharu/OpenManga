@@ -172,9 +172,9 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
             viewHolder.textView.setVisibility(View.VISIBLE);
             viewHolder.textView.setText(
                     Html.fromHtml(
-                            view.getContext().getString(
+                            viewHolder.textView.getContext().getString(
                                     R.string.error_loadimage_html,
-                                    failReason.getCause().getMessage()
+                                    failReason == null ? "unknown" : failReason.getCause().getMessage()
                             )
                     )
             );

@@ -33,7 +33,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY,"
                 + "name TEXT,"
                 + "subtitle TEXT,"
-                + "summary TEXT,"
+                + "genres TEXT,"
                 + "preview TEXT,"
                 + "provider TEXT,"
                 + "path TEXT,"
@@ -45,7 +45,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY,"
                 + "name TEXT,"
                 + "subtitle TEXT,"
-                + "summary TEXT,"
+                + "genres TEXT,"
                 + "preview TEXT,"
                 + "provider TEXT,"
                 + "path TEXT,"
@@ -65,34 +65,6 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
                 + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
                 + ");");
-        /*
-        //db.execSQL("DROP TABLE IF EXISTS local_storage");
-        db.execSQL("CREATE TABLE local_storage ("       //менять нельзя ничего
-                + "id INTEGER PRIMARY KEY,"                 //0
-                + "name TEXT,"                              //1
-                + "subtitle TEXT,"                          //2
-                + "summary TEXT,"                           //3
-                + "preview TEXT,"                           //4
-                + "provider TEXT,"                          //5
-                + "path TEXT,"                              //6 - хеш readlink-а - путь и id
-                + "description TEXT,"                       //7
-                + "timestamp INTEGER"                       //8
-                + ");");
-
-        db.execSQL("CREATE TABLE local_chapters ("
-                + "number INTEGER PRIMARY KEY,"                 //0
-                + "id INTEGER,"                                 //1 - хеш readlink-а
-                + "mangaId INTEGER,"                            //2 - dir - соответствует path из storage
-                + "name TEXT"                                   //3
-                + ");");
-
-        db.execSQL("CREATE TABLE local_pages ("
-                + "number INTEGER PRIMARY KEY,"                 //0
-                + "id INTEGER,"                                 //1
-                + "chapterId INTEGER,"                          //2
-                + "path TEXT"                                   //3
-                + ");");
-        */
     }
 
     @Override
@@ -230,15 +202,14 @@ public class StorageHelper extends SQLiteOpenHelper {
     public static CopyOnWriteArraySet<String> getTableNames(SQLiteDatabase db) {
         CopyOnWriteArraySet<String> result = new CopyOnWriteArraySet<>();
         try {
-            StringBuilder sb = new StringBuilder();
-            sb.append("SELECT name FROM sqlite_master ");
-            sb.append("WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ");
-            sb.append("UNION ALL ");
-            sb.append("SELECT name FROM sqlite_temp_master ");
-            sb.append("WHERE type IN ('table','view') ");
-            sb.append("ORDER BY 1");
+            String s = "SELECT name FROM sqlite_master " +
+                    "WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' " +
+                    "UNION ALL " +
+                    "SELECT name FROM sqlite_temp_master " +
+                    "WHERE type IN ('table','view') " +
+                    "ORDER BY 1";
 
-            Cursor c = db.rawQuery(sb.toString(), null);
+            Cursor c = db.rawQuery(s, null);
             c.moveToFirst();
 
             while (c.moveToNext()) {

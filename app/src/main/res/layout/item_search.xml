@@ -15,6 +15,6 @@
     android:paddingLeft="?android:listPreferredItemPaddingLeft"
     android:paddingRight="?android:listPreferredItemPaddingRight"
     android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:singleLine="true"
     android:textAppearance="?android:textAppearanceMedium"
-    android:textColor="@android:color/black" />
+    android:textColor="@android:color/black"
+    android:maxLines="1" />

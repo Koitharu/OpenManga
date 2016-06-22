@@ -16,7 +16,7 @@ public class MangaSummary extends MangaInfo {
     public MangaSummary(MangaInfo mangaInfo) {
         id = mangaInfo.id;
         this.name = mangaInfo.name;
-        this.summary = mangaInfo.summary;
+        this.genres = mangaInfo.genres;
         this.path = mangaInfo.path;
         this.preview = mangaInfo.preview;
         this.subtitle = mangaInfo.subtitle;
@@ -29,7 +29,7 @@ public class MangaSummary extends MangaInfo {
     public MangaSummary(MangaSummary mangaSummary) {
         id = mangaSummary.id;
         this.name = mangaSummary.name;
-        this.summary = mangaSummary.summary;
+        this.genres = mangaSummary.genres;
         this.path = mangaSummary.path;
         this.preview = mangaSummary.preview;
         this.subtitle = mangaSummary.subtitle;

@@ -114,7 +114,7 @@ public class RecommendationsProvider extends MangaProvider {
                 int k=0;
                 for (int j=0; j<tempList.size() && k<=groupSize;j++) {
                     manga = tempList.get(j);
-                    if (checkGenres(manga.summary, genres) >= 50) {
+                    if (checkGenres(manga.genres, genres) >= 50) {
                         mangas.add(manga);
                         k++;
                     }

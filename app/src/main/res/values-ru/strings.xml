@@ -54,8 +54,6 @@
     <string name="error">Произошла ошибка</string>
     <string name="file_not_found">Файл не найден</string>
     <string name="history_will_cleared">История будет очищена</string>
-    <string name="manga_delete_confirm">Манга будет удалена с устройства</string>
-    <string name="saving_cancelled">Сохранение отменено</string>
     <string name="action_clear_search_hist">Очистить историю поиска</string>
     <string name="action_sort">Сортировка</string>
     <string name="about">О программе</string>
@@ -89,7 +87,6 @@
     <string name="genre_manga">Манга</string>
     <string name="scroll_by_volkeys">Листание кнопками громкости</string>
     <string name="chapters_to_save">Сохранить мангу</string>
-    <string name="all">Все</string>
     <string name="genre_yuri">Юри</string>
     <string name="sort_random">Случайно</string>
     <string name="genre_fantastic">Фантастика</string>
@@ -187,7 +184,6 @@
     <string name="brightness_value">Яркость экрана</string>
     <string name="save_image">Сохранить изображение</string>
     <string name="unfavourited">Удалено из избранного</string>
-    <string name="undo">Отмена</string>
     <string name="unknown">Неизвестно</string>
     <string name="update">Обновление</string>
     <string name="no_app_updates">Обновлений не найдено</string>
@@ -200,7 +196,6 @@
     <string name="got_it">Понятно</string>
     <string name="menu">Меню</string>
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
-    <string name="tip_genre_sort">Нажмите на заголовок, чтобы выбрать жанр и порядок сортировки</string>
     <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
     <string name="select_image">Выберите картинку</string>
     <string name="error_open_image_choser">Не удается найти приложения для работы с картинками</string>
@@ -220,7 +215,6 @@
     <string name="next_chapter" formatted="false">Следующая глава\n\n%s</string>
     <string name="prev_chapter" formatted="false">Предыдущая глава\n\n%s</string>
     <string name="filter">Фильтр</string>
-    <string name="tip_mark_read">Смахните, чтобы пометить все новые главы как просмотренные</string>
     <string name="wrap_long_pages">Переносить длинные изображения</string>
     <string name="image_shifting_summary">Полезно для страниц нестандартного размера</string>
     <string name="action_save_add">Сохранить недостающие главы</string>

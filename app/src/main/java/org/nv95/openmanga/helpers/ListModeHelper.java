@@ -29,7 +29,7 @@ public class ListModeHelper implements SharedPreferences.OnSharedPreferenceChang
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PreferenceManager.getDefaultSharedPreferences(mContext)
-                                .edit().putInt(PREF_KEY, which).commit();
+                                .edit().putInt(PREF_KEY, which).apply();
                         dialog.dismiss();
                     }
                 })

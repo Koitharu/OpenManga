@@ -54,9 +54,9 @@ public class PuzzmosProvider extends MangaProvider {
             }
             manga.name = t.text();
             try {
-                manga.summary = o.select("small").first().text();
+                manga.genres = o.select("small").first().text();
             } catch (Exception e) {
-                manga.summary = "";
+                manga.genres = "";
             }
             manga.path = o.select("a").first().attr("href");
             try {
@@ -79,7 +79,7 @@ public class PuzzmosProvider extends MangaProvider {
             Element e = document.body();
             summary.readLink = summary.path;
             summary.description = e.select("p").first().text();
-            //summary.preview = e.select("img.thumbnail").first().attr("src");
+            //genres.preview = e.select("img.thumbnail").first().attr("src");
             MangaChapter chapter;
             e = e.select("table.table").last();
             for (Element o : e.select("a")) {
@@ -92,7 +92,7 @@ public class PuzzmosProvider extends MangaProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //summary.addDefaultChapter();
+        //genres.addDefaultChapter();
         return summary;
     }
 
@@ -153,7 +153,7 @@ public class PuzzmosProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.subtitle = "";
             }
-            manga.summary = o.select("a.element-link").text();
+            manga.genres = o.select("a.element-link").text();
             manga.path = o.select("a").first().attr("href");
             try {
                 manga.preview = o.select("img").first().attr("src");

@@ -63,7 +63,7 @@ public class MintMangaProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.subtitle = "";
             }
-            manga.summary = o.select("a.element-link").text();
+            manga.genres = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = MintMangaProvider.class;
@@ -95,7 +95,6 @@ public class MintMangaProvider extends MangaProvider {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
                 chapter.readLink = "http://mintmanga.com" + o.attr("href") + "?mature=1";
-                ;
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -182,7 +181,7 @@ public class MintMangaProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
-            manga.summary = o.select("a.element-link").text();
+            manga.genres = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = MintMangaProvider.class;

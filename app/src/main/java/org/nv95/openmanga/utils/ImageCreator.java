@@ -15,29 +15,25 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import org.nv95.openmanga.R;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Владимир on 29.09.2014.
  */
 public class ImageCreator {
 
-    public static final int FROM_GALLERY = 23;
-    public static final int REQUEST_TAKE_PHOTO = 25;
+    private static final int FROM_GALLERY = 23;
+    private static final int REQUEST_TAKE_PHOTO = 25;
 
-    private AppCompatActivity activity;
-    private File photoFile;
-    private android.support.v7.app.AlertDialog dialog;
+    private AppCompatActivity mActivity;
+    private File mPhotoFile;
 
     public ImageCreator(AppCompatActivity activity) {
-        this.activity = activity;
+        this.mActivity = activity;
     }
 
     public void getImageFromGallery() {
@@ -67,10 +63,10 @@ public class ImageCreator {
 
         // у кого нет приложения Галерея(или на подобии), у того падает приложение и мораль
         try {
-            activity.startActivityForResult(i, FROM_GALLERY);
+            mActivity.startActivityForResult(i, FROM_GALLERY);
         } catch (ActivityNotFoundException e) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(activity.getString(R.string.error_open_image_choser))
+            new AlertDialog.Builder(mActivity)
+                    .setMessage(mActivity.getString(R.string.error_open_image_choser))
                     .setPositiveButton("ok", null)
                     .show();
         }
@@ -78,40 +74,37 @@ public class ImageCreator {
 
     public void getImageFromCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+        // Ensure that there's a camera mActivity to handle the intent
+        if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
             // Create the File where the photo should go
-            photoFile = null;
+            mPhotoFile = null;
             try {
-                photoFile = createImageFile();
+                mPhotoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 System.out.println("Error occurred while creating the File!");
             }
             // Continue only if the File was successfully created
-            if (photoFile != null) {
+            if (mPhotoFile != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                        Uri.fromFile(mPhotoFile));
+                mActivity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
 
         // Save a file: path for use with ACTION_VIEW intents
         //mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
+        return File.createTempFile(
+                String.valueOf(System.currentTimeMillis()),  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
     }
 
     public String getPathFromActivityResult(int requestCode, int resultCode, Intent data) {
@@ -124,7 +117,7 @@ public class ImageCreator {
         }
 
         if (requestCode == FROM_GALLERY) {
-            if (activity == null || data == null)
+            if (mActivity == null || data == null)
                 return null;
             Uri selectedImageUri = data.getData();
 
@@ -135,7 +128,7 @@ public class ImageCreator {
                 return null;
 
             //MEDIA GALLERY
-            String selectedImagePath = getPath(activity, selectedImageUri);
+            String selectedImagePath = getPath(mActivity, selectedImageUri);
             Log.d("testdata getPath", "" + selectedImagePath);
 
             //NOW WE HAVE OUR WANTED STRING
@@ -145,8 +138,8 @@ public class ImageCreator {
             } else
                 System.out.println("filemanagerstring is the right one for you!");
         } else if (REQUEST_TAKE_PHOTO == requestCode) {
-            if (photoFile != null && photoFile.length() > 0) {
-                return photoFile.getAbsolutePath();
+            if (mPhotoFile != null && mPhotoFile.length() > 0) {
+                return mPhotoFile.getAbsolutePath();
             }
         }
         return null;
@@ -156,11 +149,10 @@ public class ImageCreator {
      * Dialog for add image
      */
     public void addPhoto() {
-
-        dialog = new AlertDialog.Builder(activity)
+        new AlertDialog.Builder(mActivity)
                 .setItems(new String[]{
-                        activity.getString(R.string.getFromGallery),
-                        activity.getString(R.string.getPicture)
+                        mActivity.getString(R.string.getFromGallery),
+                        mActivity.getString(R.string.getPicture)
                 }, photoDialog).show();
     }
 

@@ -62,11 +62,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_arrow" />
+            android:src="@drawable/ic_arrow"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
 
-    <org.nv95.openmanga.utils.imagecontroller.StatusBarChecker
+    <org.nv95.openmanga.utils.imagecontroller.TouchGridDetector
+        android:id="@+id/gridDetector"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

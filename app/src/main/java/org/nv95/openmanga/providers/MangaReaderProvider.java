@@ -38,7 +38,7 @@ public class MangaReaderProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.subtitle = "";
             }
-            manga.summary = o.select("div.manga_genre").first().text();
+            manga.genres = o.select("div.manga_genre").first().text();
             manga.path = "http://www.mangareader.net" + o.select("a").first().attr("href");
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
@@ -135,7 +135,7 @@ public class MangaReaderProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.subtitle = "";
             }
-            manga.summary = o.select("div.manga_genre").first().text();
+            manga.genres = o.select("div.manga_genre").first().text();
             manga.path = "http://www.mangareader.net" + o.select("a").first().attr("href");
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));

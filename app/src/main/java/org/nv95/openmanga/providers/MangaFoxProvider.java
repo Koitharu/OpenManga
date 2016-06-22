@@ -53,9 +53,9 @@ public class MangaFoxProvider extends MangaProvider {
             manga.name = o.select("a.title").first().text();
             manga.subtitle = null;
             try {
-                manga.summary = o.select("p.info").first().text();
+                manga.genres = o.select("p.info").first().text();
             } catch (Exception e) {
-                manga.summary = "";
+                manga.genres = "";
             }
             manga.path = o.select("a").first().attr("href");
             try {
@@ -79,7 +79,7 @@ public class MangaFoxProvider extends MangaProvider {
         try {
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.description = Html.fromHtml(e.select("p.summary").html()).toString();
+            summary.description = Html.fromHtml(e.select("p.genres").html()).toString();
             summary.preview = e.select("div.cover").first().select("img").first().attr("src");
             MangaChapter chapter;
             e = e.getElementById("chapters");
@@ -94,7 +94,7 @@ public class MangaFoxProvider extends MangaProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //summary.addDefaultChapter();
+        //genres.addDefaultChapter();
         return summary;
     }
 
@@ -149,7 +149,7 @@ public class MangaFoxProvider extends MangaProvider {
             manga.name = o.getString(1);
             manga.path = "http://mangafox.me/manga/" + o.getString(2);
             manga.subtitle = null;
-            manga.summary = o.getString(3);
+            manga.genres = o.getString(3);
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
