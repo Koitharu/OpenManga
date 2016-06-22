@@ -105,6 +105,7 @@ public class ReadmangaRuProvider extends MangaProvider {
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
+            summary.chapters.enumerate();
         } catch (Exception e) {
             e.printStackTrace();
         }

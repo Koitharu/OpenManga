@@ -23,7 +23,7 @@ import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
-import org.nv95.openmanga.items.MangaChapters;
+import org.nv95.openmanga.lists.MangaChapters;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.FavouritesProvider;

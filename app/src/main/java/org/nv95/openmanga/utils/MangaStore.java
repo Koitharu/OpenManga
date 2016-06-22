@@ -95,7 +95,9 @@ public class MangaStore {
             cv.put("id", id);
             cv.put("mangaid", mangaId);
             cv.put("name", chapter.name);
-            cv.put("number", StorageHelper.getColumnCount(database, TABLE_CHAPTERS, "mangaid=" + mangaId));
+            cv.put("number", chapter.number == -1 ?
+                    StorageHelper.getColumnCount(database, TABLE_CHAPTERS, "mangaid=" + mangaId)
+                    : chapter.number);
             if (database.update(TABLE_CHAPTERS,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_CHAPTERS, null, cv);
             }

@@ -3,6 +3,8 @@ package org.nv95.openmanga.items;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import org.nv95.openmanga.lists.MangaChapters;
+
 /**
  * Created by nv95 on 30.09.15.
  * Более подробная информация
