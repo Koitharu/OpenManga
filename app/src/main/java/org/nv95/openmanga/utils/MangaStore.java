@@ -130,7 +130,11 @@ public class MangaStore {
             cv.put("chapterid", chapterId);
             cv.put("mangaid", mangaId);
             File dest = new File(getMangaDir(mContext, mangaId), chapterId + "_" + id);
-            new SimpleDownload(page.path, dest).run();
+            SimpleDownload sd =new SimpleDownload(page.path, dest);
+            sd.run();
+            if (!sd.isSuccess()) {
+                return 0;
+            }
             cv.put("file", dest.getName());
             cv.put("number", StorageHelper.getColumnCount(database, TABLE_PAGES, "chapterid=" + chapterId));
             if (database.update(TABLE_PAGES,cv, "id=" + id, null) == 0) {
@@ -138,6 +142,7 @@ public class MangaStore {
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
+            id = 0;
         } finally {
             if (database != null) {
                 database.close();

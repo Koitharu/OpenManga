@@ -37,8 +37,8 @@ import java.util.Vector;
  * Created by nv95 on 13.02.16.
  */
 public class DownloadService extends Service {
-    public static final int ACTION_ADD = 50;
-    public static final int ACTION_CANCEL = 51;
+    private static final int ACTION_ADD = 50;
+    private static final int ACTION_CANCEL = 51;
     private static final int NOTIFY_ID = 532;
     private NotificationHelper mNotificationHelper;
     private PowerManager.WakeLock mWakeLock;
@@ -159,12 +159,12 @@ public class DownloadService extends Service {
 
     private class DownloadTask extends AsyncTask<Void,Integer,Integer> {
         //прогресс по главам
-        protected static final int PROGRESS_PRIMARY = 0;
+        static final int PROGRESS_PRIMARY = 0;
         //прогресс по страницам
-        protected static final int PROGRESS_SECONDARY = 1;
+        static final int PROGRESS_SECONDARY = 1;
         private final DownloadInfo mDownload;
 
-        public DownloadTask(DownloadInfo download) {
+        DownloadTask(DownloadInfo download) {
             this.mDownload = download;
             mTaskReference = new WeakReference<>(this);
         }
@@ -203,11 +203,26 @@ public class DownloadService extends Service {
                 o = mDownload.chapters.get(i);
                 o.id = store.pushChapter(o, mangaId);
                 pages = provider.getPages(o.readLink);
+                if (pages == null) {
+                    //try again
+                    pages = provider.getPages(o.readLink);
+                    if (pages == null) {
+                        return null;
+                    }
+                }
                 publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
                 for (int j=0; j<pages.size(); j++) {
                     o1 = pages.get(j);
                     o1.path = provider.getPageImage(o1);
                     o1.id = store.pushPage(o1, mangaId, o.id);
+                    if (o1.id == 0) {
+                        //error(
+                        //try again
+                        o1.id = store.pushPage(o1, mangaId, o.id);
+                        if (o1.id == 0) {
+                            return null;
+                        }
+                    }
                     publishProgress(PROGRESS_SECONDARY, j, pages.size());
                     if (isCancelled()) {
                         break;
@@ -216,7 +231,7 @@ public class DownloadService extends Service {
                 publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
             }
             publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
-            return null;
+            return 0;
         }
 
         @Override
@@ -228,6 +243,17 @@ public class DownloadService extends Service {
                 o.onDataUpdated();
             }
             final int pos = mDownloads.indexOf(mDownload);
+            if (integer == null) {
+                stopSelf();
+                mNotificationHelper
+                        .noActions()
+                        .noProgress()
+                        .autoCancel()
+                        .icon(android.R.drawable.stat_notify_error)
+                        .text(R.string.loading_error)
+                        .update(NOTIFY_ID);
+                return;
+            }
             if (pos == mDownloads.size() - 1) {
                 stopSelf();
                 mNotificationHelper
