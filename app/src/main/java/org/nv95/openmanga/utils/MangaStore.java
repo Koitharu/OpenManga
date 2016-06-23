@@ -89,12 +89,12 @@ public class MangaStore {
         SQLiteDatabase database = null;
         int id = 0;
         try {
-            database = mDatabaseHelper.getWritableDatabase();
             final ContentValues cv = new ContentValues();
             id = chapter.readLink.hashCode();
             cv.put("id", id);
             cv.put("mangaid", mangaId);
             cv.put("name", chapter.name);
+            database = mDatabaseHelper.getWritableDatabase();
             cv.put("number", chapter.number == -1 ?
                     StorageHelper.getColumnCount(database, TABLE_CHAPTERS, "mangaid=" + mangaId)
                     : chapter.number);
@@ -123,7 +123,6 @@ public class MangaStore {
         SQLiteDatabase database = null;
         int id = 0;
         try {
-            database = mDatabaseHelper.getWritableDatabase();
             final ContentValues cv = new ContentValues();
             id = page.path.hashCode();
             cv.put("id", id);
@@ -136,6 +135,7 @@ public class MangaStore {
                 return 0;
             }
             cv.put("file", dest.getName());
+            database = mDatabaseHelper.getWritableDatabase();
             cv.put("number", StorageHelper.getColumnCount(database, TABLE_PAGES, "chapterid=" + chapterId));
             if (database.update(TABLE_PAGES,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_PAGES, null, cv);

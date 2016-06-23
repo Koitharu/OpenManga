@@ -61,7 +61,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         setContentView(R.layout.activity_preview);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
-        enableTransparentStatusBar(0);
+        enableTransparentStatusBar(android.R.color.transparent);
         mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_container);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);
