@@ -1,12 +1,15 @@
 package org.nv95.openmanga.components;
 
+import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
+
+import org.nv95.openmanga.utils.OnSwipeTouchListener;
 
 /**
  * Created by nv95 on 10.04.16.
  */
-public abstract class OverScrollDetector implements View.OnTouchListener {
+public abstract class OverScrollDetector extends OnSwipeTouchListener {
     public static final int DIRECTION_NONE = -1;
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_RIGHT = 1;
@@ -19,13 +22,19 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
     private boolean mFly;
     private float mStartX, mStartY;
 
-    public OverScrollDetector() {
+    public OverScrollDetector(Context context) {
+        super(context);
         mDown = false;
         mFly = false;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if (super.onTouch(v, event)){
+            mDown = false;
+            mFly = false;
+            return true;
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDown = true;
@@ -38,7 +47,7 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
                     float dy = mStartY - event.getY();
                     final int direction = getDirection(SENSITIVITY_BEGIN, dx, dy);
                     if (mFly) {
-                        onFly(direction, dx, dy);
+                        onOverScroll(direction, dx, dy);
                     } else if (direction != DIRECTION_NONE && canOverScroll(direction)) {
                         onPreOverscroll(direction);
                         mFly = true;
@@ -86,9 +95,7 @@ public abstract class OverScrollDetector implements View.OnTouchListener {
         return DIRECTION_NONE;
     }
 
-    public abstract boolean canOverScroll(int direction);
-
-    public abstract void onFly(int direction, float deltaX, float deltaY);
+    public abstract void onOverScroll(int direction, float deltaX, float deltaY);
 
     public abstract void onOverScrolled(int direction);
 

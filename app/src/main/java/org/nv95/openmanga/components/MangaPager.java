@@ -25,50 +25,8 @@ public class MangaPager extends ViewPager {
     private boolean mReverse, mVertical;
     private OverScrollListener mOverScrollListener;
     private int lastX = -1;
+    private OverScrollDetector mDetector;
     // touch detector
-    private OverScrollDetector mDetector = new OverScrollDetector() {
-        @SuppressWarnings("SimplifiableIfStatement")
-        @Override
-        public boolean canOverScroll(int direction) {
-            if (direction == DIRECTION_LEFT) {
-                return getCurrentItem() == 0 &&
-                        (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
-            } else if (direction == DIRECTION_RIGHT) {
-                return getCurrentItem() == getCount() - 1 &&
-                        (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public void onFly(int direction, float deltaX, float deltaY) {
-            if (mOverScrollListener != null) {
-                mOverScrollListener.onFly(direction, deltaX, deltaY);
-            }
-        }
-
-        @Override
-        public void onOverScrolled(int direction) {
-            if (mOverScrollListener != null) {
-                mOverScrollListener.onOverScrollDone(direction);
-            }
-        }
-
-        @Override
-        public void onPreOverscroll(int direction) {
-            if (mOverScrollListener != null) {
-                mOverScrollListener.onPreOverScroll(direction);
-            }
-        }
-
-        @Override
-        public void onCancelled(int direction) {
-            if (mOverScrollListener != null) {
-                mOverScrollListener.onCancelled(direction);
-            }
-        }
-    };
 
     public MangaPager(Context context) {
         super(context);
@@ -84,8 +42,69 @@ public class MangaPager extends ViewPager {
         mList = new ArrayList<>();
         mAdapter = new PagerReaderAdapter(context, mList);
         setOverScrollMode(OVER_SCROLL_NEVER);
-        mDetector.setSensitivityDone(context.getResources().getDimensionPixelSize(R.dimen.overscroll_size));
+        initDetector();
         super.setAdapter(mAdapter);
+    }
+
+    private void initDetector() {
+        mDetector = new OverScrollDetector(getContext()) {
+            @SuppressWarnings("SimplifiableIfStatement")
+            @Override
+            public boolean canOverScroll(int direction) {
+                if (direction == DIRECTION_LEFT) {
+                    return getCurrentItem() == 0 &&
+                            (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
+                } else if (direction == DIRECTION_RIGHT) {
+                    return getCurrentItem() == getCount() - 1 &&
+                            (mOverScrollListener == null || mOverScrollListener.canOverScroll(direction));
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            public void onOverScroll(int direction, float deltaX, float deltaY) {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onOverScroll(direction, deltaX, deltaY);
+                }
+            }
+
+            @Override
+            public void onOverScrolled(int direction) {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onOverScrollDone(direction);
+                }
+            }
+
+            @Override
+            public void onPreOverscroll(int direction) {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onPreOverScroll(direction);
+                }
+            }
+
+            @Override
+            public void onCancelled(int direction) {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onCancelled(direction);
+                }
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onSwipeLeft();
+                }
+            }
+
+            @Override
+            public void onSwipeRight() {
+                if (mOverScrollListener != null) {
+                    mOverScrollListener.onSwipeRight();
+                }
+            }
+        };
+        mDetector.setSensitivityDone(getContext().getResources().getDimensionPixelSize(R.dimen.overscroll_size));
     }
 
     public void setPages(ArrayList<MangaPage> pages, int position) {
@@ -193,10 +212,12 @@ public class MangaPager extends ViewPager {
 
     public interface OverScrollListener {
         void onOverScrollDone(int direction);
-        void onFly(int direction, float deltaX, float deltaY);
+        void onOverScroll(int direction, float deltaX, float deltaY);
         boolean canOverScroll(int direction);
         void onPreOverScroll(int direction);
         void onCancelled(int direction);
+        void onSwipeLeft();
+        void onSwipeRight();
     }
 
     //это что и зачем?
