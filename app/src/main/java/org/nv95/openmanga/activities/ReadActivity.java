@@ -14,16 +14,22 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.OverScroller;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
@@ -71,6 +77,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private boolean scrollWithVolkeys = false;
     private int overscrollSize;
     private BrightnessHelper mBrightnessHelper;
+    SwipeAnimationListener swipeAnimationListener = new SwipeAnimationListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -410,13 +417,15 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     }
 
     @Override
-    public void onFly(int direction, float deltaX, float deltaY) {
+    public void onOverScroll(int direction, float deltaX, float deltaY) {
         switch (direction) {
             case OverScrollDetector.DIRECTION_LEFT:
                 mImageViewArrow.setTranslationX(Math.abs(deltaX) < overscrollSize ? -deltaX : overscrollSize);
+//                mImageViewArrow.setTranslationX(overscrollSize);
                 break;
             case OverScrollDetector.DIRECTION_RIGHT:
                 mImageViewArrow.setTranslationX(Math.abs(deltaX) < overscrollSize ? -deltaX : -overscrollSize);
+//                mImageViewArrow.setTranslationX(-overscrollSize);
                 break;
             default:
                 return;
@@ -427,6 +436,32 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             delta = 180;
         }
         mSwipeFrame.setBackgroundColor(Color.argb((int) delta, 0, 0, 0));
+    }
+
+    /**
+     * Animate arrow and swipe background when overscroll swipe
+     * @param direction
+     */
+    private void animateSwipeViews(float direction) {
+        swipeAnimationListener.setDirection(direction < 0 ?
+                OverScrollDetector.DIRECTION_RIGHT : OverScrollDetector.DIRECTION_LEFT);
+        mImageViewArrow.animate()
+                .setInterpolator(new DecelerateInterpolator())
+                .setListener(swipeAnimationListener)
+                .translationX(direction);
+        mSwipeFrame.animate()
+                .alpha(180);
+    }
+
+    // Triggered when overscroll swipe
+    @Override
+    public void onSwipeLeft() {
+        animateSwipeViews(-overscrollSize);
+    }
+    //Triggered when overscroll swipe
+    @Override
+    public void onSwipeRight() {
+        animateSwipeViews(overscrollSize);
     }
 
     @Override
@@ -596,5 +631,34 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mPager.onConfigurationChange(this);
+    }
+
+    class SwipeAnimationListener implements Animator.AnimatorListener {
+
+        private int direction;
+
+        public void setDirection(int direction) {
+            this.direction = direction;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            onOverScrollDone(direction);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+
+        }
     }
 }

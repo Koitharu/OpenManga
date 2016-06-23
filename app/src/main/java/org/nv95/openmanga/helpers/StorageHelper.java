@@ -45,8 +45,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY,"
                 + "name TEXT,"
                 + "subtitle TEXT,"
-                + "genres TEXT,"
                 + "preview TEXT,"
+                + "summary TEXT,"
                 + "provider TEXT,"
                 + "path TEXT,"
                 + "timestamp INTEGER,"
@@ -85,11 +85,16 @@ public class StorageHelper extends SQLiteOpenHelper {
                     + ");");
         }
 
-        final CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
+        // favorite
+        CopyOnWriteArraySet<String> columnsFavourites = getColumsNames(db, "favourites");
         if(!columnsFavourites.contains("timestamp"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN timestamp INTEGER DEFAULT 0");
         if(!columnsFavourites.contains("category"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN category INTEGER DEFAULT 0");
+        // history
+        columnsFavourites = getColumsNames(db, "history");
+        if(!columnsFavourites.contains("summary"))
+            db.execSQL("ALTER TABLE history ADD COLUMN summary TEXT");
     }
 
     @Nullable
