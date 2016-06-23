@@ -14,22 +14,17 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.OverScroller;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
@@ -77,7 +72,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private boolean scrollWithVolkeys = false;
     private int overscrollSize;
     private BrightnessHelper mBrightnessHelper;
-    SwipeAnimationListener swipeAnimationListener = new SwipeAnimationListener();
+    private SwipeAnimationListener mSwipeAnimationListener = new SwipeAnimationListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +101,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         initParams(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         overscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
         chapter = mangaSummary.getChapters().get(chapterId);
-        mPager.setOffscreenPageLimit(3);
+        mPager.setOffscreenPageLimit(2);
         new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -443,11 +438,11 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
      * @param direction
      */
     private void animateSwipeViews(float direction) {
-        swipeAnimationListener.setDirection(direction < 0 ?
+        mSwipeAnimationListener.setDirection(direction < 0 ?
                 OverScrollDetector.DIRECTION_RIGHT : OverScrollDetector.DIRECTION_LEFT);
         mImageViewArrow.animate()
                 .setInterpolator(new DecelerateInterpolator())
-                .setListener(swipeAnimationListener)
+                .setListener(mSwipeAnimationListener)
                 .translationX(direction);
         mSwipeFrame.animate()
                 .alpha(180);

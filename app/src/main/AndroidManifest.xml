@@ -29,8 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MangaPreviewActivity"
-            android:theme="@style/AppTheme.Preview"/>
+            android:name=".activities.MangaPreviewActivity" />
         <activity
             android:name=".activities.SearchActivity"
             android:configChanges="orientation|screenSize"
