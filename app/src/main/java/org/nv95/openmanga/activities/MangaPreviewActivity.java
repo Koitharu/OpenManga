@@ -251,6 +251,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             }
                             if (new MangaStore(MangaPreviewActivity.this).dropChapters(mangaSummary.id, ids)) {
                                 Snackbar.make(mTextViewDescription, getString(R.string.chapters_removed, ids.length), Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
                             }
                             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }

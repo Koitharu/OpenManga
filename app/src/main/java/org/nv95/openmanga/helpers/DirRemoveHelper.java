@@ -15,6 +15,8 @@
 
 package org.nv95.openmanga.helpers;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.concurrent.ExecutorService;
@@ -47,23 +49,29 @@ public class DirRemoveHelper implements Runnable {
         });
     }
 
-    private static void RemoveDir(File dir) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void removeDir(File dir) {
         if (dir == null || !dir.exists()) {
+            Log.w("DIRRM", "not exists: " + (dir != null ? dir.getPath() : "null"));
             return;
         }
-        for (File o : dir.listFiles()) {
-            if (o.isDirectory())
-                RemoveDir(o);
-            else
-                o.delete();
+        if (dir.isDirectory()) {
+            for (File o : dir.listFiles()) {
+                if (o.isDirectory()) {
+                    removeDir(o);
+                } else {
+                    o.delete();
+                }
+            }
         }
+        Log.d("DIRRM", "removed: " + dir.getPath());
         dir.delete();
     }
 
     @Override
     public void run() {
         for (File file : mFiles) {
-            RemoveDir(file);
+            removeDir(file);
         }
     }
 
