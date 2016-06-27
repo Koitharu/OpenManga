@@ -58,7 +58,7 @@ public class MangaStore {
             cv.put("name", manga.name);
             cv.put("subtitle", manga.subtitle);
             cv.put("summary", manga.genres);
-            final File dest = getMangaDir(mContext, id);
+            File dest = getMangaDir(mContext, database, id);
             cv.put("dir", dest.getPath());
             new SimpleDownload(manga.preview, new File(dest, "cover")).run();
             cv.put("description", manga.description);
@@ -205,7 +205,7 @@ public class MangaStore {
             for (long id : ids) {
                 database.delete(TABLE_PAGES, "chapterid=? AND mangaid=?", new String[]{String.valueOf(id), String.valueOf(mangaId)});
                 database.delete(TABLE_CHAPTERS, "id=?", new String[]{String.valueOf(id)});
-                new DirRemoveHelper(getMangaDir(mContext, mangaId), id + "_*").runAsync();
+                new DirRemoveHelper(getMangaDir(mContext, database, mangaId), id + "_[-\\w]*").runAsync();
             }
             database.setTransactionSuccessful();
         } catch (Exception e) {
@@ -235,14 +235,45 @@ public class MangaStore {
         return res;
     }
 
+    @Deprecated
     public static File getMangaDir(Context context, int id) {
-        final File res = new File(getMangasDir(context), String.valueOf(id));
+        File res = null;
+        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+        Cursor c = db.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
+        if (c.moveToFirst()) {
+            res = new File(c.getString(0));
+        }
+        c.close();
+        db.close();
+        if (res != null && res.exists()) {
+            return res;
+        }
+        res = new File(getMangasDir(context), String.valueOf(id));
         if (!res.exists()) {
             //noinspection ResultOfMethodCallIgnored
             res.mkdirs();
         }
         return res;
     }
+
+    public static File getMangaDir(Context context, SQLiteDatabase database, int id) {
+        File res = null;
+        Cursor c = database.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
+        if (c.moveToFirst()) {
+            res = new File(c.getString(0));
+        }
+        c.close();
+        if (res != null && res.exists()) {
+            return res;
+        }
+        res = new File(getMangasDir(context), String.valueOf(id));
+        if (!res.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            res.mkdirs();
+        }
+        return res;
+    }
+
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
