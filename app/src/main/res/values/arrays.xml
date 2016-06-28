@@ -48,4 +48,14 @@
         <item>@string/interval_once_day</item>
         <item>@string/interval_two_days</item>
     </string-array>
+    <string-array name="themes">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="themes_names">
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+        <item>@string/theme_black</item>
+    </string-array>
 </resources>

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -86,8 +87,12 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mTextViewNext = (TextView) findViewById(R.id.textView_title);
         mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
         mGridDetector = (TouchGridDetector) findViewById(R.id.gridDetector);
-        //noinspection ConstantConditions
-        findViewById(R.id.imageView_menu).setOnClickListener(this);
+        ImageView imageViewMenu = (ImageView) findViewById(R.id.imageView_menu);
+        assert imageViewMenu != null;
+        if (isDarkTheme()) {
+            imageViewMenu.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
+        }
+        imageViewMenu.setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
         mPager.setOverScrollListener(this);
         mPager.onConfigurationChange(this);
@@ -163,7 +168,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                                 titles[favId] : getString(R.string.category_no);
                         break;
                 }
-                new ReaderMenuDialog(this)
+                new ReaderMenuDialog(this, isDarkTheme())
                         .callback(this)
                         .favourites(fav)
                         .setOnDismissListener(new ReaderMenuDialog.OnDismissListener() {

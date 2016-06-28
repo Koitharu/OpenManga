@@ -255,4 +255,8 @@
     <string name="use_dark_theme">Use dark theme</string>
     <string name="restart_required">Restart is required</string>
     <string name="wait_for_complete">Wait for the completion of operations</string>
+    <string name="theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_black">Black</string>
 </resources>

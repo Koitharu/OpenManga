@@ -1,7 +1,9 @@
 package org.nv95.openmanga.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PointF;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMovement.OnLinkClickListener {
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
-    private boolean isLandOrientation;
+    private boolean isLandOrientation, isLight;
     private SparseArray<ViewHolder> views = new SparseArray<>();
     private final InternalLinkMovement mLinkMovement;
 
@@ -37,6 +39,8 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         inflater = LayoutInflater.from(context);
         pages = mangaPages;
         mLinkMovement = new InternalLinkMovement(this);
+        isLight = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("theme", "0").equals("0");
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
@@ -57,6 +61,9 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_page, container, false);
+        if (isLight) {
+            view.setBackgroundColor(Color.WHITE);
+        }
         MangaPage page = getItem(position);
         ViewHolder holder = new ViewHolder();
         holder.position = position;
