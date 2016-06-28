@@ -11,7 +11,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Surface;
@@ -32,7 +31,7 @@ import java.io.FileOutputStream;
 /**
  * Created by Владимир on 03.02.2015.
  */
-public class EditImageActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditImageActivity extends BaseAppActivity implements View.OnClickListener {
 
     private static final int ORIENTATION_PORT = 1;
     private static final int ORIENTATION_LAND = 2;

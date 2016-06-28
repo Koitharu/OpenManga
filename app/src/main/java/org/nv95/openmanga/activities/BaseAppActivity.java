@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -30,9 +32,19 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 19.02.16.
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
-    private static final int REQEST_PERMISSION = 112;
+    private static final int REQUEST_PERMISSION = 112;
     private boolean mActionBarVisible = false;
     private boolean mHomeAsUpEnabled = false;
+    private boolean mDarkTheme = false;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("darktheme", false)) {
+            setTheme(R.style.AppThemeDark);
+            mDarkTheme = true;
+        }
+    }
 
     public void enableHomeAsUp() {
         final ActionBar actionBar = getSupportActionBar();
@@ -101,6 +113,10 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         return mActionBarVisible;
     }
 
+    public boolean isDarkTheme() {
+        return mDarkTheme;
+    }
+
     public void setSubtitle(@Nullable CharSequence subtitle) {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -146,14 +162,14 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{permission},
-                    REQEST_PERMISSION);
+                    REQUEST_PERMISSION);
         }
         return false;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (requestCode == REQEST_PERMISSION) {
+        if (requestCode == REQUEST_PERMISSION) {
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     onPermissionGranted(permissions[i]);

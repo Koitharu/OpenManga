@@ -37,7 +37,7 @@ import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
 /**
  * Created by nv95 on 05.02.16.
  */
-public class CBZActivity extends AppCompatActivity implements View.OnClickListener {
+public class CBZActivity extends BaseAppActivity implements View.OnClickListener {
     private TextView mTextViewPrimary;
     private TextView mTextViewSecondary;
     private ProgressBar mProgressBar;

@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/primary_dark</item>
-        <item name="colorPrimaryDark">@color/primary_dark_dark</item>
-        <item name="colorAccent">@color/accent_light</item>
-        <item name="windowActionModeOverlay">true</item>
-    </style>
-
 </resources>
