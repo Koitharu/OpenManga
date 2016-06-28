@@ -41,7 +41,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("darktheme", false)) {
-            setTheme(R.style.AppThemeDark);
+            setTheme(R.style.AppTheme_Dark);
             mDarkTheme = true;
         }
     }
