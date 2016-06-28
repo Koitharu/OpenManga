@@ -10,6 +10,4 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:background="?selectableItemBackground"
-    android:drawableEnd="@drawable/ic_arrow_more"
-    android:textColor="?android:textColorSecondary"
-    android:drawableRight="@drawable/ic_arrow_more" />
+    android:textColor="?android:textColorSecondary" />
