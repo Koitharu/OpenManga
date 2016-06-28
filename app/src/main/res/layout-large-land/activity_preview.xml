@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/genre"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/accent_light"/>
+                    android:textColor="?colorAccent"/>
 
                 <TextView
                     android:id="@+id/textView_summary"
@@ -76,14 +76,14 @@
                     android:text="Small Text"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="?android:textColorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/description"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/accent_light"/>
+                    android:textColor="?colorAccent"/>
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="?android:textColorPrimary"/>
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
