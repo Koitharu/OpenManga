@@ -37,4 +37,8 @@ public class OneShotNotifier {
                 .apply();
         return true;
     }
+
+    public void cancel(int id) {
+        mNotificationManager.cancel(id);
+    }
 }
