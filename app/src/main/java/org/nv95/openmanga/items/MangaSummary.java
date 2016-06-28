@@ -23,6 +23,8 @@ public class MangaSummary extends MangaInfo {
         this.preview = mangaInfo.preview;
         this.subtitle = mangaInfo.subtitle;
         this.provider = mangaInfo.provider;
+        this.status = mangaInfo.status;
+        this.extra = mangaInfo.extra;
         this.description = "";
         this.readLink = "";
         this.chapters = new MangaChapters();
@@ -38,6 +40,8 @@ public class MangaSummary extends MangaInfo {
         this.provider = mangaSummary.provider;
         this.description = mangaSummary.description;
         this.readLink = mangaSummary.readLink;
+        this.status = mangaSummary.status;
+        this.extra = mangaSummary.extra;
         this.chapters = new MangaChapters(mangaSummary.chapters);
     }
 

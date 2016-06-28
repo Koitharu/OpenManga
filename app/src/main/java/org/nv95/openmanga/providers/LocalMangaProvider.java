@@ -89,7 +89,7 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         try {
             list = new MangaList();
-            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir"}, null, null, null, null, sortUrls[sort]);
+            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, null, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
                     manga = new MangaInfo();
@@ -100,6 +100,7 @@ public class LocalMangaProvider extends MangaProvider {
                     manga.path = cursor.getString(4);
                     manga.preview = manga.path + "/cover";
                     manga.provider = LocalMangaProvider.class;
+                    manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }
