@@ -82,6 +82,7 @@ public class DrawerHeaderImageTool implements View.OnClickListener {
                     thumb.compress(Bitmap.CompressFormat.PNG, 100, out);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mImageFile.delete();
                 } finally {
                     thumb.recycle();
                     try {
