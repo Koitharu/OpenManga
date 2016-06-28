@@ -78,6 +78,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
+        enableTransparentStatusBar(android.R.color.transparent);
         mLoader = findViewById(R.id.loader);
         mBrightnessHelper = new BrightnessHelper(getWindow());
         mPager = (MangaPager) findViewById(R.id.pager);

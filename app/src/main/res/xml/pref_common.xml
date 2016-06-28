@@ -28,6 +28,11 @@
         android:title="@string/favourites_categories"
         android:dialogMessage="@string/favourites_categories_description"
         android:defaultValue="@string/favourites_categories_default" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="darktheme"
+        android:title="@string/use_dark_theme"
+        android:widgetLayout="@layout/pref_switchcompat" />
     <PreferenceCategory android:title="@string/data">
         <Preference
             android:key="mangadir"

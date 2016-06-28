@@ -22,7 +22,7 @@
             android:maxLines="1"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/black_owerlay_90" />
+            android:textColor="?android:textColorPrimary" />
 
         <TextView
             android:id="@+id/textView_subtitle"
@@ -34,7 +34,7 @@
             android:maxLines="1"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/black_owerlay_60" />
+            android:textColor="?android:textColorSecondary" />
 
         <TextView
             android:id="@+id/textView_summary"
@@ -47,7 +47,7 @@
             android:maxLines="1"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/black_owerlay_90" />
+            android:textColor="?android:textColorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"

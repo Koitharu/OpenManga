@@ -1,36 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryDark">@color/primary_dark_dark</item>
         <item name="colorAccent">@color/accent_light</item>
-        <item name="colorControlNormal">@color/primary_dark</item>
+        <!--item name="colorControlNormal">@color/accent_light</item-->
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryDark">@color/primary_dark_dark</item>
-        <item name="colorAccent">@color/accent_light</item>
-        <item name="colorControlNormal">@color/accent_light</item>
+        <item name="colorAccent">@color/accent_light_light</item>
+        <!--item name="colorControlNormal">@color/accent_light_light</item-->
         <item name="windowActionModeOverlay">true</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds" tools:ignore="NewApi">true</item>
-        <item name="android:statusBarColor" tools:ignore="NewApi">@android:color/transparent</item>
-    </style>
-
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/primary_dark</item>
-        <item name="colorPrimaryDark">@color/primary_dark_dark</item>
-        <item name="colorAccent">@color/accent_light</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
     </style>
 
     <style name="FlatMenuButtonSimple" >

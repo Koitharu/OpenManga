@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/padding8"
-    android:background="#fff">
+    android:padding="@dimen/padding8" >
 
         <com.edmodo.cropper.CropImageView
             android:id="@+id/CropImageView"

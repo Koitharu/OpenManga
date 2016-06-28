@@ -252,4 +252,6 @@
     <string name="error_loadimage_html" formatted="false"><![CDATA[Failed to load image<br/><h3><a href=\"app:retry\">Try again</a></h3><br/><br/>Details:<br/>%s]]></string>
     <string name="sources">Sources</string>
     <string name="full_match">Full match</string>
+    <string name="use_dark_theme">Use dark theme</string>
+    <string name="restart_required">Restart is required</string>
 </resources>

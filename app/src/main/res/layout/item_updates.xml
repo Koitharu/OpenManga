@@ -17,6 +17,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textView_title"
         android:padding="6dp"
+        android:textColor="?android:textColorPrimary"
         android:layout_toRightOf="@+id/imageView"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />

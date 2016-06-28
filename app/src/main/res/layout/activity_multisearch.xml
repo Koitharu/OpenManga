@@ -25,7 +25,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_overlay_85"
             android:text="@string/loading"
             android:id="@+id/textView" />
 

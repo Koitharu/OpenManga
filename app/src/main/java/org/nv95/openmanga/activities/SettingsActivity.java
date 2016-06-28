@@ -189,6 +189,15 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
             bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
 
+            p = findPreference("darktheme");
+            p.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean current = ((BaseAppActivity)getActivity()).isDarkTheme();
+                    preference.setSummary(newValue.equals(current) ? null : getString(R.string.restart_required));
+                    return true;
+                }
+            });
 
             p = findPreference("mangadir");
             try {

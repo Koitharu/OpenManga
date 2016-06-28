@@ -28,7 +28,7 @@
             android:padding="1dp"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/black_owerlay_90"/>
+            android:textColor="?android:textColorPrimary"/>
     </LinearLayout>
 
     <LinearLayout
