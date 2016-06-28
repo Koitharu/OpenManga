@@ -52,6 +52,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
+import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageCreator;
@@ -249,7 +250,7 @@ public class MainActivity extends BaseAppActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         drawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
-            startActivity(new Intent(this, CBZActivity.class).putExtras(data));
+            startService(new Intent(this, ImportService.class).putExtras(data).putExtra("action", ImportService.ACTION_START));
         } else if (requestCode == Constants.SETTINGS_REQUEST_ID
                 && mProviderManager != null && mNavigationView != null){
             mProviderManager.update();

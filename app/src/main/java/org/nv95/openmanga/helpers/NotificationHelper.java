@@ -137,4 +137,8 @@ public class NotificationHelper {
         mNotificationBuilder.setAutoCancel(true);
         return this;
     }
+
+    public void dismiss(int id) {
+        mNotifier.cancel(id);
+    }
 }
