@@ -55,7 +55,6 @@ import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.ImageCreator;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -64,11 +63,12 @@ import org.nv95.openmanga.utils.StorageUpgradeTask;
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
-        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener, InternalLinkMovement.OnLinkClickListener {
+        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
+        InternalLinkMovement.OnLinkClickListener {
+
     private static final int REQUEST_IMPORT = 792;
     //views
     private RecyclerView mRecyclerView;
-//    private ListView mDrawerListView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private FloatingActionButton mFab;
@@ -84,10 +84,8 @@ public class MainActivity extends BaseAppActivity implements
     private int mGenre = 0;
     private NavigationView mNavigationView;
     private int selectedItem;
-    private ImageCreator imageCreator;
-    private DrawerHeaderImageTool drawerHeaderTool;
+    private DrawerHeaderImageTool mDrawerHeaderTool;
     private boolean mUpdatesChecked = false;
-//    private int remoteSelectedPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,8 +146,8 @@ public class MainActivity extends BaseAppActivity implements
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
         //Load saved image in drawer head
-        drawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
-        drawerHeaderTool.initDrawerImage();
+        mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
+        mDrawerHeaderTool.initDrawerImage();
     }
 
     /**
@@ -248,7 +246,6 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        drawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
             startService(new Intent(this, ImportService.class).putExtras(data).putExtra("action", ImportService.ACTION_START));
         } else if (requestCode == Constants.SETTINGS_REQUEST_ID
@@ -256,6 +253,8 @@ public class MainActivity extends BaseAppActivity implements
             mProviderManager.update();
             initDrawerRemoteProviders();
             mNavigationView.setCheckedItem(selectedItem);
+        } else {
+            mDrawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         }
     }
 

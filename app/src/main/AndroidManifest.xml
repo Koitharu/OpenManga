@@ -38,10 +38,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity
-            android:name=".activities.EditImageActivity"
-            android:label="@string/select_image"
-            android:configChanges="orientation|screenSize" />
-        <activity
             android:name=".activities.ReadActivity"
             android:configChanges="orientation|screenSize"/>
         <activity
@@ -81,6 +77,7 @@
             android:name=".activities.FileSelectActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/select_file" />
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <service android:name=".services.DownloadService" />
         <service android:name=".services.ScheduledService" />

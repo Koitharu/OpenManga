@@ -49,5 +49,5 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
-    compile 'com.edmodo:cropper:1.0.1'
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 }
