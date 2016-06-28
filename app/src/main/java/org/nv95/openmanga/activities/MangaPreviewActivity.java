@@ -160,7 +160,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         if (LocalMangaProvider.class.equals(mangaSummary.provider)) {
             menu.findItem(R.id.action_save).setVisible(false);
             menu.findItem(R.id.action_remove).setVisible(true);
-            menu.findItem(R.id.action_save_more).setVisible(true);
+            menu.findItem(R.id.action_save_more).setVisible(mangaSummary.status == MangaInfo.STATUS_ONGOING);
             menu.findItem(R.id.action_favourite).setVisible(false);
         } else if (FavouritesProvider.Has(this, mangaSummary)) {
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
