@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/genre"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/accent_light"/>
+                android:textColor="?colorAccent"/>
 
             <TextView
                 android:id="@+id/textView_summary"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/description"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/accent_light"/>
+                android:textColor="?colorAccent"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
