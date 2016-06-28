@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.BrightnessHelper;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 12.02.16.
@@ -54,7 +55,7 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
     private OnDismissListener onDismissListener;
 
     @SuppressLint("InflateParams")
-    public ReaderMenuDialog(Context context) {
+    public ReaderMenuDialog(Context context, boolean dark) {
         mScrollView = (ScrollView) LayoutInflater.from(context)
                 .inflate(R.layout.dialog_reader, null);
         mTextViewTitle = (TextView) mScrollView.findViewById(R.id.textView_title);
@@ -95,6 +96,9 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
         mOptionsBlock = mScrollView.findViewById(R.id.block_options);
         mButtonApply = (Button) mScrollView.findViewById(R.id.button_positive);
         mButtonApply.setOnClickListener(this);
+        if (dark) {
+            LayoutUtils.setAllImagesColor(mScrollView, R.color.white_overlay_85);
+        }
         mDialog = new AlertDialog.Builder(context)
                 .setView(mScrollView)
                 .setCancelable(true)

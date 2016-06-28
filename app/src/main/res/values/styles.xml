@@ -16,6 +16,10 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="AppThemeBlack" parent="AppThemeDark">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
     <style name="FlatMenuButtonSimple" >
         <item name="android:drawablePadding">24dp</item>
         <item name="android:gravity">center_vertical</item>
