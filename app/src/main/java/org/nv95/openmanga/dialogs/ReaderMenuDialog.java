@@ -5,11 +5,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.SwitchCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -151,10 +156,30 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
             case R.id.button_opt:
                 if (mOptionsBlock.getVisibility() == View.VISIBLE) {
                     mOptionsBlock.setVisibility(View.GONE);
+
+                    // это пример того как можно получить из attr значение и применить его
+                    // можно создать свой атрибут и описать его в каждой theme c разными значениями
+//                    int color = ContextCompat.getColor(mButtonOpts.getContext(),
+//                            getAttributeResourceId(mButtonOpts.getContext(), android.R.attr.textColorPrimary));
+
+//                    Drawable l = ContextCompat.getDrawable(mButtonOpts.getContext(), R.drawable.ic_settings_dark);
+//                    Drawable r = ContextCompat.getDrawable(mButtonOpts.getContext(), R.drawable.ic_drop_down_dark);
+//
+//
+//                    l.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+//                    r.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+//
+//                    mButtonOpts.setCompoundDrawablesWithIntrinsicBounds(
+//                            l, null, r, null
+//                    );
                     mButtonOpts.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_settings_dark, 0, R.drawable.ic_drop_down_dark, 0
                     );
+
                 } else {
+
+
+
                     mOptionsBlock.setVisibility(View.VISIBLE);
                     mButtonOpts.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_settings_dark, 0, R.drawable.ic_drop_up_dark, 0
@@ -232,5 +257,25 @@ public class ReaderMenuDialog implements View.OnClickListener, SeekBar.OnSeekBar
 
     public interface OnDismissListener {
         void settingsDialogDismiss();
+    }
+
+    /**
+     * Метод возвращает значение ресурса
+     * @param context
+     * @param attr
+     * @return
+     */
+    public static int getAttributeResourceId(Context context, int attr){
+        try {
+            TypedValue typedValue = new TypedValue();
+            int[] resIdAttr = new int[] { attr };
+            TypedArray a = context.obtainStyledAttributes(typedValue.data, resIdAttr);
+            int resId = a.getResourceId(0, 0);
+            a.recycle();
+            return resId;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

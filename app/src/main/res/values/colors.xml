@@ -2,8 +2,9 @@
 <resources>
     <color name="primary_dark">#303f9f</color>
     <color name="primary_dark_dark">#1a237e</color>
+    <color name="primary_dark_black">#212121</color>
     <color name="accent_light">#b71c1c</color>
-    <color name="accent_light_light">#ef5350</color>
+    <color name="accent_light_light">#0091EA</color>
     <color name="transparent_dark">#98000000</color>
     <color name="light_background">#f4f4f4</color>
     <color name="preview_filter">#35000000</color>
