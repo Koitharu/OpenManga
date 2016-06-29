@@ -16,7 +16,12 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="AppThemeBlack" parent="AppThemeDark">
+    <style name="AppThemeBlack" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary_darker</item>
+        <item name="colorPrimaryDark">@color/primary_darkest</item>
+        <item name="colorAccent">@color/accent_dark</item>
+        <!--item name="colorControlNormal">@color/accent_light_light</item-->
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
@@ -48,5 +53,4 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>

@@ -3,6 +3,7 @@ package org.nv95.openmanga.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -145,6 +147,11 @@ public class MainActivity extends BaseAppActivity implements
         StorageUpgradeTask.doUpgrade(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
+        if (isDarkTheme()) {
+            ColorStateList csl = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white_overlay_85));
+            mNavigationView.setItemTextColor(csl);
+            mNavigationView.setItemIconTintList(csl);
+        }
         //Load saved image in drawer head
         mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
         mDrawerHeaderTool.initDrawerImage();
