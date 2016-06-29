@@ -3,6 +3,7 @@ package org.nv95.openmanga.activities;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -111,6 +112,16 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ReaderMenuDialog.REQUEST_SETTINGS:
+                onOptionsChanged();
+                break;
+        }
+    }
+
     private void initParams(Bundle b){
         chapterId = b.getInt("chapter", 0);
         pageId = b.getInt("page", 0);
@@ -177,7 +188,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                                 setFullScreen();
                             }
                         })
-                        .brightnessHelper(mBrightnessHelper)
                         .progress(
                                 mPager.getCurrentPageIndex(),
                                 mPager.getCount()
