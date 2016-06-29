@@ -135,6 +135,10 @@ public class MangaProviderManager {
         return new ProviderSelectAdapter();
     }
 
+    public static boolean needConnection(MangaProvider provider) {
+        return !(provider instanceof LocalMangaProvider || provider instanceof FavouritesProvider || provider instanceof HistoryProvider);
+    }
+
     private enum Language {EN, RU, TR, MULTI, JP}
 
     public static class ProviderSumm {

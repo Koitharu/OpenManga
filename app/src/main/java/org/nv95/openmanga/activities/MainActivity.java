@@ -424,14 +424,18 @@ public class MainActivity extends BaseAppActivity implements
             mTextViewHolder.setText(holder);
             mTextViewHolder.setVisibility(View.VISIBLE);
             if (!success) {
-                Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                updateContent();
-                            }
-                        })
-                        .show();
+                if (!checkConnection() && MangaProviderManager.needConnection(mProvider)) {
+                    mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
+                } else {
+                    Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.retry, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    updateContent();
+                                }
+                            })
+                            .show();
+                }
             }
         }
 
@@ -526,16 +530,7 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     private void updateContent() {
-        if (selectedItem == R.id.nav_local_storage
-                || selectedItem == R.id.nav_action_favourites
-                || selectedItem == R.id.nav_action_history
-                || checkConnection()) {
-            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-        } else {
-            mListLoader.clearItemsLazy();
-            mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
-            mTextViewHolder.setVisibility(View.VISIBLE);
-        }
+        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
     private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
