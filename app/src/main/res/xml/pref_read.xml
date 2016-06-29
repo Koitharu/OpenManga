@@ -26,7 +26,7 @@
         android:dependency="brightness"
         android:key="brightness_value"
         android:title="@string/brightness_value"
-        app:currentValue="20"
+        android:defaultValue="20"
         app:iconDrawable="@drawable/ic_brightness_darker"
         app:max="100" />
     <CheckBoxPreference
