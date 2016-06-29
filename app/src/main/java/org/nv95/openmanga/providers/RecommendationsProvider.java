@@ -51,8 +51,8 @@ public class RecommendationsProvider extends MangaProvider {
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
+            database = mStorageHelper.getReadableDatabase();
             if (fav) {
-                database = mStorageHelper.getReadableDatabase();
                 cursor = database.query("favourites",  new String[]{"summary"}, null, null, null, null, null);
                 if (cursor.moveToFirst()) {
                     do {
@@ -116,15 +116,20 @@ public class RecommendationsProvider extends MangaProvider {
         final int groupSize = 20 / groupCount;
         MangaList tempList;
         MangaInfo manga;
+        boolean atLeastOne = false;
         for (int i=0; i<groupCount && mangas.size()<=20; i++) {
             try {
                 //noinspection ConstantConditions
                 tempList = providers.get(i).instance().getList(random.nextInt(10), 0, 0);
+                if (tempList == null) {
+                    continue;
+                }
+                atLeastOne = true;
                 Collections.shuffle(tempList);
                 int k=0;
                 for (int j=0; j<tempList.size() && k<=groupSize;j++) {
                     manga = tempList.get(j);
-                    if (checkGenres(manga.genres, genres) >= (config[2] ? 100 : 50)) {
+                    if (checkGenres(manga.genres, genres) >= (config[2] ? 99 : 49)) {
                         mangas.add(manga);
                         k++;
                     }
@@ -134,7 +139,7 @@ public class RecommendationsProvider extends MangaProvider {
             }
         }
         Collections.shuffle(mangas);
-        return mangas;
+        return atLeastOne ? mangas : null;
     }
 
     @Override
