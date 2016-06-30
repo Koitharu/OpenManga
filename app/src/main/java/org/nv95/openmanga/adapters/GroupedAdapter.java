@@ -69,7 +69,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
-            ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position), mThumbSize);
+            ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position), mThumbSize, false);
         } else {
             ((GroupViewHolder) holder).fill((MangaProviderManager.ProviderSumm) mDataset.get(position));
         }

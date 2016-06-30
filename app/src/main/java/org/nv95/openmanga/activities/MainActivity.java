@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -61,6 +62,8 @@ import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
 import java.io.File;
 
@@ -68,7 +71,7 @@ public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
-        InternalLinkMovement.OnLinkClickListener {
+        InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback {
 
     private static final int REQUEST_IMPORT = 792;
     //views
@@ -142,6 +145,8 @@ public class MainActivity extends BaseAppActivity implements
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().setOnItemLongClickListener(this);
+        mListLoader.getAdapter().getChoiceController().setCallback(this);
+        mListLoader.getAdapter().getChoiceController().setEnabled(true);
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
@@ -466,6 +471,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onLoadingStarts(int page) {
         if (page == 0) {
             mProgressBar.setVisibility(View.VISIBLE);
+            mListLoader.getAdapter().getChoiceController().clearSelection();
         }
         mTextViewHolder.setVisibility(View.GONE);
     }
@@ -549,6 +555,31 @@ public class MainActivity extends BaseAppActivity implements
 
     private void updateContent() {
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+    }
+
+    @Override
+    public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+        return false;
+    }
+
+    @Override
+    public void onDestroyActionMode(android.view.ActionMode mode) {
+        mListLoader.getAdapter().getChoiceController().clearSelection();
+    }
+
+    @Override
+    public void onChoiceChanged(ActionMode actionMode, ModalChoiceController controller, int count) {
+        actionMode.setTitle(String.valueOf(count));
     }
 
     private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
