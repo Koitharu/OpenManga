@@ -559,22 +559,47 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+        getMenuInflater().inflate(R.menu.actionmode_mangas, menu);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         return true;
     }
 
     @Override
     public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+        menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
         return false;
     }
 
     @Override
     public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-        return false;
+        final int[] items = mListLoader.getAdapter().getChoiceController().getSelectedItemsPositions();
+        final long[] ids = new long[items.length];
+        for (int i=0;i<items.length;i++) {
+            ids[i] = mListLoader.getAdapter().getItemId(items[i]);
+        }
+        switch (item.getItemId()) {
+            case R.id.action_remove:
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.delete_mangas_confirm)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mProvider.remove(ids);
+                                updateContent();
+                            }
+                        })
+                        .create().show();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
     public void onDestroyActionMode(android.view.ActionMode mode) {
         mListLoader.getAdapter().getChoiceController().clearSelection();
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     @Override
