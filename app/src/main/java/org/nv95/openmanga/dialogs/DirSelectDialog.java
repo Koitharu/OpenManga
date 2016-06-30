@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DirAdapter;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
@@ -28,7 +29,8 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
         listView = new ListView(context);
         adapter = new DirAdapter(context, MangaStore.getMangasDir(context));
         headerUp = (TextView) View.inflate(context, R.layout.item_dir, null);
-        headerUp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hardware_keyboard_return, 0, 0, 0);
+        headerUp.setCompoundDrawablesWithIntrinsicBounds(LayoutUtils.getThemedIcons(context, R.drawable.ic_return_dark)[0],
+                null, null, null);
         headerUp.setMaxLines(2);
         headerUp.setText(adapter.getCurrentDir().getPath());
         listView.addHeaderView(headerUp);

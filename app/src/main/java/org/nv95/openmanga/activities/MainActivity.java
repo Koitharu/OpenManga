@@ -62,6 +62,8 @@ import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
 
+import java.io.File;
+
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
@@ -251,10 +253,25 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT && resultCode == RESULT_OK) {
-            startService(new Intent(this, ImportService.class).putExtras(data).putExtra("action", ImportService.ACTION_START));
+            String f = data.getStringExtra(Intent.EXTRA_TEXT);
+            if (f == null) {
+                return;
+            }
+            f = new File(f).getName();
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.import_file_confirm, f))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startService(new Intent(MainActivity.this, ImportService.class)
+                                    .putExtras(data).putExtra("action", ImportService.ACTION_START));
+                        }
+                    })
+                    .create().show();
         } else if (requestCode == Constants.SETTINGS_REQUEST_ID
                 && mProviderManager != null && mNavigationView != null){
             mProviderManager.update();
@@ -272,7 +289,8 @@ public class MainActivity extends BaseAppActivity implements
         }
         switch (item.getItemId()) {
             case R.id.action_import:
-                startActivityForResult(new Intent(this, FileSelectActivity.class), REQUEST_IMPORT);
+                startActivityForResult(new Intent(this, FileSelectActivity.class)
+                        .putExtra(FileSelectActivity.EXTRA_FILTER, "cbz"), REQUEST_IMPORT);
                 return true;
             case R.id.action_filter:
                 if (mProvider == null) {
