@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.TextView;
 
-import org.nv95.openmanga.activities.MangaPreviewActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.MangaPreviewActivity;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
@@ -71,7 +71,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
 
     @Override
     public long getItemId(MangaInfo data) {
-        return data.hashCode();
+        return data.id;
     }
 
     @Override
