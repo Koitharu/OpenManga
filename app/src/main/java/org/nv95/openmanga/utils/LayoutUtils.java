@@ -2,10 +2,14 @@ package org.nv95.openmanga.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
 
 /**
@@ -80,6 +85,27 @@ public class LayoutUtils {
                 setAllImagesColor((ViewGroup) o, colorId);
             }
         }
+    }
 
+    public static ColorStateList getColorStateList(Context context, int id) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(new int[] {id});
+        int attributeResourceId = a.getResourceId(0, 0);
+        return ContextCompat.getColorStateList(context, attributeResourceId);
+    }
+
+    public static Drawable[] getThemedIcons(Context context, int... ids) {
+        boolean dark = !PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("theme", "0").equals("0");
+        PorterDuffColorFilter cf = dark ?
+                new PorterDuffColorFilter(ContextCompat.getColor(context, R.color.white_overlay_85), PorterDuff.Mode.SRC_ATOP)
+                : null;
+        Drawable[] ds = new Drawable[ids.length];
+        for (int i=0;i<ids.length;i++) {
+            ds[i] = ContextCompat.getDrawable(context, ids[i]);
+            if (ds[i] != null && dark) {
+                ds[i].setColorFilter(cf);
+            }
+        }
+        return ds;
     }
 }

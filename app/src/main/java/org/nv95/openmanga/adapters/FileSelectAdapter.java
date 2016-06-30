@@ -1,14 +1,17 @@
 package org.nv95.openmanga.adapters;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,16 +24,16 @@ import java.util.Comparator;
 public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.FileViewHolder>
     implements FileHolderCallback{
 
-    private String mPattern;
+    private String[] mPattern;
     private final DirSelectDialog.OnDirSelectListener mCallback;
     private File mCurrentDir;
     private final ArrayList<File> files;
 
-    public FileSelectAdapter(File currentDir, String pattern,
+    public FileSelectAdapter(File currentDir, @Nullable String pattern,
                              DirSelectDialog.OnDirSelectListener callback) {
         files = new ArrayList<>();
         mCallback = callback;
-        mPattern = pattern;
+        mPattern = pattern == null ? null : pattern.split(";");
         setCurrentDir(currentDir);
     }
 
@@ -44,13 +47,26 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         files.clear();
         File[] list = dir.listFiles();
         for (File o : list) {
-            if (o.isDirectory() || o.getName().toLowerCase().endsWith(mPattern)) {
+            if (o.isDirectory() || checkPattern(o.getName())) {
                 files.add(o);
             }
         }
         Collections.sort(files, new FileSortComparator());
         files.add(0, new File(dir, ".."));
         notifyDataSetChanged();
+    }
+
+    private boolean checkPattern(String name) {
+        if (mPattern == null) {
+            return true;
+        }
+        String ext = name.substring(name.lastIndexOf('.') + 1);
+        for (String o : mPattern) {
+            if (ext.equalsIgnoreCase(o)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean toParentDir() {
@@ -61,7 +77,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         files.clear();
         File[] list = parentDir.listFiles();
         for (File o : list) {
-            if (o.isDirectory() || o.getName().toLowerCase().endsWith(mPattern)) {
+            if (o.isDirectory() || checkPattern(o.getName())) {
                 files.add(o);
             }
         }
@@ -88,7 +104,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         files.clear();
         File[] list = directory.listFiles();
         for (File o : list) {
-            if (o.isDirectory() || o.getName().toLowerCase().endsWith(mPattern)) {
+            if (o.isDirectory() || checkPattern(o.getName())) {
                 files.add(o);
             }
         }
@@ -121,6 +137,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
     }
 
     public static class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private static Drawable[] icons = null;
         private File mFile;
         private final TextView mTextView;
         private final FileHolderCallback mCallback;
@@ -130,6 +147,15 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
             mCallback = callback;
             mTextView = (TextView) itemView;
             itemView.setOnClickListener(this);
+            if (icons == null) {
+                icons = LayoutUtils.getThemedIcons(
+                        mTextView.getContext(),
+                        R.drawable.ic_return_dark,
+                        R.drawable.ic_directory_dark,
+                        R.drawable.ic_directory_null_dark,
+                        R.drawable.ic_file_dark
+                );
+            }
         }
 
         protected void fill(File file) {
@@ -137,13 +163,13 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
             mTextView.setText(file.getName());
             int icon;
             if ("..".endsWith(file.getName())) {
-                icon = R.drawable.ic_return_dark;
+                icon = 0;
             } else if (file.isDirectory()) {
-                icon = file.canRead() ? R.drawable.ic_directory_dark : R.drawable.ic_directory_null_dark;
+                icon = file.canRead() ? 1 : 2;
             } else {
-                icon = R.drawable.ic_file_dark;
+                icon = 3;
             }
-            mTextView.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
+            mTextView.setCompoundDrawablesWithIntrinsicBounds(icons[icon], null, null, null);
         }
 
         @Override
