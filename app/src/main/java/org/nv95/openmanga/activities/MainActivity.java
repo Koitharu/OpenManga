@@ -3,6 +3,7 @@ package org.nv95.openmanga.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -145,6 +147,11 @@ public class MainActivity extends BaseAppActivity implements
         StorageUpgradeTask.doUpgrade(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
+        if (isDarkTheme()) {
+            ColorStateList csl = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white_overlay_85));
+            mNavigationView.setItemTextColor(csl);
+            mNavigationView.setItemIconTintList(csl);
+        }
         //Load saved image in drawer head
         mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
         mDrawerHeaderTool.initDrawerImage();
@@ -417,14 +424,18 @@ public class MainActivity extends BaseAppActivity implements
             mTextViewHolder.setText(holder);
             mTextViewHolder.setVisibility(View.VISIBLE);
             if (!success) {
-                Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                updateContent();
-                            }
-                        })
-                        .show();
+                if (!checkConnection() && MangaProviderManager.needConnection(mProvider)) {
+                    mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
+                } else {
+                    Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.retry, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    updateContent();
+                                }
+                            })
+                            .show();
+                }
             }
         }
 
@@ -519,16 +530,7 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     private void updateContent() {
-        if (selectedItem == R.id.nav_local_storage
-                || selectedItem == R.id.nav_action_favourites
-                || selectedItem == R.id.nav_action_history
-                || checkConnection()) {
-            mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
-        } else {
-            mListLoader.clearItemsLazy();
-            mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
-            mTextViewHolder.setVisibility(View.VISIBLE);
-        }
+        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
     }
 
     private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {

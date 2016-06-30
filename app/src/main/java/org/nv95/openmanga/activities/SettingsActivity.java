@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -37,6 +38,8 @@ import java.io.File;
  */
 public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
+    public static final int SECTION_READER = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +47,17 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
 
+        int section = getIntent().getIntExtra("section", 0);
+        Fragment fragment;
+        switch (section) {
+            case SECTION_READER:
+                fragment = new ReadSettingsFragment();
+                break;
+            default:
+                fragment = new CommonSettingsFragment();
+        }
         getFragmentManager().beginTransaction()
-                .replace(R.id.content, new CommonSettingsFragment())
+                .replace(R.id.content, fragment)
                 .commit();
 
     }
@@ -187,17 +199,8 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     OpenMangaApplication.getVersionName()));
 
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
+            bindPreferenceSummary((ListPreference) findPreference("theme"));
             bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
-
-            p = findPreference("darktheme");
-            p.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    boolean current = ((BaseAppActivity)getActivity()).isDarkTheme();
-                    preference.setSummary(newValue.equals(current) ? null : getString(R.string.restart_required));
-                    return true;
-                }
-            });
 
             p = findPreference("mangadir");
             try {

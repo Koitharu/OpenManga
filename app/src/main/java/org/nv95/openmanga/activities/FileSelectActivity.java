@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.FileSelectAdapter;
+import org.nv95.openmanga.dialogs.DirSelectDialog;
 
 import java.io.File;
 
@@ -51,10 +50,7 @@ public class FileSelectActivity extends BaseAppActivity implements DirSelectDial
     public void onDirSelected(File dir) {
         if (dir.isDirectory()) {
             mAdapter.setDirectory(dir);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setSubtitle(mAdapter.getCurrentDir().getPath());
-            }
+            setSubtitle(mAdapter.getCurrentDir().getPath());
         } else {
             getSharedPreferences(this.getLocalClassName(), MODE_PRIVATE).edit()
                     .putString("dir", mAdapter.getCurrentDir().getPath())
@@ -70,6 +66,8 @@ public class FileSelectActivity extends BaseAppActivity implements DirSelectDial
     public void onBackPressed() {
         if (!mAdapter.toParentDir()) {
             super.onBackPressed();
+        } else {
+            setSubtitle(mAdapter.getCurrentDir().getPath());
         }
     }
 }

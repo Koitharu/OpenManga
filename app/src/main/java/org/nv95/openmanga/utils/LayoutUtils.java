@@ -4,8 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.nv95.openmanga.items.ThumbSize;
 
@@ -55,4 +63,23 @@ public class LayoutUtils {
         return count == 0 ? 1 : count;
     }
 
+    public static void setAllImagesColor(ViewGroup container, @ColorRes int colorId) {
+        int color = ContextCompat.getColor(container.getContext(), colorId);
+        View o;
+        for (int i = container.getChildCount() - 1;i >= 0;i--) {
+            o = container.getChildAt(i);
+            if (o instanceof ImageView) {
+                ((ImageView) o).setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            } else if (o instanceof TextView) {
+                for (Drawable d : ((TextView)o).getCompoundDrawables()) {
+                    if (d != null) {
+                        d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                    }
+                }
+            } else if (o instanceof ViewGroup) {
+                setAllImagesColor((ViewGroup) o, colorId);
+            }
+        }
+
+    }
 }
