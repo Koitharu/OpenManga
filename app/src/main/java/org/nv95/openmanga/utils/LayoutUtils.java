@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,5 +108,13 @@ public class LayoutUtils {
             }
         }
         return ds;
+    }
+
+    public static int getAccentColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+        int color = a.getColor(0, 0);
+        a.recycle();
+        return color;
     }
 }

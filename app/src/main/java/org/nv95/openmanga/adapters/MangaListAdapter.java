@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Checkable;
 import android.widget.TextView;
 
 import org.nv95.openmanga.activities.MangaPreviewActivity;
@@ -17,6 +18,8 @@ import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
+import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -26,9 +29,11 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     private ThumbSize mThumbSize;
     @Nullable
     private OnItemLongClickListener<MangaViewHolder> mOnItemLongClickListener;
+    private final ModalChoiceController mChoiceController;
 
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
+        mChoiceController = new ModalChoiceController();
     }
 
     public void setOnItemLongClickListener(OnItemLongClickListener<MangaViewHolder> itemLongClickListener) {
@@ -45,6 +50,10 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         }
     }
 
+    public ModalChoiceController getChoiceController() {
+        return mChoiceController;
+    }
+
     public void setThumbnailsSize(@NonNull ThumbSize size) {
         if (!size.equals(mThumbSize)) {
             mThumbSize = size;
@@ -54,16 +63,10 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
 
     @Override
     public MangaViewHolder onCreateHolder(ViewGroup parent) {
-        return new MangaViewHolder(LayoutInflater.from(parent.getContext())
+        MangaViewHolder holder = new MangaViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), mOnItemLongClickListener);
-    }
-
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder instanceof MangaViewHolder) {
-            ((MangaViewHolder) holder).asyncImageView.setImageAsync(null);
-        }
-        super.onViewRecycled(holder);
+        holder.setListener(mChoiceController);
+        return holder;
     }
 
     @Override
@@ -72,8 +75,8 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     }
 
     @Override
-    public void onBindHolder(MangaViewHolder viewHolder, MangaInfo data) {
-        viewHolder.fill(data, mThumbSize);
+    public void onBindHolder(MangaViewHolder viewHolder, MangaInfo data, int position) {
+        viewHolder.fill(data, mThumbSize, mChoiceController.isSelected(position));
     }
 
     public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -85,6 +88,8 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private TextView textViewBadge;
         private AsyncImageView asyncImageView;
         private MangaInfo mData;
+        @Nullable
+        private OnHolderClickListener mListener;
 
         public MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);
@@ -103,8 +108,11 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             return mData;
         }
 
-        public void fill(MangaInfo data, ThumbSize thumbSize) {
+        public void fill(MangaInfo data, ThumbSize thumbSize, boolean checked) {
             mData = data;
+            if (itemView instanceof Checkable) {
+                ((Checkable) itemView).setChecked(checked);
+            }
             textViewTitle.setText(mData.name);
             if (mData.subtitle == null) {
                 textViewSubtitle.setVisibility(View.GONE);
@@ -124,17 +132,23 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             }
         }
 
+        public void setListener(@Nullable OnHolderClickListener listener) {
+            this.mListener = listener;
+        }
+
         @Override
         public void onClick(View v) {
-            Context context = v.getContext();
-            Intent intent = new Intent(context, MangaPreviewActivity.class);
-            intent.putExtras(mData.toBundle());
-            context.startActivity(intent);
+            if (mListener == null || !mListener.onClick(this)) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, MangaPreviewActivity.class);
+                intent.putExtras(mData.toBundle());
+                context.startActivity(intent);
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            return mLongClickListener != null && mLongClickListener.onItemLongClick(this);
+            return !(mListener == null || !mListener.onLongClick(this)) || mLongClickListener != null && mLongClickListener.onItemLongClick(this);
         }
     }
 

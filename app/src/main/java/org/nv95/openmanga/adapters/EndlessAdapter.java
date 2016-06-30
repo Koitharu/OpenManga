@@ -82,7 +82,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         T item = getItem(position);
         if (item != null) {
             //noinspection unchecked
-            onBindHolder((VH) holder, item);
+            onBindHolder((VH) holder, item, position);
         } else if (holder instanceof ProgressViewHolder) {
             ((ProgressViewHolder) holder).setVisible(isLoadEnabled());
         }
@@ -116,7 +116,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
     public abstract VH onCreateHolder(ViewGroup parent);
 
-    public abstract void onBindHolder(VH viewHolder, T data);
+    public abstract void onBindHolder(VH viewHolder, T data, int position);
 
     public abstract long getItemId(T data);
 
