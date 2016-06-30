@@ -2,7 +2,6 @@ package org.nv95.openmanga.components;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
@@ -22,20 +21,22 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 12.02.16.
  */
 public class SeekBarPreference extends Preference implements AppCompatSeekBar.OnSeekBarChangeListener {
-    private static final String ATTR_NS = "http://schemas.android.com/apk/res-auto";
-    private TextView valueTextView;
-    private int currentValue;
-    private int max;
-    private Drawable icon;
+    private TextView mTextView;
+    private AppCompatSeekBar mSeekBar;
+    private int mValue;
+    private int mMax;
+    private Drawable mIcon;
+    private boolean mValueSet;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.SeekBarPreferenceAttrs);
-        icon = a.getDrawable(R.styleable.SeekBarPreferenceAttrs_iconDrawable);
-        max = a.getInt(R.styleable.SeekBarPreferenceAttrs_max, 100);
-        currentValue = a.getInt(R.styleable.SeekBarPreferenceAttrs_currentValue, 0);
+        mIcon = a.getDrawable(R.styleable.SeekBarPreferenceAttrs_iconDrawable);
+        mMax = a.getInt(R.styleable.SeekBarPreferenceAttrs_max, 100);
+        mValue = 0;
         a.recycle();
+        mValueSet = false;
     }
 
     @SuppressLint("MissingSuperCall")
@@ -45,41 +46,51 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
                 getContext())
                 .inflate(R.layout.pref_seekbar, parent, false);
         ((TextView) layout.findViewById(R.id.title)).setText(getTitle());
-        AppCompatSeekBar bar = (AppCompatSeekBar) layout.findViewById(R.id.seekBar);
-        bar.setMax(max);
-        bar.setProgress(currentValue);
-        bar.setOnSeekBarChangeListener(this);
+        mSeekBar = (AppCompatSeekBar) layout.findViewById(R.id.seekBar);
+        mSeekBar.setMax(mMax);
+        mSeekBar.setProgress(mValue);
+        mSeekBar.setOnSeekBarChangeListener(this);
         ImageView imageView = (ImageView) layout.findViewById(R.id.icon);
-        if (icon != null) {
+        if (mIcon != null) {
             imageView.setVisibility(View.VISIBLE);
-            imageView.setImageDrawable(icon);
+            imageView.setImageDrawable(mIcon);
         }
-        valueTextView = (TextView) layout.findViewById(R.id.value);
-        valueTextView.setText(String.valueOf(currentValue));
+        mTextView = (TextView) layout.findViewById(R.id.value);
+        mTextView.setText(String.valueOf(mValue));
         return layout;
     }
 
-    //Функция, вызываемая каждый раз при перемещении ползунка
+    @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
-        valueTextView.setText(String.valueOf(progress));
-        valueTextView.invalidate();
+        mTextView.setText(String.valueOf(progress));
+        mTextView.invalidate();
     }
 
+    @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
     }
 
-    //Функция, вызываемая после окончания движения пользователем
+    @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        currentValue = seekBar.getProgress();
-        updatePreference(currentValue);
-        notifyChanged();
+        setValue(seekBar.getProgress());
     }
 
-    //Сохранение значения настройки
-    private void updatePreference(int newValue) {
-        SharedPreferences.Editor editor = getEditor();
-        editor.putInt(getKey(), newValue);
-        editor.commit();
+    public void setValue(int value) {
+        // Always persist/notify the first time.
+        final boolean changed = mValue != value;
+        if (changed || !mValueSet) {
+            mValue = value;
+            mValueSet = true;
+            persistInt(value);
+            if (changed) {
+                notifyChanged();
+            }
+        }
+    }
+
+    @Override
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        setValue(restoreValue ? getPersistedInt(mValue) : (int) defaultValue);
     }
 }

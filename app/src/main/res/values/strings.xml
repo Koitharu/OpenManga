@@ -248,11 +248,15 @@
     <string name="download">Download</string>
     <string name="action_save_add">Save missing chapters</string>
     <string name="no_network_connection">No network connection</string>
-    <string name="no_network_connection_html"><![CDATA[No network connection available.<br/>Turn on <a href=\"settings:network\">mobile data</a> or <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><a href=\"app:update\">Try again</a>]]></string>
+    <string name="no_network_connection_html"><![CDATA[No network connection available.<br/>Turn on <a href=\"settings:network\">mobile data</a> or <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><h4><a href=\"app:update\">Try again</a></h4>]]></string>
     <string name="error_loadimage_html" formatted="false"><![CDATA[Failed to load image<br/><h3><a href=\"app:retry\">Try again</a></h3><br/><br/>Details:<br/>%s]]></string>
     <string name="sources">Sources</string>
     <string name="full_match">Full match</string>
     <string name="use_dark_theme">Use dark theme</string>
     <string name="restart_required">Restart is required</string>
     <string name="wait_for_complete">Wait for the completion of operations</string>
+    <string name="theme">Theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_black">Black</string>
 </resources>
