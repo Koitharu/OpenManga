@@ -44,7 +44,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                 .getString("theme", "0"));
         if (theme != 0) {
             mDarkTheme = true;
-            setTheme(theme == 2 ? R.style.AppThemeBlack : R.style.AppThemeDark);
+            setTheme(theme == 2 ? R.style.AppTheme_Black : R.style.AppTheme_Dark);
         }
     }
 
