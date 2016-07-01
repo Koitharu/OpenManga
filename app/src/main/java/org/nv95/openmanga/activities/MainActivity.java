@@ -553,8 +553,14 @@ public class MainActivity extends BaseAppActivity implements
                                 updateContent();
                             }
                         })
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                mListLoader.getAdapter().getChoiceController().clearSelection();
+                            }
+                        })
                         .create().show();
-                break;
+                return true;
             case R.id.action_save:
                 DownloadService.start(this, mListLoader.getItems(items));
                 break;
