@@ -20,9 +20,13 @@ import java.util.Collections;
  */
 public class MangaPager extends ViewPager {
 
+    public static final int TRANSFORM_MODE_SCROLL = 0;
+    public static final int TRANSFORM_MODE_SLIDE = 1;
+
     private PagerReaderAdapter mAdapter;
     private ArrayList<MangaPage> mList;
     private boolean mReverse, mVertical;
+    private int mTransformMode;
     private OverScrollListener mOverScrollListener;
     private int lastX = -1;
     private OverScrollDetector mDetector;
@@ -39,6 +43,9 @@ public class MangaPager extends ViewPager {
     }
 
     private void init(Context context) {
+        mTransformMode = TRANSFORM_MODE_SCROLL;
+        mReverse = false;
+        mVertical = false;
         mList = new ArrayList<>();
         mAdapter = new PagerReaderAdapter(context, mList);
         setOverScrollMode(OVER_SCROLL_NEVER);
@@ -164,6 +171,11 @@ public class MangaPager extends ViewPager {
         return mReverse;
     }
 
+    public boolean isVertical() {
+        return mVertical;
+    }
+
+    @Deprecated
     public void setReverse(boolean reverse) {
         if (mReverse != reverse) {
             int pos = getCurrentPageIndex();
@@ -175,17 +187,56 @@ public class MangaPager extends ViewPager {
         }
     }
 
-    public boolean isVertical() {
-        return mVertical;
-    }
-
+    @Deprecated
     public void setVertical(boolean vertical) {
         if (mVertical != vertical) {
             mVertical = vertical;
-            setPageTransformer(true, vertical ? new VerticalPageTransformer() : null);
+            setTransformMode(mTransformMode);
             mAdapter.notifyDataSetChanged();
             setAdapter(mAdapter);
         }
+    }
+
+    @Deprecated
+    public void setTransformMode(int mode) {
+        mTransformMode = mode;
+        switch (mode) {
+            case TRANSFORM_MODE_SCROLL:
+                setPageTransformer(true, mVertical ? new VerticalPageTransformer() : null);
+                break;
+            case TRANSFORM_MODE_SLIDE:
+                if (mVertical) {
+                    setPageTransformer(true, new VerticalSlidePageTransformer());
+                } else {
+                    setPageTransformer(!mReverse, new SlidePageTransformer(mReverse));
+                }
+                break;
+        }
+    }
+
+    public void setBehavior(boolean vertical, boolean reverse, int transformMode) {
+        final int pos = getCurrentPageIndex();
+        mVertical = vertical;
+        if (mReverse != reverse) {
+            mReverse = reverse;
+            Collections.reverse(mList);
+        }
+        mTransformMode = transformMode;
+        switch (mTransformMode) {
+            case TRANSFORM_MODE_SCROLL:
+                setPageTransformer(true, mVertical ? new VerticalPageTransformer() : null);
+                break;
+            case TRANSFORM_MODE_SLIDE:
+                if (mVertical) {
+                    setPageTransformer(true, new VerticalSlidePageTransformer());
+                } else {
+                    setPageTransformer(!mReverse, new SlidePageTransformer(mReverse));
+                }
+                break;
+        }
+        setAdapter(null);
+        setAdapter(mAdapter);
+        setCurrentPageIndex(pos);
     }
 
     public void setOverScrollListener(OverScrollListener overScrollListener) {
