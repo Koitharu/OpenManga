@@ -121,6 +121,14 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         mRecyclerView.scrollToPosition(position);
     }
 
+    public MangaInfo[] getItems(int[] positions) {
+        MangaInfo[] items = new MangaInfo[positions.length];
+        for (int i=0;i<positions.length;i++) {
+            items[i] = mList.get(positions[i]);
+        }
+        return items;
+    }
+
     private class LoadContentTask extends AsyncTask<Void, Void, MangaList> {
         private final int mPage;
         private final boolean mAppendable;

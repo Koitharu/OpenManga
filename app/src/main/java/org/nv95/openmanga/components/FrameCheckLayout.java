@@ -3,9 +3,7 @@ package org.nv95.openmanga.components;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.GravityCompat;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
@@ -23,6 +21,7 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
 
     private boolean mChecked;
     private int mAccentColor;
+    private int mPadding;
     private ImageView mCheckMark;
 
     public FrameCheckLayout(Context context) {
@@ -49,18 +48,15 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
     private void init() {
         mChecked = false;
         mAccentColor = LayoutUtils.getAccentColor(getContext());
+        mPadding = getResources().getDimensionPixelOffset(R.dimen.size_selector);
     }
 
     @Override
     public void setChecked(boolean checked) {
         mChecked = checked;
         if (mChecked) {
-            setScaleX(0.9f);
-            setScaleY(0.9f);
             getCheckMark().setVisibility(VISIBLE);
         } else {
-            setScaleX(1);
-            setScaleY(1);
             getCheckMark().setVisibility(View.GONE);
         }
     }
@@ -68,11 +64,9 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
     private View getCheckMark() {
         if (mCheckMark == null) {
             mCheckMark = new ImageView(getContext());
-            LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.gravity = GravityCompat.START | Gravity.BOTTOM;
-            mCheckMark.setLayoutParams(lp);
-            mCheckMark.setImageResource(R.drawable.ic_checkmark_dark);
-            mCheckMark.setColorFilter(mAccentColor);
+            mCheckMark.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            mCheckMark.setImageResource(R.drawable.selector_frame);
+            //mCheckMark.setColorFilter(mAccentColor);
             mCheckMark.setVisibility(GONE);
             addView(mCheckMark);
         }

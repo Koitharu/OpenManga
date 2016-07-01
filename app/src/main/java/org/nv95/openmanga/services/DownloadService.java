@@ -1,6 +1,7 @@
 package org.nv95.openmanga.services;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AlertDialog;
 import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.Constants;
@@ -21,8 +23,10 @@ import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaChangesObserver;
@@ -48,8 +52,13 @@ public class DownloadService extends Service {
     @NonNull
     private WeakReference<DownloadTask> mTaskReference = new WeakReference<>(null);
 
-    public static void start(final Context context, final MangaSummary manga) {
+    public static void start(Context context, MangaSummary manga) {
         start(context, manga, R.string.chapters_to_save);
+    }
+
+    public static void start(final Context context, MangaInfo[] mangas) {
+        new GetDetailsTask(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                mangas);
     }
 
     public static void start(final Context context, final MangaSummary manga, @StringRes int dialogTitle) {
@@ -329,6 +338,103 @@ public class DownloadService extends Service {
 
         public void removeListener(OnProgressUpdateListener listener) {
             mProgressListeners.remove(listener);
+        }
+    }
+
+    private static class GetDetailsTask extends AsyncTask<MangaInfo,Integer,MangaSummary[]>
+            implements DialogInterface.OnClickListener {
+
+        private final ProgressDialog mProgressDialog;
+        private final Context mContext;
+
+        public GetDetailsTask(Context context) {
+            super();
+            mContext = context;
+            mProgressDialog = new ProgressDialog(mContext);
+            mProgressDialog.setMessage(mContext.getString(R.string.loading));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                    mContext.getString(android.R.string.cancel), this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected MangaSummary[] doInBackground(MangaInfo... params) {
+            MangaSummary[] summaries = new MangaSummary[params.length];
+            MangaProvider provider;
+            publishProgress(0, params.length);
+            for (int i=0;i<params.length && !isCancelled();i++) {
+                try {
+                    provider = (MangaProvider) params[i].provider.newInstance();
+                    if (provider instanceof LocalMangaProvider) {
+                        summaries[i] = null;
+                    } else {
+                        summaries[i] = provider.getDetailedInfo(params[i]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    summaries[i] = null;
+                }
+                publishProgress(i, params.length);
+            }
+            return summaries;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setMax(values[1]);
+            mProgressDialog.setProgress(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(final MangaSummary[] mangaSummaries) {
+            super.onPostExecute(mangaSummaries);
+            int mangas = 0, chapters = 0;
+            for (MangaSummary o : mangaSummaries) {
+                if (o != null) {
+                    mangas++;
+                    chapters += o.chapters.size();
+                }
+            }
+            mProgressDialog.dismiss();
+            new AlertDialog.Builder(mContext)
+                    .setMessage(mContext.getString(R.string.multiple_save_confirm, mangas, chapters))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            for (MangaSummary o : mangaSummaries) {
+                                if (o != null) {
+                                    startNoConfirm(mContext, o);
+                                }
+                            }
+                        }
+                    })
+                    .create().show();
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_NEGATIVE) {
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.setMessage(mContext.getString(R.string.cancelling));
+                this.cancel(false);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mProgressDialog.dismiss();
         }
     }
 }

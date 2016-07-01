@@ -21,7 +21,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -37,8 +36,6 @@ import android.widget.TextView;
 import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.MangaListAdapter;
-import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
@@ -55,6 +52,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
@@ -69,7 +67,6 @@ import java.io.File;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
-        OnItemLongClickListener<MangaListAdapter.MangaViewHolder>,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
         InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback {
 
@@ -144,7 +141,6 @@ public class MainActivity extends BaseAppActivity implements
         setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
         mProvider = mProviderManager.getMangaProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
-        mListLoader.getAdapter().setOnItemLongClickListener(this);
         mListLoader.getAdapter().getChoiceController().setCallback(this);
         mListLoader.getAdapter().getChoiceController().setEnabled(true);
         mListModeHelper = new ListModeHelper(this, this);
@@ -487,40 +483,6 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     @Override
-    public boolean onItemLongClick(MangaListAdapter.MangaViewHolder viewHolder) {
-        PopupMenu popupMenu = new PopupMenu(this, viewHolder.itemView);
-        popupMenu.inflate(R.menu.manga_popup);
-        Menu menu = popupMenu.getMenu();
-        menu.findItem(R.id.action_delete).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
-        menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
-        if (!menu.hasVisibleItems()) {
-            return false;
-        }
-        final MangaInfo mangaInfo = viewHolder.getData();
-        final int position = viewHolder.getAdapterPosition();
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_delete:
-                        if (mProvider.remove(new long[]{mangaInfo.id})) {
-                            mListLoader.removeItem(position);
-                        }
-                        //new RemoveHelper(position).remove();
-                        return true;
-                    case R.id.action_share:
-                        new ContentShareHelper(MainActivity.this).share(mangaInfo);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-        popupMenu.show();
-        return true;
-    }
-
-    @Override
     public void onListModeChanged(boolean grid, int sizeMode) {
         int spans;
         ThumbSize thumbSize;
@@ -567,6 +529,8 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
         menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
+        menu.findItem(R.id.action_save).setVisible(!(mProvider instanceof LocalMangaProvider));
+        menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
         return false;
     }
 
@@ -590,10 +554,18 @@ public class MainActivity extends BaseAppActivity implements
                             }
                         })
                         .create().show();
-                return true;
+                break;
+            case R.id.action_save:
+                DownloadService.start(this, mListLoader.getItems(items));
+                break;
+            case R.id.action_share:
+                new ContentShareHelper(MainActivity.this).share(mListLoader.getItems(items)[0]);
+                break;
             default:
                 return false;
         }
+        mode.finish();
+        return true;
     }
 
     @Override
@@ -605,6 +577,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public void onChoiceChanged(ActionMode actionMode, ModalChoiceController controller, int count) {
         actionMode.setTitle(String.valueOf(count));
+        actionMode.getMenu().findItem(R.id.action_share).setVisible(count == 1);
     }
 
     private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
