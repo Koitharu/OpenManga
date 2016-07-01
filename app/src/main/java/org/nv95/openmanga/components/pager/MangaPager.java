@@ -1,4 +1,4 @@
-package org.nv95.openmanga.components;
+package org.nv95.openmanga.components.pager;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.Surface;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
+import org.nv95.openmanga.components.OverScrollDetector;
 import org.nv95.openmanga.items.MangaPage;
 
 import java.util.ArrayList;

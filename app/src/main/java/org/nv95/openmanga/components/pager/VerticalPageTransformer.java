@@ -1,4 +1,4 @@
-package org.nv95.openmanga.components;
+package org.nv95.openmanga.components.pager;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
