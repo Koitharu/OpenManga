@@ -262,4 +262,7 @@
     <string name="import_file_confirm" formatted="false">Are you want to import file %s to local storage?</string>
     <string name="delete_mangas_confirm">Remove selected mangas?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (total %d chapters)</string>
+    <string name="scrolling_animation">Scrolling animation</string>
+    <string name="scrolling">Scrolling</string>
+    <string name="sliding">Sliding</string>
 </resources>

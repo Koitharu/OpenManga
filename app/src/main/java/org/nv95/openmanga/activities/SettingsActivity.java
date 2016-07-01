@@ -253,6 +253,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             Activity activity = getActivity();
             activity.setTitle(R.string.action_reading_options);
             bindPreferenceSummary((ListPreference) findPreference("direction"));
+            bindPreferenceSummary((ListPreference) findPreference("animation"));
         }
     }
 
