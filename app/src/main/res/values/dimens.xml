@@ -15,5 +15,6 @@
     <dimen name="padding8">8dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="status_bar_height">25dp</dimen>
+    <dimen name="size_selector">2dp</dimen>
 
 </resources>
