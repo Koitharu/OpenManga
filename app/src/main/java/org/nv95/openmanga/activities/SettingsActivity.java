@@ -11,6 +11,7 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
 
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
 /**
  * Created by nv95 on 03.10.15.
  * Activity with settings fragments
@@ -39,6 +42,7 @@ import java.io.File;
 public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
     public static final int SECTION_READER = 2;
+    private String mTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,8 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         setContentView(R.layout.activity_settings);
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
+        mTheme = getDefaultSharedPreferences(this)
+                .getString("theme", "0");
 
         int section = getIntent().getIntExtra("section", 0);
         Fragment fragment;
@@ -60,6 +66,15 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 .replace(R.id.content, fragment)
                 .commit();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mTheme.equals(PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("theme", "0"))) {
+            ((OpenMangaApplication)getApplication()).restart();
+        }
     }
 
     @Override
@@ -157,6 +172,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
     }
 
     public static class CommonSettingsFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
