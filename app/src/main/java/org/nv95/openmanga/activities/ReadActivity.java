@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.MangaPager;
+import org.nv95.openmanga.components.pager.MangaPager;
 import org.nv95.openmanga.components.OverScrollDetector;
 import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.dialogs.ReaderMenuDialog;
