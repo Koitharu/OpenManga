@@ -1,5 +1,6 @@
 package org.nv95.openmanga.utils;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -17,6 +18,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -116,5 +118,22 @@ public class LayoutUtils {
         int color = a.getColor(0, 0);
         a.recycle();
         return color;
+    }
+
+    public static void animatePress(final View view) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1, 0.96f)
+                .setDuration(200);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setRepeatCount(1);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float v = (float) animation.getAnimatedValue();
+                view.setScaleY(v);
+                view.setScaleX(v);
+            }
+        });
+        animator.start();
     }
 }

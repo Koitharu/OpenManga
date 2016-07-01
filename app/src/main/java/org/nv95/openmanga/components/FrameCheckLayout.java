@@ -53,11 +53,16 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
 
     @Override
     public void setChecked(boolean checked) {
+        if (mChecked == checked) {
+            return;
+        }
         mChecked = checked;
         if (mChecked) {
             getCheckMark().setVisibility(VISIBLE);
+            LayoutUtils.animatePress(this);
         } else {
             getCheckMark().setVisibility(View.GONE);
+            LayoutUtils.animatePress(this);
         }
     }
 
