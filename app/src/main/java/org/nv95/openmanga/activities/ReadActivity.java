@@ -332,7 +332,8 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     public void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int direction = Integer.parseInt(prefs.getString("direction", "0"));
-        mPager.setBehavior(direction == 1, direction > 1, MangaPager.TRANSFORM_MODE_SLIDE);
+        mPager.setBehavior(direction == 1, direction > 1,
+                Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))));
         if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {

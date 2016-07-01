@@ -7,6 +7,12 @@
         android:entryValues="@array/directions_values"
         android:key="direction"
         android:title="@string/scrolling_direction" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/animations"
+        android:entryValues="@array/animation_values"
+        android:key="animation"
+        android:title="@string/scrolling_animation" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="keep_screen"
