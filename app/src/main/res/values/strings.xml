@@ -269,4 +269,7 @@
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
     <string name="show_resume_fab">Show floating \"Continue\" button</string>
+    <string name="next">Next</string>
+    <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
+    <string name="moving_files">Moving files…</string>
 </resources>

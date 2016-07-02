@@ -15,6 +15,7 @@ import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.SimpleDownload;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 
 import java.io.File;
 import java.util.Date;
@@ -195,6 +196,42 @@ public class MangaStore {
         return result;
     }
 
+    @WorkerThread
+    public boolean moveManga(long id, String destDir) {
+        SQLiteDatabase database = null;
+        boolean result = true;
+        Cursor cursor = null;
+        ContentValues cv = new ContentValues();
+        cv.put("dir", destDir + File.separatorChar + String.valueOf(id));
+        File dir;
+        try {
+            database = mDatabaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            cursor = database.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
+            cursor.moveToFirst();
+            dir = new File(cursor.getString(0));
+            LocalMangaProvider.moveDir(dir, destDir);
+            cursor.close();
+            cursor = null;
+            database.update(TABLE_MANGAS, cv, "id=?", new String[]{String.valueOf(id)});
+            if (result) {
+                database.setTransactionSuccessful();
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+            result = false;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.endTransaction();
+                database.close();
+            }
+        }
+        return result;
+    }
+
     @MainThread
     public boolean dropChapters(int mangaId, long[] ids) {
         SQLiteDatabase database = null;
@@ -273,7 +310,6 @@ public class MangaStore {
         }
         return res;
     }
-
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 

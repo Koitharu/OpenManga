@@ -38,6 +38,7 @@ import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
+import org.nv95.openmanga.dialogs.LocalMoveDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
@@ -553,7 +554,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
         menu.findItem(R.id.action_save).setVisible(!(mProvider instanceof LocalMangaProvider));
         menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
-        menu.findItem(R.id.action_move).setVisible(mProvider instanceof FavouritesProvider);
+        menu.findItem(R.id.action_move).setVisible(mProvider instanceof FavouritesProvider || mProvider instanceof LocalMangaProvider);
         return false;
     }
 
@@ -588,28 +589,11 @@ public class MainActivity extends BaseAppActivity implements
                 DownloadService.start(this, mListLoader.getItems(items));
                 break;
             case R.id.action_move:
-                final int[] selected = new int[1];
-                CharSequence[] categories = (getString(R.string.category_no) + "," +
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                                .getString("fav.categories", getString(R.string.favourites_categories_default)))
-                        .replaceAll(", ", ",").split(",");
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.action_move)
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setCancelable(true)
-                        .setSingleChoiceItems(categories, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                selected[0] = which;
-                            }
-                        })
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                FavouritesProvider.getInstacne(MainActivity.this).move(ids, selected[0]);
-                                updateContent();
-                            }
-                        }).create().show();
+                if (mProvider instanceof LocalMangaProvider) {
+                    new LocalMoveDialog(this, ids).showSelectSource();
+                } else {
+                    favouritesMoveDialog(ids);
+                }
                 break;
             case R.id.action_share:
                 new ContentShareHelper(MainActivity.this).share(mListLoader.getItems(items)[0]);
@@ -619,6 +603,31 @@ public class MainActivity extends BaseAppActivity implements
         }
         mode.finish();
         return true;
+    }
+
+    private void favouritesMoveDialog(final long[] ids) {
+        final int[] selected = new int[1];
+        CharSequence[] categories = (getString(R.string.category_no) + "," +
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                        .getString("fav.categories", getString(R.string.favourites_categories_default)))
+                .replaceAll(", ", ",").split(",");
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.action_move)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setCancelable(true)
+                .setSingleChoiceItems(categories, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        selected[0] = which;
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FavouritesProvider.getInstacne(MainActivity.this).move(ids, selected[0]);
+                        updateContent();
+                    }
+                }).create().show();
     }
 
     @Override
