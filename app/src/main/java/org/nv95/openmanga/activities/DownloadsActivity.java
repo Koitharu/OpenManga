@@ -68,6 +68,14 @@ public class DownloadsActivity extends BaseAppActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean paused = adapter.isPaused();
+        menu.findItem(R.id.action_pause).setVisible(!paused);
+        menu.findItem(R.id.action_resume).setVisible(paused);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_cancel:
@@ -81,6 +89,14 @@ public class DownloadsActivity extends BaseAppActivity {
                         })
                         .setMessage(R.string.downloads_cancel_confirm)
                         .create().show();
+                return true;
+            case R.id.action_resume:
+                adapter.setTaskPaused(false);
+                invalidateOptionsMenu();
+                return true;
+            case R.id.action_pause:
+                adapter.setTaskPaused(true);
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

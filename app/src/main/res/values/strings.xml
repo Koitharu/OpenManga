@@ -266,4 +266,6 @@
     <string name="scrolling">Scrolling</string>
     <string name="sliding">Sliding</string>
     <string name="action_move">Move to</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>
