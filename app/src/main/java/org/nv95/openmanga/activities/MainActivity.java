@@ -108,6 +108,8 @@ public class MainActivity extends BaseAppActivity implements
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         mFab.setOnClickListener(this);
         mFab.setOnLongClickListener(this);
+        mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
         mNavigationView.setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
@@ -280,6 +282,8 @@ public class MainActivity extends BaseAppActivity implements
                 recreate();
                 return;
             }
+            mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                    .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
             if (mProviderManager != null && mNavigationView != null){
                 mProviderManager.update();
                 initDrawerRemoteProviders();
