@@ -116,6 +116,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         notifyDataSetChanged();
     }
 
+    public boolean isPaused() {
+        return mBinder != null && mBinder.isPaused();
+    }
+
+    public void setTaskPaused(boolean paused) {
+        if (mBinder != null) {
+            mBinder.setPaused(paused);
+        }
+    }
+
     protected static class DownloadHolder extends RecyclerView.ViewHolder {
         private final AsyncImageView mAsyncImageView;
         private final TextView mTextViewTitle;

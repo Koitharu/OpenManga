@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_pause"
+        android:title="@string/pause"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_resume"
+        android:title="@string/resume"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_cancel"
         android:title="@android:string/cancel"
         app:showAsAction="never" />

@@ -20,6 +20,8 @@ public class NotificationHelper {
     private final Context mContext;
     private final OneShotNotifier mNotifier;
     private final NotificationCompat.Builder mNotificationBuilder;
+    @Nullable
+    private NotificationCompat.Action mSecondaryAction = null;
 
     public NotificationHelper(Context context) {
         mContext = context;
@@ -54,6 +56,7 @@ public class NotificationHelper {
 
     public NotificationHelper noActions() {
         mNotificationBuilder.mActions.clear();
+        mSecondaryAction = null;
         return this;
     }
 
@@ -61,6 +64,21 @@ public class NotificationHelper {
         mNotificationBuilder.addAction(R.drawable.sym_cancel,
                 mContext.getString(android.R.string.cancel),
                 intent);
+        return this;
+    }
+
+    public NotificationHelper actionSecondary(PendingIntent intent, @DrawableRes int icon, @StringRes int title) {
+        if (mSecondaryAction == null) {
+            mNotificationBuilder.addAction(icon,
+                    mContext.getString(title),
+                    intent);
+            mSecondaryAction = mNotificationBuilder.mActions.get(mNotificationBuilder.mActions.size() - 1);
+
+        } else {
+            mSecondaryAction.actionIntent = intent;
+            mSecondaryAction.title = mContext.getString(title);
+            mSecondaryAction.icon = icon;
+        }
         return this;
     }
 

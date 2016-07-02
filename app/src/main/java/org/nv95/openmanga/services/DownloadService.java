@@ -36,6 +36,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -43,6 +44,8 @@ import java.util.Vector;
 public class DownloadService extends Service {
     private static final int ACTION_ADD = 50;
     private static final int ACTION_CANCEL = 51;
+    private static final int ACTION_PAUSE = 52;
+    private static final int ACTION_RESUME = 53;
     private static final int NOTIFY_ID = 532;
     private NotificationHelper mNotificationHelper;
     private PowerManager.WakeLock mWakeLock;
@@ -112,9 +115,13 @@ public class DownloadService extends Service {
         mNotificationHelper = new NotificationHelper(this)
                 .intentActivity(new Intent(this, DownloadsActivity.class))
                 .actionCancel(PendingIntent.getService(
-                        this, 0,
+                        this, ACTION_CANCEL,
                         new Intent(this, DownloadService.class).putExtra("action", ACTION_CANCEL),
-                        0));
+                        0))
+                .actionSecondary(PendingIntent.getService(
+                        this, ACTION_PAUSE,
+                        new Intent(this, DownloadService.class).putExtra("action", ACTION_PAUSE),
+                        0), R.drawable.sym_pause, R.string.pause);
         startForeground(NOTIFY_ID, mNotificationHelper.notification());
         mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Saving manga");
         mWakeLock.acquire();
@@ -150,6 +157,18 @@ public class DownloadService extends Service {
                     stopSelf();
                 }
                 break;
+            case ACTION_PAUSE:
+                task = mTaskReference.get();
+                if (task != null) {
+                    task.setPaused(true);
+                }
+                break;
+            case ACTION_RESUME:
+                task = mTaskReference.get();
+                if (task != null) {
+                    task.setPaused(false);
+                }
+                break;
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -172,10 +191,24 @@ public class DownloadService extends Service {
         //прогресс по страницам
         static final int PROGRESS_SECONDARY = 1;
         private final DownloadInfo mDownload;
+        private final AtomicBoolean mPaused = new AtomicBoolean(false);
 
         DownloadTask(DownloadInfo download) {
             this.mDownload = download;
             mTaskReference = new WeakReference<>(this);
+        }
+
+        public void setPaused(boolean paused) {
+            mPaused.set(paused);
+            mNotificationHelper
+                    .actionSecondary(PendingIntent.getService(
+                            DownloadService.this, paused ? ACTION_RESUME : ACTION_PAUSE,
+                            new Intent(DownloadService.this, DownloadService.class).putExtra("action", paused ? ACTION_RESUME : ACTION_PAUSE),
+                            0),
+                            paused ? R.drawable.sym_resume : R.drawable.sym_pause,
+                            paused ? R.string.resume : R.string.pause)
+                    .icon(paused ? R.drawable.ic_stat_paused : android.R.drawable.stat_sys_download)
+                    .update(NOTIFY_ID);
         }
 
         @Override
@@ -233,6 +266,13 @@ public class DownloadService extends Service {
                         }
                     }
                     publishProgress(PROGRESS_SECONDARY, j, pages.size());
+                    while(mPaused.get() && !isCancelled()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     if (isCancelled()) {
                         break;
                     }
@@ -338,6 +378,18 @@ public class DownloadService extends Service {
 
         public void removeListener(OnProgressUpdateListener listener) {
             mProgressListeners.remove(listener);
+        }
+
+        public boolean isPaused() {
+            DownloadTask task = mTaskReference.get();
+            return task != null && task.mPaused.get();
+        }
+
+        public void setPaused(boolean paused) {
+            DownloadTask task = mTaskReference.get();
+            if (task != null) {
+                task.setPaused(paused);
+            }
         }
     }
 
