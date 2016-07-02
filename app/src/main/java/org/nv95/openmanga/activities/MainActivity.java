@@ -273,11 +273,17 @@ public class MainActivity extends BaseAppActivity implements
                         }
                     })
                     .create().show();
-        } else if (requestCode == Constants.SETTINGS_REQUEST_ID
-                && mProviderManager != null && mNavigationView != null){
-            mProviderManager.update();
-            initDrawerRemoteProviders();
-            mNavigationView.setCheckedItem(selectedItem);
+        } else if (requestCode == Constants.SETTINGS_REQUEST_ID) {
+            if (getActivityTheme() != Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("theme", "0"))) {
+                recreate();
+                return;
+            }
+            if (mProviderManager != null && mNavigationView != null){
+                mProviderManager.update();
+                initDrawerRemoteProviders();
+                mNavigationView.setCheckedItem(selectedItem);
+            }
         } else {
             mDrawerHeaderTool.onActivityResult(requestCode, resultCode, data);
         }

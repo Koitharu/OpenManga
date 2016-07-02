@@ -1,10 +1,7 @@
 package org.nv95.openmanga;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
@@ -15,7 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import org.nv95.openmanga.activities.MainActivity;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.imagecontroller.ImageShifter;
@@ -96,17 +92,5 @@ public class OpenMangaApplication extends Application {
                 .cacheOnDisk(true)
                 .resetViewBeforeLoading(false)
                 .displayer(new FadeInBitmapDisplayer(400, true, true, false));
-    }
-
-    public void restart() {
-        Intent mStartActivity = new Intent(this, MainActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId,
-                mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        onTerminate();
-        System.runFinalization();
-        System.exit(0);
     }
 }

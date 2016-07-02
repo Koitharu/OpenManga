@@ -32,19 +32,21 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 19.02.16.
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
+    public static final int APP_THEME_LIGHT = 0;
+    public static final int APP_THEME_DARK = 1;
+    public static final int APP_THEME_BLACK = 2;
     private static final int REQUEST_PERMISSION = 112;
     private boolean mActionBarVisible = false;
     private boolean mHomeAsUpEnabled = false;
-    private boolean mDarkTheme = false;
+    private int mTheme = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int theme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
+        mTheme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("theme", "0"));
-        if (theme != 0) {
-            mDarkTheme = true;
-            setTheme(theme == 2 ? R.style.AppTheme_Black : R.style.AppTheme_Dark);
+        if (mTheme != APP_THEME_LIGHT) {
+            setTheme(mTheme == APP_THEME_BLACK ? R.style.AppTheme_Black : R.style.AppTheme_Dark);
         }
     }
 
@@ -116,7 +118,11 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     }
 
     public boolean isDarkTheme() {
-        return mDarkTheme;
+        return mTheme != APP_THEME_LIGHT;
+    }
+
+    public int getActivityTheme() {
+        return mTheme;
     }
 
     public void setSubtitle(@Nullable CharSequence subtitle) {
