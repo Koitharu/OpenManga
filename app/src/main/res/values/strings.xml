@@ -268,4 +268,5 @@
     <string name="action_move">Move to</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
+    <string name="show_resume_fab">Show floating \"Continue\" button</string>
 </resources>

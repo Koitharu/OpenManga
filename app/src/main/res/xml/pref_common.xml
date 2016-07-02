@@ -34,6 +34,11 @@
         android:entryValues="@array/themes"
         android:key="theme"
         android:title="@string/theme" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="fab"
+        android:title="@string/show_resume_fab"
+        android:widgetLayout="@layout/pref_switchcompat" />
     <PreferenceCategory android:title="@string/data">
         <Preference
             android:key="mangadir"
