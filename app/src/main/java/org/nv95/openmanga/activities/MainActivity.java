@@ -68,7 +68,7 @@ import java.io.File;
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
-        InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback {
+        InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener {
 
     private static final int REQUEST_IMPORT = 792;
     //views
@@ -107,6 +107,7 @@ public class MainActivity extends BaseAppActivity implements
 
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         mFab.setOnClickListener(this);
+        mFab.setOnLongClickListener(this);
         mNavigationView.setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
@@ -412,8 +413,19 @@ public class MainActivity extends BaseAppActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
                 break;
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_read:
+                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false);
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -617,7 +629,7 @@ public class MainActivity extends BaseAppActivity implements
         actionMode.getMenu().findItem(R.id.action_share).setVisible(count == 1);
     }
 
-    private class OpenLastTask extends AsyncTask<Void,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
+    private class OpenLastTask extends AsyncTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;
 
         OpenLastTask() {
@@ -635,12 +647,18 @@ public class MainActivity extends BaseAppActivity implements
         }
 
         @Override
-        protected Pair<Integer, Intent> doInBackground(Void... params) {
+        protected Pair<Integer, Intent> doInBackground(Boolean... params) {
             try {
+                Intent intent;
                 HistoryProvider historyProvider = HistoryProvider.getInstacne(MainActivity.this);
                 MangaInfo info = historyProvider.getLast();
                 if (info == null) {
                     return new Pair<>(2, null);
+                }
+                if (params.length != 0 && !params[0]) {
+                    intent = new Intent(MainActivity.this, MangaPreviewActivity.class);
+                    intent.putExtras(info.toBundle());
+                    return new Pair<>(0, intent);
                 }
                 MangaProvider provider;
                 if (info.provider.equals(LocalMangaProvider.class)) {
@@ -652,7 +670,7 @@ public class MainActivity extends BaseAppActivity implements
                     provider = (MangaProvider) info.provider.newInstance();
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
-                Intent intent = new Intent(MainActivity.this, ReadActivity.class);
+                intent = new Intent(MainActivity.this, ReadActivity.class);
                 intent.putExtras(summary.toBundle());
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
                 intent.putExtra("chapter", hs.getChapter());
