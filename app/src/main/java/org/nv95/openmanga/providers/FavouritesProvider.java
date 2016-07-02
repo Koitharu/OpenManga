@@ -225,6 +225,20 @@ public class FavouritesProvider extends MangaProvider {
                         .getString("fav.categories", context.getString(R.string.favourites_categories_default))).split(",\\s*");
     }
 
+    public void move(long[] ids, int category) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("category", category);
+        database.beginTransaction();
+        for (long id : ids) {
+            database.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)});
+        }
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        database.close();
+        MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+    }
+
     public static void AddDialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
         final int[] selected = new int[1];
         CharSequence[] categories = (context.getString(R.string.category_no) + "," +
