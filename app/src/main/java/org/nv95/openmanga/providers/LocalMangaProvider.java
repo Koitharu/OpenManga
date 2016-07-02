@@ -7,11 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.items.LocalMangaInfo;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.lists.MangaChapters;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.lists.MangaChapters;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
@@ -254,5 +255,79 @@ public class LocalMangaProvider extends MangaProvider {
             }
         }
         return null;
+    }
+
+    @WorkerThread
+    public LocalMangaInfo[] getLocalInfo(long[] ids) {
+        LocalMangaInfo[] infos = new LocalMangaInfo[ids.length];
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStore.getDatabase(false);
+            for (int i=0;i<ids.length;i++) {
+                cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"name", "dir"}, "id=?", new String[]{String.valueOf(ids[i])}, null, null, null);
+                if (cursor.moveToFirst()) {
+                    infos[i] = new LocalMangaInfo();
+                    infos[i].id = ids[i];
+                    infos[i].name = cursor.getString(0);
+                    infos[i].path = cursor.getString(1);
+                    infos[i].size = LocalMangaProvider.DirSize(new File(infos[i].path));
+                }
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        return infos;
+    }
+
+    public static boolean moveDir(File source, String destination) {
+        if (source.isDirectory()) {
+            boolean res = true;
+            File[] list = source.listFiles();
+            if (list != null) {
+                String dirDest = destination + File.separatorChar + source.getName();
+                for (File o : list) {
+                     res = moveDir(o, dirDest) && res;
+                }
+            }
+            source.delete();
+            return res;
+        } else {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                //create output directory if it doesn't exist
+                File dir = new File (destination);
+                if (!dir.exists())
+                {
+                    dir.mkdirs();
+                }
+                in = new FileInputStream(source);
+                out = new FileOutputStream(destination + File.separatorChar + source.getName());
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+                in = null;
+                // write the output file
+                out.flush();
+                out.close();
+                out = null;
+                // delete the original file
+                source.delete();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
     }
 }

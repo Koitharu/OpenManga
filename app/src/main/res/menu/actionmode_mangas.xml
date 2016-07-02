@@ -18,7 +18,7 @@
         android:visible="false" />
     <item android:id="@+id/action_move"
         android:title="@string/action_move"
-        android:icon="@drawable/ic_badge_light"
+        android:icon="@drawable/ic_folder_move_light"
         app:showAsAction="ifRoom"
         android:visible="false" />
 </menu>
