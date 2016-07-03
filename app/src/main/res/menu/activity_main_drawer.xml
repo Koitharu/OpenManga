@@ -27,11 +27,13 @@
         </menu>
     </item>
 
-    <item
-        android:id="@+id/footer_spacer_1"
-        android:checkable="false"
-        android:enabled="false"
-        android:orderInCategory="200"
-        android:title="" />
-
+    <group android:id="@+id/group1">
+        <!--вот такие костыли-->
+        <item
+            android:id="@+id/footer_spacer_1"
+            android:checkable="false"
+            android:enabled="false"
+            android:orderInCategory="200"
+            android:title="" />
+    </group>
 </menu>
