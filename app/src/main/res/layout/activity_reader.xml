@@ -67,7 +67,7 @@
 
     </FrameLayout>
 
-    <org.nv95.openmanga.utils.imagecontroller.TouchGridDetector
+    <org.nv95.openmanga.components.StatusBarController
         android:id="@+id/gridDetector"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

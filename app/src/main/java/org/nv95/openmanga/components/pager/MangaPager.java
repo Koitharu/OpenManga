@@ -10,7 +10,6 @@ import android.view.Surface;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
-import org.nv95.openmanga.components.OverScrollDetector;
 import org.nv95.openmanga.items.MangaPage;
 
 import java.util.ArrayList;
@@ -215,7 +214,7 @@ public class MangaPager extends ViewPager {
         }
     }
 
-    public void setBehavior(boolean vertical, boolean reverse, int transformMode) {
+    public void setBehavior(boolean vertical, boolean reverse, int transformMode, int scaleMode) {
         final int pos = getCurrentPageIndex();
         mVertical = vertical;
         if (mReverse != reverse) {
@@ -236,6 +235,7 @@ public class MangaPager extends ViewPager {
                 break;
         }
         setAdapter(null);
+        mAdapter.setScaleMode(scaleMode);
         setAdapter(mAdapter);
         setCurrentPageIndex(pos);
     }
@@ -286,7 +286,7 @@ public class MangaPager extends ViewPager {
 
     public static int getOrientation(Activity mContext){
         final int orientation = mContext.getResources().getConfiguration().orientation;
-        final int rotation = mContext.getWindowManager().getDefaultDisplay().getOrientation();
+        final int rotation = mContext.getWindowManager().getDefaultDisplay().getRotation();
 
         if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {

@@ -276,4 +276,9 @@
     <string name="status_completed">Manga completed</string>
     <string name="status_ongoing">Ongoing</string>
     <string name="local_size" formatted="false">Size: %s</string>
+    <string name="scale_mode">Scale mode</string>
+    <string name="scale_source">Source size</string>
+    <string name="scale_auto">Auto</string>
+    <string name="scale_crop">Zoom in</string>
+    <string name="scale_fit">Fit screen</string>
 </resources>
