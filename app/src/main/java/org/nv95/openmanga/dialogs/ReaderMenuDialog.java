@@ -3,7 +3,6 @@ package org.nv95.openmanga.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.SettingsActivity;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
@@ -23,7 +21,6 @@ import org.nv95.openmanga.utils.LayoutUtils;
 public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.OnDismissListener,
         DialogInterface.OnCancelListener {
 
-    public static final int REQUEST_SETTINGS = 1299;
 
     private final AppCompatActivity mActivity;
     private final Dialog mDialog;
@@ -112,18 +109,10 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_opt:
-                mDialog.dismiss();
-                mActivity.startActivityForResult(new Intent(mActivity, SettingsActivity.class)
-                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
-                break;
-            default:
-                if (mCallback != null) {
-                    mCallback.onClick(v);
-                }
-                mDialog.dismiss();
+        if (mCallback != null) {
+            mCallback.onClick(v);
         }
+        mDialog.dismiss();
     }
 
     public ReaderMenuDialog setOnDismissListener(OnDismissListener onDismissListener){
