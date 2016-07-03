@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
+import org.nv95.openmanga.components.StatusBarController;
 import org.nv95.openmanga.components.pager.MangaPager;
 import org.nv95.openmanga.components.pager.OverScrollDetector;
 import org.nv95.openmanga.dialogs.NavigationDialog;
@@ -48,9 +51,9 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.components.StatusBarController;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -60,6 +63,8 @@ import java.util.ArrayList;
 public class ReadActivity extends BaseAppActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
         MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener {
+
+    public static final int REQUEST_SETTINGS = 1299;
     //views
     private MangaPager mPager;
     private View mLoader;
@@ -117,7 +122,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ReaderMenuDialog.REQUEST_SETTINGS:
+            case REQUEST_SETTINGS:
                 onOptionsChanged();
                 break;
         }
@@ -203,6 +208,10 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 } else {
                     Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.button_opt:
+                startActivityForResult(new Intent(this, SettingsActivity.class)
+                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
                 break;
             case R.id.button_fav:
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
@@ -621,7 +630,17 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                     provider = (MangaProvider) mangaSummary.provider.newInstance();
                 }
                 String url = provider.getPageImage(params[0]);
-                File dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
+                File dest;
+                if (url.startsWith("/") || url.startsWith("file://")) {
+                    Bitmap bmp = BitmapFactory.decodeFile(url);
+                    dest = new File(getExternalFilesDir("temp"), url.hashCode() + ".png");
+                    FileOutputStream fos = new FileOutputStream(dest);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                    bmp.recycle();
+                    return dest;
+                }
+                dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
                 final SimpleDownload dload = new SimpleDownload(url, dest);
                 dload.run();
                 return dload.isSuccess() ? dest : null;
@@ -634,7 +653,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
             mLoader.setVisibility(View.GONE);
-            if (file != null) {
+            if (file != null && file.exists()) {
                 SaveImage(file);
             } else {
                 Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
