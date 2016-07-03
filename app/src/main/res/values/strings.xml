@@ -273,4 +273,7 @@
     <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
     <string name="moving_files">Moving files…</string>
     <string name="move_saved_confirm">Move already saved manga to new directory?</string>
+    <string name="status_completed">Manga completed</string>
+    <string name="status_ongoing">Ongoing</string>
+    <string name="local_size" formatted="false">Size: %s</string>
 </resources>
