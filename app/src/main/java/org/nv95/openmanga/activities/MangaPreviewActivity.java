@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.MangaStore;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -51,6 +53,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     private ProgressBar mProgressBar;
     private TextView mTextViewSummary;
     private TextView mTextViewDescription;
+    private TextView mTextViewExtra;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private AppBarLayout mAppBarLayout;
     private View tvGenreTitle;
@@ -69,6 +72,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mTextViewSummary = (TextView) findViewById(R.id.textView_summary);
+        mTextViewExtra = (TextView) findViewById(R.id.textView_extra);
         tvGenreTitle = findViewById(R.id.tvGenreTitle);
         mTextViewDescription = (TextView) findViewById(R.id.textView_description);
         mCollapsingToolbarLayout.setTitle(mangaSummary.name);
@@ -305,6 +309,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             }
             MangaPreviewActivity.this.mangaSummary = mangaSummary;
             mTextViewDescription.setText(mangaSummary.getDescription());
+            mTextViewExtra.setText(mangaSummary.extra);
             mImageView.updateImageAsync(mangaSummary.preview);
             if (mangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
@@ -322,7 +327,16 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 } else {
                     provider = (MangaProvider) mangaSummary.provider.newInstance();
                 }
-                return provider.getDetailedInfo(mangaSummary);
+                MangaSummary ms = provider.getDetailedInfo(mangaSummary);
+                if (provider instanceof LocalMangaProvider) {
+                    ms.extra = getString(R.string.local_size,
+                            Formatter.formatFileSize(MangaPreviewActivity.this, LocalMangaProvider.DirSize(new File(ms.path))));
+                } else if (ms.status != MangaInfo.STATUS_UNKNOWN) {
+                    ms.extra = getString(ms.isCompleted() ? R.string.status_completed : R.string.status_ongoing);
+                } else {
+                    ms.extra = null;
+                }
+                return ms;
             } catch (Exception e) {
                 return null;
             }

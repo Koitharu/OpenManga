@@ -71,6 +71,9 @@ public class LocalMangaProvider extends MangaProvider {
     }
 
     public static long DirSize(File dir) {
+        if (!dir.exists()) {
+            return 0;
+        }
         long size = 0;
         for (File file : dir.listFiles()) {
             if (file.isFile()) {

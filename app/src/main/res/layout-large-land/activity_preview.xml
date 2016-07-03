@@ -99,6 +99,13 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="?android:textColorPrimary"/>
 
+                <TextView
+                    android:id="@+id/textView_extra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="?android:textColorSecondary"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
