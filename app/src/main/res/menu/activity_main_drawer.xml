@@ -26,11 +26,4 @@
             <group android:id="@+id/groupRemote"  android:checkableBehavior="single" />
         </menu>
     </item>
-
-    <group android:id="@+id/group_options" android:checkableBehavior="none" >
-        <item
-            android:id="@+id/nav_action_settings"
-            android:icon="@drawable/ic_nav_settings"
-            android:title="@string/action_settings"/>
-    </group>
 </menu>

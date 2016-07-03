@@ -100,7 +100,7 @@ public class MainActivity extends BaseAppActivity implements
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
@@ -112,6 +112,7 @@ public class MainActivity extends BaseAppActivity implements
         mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
         mNavigationView.setNavigationItemSelectedListener(this);
+        ((NavigationView) findViewById(R.id.navigation_drawer_bottom)).setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
         mSearchAdapter = new SearchHistoryAdapter(this);
