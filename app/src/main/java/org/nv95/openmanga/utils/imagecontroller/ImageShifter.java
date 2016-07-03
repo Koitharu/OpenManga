@@ -15,10 +15,12 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by admin on 19.05.16.
  */
 public class ImageShifter implements BitmapProcessor, SharedPreferences.OnSharedPreferenceChangeListener {
+
     private static final ImageShifter instance = new ImageShifter();
+
     private int mSpace;
     private boolean mShift;
-    private boolean rtl;
+    private boolean mRtl;
 
     public static ImageShifter getInstance() {
         return instance;
@@ -26,7 +28,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
 
     private ImageShifter() {
         mShift = true;
-        rtl = false;
+        mRtl = false;
     }
 
     public ImageShifter setSpace(int spacePx) {
@@ -47,7 +49,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
         for (int i=0;i<count;i++) {
             canvas.drawBitmap(bitmap,
                     new Rect(0, sectHeight * i, bitmap.getWidth(), sectHeight * (i+1)),     /*source*/
-                    !rtl ?                                                                   /*destination*/
+                    !mRtl ?                                                                   /*destination*/
                     new RectF((bitmap.getWidth() + mSpace) * i, 0, (bitmap.getWidth() + mSpace) * i + bitmap.getWidth(), sectHeight) :
                             new RectF((bitmap.getWidth() + mSpace) * (count - i - 1), 0, (bitmap.getWidth() + mSpace) * (count - i) - mSpace, sectHeight),
                     paint);
@@ -93,7 +95,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
                 mShift = sharedPreferences.getBoolean("shifts", true);
                 break;
             case "direction":
-                rtl = "2".equals(sharedPreferences.getString("direction", "0"));
+                mRtl = "2".equals(sharedPreferences.getString("direction", "0"));
         }
     }
 }

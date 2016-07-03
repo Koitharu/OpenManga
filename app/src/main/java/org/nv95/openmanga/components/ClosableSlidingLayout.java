@@ -20,18 +20,19 @@ import android.widget.LinearLayout;
 public class ClosableSlidingLayout extends LinearLayout {
 
     private static final int INVALID_POINTER = -1;
+
     private final float MINVEL;
     View mTarget;
-    boolean swipeable = true;
+    boolean mSwipeable = true;
     private ViewDragHelper mDragHelper;
     private SlideListener mListener;
-    private int height;
-    private int top;
+    private int mHeight;
+    private int mTop;
     private int mActivePointerId;
     private boolean mIsBeingDragged;
     private float mInitialMotionY;
-    private boolean collapsible = false;
-    private float yDiff;
+    private boolean mCollapsible = false;
+    private float mYDiff;
 
     public ClosableSlidingLayout(Context context) {
         this(context, null);
@@ -60,7 +61,7 @@ public class ClosableSlidingLayout extends LinearLayout {
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
             mActivePointerId = INVALID_POINTER;
             mIsBeingDragged = false;
-            if (collapsible && -yDiff > mDragHelper.getTouchSlop()) {
+            if (mCollapsible && -mYDiff > mDragHelper.getTouchSlop()) {
                 expand(mDragHelper.getCapturedView(), 0);
             }
             mDragHelper.cancel();
@@ -69,8 +70,8 @@ public class ClosableSlidingLayout extends LinearLayout {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                height = getChildAt(0).getHeight();
-                top = getChildAt(0).getTop();
+                mHeight = getChildAt(0).getHeight();
+                mTop = getChildAt(0).getTop();
                 mActivePointerId = MotionEventCompat.getPointerId(event, 0);
                 mIsBeingDragged = false;
                 final float initialMotionY = getMotionEventY(event, mActivePointerId);
@@ -78,7 +79,7 @@ public class ClosableSlidingLayout extends LinearLayout {
                     return false;
                 }
                 mInitialMotionY = initialMotionY;
-                yDiff = 0;
+                mYDiff = 0;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mActivePointerId == INVALID_POINTER) {
@@ -88,8 +89,8 @@ public class ClosableSlidingLayout extends LinearLayout {
                 if (y == -1) {
                     return false;
                 }
-                yDiff = y - mInitialMotionY;
-                if (swipeable && yDiff > mDragHelper.getTouchSlop() && !mIsBeingDragged) {
+                mYDiff = y - mInitialMotionY;
+                if (mSwipeable && mYDiff > mDragHelper.getTouchSlop() && !mIsBeingDragged) {
                     mIsBeingDragged = true;
                     mDragHelper.captureChildView(getChildAt(0), 0);
                 }
@@ -138,7 +139,7 @@ public class ClosableSlidingLayout extends LinearLayout {
         }
 
         try {
-            if (swipeable)
+            if (mSwipeable)
                 mDragHelper.processTouchEvent(ev);
         } catch (Exception ignored) {
         }
@@ -157,7 +158,7 @@ public class ClosableSlidingLayout extends LinearLayout {
     }
 
     void setCollapsible(boolean collapsible) {
-        this.collapsible = collapsible;
+        this.mCollapsible = collapsible;
     }
 
     public void collapse() {
@@ -171,7 +172,7 @@ public class ClosableSlidingLayout extends LinearLayout {
     }
 
     private void dismiss(View view, float yvel) {
-        mDragHelper.smoothSlideViewTo(view, 0, top + height);
+        mDragHelper.smoothSlideViewTo(view, 0, mTop + mHeight);
         ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
     }
 
@@ -200,10 +201,10 @@ public class ClosableSlidingLayout extends LinearLayout {
             if (yvel > MINVEL) {
                 dismiss(releasedChild, yvel);
             } else {
-                if (releasedChild.getTop() >= top + height / 2) {
+                if (releasedChild.getTop() >= mTop + mHeight / 2) {
                     dismiss(releasedChild, yvel);
                 } else {
-                    mDragHelper.smoothSlideViewTo(releasedChild, 0, top);
+                    mDragHelper.smoothSlideViewTo(releasedChild, 0, mTop);
                     ViewCompat.postInvalidateOnAnimation(ClosableSlidingLayout.this);
                 }
             }
@@ -214,7 +215,7 @@ public class ClosableSlidingLayout extends LinearLayout {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 invalidate();
             }
-            if (height - top < 1 && mListener != null) {
+            if (mHeight - top < 1 && mListener != null) {
                 mDragHelper.cancel();
                 mListener.onClosed();
                 mDragHelper.smoothSlideViewTo(changedView, 0, top);
@@ -223,7 +224,7 @@ public class ClosableSlidingLayout extends LinearLayout {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            return Math.max(top, ClosableSlidingLayout.this.top);
+            return Math.max(top, ClosableSlidingLayout.this.mTop);
         }
     }
 

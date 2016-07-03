@@ -8,6 +8,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
  * Created by nv95 on 02.10.15.
  */
 public class MangaChapter {
+
     public int id;
     public String name;
     public int number;

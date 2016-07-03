@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
@@ -45,8 +44,9 @@ import java.util.Arrays;
  */
 public class MangaPreviewActivity extends BaseAppActivity implements View.OnClickListener,
         DialogInterface.OnClickListener, View.OnLongClickListener {
+
     //data
-    protected MangaSummary mangaSummary;
+    private MangaSummary mMangaSummary;
     //views
     private FloatingActionButton mFab;
     private AsyncImageView mImageView;
@@ -56,7 +56,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     private TextView mTextViewExtra;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private AppBarLayout mAppBarLayout;
-    private View tvGenreTitle;
+    private View mViewGenres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
         enableTransparentStatusBar(android.R.color.transparent);
-        mangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
+        mMangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_container);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);
         mImageView = (AsyncImageView) findViewById(R.id.imageView);
@@ -73,23 +73,22 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mTextViewSummary = (TextView) findViewById(R.id.textView_summary);
         mTextViewExtra = (TextView) findViewById(R.id.textView_extra);
-        tvGenreTitle = findViewById(R.id.tvGenreTitle);
+        mViewGenres = findViewById(R.id.tvGenreTitle);
         mTextViewDescription = (TextView) findViewById(R.id.textView_description);
-        mCollapsingToolbarLayout.setTitle(mangaSummary.name);
+        mCollapsingToolbarLayout.setTitle(mMangaSummary.name);
 
         mFab.setOnClickListener(this);
         mFab.setOnLongClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
-        mImageView.useMemoryCache(false);
-        mImageView.setImageAsync(mangaSummary.preview, false);
+        mImageView.setImageAsync(mMangaSummary.preview, false);
         mImageView.setOnClickListener(this);
 
         if (savedInstanceState != null && savedInstanceState.containsKey("readlink")) {
-            mangaSummary = new MangaSummary(savedInstanceState);
+            mMangaSummary = new MangaSummary(savedInstanceState);
             mProgressBar.setVisibility(View.GONE);
-            mTextViewDescription.setText(mangaSummary.getDescription());
-            mImageView.setImageAsync(mangaSummary.preview, false);
-            if (mangaSummary.getChapters().size() == 0) {
+            mTextViewDescription.setText(mMangaSummary.getDescription());
+            mImageView.setImageAsync(mMangaSummary.preview, false);
+            if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
                         .show();
@@ -100,18 +99,18 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-        if(TextUtils.isEmpty(mangaSummary.genres)){
-            tvGenreTitle.setVisibility(View.GONE);
+        if(TextUtils.isEmpty(mMangaSummary.genres)){
+            mViewGenres.setVisibility(View.GONE);
             mTextViewSummary.setVisibility(View.GONE);
         } else
-            mTextViewSummary.setText(mangaSummary.genres);
+            mTextViewSummary.setText(mMangaSummary.genres);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mangaSummary != null) {
-            outState.putAll(mangaSummary.toBundle());
+        if (mMangaSummary != null) {
+            outState.putAll(mMangaSummary.toBundle());
         }
     }
 
@@ -135,8 +134,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.fab_read:
                 Intent intent = new Intent(this, ReadActivity.class);
-                intent.putExtras(mangaSummary.toBundle());
-                HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(this).get(mangaSummary);
+                intent.putExtras(mMangaSummary.toBundle());
+                HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(this).get(mMangaSummary);
                 intent.putExtra("chapter", hs == null ? 0 : hs.getChapter());
                 intent.putExtra("page", hs == null ? 0 : hs.getPage());
                 startActivity(intent);
@@ -147,21 +146,21 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     }
 
     private void showChaptersSheet() {
-        if (mangaSummary.getChapters().size() == 0) {
+        if (mMangaSummary.getChapters().size() == 0) {
             return;
         }
-        final HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mangaSummary);
+        final HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mMangaSummary);
         BottomSheetDialog sheet = new BottomSheetDialog(this);
-        if (lastChapter != null && lastChapter.getChapter() < mangaSummary.chapters.size()) {
+        if (lastChapter != null && lastChapter.getChapter() < mMangaSummary.chapters.size()) {
             sheet.addHeader(
-                    mangaSummary.chapters.get(lastChapter.getChapter()).name,
+                    mMangaSummary.chapters.get(lastChapter.getChapter()).name,
                     R.string.continue_reading, 0, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
-                            intent.putExtras(mangaSummary.toBundle());
-                            HistoryProvider.HistorySummary hs = HistoryProvider.get(MangaPreviewActivity.this, mangaSummary);
+                            intent.putExtras(mMangaSummary.toBundle());
+                            HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(MangaPreviewActivity.this).get(mMangaSummary);
                             intent.putExtra("chapter", hs.getChapter());
                             intent.putExtra("page", hs.getPage());
                             startActivity(intent);
@@ -169,7 +168,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                     }
             );
         }
-        sheet.setItems(mangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
+        sheet.setItems(mMangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
                 .setSheetTitle(R.string.chapters_list)
                 .setOnItemClickListener(this)
                 .show();
@@ -178,12 +177,12 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.preview, menu);
-        if (LocalMangaProvider.class.equals(mangaSummary.provider)) {
+        if (LocalMangaProvider.class.equals(mMangaSummary.provider)) {
             menu.findItem(R.id.action_save).setVisible(false);
             menu.findItem(R.id.action_remove).setVisible(true);
-            menu.findItem(R.id.action_save_more).setVisible(mangaSummary.status == MangaInfo.STATUS_ONGOING);
+            menu.findItem(R.id.action_save_more).setVisible(mMangaSummary.status == MangaInfo.STATUS_ONGOING);
             menu.findItem(R.id.action_favourite).setVisible(false);
-        } else if (FavouritesProvider.Has(this, mangaSummary)) {
+        } else if (FavouritesProvider.getInstacne(this).has(mMangaSummary)) {
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
             menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
@@ -195,30 +194,30 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         switch (item.getItemId()) {
             case R.id.action_favourite:
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
-                if (favouritesProvider.has(mangaSummary)) {
-                    if (favouritesProvider.remove(mangaSummary)) {
+                if (favouritesProvider.has(mMangaSummary)) {
+                    if (favouritesProvider.remove(mMangaSummary)) {
                         item.setIcon(R.drawable.ic_favorite_outline_light);
                         item.setTitle(R.string.action_favourite);
                     }
                 } else {
-                    FavouritesProvider.AddDialog(this, new DialogInterface.OnClickListener() {
+                    FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            NewChaptersProvider.getInstance(MangaPreviewActivity.this).markAsViewed(mangaSummary.hashCode(), mangaSummary.getChapters().size());
+                            NewChaptersProvider.getInstance(MangaPreviewActivity.this).markAsViewed(mMangaSummary.hashCode(), mMangaSummary.getChapters().size());
                             item.setIcon(R.drawable.ic_favorite_light);
                             item.setTitle(R.string.action_unfavourite);
                         }
-                    }, mangaSummary);
+                    }, mMangaSummary);
                 }
                 return true;
             case R.id.action_save:
-                DownloadService.start(this, mangaSummary);
+                DownloadService.start(this, mMangaSummary);
                 return true;
             case R.id.action_remove:
                 deleteDialog();
                 return true;
             case R.id.action_save_more:
-                new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangaSummary);
+                new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMangaSummary);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -226,12 +225,12 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     }
 
     private void deleteDialog() {
-        final int len = mangaSummary.chapters.size();
+        final int len = mMangaSummary.chapters.size();
         final SparseBooleanArray checked = new SparseBooleanArray(len);
         boolean[] defs = new boolean[len];
         Arrays.fill(defs, false);
         new BottomSheetDialog(this)
-                .addHeader(getString(R.string.chapters_total, mangaSummary.chapters.size()),
+                .addHeader(getString(R.string.chapters_total, mMangaSummary.chapters.size()),
                         R.string.check_all, 0, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -241,7 +240,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                                 }
                             }
                         })
-                .setMultiChoiceItems(mangaSummary.chapters.getNames(), defs)
+                .setMultiChoiceItems(mMangaSummary.chapters.getNames(), defs)
                 .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -256,21 +255,21 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         final ArrayList<Long> idlist = new ArrayList<>();
                         for (int i = 0;i < len;i++) {
                             if (checked.get(i, false)) {
-                                idlist.add((long) mangaSummary.chapters.get(i).id);
+                                idlist.add((long) mMangaSummary.chapters.get(i).id);
                             }
                         }
                         if (idlist.size() == len) {
-                            if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mangaSummary.id})) {
-                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mangaSummary.id});
+                            if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
+                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
                             }
-                            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+                            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
                             finish();
                         } else {
                             final long[] ids = new long[idlist.size()];
                             for (int i = 0;i < idlist.size();i++) {
                                 ids[i] = idlist.get(i);
                             }
-                            if (new MangaStore(MangaPreviewActivity.this).dropChapters(mangaSummary.id, ids)) {
+                            if (new MangaStore(MangaPreviewActivity.this).dropChapters(mMangaSummary.id, ids)) {
                                 Snackbar.make(mTextViewDescription, getString(R.string.chapters_removed, ids.length), Snackbar.LENGTH_SHORT).show();
                             } else {
                                 Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
@@ -284,8 +283,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
-        HistoryProvider.addToHistory(this, mangaSummary, which, 0);
-        startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mangaSummary.toBundle()));
+        HistoryProvider.getInstacne(this).add(mMangaSummary, which, 0);
+        startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
     }
 
     private class LoadInfoTask extends AsyncTask<Void, Void, MangaSummary> {
@@ -307,7 +306,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         .show();
                 return;
             }
-            MangaPreviewActivity.this.mangaSummary = mangaSummary;
+            MangaPreviewActivity.this.mMangaSummary = mangaSummary;
             mTextViewDescription.setText(mangaSummary.getDescription());
             mTextViewExtra.setText(mangaSummary.extra);
             mImageView.updateImageAsync(mangaSummary.preview);
@@ -322,15 +321,15 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         protected MangaSummary doInBackground(Void... params) {
             try {
                 MangaProvider provider;
-                if (mangaSummary.provider.equals(LocalMangaProvider.class)) {
+                if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
                     provider = LocalMangaProvider.getInstacne(MangaPreviewActivity.this);
                 } else {
-                    provider = (MangaProvider) mangaSummary.provider.newInstance();
+                    provider = (MangaProvider) mMangaSummary.provider.newInstance();
                 }
-                MangaSummary ms = provider.getDetailedInfo(mangaSummary);
+                MangaSummary ms = provider.getDetailedInfo(mMangaSummary);
                 if (provider instanceof LocalMangaProvider) {
                     ms.extra = getString(R.string.local_size,
-                            Formatter.formatFileSize(MangaPreviewActivity.this, LocalMangaProvider.DirSize(new File(ms.path))));
+                            Formatter.formatFileSize(MangaPreviewActivity.this, LocalMangaProvider.dirSize(new File(ms.path))));
                 } else if (ms.status != MangaInfo.STATUS_UNKNOWN) {
                     ms.extra = getString(ms.isCompleted() ? R.string.status_completed : R.string.status_ongoing);
                 } else {
@@ -374,8 +373,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         .show();
                 return;
             }
-            MangaChapters newChapters = sourceManga.chapters.complementByName(mangaSummary.chapters);
-            if (sourceManga.chapters.size() <= mangaSummary.chapters.size()) {
+            MangaChapters newChapters = sourceManga.chapters.complementByName(mMangaSummary.chapters);
+            if (sourceManga.chapters.size() <= mMangaSummary.chapters.size()) {
                 Snackbar.make(mAppBarLayout, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
                         .show();
             } else {

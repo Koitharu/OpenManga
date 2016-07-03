@@ -32,10 +32,13 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 19.02.16.
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
+
     public static final int APP_THEME_LIGHT = 0;
     public static final int APP_THEME_DARK = 1;
     public static final int APP_THEME_BLACK = 2;
+
     private static final int REQUEST_PERMISSION = 112;
+
     private boolean mActionBarVisible = false;
     private boolean mHomeAsUpEnabled = false;
     private int mTheme = 0;

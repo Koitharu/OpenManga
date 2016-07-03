@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 
 import java.io.File;
@@ -23,8 +23,9 @@ import java.io.StringWriter;
  * Created by nv95 on 16.10.15.
  */
 public class FileLogger implements Thread.UncaughtExceptionHandler {
+
     private static FileLogger instance;
-    private Thread.UncaughtExceptionHandler oldHandler;
+    private Thread.UncaughtExceptionHandler mOldHandler;
     private final File mLogFile;
 
     private FileLogger(Context context) {
@@ -37,12 +38,12 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     public static void init(Context context) {
         instance = new FileLogger(context);
-        instance.oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+        instance.mOldHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(instance);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final int logVersion = prefs.getInt("_log_version", 0);
-        if (logVersion < OpenMangaApplication.getVersion()) {
-            prefs.edit().putInt("_log_version", OpenMangaApplication.getVersion()).apply();
+        if (logVersion < BuildConfig.VERSION_CODE) {
+            prefs.edit().putInt("_log_version", BuildConfig.VERSION_CODE).apply();
             instance.upgrade();
         }
     }
@@ -52,8 +53,8 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
             mLogFile.delete();
             FileOutputStream ostream = new FileOutputStream(mLogFile, true);
             ostream.write(("Init logger: " + AppHelper.getReadableDateTime(System.currentTimeMillis())
-                    + "\nApp version: " + OpenMangaApplication.getVersion()
-                    + " (" + OpenMangaApplication.getVersionName()
+                    + "\nApp version: " + BuildConfig.VERSION_CODE
+                    + " (" + BuildConfig.VERSION_NAME
                     + ")\n\nDevice info:\n" + Build.FINGERPRINT
                     + "\nAndroid: " + Build.VERSION.RELEASE + " (API v" + Build.VERSION.SDK_INT + ")\n\n").getBytes());
             ostream.flush();
@@ -113,8 +114,8 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         report("!CRASH\n" + ex.getMessage() + "\n\n" + ex.getCause() + "\n");
-        if (oldHandler != null)
-            oldHandler.uncaughtException(thread, ex);
+        if (mOldHandler != null)
+            mOldHandler.uncaughtException(thread, ex);
     }
 
     private static File getLogFile(Context context) {

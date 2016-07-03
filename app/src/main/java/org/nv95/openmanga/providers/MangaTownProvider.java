@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Created by nv95 on 06.10.15.
  */
 public class MangaTownProvider extends MangaProvider {
+
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular};
     protected static final String sortUrls[] = {"latest", "hot"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_romance, R.string.genre_adventure, R.string.genre_school, R.string.genre_comedy, R.string.genre_vampires, R.string.genre_youkai, R.string.genre_horror, R.string.genre_genderch, R.string.genre_harem, R.string.genre_ecchi, R.string.genre_shoujo, R.string.genre_seinen, R.string.genre_shounen, R.string.genre_yaoi};

@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class MangaProviderManager {
+
     public static final int PROVIDER_LOCAL = -4;
     public static final int PROVIDER_RECOMMENDATIONS = -3;
     public static final int PROVIDER_FAVOURITES = -2;
@@ -30,6 +31,7 @@ public class MangaProviderManager {
     public static final int FEAUTURE_REMOVE = 2;
     public static final int FEAUTURE_SORT = 3;
     public static final int FEAUTURE_GENRES = 4;
+
     public static final ProviderSumm[] providers = {
             new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Language.RU),
             new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
@@ -41,12 +43,13 @@ public class MangaProviderManager {
             new ProviderSumm("MangaReader", MangaReaderProvider.class, Language.EN),
             new ProviderSumm("PuzzManga", PuzzmosProvider.class, Language.TR)
     };
-    private final Context context;
-    private final ArrayList<ProviderSumm> enabledProviders;
+
+    private final Context mContext;
+    private final ArrayList<ProviderSumm> mEnabledProviders;
 
     public MangaProviderManager(Context context) {
-        this.context = context;
-        enabledProviders = new ArrayList<>();
+        mContext = context;
+        mEnabledProviders = new ArrayList<>();
         update();
     }
 
@@ -62,18 +65,18 @@ public class MangaProviderManager {
     }
 
     public void update() {
-        enabledProviders.clear();
-        SharedPreferences prefs = context.getSharedPreferences("providers", Context.MODE_PRIVATE);
+        mEnabledProviders.clear();
+        SharedPreferences prefs = mContext.getSharedPreferences("providers", Context.MODE_PRIVATE);
         for (ProviderSumm o : providers) {
             if (prefs.getBoolean(o.name, true)) {
-                enabledProviders.add(o);
+                mEnabledProviders.add(o);
             }
         }
     }
 
     public int indexOf(ProviderSumm providerSumm) {
-        for (int i = 0; i < enabledProviders.size(); i++) {
-            if (enabledProviders.get(i).equals(providerSumm)) {
+        for (int i = 0; i < mEnabledProviders.size(); i++) {
+            if (mEnabledProviders.get(i).equals(providerSumm)) {
                 return i;
             }
         }
@@ -84,15 +87,15 @@ public class MangaProviderManager {
         try {
             switch (index) {
                 case PROVIDER_LOCAL:
-                    return LocalMangaProvider.getInstacne(context);
+                    return LocalMangaProvider.getInstacne(mContext);
                 case PROVIDER_FAVOURITES:
-                    return FavouritesProvider.getInstacne(context);
+                    return FavouritesProvider.getInstacne(mContext);
                 case PROVIDER_HISTORY:
-                    return HistoryProvider.getInstacne(context);
+                    return HistoryProvider.getInstacne(mContext);
                 case PROVIDER_RECOMMENDATIONS:
-                    return RecommendationsProvider.getInstacne(context);
+                    return RecommendationsProvider.getInstacne(mContext);
                 default:
-                    return (MangaProvider) enabledProviders.get(index).aClass.newInstance();
+                    return (MangaProvider) mEnabledProviders.get(index).aClass.newInstance();
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
@@ -101,9 +104,9 @@ public class MangaProviderManager {
     }
 
     public String[] getNames() {
-        String[] res = new String[enabledProviders.size()];
+        String[] res = new String[mEnabledProviders.size()];
         for (int i = 0; i < res.length; i++) {
-            res[i] = enabledProviders.get(i).name;
+            res[i] = mEnabledProviders.get(i).name;
         }
         return res;
     }
@@ -120,15 +123,15 @@ public class MangaProviderManager {
     }
 
     public void setProviderEnabled(String name, boolean enabled) {
-        context.getSharedPreferences("providers", Context.MODE_PRIVATE).edit().putBoolean(name, enabled).apply();
+        mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).edit().putBoolean(name, enabled).apply();
     }
 
     public boolean isProviderEnabled(String name) {
-        return context.getSharedPreferences("providers", Context.MODE_PRIVATE).getBoolean(name, true);
+        return mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getBoolean(name, true);
     }
 
     public ArrayList<ProviderSumm> getEnabledProviders() {
-        return enabledProviders;
+        return mEnabledProviders;
     }
 
     public ProviderSelectAdapter getAdapter() {
@@ -185,8 +188,8 @@ public class MangaProviderManager {
         private String[] summs;
 
         public ProviderSelectAdapter() {
-            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            summs = context.getResources().getStringArray(R.array.provider_summs);
+            inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            summs = mContext.getResources().getStringArray(R.array.provider_summs);
         }
 
         @Override

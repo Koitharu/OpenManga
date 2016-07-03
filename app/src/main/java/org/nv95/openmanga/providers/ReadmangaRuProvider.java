@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * provider for http://readmanga.me/
  */
 public class ReadmangaRuProvider extends MangaProvider {
+    
     protected static final boolean features[] = {true, true, false, true, true};
     protected static final int sorts[] = {R.string.sort_popular, R.string.sort_latest, R.string.sort_updated, R.string.sort_rating};
     protected static final String sortUrls[] = {"popular","created", "updated", "votes"};
@@ -174,7 +175,7 @@ public class ReadmangaRuProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
-            return MangaList.Empty();
+            return MangaList.empty();
         }
         MangaList list = new MangaList();
         String data[] = new String[]{

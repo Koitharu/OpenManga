@@ -14,6 +14,7 @@ import org.nv95.openmanga.providers.MangaProviderManager;
  * Created by nv95 on 14.10.15.
  */
 public class ProviderSelectActivity extends BaseAppActivity implements AdapterView.OnItemClickListener {
+
     private MangaProviderManager.ProviderSelectAdapter mAdapter;
     private MangaProviderManager mProviderManager;
 
@@ -24,6 +25,7 @@ public class ProviderSelectActivity extends BaseAppActivity implements AdapterVi
         setSupportActionBar(R.id.toolbar);
         ListView listView = (ListView) findViewById(R.id.listView);
         View footerDisclaimer = getLayoutInflater().inflate(R.layout.footer_disclaimer, listView, false);
+        assert listView != null;
         listView.addFooterView(footerDisclaimer, null, false);
         mProviderManager = new MangaProviderManager(this);
         mAdapter = mProviderManager.getAdapter();

@@ -18,6 +18,7 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 11.02.16.
  */
 public class FilterSortDialog implements TabLayout.OnTabSelectedListener {
+
     private static final int TAB_GENRES = 0;
     private static final int TAB_SORT = 1;
 

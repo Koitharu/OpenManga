@@ -34,16 +34,16 @@ import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
  */
 @SuppressWarnings("TryFinallyCanBeTryWithResources")
 public class LocalMangaProvider extends MangaProvider {
+
     private static boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);
-    private final Context context;
+    private final Context mContext;
     private final MangaStore mStore;
 
-    @Deprecated
     public LocalMangaProvider(Context context) {
-        this.context = context;
+        mContext = context;
         mStore = new MangaStore(context);
     }
 
@@ -56,11 +56,9 @@ public class LocalMangaProvider extends MangaProvider {
         return instance;
     }
 
-    public static void CopyFile(File src, File dst) throws IOException {
+    public static void copyFile(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
-
-        // Transfer bytes from in to out
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
@@ -70,7 +68,7 @@ public class LocalMangaProvider extends MangaProvider {
         out.close();
     }
 
-    public static long DirSize(File dir) {
+    public static long dirSize(File dir) {
         if (!dir.exists()) {
             return 0;
         }
@@ -79,7 +77,7 @@ public class LocalMangaProvider extends MangaProvider {
             if (file.isFile()) {
                 size += file.length();
             } else
-                size += DirSize(file);
+                size += dirSize(file);
         }
         return size;
     }
@@ -202,7 +200,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return context.getString(R.string.local_storage);
+        return mContext.getString(R.string.local_storage);
     }
 
     @Override
@@ -212,7 +210,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
-        return mStore.dropMangas(ids) && HistoryProvider.getInstacne(context).remove(ids);
+        return mStore.dropMangas(ids) && HistoryProvider.getInstacne(mContext).remove(ids);
     }
 
     @Override
@@ -303,7 +301,7 @@ public class LocalMangaProvider extends MangaProvider {
                     infos[i].id = ids[i];
                     infos[i].name = cursor.getString(0);
                     infos[i].path = cursor.getString(1);
-                    infos[i].size = LocalMangaProvider.DirSize(new File(infos[i].path));
+                    infos[i].size = LocalMangaProvider.dirSize(new File(infos[i].path));
                 }
             }
         } catch (Exception e) {

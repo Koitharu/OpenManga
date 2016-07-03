@@ -9,6 +9,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
  * Created by nv95 on 30.09.15.
  */
 public class MangaInfo {
+
     public static final int STATUS_UNKNOWN = 0;
     public static final int STATUS_COMPLETED = 1;
     public static final int STATUS_ONGOING = 2;

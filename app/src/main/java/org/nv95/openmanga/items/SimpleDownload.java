@@ -12,6 +12,7 @@ import java.net.URL;
  * Created by nv95 on 12.02.16.
  */
 public class SimpleDownload implements Runnable {
+
     private final String mSourceUrl;
     private final File mDestination;
 

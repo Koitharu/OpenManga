@@ -1,12 +1,12 @@
 package org.nv95.openmanga.items;
 
-import android.content.Context;
 import android.view.View;
 
 /**
  * Created by nv95 on 09.02.16.
  */
 public class ThumbSize {
+
     public static ThumbSize THUMB_SIZE_LIST;
     public static ThumbSize THUMB_SIZE_SMALL;
     public static ThumbSize THUMB_SIZE_MEDIUM;
@@ -48,9 +48,5 @@ public class ThumbSize {
         return o instanceof ThumbSize &&
                 ((ThumbSize)o).mHeight == mHeight &&
                 ((ThumbSize)o).mWidth == mWidth;
-    }
-
-    public static void autoFit(Context context, float width) {
-        
     }
 }

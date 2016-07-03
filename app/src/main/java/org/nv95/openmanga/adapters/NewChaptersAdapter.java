@@ -18,6 +18,7 @@ import org.nv95.openmanga.lists.MangaList;
  * Created by nv95 on 17.04.16.
  */
 public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.UpdatesHolder> {
+
     private final MangaList mDataset;
 
     public NewChaptersAdapter(MangaList dataset) {
@@ -40,7 +41,7 @@ public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.
         return mDataset.size();
     }
 
-    protected static class UpdatesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class UpdatesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextViewTitle;
         private final AsyncImageView mAsyncImageView;
         private final TextView mTextViewBadge;

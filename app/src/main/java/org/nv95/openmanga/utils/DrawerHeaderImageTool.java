@@ -34,6 +34,7 @@ import static org.nv95.openmanga.R.id.textView;
 public class DrawerHeaderImageTool implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_HEADER = 434;
+
     private final ImageView mImageView;
     private final TextView mTextView;
     private final AppCompatActivity mActivity;

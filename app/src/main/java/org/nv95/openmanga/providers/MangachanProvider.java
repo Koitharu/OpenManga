@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * Created by nv95 on 14.12.15.
  */
 public class MangachanProvider extends MangaProvider {
+
     protected static final boolean features[] = {true, true, false, true, false};
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};
     protected static final String sortUrls[] = {"manga/new", "mostfavorites", "manga/random"};

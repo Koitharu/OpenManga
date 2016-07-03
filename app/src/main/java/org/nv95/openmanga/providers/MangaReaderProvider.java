@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by nv95 on 14.10.15.
  */
 public class MangaReaderProvider extends MangaProvider {
+
     protected static final int sorts[] = {R.string.sort_popular};
     protected static final String sortUrls[] = {""};
     protected static boolean features[] = {true, true, false, true, false};
@@ -122,7 +123,7 @@ public class MangaReaderProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
-            return MangaList.Empty();
+            return MangaList.empty();
         }
         MangaList list = new MangaList();
         Document document = getPage("http://www.mangareader.net/search/?w=" + URLEncoder.encode(query, "UTF-8"));

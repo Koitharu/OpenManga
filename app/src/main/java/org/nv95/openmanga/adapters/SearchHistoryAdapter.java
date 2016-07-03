@@ -18,7 +18,9 @@ import org.nv95.openmanga.helpers.StorageHelper;
  * Created by nv95 on 02.01.16.
  */
 public class SearchHistoryAdapter extends CursorAdapter {
+
     private static final String TABLE_NAME = "search_history";
+    
     private final StorageHelper mStorageHelper;
     private final SQLiteDatabase mDatabase;
 

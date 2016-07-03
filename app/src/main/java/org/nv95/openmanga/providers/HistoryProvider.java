@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
@@ -27,18 +26,18 @@ import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
  * Created by nv95 on 05.10.15.
  */
 public class HistoryProvider extends MangaProvider {
+
     private static final String TABLE_NAME = "history";
     protected static boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<HistoryProvider> instanceReference = new WeakReference<>(null);
-    StorageHelper dbHelper;
-    private Context context;
+    private StorageHelper mStorageHelper;
+    private Context mContext;
 
-    @Deprecated
     public HistoryProvider(Context context) {
-        this.context = context;
-        dbHelper = new StorageHelper(context);
+        mContext = context;
+        mStorageHelper = new StorageHelper(context);
     }
 
     public static HistoryProvider getInstacne(Context context) {
@@ -50,28 +49,12 @@ public class HistoryProvider extends MangaProvider {
         return instance;
     }
 
-    public static boolean addToHistory(Context context, MangaInfo mangaInfo, int chapter, int page) {
-        return HistoryProvider.getInstacne(context).add(mangaInfo, chapter, page);
-    }
-
-    public static boolean removeFromHistory(Context context, MangaInfo mangaInfo) {
-        return HistoryProvider.getInstacne(context).remove(mangaInfo);
-    }
-
-    public static boolean has(Context context, MangaInfo mangaInfo) {
-        return HistoryProvider.getInstacne(context).has(mangaInfo);
-    }
-
-    public static HistorySummary get(Context context, MangaInfo mangaInfo) {
-        return HistoryProvider.getInstacne(context).get(mangaInfo);
-    }
-
     public MangaInfo getLast() {
         SQLiteDatabase database = null;
         Cursor cursor = null;
         MangaInfo last = null;
         try {
-            database = dbHelper.getReadableDatabase();
+            database = mStorageHelper.getReadableDatabase();
             cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[0]);
             if (cursor.moveToFirst()) {
                 last = new MangaInfo();
@@ -102,7 +85,7 @@ public class HistoryProvider extends MangaProvider {
 
     @Override
     protected void finalize() throws Throwable {
-        dbHelper.close();
+        mStorageHelper.close();
         super.finalize();
     }
 
@@ -110,7 +93,7 @@ public class HistoryProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         MangaList list;
         MangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
@@ -160,7 +143,7 @@ public class HistoryProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return context.getString(R.string.action_history);
+        return mContext.getString(R.string.action_history);
     }
 
     @Override
@@ -180,27 +163,27 @@ public class HistoryProvider extends MangaProvider {
         cv.put("timestamp", new Date().getTime());
         cv.put("chapter", chapter);
         cv.put("page", page);
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         int updCount = database.update(TABLE_NAME, cv, "id=" + mangaInfo.id, null);
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
     @Override
     public boolean remove(long[] ids) {
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.beginTransaction();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
@@ -208,20 +191,20 @@ public class HistoryProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
     public void clear() {
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.delete(TABLE_NAME, null, null);
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
     }
 
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
         database.close();
         return res;
@@ -230,7 +213,7 @@ public class HistoryProvider extends MangaProvider {
     @Nullable
     public HistorySummary get(MangaInfo mangaInfo) {
         HistorySummary res = null;
-        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         Cursor c = database.query(TABLE_NAME, new String[]{"timestamp", "chapter", "page"}, "id=" + mangaInfo.id, null, null, null, null);
         if (c.moveToFirst()) {
             res = new HistorySummary();

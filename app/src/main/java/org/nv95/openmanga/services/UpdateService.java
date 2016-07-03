@@ -23,10 +23,10 @@ import java.net.URL;
  * Created by nv95 on 20.02.16.
  */
 public class UpdateService extends Service {
-    private static final int NOTIFY_ID = 344;
-    private String url;
-    private NotificationHelper mNotificationHelper;
 
+    private static final int NOTIFY_ID = 344;
+
+    private NotificationHelper mNotificationHelper;
 
     public static void start(Context context, String url) {
         context.startService(new Intent(context, UpdateService.class)

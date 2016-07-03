@@ -194,7 +194,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
                             )
                     )
             );
-            FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + page.path);
+            FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + mPage.path);
         }
 
         @Override

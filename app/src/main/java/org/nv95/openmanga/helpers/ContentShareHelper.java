@@ -14,6 +14,7 @@ import java.io.File;
  * Created by nv95 on 28.01.16.
  */
 public class ContentShareHelper {
+
     private final Context mContext;
     private final Intent mIntent;
 

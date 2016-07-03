@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,7 @@ import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
  * Created by nv95 on 30.09.15.
  */
 public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter.MangaViewHolder> {
+
     private boolean mGrid;
     private ThumbSize mThumbSize;
     @Nullable
@@ -34,10 +34,6 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
         mChoiceController = new ModalChoiceController();
-    }
-
-    public void setOnItemLongClickListener(OnItemLongClickListener<MangaViewHolder> itemLongClickListener) {
-        mOnItemLongClickListener = itemLongClickListener;
     }
 
     public boolean setGrid(boolean grid) {
@@ -79,7 +75,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         viewHolder.fill(data, mThumbSize, mChoiceController.isSelected(position));
     }
 
-    public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         @Nullable
         private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
         private TextView textViewTitle;
@@ -151,18 +147,4 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             return !(mListener == null || !mListener.onLongClick(this)) || mLongClickListener != null && mLongClickListener.onItemLongClick(this);
         }
     }
-
-    private class AutoSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
-        final int mCount;
-
-        public AutoSpanSizeLookup(int mCount) {
-            this.mCount = mCount;
-        }
-
-        @Override
-        public int getSpanSize(int position) {
-            return getItemViewType(position) == VIEW_PROGRESS ? mCount : 1;
-        }
-    }
-
 }

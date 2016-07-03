@@ -31,6 +31,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
 public class SearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
         ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener {
+
     //views
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
@@ -40,9 +41,9 @@ public class SearchActivity extends BaseAppActivity implements
     private MangaProvider mProvider;
     private ListModeHelper mListModeHelper;
     //data
-    private String query;
+    private String mQuery;
     @Nullable
-    private String title;
+    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +55,19 @@ public class SearchActivity extends BaseAppActivity implements
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         Bundle extras = getIntent().getExtras();
-        query = extras.getString("query");
-        title = extras.getString("title");
+        mQuery = extras.getString("query");
+        mTitle = extras.getString("title");
         int provider = extras.getInt("provider");
         mProvider = new MangaProviderManager(this).getMangaProvider(provider);
         if (mProvider == null) {
             finish();
             return;
         }
-        if (title != null) {
-            setTitle(query);
+        if (mTitle != null) {
+            setTitle(mQuery);
         }
         enableHomeAsUp();
-        setSubtitle(title == null ? query : title);
+        setSubtitle(mTitle == null ? mQuery : mTitle);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mLoader = new MangaListLoader(mRecyclerView, this);
         mListModeHelper = new ListModeHelper(this, this);
@@ -78,7 +79,7 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        menu.findItem(R.id.action_search).setVisible(title == null);
+        menu.findItem(R.id.action_search).setVisible(mTitle == null);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -113,7 +114,7 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     public void onClick(View v) {
         startActivity(new Intent(SearchActivity.this, MultipleSearchActivity.class)
-                .putExtra("query", query));
+                .putExtra("query", mQuery));
     }
 
     @Override
@@ -138,7 +139,7 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     public MangaList onContentNeeded(int page) {
         try {
-            return mProvider.search(query, page);
+            return mProvider.search(mQuery, page);
         } catch (Exception e) {
             return null;
         }

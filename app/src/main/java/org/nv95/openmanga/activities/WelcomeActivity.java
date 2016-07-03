@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Checkable;
 import android.widget.TextView;
 
-import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.AppHelper;
 
@@ -18,12 +18,12 @@ import org.nv95.openmanga.utils.AppHelper;
  * Created by nv95 on 18.10.15.
  */
 public class WelcomeActivity extends BaseAppActivity {
-    private static final int WELCOME_CHANGELOG = 1;
-    private static final int WELCOME_LANGS = 2;
 
-    public static void ShowChangelog(Context context) {
+    private static final int WELCOME_CHANGELOG = 1;
+
+    public static void showChangelog(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(WelcomeActivity.class.getName(), MODE_PRIVATE);
-        int version = OpenMangaApplication.getVersion();
+        int version = BuildConfig.VERSION_CODE;
         int lastVersion = prefs.getInt("version", -1);
         if (lastVersion < version) {
             if (lastVersion != -1 && version % 2 == 0 && prefs.getBoolean("showChangelog", true)) {
@@ -34,13 +34,6 @@ public class WelcomeActivity extends BaseAppActivity {
             }
             prefs.edit().putInt("version", version).apply();
         }
-    }
-
-    public static void ShowLangSelect(Context context) {
-        context.startActivity(
-                new Intent(context, WelcomeActivity.class)
-                        .putExtra("mode", WELCOME_LANGS)
-        );
     }
 
     @Override
@@ -73,8 +66,6 @@ public class WelcomeActivity extends BaseAppActivity {
                         }
                     }
                 });
-                break;
-            case WELCOME_LANGS:
                 break;
             default:
                 finish();

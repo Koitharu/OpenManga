@@ -23,6 +23,11 @@ import java.util.Vector;
  * Created by nv95 on 03.01.16.
  */
 public class MangaChangesObserver {
+
+    public static final int CATEGORY_LOCAL = 0;
+    public static final int CATEGORY_FAVOURITES = 2;
+    public static final int CATEGORY_HISTORY = 3;
+
     private static MangaChangesObserver instance = new MangaChangesObserver();
     private Vector<OnMangaChangesListener> listeners = new Vector<>();
     private int[] queuedChanges = {0, 0, 0, 0};

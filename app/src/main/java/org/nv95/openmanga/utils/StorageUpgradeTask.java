@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 
@@ -20,7 +19,9 @@ import java.io.File;
  */
 
 public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
+
     private static final int STORAGE_VERSION = 1;
+
     private final ProgressDialog mProgressDialog;
     private final Context mContext;
 
@@ -149,7 +150,7 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         mProgressDialog.dismiss();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
     }
 
     public static void doUpgrade(Context context) {

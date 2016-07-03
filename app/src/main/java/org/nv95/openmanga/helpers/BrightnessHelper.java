@@ -7,6 +7,7 @@ import android.view.WindowManager;
  * Created by nv95 on 12.02.16.
  */
 public class BrightnessHelper {
+
     private final Window mWindow;
     private final float mLastValue;
 

@@ -10,10 +10,10 @@ import android.view.View;
  */
 public abstract class OnSwipeTouchListener implements View.OnTouchListener {
 
-    private final GestureDetector gestureDetector;
+    private final GestureDetector mGestureDetector;
 
     public OnSwipeTouchListener(Context context) {
-        gestureDetector = new GestureDetector(context, new GestureListener());
+        mGestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     public void onSwipeLeft() {
@@ -26,18 +26,13 @@ public abstract class OnSwipeTouchListener implements View.OnTouchListener {
     public abstract boolean canOverScroll(int direction);
 
     public boolean onTouch(View v, MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+        return mGestureDetector.onTouchEvent(event);
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         private static final int SWIPE_DISTANCE_THRESHOLD = 100;
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-
-//        @Override
-//        public boolean onDown(MotionEvent e) {
-//            return true;
-//        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {

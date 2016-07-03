@@ -30,6 +30,7 @@ import java.util.HashMap;
  * Created by nv95 on 17.04.16.
  */
 public class NewChaptersActivity extends BaseAppActivity {
+
     //views
     private RecyclerView mRecyclerView;
     private TextView mTextViewHolder;
@@ -51,7 +52,8 @@ public class NewChaptersActivity extends BaseAppActivity {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START | ItemTouchHelper.END) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.START | ItemTouchHelper.END) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;

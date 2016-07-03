@@ -18,15 +18,16 @@ import java.util.ArrayList;
  * Created by nv95 on 01.01.16.
  */
 public class DirAdapter extends BaseAdapter {
-    private final Context context;
-    private ArrayList<File> files;
-    private File currentDir;
-    private final Drawable[] icons;
+
+    private final Context mContext;
+    private ArrayList<File> mFiles;
+    private File mCurrentDir;
+    private final Drawable[] mIcons;
 
     public DirAdapter(Context context, File dir) {
-        this.context = context;
-        files = new ArrayList<>();
-        icons = LayoutUtils.getThemedIcons(
+        mContext = context;
+        mFiles = new ArrayList<>();
+        mIcons = LayoutUtils.getThemedIcons(
                 context,
                 R.drawable.ic_directory_dark,
                 R.drawable.ic_directory_null_dark
@@ -36,17 +37,17 @@ public class DirAdapter extends BaseAdapter {
 
     @NonNull
     public File getCurrentDir() {
-        return currentDir;
+        return mCurrentDir;
     }
 
     public void setCurrentDir(@NonNull File dir) {
-        currentDir = dir;
-        files.clear();
+        mCurrentDir = dir;
+        mFiles.clear();
         File[] list = dir.listFiles();
         if (list != null) {
             for (File o : list) {
                 if (o.isDirectory()) {
-                    files.add(o);
+                    mFiles.add(o);
                 }
             }
         }
@@ -54,25 +55,25 @@ public class DirAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return files.size();
+        return mFiles.size();
     }
 
     @Override
     public File getItem(int position) {
-        return files.get(position);
+        return mFiles.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return files.get(position).hashCode();
+        return mFiles.get(position).hashCode();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView textView = (TextView) (convertView == null ? View.inflate(context, R.layout.item_dir, null) : convertView);
+        TextView textView = (TextView) (convertView == null ? View.inflate(mContext, R.layout.item_dir, null) : convertView);
         File f = getItem(position);
         textView.setText(f.getName());
-        textView.setCompoundDrawablesWithIntrinsicBounds(f.canWrite() ? icons[0]: icons[1], null, null, null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(f.canWrite() ? mIcons[0]: mIcons[1], null, null, null);
         return textView;
     }
 }

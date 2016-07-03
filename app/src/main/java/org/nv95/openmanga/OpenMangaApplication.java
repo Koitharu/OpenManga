@@ -21,14 +21,6 @@ import org.nv95.openmanga.utils.imagecontroller.ImageShifter;
  */
 public class OpenMangaApplication extends Application {
 
-    public static int getVersion() {
-        return BuildConfig.VERSION_CODE;
-    }
-
-    public static String getVersionName() {
-        return BuildConfig.VERSION_NAME;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

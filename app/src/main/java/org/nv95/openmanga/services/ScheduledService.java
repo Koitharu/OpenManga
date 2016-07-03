@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.NewChaptersActivity;
 import org.nv95.openmanga.helpers.NotificationHelper;
@@ -29,8 +28,10 @@ import org.nv95.openmanga.utils.OneShotNotifier;
  * Created by nv95 on 18.03.16.
  */
 public class ScheduledService extends Service {
-    private ScheduleHelper mScheduleHelper;
+
     private static final int INTERVAL_CHECK_APP_UPDATE = 12;
+
+    private ScheduleHelper mScheduleHelper;
     private boolean mChaptersCheckEnabled;
     private int mChaptersCheckInterval;
     private boolean mChapterCheckWifiOnly;
@@ -74,19 +75,19 @@ public class ScheduledService extends Service {
         @Override
         protected MangaUpdateInfo[] doInBackground(Void... params) {
             try {
-                int delay = mScheduleHelper.getActionIntervalHours(Constants.ACTION_CHECK_APP_UPDATES);
+                int delay = mScheduleHelper.getActionIntervalHours(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
                 if (mAutoUpdate && (delay < 0 || delay >= INTERVAL_CHECK_APP_UPDATE)) {
                     publishProgress(new AppUpdatesProvider().getLatestAny());
-                    mScheduleHelper.actionDone(Constants.ACTION_CHECK_APP_UPDATES);
+                    mScheduleHelper.actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                int delay = mScheduleHelper.getActionIntervalHours(Constants.ACTION_CHECK_NEW_CHAPTERS);
+                int delay = mScheduleHelper.getActionIntervalHours(ScheduleHelper.ACTION_CHECK_NEW_CHAPTERS);
                 if (mChaptersCheckEnabled && (delay < 0 || delay >= mChaptersCheckInterval)) {
                     MangaUpdateInfo[] res = NewChaptersProvider.getInstance(ScheduledService.this).checkForNewChapters();
-                    mScheduleHelper.actionDone(Constants.ACTION_CHECK_NEW_CHAPTERS);
+                    mScheduleHelper.actionDone(ScheduleHelper.ACTION_CHECK_NEW_CHAPTERS);
                     return res;
                 } else {
                     return null;

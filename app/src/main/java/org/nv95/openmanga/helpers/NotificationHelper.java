@@ -17,6 +17,7 @@ import org.nv95.openmanga.utils.OneShotNotifier;
  * Created by nv95 on 13.02.16.
  */
 public class NotificationHelper {
+
     private final Context mContext;
     private final OneShotNotifier mNotifier;
     private final NotificationCompat.Builder mNotificationBuilder;

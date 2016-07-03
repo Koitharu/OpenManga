@@ -39,19 +39,20 @@ import org.nv95.openmanga.services.DownloadService;
  */
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadHolder>
         implements ServiceConnection, DownloadService.OnProgressUpdateListener {
-    private final Intent intent;
+
+    private final Intent mIntent;
     @Nullable
     private DownloadService.DownloadBinder mBinder;
     private final RecyclerView mRecyclerView;
 
     public DownloadsAdapter(RecyclerView recyclerView) {
-        intent = new Intent(recyclerView.getContext(), DownloadService.class);
+        mIntent = new Intent(recyclerView.getContext(), DownloadService.class);
         mBinder = null;
         mRecyclerView = recyclerView;
     }
 
     public void enable() {
-        mRecyclerView.getContext().bindService(intent, this, 0);
+        mRecyclerView.getContext().bindService(mIntent, this, 0);
     }
 
     public void disable() {

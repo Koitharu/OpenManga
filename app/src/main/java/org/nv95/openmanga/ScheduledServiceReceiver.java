@@ -14,6 +14,7 @@ import org.nv95.openmanga.utils.FileLogger;
  * Created by nv95 on 19.12.15.
  */
 public class ScheduledServiceReceiver extends BroadcastReceiver {
+
     public static final long SCHEDULE_INTERVAL = AlarmManager.INTERVAL_HOUR / 30;
 
     public static void enable(Context context) {

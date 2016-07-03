@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * Created by nv95 on 31.01.16.
  */
 public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     protected static final int VIEW_ITEM = 1;
     protected static final int VIEW_HEADER = 0;
 

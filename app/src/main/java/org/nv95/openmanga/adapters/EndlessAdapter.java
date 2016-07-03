@@ -15,31 +15,30 @@ import org.nv95.openmanga.lists.PagedList;
  * Created by nv95 on 25.01.16.
  */
 public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     protected static final int VIEW_ITEM = 1;
     protected static final int VIEW_PROGRESS = 0;
-    private final RecyclerView mRecyclerView;
     private PagedList<T> mDataset;
-    private int visibleThreshold = 2;
-    private int lastVisibleItem, totalItemCount;
-    private boolean loading;
-    private OnLoadMoreListener onLoadMoreListener;
+    private int mVisibleThreshold = 2;
+    private int mLastVisibleItem, mTotalItemCount;
+    private boolean mLoading;
+    private OnLoadMoreListener mOnLoadMoreListener;
     private GridLayoutManager mLayoutManager;
 
     public EndlessAdapter(PagedList<T> dataset, RecyclerView recyclerView) {
         mDataset = dataset;
-        mRecyclerView = recyclerView;
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                totalItemCount = mLayoutManager.getItemCount();
-                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
-                if (!loading && isLoadEnabled() && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                mTotalItemCount = mLayoutManager.getItemCount();
+                mLastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                if (!mLoading && isLoadEnabled() && mTotalItemCount <= (mLastVisibleItem + mVisibleThreshold)) {
                     // End has been reached
                     // Do something
-                    if (onLoadMoreListener != null) {
-                        onLoadMoreListener.onLoadMore();
-                        loading = true;
+                    if (mOnLoadMoreListener != null) {
+                        mOnLoadMoreListener.onLoadMore();
+                        mLoading = true;
                     }
                 }
             }
@@ -89,7 +88,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     }
 
     public void setLoaded() {
-        loading = false;
+        mLoading = false;
     }
 
     @Override
@@ -107,7 +106,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
+        this.mOnLoadMoreListener = onLoadMoreListener;
     }
 
     private boolean isLoadEnabled() {
