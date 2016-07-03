@@ -26,8 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:elevation="0dp"
-            android:layout_marginBottom="-2dp"
+            app:elevation="4dp"
             app:menu="@menu/activity_main_drawer_bottom" />
 
     </android.support.design.widget.NavigationView>
