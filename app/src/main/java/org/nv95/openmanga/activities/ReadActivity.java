@@ -30,8 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.adapters.PagerReaderAdapter;
 import org.nv95.openmanga.components.pager.MangaPager;
-import org.nv95.openmanga.components.OverScrollDetector;
+import org.nv95.openmanga.components.pager.OverScrollDetector;
 import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
@@ -47,7 +48,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.imagecontroller.TouchGridDetector;
+import org.nv95.openmanga.components.StatusBarController;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private View mSwipeFrame;
     private TextView mTextViewNext;
     private ImageView mImageViewArrow;
-    private TouchGridDetector mGridDetector;
+    private StatusBarController mGridDetector;
     //data
     private MangaSummary mangaSummary;
     private MangaChapter chapter;
@@ -87,7 +88,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mSwipeFrame = findViewById(R.id.swipeFrame);
         mTextViewNext = (TextView) findViewById(R.id.textView_title);
         mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
-        mGridDetector = (TouchGridDetector) findViewById(R.id.gridDetector);
+        mGridDetector = (StatusBarController) findViewById(R.id.gridDetector);
         ImageView imageViewMenu = (ImageView) findViewById(R.id.imageView_menu);
         assert imageViewMenu != null;
         if (isDarkTheme()) {
@@ -332,8 +333,12 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     public void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int direction = Integer.parseInt(prefs.getString("direction", "0"));
-        mPager.setBehavior(direction == 1, direction > 1,
-                Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))));
+        mPager.setBehavior(
+                direction == 1,
+                direction > 1,
+                Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))),
+                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT)))
+        );
         if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {

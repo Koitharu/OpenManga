@@ -1,11 +1,9 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.components.pager;
 
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
-import org.nv95.openmanga.components.OverScrollDetector;
 
 /**
  * Detects left and right swipes across a view.

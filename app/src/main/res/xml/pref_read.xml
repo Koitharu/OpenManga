@@ -35,6 +35,12 @@
         android:defaultValue="20"
         app:iconDrawable="@drawable/ic_brightness_darker"
         app:max="100" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/scale_modes"
+        android:entryValues="@array/scale_values"
+        android:key="scalemode"
+        android:title="@string/scale_mode" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="shifts"

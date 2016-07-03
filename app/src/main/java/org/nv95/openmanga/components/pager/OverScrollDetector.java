@@ -1,10 +1,8 @@
-package org.nv95.openmanga.components;
+package org.nv95.openmanga.components.pager;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
-
-import org.nv95.openmanga.utils.OnSwipeTouchListener;
 
 /**
  * Created by nv95 on 10.04.16.

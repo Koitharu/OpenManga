@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +28,17 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMovement.OnLinkClickListener {
+
+    public static final int SCALE_FIT = 0;
+    public static final int SCALE_CROP = 1;
+    public static final int SCALE_AUTO = 2;
+    public static final int SCALE_SRC = 3;
+
     private final LayoutInflater inflater;
     private final ArrayList<MangaPage> pages;
     private boolean isLandOrientation, isLight;
-    private SparseArray<ViewHolder> views = new SparseArray<>();
     private final InternalLinkMovement mLinkMovement;
+    private int mScaleMode = SCALE_FIT;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -58,6 +63,10 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         return view.equals(object);
     }
 
+    public void setScaleMode(int scaleMode) {
+        mScaleMode = scaleMode;
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_page, container, false);
@@ -65,35 +74,19 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
             view.setBackgroundColor(Color.WHITE);
         }
         MangaPage page = getItem(position);
-        ViewHolder holder = new ViewHolder();
+        PageHolder holder = new PageHolder();
         holder.position = position;
-        holder.isLand = isLandOrientation;
+        holder.scale = mScaleMode;
+        holder.land = isLandOrientation;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
-//        holder.ssiv.setMinimumScaleType(
-//                isLandOrientation ? SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
-//                         : SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
-//        );
         holder.ssiv.setScaleAndCenter(isLandOrientation ? holder.ssiv.getMaxScale() -.2f : holder.ssiv.getMinScale(), new PointF(0,0));
         holder.textView = (TextView) view.findViewById(R.id.textView_holder);
         holder.textView.setMovementMethod(mLinkMovement);
         holder.textView.setTag(holder);
-//        holder.textView = (TextView) view.findViewById(R.id.textView_progress);
-
-        // Работаю над отображением не трогай
-//        String path;
-//        try {
-//            path = ((MangaProvider) page.provider.newInstance()).getPageImage(page);
-//        } catch (Exception e) {
-//            path = page.path;
-//        }
-//        holder.ssiv.setParallelLoadingEnabled(true);
-//        ImageLoader.getInstance().loadImage(path, new LoaderImage(holder));
-//        holder.loadTask = new PageLoadTask(inflater.getContext(), holder, page);
-//        holder.loadTask.executeOnExecutor(executor);
         holder.loadTask = new PageLoad(holder, page);
         holder.loadTask.load();
-        views.append(position, holder);
+        view.setTag(holder);
         container.addView(view, 0);
         return view;
     }
@@ -104,14 +97,13 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
             return;
         }
         View view = (View) object;
-        ViewHolder holder = (ViewHolder) view.getTag();
+        PageHolder holder = (PageHolder) view.getTag();
         if (holder != null) {
             if (holder.loadTask != null) {
                 holder.loadTask.cancel();
             }
             holder.ssiv.recycle();
         }
-        views.remove(position);
         container.removeView(view);
     }
 
@@ -124,10 +116,10 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         switch (url) {
             case "retry":
                 Object tag = view.getTag();
-                if (tag == null || !(tag instanceof ViewHolder)) {
+                if (tag == null || !(tag instanceof PageHolder)) {
                     return;
                 }
-                final ViewHolder holder = (ViewHolder) tag;
+                final PageHolder holder = (PageHolder) tag;
                 MangaPage page = pages.get(holder.position);
                 holder.loadTask = new PageLoad(holder, page);
                 holder.loadTask.load();
@@ -135,20 +127,21 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         }
     }
 
-    private static class ViewHolder {
+    private static class PageHolder {
         ProgressBar progressBar;
         SubsamplingScaleImageView ssiv;
         TextView textView;
         @Nullable
         PageLoad loadTask;
         int position;
-        boolean isLand;
+        boolean land;
+        int scale;
     }
 
     private static class PageLoad extends PageLoadAbs {
-        private final ViewHolder viewHolder;
+        private final PageHolder viewHolder;
 
-        PageLoad(ViewHolder viewHolder, MangaPage page){
+        PageLoad(PageHolder viewHolder, MangaPage page){
             super(page, viewHolder.ssiv);
             this.viewHolder = viewHolder;
         }
@@ -169,8 +162,24 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.ssiv.setScaleAndCenter(viewHolder.isLand ?
-                    viewHolder.ssiv.getMaxScale() -.2f : viewHolder.ssiv.getMinScale(), new PointF(0,0));
+            switch (viewHolder.scale) {
+                case SCALE_FIT:
+                    viewHolder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE);
+                    break;
+                case SCALE_CROP:
+                    viewHolder.ssiv.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+                    break;
+                case SCALE_AUTO:
+                    viewHolder.ssiv.setMinimumScaleType(
+                            (viewHolder.ssiv.getSWidth() > viewHolder.ssiv.getSHeight()) == viewHolder.land ?
+                                    SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
+                                    : SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
+                    );
+                    break;
+                case SCALE_SRC:
+                    viewHolder.ssiv.setScaleAndCenter(viewHolder.ssiv.getMaxScale(), new PointF(0, 0));
+                    break;
+            }
         }
 
         @Override
@@ -193,22 +202,5 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
             int progress = (current * 100 / total);
             viewHolder.progressBar.setProgress(progress);
         }
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        for(int i = 0; i < views.size(); i++) {
-            ViewHolder view = views.get(i);
-            if(view!= null && view.ssiv!=null) {
-//                view.ssiv.setMinimumScaleType(
-//                        isLandOrientation ? SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP
-//                                : SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE
-//                );
-                view.isLand = isLandOrientation;
-//                view.ssiv.resetScaleAndCenter();
-                view.ssiv.setScaleAndCenter(isLandOrientation ? view.ssiv.getMaxScale() -.2f: view.ssiv.getMinScale(), new PointF(0,0));
-            }
-        }
-        super.notifyDataSetChanged();
     }
 }
