@@ -257,6 +257,35 @@ public class LocalMangaProvider extends MangaProvider {
         return null;
     }
 
+    public long[] getAllIds() {
+        ArrayList<Long> ids = new ArrayList<>();
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        try {
+            database = mStore.getDatabase(false);
+            cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id"}, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                while (cursor.moveToNext()) {
+                    ids.add(cursor.getLong(0));
+                }
+            }
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (database != null) {
+                database.close();
+            }
+        }
+        long[] ids_a = new long[ids.size()];
+        for (int i=0;i<ids.size();i++) {
+            ids_a[i] = ids.get(i);
+        }
+        return ids_a;
+    }
+
     @WorkerThread
     public LocalMangaInfo[] getLocalInfo(long[] ids) {
         LocalMangaInfo[] infos = new LocalMangaInfo[ids.length];
@@ -294,7 +323,7 @@ public class LocalMangaProvider extends MangaProvider {
             if (list != null) {
                 String dirDest = destination + File.separatorChar + source.getName();
                 for (File o : list) {
-                     res = moveDir(o, dirDest) && res;
+                     res = (o.renameTo(new File(dirDest, o.getName())) || moveDir(o, dirDest)) && res;
                 }
             }
             source.delete();

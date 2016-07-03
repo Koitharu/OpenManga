@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -35,14 +36,21 @@ public class LocalMoveDialog {
 
     private final Context mContext;
     private final long[] mIds;
+    @Nullable
+    private String mDestinaton = null;
 
     public LocalMoveDialog(Context context, long... ids) {
         mContext = context;
         mIds = ids;
     }
 
-    public void showSelectSource() {
-        new LoadDataTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    public LocalMoveDialog setDestination(String path) {
+        mDestinaton = path;
+        return this;
+    }
+
+    public void showSelectSource(@Nullable String exclude) {
+        new LoadDataTask(exclude).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void showSelectDestination(final LocalMangaInfo[] mangas) {
@@ -50,17 +58,14 @@ public class LocalMoveDialog {
                 .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
                     @Override
                     public void onDirSelected(File dir) {
-                        if (dir.equals(MangaStore.getMangasDir(mContext))) {
-                            showSelectDestination(mangas);
-                        } else {
-                            showMove(mangas, dir.getPath());
-                        }
+                        mDestinaton = dir.getPath();
+                        showMove(mangas);
                     }
                 }).show();
     }
 
-    public void showMove(LocalMangaInfo[] mangas, String dest) {
-        new MoveMangaTask(dest).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas);
+    public void showMove(LocalMangaInfo[] mangas) {
+        new MoveMangaTask(mDestinaton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mangas);
     }
 
     private class MoveMangaTask extends AsyncTask<LocalMangaInfo, Object, Long> {
@@ -132,8 +137,10 @@ public class LocalMoveDialog {
     private class LoadDataTask extends AsyncTask<Void, Void, List<LocalMangaInfo>> {
 
         private final ProgressDialog mProgressDialog;
+        private final String mExclude;
 
-        LoadDataTask() {
+        LoadDataTask(String exclude) {
+            mExclude = exclude;
             mProgressDialog = new ProgressDialog(mContext);
             mProgressDialog.setMessage(mContext.getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
@@ -148,14 +155,25 @@ public class LocalMoveDialog {
 
         @Override
         protected List<LocalMangaInfo> doInBackground(Void... params) {
-            return Arrays.asList(LocalMangaProvider.getInstacne(mContext)
-                    .getLocalInfo(mIds));
+            LocalMangaInfo[] infos = LocalMangaProvider.getInstacne(mContext)
+                    .getLocalInfo(mIds);
+            ArrayList<LocalMangaInfo> res = new ArrayList<>();
+            for (LocalMangaInfo o : infos) {
+                if (o != null && !o.path.equals(mExclude)) {
+                    res.add(o);
+                }
+            }
+            return res;
         }
 
         @Override
         protected void onPostExecute(List<LocalMangaInfo> localMangaInfos) {
             super.onPostExecute(localMangaInfos);
             mProgressDialog.dismiss();
+            if (localMangaInfos.size() == 0) {
+                Toast.makeText(mContext, R.string.no_manga_found, Toast.LENGTH_SHORT).show();
+                return;
+            }
             final SelectAdapter adapter = new SelectAdapter(mContext, localMangaInfos);
             ListView listView = new ListView(mContext);
             listView.setAdapter(adapter);
@@ -175,7 +193,11 @@ public class LocalMoveDialog {
                             if (items.length == 0) {
                                 Toast.makeText(mContext, R.string.nothing_selected, Toast.LENGTH_SHORT).show();
                             } else {
-                                showSelectDestination(items);
+                                if (mDestinaton == null) {
+                                    showSelectDestination(items);
+                                } else {
+                                    showMove(items);
+                                }
                             }
                         }
                     })
