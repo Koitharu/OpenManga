@@ -36,7 +36,8 @@ import org.nv95.openmanga.items.ThumbSize;
  * Created by nv95 on 10.12.15.
  */
 public class AsyncImageView extends ImageView {
-    public static Drawable IMAGE_HOLDER;
+
+    private static Drawable mDrawableHolder;
     @Nullable
     private String mUrl = null;
 
@@ -60,8 +61,8 @@ public class AsyncImageView extends ImageView {
     }
 
     protected void init(){
-        if(IMAGE_HOLDER == null) {
-            IMAGE_HOLDER = ContextCompat.getDrawable(getContext(), R.drawable.placeholder);
+        if(mDrawableHolder == null) {
+            mDrawableHolder = ContextCompat.getDrawable(getContext(), R.drawable.placeholder);
         }
     }
 
@@ -82,7 +83,7 @@ public class AsyncImageView extends ImageView {
             return;
         }
         if (useHolder) {
-            setImageDrawable(IMAGE_HOLDER);
+            setImageDrawable(mDrawableHolder);
         }
         mUrl = (url != null && url.charAt(0) == '/') ? "file://" + url : url;
         if (size != null && getMeasuredWidth() == 0) {
@@ -90,10 +91,6 @@ public class AsyncImageView extends ImageView {
         } else {
             ImageLoader.getInstance().displayImage(mUrl, this);
         }
-    }
-
-    public void useMemoryCache(boolean b) {
-
     }
 
     public void updateImageAsync(String url) {

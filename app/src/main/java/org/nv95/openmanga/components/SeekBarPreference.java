@@ -21,6 +21,7 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 12.02.16.
  */
 public class SeekBarPreference extends Preference implements AppCompatSeekBar.OnSeekBarChangeListener {
+
     private TextView mTextView;
     private AppCompatSeekBar mSeekBar;
     private int mValue;

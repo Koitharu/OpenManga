@@ -5,7 +5,7 @@ import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.BuildConfig;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,9 @@ import java.util.ArrayList;
  * Created by nv95 on 19.02.16.
  */
 public class AppUpdatesProvider {
+
     private static final String CHECKER_URL = "http://anibreak.ru/v.0.3/get/openmanga/version";
+
     @Nullable
     private final JSONObject mResponse;
 
@@ -105,7 +107,7 @@ public class AppUpdatesProvider {
         }
 
         public boolean isActual() {
-            return versionCode > OpenMangaApplication.getVersion();
+            return versionCode > BuildConfig.VERSION_CODE;
         }
     }
 }

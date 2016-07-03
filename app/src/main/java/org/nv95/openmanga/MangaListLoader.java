@@ -16,6 +16,7 @@ import org.nv95.openmanga.lists.MangaList;
  * Created by nv95 on 25.01.16.
  */
 public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
+
     private final RecyclerView mRecyclerView;
     @NonNull
     private final MangaListAdapter mAdapter;

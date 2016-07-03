@@ -11,7 +11,6 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
@@ -43,6 +42,7 @@ public class ImportService extends Service {
     public static final int ACTION_START = 60;
     public static final int ACTION_CANCEL = 61;
     private static final int NOTIFY_ID = 632;
+
     private NotificationHelper mNotificationHelper;
     private PowerManager.WakeLock mWakeLock;
     private WeakReference<ImportTask> mTaskReference = new WeakReference<>(null);
@@ -183,7 +183,7 @@ public class ImportService extends Service {
                             publishProgress(pages, total);
                             if (preview == null) {
                                 preview = new File(dest, "cover");
-                                LocalMangaProvider.CopyFile(outFile, preview);
+                                LocalMangaProvider.copyFile(outFile, preview);
                             }
                         }
                     }
@@ -254,7 +254,7 @@ public class ImportService extends Service {
                     .text(integer == -1 ? R.string.error : R.string.import_complete)
                     .update(NOTIFY_ID);
             mTaskReference = new WeakReference<>(null);
-            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
         }
 
         @Override
@@ -262,7 +262,7 @@ public class ImportService extends Service {
             super.onCancelled();
             stopSelf();
             mTaskReference = new WeakReference<>(null);
-            MangaChangesObserver.queueChanges(Constants.CATEGORY_LOCAL);
+            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
             mNotificationHelper.dismiss(NOTIFY_ID);
         }
     }

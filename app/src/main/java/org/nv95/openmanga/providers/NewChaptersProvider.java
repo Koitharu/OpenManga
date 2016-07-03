@@ -21,10 +21,12 @@ import java.util.HashMap;
  * Created by nv95 on 18.03.16.
  */
 public class NewChaptersProvider {
+
     private static final String TABLE_NAME = "new_chapters";
     private static final int COLUMN_ID = 0;
     private static final int COLUMN_CHAPTERS_LAST = 1;
     private static final int COLUMN_CHAPTERS = 2;
+
     private final Context mContext;
     private final StorageHelper mStorageHelper;
     private static WeakReference<NewChaptersProvider> instanceReference = new WeakReference<>(null);

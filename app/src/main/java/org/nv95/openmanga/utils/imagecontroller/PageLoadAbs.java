@@ -18,16 +18,17 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.providers.MangaProvider;
 
 public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingProgressListener {
-    protected final MangaPage page;
-    private static DisplayImageOptions options = null;
-    private PageImageAvare view;
-    private AsyncTask<Void, Void, String> task;
+
+    protected final MangaPage mPage;
+    private static DisplayImageOptions mOptions = null;
+    private PageImageAvare mView;
+    private AsyncTask<Void, Void, String> mTask;
 
     public PageLoadAbs(MangaPage page, SubsamplingScaleImageView view) {
-        this.page = page;
-        this.view = new PageImageAvare(view);
-        if (options == null) {
-            options = OpenMangaApplication.getImageLoaderOptionsBuilder()
+        mPage = page;
+        this.mView = new PageImageAvare(view);
+        if (mOptions == null) {
+            mOptions = OpenMangaApplication.getImageLoaderOptionsBuilder()
                     .imageScaleType(ImageScaleType.NONE)
                     .postProcessor(ImageShifter.getInstance()
                             .setSpace(view.getContext().getResources()
@@ -45,9 +46,9 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
         @Override
         protected String doInBackground(Void... params) {
             try {
-                return ((MangaProvider) page.provider.newInstance()).getPageImage(page);
+                return ((MangaProvider) mPage.provider.newInstance()).getPageImage(mPage);
             } catch (Exception e) {
-                return page.path;
+                return mPage.path;
             }
         }
 
@@ -58,7 +59,7 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
                 if (path.startsWith("/")) {
                     path = "file://" + path;
                 }
-                ImageLoader.getInstance().displayImage(path, view, options, PageLoadAbs.this, PageLoadAbs.this);
+                ImageLoader.getInstance().displayImage(path, mView, mOptions, PageLoadAbs.this, PageLoadAbs.this);
             } else {
                 onLoadingFailed(null, null, null);
             }
@@ -67,13 +68,13 @@ public abstract class PageLoadAbs implements ImageLoadingListener, ImageLoadingP
 
     public void load() {
         preLoad();
-        task = new PrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mTask = new PrepareTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void cancel(){
-        if(task!=null)
-            task.cancel(true);
-        ImageLoader.getInstance().cancelDisplayTask(this.view);
+        if(mTask !=null)
+            mTask.cancel(true);
+        ImageLoader.getInstance().cancelDisplayTask(this.mView);
     }
 
     @Override

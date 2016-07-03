@@ -14,7 +14,9 @@ import android.view.animation.Interpolator;
  * Created by nv95 on 25.01.16.
  */
 public class FABScrollBehavior extends FloatingActionButton.Behavior {
+
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
+
     private boolean mIsAnimatingOut = false;
 
     public FABScrollBehavior(Context context, AttributeSet attributeSet) {

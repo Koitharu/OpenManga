@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
@@ -31,18 +30,18 @@ import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
  * Created by nv95 on 03.10.15.
  */
 public class FavouritesProvider extends MangaProvider {
+
     private static final String TABLE_NAME = "favourites";
     private static boolean features[] = {false, false, true, true, true};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<>(null);
-    private final StorageHelper dbHelper;
-    private final Context context;
+    private final StorageHelper mStorageHelper;
+    private final Context mContext;
 
-    @Deprecated
     public FavouritesProvider(Context context) {
-        this.context = context;
-        dbHelper = new StorageHelper(context);
+        mContext = context;
+        mStorageHelper = new StorageHelper(context);
     }
 
     public static FavouritesProvider getInstacne(Context context) {
@@ -54,21 +53,9 @@ public class FavouritesProvider extends MangaProvider {
         return instance;
     }
 
-    public static boolean AddToFavourites(Context context, MangaInfo mangaInfo, int category) {
-        return FavouritesProvider.getInstacne(context).add(mangaInfo, category);
-    }
-
-    public static boolean RemoveFromFavourites(Context context, MangaInfo mangaInfo) {
-        return FavouritesProvider.getInstacne(context).remove(mangaInfo);
-    }
-
-    public static boolean Has(Context context, MangaInfo mangaInfo) {
-        return FavouritesProvider.getInstacne(context).has(mangaInfo);
-    }
-
     @Override
     protected void finalize() throws Throwable {
-        dbHelper.close();
+        mStorageHelper.close();
         super.finalize();
     }
 
@@ -76,7 +63,7 @@ public class FavouritesProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
-        final SQLiteDatabase database = dbHelper.getReadableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         MangaList list = null;
         MangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
@@ -129,7 +116,7 @@ public class FavouritesProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return context.getString(R.string.action_favourites);
+        return mContext.getString(R.string.action_favourites);
     }
 
     @Override
@@ -153,24 +140,24 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("path", mangaInfo.path);
         cv.put("timestamp", new Date().getTime());
         cv.put("category", category);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.insert(TABLE_NAME, null, cv);
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
     @Override
     public boolean remove(long[] ids) {
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.beginTransaction();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
@@ -178,14 +165,14 @@ public class FavouritesProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
 
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
-        final SQLiteDatabase database = dbHelper.getReadableDatabase();
+        final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
         database.close();
         return res;
@@ -196,7 +183,7 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
-            database = dbHelper.getReadableDatabase();
+            database = mStorageHelper.getReadableDatabase();
             cursor = database.query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
                 res = cursor.getInt(0);
@@ -226,7 +213,7 @@ public class FavouritesProvider extends MangaProvider {
     }
 
     public void move(long[] ids, int category) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("category", category);
         database.beginTransaction();
@@ -236,10 +223,10 @@ public class FavouritesProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
     }
 
-    public static void AddDialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
+    public static void dialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
         final int[] selected = new int[1];
         CharSequence[] categories = (context.getString(R.string.category_no) + "," +
                 PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
@@ -258,7 +245,7 @@ public class FavouritesProvider extends MangaProvider {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AddToFavourites(context, mangaInfo, selected[0]);
+                        getInstacne(context).add(mangaInfo, selected[0]);
                         if (doneListener != null) {
                             doneListener.onClick(dialog, which);
                         }

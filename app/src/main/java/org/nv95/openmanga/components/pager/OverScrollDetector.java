@@ -8,15 +8,17 @@ import android.view.View;
  * Created by nv95 on 10.04.16.
  */
 public abstract class OverScrollDetector extends OnSwipeTouchListener {
+
     public static final int DIRECTION_NONE = -1;
     public static final int DIRECTION_LEFT = 0;
     public static final int DIRECTION_RIGHT = 1;
     public static final int DIRECTION_TOP = 2;
     public static final int DIRECTION_BOTTOM = 3;
-    public static final float SENSITIVITY_BEGIN = 20f;
-    public float mSensitivityDone = 300f;
+
+    private static final float SENSITIVITY_START = 20f;
 
     private boolean mDown;
+    private float mSensitivityDone;
     private boolean mFly;
     private float mStartX, mStartY;
 
@@ -24,6 +26,7 @@ public abstract class OverScrollDetector extends OnSwipeTouchListener {
         super(context);
         mDown = false;
         mFly = false;
+        mSensitivityDone = 300f;
     }
 
     @Override
@@ -43,7 +46,7 @@ public abstract class OverScrollDetector extends OnSwipeTouchListener {
                 if (mDown) {
                     float dx = mStartX - event.getX();
                     float dy = mStartY - event.getY();
-                    final int direction = getDirection(SENSITIVITY_BEGIN, dx, dy);
+                    final int direction = getDirection(SENSITIVITY_START, dx, dy);
                     if (mFly) {
                         onOverScroll(direction, dx, dy);
                     } else if (direction != DIRECTION_NONE && canOverScroll(direction)) {
@@ -61,7 +64,7 @@ public abstract class OverScrollDetector extends OnSwipeTouchListener {
                 mFly = false;
                 break;
             case MotionEvent.ACTION_CANCEL:
-                onCancelled(getDirection(SENSITIVITY_BEGIN, mStartX - event.getX(), mStartY - event.getY()));
+                onCancelled(getDirection(SENSITIVITY_START, mStartX - event.getX(), mStartY - event.getY()));
                 mDown = false;
                 mFly = false;
                 break;

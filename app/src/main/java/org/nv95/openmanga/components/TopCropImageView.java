@@ -37,7 +37,6 @@ public class TopCropImageView extends AsyncImageView {
     protected void init(){
         super.init();
         setScaleType(ScaleType.MATRIX);
-        useMemoryCache(false);
     }
 
     @Override

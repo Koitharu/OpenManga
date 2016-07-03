@@ -14,6 +14,7 @@ import org.nv95.openmanga.R;
  */
 
 public class StatusBarController extends View {
+    
     private boolean mIsStatusBar;
     private int mLimitYStatusBar;
 

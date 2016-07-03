@@ -28,9 +28,7 @@ public class MangaPager extends ViewPager {
     private boolean mReverse, mVertical;
     private int mTransformMode;
     private OverScrollListener mOverScrollListener;
-    private int lastX = -1;
     private OverScrollDetector mDetector;
-    // touch detector
 
     public MangaPager(Context context) {
         super(context);
@@ -175,45 +173,6 @@ public class MangaPager extends ViewPager {
         return mVertical;
     }
 
-    @Deprecated
-    public void setReverse(boolean reverse) {
-        if (mReverse != reverse) {
-            int pos = getCurrentPageIndex();
-            mReverse = reverse;
-            Collections.reverse(mList);
-            mAdapter.notifyDataSetChanged();
-            setAdapter(mAdapter);
-            setCurrentPageIndex(pos);
-        }
-    }
-
-    @Deprecated
-    public void setVertical(boolean vertical) {
-        if (mVertical != vertical) {
-            mVertical = vertical;
-            setTransformMode(mTransformMode);
-            mAdapter.notifyDataSetChanged();
-            setAdapter(mAdapter);
-        }
-    }
-
-    @Deprecated
-    public void setTransformMode(int mode) {
-        mTransformMode = mode;
-        switch (mode) {
-            case TRANSFORM_MODE_SCROLL:
-                setPageTransformer(true, mVertical ? new VerticalPageTransformer() : null);
-                break;
-            case TRANSFORM_MODE_SLIDE:
-                if (mVertical) {
-                    setPageTransformer(true, new VerticalSlidePageTransformer());
-                } else {
-                    setPageTransformer(!mReverse, new SlidePageTransformer(mReverse));
-                }
-                break;
-        }
-    }
-
     public void setBehavior(boolean vertical, boolean reverse, int transformMode, int scaleMode) {
         final int pos = getCurrentPageIndex();
         mVertical = vertical;
@@ -251,15 +210,6 @@ public class MangaPager extends ViewPager {
         float newY = (ev.getX() / width) * height;
         ev.setLocation(newX, newY);
         return ev;
-    }
-
-    public int getState(){
-        if (getCurrentItem() == 0) {
-            return -1;
-        } else if (getCurrentItem() == getAdapter().getCount() - 1) {
-            return 1;
-        }
-        return 0;
     }
 
     public interface OverScrollListener {

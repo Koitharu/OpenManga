@@ -4,6 +4,7 @@ package org.nv95.openmanga.items;
  * Created by nv95 on 18.03.16.
  */
 public class MangaUpdateInfo {
+
     public int mangaId;
     public String mangaName;
 

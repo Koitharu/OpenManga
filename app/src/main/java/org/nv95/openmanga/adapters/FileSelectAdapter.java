@@ -136,7 +136,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         mCallback.onDirSelected(holder.mFile);
     }
 
-    public static class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private static Drawable[] icons = null;
         private File mFile;
         private final TextView mTextView;
@@ -178,7 +178,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         }
     }
 
-    protected class FileSortComparator implements Comparator<File> {
+    private class FileSortComparator implements Comparator<File> {
 
         @Override
         public int compare(File lhs, File rhs) {
@@ -189,6 +189,4 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
             return lhs.compareTo(rhs);
         }
     }
-
-
 }

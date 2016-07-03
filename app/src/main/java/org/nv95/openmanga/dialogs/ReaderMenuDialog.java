@@ -2,10 +2,10 @@ package org.nv95.openmanga.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +21,6 @@ import org.nv95.openmanga.utils.LayoutUtils;
 public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.OnDismissListener,
         DialogInterface.OnCancelListener {
 
-
-    private final AppCompatActivity mActivity;
     private final Dialog mDialog;
     private final TextView mTextViewTitle;
     private final TextView mTextViewSubtitle;
@@ -38,9 +36,8 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     private OnDismissListener onDismissListener;
 
     @SuppressLint("InflateParams")
-    public ReaderMenuDialog(AppCompatActivity activity, boolean dark) {
-        mActivity = activity;
-        View view = LayoutInflater.from(activity)
+    public ReaderMenuDialog(Context context, boolean dark) {
+        View view = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_reader, null);
         mTextViewTitle = (TextView) view.findViewById(R.id.textView_title);
         mTextViewSubtitle = (TextView) view.findViewById(R.id.textView_subtitle);
@@ -62,7 +59,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         if (dark) {
             LayoutUtils.setAllImagesColor((ViewGroup) view, R.color.white_overlay_85);
         }
-        mDialog = new AlertDialog.Builder(mActivity)
+        mDialog = new AlertDialog.Builder(context)
                 .setView(view)
                 .setCancelable(true)
                 .setOnDismissListener(this)

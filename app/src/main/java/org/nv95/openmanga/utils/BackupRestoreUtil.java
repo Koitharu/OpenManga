@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
@@ -31,11 +30,13 @@ import java.io.OutputStreamWriter;
  * Created by nv95 on 14.01.16.
  */
 public class BackupRestoreUtil {
+
     public static final int BACKUP_IMPORT_CODE = 72;
-    private final Context context;
+
+    private final Context mContext;
 
     public BackupRestoreUtil(Context context) {
-        this.context = context;
+        mContext = context;
     }
 
     public static void showBackupDialog(final Context context) {
@@ -134,9 +135,9 @@ public class BackupRestoreUtil {
         private final ProgressDialog processDialog;
 
         private BackupTask() {
-            processDialog = new ProgressDialog(context);
-            processDialog.setTitle(context.getString(R.string.backup));
-            processDialog.setMessage(context.getString(R.string.preparing));
+            processDialog = new ProgressDialog(mContext);
+            processDialog.setTitle(mContext.getString(R.string.backup));
+            processDialog.setMessage(mContext.getString(R.string.preparing));
             processDialog.setIndeterminate(true);
             processDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             processDialog.setCancelable(false);
@@ -152,7 +153,7 @@ public class BackupRestoreUtil {
         protected File doInBackground(Boolean... params) {
             int errors = 0;
             JSONArray jsonArray;
-            File dir = context.getExternalFilesDir("backup");
+            File dir = mContext.getExternalFilesDir("backup");
             if (dir == null) {
                 return null;
             }
@@ -162,9 +163,9 @@ public class BackupRestoreUtil {
             dir.mkdir();
             File file;
 
-            StorageHelper storageHelper = new StorageHelper(context);
+            StorageHelper storageHelper = new StorageHelper(mContext);
             //backup history
-            if (params[Constants.CATEGORY_HISTORY]) {
+            if (params[MangaChangesObserver.CATEGORY_HISTORY]) {
                 publishProgress(R.string.action_history);
                 file = new File(dir, "history.json");
                 jsonArray = storageHelper.extractTableData("history");
@@ -173,7 +174,7 @@ public class BackupRestoreUtil {
                 }
             }
             //backup favourites
-            if (params[Constants.CATEGORY_FAVOURITES]) {
+            if (params[MangaChangesObserver.CATEGORY_FAVOURITES]) {
                 publishProgress(R.string.action_favourites);
                 file = new File(dir, "favourites.json");
                 jsonArray = storageHelper.extractTableData("favourites");
@@ -202,7 +203,7 @@ public class BackupRestoreUtil {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            processDialog.setMessage(context.getString(values[0]));
+            processDialog.setMessage(mContext.getString(values[0]));
         }
 
         @Override
@@ -210,19 +211,19 @@ public class BackupRestoreUtil {
             super.onPostExecute(file);
             processDialog.dismiss();
             if (file != null) {
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(mContext)
                         .setMessage(R.string.backup_done)
                         .setTitle(R.string.backup)
                         .setNegativeButton(R.string.done, null)
                         .setPositiveButton(R.string.export_file, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new ContentShareHelper(context).exportFile(file);
+                                new ContentShareHelper(mContext).exportFile(file);
                             }
                         })
                         .create().show();
             } else {
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(mContext)
                         .setMessage(R.string.error)
                         .setTitle(R.string.backup)
                         .setPositiveButton(R.string.close, null)
@@ -246,9 +247,9 @@ public class BackupRestoreUtil {
         private final ProgressDialog processDialog;
 
         private RestoreTask() {
-            processDialog = new ProgressDialog(context);
-            processDialog.setTitle(context.getString(R.string.restore));
-            processDialog.setMessage(context.getString(R.string.preparing));
+            processDialog = new ProgressDialog(mContext);
+            processDialog.setTitle(mContext.getString(R.string.restore));
+            processDialog.setMessage(mContext.getString(R.string.preparing));
             processDialog.setIndeterminate(true);
             processDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             processDialog.setCancelable(false);
@@ -263,7 +264,7 @@ public class BackupRestoreUtil {
         @Override
         protected Boolean doInBackground(File... params) {
             int errors = 0;
-            File dir = context.getExternalFilesDir("restore");
+            File dir = mContext.getExternalFilesDir("restore");
             if (dir == null) {
                 return null;
             }
@@ -273,7 +274,7 @@ public class BackupRestoreUtil {
             dir.mkdir();
             File file = new File(dir, "backup.zip");
             try {
-                LocalMangaProvider.CopyFile(params[0], file);
+                LocalMangaProvider.copyFile(params[0], file);
             } catch (IOException e) {
                 return false;
             }
@@ -281,7 +282,7 @@ public class BackupRestoreUtil {
                 new DirRemoveHelper(dir).run();
                 return null;
             }
-            StorageHelper storageHelper = new StorageHelper(context);
+            StorageHelper storageHelper = new StorageHelper(mContext);
             JSONArray data;
             //restore history
             file = new File(dir, "history.json");
@@ -323,13 +324,13 @@ public class BackupRestoreUtil {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             processDialog.dismiss();
-            new AlertDialog.Builder(context)
+            new AlertDialog.Builder(mContext)
                     .setMessage(aBoolean ? R.string.restore_done : R.string.error)
                     .setTitle(R.string.restore)
                     .setPositiveButton(R.string.close, null)
                     .create().show();
-            MangaChangesObserver.queueChanges(Constants.CATEGORY_HISTORY);
-            MangaChangesObserver.queueChanges(Constants.CATEGORY_FAVOURITES);
+            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
+            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         }
 
         @Nullable

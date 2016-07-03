@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by nv95 on 04.02.16.
  */
 public class MangaFoxProvider extends MangaProvider {
+
     private static final int sorts[] = {R.string.sort_alphabetical, R.string.sort_popular, R.string.sort_rating, R.string.sort_updated};
     private static final String sortUrls[] = {"?az", "", "?rating", "?latest"};
     private static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_adult,
@@ -136,7 +137,7 @@ public class MangaFoxProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         if (page != 0) {
-            return MangaList.Empty();
+            return MangaList.empty();
         }
         MangaList list = new MangaList();
         JSONArray jsonArray = new JSONArray(getRawPage("http://mangafox.me/ajax/search.php?term=" + query));

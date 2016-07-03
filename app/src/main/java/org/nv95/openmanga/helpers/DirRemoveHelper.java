@@ -28,7 +28,9 @@ import java.util.regex.Pattern;
  * Remove directory
  */
 public class DirRemoveHelper implements Runnable {
+
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+
     private final File[] mFiles;
 
     public DirRemoveHelper(File file) {

@@ -8,6 +8,7 @@ import java.util.Arrays;
  * Created by nv95 on 12.03.16.
  */
 public class DownloadInfo extends MangaInfo {
+
     public static final int STATE_IDLE = 0;
     public static final int STATE_RUNNING = 1;
     public static final int STATE_FINISHED = 2;
@@ -59,6 +60,6 @@ public class DownloadInfo extends MangaInfo {
 
     @Override
     public int hashCode() {
-        return id;
+        return id == 0 ? path.hashCode() : id;
     }
 }

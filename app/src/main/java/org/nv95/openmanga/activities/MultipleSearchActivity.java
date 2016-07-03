@@ -31,7 +31,9 @@ import java.util.concurrent.Executors;
 /**
  * Created by nv95 on 12.01.16.
  */
-public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener, GroupedAdapter.OnMoreClickListener, DialogInterface.OnDismissListener {
+public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
+        GroupedAdapter.OnMoreClickListener, DialogInterface.OnDismissListener {
+
     private ProgressBar mProgressBar;
     private LinearLayout mMessageBlock;
     private String mQuery;

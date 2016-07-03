@@ -9,6 +9,7 @@ import android.util.AttributeSet;
  * Created by nv95 on 25.01.16.
  */
 public class AutoHeightLayout extends FrameCheckLayout {
+
     private static final double ASPECT_RATIO = 1.6f;
 
     public AutoHeightLayout(Context context) {

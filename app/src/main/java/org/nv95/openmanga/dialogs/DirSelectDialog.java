@@ -19,32 +19,32 @@ import java.io.File;
  * Created by nv95 on 01.01.16.
  */
 public class DirSelectDialog implements DialogInterface.OnClickListener, AdapterView.OnItemClickListener {
-    private final AlertDialog dialog;
-    private final ListView listView;
-    private final DirAdapter adapter;
-    private final TextView headerUp;
-    private OnDirSelectListener dirSelectListener;
+
+    private final AlertDialog mDialog;
+    private final DirAdapter mAdapter;
+    private final TextView mHeaderUp;
+    private OnDirSelectListener mDirSelectListener;
 
     public DirSelectDialog(final Context context) {
-        listView = new ListView(context);
-        adapter = new DirAdapter(context, MangaStore.getMangasDir(context));
-        headerUp = (TextView) View.inflate(context, R.layout.item_dir, null);
-        headerUp.setCompoundDrawablesWithIntrinsicBounds(LayoutUtils.getThemedIcons(context, R.drawable.ic_return_dark)[0],
+        ListView listView = new ListView(context);
+        mAdapter = new DirAdapter(context, MangaStore.getMangasDir(context));
+        mHeaderUp = (TextView) View.inflate(context, R.layout.item_dir, null);
+        mHeaderUp.setCompoundDrawablesWithIntrinsicBounds(LayoutUtils.getThemedIcons(context, R.drawable.ic_return_dark)[0],
                 null, null, null);
-        headerUp.setMaxLines(2);
-        headerUp.setText(adapter.getCurrentDir().getPath());
-        listView.addHeaderView(headerUp);
-        listView.setAdapter(adapter);
+        mHeaderUp.setMaxLines(2);
+        mHeaderUp.setText(mAdapter.getCurrentDir().getPath());
+        listView.addHeaderView(mHeaderUp);
+        listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
-        dialog = new AlertDialog.Builder(context)
+        mDialog = new AlertDialog.Builder(context)
                 .setView(listView)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, this)
                 .setNeutralButton(R.string.reset, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (dirSelectListener != null) {
-                            dirSelectListener.onDirSelected(context.getExternalFilesDir("saved"));
+                        if (mDirSelectListener != null) {
+                            mDirSelectListener.onDirSelected(context.getExternalFilesDir("saved"));
                         }
                     }
                 })
@@ -54,32 +54,32 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (dirSelectListener != null) {
-            dirSelectListener.onDirSelected(adapter.getCurrentDir());
+        if (mDirSelectListener != null) {
+            mDirSelectListener.onDirSelected(mAdapter.getCurrentDir());
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
-            File dir = adapter.getCurrentDir().getParentFile();
+            File dir = mAdapter.getCurrentDir().getParentFile();
             if (dir != null) {
-                adapter.setCurrentDir(adapter.getCurrentDir().getParentFile());
+                mAdapter.setCurrentDir(mAdapter.getCurrentDir().getParentFile());
             }
         } else {
-            adapter.setCurrentDir(adapter.getItem(position - 1));
+            mAdapter.setCurrentDir(mAdapter.getItem(position - 1));
         }
-        headerUp.setText(adapter.getCurrentDir().getPath());
-        adapter.notifyDataSetChanged();
+        mHeaderUp.setText(mAdapter.getCurrentDir().getPath());
+        mAdapter.notifyDataSetChanged();
     }
 
     public DirSelectDialog setDirSelectListener(OnDirSelectListener dirSelectListener) {
-        this.dirSelectListener = dirSelectListener;
+        this.mDirSelectListener = dirSelectListener;
         return this;
     }
 
     public void show() {
-        dialog.show();
+        mDialog.show();
     }
 
     public interface OnDirSelectListener {

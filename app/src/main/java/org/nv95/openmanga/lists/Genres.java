@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
  */
 
 public class Genres implements Parcelable {
+
     private final String[] mData;
 
     public Genres(@NonNull String data) {

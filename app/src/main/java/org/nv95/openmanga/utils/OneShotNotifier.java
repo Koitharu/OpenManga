@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
  */
 
 public class OneShotNotifier {
+
     private final NotificationManager mNotificationManager;
     private final SharedPreferences mPreferences;
 

@@ -12,7 +12,9 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 09.02.16.
  */
 public class ListModeHelper implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     private static final String PREF_KEY = "view_mode";
+
     private final Context mContext;
     private final OnListModeListener mListModeListener;
 

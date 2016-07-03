@@ -16,7 +16,6 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.SparseBooleanArray;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.components.BottomSheetDialog;
@@ -42,14 +41,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by nv95 on 13.02.16.
  */
 public class DownloadService extends Service {
+
     private static final int ACTION_ADD = 50;
     private static final int ACTION_CANCEL = 51;
     private static final int ACTION_PAUSE = 52;
     private static final int ACTION_RESUME = 53;
     private static final int NOTIFY_ID = 532;
+
     private NotificationHelper mNotificationHelper;
     private PowerManager.WakeLock mWakeLock;
-    //-----------------------------------------
     private final ArrayList<DownloadInfo> mDownloads = new ArrayList<>();
     private final Vector<OnProgressUpdateListener> mProgressListeners = new Vector<>();
     @NonNull
@@ -286,7 +286,7 @@ public class DownloadService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            MangaChangesObserver.emitAdding(Constants.CATEGORY_LOCAL, mDownload);
+            MangaChangesObserver.emitAdding(MangaChangesObserver.CATEGORY_LOCAL, mDownload);
             mDownload.state = DownloadInfo.STATE_FINISHED;
             for (OnProgressUpdateListener o:mProgressListeners) {
                 o.onDataUpdated();

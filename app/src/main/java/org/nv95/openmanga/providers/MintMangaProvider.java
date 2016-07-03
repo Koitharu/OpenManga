@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class MintMangaProvider extends MangaProvider {
+
     protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_bara, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
             R.string.genre_genderbender, R.string.genre_hero_fantasy, R.string.genre_detective, R.string.genre_josei,
             R.string.genre_doujinshi, R.string.genre_drama, R.string.genre_game, R.string.genre_historical, R.string.genre_cyberpunk,
@@ -170,7 +171,7 @@ public class MintMangaProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
-            return MangaList.Empty();
+            return MangaList.empty();
         }
         MangaList list = new MangaList();
         String data[] = new String[]{

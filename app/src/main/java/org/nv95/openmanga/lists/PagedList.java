@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by nv95 on 25.01.16.
  */
 public class PagedList<T> extends ArrayList<T> {
+
     private int mPages = 0;
     private boolean mHasNext;
 

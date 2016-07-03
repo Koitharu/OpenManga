@@ -22,13 +22,14 @@ import java.util.Random;
  * Created by nv95 on 21.03.16.
  */
 public class RecommendationsProvider extends MangaProvider {
+
     private static boolean features[] = {true, false, false, false, false};
     @NonNull
     private static WeakReference<RecommendationsProvider> instanceReference = new WeakReference<>(null);
     private final MangaProviderManager mProviderManager;
     private final Context mContext;
     private final StorageHelper mStorageHelper;
-    private final boolean[] config = new boolean[3];
+    private final boolean[] mConfig = new boolean[3];
 
     public RecommendationsProvider(Context context) {
         mContext = context;
@@ -108,7 +109,7 @@ public class RecommendationsProvider extends MangaProvider {
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
-        final ArrayList<String> genres = getStatGenres(config[0], config[1]);
+        final ArrayList<String> genres = getStatGenres(mConfig[0], mConfig[1]);
         final ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
@@ -129,7 +130,7 @@ public class RecommendationsProvider extends MangaProvider {
                 int k=0;
                 for (int j=0; j<tempList.size() && k<=groupSize;j++) {
                     manga = tempList.get(j);
-                    if (checkGenres(manga.genres, genres) >= (config[2] ? 99 : 49)) {
+                    if (checkGenres(manga.genres, genres) >= (mConfig[2] ? 99 : 49)) {
                         mangas.add(manga);
                         k++;
                     }
@@ -175,8 +176,8 @@ public class RecommendationsProvider extends MangaProvider {
 
     public void updateConfig() {
         SharedPreferences prefs = mContext.getSharedPreferences("recommendations", Context.MODE_PRIVATE);
-        config[0] = prefs.getBoolean("fav", true);
-        config[1] = prefs.getBoolean("hist", true);
-        config[2] = prefs.getBoolean("match", false);
+        mConfig[0] = prefs.getBoolean("fav", true);
+        mConfig[1] = prefs.getBoolean("hist", true);
+        mConfig[2] = prefs.getBoolean("match", false);
     }
 }

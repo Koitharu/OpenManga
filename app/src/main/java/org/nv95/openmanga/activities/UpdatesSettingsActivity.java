@@ -21,7 +21,8 @@ import org.nv95.openmanga.utils.AppHelper;
  */
 public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnClickListener,
         Preference.OnPreferenceChangeListener {
-    private SettingsFragment settingsFragment;
+
+    private SettingsFragment mSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +34,10 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
         toggle.setChecked(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("chupd", false));
         toggle.setOnClickListener(this);
 
-        settingsFragment = new SettingsFragment();
+        mSettingsFragment = new SettingsFragment();
         if (toggle.isChecked()) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.content, settingsFragment)
+                    .add(R.id.content, mSettingsFragment)
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
         } else {
@@ -52,12 +53,12 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
                 .apply();
         if (checked) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.content, settingsFragment)
+                    .add(R.id.content, mSettingsFragment)
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
         } else {
             getFragmentManager().beginTransaction()
-                    .remove(settingsFragment)
+                    .remove(mSettingsFragment)
                     .commit();
             findViewById(R.id.textView).setVisibility(View.VISIBLE);
         }

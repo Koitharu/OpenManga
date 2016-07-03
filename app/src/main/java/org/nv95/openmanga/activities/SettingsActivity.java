@@ -15,8 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.nv95.openmanga.Constants;
-import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
@@ -207,14 +206,14 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
             Preference p = findPreference("update");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-            long lastCheck = new ScheduleHelper(activity).getActionRawTime(Constants.ACTION_CHECK_APP_UPDATES);
+            long lastCheck = new ScheduleHelper(activity).getActionRawTime(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
             p.setSummary(getString(R.string.last_update_check,
                     lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
 
             p = findPreference("about");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             p.setSummary(String.format(activity.getString(R.string.version),
-                    OpenMangaApplication.getVersionName()));
+                    BuildConfig.VERSION_NAME));
 
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
             bindPreferenceSummary((ListPreference) findPreference("theme"));
@@ -239,7 +238,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 @Override
                 protected Float doInBackground(Void... params) {
                     try {
-                        return LocalMangaProvider.DirSize(getActivity().getExternalCacheDir()) / 1048576f;
+                        return LocalMangaProvider.dirSize(getActivity().getExternalCacheDir()) / 1048576f;
                     } catch (Exception e) {
                         return null;
                     }
@@ -355,7 +354,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             super.onPostExecute(appUpdatesProvider);
             if (appUpdatesProvider.isSuccess()) {
                 long lastCheck = System.currentTimeMillis();
-                new ScheduleHelper(SettingsActivity.this).actionDone(Constants.ACTION_CHECK_APP_UPDATES);
+                new ScheduleHelper(SettingsActivity.this).actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
                 mPreference.setSummary(getString(R.string.last_update_check,
                         lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
                 final AppUpdatesProvider.AppUpdateInfo[] updates = appUpdatesProvider.getLatestUpdates();

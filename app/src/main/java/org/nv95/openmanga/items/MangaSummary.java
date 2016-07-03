@@ -10,6 +10,7 @@ import org.nv95.openmanga.lists.MangaChapters;
  * Более подробная информация
  */
 public class MangaSummary extends MangaInfo {
+
     public String readLink;
     public String description;
     @NonNull

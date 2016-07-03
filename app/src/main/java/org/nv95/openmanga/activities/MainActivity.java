@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.nv95.openmanga.Constants;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
@@ -72,6 +71,7 @@ public class MainActivity extends BaseAppActivity implements
         InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener {
 
     private static final int REQUEST_IMPORT = 792;
+    private static final int REQUEST_SETTINGS = 795;
     //views
     private RecyclerView mRecyclerView;
     private DrawerLayout mDrawerLayout;
@@ -88,7 +88,7 @@ public class MainActivity extends BaseAppActivity implements
     private MangaProvider mProvider;
     private int mGenre = 0;
     private NavigationView mNavigationView;
-    private int selectedItem;
+    private int mSelectedItem;
     private DrawerHeaderImageTool mDrawerHeaderTool;
     private boolean mUpdatesChecked = false;
 
@@ -123,7 +123,7 @@ public class MainActivity extends BaseAppActivity implements
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
         final MenuItem menuItem = mNavigationView.getMenu().getItem(4 + defSection);
         menuItem.setChecked(true);
-        selectedItem = menuItem.getItemId();
+        mSelectedItem = menuItem.getItemId();
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -154,7 +154,7 @@ public class MainActivity extends BaseAppActivity implements
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        WelcomeActivity.ShowChangelog(this);
+        WelcomeActivity.showChangelog(this);
         StorageUpgradeTask.doUpgrade(this);
         mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
 
@@ -227,19 +227,19 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     private int getMenuItemPosition(){
-        switch (selectedItem){
-            case R.id.nav_local_storage: return Constants.CATEGORY_LOCAL;
-            case R.id.nav_action_favourites: return Constants.CATEGORY_FAVOURITES;
-            case R.id.nav_action_history: return Constants.CATEGORY_HISTORY;
-            default: return selectedItem;
+        switch (mSelectedItem){
+            case R.id.nav_local_storage: return MangaChangesObserver.CATEGORY_LOCAL;
+            case R.id.nav_action_favourites: return MangaChangesObserver.CATEGORY_FAVOURITES;
+            case R.id.nav_action_history: return MangaChangesObserver.CATEGORY_HISTORY;
+            default: return mSelectedItem;
         }
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.setGroupVisible(R.id.group_local, selectedItem == R.id.nav_local_storage);
-        menu.setGroupVisible(R.id.group_history, selectedItem == R.id.nav_action_history);
-        menu.setGroupVisible(R.id.group_favourites, selectedItem == R.id.nav_action_favourites);
+        menu.setGroupVisible(R.id.group_local, mSelectedItem == R.id.nav_local_storage);
+        menu.setGroupVisible(R.id.group_history, mSelectedItem == R.id.nav_action_history);
+        menu.setGroupVisible(R.id.group_favourites, mSelectedItem == R.id.nav_action_favourites);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -281,7 +281,7 @@ public class MainActivity extends BaseAppActivity implements
                         }
                     })
                     .create().show();
-        } else if (requestCode == Constants.SETTINGS_REQUEST_ID) {
+        } else if (requestCode == REQUEST_SETTINGS) {
             if (getActivityTheme() != Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
                     .getString("theme", "0"))) {
                 recreate();
@@ -292,7 +292,7 @@ public class MainActivity extends BaseAppActivity implements
             if (mProviderManager != null && mNavigationView != null){
                 mProviderManager.update();
                 initDrawerRemoteProviders();
-                mNavigationView.setCheckedItem(selectedItem);
+                mNavigationView.setCheckedItem(mSelectedItem);
             }
         } else {
             mDrawerHeaderTool.onActivityResult(requestCode, resultCode, data);
@@ -369,7 +369,7 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_action_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), Constants.SETTINGS_REQUEST_ID);
+                startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
                 return true;
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstacne(this);
@@ -387,7 +387,7 @@ public class MainActivity extends BaseAppActivity implements
                 mProvider = mProviderManager.getMangaProvider(item.getItemId());
                 break;
         }
-        selectedItem = item.getItemId();
+        mSelectedItem = item.getItemId();
         mGenre = 0;
         setSubtitle(null);
         mDrawerLayout.closeDrawer(GravityCompat.START);

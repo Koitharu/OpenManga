@@ -20,8 +20,9 @@ import org.nv95.openmanga.services.DownloadService;
  * Created by nv95 on 03.01.16.
  */
 public class DownloadsActivity extends BaseAppActivity {
-    private DownloadsAdapter adapter;
-    private TextView textViewHolder;
+
+    private DownloadsAdapter mAdapter;
+    private TextView mTextViewHolder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,35 +31,36 @@ public class DownloadsActivity extends BaseAppActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         enableHomeAsUp();
         final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        assert mRecyclerView != null;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        textViewHolder = (TextView) findViewById(R.id.textView_holder);
-        adapter = new DownloadsAdapter(mRecyclerView);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
+        mAdapter = new DownloadsAdapter(mRecyclerView);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
-                textViewHolder.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+                mTextViewHolder.setVisibility(mAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
             }
         });
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.enable();
+        mAdapter.enable();
     }
 
     @Override
     protected void onStop() {
-        adapter.disable();
+        mAdapter.disable();
         super.onStop();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class DownloadsActivity extends BaseAppActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean paused = adapter.isPaused();
+        boolean paused = mAdapter.isPaused();
         menu.findItem(R.id.action_pause).setVisible(!paused);
         menu.findItem(R.id.action_resume).setVisible(paused);
         return super.onPrepareOptionsMenu(menu);
@@ -91,11 +93,11 @@ public class DownloadsActivity extends BaseAppActivity {
                         .create().show();
                 return true;
             case R.id.action_resume:
-                adapter.setTaskPaused(false);
+                mAdapter.setTaskPaused(false);
                 invalidateOptionsMenu();
                 return true;
             case R.id.action_pause:
-                adapter.setTaskPaused(true);
+                mAdapter.setTaskPaused(true);
                 invalidateOptionsMenu();
                 return true;
             default:

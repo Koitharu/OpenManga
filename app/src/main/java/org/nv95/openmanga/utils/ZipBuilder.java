@@ -19,11 +19,12 @@ import java.util.zip.ZipOutputStream;
  * Helps to pack files in zip archive easily
  */
 public class ZipBuilder {
-    private final ZipOutputStream zipOutputStream;
-    private final byte[] buffer = new byte[1024];
+
+    private final ZipOutputStream mZipOutputStream;
+    private final byte[] mBuffer = new byte[1024];
 
     public ZipBuilder(File outputFile) throws IOException {
-        zipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile));
+        mZipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile));
 
     }
 
@@ -73,14 +74,14 @@ public class ZipBuilder {
 
     public ZipBuilder addFile(File file) throws IOException {
         ZipEntry zipEntry = new ZipEntry(file.getName());
-        zipOutputStream.putNextEntry(zipEntry);
+        mZipOutputStream.putNextEntry(zipEntry);
         FileInputStream in = new FileInputStream(file);
         int len;
-        while ((len = in.read(buffer)) > 0) {
-            zipOutputStream.write(buffer, 0, len);
+        while ((len = in.read(mBuffer)) > 0) {
+            mZipOutputStream.write(mBuffer, 0, len);
         }
         in.close();
-        zipOutputStream.closeEntry();
+        mZipOutputStream.closeEntry();
         return this;
     }
 
@@ -94,7 +95,7 @@ public class ZipBuilder {
     }
 
     public void build() throws IOException {
-        zipOutputStream.finish();
-        zipOutputStream.close();
+        mZipOutputStream.finish();
+        mZipOutputStream.close();
     }
 }
