@@ -42,7 +42,7 @@ import java.util.Arrays;
  * Created by nv95 on 30.09.15.
  */
 public class MangaPreviewActivity extends BaseAppActivity implements View.OnClickListener,
-        DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener, View.OnLongClickListener {
     //data
     protected MangaSummary mangaSummary;
     //views
@@ -74,6 +74,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mCollapsingToolbarLayout.setTitle(mangaSummary.name);
 
         mFab.setOnClickListener(this);
+        mFab.setOnLongClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
         mImageView.useMemoryCache(false);
         mImageView.setImageAsync(mangaSummary.preview, false);
@@ -122,6 +123,22 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             case R.id.snackbar_action:
                 new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab_read:
+                Intent intent = new Intent(this, ReadActivity.class);
+                intent.putExtras(mangaSummary.toBundle());
+                HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(this).get(mangaSummary);
+                intent.putExtra("chapter", hs == null ? 0 : hs.getChapter());
+                intent.putExtra("page", hs == null ? 0 : hs.getPage());
+                startActivity(intent);
+                return true;
+            default:
+                return false;
         }
     }
 
