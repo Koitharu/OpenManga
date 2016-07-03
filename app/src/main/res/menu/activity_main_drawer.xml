@@ -26,4 +26,12 @@
             <group android:id="@+id/groupRemote"  android:checkableBehavior="single" />
         </menu>
     </item>
+
+    <item
+        android:id="@+id/footer_spacer_1"
+        android:checkable="false"
+        android:enabled="false"
+        android:orderInCategory="200"
+        android:title="" />
+
 </menu>
