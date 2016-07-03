@@ -100,19 +100,22 @@ public class MainActivity extends BaseAppActivity implements
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        mNavigationView = ((NavigationView) findViewById(R.id.navigation_drawer_bottom));
+        mNavigationView.getChildAt(0).setVerticalScrollBarEnabled(false);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         mFab.setOnClickListener(this);
         mFab.setOnLongClickListener(this);
         mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_drawer);
         mNavigationView.setNavigationItemSelectedListener(this);
-        ((NavigationView) findViewById(R.id.navigation_drawer_bottom)).setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
         mSearchAdapter = new SearchHistoryAdapter(this);
