@@ -590,7 +590,7 @@ public class MainActivity extends BaseAppActivity implements
                 break;
             case R.id.action_move:
                 if (mProvider instanceof LocalMangaProvider) {
-                    new LocalMoveDialog(this, ids).showSelectSource();
+                    new LocalMoveDialog(this, ids).showSelectSource(null);
                 } else {
                     favouritesMoveDialog(ids);
                 }

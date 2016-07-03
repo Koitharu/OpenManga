@@ -20,6 +20,7 @@ import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
+import org.nv95.openmanga.dialogs.LocalMoveDialog;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
@@ -111,10 +112,26 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 new DirSelectDialog(this)
                         .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
                             @Override
-                            public void onDirSelected(File dir) {
+                            public void onDirSelected(final File dir) {
                                 if (!dir.canWrite()) {
                                     Toast.makeText(SettingsActivity.this, R.string.dir_no_access,
                                             Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                if (!preference.getSummary().toString().equals(dir.getPath())) {
+                                    new AlertDialog.Builder(SettingsActivity.this)
+                                            .setMessage(R.string.move_saved_confirm)
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    new LocalMoveDialog(SettingsActivity.this,
+                                                            LocalMangaProvider.getInstacne(SettingsActivity.this).getAllIds())
+                                                            .setDestination(dir.getPath())
+                                                            .showSelectSource(dir.getPath());
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.no, null)
+                                            .create().show();
                                 }
                                 preference.setSummary(dir.getPath());
                                 preference.getEditor()
