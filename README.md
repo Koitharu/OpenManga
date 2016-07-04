@@ -2,6 +2,8 @@
 
 OpenManga - Manga reader for Android with simple user-friendly interface and online catalogues.
 
+[![Build Status](https://travis-ci.org/nv95/OpenManga.svg?branch=master)](https://travis-ci.org/nv95/OpenManga)
+
 ## Download
 [Latest release](http://anibreak.ru/uploads/apps/openmanga/openmanga_1.5.apk) - v1.5
 
