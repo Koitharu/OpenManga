@@ -35,7 +35,7 @@ import static org.nv95.openmanga.utils.MangaStore.TABLE_PAGES;
 @SuppressWarnings("TryFinallyCanBeTryWithResources")
 public class LocalMangaProvider extends MangaProvider {
 
-    private static boolean features[] = {false, false, true, true, false};
+    private static final boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<LocalMangaProvider> instanceReference = new WeakReference<>(null);

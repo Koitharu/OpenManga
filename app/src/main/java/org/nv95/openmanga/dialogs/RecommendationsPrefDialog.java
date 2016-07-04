@@ -1,5 +1,6 @@
 package org.nv95.openmanga.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +23,7 @@ public class RecommendationsPrefDialog implements View.OnClickListener {
     private final FilterSortDialog.Callback mCallback;
 
     public RecommendationsPrefDialog(final Context context, FilterSortDialog.Callback callback) {
+        @SuppressLint("InflateParams")
         View contentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_recommendprefs, null);
         final CheckedTextView checkedTextViewFav = (CheckedTextView) contentView.findViewById(R.id.checkedTextView_fav);

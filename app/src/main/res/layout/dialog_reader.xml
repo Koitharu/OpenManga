@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -42,7 +43,6 @@
             android:paddingLeft="4dp"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingStart="4dp"
-            android:text="0/0"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -65,8 +65,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingTop="2dp"
-            android:text="Chapter name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:ignore="RtlSymmetry" />
 
         <ProgressBar
             android:id="@+id/progressBar"

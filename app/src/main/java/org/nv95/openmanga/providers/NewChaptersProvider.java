@@ -15,7 +15,8 @@ import org.nv95.openmanga.utils.FileLogger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by nv95 on 18.03.16.
@@ -102,7 +103,7 @@ public class NewChaptersProvider {
     }
 
     public void markAllAsViewed() {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new TreeMap<>();
         Cursor cursor = null;
         SQLiteDatabase database = null;
         try {
@@ -142,8 +143,8 @@ public class NewChaptersProvider {
     }
 
     @NonNull
-    public HashMap<Integer, Integer> getLastUpdates() {
-        final HashMap<Integer, Integer> map = new HashMap<>();
+    public Map<Integer, Integer> getLastUpdates() {
+        Map<Integer, Integer> map = new TreeMap<>();
         Cursor cursor = null;
         SQLiteDatabase database = null;
         try {
@@ -197,8 +198,8 @@ public class NewChaptersProvider {
      * @return map of numbers of last user viewed chapters
      */
     @NonNull
-    protected HashMap<Integer, Integer> getChaptersMap() {
-        HashMap<Integer, Integer> map = new HashMap<>();
+    private Map<Integer, Integer> getChaptersMap() {
+        Map<Integer, Integer> map = new TreeMap<>();
         Cursor cursor = null;
         SQLiteDatabase database = null;
         try {
@@ -259,7 +260,7 @@ public class NewChaptersProvider {
         FavouritesProvider favs = FavouritesProvider.getInstacne(mContext);
         try {
             MangaList mangas = favs.getList(0, 0, 0);
-            HashMap<Integer, Integer> map = getChaptersMap();
+            Map<Integer, Integer> map = getChaptersMap();
             MangaProvider provider;
             int key;
             ArrayList<MangaUpdateInfo> updates = new ArrayList<>();

@@ -26,7 +26,7 @@ public class FilterSortDialog implements TabLayout.OnTabSelectedListener {
     private final Callback mCallback;
     private final ListView mListView[];
     private final boolean mTabsEnabled[];
-    private TabLayout mTabLayout;
+    private final TabLayout mTabLayout;
 
     @SuppressLint("InflateParams")
     public FilterSortDialog(Context context, Callback callback) {

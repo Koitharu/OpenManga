@@ -156,11 +156,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageView_menu:

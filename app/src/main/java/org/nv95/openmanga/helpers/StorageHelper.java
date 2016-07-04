@@ -223,6 +223,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
             c.close();
         } catch (SQLiteException e) {
+            FileLogger.getInstance().report(e);
         }
         return result;
     }
