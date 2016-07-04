@@ -223,7 +223,36 @@
     <string name="storage_upgrading">Обновление локальных данных…</string>
     <string name="no_network_connection">Подключение к сети отсутствует</string>
     <string name="no_network_connection_html"><![CDATA[Подключение к сети отсутствует.<br/>Включите <a href=\"settings:network\">передачу данных</a> или <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><h4><a href=\"app:update\">Попробовать снова</a></h4>]]></string>
-    <string name="delete_manga">Удалить мангу</string>
-    <string name="full_match">Полное соответствие</string>
+    <string name="error_loadimage_html" formatted="false"><![CDATA[Не удалось загрузить изображение<br/><h3><a href=\"app:retry\">Повторить</a></h3><br/><br/>Подробности:<br/>%s]]></string>
     <string name="sources">Источники</string>
+    <string name="full_match">Полное соответствие</string>
+    <string name="use_dark_theme">Использовать тёмную тему</string>
+    <string name="restart_required">Требудется перезапуск</string>
+    <string name="wait_for_complete">Дождитесь завешения операции</string>
+    <string name="theme">Тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_black">Чёрная</string>
+    <string name="import_file_confirm" formatted="false">Импортировать файл %s ?</string>
+    <string name="delete_mangas_confirm">Удалить выделенную мангу?</string>
+    <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всего %d глав)</string>
+    <string name="scrolling_animation">Анимация листания</string>
+    <string name="scrolling">Прокрутка</string>
+    <string name="sliding">Сдвиг</string>
+    <string name="action_move">Переместить в</string>
+    <string name="pause">Пауза</string>
+    <string name="resume">Продолжить</string>
+    <string name="show_resume_fab">Отображать плавающаю конпка \"Продолжить\"</string>
+    <string name="next">Далее</string>
+    <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
+    <string name="moving_files">Перемещение файлов…</string>
+    <string name="move_saved_confirm">Move already saved manga to new directory?</string>
+    <string name="status_completed">Выпуск завершён</string>
+    <string name="status_ongoing">Онгоинг</string>
+    <string name="local_size" formatted="false">Размер: %s</string>
+    <string name="scale_mode">Масштабирование</string>
+    <string name="scale_source">Исходный размер</string>
+    <string name="scale_auto">Автоматически</string>
+    <string name="scale_crop">Увеличить</string>
+    <string name="scale_fit">Под экран</string>
 </resources>
