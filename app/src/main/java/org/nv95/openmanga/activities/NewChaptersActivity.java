@@ -24,7 +24,7 @@ import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by nv95 on 17.04.16.
@@ -117,8 +117,8 @@ public class NewChaptersActivity extends BaseAppActivity {
             final NewChaptersProvider news = NewChaptersProvider.getInstance(NewChaptersActivity.this);
             try {
                 news.checkForNewChapters();
-                final MangaList mangas = favs.getList(0, 0, 0);
-                final HashMap<Integer, Integer> updates =  news.getLastUpdates();
+                MangaList mangas = favs.getList(0, 0, 0);
+                Map<Integer, Integer> updates =  news.getLastUpdates();
                 Integer t;
                 final MangaList res = new MangaList();
                 for (MangaInfo o:mangas) {

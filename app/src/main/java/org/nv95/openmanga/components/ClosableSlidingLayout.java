@@ -24,7 +24,7 @@ public class ClosableSlidingLayout extends LinearLayout {
     private final float MINVEL;
     View mTarget;
     boolean mSwipeable = true;
-    private ViewDragHelper mDragHelper;
+    private final ViewDragHelper mDragHelper;
     private SlideListener mListener;
     private int mHeight;
     private int mTop;

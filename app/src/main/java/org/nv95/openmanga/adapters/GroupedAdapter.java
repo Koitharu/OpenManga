@@ -20,10 +20,10 @@ import java.util.ArrayList;
  */
 public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected static final int VIEW_ITEM = 1;
-    protected static final int VIEW_HEADER = 0;
+    private static final int VIEW_ITEM = 1;
+    private static final int VIEW_HEADER = 0;
 
-    private ArrayList<Object> mDataset;
+    private final ArrayList<Object> mDataset;
     private boolean mGrid;
     private ThumbSize mThumbSize;
     private final OnMoreClickListener mOnMoreClickListener;

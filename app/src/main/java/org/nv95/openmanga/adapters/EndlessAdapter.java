@@ -16,10 +16,11 @@ import org.nv95.openmanga.lists.PagedList;
  */
 public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    protected static final int VIEW_ITEM = 1;
-    protected static final int VIEW_PROGRESS = 0;
-    private PagedList<T> mDataset;
-    private int mVisibleThreshold = 2;
+    private static final int VIEW_ITEM = 1;
+    private static final int VIEW_PROGRESS = 0;
+
+    private final PagedList<T> mDataset;
+    private final int mVisibleThreshold = 2;
     private int mLastVisibleItem, mTotalItemCount;
     private boolean mLoading;
     private OnLoadMoreListener mOnLoadMoreListener;
@@ -67,7 +68,6 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder vh;
         if (viewType == VIEW_ITEM) {
             return onCreateHolder(parent);
         } else {
@@ -76,11 +76,11 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         T item = getItem(position);
         if (item != null) {
-            //noinspection unchecked
             onBindHolder((VH) holder, item, position);
         } else if (holder instanceof ProgressViewHolder) {
             ((ProgressViewHolder) holder).setVisible(isLoadEnabled());
@@ -123,16 +123,16 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
         void onLoadMore();
     }
 
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
-        private ProgressBar progressBar;
+    private static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        private final ProgressBar mProgressBar;
 
-        public ProgressViewHolder(View v) {
+        ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
 
         public void setVisible(boolean visible) {
-            progressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+            mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
     }
 }

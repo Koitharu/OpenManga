@@ -163,14 +163,12 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    protected boolean checkPermission(String permission) {
+    boolean checkPermission(String permission) {
         if (ContextCompat.checkSelfPermission(this,
                 permission) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-
-        } else {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             ActivityCompat.requestPermissions(this,
                     new String[]{permission},
                     REQUEST_PERMISSION);

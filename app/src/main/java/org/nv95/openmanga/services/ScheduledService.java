@@ -68,11 +68,6 @@ public class ScheduledService extends Service {
     private class BackgroundTask extends AsyncTask<Void,AppUpdatesProvider.AppUpdateInfo,MangaUpdateInfo[]> {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected MangaUpdateInfo[] doInBackground(Void... params) {
             try {
                 int delay = mScheduleHelper.getActionIntervalHours(ScheduleHelper.ACTION_CHECK_APP_UPDATES);

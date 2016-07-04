@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class DirAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private ArrayList<File> mFiles;
+    private final ArrayList<File> mFiles;
     private File mCurrentDir;
     private final Drawable[] mIcons;
 
