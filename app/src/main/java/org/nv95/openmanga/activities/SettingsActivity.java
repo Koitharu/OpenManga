@@ -104,6 +104,11 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
+            case "movemanga":
+                new LocalMoveDialog(this,
+                        LocalMangaProvider.getInstacne(this).getAllIds())
+                        .showSelectSource(null);
+                return true;
             case "mangadir":
                 if (!checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     return true;
@@ -116,21 +121,6 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                                     Toast.makeText(SettingsActivity.this, R.string.dir_no_access,
                                             Toast.LENGTH_SHORT).show();
                                     return;
-                                }
-                                if (!preference.getSummary().toString().equals(dir.getPath())) {
-                                    new AlertDialog.Builder(SettingsActivity.this)
-                                            .setMessage(R.string.move_saved_confirm)
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    new LocalMoveDialog(SettingsActivity.this,
-                                                            LocalMangaProvider.getInstacne(SettingsActivity.this).getAllIds())
-                                                            .setDestination(dir.getPath())
-                                                            .showSelectSource(dir.getPath());
-                                                }
-                                            })
-                                            .setNegativeButton(android.R.string.no, null)
-                                            .create().show();
                                 }
                                 preference.setSummary(dir.getPath());
                                 preference.getEditor()
@@ -202,6 +192,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("movemanga").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
             Preference p = findPreference("update");

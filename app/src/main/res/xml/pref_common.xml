@@ -44,6 +44,9 @@
             android:key="mangadir"
             android:title="@string/manga_local_dir" />
         <Preference
+            android:key="movemanga"
+            android:title="Move saved manga" />
+        <Preference
             android:key="csearchhist"
             android:title="@string/action_clear_search_hist" />
         <Preference
