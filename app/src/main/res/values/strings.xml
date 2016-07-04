@@ -281,4 +281,7 @@
     <string name="scale_auto">Auto</string>
     <string name="scale_crop">Zoom in</string>
     <string name="scale_fit">Fit screen</string>
+    <string name="scroll_by_click">Scrolling by click</string>
+    <string name="bottom">Bottom</string>
+    <string name="at_sides">At sides</string>
 </resources>
