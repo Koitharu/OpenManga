@@ -14,27 +14,10 @@
         android:key="animation"
         android:title="@string/scrolling_animation" />
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="keep_screen"
-        android:title="@string/keep_screen"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <CheckBoxPreference
         android:defaultValue="false"
         android:key="volkeyscroll"
         android:title="@string/scroll_by_volkeys"
         android:widgetLayout="@layout/pref_switchcompat" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="brightness"
-        android:title="@string/adjust_brightness"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <org.nv95.openmanga.components.SeekBarPreference
-        android:dependency="brightness"
-        android:key="brightness_value"
-        android:title="@string/brightness_value"
-        android:defaultValue="20"
-        app:iconDrawable="@drawable/ic_brightness_darker"
-        app:max="100" />
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/scale_modes"
@@ -44,8 +27,24 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="shifts"
-        android:title="@string/wrap_long_pages"
         android:summary="@string/image_shifting_summary"
+        android:title="@string/wrap_long_pages"
         android:widgetLayout="@layout/pref_switchcompat" />
-
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="brightness"
+        android:title="@string/adjust_brightness"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <org.nv95.openmanga.components.SeekBarPreference
+        android:defaultValue="20"
+        android:dependency="brightness"
+        android:key="brightness_value"
+        android:title="@string/brightness_value"
+        app:iconDrawable="@drawable/ic_brightness_darker"
+        app:max="100" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="keep_screen"
+        android:title="@string/keep_screen"
+        android:widgetLayout="@layout/pref_switchcompat" />
 </PreferenceScreen>

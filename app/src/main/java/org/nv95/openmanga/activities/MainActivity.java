@@ -37,7 +37,6 @@ import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
-import org.nv95.openmanga.dialogs.LocalMoveDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
@@ -558,7 +557,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
         menu.findItem(R.id.action_save).setVisible(!(mProvider instanceof LocalMangaProvider));
         menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
-        menu.findItem(R.id.action_move).setVisible(mProvider instanceof FavouritesProvider || mProvider instanceof LocalMangaProvider);
+        menu.findItem(R.id.action_move).setVisible(mProvider instanceof FavouritesProvider);
         return false;
     }
 
@@ -593,11 +592,7 @@ public class MainActivity extends BaseAppActivity implements
                 DownloadService.start(this, mListLoader.getItems(items));
                 break;
             case R.id.action_move:
-                if (mProvider instanceof LocalMangaProvider) {
-                    new LocalMoveDialog(this, ids).showSelectSource(null);
-                } else {
-                    favouritesMoveDialog(ids);
-                }
+                favouritesMoveDialog(ids);
                 break;
             case R.id.action_share:
                 new ContentShareHelper(MainActivity.this).share(mListLoader.getItems(items)[0]);
