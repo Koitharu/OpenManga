@@ -255,4 +255,7 @@
     <string name="scale_auto">Автоматически</string>
     <string name="scale_crop">Увеличить</string>
     <string name="scale_fit">Под экран</string>
+    <string name="scroll_by_click">Листание нажатием</string>
+    <string name="bottom">Снизу</string>
+    <string name="at_sides">По бокам</string>
 </resources>

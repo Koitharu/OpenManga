@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frame_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="RtlHardcoded">
 
     <org.nv95.openmanga.components.pager.MangaPager
         android:id="@+id/pager"
@@ -26,6 +27,47 @@
 
     </FrameLayout>
 
+    <View
+        android:id="@+id/area_left"
+        android:layout_width="@dimen/clickable_area_size"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:layout_marginBottom="@dimen/clickable_area_size"
+        android:layout_marginTop="@dimen/clickable_area_size"
+        android:background="?selectableItemBackground"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/area_right"
+        android:layout_width="@dimen/clickable_area_size"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:layout_marginBottom="@dimen/clickable_area_size"
+        android:layout_marginTop="@dimen/clickable_area_size"
+        android:background="?selectableItemBackground"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/area_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/clickable_area_size"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/area_bottom_left"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground" />
+
+        <View
+            android:id="@+id/area_bottom_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView_menu"

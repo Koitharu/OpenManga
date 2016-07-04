@@ -79,4 +79,14 @@
         <item>@string/scale_auto</item>
         <item>@string/scale_source</item>
     </string-array>
+    <string-array name="clickareas">
+        <item>@string/disabled</item>
+        <item>@string/bottom</item>
+        <item>@string/at_sides</item>
+    </string-array>
+    <string-array name="clickareas_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

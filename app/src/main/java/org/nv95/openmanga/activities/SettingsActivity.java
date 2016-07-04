@@ -263,6 +263,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             bindPreferenceSummary((ListPreference) findPreference("direction"));
             bindPreferenceSummary((ListPreference) findPreference("animation"));
             bindPreferenceSummary((ListPreference) findPreference("scalemode"));
+            bindPreferenceSummary((ListPreference) findPreference("clickareas"));
         }
     }
 

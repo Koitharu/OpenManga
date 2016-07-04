@@ -70,6 +70,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private View mSwipeFrame;
     private TextView mTextViewNext;
     private ImageView mImageViewArrow;
+    private View[] mClickAreas;
     //data
     private MangaSummary mMangaSumary;
     private MangaChapter mChapter;
@@ -91,12 +92,23 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mSwipeFrame = findViewById(R.id.swipeFrame);
         mTextViewNext = (TextView) findViewById(R.id.textView_title);
         mImageViewArrow = (ImageView) findViewById(R.id.imageView_arrow);
+        mClickAreas = new View[] {
+                findViewById(R.id.area_left),
+                findViewById(R.id.area_right),
+                findViewById(R.id.area_bottom),
+                findViewById(R.id.area_bottom_left),
+                findViewById(R.id.area_bottom_right)
+        };
         ImageView imageViewMenu = (ImageView) findViewById(R.id.imageView_menu);
         assert imageViewMenu != null;
         if (isDarkTheme()) {
             imageViewMenu.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
         }
         imageViewMenu.setOnClickListener(this);
+        mClickAreas[0].setOnClickListener(this);
+        mClickAreas[1].setOnClickListener(this);
+        mClickAreas[3].setOnClickListener(this);
+        mClickAreas[4].setOnClickListener(this);
         mPager.addOnPageChangeListener(this);
         mPager.setOverScrollListener(this);
         mPager.onConfigurationChange(this);
@@ -239,10 +251,30 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             case R.id.button_positive:
                 onOptionsChanged();
                 break;
+            case R.id.area_left:
+            case R.id.area_bottom_left:
+                if (mPager.getCurrentItem() > 0) {
+                    mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+                } else {
+                    mChapterId += mPager.isReverse() ? 1 : -1;
+                    mPageId = mPager.isReverse() ? 0 : -1;
+                    loadChapter();
+                }
+                break;
+            case R.id.area_right:
+            case R.id.area_bottom_right:
+                if (mPager.getCurrentItem() < mPager.getCount() - 1) {
+                    mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                } else {
+                    mChapterId += mPager.isReverse() ? -1 : 1;
+                    mPageId = mPager.isReverse() ? -1 : 0;
+                    loadChapter();
+                }
+                break;
         }
     }
 
-    private void SaveImage(final File file) {
+    private void saveImage(final File file) {
         File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
         try {
             LocalMangaProvider.copyFile(file, dest);
@@ -351,7 +383,10 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         } else {
             mBrightnessHelper.reset();
         }
-
+        int areas = Integer.parseInt(prefs.getString("clickareas", "0"));
+        mClickAreas[0].setVisibility(areas == 2 ? View.VISIBLE : View.GONE);
+        mClickAreas[1].setVisibility(areas == 2 ? View.VISIBLE : View.GONE);
+        mClickAreas[2].setVisibility(areas == 1 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -361,9 +396,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     private boolean hasNextChapter() {
         if (mPager.isReverse()) {
-            return mPageId > 0;
+            return mChapterId > 0;
         } else {
-            return mPageId < mMangaSumary.getChapters().size() - 1;
+            return mChapterId < mMangaSumary.getChapters().size() - 1;
         }
     }
 
@@ -646,7 +681,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             super.onPostExecute(file);
             mLoader.setVisibility(View.GONE);
             if (file != null && file.exists()) {
-                SaveImage(file);
+                saveImage(file);
             } else {
                 Snackbar.make(mPager, R.string.file_not_found, Snackbar.LENGTH_SHORT).show();
             }
