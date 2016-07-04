@@ -32,7 +32,7 @@ android {
         }
     }
     lintOptions {
-        disable 'MissingTranslation'
+        abortOnError false
     }
     allprojects {
         repositories {
