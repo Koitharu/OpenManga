@@ -43,7 +43,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/divider"
         android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:background="@android:color/darker_gray" />

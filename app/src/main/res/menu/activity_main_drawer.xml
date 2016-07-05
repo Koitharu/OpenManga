@@ -27,10 +27,9 @@
         </menu>
     </item>
 
-    <group android:id="@+id/group1">
+    <group>
         <!--вот такие костыли-->
         <item
-            android:id="@+id/footer_spacer_1"
             android:checkable="false"
             android:enabled="false"
             android:orderInCategory="200"

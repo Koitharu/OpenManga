@@ -171,7 +171,6 @@
     <string name="select_file">Выброр файла</string>
     <string name="more">Ещё</string>
     <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
-    <string name="cancelled">Отменено</string>
     <string name="import_complete">Завершено</string>
     <string name="action_category">Раздел</string>
     <string name="category_no">Без метки</string>
@@ -180,7 +179,6 @@
     <string name="favourites_categories_description">Введите названия, разделяя их запятой</string>
     <string name="adjust_brightness">Установить яркость</string>
     <string name="action_options">Опции</string>
-    <string name="apply">Применить</string>
     <string name="brightness_value">Яркость экрана</string>
     <string name="save_image">Сохранить изображение</string>
     <string name="unfavourited">Удалено из избранного</string>
@@ -198,11 +196,6 @@
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
     <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
     <string name="select_image">Выберите картинку</string>
-    <string name="error_open_image_choser">Не удается найти приложения для работы с картинками</string>
-    <string name="getFromGallery">Выбрать из галереи</string>
-    <string name="getPicture">Сделать фото</string>
-    <string name="error_crop_image">Ошибка сохранения изображения</string>
-    <string name="select">Выбрать</string>
     <string name="genre">Жанр</string>
     <string name="description">Описание</string>
     <string name="app_update_avaliable">Доступно обновление приложения</string>
@@ -226,8 +219,6 @@
     <string name="error_loadimage_html" formatted="false"><![CDATA[Не удалось загрузить изображение<br/><h3><a href=\"app:retry\">Повторить</a></h3><br/><br/>Подробности:<br/>%s]]></string>
     <string name="sources">Источники</string>
     <string name="full_match">Полное соответствие</string>
-    <string name="use_dark_theme">Использовать тёмную тему</string>
-    <string name="restart_required">Требудется перезапуск</string>
     <string name="wait_for_complete">Дождитесь завешения операции</string>
     <string name="theme">Тема</string>
     <string name="theme_light">Светлая</string>
@@ -246,7 +237,6 @@
     <string name="next">Далее</string>
     <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
     <string name="moving_files">Перемещение файлов…</string>
-    <string name="move_saved_confirm">Move already saved manga to new directory?</string>
     <string name="status_completed">Выпуск завершён</string>
     <string name="status_ongoing">Онгоинг</string>
     <string name="local_size" formatted="false">Размер: %s</string>

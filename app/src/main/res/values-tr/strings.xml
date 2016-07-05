@@ -138,11 +138,9 @@
     <string name="action_recommendations">Tavsiyeler</string>
     <string name="adjust_brightness">Parlaklığı Ayarla</string>
     <string name="app_update_avaliable">Güncelleme Mevcut</string>
-    <string name="apply">Uygula</string>
     <string name="backup">Verileri Yedekle</string>
     <string name="backup_done">Yedekleme tamamlandı</string>
     <string name="brightness_value">Parlaklık değeri</string>
-    <string name="cancelled">İptal edildi</string>
     <string name="category_no">Kategori bulunamadı</string>
     <string name="chapters_total" formatted="false">Toplam bölüm: %d</string>
     <string name="check_all">Hepsini seç</string>
@@ -158,8 +156,6 @@
     <string name="done">Tamamlandı</string>
     <string name="downloads_cancel_confirm">Tüm indirmeler iptal edilecek. Onaylıyor musunuz?</string>
     <string name="downloads_queue">İndirme sırası</string>
-    <string name="error_crop_image">Resim boyutlandırılamıyor</string>
-    <string name="error_open_image_choser">Resimlerin kullanılabileceği uygulama bulunamadı</string>
     <string name="export_file">Dışarı aktar</string>
     <string name="favourites_categories">Favori kategoriler</string>
     <string name="favourites_categories_default">Şuan okuduklarım, Sonra okuyacaklarım, Önceden okuduklarım</string>
@@ -178,8 +174,6 @@
     <string name="genre_sci_fi">Bilim Kurgu</string>
     <string name="genre_slice_of_life">Slice of Life</string>
     <string name="genre_superpower">Süper Güçler</string>
-    <string name="getFromGallery">Galeriden seç</string>
-    <string name="getPicture">Kamera ile çek</string>
     <string name="got_it">Anladım</string>
     <string name="image_shifting_summary">Sayfa standart orana sahip değilse faydalıdır</string>
     <string name="import_file">İçeri aktar</string>
@@ -211,7 +205,6 @@
     <string name="reset">Yediden başlat</string>
     <string name="save_image">Resmi kaydet</string>
     <string name="search_on_another_sources">Diğer kaynaklarda ara</string>
-    <string name="select">Seç</string>
     <string name="select_backup">Yedek seç</string>
     <string name="select_file">Dosya seç</string>
     <string name="select_image">Resim seç</string>

@@ -185,7 +185,7 @@ public class LocalMoveDialog {
             });
             new AlertDialog.Builder(mContext)
                     .setView(listView)
-                    .setTitle(R.string.action_move)
+                    .setTitle(R.string.move_saved)
                     .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
