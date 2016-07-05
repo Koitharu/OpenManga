@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -528,6 +529,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         }
     }
 
+    @SuppressLint("RtlHardcoded")
     @Override
     public void onPreOverScroll(int direction) {
         switch (direction) {

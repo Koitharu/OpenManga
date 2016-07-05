@@ -248,4 +248,7 @@
     <string name="scroll_by_click">Листание нажатием</string>
     <string name="bottom">Снизу</string>
     <string name="at_sides">По бокам</string>
+    <string name="delete_manga">Удалить мангу</string>
+    <string name="imported_from" formatted="false">Импортировано из %s</string>
+    <string name="move_saved">Переместить сохранённую мангу</string>
 </resources>
