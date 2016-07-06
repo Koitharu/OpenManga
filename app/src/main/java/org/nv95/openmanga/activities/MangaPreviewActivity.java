@@ -190,6 +190,13 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_save_more).setVisible(LocalMangaProvider.class.equals(mMangaSummary.provider) &&
+                mMangaSummary.status == MangaInfo.STATUS_ONGOING);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
@@ -217,7 +224,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 deleteDialog();
                 return true;
             case R.id.action_save_more:
-                new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMangaSummary);
+                if (checkConnectionWithSnackbar(mTextViewDescription)) {
+                    new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMangaSummary);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -315,6 +324,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
                         .show();
             }
+            invalidateOptionsMenu();
         }
 
         @Override
