@@ -141,10 +141,10 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("timestamp", new Date().getTime());
         cv.put("category", category);
         SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        database.insert(TABLE_NAME, null, cv);
+        boolean res = (database.insert(TABLE_NAME, null, cv) != -1);
         database.close();
         MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
-        return true;
+        return res;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
@@ -171,9 +171,8 @@ public class FavouritesProvider extends MangaProvider {
 
 
     public boolean has(MangaInfo mangaInfo) {
-        boolean res;
         final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
-        res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
+        boolean res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
         database.close();
         return res;
     }

@@ -33,7 +33,7 @@
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/clickable_area_size"
         android:layout_marginTop="@dimen/clickable_area_size"
-        android:background="?selectableItemBackground"
+        android:background="@drawable/background_clickarea"
         android:visibility="gone" />
 
     <View
@@ -43,8 +43,12 @@
         android:layout_gravity="right"
         android:layout_marginBottom="@dimen/clickable_area_size"
         android:layout_marginTop="@dimen/clickable_area_size"
-        android:background="?selectableItemBackground"
+        android:background="@drawable/background_clickarea"
         android:visibility="gone" />
+
+    <org.nv95.openmanga.components.StatusBarController
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/area_bottom"
@@ -58,14 +62,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?selectableItemBackground" />
+            android:background="@drawable/background_clickarea" />
 
         <View
             android:id="@+id/area_bottom_right"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?selectableItemBackground" />
+            android:background="@drawable/background_clickarea" />
     </LinearLayout>
 
     <ImageView
@@ -107,10 +111,5 @@
             tools:ignore="ContentDescription" />
 
     </FrameLayout>
-
-    <org.nv95.openmanga.components.StatusBarController
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
 
 </android.support.design.widget.CoordinatorLayout>
