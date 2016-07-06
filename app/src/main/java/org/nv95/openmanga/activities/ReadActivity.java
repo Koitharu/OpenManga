@@ -31,6 +31,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.PagerReaderAdapter;
@@ -256,20 +257,22 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             case R.id.area_bottom_left:
                 if (mPager.getCurrentItem() > 0) {
                     mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-                } else {
+                } else if (mPager.isReverse() ? mChapterId < mMangaSumary.chapters.size() - 1 : mChapterId > 0){
                     mChapterId += mPager.isReverse() ? 1 : -1;
                     mPageId = mPager.isReverse() ? 0 : -1;
                     loadChapter();
+                    showToast(mChapter.name, Gravity.TOP, Toast.LENGTH_LONG);
                 }
                 break;
             case R.id.area_right:
             case R.id.area_bottom_right:
                 if (mPager.getCurrentItem() < mPager.getCount() - 1) {
                     mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-                } else {
+                } else if (mPager.isReverse() ? mChapterId > 0 : mChapterId < mMangaSumary.chapters.size() - 1) {
                     mChapterId += mPager.isReverse() ? -1 : 1;
                     mPageId = mPager.isReverse() ? -1 : 0;
                     loadChapter();
+                    showToast(mChapter.name, Gravity.TOP, Toast.LENGTH_LONG);
                 }
                 break;
         }
@@ -314,14 +317,24 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         if (mScrollVolumeKeys) {
             int page = mPager.getCurrentPageIndex();
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                if (page < mPager.getCount()) {
+                if (page < mPager.getCount() - 1) {
                     mPager.scrollToPage(page + 1);
+                } else if (mChapterId < mMangaSumary.chapters.size() - 1) {
+                    mChapterId += 1;
+                    mPageId = 0;
+                    loadChapter();
+                    showToast(mChapter.name, Gravity.TOP, Toast.LENGTH_LONG);
                 }
                 return true;
             }
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 if (page > 0) {
                     mPager.scrollToPage(page - 1);
+                } else if (mChapterId > 0) {
+                    mChapterId -= 1;
+                    mPageId = -1;
+                    loadChapter();
+                    showToast(mChapter.name, Gravity.TOP, Toast.LENGTH_LONG);
                 }
                 return true;
             }
