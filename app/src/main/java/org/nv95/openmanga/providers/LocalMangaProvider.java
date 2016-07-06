@@ -142,9 +142,10 @@ public class LocalMangaProvider extends MangaProvider {
         MangaChapter chapter;
 
         try {
-            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"description"}, "id=" + mangaInfo.id, null, null, null, null);
+            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"description", "source"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
                 summary.description = cursor.getString(0);
+                summary.status = cursor.getString(1) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
             }
             cursor.close();
             cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
