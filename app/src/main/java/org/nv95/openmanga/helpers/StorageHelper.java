@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class StorageHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 14;
+    private static final int DB_VERSION = 15;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -34,7 +34,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "id INTEGER PRIMARY KEY,"
                 + "name TEXT,"
                 + "subtitle TEXT,"
-                + "genres TEXT,"
+                + "summary TEXT,"
                 + "preview TEXT,"
                 + "provider TEXT,"
                 + "path TEXT,"
@@ -96,6 +96,10 @@ public class StorageHelper extends SQLiteOpenHelper {
         columnsFavourites = getColumsNames(db, "history");
         if(!columnsFavourites.contains("summary"))
             db.execSQL("ALTER TABLE history ADD COLUMN summary TEXT");
+        // favourites
+        columnsFavourites = getColumsNames(db, "favourites");
+        if(!columnsFavourites.contains("summary"))
+            db.execSQL("ALTER TABLE favourites ADD COLUMN summary TEXT");
     }
 
     @Nullable
