@@ -64,7 +64,7 @@ public class MangachanProvider extends MangaProvider {
             Element e = document.body();
             summary.readLink = summary.path;
 
-            summary.description = e.getElementById("description").text();
+            summary.description = e.getElementById("description").text().trim();
             summary.preview = "http://mangachan.ru" + e.getElementById("cover").attr("src");
             MangaChapter chapter;
             Elements els = e.select("table.table_cha");

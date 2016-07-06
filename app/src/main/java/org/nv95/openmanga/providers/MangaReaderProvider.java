@@ -60,7 +60,7 @@ public class MangaReaderProvider extends MangaProvider {
             int p = descr.indexOf(">Tweet");
             if (p > 0)
                 descr = descr.substring(0, p);
-            summary.description = Html.fromHtml(descr).toString();
+            summary.description = Html.fromHtml(descr).toString().trim();
             summary.preview = e.getElementById("mangaimg").child(0).attr("src");
             MangaChapter chapter;
             e = e.getElementById("listing");

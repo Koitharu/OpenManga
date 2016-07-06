@@ -61,7 +61,7 @@ public class EHentaiProvider extends MangaProvider {
             for (Element o : document.body().getElementById("taglist").select("tr")) {
                 builder.append(o.text()).append('\n');
             }
-            summary.description = builder.toString();
+            summary.description = builder.toString().trim();
             Elements els = document.body().select("table.ptt").first().select("td");
             els.remove(els.size() - 1);
             els.remove(0);
