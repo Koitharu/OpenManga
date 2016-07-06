@@ -88,7 +88,7 @@ public class MintMangaProvider extends MangaProvider {
             int p = descr.indexOf("<a h");
             if (p > 0)
                 descr = descr.substring(0, p);
-            summary.description = Html.fromHtml(descr).toString();
+            summary.description = Html.fromHtml(descr).toString().trim();
             summary.preview = e.select("div.picture-fotorama").first().child(0).attr("data-full");
             MangaChapter chapter;
             e = e.select("table.table").first();

@@ -80,7 +80,7 @@ public class MangaFoxProvider extends MangaProvider {
         try {
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.description = Html.fromHtml(e.select("p.summary").html()).toString();
+            summary.description = Html.fromHtml(e.select("p.summary").html()).toString().trim();
             summary.preview = e.select("div.cover").first().select("img").first().attr("src");
             MangaChapter chapter;
             e = e.getElementById("chapters");

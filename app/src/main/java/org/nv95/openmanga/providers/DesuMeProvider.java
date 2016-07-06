@@ -86,7 +86,7 @@ public class DesuMeProvider extends MangaProvider {
             Element e = document.body();
             summary.readLink = summary.path;
 
-            summary.description = e.select("div.prgrph").first().text();
+            summary.description = e.select("div.prgrph").first().text().trim();
             summary.preview = e.select("img").first().attr("src");
             MangaChapter chapter;
             e = e.select("ul.chlist").first();

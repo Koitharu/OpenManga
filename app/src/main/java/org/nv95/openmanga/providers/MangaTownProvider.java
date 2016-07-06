@@ -61,7 +61,7 @@ public class MangaTownProvider extends MangaProvider {
         try {
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.description = Html.fromHtml(e.getElementById("show").html()).toString();
+            summary.description = Html.fromHtml(e.getElementById("show").html()).toString().trim();
             summary.preview = e.select("img").first().attr("src");
             MangaChapter chapter;
             e = e.select("ul.detail-ch-list").first();
