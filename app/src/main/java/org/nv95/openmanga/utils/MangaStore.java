@@ -256,6 +256,29 @@ public class MangaStore {
         return result;
     }
 
+    @WorkerThread
+    public boolean dropChapter(int mangaId, long id) {
+        SQLiteDatabase database = null;
+        boolean result = true;
+        try {
+            database = mDatabaseHelper.getWritableDatabase();
+            database.beginTransaction();
+            database.delete(TABLE_PAGES, "chapterid=? AND mangaid=?", new String[]{String.valueOf(id), String.valueOf(mangaId)});
+            database.delete(TABLE_CHAPTERS, "id=?", new String[]{String.valueOf(id)});
+            new DirRemoveHelper(getMangaDir(mContext, database, mangaId), id + "_[-\\w]*").run();
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            FileLogger.getInstance().report(e);
+            result = false;
+        } finally {
+            if (database != null) {
+                database.endTransaction();
+                database.close();
+            }
+        }
+        return result;
+    }
+
     public SQLiteDatabase getDatabase(boolean writable) {
         return writable ? mDatabaseHelper.getWritableDatabase() : mDatabaseHelper.getReadableDatabase();
     }

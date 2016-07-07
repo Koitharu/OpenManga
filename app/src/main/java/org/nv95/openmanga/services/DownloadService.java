@@ -290,6 +290,7 @@ public class DownloadService extends Service {
                             if (!isCancelled()) {
                                 continue;
                             } else {
+                                store.dropChapter(mangaId, o.id);
                                 break;
                             }
                         }
@@ -299,10 +300,11 @@ public class DownloadService extends Service {
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            break;
                         }
                     }
                     if (isCancelled()) {
+                        store.dropChapter(mangaId, o.id);
                         break;
                     }
                 }
@@ -320,7 +322,7 @@ public class DownloadService extends Service {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
         }
