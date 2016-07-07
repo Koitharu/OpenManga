@@ -20,8 +20,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
 public class FrameCheckLayout extends FrameLayout implements Checkable {
 
     private boolean mChecked;
-    private int mAccentColor;
-    private int mPadding;
+    private static int mPadding;
     private ImageView mCheckMark;
 
     public FrameCheckLayout(Context context) {
@@ -47,8 +46,9 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
 
     private void init() {
         mChecked = false;
-        mAccentColor = LayoutUtils.getAccentColor(getContext());
-        mPadding = getResources().getDimensionPixelOffset(R.dimen.size_selector);
+        if (mPadding == 0) {
+            mPadding = getResources().getDimensionPixelOffset(R.dimen.padding8);
+        }
     }
 
     @Override
@@ -70,8 +70,10 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
         if (mCheckMark == null) {
             mCheckMark = new ImageView(getContext());
             mCheckMark.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            mCheckMark.setImageResource(R.drawable.selector_frame);
-            //mCheckMark.setColorFilter(mAccentColor);
+            mCheckMark.setBackgroundResource(R.drawable.selector_frame);
+            mCheckMark.setPadding(mPadding, mPadding, mPadding, mPadding);
+            mCheckMark.setScaleType(ImageView.ScaleType.MATRIX);
+            mCheckMark.setImageResource(R.drawable.ic_checkmark);
             mCheckMark.setVisibility(GONE);
             addView(mCheckMark);
         }
