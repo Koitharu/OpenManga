@@ -1,6 +1,6 @@
 package org.nv95.openmanga.items;
 
-import org.nv95.openmanga.lists.MangaChapters;
+import org.nv95.openmanga.lists.ChaptersList;
 
 import java.util.Arrays;
 
@@ -19,7 +19,7 @@ public class DownloadInfo extends MangaInfo {
     public final int max;
     public int pos;
     public int state;
-    public final MangaChapters chapters;
+    public final ChaptersList chapters;
     public final int[] chaptersProgresses;
     public final int[] chaptersSizes;
 

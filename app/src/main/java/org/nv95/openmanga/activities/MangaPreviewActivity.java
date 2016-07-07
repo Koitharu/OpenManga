@@ -23,7 +23,8 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
-import org.nv95.openmanga.lists.MangaChapters;
+import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -136,8 +137,13 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 Intent intent = new Intent(this, ReadActivity.class);
                 intent.putExtras(mMangaSummary.toBundle());
                 HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(this).get(mMangaSummary);
-                intent.putExtra("chapter", hs == null ? 0 : hs.getChapter());
-                intent.putExtra("page", hs == null ? 0 : hs.getPage());
+                if (hs != null) {
+                    int index = mMangaSummary.chapters.indexByNumber(hs.getChapter());
+                    if (index != -1) {
+                        intent.putExtra("chapter", index);
+                        intent.putExtra("page", hs.getPage());
+                    }
+                }
                 startActivity(intent);
                 return true;
             default:
@@ -149,24 +155,22 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         if (mMangaSummary.getChapters().size() == 0) {
             return;
         }
-        final HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mMangaSummary);
+        HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mMangaSummary);
         BottomSheetDialog sheet = new BottomSheetDialog(this);
         if (lastChapter != null && lastChapter.getChapter() < mMangaSummary.chapters.size()) {
-            sheet.addHeader(
-                    mMangaSummary.chapters.get(lastChapter.getChapter()).name,
-                    R.string.continue_reading, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent intent = new Intent(MangaPreviewActivity.this, ReadActivity.class);
-                            intent.putExtras(mMangaSummary.toBundle());
-                            HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(MangaPreviewActivity.this).get(mMangaSummary);
-                            intent.putExtra("chapter", hs.getChapter());
-                            intent.putExtra("page", hs.getPage());
-                            startActivity(intent);
+            MangaChapter c = mMangaSummary.chapters.getByNumber(lastChapter.getChapter());
+            if (c != null) {
+                sheet.addHeader(
+                        c.name,
+                        R.string.continue_reading, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                onLongClick(mFab);
+                            }
                         }
-                    }
-            );
+                );
+            }
         }
         sheet.setItems(mMangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
                 .setSheetTitle(R.string.chapters_list)
@@ -383,7 +387,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         .show();
                 return;
             }
-            MangaChapters newChapters = sourceManga.chapters.complementByName(mMangaSummary.chapters);
+            ChaptersList newChapters = sourceManga.chapters.complementByName(mMangaSummary.chapters);
             if (sourceManga.chapters.size() <= mMangaSummary.chapters.size()) {
                 Snackbar.make(mAppBarLayout, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
                         .show();

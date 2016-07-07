@@ -12,7 +12,7 @@ import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
-import org.nv95.openmanga.lists.MangaChapters;
+import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
@@ -138,7 +138,7 @@ public class LocalMangaProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         MangaSummary summary = new MangaSummary(mangaInfo);
         SQLiteDatabase database = mStore.getDatabase(false);
-        MangaChapters list = new MangaChapters();
+        ChaptersList list = new ChaptersList();
         MangaChapter chapter;
 
         try {
