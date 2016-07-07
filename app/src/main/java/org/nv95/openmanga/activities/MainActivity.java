@@ -685,8 +685,13 @@ public class MainActivity extends BaseAppActivity implements
                 intent = new Intent(MainActivity.this, ReadActivity.class);
                 intent.putExtras(summary.toBundle());
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
-                intent.putExtra("chapter", hs.getChapter());
-                intent.putExtra("page", hs.getPage());
+                if (hs != null) {
+                    int index = summary.chapters.indexByNumber(hs.getChapter());
+                    if (index != -1) {
+                        intent.putExtra("chapter", index);
+                        intent.putExtra("page", hs.getPage());
+                    }
+                }
                 return new Pair<>(0, intent);
             } catch (Exception e) {
                 FileLogger.getInstance().report(e);
