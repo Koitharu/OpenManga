@@ -10,9 +10,11 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.WorkerThread;
 import android.support.v7.app.AlertDialog;
 import android.util.SparseBooleanArray;
 
@@ -193,6 +195,8 @@ public class DownloadService extends Service {
         static final int PROGRESS_PRIMARY = 0;
         //прогресс по страницам
         static final int PROGRESS_SECONDARY = 1;
+        //в случае ошибки
+        static final int PROGRESS_ERROR = 2;
         private final DownloadInfo mDownload;
         private final AtomicBoolean mPaused = new AtomicBoolean(false);
 
@@ -201,6 +205,7 @@ public class DownloadService extends Service {
             mTaskReference = new WeakReference<>(this);
         }
 
+        @MainThread
         public void setPaused(boolean paused) {
             mPaused.set(paused);
             mNotificationHelper
@@ -211,6 +216,7 @@ public class DownloadService extends Service {
                             paused ? R.drawable.sym_resume : R.drawable.sym_pause,
                             paused ? R.string.resume : R.string.pause)
                     .icon(paused ? R.drawable.ic_stat_paused : android.R.drawable.stat_sys_download)
+                    .text(R.string.saving_manga)
                     .update(NOTIFY_ID);
         }
 
@@ -244,18 +250,32 @@ public class DownloadService extends Service {
             ArrayList<MangaPage> pages;
             MangaChapter o;
             MangaPage o1;
+            //all chapters
             for (int i=0; i<mDownload.max; i++) {
                 o = mDownload.chapters.get(i);
-                o.id = store.pushChapter(o, mangaId);
                 pages = provider.getPages(o.readLink);
-                if (pages == null) {
+                if (pages == null) { //всё не совсем плохо
                     //try again
                     pages = provider.getPages(o.readLink);
                     if (pages == null) {
-                        return null;
+                        //wait for resume or cancelled
+                        onError();
+                        //go to previous
+                        i--;
+                        if (!isCancelled()) {
+                            continue;
+                        } else {
+                            break;
+                        }
                     }
                 }
+                //add chapter to db
+                o.id = store.pushChapter(o, mangaId);
+                if (o.id == 0) { //всё очень плохо
+                    return null;
+                }
                 publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
+                //time for saving pages
                 for (int j=0; j<pages.size(); j++) {
                     o1 = pages.get(j);
                     o1.path = provider.getPageImage(o1);
@@ -265,7 +285,13 @@ public class DownloadService extends Service {
                         //try again
                         o1.id = store.pushPage(o1, mangaId, o.id);
                         if (o1.id == 0) {
-                            return null;
+                            onError();
+                            j--;
+                            if (!isCancelled()) {
+                                continue;
+                            } else {
+                                break;
+                            }
                         }
                     }
                     publishProgress(PROGRESS_SECONDARY, j, pages.size());
@@ -284,6 +310,19 @@ public class DownloadService extends Service {
             }
             publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
             return 0;
+        }
+
+        @WorkerThread
+        void onError() {
+            mPaused.set(true);
+            publishProgress(PROGRESS_ERROR);
+            while(mPaused.get() && !isCancelled()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -322,13 +361,26 @@ public class DownloadService extends Service {
 
         /**
          * @param values
-         * [0] - #PROGRESS_PRIMARY or #PROGRESS_SECONDARY
+         * [0] - #PROGRESS_PRIMARY or #PROGRESS_SECONDARY or #PROGRESS_ERROR
          * [1] - progress
          * [2] - max
          */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            if (values[0] == PROGRESS_ERROR) {
+                mNotificationHelper
+                        .actionSecondary(PendingIntent.getService(
+                                DownloadService.this, ACTION_RESUME,
+                                new Intent(DownloadService.this, DownloadService.class).putExtra("action", ACTION_RESUME),
+                                0),
+                                R.drawable.sym_resume,
+                                R.string.resume)
+                        .text(R.string.loading_error)
+                        .icon(android.R.drawable.stat_notify_error)
+                        .update(NOTIFY_ID, R.string.loading_error);
+                return;
+            }
             if (values[0] == PROGRESS_PRIMARY) {
                 mDownload.pos = values[1];
             } else if (values[0] == PROGRESS_SECONDARY) {
