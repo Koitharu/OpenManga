@@ -88,10 +88,9 @@ public class MangaStore {
     @WorkerThread
     public int pushChapter(MangaChapter chapter, int mangaId) {
         SQLiteDatabase database = null;
-        int id = 0;
+        int id = chapter.readLink.hashCode();
         try {
             final ContentValues cv = new ContentValues();
-            id = chapter.readLink.hashCode();
             cv.put("id", id);
             cv.put("mangaid", mangaId);
             cv.put("name", chapter.name);
@@ -104,6 +103,7 @@ public class MangaStore {
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
+            id = 0;
         } finally {
             if (database != null) {
                 database.close();
@@ -122,10 +122,9 @@ public class MangaStore {
     @WorkerThread
     public int pushPage(MangaPage page, int mangaId, int chapterId) {
         SQLiteDatabase database = null;
-        int id = 0;
+        int id = page.path.hashCode();
         try {
-            final ContentValues cv = new ContentValues();
-            id = page.path.hashCode();
+            ContentValues cv = new ContentValues();
             cv.put("id", id);
             cv.put("chapterid", chapterId);
             cv.put("mangaid", mangaId);
