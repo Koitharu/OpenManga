@@ -1,6 +1,7 @@
 package org.nv95.openmanga.lists;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.items.MangaChapter;
 
@@ -9,19 +10,19 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 02.10.15.
  */
-public class MangaChapters extends ArrayList<MangaChapter> {
+public class ChaptersList extends ArrayList<MangaChapter> {
 
-    public MangaChapters() {
+    public ChaptersList() {
     }
 
-    public MangaChapters(Bundle bundle) {
+    public ChaptersList(Bundle bundle) {
         int n = bundle.getInt("size");
         for (int i = 0; i < n; i++) {
             add(new MangaChapter(bundle.getBundle("chapter" + i)));
         }
     }
 
-    public MangaChapters(MangaChapters chapters) {
+    public ChaptersList(ChaptersList chapters) {
         super(chapters);
     }
 
@@ -42,8 +43,8 @@ public class MangaChapters extends ArrayList<MangaChapter> {
         return res;
     }
 
-    public MangaChapters complementByName(MangaChapters list) {
-        MangaChapters res = new MangaChapters();
+    public ChaptersList complementByName(ChaptersList list) {
+        ChaptersList res = new ChaptersList();
         boolean exists;
         for (MangaChapter o:this) {
             exists = false;
@@ -58,6 +59,27 @@ public class MangaChapters extends ArrayList<MangaChapter> {
             }
         }
         return res;
+    }
+
+    @Nullable
+    public MangaChapter getByNumber(int number) {
+        for (MangaChapter o : this) {
+            if (o != null && o.number == number) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+    public int indexByNumber(int number) {
+        MangaChapter o;
+        for (int i=0;i<size();i++) {
+            o = get(i);
+            if (o != null && o.number == number) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void enumerate() {

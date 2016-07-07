@@ -3,7 +3,7 @@ package org.nv95.openmanga.items;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import org.nv95.openmanga.lists.MangaChapters;
+import org.nv95.openmanga.lists.ChaptersList;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -14,7 +14,7 @@ public class MangaSummary extends MangaInfo {
     public String readLink;
     public String description;
     @NonNull
-    public MangaChapters chapters;
+    public ChaptersList chapters;
 
     public MangaSummary(MangaInfo mangaInfo) {
         id = mangaInfo.id;
@@ -28,7 +28,7 @@ public class MangaSummary extends MangaInfo {
         this.extra = mangaInfo.extra;
         this.description = "";
         this.readLink = "";
-        this.chapters = new MangaChapters();
+        this.chapters = new ChaptersList();
     }
 
     public MangaSummary(MangaSummary mangaSummary) {
@@ -43,14 +43,14 @@ public class MangaSummary extends MangaInfo {
         this.readLink = mangaSummary.readLink;
         this.status = mangaSummary.status;
         this.extra = mangaSummary.extra;
-        this.chapters = new MangaChapters(mangaSummary.chapters);
+        this.chapters = new ChaptersList(mangaSummary.chapters);
     }
 
     public MangaSummary(Bundle bundle) {
         super(bundle);
         this.readLink = bundle.getString("readlink");
         this.description = bundle.getString("description");
-        chapters = new MangaChapters(bundle);
+        chapters = new ChaptersList(bundle);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MangaSummary extends MangaInfo {
     }
 
     @NonNull
-    public MangaChapters getChapters() {
+    public ChaptersList getChapters() {
         return chapters;
     }
 
