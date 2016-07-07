@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
@@ -58,7 +59,7 @@ public class RecommendationsProvider extends MangaProvider {
                 if (cursor.moveToFirst()) {
                     do {
                         String s = cursor.getString(0);
-                        if (s != null && s.length() != 0) {
+                        if (!TextUtils.isEmpty(s)) {
                             Collections.addAll(genres, s.split("[,]?\\s"));
                         }
                     } while (cursor.moveToNext());
@@ -71,7 +72,7 @@ public class RecommendationsProvider extends MangaProvider {
                 if (cursor.moveToFirst()) {
                     do {
                         String s = cursor.getString(0);
-                        if (s != null && s.length() != 0) {
+                        if (!TextUtils.isEmpty(s)) {
                             Collections.addAll(genres, s.toLowerCase().split("[,]?\\s"));
                         }
                     } while (cursor.moveToNext());
