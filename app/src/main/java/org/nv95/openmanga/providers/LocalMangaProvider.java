@@ -267,9 +267,9 @@ public class LocalMangaProvider extends MangaProvider {
             database = mStore.getDatabase(false);
             cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id"}, null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                while (cursor.moveToNext()) {
+                do {
                     ids.add(cursor.getLong(0));
-                }
+                } while (cursor.moveToNext());
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
