@@ -114,6 +114,9 @@ public class DownloadService extends Service {
         super.onCreate();
         mNotificationHelper = new NotificationHelper(this)
                 .intentActivity(new Intent(this, DownloadsActivity.class))
+                .icon(android.R.drawable.stat_sys_download)
+                .title(R.string.saving_manga)
+                .text(R.string.preparing)
                 .actionCancel(PendingIntent.getService(
                         this, ACTION_CANCEL,
                         new Intent(this, DownloadService.class).putExtra("action", ACTION_CANCEL),

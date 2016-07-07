@@ -151,7 +151,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     }
 
     private void saveHistory() {
-        HistoryProvider.getInstacne(this).add(mMangaSumary, mChapterId, mPager.getCurrentPageIndex());
+        HistoryProvider.getInstacne(this).add(mMangaSumary, mMangaSumary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
     }
 
     @Override

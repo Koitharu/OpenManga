@@ -296,7 +296,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
-        HistoryProvider.getInstacne(this).add(mMangaSummary, which, 0);
+        HistoryProvider.getInstacne(this).add(mMangaSummary, mMangaSummary.chapters.get(which).number, 0);
         startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
     }
 
