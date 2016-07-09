@@ -251,4 +251,7 @@
     <string name="delete_manga">Удалить мангу</string>
     <string name="imported_from" formatted="false">Импортировано из %s</string>
     <string name="move_saved">Переместить сохранённую мангу</string>
+    <string name="image_decode_error">Не удалось декодировать изображение</string>
+    <string name="image_loading_error">Не удалось загрузить изображение</string>
+    <string name="out_of_memory">Недостаточно памяти</string>
 </resources>
