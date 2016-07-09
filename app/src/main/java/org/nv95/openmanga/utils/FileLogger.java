@@ -7,11 +7,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.assist.FailReason;
+
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.providers.MangaProviderManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -109,6 +113,31 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         report(e.getMessage() + "\n\tStack trace:\n" + sw.toString());
+    }
+
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    public String getFailMessage(Context context, @Nullable FailReason failReason) {
+        if (failReason == null) {
+            return context.getString(R.string.unknown);
+        }
+        Throwable cause = failReason.getCause();
+        if (cause != null) {
+            report("** " + cause.getMessage());
+        }
+        switch (failReason.getType()) {
+            case IO_ERROR:
+            case NETWORK_DENIED:
+                return context.getString(
+                        MangaProviderManager.checkConnection(context) ?
+                        R.string.image_loading_error : R.string.no_network_connection
+                );
+            case DECODING_ERROR:
+                return context.getString(R.string.image_decode_error);
+            case OUT_OF_MEMORY:
+                return context.getString(R.string.out_of_memory);
+            default:
+                return cause != null ? cause.getMessage() : context.getString(R.string.unknown);
+        }
     }
 
     @Override
