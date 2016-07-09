@@ -190,11 +190,10 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
                     Html.fromHtml(
                             viewHolder.textView.getContext().getString(
                                     R.string.error_loadimage_html,
-                                    failReason == null ? "unknown" : failReason.getCause().getMessage()
+                                    FileLogger.getInstance().getFailMessage(view.getContext(), failReason)
                             )
                     )
             );
-            FileLogger.getInstance().report("# PageLoadTask.onImageLoadError\n page.path: " + mPage.path);
         }
 
         @Override

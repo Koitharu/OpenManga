@@ -275,4 +275,7 @@
     <string name="bottom">Bottom</string>
     <string name="at_sides">At sides</string>
     <string name="move_saved">Move saved manga</string>
+    <string name="image_decode_error">Decoding error</string>
+    <string name="out_of_memory">Out of memory</string>
+    <string name="image_loading_error">Loading error</string>
 </resources>
