@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     @Nullable
     private View.OnClickListener mCallback;
     private OnDismissListener onDismissListener;
+    private final Drawable mFavIcon;
 
     @SuppressLint("InflateParams")
     public ReaderMenuDialog(Context context, boolean dark) {
@@ -59,6 +61,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         if (dark) {
             LayoutUtils.setAllImagesColor((ViewGroup) view, R.color.white_overlay_85);
         }
+        mFavIcon = LayoutUtils.getThemedIcons(context, R.drawable.ic_favorite_dark)[0];
         mDialog = new AlertDialog.Builder(context)
                 .setView(view)
                 .setCancelable(true)
@@ -85,7 +88,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     public ReaderMenuDialog favourites(@Nullable String title) {
         if (title != null) {
             mButtonFav.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite_dark, 0, 0, 0
+                    mFavIcon, null, null, null
             );
             mButtonFav.setText(title);
         }
