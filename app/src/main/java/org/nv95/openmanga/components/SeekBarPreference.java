@@ -35,7 +35,7 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
                 attrs, R.styleable.SeekBarPreferenceAttrs);
         mIcon = a.getDrawable(R.styleable.SeekBarPreferenceAttrs_iconDrawable);
         mMax = a.getInt(R.styleable.SeekBarPreferenceAttrs_max, 100);
-        mValue = 0;
+        mValue = 20;
         a.recycle();
         mValueSet = false;
     }
