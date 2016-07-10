@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         DialogInterface.OnCancelListener {
 
     private final Dialog mDialog;
+    private final ViewGroup mRootView;
     private final TextView mTextViewTitle;
     private final TextView mTextViewSubtitle;
     private final TextView mButtonFav;
@@ -35,35 +35,29 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     @Nullable
     private View.OnClickListener mCallback;
     private OnDismissListener onDismissListener;
-    private final Drawable mFavIcon;
 
     @SuppressLint("InflateParams")
-    public ReaderMenuDialog(Context context, boolean dark) {
-        View view = LayoutInflater.from(context)
+    public ReaderMenuDialog(Context context) {
+        mRootView = (ViewGroup) LayoutInflater.from(context)
                 .inflate(R.layout.dialog_reader, null);
-        mTextViewTitle = (TextView) view.findViewById(R.id.textView_title);
-        mTextViewSubtitle = (TextView) view.findViewById(R.id.textView_subtitle);
+        mTextViewTitle = (TextView) mRootView.findViewById(R.id.textView_title);
+        mTextViewSubtitle = (TextView) mRootView.findViewById(R.id.textView_subtitle);
         mTextViewSubtitle.setOnClickListener(this);
-        mButtonFav = (TextView) view.findViewById(R.id.button_fav);
+        mButtonFav = (TextView) mRootView.findViewById(R.id.button_fav);
         mButtonFav.setOnClickListener(this);
-        mButtonSave = (TextView) view.findViewById(R.id.button_save);
+        mButtonSave = (TextView) mRootView.findViewById(R.id.button_save);
         mButtonSave.setOnClickListener(this);
-        mButtonShare = (TextView) view.findViewById(R.id.button_share);
+        mButtonShare = (TextView) mRootView.findViewById(R.id.button_share);
         mButtonShare.setOnClickListener(this);
-        mButtonOpts = (TextView) view.findViewById(R.id.button_opt);
+        mButtonOpts = (TextView) mRootView.findViewById(R.id.button_opt);
         mButtonOpts.setOnClickListener(this);
-        mButtonImg = (TextView) view.findViewById(R.id.button_img);
+        mButtonImg = (TextView) mRootView.findViewById(R.id.button_img);
         mButtonImg.setOnClickListener(this);
-        mButtonNav = (TextView) view.findViewById(R.id.textView_goto);
+        mButtonNav = (TextView) mRootView.findViewById(R.id.textView_goto);
         mButtonNav.setOnClickListener(this);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        //preferences
-        if (dark) {
-            LayoutUtils.setAllImagesColor((ViewGroup) view, R.color.white_overlay_85);
-        }
-        mFavIcon = LayoutUtils.getThemedIcons(context, R.drawable.ic_favorite_dark)[0];
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progressBar);
         mDialog = new AlertDialog.Builder(context)
-                .setView(view)
+                .setView(mRootView)
                 .setCancelable(true)
                 .setOnDismissListener(this)
                 .setOnCancelListener(this)
@@ -88,7 +82,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     public ReaderMenuDialog favourites(@Nullable String title) {
         if (title != null) {
             mButtonFav.setCompoundDrawablesWithIntrinsicBounds(
-                    mFavIcon, null, null, null
+                    R.drawable.ic_favorite_dark, 0, 0, 0
             );
             mButtonFav.setText(title);
         }
@@ -103,7 +97,10 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         return this;
     }
 
-    public void show() {
+    public void show(boolean dark) {
+        if (dark) {
+            LayoutUtils.setAllImagesColor(mRootView, R.color.white_overlay_85);
+        }
         mDialog.show();
     }
 

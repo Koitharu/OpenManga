@@ -14,8 +14,8 @@ import org.nv95.openmanga.R;
  */
 public class NavigationDialog implements DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    protected AlertDialog mDialog;
-    protected NavigationListener mNavigationListener;
+    private AlertDialog mDialog;
+    private NavigationListener mNavigationListener;
     private Context mContext;
     //controls
     private SeekBar mSeekBar;
@@ -28,7 +28,7 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
         View view = View.inflate(context, R.layout.dialog_navigation, null);
         mSeekBar = (SeekBar) view.findViewById(R.id.seekBar);
         mTextView = (TextView) view.findViewById(R.id.textView);
-        ((TextView) view.findViewById(R.id.textView_summary)).setText(String.format(context.getString(R.string.current_summary), size));
+        ((TextView) view.findViewById(R.id.textView_summary)).setText(context.getString(R.string.current_page, pos + 1));
         mSeekBar.setOnSeekBarChangeListener(this);
         mSeekBar.setMax(size - 1);
         mSeekBar.setProgress(pos);
@@ -47,7 +47,7 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mTextView.setText(String.format(mContext.getString(R.string.current_pos), mPos + 1, progress + 1));
+        mTextView.setText(mContext.getString(R.string.goto_page, progress + 1, seekBar.getMax()));
     }
 
     @Override

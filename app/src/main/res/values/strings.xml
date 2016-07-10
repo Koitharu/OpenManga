@@ -35,8 +35,8 @@
     <string name="disclaimer">All manga, characters and logos belong to their respective copyright owners. This app\'s developers not have any affiliation with the content providers.</string>
     <string name="select_sources">Select manga\'s sources</string>
     <string name="navigate">Go to</string>
-    <string name="current_pos" formatted="false">Current page: %d -> %d</string>
-    <string name="current_summary" formatted="false">Total %d pages.</string>
+    <string name="goto_page" formatted="false">Go to: %d/%d</string>
+    <string name="current_page" formatted="false">Current page: %d</string>
     <string name="bug_report">Send a bug report</string>
     <string name="bug_report_summ">Send debug log to developer</string>
     <string name="log_not_found">Error log not found!</string>

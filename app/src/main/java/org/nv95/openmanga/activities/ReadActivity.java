@@ -191,7 +191,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                                 titles[favId] : getString(R.string.category_no);
                         break;
                 }
-                new ReaderMenuDialog(this, isDarkTheme())
+                new ReaderMenuDialog(this)
                         .callback(this)
                         .favourites(fav)
                         .setOnDismissListener(new ReaderMenuDialog.OnDismissListener() {
@@ -206,7 +206,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         )
                         .chapter(mMangaSumary.getChapters().get(mChapterId).name)
                         .title(mMangaSumary.name)
-                        .show();
+                        .show(isDarkTheme());
                 break;
             case R.id.button_save:
                 if (!LocalMangaProvider.class.equals(mMangaSumary.provider)) {
