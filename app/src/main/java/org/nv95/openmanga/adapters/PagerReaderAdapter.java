@@ -190,7 +190,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
                     Html.fromHtml(
                             viewHolder.textView.getContext().getString(
                                     R.string.error_loadimage_html,
-                                    FileLogger.getInstance().getFailMessage(view.getContext(), failReason)
+                                    FileLogger.getInstance().getFailMessage(viewHolder.textView.getContext(), failReason)
                             )
                     )
             );
