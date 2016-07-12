@@ -109,7 +109,7 @@ public class MainActivity extends BaseAppActivity implements
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         mNavigationView = ((NavigationView) findViewById(R.id.navigation_drawer_bottom));
-        mNavigationView.getChildAt(0).setVerticalScrollBarEnabled(false);
+        mNavigationView.getChildAt(0).setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
