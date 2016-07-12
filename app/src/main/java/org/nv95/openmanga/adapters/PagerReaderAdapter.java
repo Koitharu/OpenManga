@@ -39,7 +39,6 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
     private boolean isLandOrientation, isLight;
     private final InternalLinkMovement mLinkMovement;
     private int mScaleMode = SCALE_FIT;
-    private float mDoubleTapScale;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -64,9 +63,8 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         return view.equals(object);
     }
 
-    public void setScaleMode(int scaleMode, float doubleTapScale) {
+    public void setScaleMode(int scaleMode) {
         mScaleMode = scaleMode;
-        mDoubleTapScale = doubleTapScale;
     }
 
     @Override
@@ -79,7 +77,6 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         PageHolder holder = new PageHolder();
         holder.position = position;
         holder.scale = mScaleMode;
-        holder.doubleTapScale = mDoubleTapScale;
         holder.land = isLandOrientation;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
@@ -139,7 +136,6 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         int position;
         boolean land;
         int scale;
-        float doubleTapScale;
     }
 
     private static class PageLoad extends PageLoadAbs {
@@ -166,7 +162,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.ssiv.setDoubleTapZoomScale(viewHolder.doubleTapScale);
+            viewHolder.ssiv.setDoubleTapZoomScale(1.8f);
             viewHolder.ssiv.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
             switch (viewHolder.scale) {
                 case SCALE_FIT:

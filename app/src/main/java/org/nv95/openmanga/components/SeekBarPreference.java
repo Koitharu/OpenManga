@@ -20,17 +20,14 @@ import org.nv95.openmanga.R;
 /**
  * Created by nv95 on 12.02.16.
  */
-@SuppressLint("SetTextI18n")
 public class SeekBarPreference extends Preference implements AppCompatSeekBar.OnSeekBarChangeListener {
 
     private TextView mTextView;
     private AppCompatSeekBar mSeekBar;
     private int mValue;
     private int mMax;
-    private int mMin;
     private Drawable mIcon;
     private boolean mValueSet;
-    private String mSuffix;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,11 +35,6 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
                 attrs, R.styleable.SeekBarPreferenceAttrs);
         mIcon = a.getDrawable(R.styleable.SeekBarPreferenceAttrs_iconDrawable);
         mMax = a.getInt(R.styleable.SeekBarPreferenceAttrs_max, 100);
-        mMin = a.getInt(R.styleable.SeekBarPreferenceAttrs_min, 0);
-        mSuffix = a.getString(R.styleable.SeekBarPreferenceAttrs_suffix);
-        if (mSuffix == null) {
-            mSuffix = "";
-        }
         mValue = 20;
         a.recycle();
         mValueSet = false;
@@ -57,7 +49,7 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
         ((TextView) layout.findViewById(R.id.title)).setText(getTitle());
         mSeekBar = (AppCompatSeekBar) layout.findViewById(R.id.seekBar);
         mSeekBar.setMax(mMax);
-        mSeekBar.setProgress(mValue - mMin);
+        mSeekBar.setProgress(mValue);
         mSeekBar.setOnSeekBarChangeListener(this);
         ImageView imageView = (ImageView) layout.findViewById(R.id.icon);
         if (mIcon != null) {
@@ -65,14 +57,14 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
             imageView.setImageDrawable(mIcon);
         }
         mTextView = (TextView) layout.findViewById(R.id.value);
-        mTextView.setText(String.valueOf(mValue) + mSuffix);
+        mTextView.setText(String.valueOf(mValue));
         return layout;
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
                                   boolean fromUser) {
-        mTextView.setText(String.valueOf(progress + mMin) + mSuffix);
+        mTextView.setText(String.valueOf(progress));
         mTextView.invalidate();
     }
 
@@ -82,7 +74,7 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        setValue(seekBar.getProgress() + mMin);
+        setValue(seekBar.getProgress());
     }
 
     public void setValue(int value) {
