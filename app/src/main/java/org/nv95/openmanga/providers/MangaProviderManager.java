@@ -18,6 +18,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -35,15 +36,15 @@ public class MangaProviderManager {
     public static final int FEAUTURE_GENRES = 4;
 
     public static final ProviderSumm[] providers = {
-            new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Language.RU),
-            new ProviderSumm("MintManga", MintMangaProvider.class, Language.RU),
-            new ProviderSumm("Манга-тян", MangachanProvider.class, Language.RU),
-            new ProviderSumm("Desu.me", DesuMeProvider.class, Language.RU),
-            new ProviderSumm("MangaFox", MangaFoxProvider.class, Language.EN),
-            new ProviderSumm("E-Hentai", EHentaiProvider.class, Language.MULTI),
-            new ProviderSumm("MangaTown", MangaTownProvider.class, Language.EN),
-            new ProviderSumm("MangaReader", MangaReaderProvider.class, Language.EN),
-            new ProviderSumm("PuzzManga", PuzzmosProvider.class, Language.TR)
+            new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Languages.RU),
+            new ProviderSumm("MintManga", MintMangaProvider.class, Languages.RU),
+            new ProviderSumm("Манга-тян", MangachanProvider.class, Languages.RU),
+            new ProviderSumm("Desu.me", DesuMeProvider.class, Languages.RU),
+            new ProviderSumm("MangaFox", MangaFoxProvider.class, Languages.EN),
+            new ProviderSumm("MangaTown", MangaTownProvider.class, Languages.EN),
+            new ProviderSumm("MangaReader", MangaReaderProvider.class, Languages.EN),
+            new ProviderSumm("E-Hentai", EHentaiProvider.class, Languages.MULTI),
+            new ProviderSumm("PuzzManga", PuzzmosProvider.class, Languages.TR)
     };
 
     private final Context mContext;
@@ -124,6 +125,15 @@ public class MangaProviderManager {
         }
     }
 
+    public static void configure(Context context, int language) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("providers", Context.MODE_PRIVATE)
+                .edit();
+        for (ProviderSumm o : providers) {
+            editor.putBoolean(o.name, o.lang == language || o.lang == Languages.MULTI);
+        }
+        editor.apply();
+    }
+
     public void setProviderEnabled(String name, boolean enabled) {
         mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).edit().putBoolean(name, enabled).apply();
     }
@@ -150,15 +160,13 @@ public class MangaProviderManager {
         return ni != null && ni.isAvailable() && ni.isConnected();
     }
 
-    private enum Language {EN, RU, TR, MULTI, JP}
-
     public static class ProviderSumm {
         public String name;
         @NonNull
         public Class<?> aClass;
-        public Language lang;
+        public int lang;
 
-        public ProviderSumm(String name, @NonNull Class<?> aClass, Language lang) {
+        public ProviderSumm(String name, @NonNull Class<?> aClass, int lang) {
             this.name = name;
             this.aClass = aClass;
             this.lang = lang;
@@ -197,7 +205,7 @@ public class MangaProviderManager {
 
         public ProviderSelectAdapter() {
             inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            summs = mContext.getResources().getStringArray(R.array.provider_summs);
+            summs = mContext.getResources().getStringArray(R.array.languages);
         }
 
         @Override
@@ -223,10 +231,34 @@ public class MangaProviderManager {
             }
             ProviderSumm prov = getItem(position);
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(prov.name);
-            ((TextView) convertView.findViewById(android.R.id.text2)).setText(summs[prov.lang.ordinal()]);
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(summs[prov.lang]);
             ((CheckBox) convertView.findViewById(android.R.id.checkbox)).setChecked(isProviderEnabled(prov.name));
             return convertView;
         }
     }
 
+    public static class Languages {
+
+        public static final int EN = 0;
+        public static final int RU = 1;
+        public static final int JP = 2;
+        public static final int TR = 3;
+        public static final int MULTI = 4;
+
+        public static int fromLocale(Locale locale) {
+            switch (locale.getLanguage()) {
+                case "ru":
+                case "uk":
+                case "be":
+                case "sk":
+                case "sl":
+                case "sr":
+                    return RU;
+                case "tr":
+                    return TR;
+                default:
+                    return EN;
+            }
+        }
+    }
 }

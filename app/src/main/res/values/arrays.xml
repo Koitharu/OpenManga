@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="provider_summs">
+    <string-array name="languages">
         <item>English</item>
         <item>Russian</item>
+        <item>Japanese</item>
         <item>Turkish</item>
         <item>Multilanguage</item>
-        <item>Japanese</item>
     </string-array>
     <string-array name="intervals_hours">
         <item>4</item>

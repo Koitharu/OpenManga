@@ -21,7 +21,12 @@ public class WelcomeActivity extends BaseAppActivity {
 
     private static final int WELCOME_CHANGELOG = 1;
 
-    public static void showChangelog(Context context) {
+    /**
+     *
+     * @param context
+     * @return true if first call
+     */
+    public static boolean show(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(WelcomeActivity.class.getName(), MODE_PRIVATE);
         int version = BuildConfig.VERSION_CODE;
         int lastVersion = prefs.getInt("version", -1);
@@ -34,6 +39,7 @@ public class WelcomeActivity extends BaseAppActivity {
             }
             prefs.edit().putInt("version", version).apply();
         }
+        return lastVersion == -1;
     }
 
     @Override
