@@ -14,7 +14,6 @@ import android.view.View;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ScheduledServiceReceiver;
-import org.nv95.openmanga.utils.AppHelper;
 
 /**
  * Created by nv95 on 19.12.15.
@@ -41,7 +40,7 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
         } else {
-            AppHelper.showcaseTip(this, toggle, R.string.tip_chapter_checking, "chaptercheck");
+            showcase(toggle, R.string.tip_chapter_checking);
         }
     }
 

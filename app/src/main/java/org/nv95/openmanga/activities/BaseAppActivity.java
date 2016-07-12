@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -27,6 +28,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 /**
  * Created by nv95 on 19.02.16.
@@ -250,5 +253,37 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                     .create().show();
             return false;
         }
+    }
+
+    void showcase(View view, @StringRes int text) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+            new MaterialShowcaseView.Builder(this)
+                    .setTarget(view)
+                    .setDismissText(getString(R.string.got_it).toUpperCase())
+                    .setContentText(text)
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .singleUse(String.valueOf(text)) // provide a unique ID used to ensure it is only shown once
+                    .setDismissTextColor(ContextCompat.getColor(this, R.color.selector_frame))
+                    .show();
+        }
+    }
+
+    void showcase(@IdRes int menuItemId, int text) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            showcase(toolbar.findViewById(menuItemId), text);
+        }
+    }
+
+    /**
+     * @return true only once for activity
+     */
+    boolean isFirstStart() {
+        SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
+        if (prefs.getBoolean(getClass().getName(), true)) {
+            prefs.edit().putBoolean(getClass().getName(), false).apply();
+            return true;
+        }
+        return false;
     }
 }

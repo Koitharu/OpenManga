@@ -165,6 +165,9 @@ public class MainActivity extends BaseAppActivity implements
         //Load saved image in drawer head
         mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
         mDrawerHeaderTool.initDrawerImage();
+        if (isFirstStart()) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     /**
@@ -482,6 +485,10 @@ public class MainActivity extends BaseAppActivity implements
                             .show();
                 }
             }
+        } else {
+            if (MangaProviderManager.needConnection(mProvider)) { //returns true on online provider
+                showcase(R.id.action_search, R.string.tip_search_main);
+            }
         }
 
         if (!mUpdatesChecked && mProvider instanceof FavouritesProvider) {
@@ -494,6 +501,8 @@ public class MainActivity extends BaseAppActivity implements
         if (page == 0) {
             mProgressBar.setVisibility(View.VISIBLE);
             mListLoader.getAdapter().getChoiceController().clearSelection();
+        } else {
+            showcase(R.id.action_filter, R.string.tip_filter);
         }
         mTextViewHolder.setVisibility(View.GONE);
     }
