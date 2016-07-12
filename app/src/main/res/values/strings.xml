@@ -278,4 +278,9 @@
     <string name="image_decode_error">Decoding error</string>
     <string name="out_of_memory">Out of memory</string>
     <string name="image_loading_error">Loading error</string>
+    <string name="tip_search_main">Looking for anything?\nUse search across online catalogues</string>
+    <string name="tip_filter">Tap to select genre and sort order</string>
+    <string name="tip_favourite">Add manga to favourites for getting quick access to it. You also can enable notifications about new chapters</string>
+    <string name="tip_save">Click to save manga to your device and read it anytime and anywhere without internet connection</string>
+    <string name="tip_save_more">This is not full manga? Click to download missing chapters</string>
 </resources>

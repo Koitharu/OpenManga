@@ -103,8 +103,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         if(TextUtils.isEmpty(mMangaSummary.genres)){
             mViewGenres.setVisibility(View.GONE);
             mTextViewSummary.setVisibility(View.GONE);
-        } else
+        } else {
             mTextViewSummary.setText(mMangaSummary.genres);
+        }
     }
 
     @Override
@@ -329,6 +330,15 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         .show();
             }
             invalidateOptionsMenu();
+            if (isFirstStart()) {
+                showcase(R.id.action_favourite, R.string.tip_favourite);
+            } else {
+                if (LocalMangaProvider.class.equals(mMangaSummary.provider)) {
+                    showcase(R.id.action_save_more, R.string.tip_save_more);
+                } else {
+                    showcase(R.id.action_save, R.string.tip_save);
+                }
+            }
         }
 
         @Override

@@ -231,7 +231,7 @@
     <string name="action_move">Переместить в</string>
     <string name="pause">Пауза</string>
     <string name="resume">Продолжить</string>
-    <string name="show_resume_fab">Отображать плавающаю конпка \"Продолжить\"</string>
+    <string name="show_resume_fab">Отображать плавающую кнопку \"Продолжить\"</string>
     <string name="next">Далее</string>
     <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
     <string name="moving_files">Перемещение файлов…</string>
@@ -254,4 +254,9 @@
     <string name="out_of_memory">Недостаточно памяти</string>
     <string name="goto_page" formatted="false">Перейти к: %d/%d</string>
     <string name="current_page" formatted="false">Текущая страница: %d</string>
+    <string name="tip_search_main">Ишите что-нибудь?\nВоспользуйтесь поиском по онлайн-каталогам</string>
+    <string name="tip_filter">Нажмите чтобы выбрать жанр и порядок сортировки</string>
+    <string name="tip_favourite">Добавьте мангу в избранное чтобы держать её под рукой. Также можно включить уведомления о новых главах</string>
+    <string name="tip_save">Сохраните мангу на устройстве и читайте её когда угодно и где угодно без подключения к сети</string>
+    <string name="tip_save_more">Сохранили лишь часть манги? Нажмите, чтобы скачать недостающие главы</string>
 </resources>

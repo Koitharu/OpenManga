@@ -51,7 +51,6 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
-import org.nv95.openmanga.utils.AppHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -632,7 +631,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 mPageId = mangaPages.size() - 1;
             }
             mPager.setPages(mangaPages, mPageId);
-            AppHelper.showcaseTip(ReadActivity.this, R.id.imageView_menu, R.string.tip_reader_menu, "readermenu");
+            showcase(findViewById(R.id.imageView_menu), R.string.tip_reader_menu);
         }
 
         @Override
@@ -713,7 +712,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mPager.onConfigurationChange(this);
     }
 
-    class SwipeAnimationListener implements Animator.AnimatorListener {
+    private class SwipeAnimationListener implements Animator.AnimatorListener {
 
         private int direction;
 
