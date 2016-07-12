@@ -1,20 +1,12 @@
 package org.nv95.openmanga.providers;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
-import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
@@ -146,10 +138,6 @@ public class MangaProviderManager {
         return mEnabledProviders;
     }
 
-    public ProviderSelectAdapter getAdapter() {
-        return new ProviderSelectAdapter();
-    }
-
     public static boolean needConnection(MangaProvider provider) {
         return !(provider instanceof LocalMangaProvider || provider instanceof FavouritesProvider || provider instanceof HistoryProvider);
     }
@@ -196,44 +184,6 @@ public class MangaProviderManager {
                 FileLogger.getInstance().report(e);
                 return null;
             }
-        }
-    }
-
-    public class ProviderSelectAdapter extends BaseAdapter {
-        private LayoutInflater inflater;
-        private String[] summs;
-
-        public ProviderSelectAdapter() {
-            inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            summs = mContext.getResources().getStringArray(R.array.languages);
-        }
-
-        @Override
-        public int getCount() {
-            return providers.length;
-        }
-
-        @Override
-        public ProviderSumm getItem(int position) {
-            return providers[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return providers[position].hashCode();
-        }
-
-        @SuppressLint("InflateParams")
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_adapter_checkable, null);
-            }
-            ProviderSumm prov = getItem(position);
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(prov.name);
-            ((TextView) convertView.findViewById(android.R.id.text2)).setText(summs[prov.lang]);
-            ((CheckBox) convertView.findViewById(android.R.id.checkbox)).setChecked(isProviderEnabled(prov.name));
-            return convertView;
         }
     }
 
