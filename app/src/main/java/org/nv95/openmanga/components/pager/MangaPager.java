@@ -173,7 +173,7 @@ public class MangaPager extends ViewPager {
         return mVertical;
     }
 
-    public void setBehavior(boolean vertical, boolean reverse, int transformMode, int scaleMode, float doubleTapScale) {
+    public void setBehavior(boolean vertical, boolean reverse, int transformMode, int scaleMode) {
         final int pos = getCurrentPageIndex();
         mVertical = vertical;
         if (mReverse != reverse) {
@@ -194,7 +194,7 @@ public class MangaPager extends ViewPager {
                 break;
         }
         setAdapter(null);
-        mAdapter.setScaleMode(scaleMode, doubleTapScale);
+        mAdapter.setScaleMode(scaleMode);
         setAdapter(mAdapter);
         setCurrentPageIndex(pos);
     }
