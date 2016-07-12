@@ -278,4 +278,5 @@
     <string name="image_decode_error">Decoding error</string>
     <string name="out_of_memory">Out of memory</string>
     <string name="image_loading_error">Loading error</string>
+    <string name="double_tap_scale">Double-tap scale</string>
 </resources>

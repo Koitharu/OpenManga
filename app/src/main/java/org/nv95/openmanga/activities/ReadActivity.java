@@ -380,14 +380,15 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         setFullScreen();
     }
 
-    public void onOptionsChanged() {
+    private void onOptionsChanged() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int direction = Integer.parseInt(prefs.getString("direction", "0"));
         mPager.setBehavior(
                 direction == 1,
                 direction > 1,
                 Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))),
-                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT)))
+                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT))),
+                prefs.getInt("double_tap_scale", 180) / 100f
         );
         if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
