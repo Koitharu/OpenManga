@@ -173,6 +173,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imageView_menu:
+                if (mLoader.getVisibility() == View.VISIBLE) {
+                    return;
+                }
                 saveHistory();
                 int favId = FavouritesProvider.getInstacne(this)
                         .getCategory(mMangaSumary);
