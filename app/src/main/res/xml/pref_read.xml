@@ -30,6 +30,13 @@
         android:entryValues="@array/scale_values"
         android:key="scalemode"
         android:title="@string/scale_mode" />
+    <org.nv95.openmanga.components.SeekBarPreference
+        android:defaultValue="180"
+        android:key="double_tap_scale"
+        android:title="@string/double_tap_scale"
+        app:suffix="%"
+        app:min="100"
+        app:max="300" />
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="shifts"
