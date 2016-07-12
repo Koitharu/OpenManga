@@ -162,7 +162,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
-            viewHolder.ssiv.setDoubleTapZoomScale(1.8f);
+            viewHolder.ssiv.setDoubleTapZoomScale((viewHolder.ssiv.getMaxScale() + viewHolder.ssiv.getMinScale()) / 2.f);
             viewHolder.ssiv.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
             switch (viewHolder.scale) {
                 case SCALE_FIT:
