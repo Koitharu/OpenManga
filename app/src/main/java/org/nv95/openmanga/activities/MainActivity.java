@@ -169,7 +169,12 @@ public class MainActivity extends BaseAppActivity implements
         mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
         mDrawerHeaderTool.initDrawerImage();
         if (isFirstStart()) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
+            mDrawerLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }
+            }, 700);
         }
     }
 
