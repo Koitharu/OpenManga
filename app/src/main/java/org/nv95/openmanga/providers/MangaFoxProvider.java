@@ -76,8 +76,8 @@ public class MangaFoxProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        MangaSummary summary = new MangaSummary(mangaInfo);
         try {
+            MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = Html.fromHtml(e.select("p.summary").html()).toString().trim();
@@ -93,11 +93,10 @@ public class MangaFoxProvider extends MangaProvider {
             }
             summary.readLink = summary.chapters.get(0).readLink;
             summary.chapters.enumerate();
+            return summary;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        //genres.addDefaultChapter();
-        return summary;
     }
 
     @Override

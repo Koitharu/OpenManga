@@ -53,9 +53,9 @@ public class EHentaiProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        MangaSummary summary = new MangaSummary(mangaInfo);
-        summary.readLink = summary.path;
         try {
+            MangaSummary summary = new MangaSummary(mangaInfo);
+            summary.readLink = summary.path;
             Document document = getPage(mangaInfo.path, DEF_COOKIE);
             StringBuilder builder = new StringBuilder();
             for (Element o : document.body().getElementById("taglist").select("tr")) {
@@ -74,10 +74,10 @@ public class EHentaiProvider extends MangaProvider {
                 summary.chapters.add(chapter);
             }
             summary.chapters.enumerate();
+            return summary;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return summary;
     }
 
     @Override

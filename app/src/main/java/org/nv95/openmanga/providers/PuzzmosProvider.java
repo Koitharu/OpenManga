@@ -74,8 +74,8 @@ public class PuzzmosProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        MangaSummary summary = new MangaSummary(mangaInfo);
         try {
+            MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = summary.path;
@@ -91,11 +91,10 @@ public class PuzzmosProvider extends MangaProvider {
                 summary.chapters.add(0, chapter);
             }
             summary.chapters.enumerate();
+            return summary;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        //genres.addDefaultChapter();
-        return summary;
     }
 
     @Override
