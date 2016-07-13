@@ -52,8 +52,8 @@ public class MangaReaderProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        MangaSummary summary = new MangaSummary(mangaInfo);
         try {
+            MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
             String descr = e.select("table").first().html();
@@ -71,12 +71,12 @@ public class MangaReaderProvider extends MangaProvider {
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
+            summary.readLink = summary.chapters.get(0).readLink;
             summary.chapters.enumerate();
+            return summary;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        summary.readLink = summary.chapters.get(0).readLink;
-        return summary;
     }
 
     @Override

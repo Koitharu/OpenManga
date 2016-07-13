@@ -86,8 +86,8 @@ public class ReadmangaRuProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
-        MangaSummary summary = new MangaSummary(mangaInfo);
         try {
+            MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.readLink = "http://readmanga.me" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
@@ -107,11 +107,10 @@ public class ReadmangaRuProvider extends MangaProvider {
                 summary.chapters.add(0, chapter);
             }
             summary.chapters.enumerate();
+            return summary;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        //genres.addDefaultChapter();
-        return summary;
     }
 
     @Override
