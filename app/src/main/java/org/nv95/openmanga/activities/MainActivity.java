@@ -63,7 +63,6 @@ import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
 import java.io.File;
-import java.util.Locale;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
@@ -100,7 +99,7 @@ public class MainActivity extends BaseAppActivity implements
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
         if (WelcomeActivity.show(this)) {
-            MangaProviderManager.configure(this, MangaProviderManager.Languages.fromLocale(Locale.getDefault()));
+            //MangaProviderManager.configure(this, MangaProviderManager.Languages.fromLocale(Locale.getDefault()));
         }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
