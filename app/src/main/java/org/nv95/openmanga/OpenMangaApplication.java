@@ -83,6 +83,6 @@ public class OpenMangaApplication extends Application {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .resetViewBeforeLoading(false)
-                .displayer(new FadeInBitmapDisplayer(400, true, true, false));
+                .displayer(new FadeInBitmapDisplayer(200, true, true, false));
     }
 }

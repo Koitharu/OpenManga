@@ -17,7 +17,6 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -143,16 +142,14 @@ public class FavouritesProvider extends MangaProvider {
         SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         boolean res = (database.insert(TABLE_NAME, null, cv) != -1);
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         return res;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
+        int c = database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)});
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
-        return true;
+        return c > 0;
     }
 
     @Override
@@ -165,7 +162,6 @@ public class FavouritesProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
         return true;
     }
 
@@ -222,7 +218,6 @@ public class FavouritesProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
     }
 
     public static void dialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {

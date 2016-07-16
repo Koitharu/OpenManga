@@ -17,6 +17,7 @@ import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MangaProviderManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -165,7 +166,7 @@ public class BackupRestoreUtil {
 
             StorageHelper storageHelper = new StorageHelper(mContext);
             //backup history
-            if (params[MangaChangesObserver.CATEGORY_HISTORY]) {
+            if (params[MangaProviderManager.CATEGORY_HISTORY]) {
                 publishProgress(R.string.action_history);
                 file = new File(dir, "history.json");
                 jsonArray = storageHelper.extractTableData("history");
@@ -174,7 +175,7 @@ public class BackupRestoreUtil {
                 }
             }
             //backup favourites
-            if (params[MangaChangesObserver.CATEGORY_FAVOURITES]) {
+            if (params[MangaProviderManager.CATEGORY_FAVOURITES]) {
                 publishProgress(R.string.action_favourites);
                 file = new File(dir, "favourites.json");
                 jsonArray = storageHelper.extractTableData("favourites");
@@ -329,8 +330,8 @@ public class BackupRestoreUtil {
                     .setTitle(R.string.restore)
                     .setPositiveButton(R.string.close, null)
                     .create().show();
-            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
-            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_FAVOURITES);
+            ChangesObserver.getInstance().emitOnFavouritesChanged();
+            ChangesObserver.getInstance().emitOnHistoryChanged();
         }
 
         @Nullable

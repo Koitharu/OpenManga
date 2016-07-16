@@ -24,16 +24,16 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.components.BottomSheetDialog;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
-import org.nv95.openmanga.utils.MangaChangesObserver;
+import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
@@ -44,7 +44,7 @@ import java.util.Arrays;
  * Created by nv95 on 30.09.15.
  */
 public class MangaPreviewActivity extends BaseAppActivity implements View.OnClickListener,
-        DialogInterface.OnClickListener, View.OnLongClickListener {
+        DialogInterface.OnClickListener, View.OnLongClickListener, ChangesObserver.OnMangaChangesListener {
 
     //data
     private MangaSummary mMangaSummary;
@@ -106,6 +106,13 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         } else {
             mTextViewSummary.setText(mMangaSummary.genres);
         }
+        ChangesObserver.getInstance().addListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ChangesObserver.getInstance().removeListener(this);
+        super.onDestroy();
     }
 
     @Override
@@ -187,37 +194,41 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             menu.findItem(R.id.action_remove).setVisible(true);
             menu.findItem(R.id.action_save_more).setVisible(mMangaSummary.status == MangaInfo.STATUS_ONGOING);
             menu.findItem(R.id.action_favourite).setVisible(false);
-        } else if (FavouritesProvider.getInstacne(this).has(mMangaSummary)) {
-            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
-            menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_save_more).setVisible(LocalMangaProvider.class.equals(mMangaSummary.provider) &&
-                mMangaSummary.status == MangaInfo.STATUS_ONGOING);
+        if (FavouritesProvider.getInstacne(this).has(mMangaSummary)) {
+            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
+            menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
+        } else {
+            menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_outline_light);
+            menu.findItem(R.id.action_favourite).setTitle(R.string.action_favourite);
+        }
+        menu.findItem(R.id.action_save_more)
+                .setVisible(LocalMangaProvider.class.equals(mMangaSummary.provider) &&
+                        mMangaSummary.status == MangaInfo.STATUS_ONGOING);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mMangaSummary)) {
                     if (favouritesProvider.remove(mMangaSummary)) {
-                        item.setIcon(R.drawable.ic_favorite_outline_light);
-                        item.setTitle(R.string.action_favourite);
+                        ChangesObserver.getInstance().emitOnFavouritesChanged();
                     }
                 } else {
                     FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            NewChaptersProvider.getInstance(MangaPreviewActivity.this).markAsViewed(mMangaSummary.hashCode(), mMangaSummary.getChapters().size());
-                            item.setIcon(R.drawable.ic_favorite_light);
-                            item.setTitle(R.string.action_unfavourite);
+                            NewChaptersProvider.getInstance(MangaPreviewActivity.this)
+                                    .storeChaptersCount(mMangaSummary.hashCode(), mMangaSummary.getChapters().size());
+                            ChangesObserver.getInstance().emitOnFavouritesChanged();
                         }
                     }, mMangaSummary);
                 }
@@ -276,7 +287,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
                                 HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
                             }
-                            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
                             finish();
                         } else {
                             final long[] ids = new long[idlist.size()];
@@ -288,6 +298,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             } else {
                                 Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
                             }
+                            ChangesObserver.getInstance().emitOnLocalChanged();
                             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
@@ -299,6 +310,21 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         dialog.dismiss();
         HistoryProvider.getInstacne(this).add(mMangaSummary, mMangaSummary.chapters.get(which).number, 0);
         startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
+    }
+
+    @Override
+    public void onLocalChanged() {
+
+    }
+
+    @Override
+    public void onFavouritesChanged() {
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onHistoryChanged() {
+
     }
 
     private class LoadInfoTask extends AsyncTask<Void, Void, MangaSummary> {
