@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,11 +54,11 @@ import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
+import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
@@ -65,7 +66,7 @@ import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 import java.io.File;
 
 public class MainActivity extends BaseAppActivity implements
-        View.OnClickListener, MangaChangesObserver.OnMangaChangesListener, MangaListLoader.OnContentLoadListener,
+        View.OnClickListener, MangaListLoader.OnContentLoadListener, ChangesObserver.OnMangaChangesListener,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
         InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener {
 
@@ -175,6 +176,8 @@ public class MainActivity extends BaseAppActivity implements
                 }
             }, 700);
         }
+
+        ChangesObserver.getInstance().addListener(this);
     }
 
     /**
@@ -237,9 +240,9 @@ public class MainActivity extends BaseAppActivity implements
 
     private int getMenuItemPosition(){
         switch (mSelectedItem){
-            case R.id.nav_local_storage: return MangaChangesObserver.CATEGORY_LOCAL;
-            case R.id.nav_action_favourites: return MangaChangesObserver.CATEGORY_FAVOURITES;
-            case R.id.nav_action_history: return MangaChangesObserver.CATEGORY_HISTORY;
+            case R.id.nav_local_storage: return MangaProviderManager.CATEGORY_LOCAL;
+            case R.id.nav_action_favourites: return MangaProviderManager.CATEGORY_FAVOURITES;
+            case R.id.nav_action_history: return MangaProviderManager.CATEGORY_HISTORY;
             default: return mSelectedItem;
         }
     }
@@ -254,20 +257,9 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     protected void onDestroy() {
+        ChangesObserver.getInstance().removeListener(this);
         mListModeHelper.disable();
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MangaChangesObserver.addListener(this);
-    }
-
-    @Override
-    protected void onStop() {
-        MangaChangesObserver.removeListener(this);
-        super.onStop();
     }
 
     @Override
@@ -448,20 +440,6 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     @Override
-    public void onMangaChanged(int category) {
-        if (category == getMenuItemPosition()) {
-            updateContent();
-        }
-    }
-
-    @Override
-    public void onMangaAdded(int category, MangaInfo data) {
-        if (category == getMenuItemPosition()) {
-            mListLoader.addItem(data);
-        }
-    }
-
-    @Override
     public void onContentLoaded(boolean success) {
         mProgressBar.setVisibility(View.GONE);
 
@@ -520,6 +498,7 @@ public class MainActivity extends BaseAppActivity implements
         try {
             return mProvider.getList(page, MangaProviderManager.getSort(this, mProvider), mGenre);
         } catch (Exception e) {
+            Log.e("OCN", e.getMessage());
             return null;
         }
     }
@@ -571,9 +550,9 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
         menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
-        menu.findItem(R.id.action_save).setVisible(!(mProvider instanceof LocalMangaProvider));
-        menu.findItem(R.id.action_share).setVisible(!(mProvider instanceof LocalMangaProvider));
-        menu.findItem(R.id.action_move).setVisible(mProvider instanceof FavouritesProvider);
+        menu.findItem(R.id.action_save).setVisible(mSelectedItem != R.id.nav_local_storage);
+        menu.findItem(R.id.action_share).setVisible(mSelectedItem != R.id.nav_local_storage);
+        menu.findItem(R.id.action_move).setVisible(mSelectedItem == R.id.nav_action_favourites);
         return false;
     }
 
@@ -640,7 +619,7 @@ public class MainActivity extends BaseAppActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FavouritesProvider.getInstacne(MainActivity.this).move(ids, selected[0]);
-                        updateContent();
+                        ChangesObserver.getInstance().emitOnFavouritesChanged();
                     }
                 }).create().show();
     }
@@ -655,6 +634,27 @@ public class MainActivity extends BaseAppActivity implements
     public void onChoiceChanged(ActionMode actionMode, ModalChoiceController controller, int count) {
         actionMode.setTitle(String.valueOf(count));
         actionMode.getMenu().findItem(R.id.action_share).setVisible(count == 1);
+    }
+
+    @Override
+    public void onLocalChanged() {
+        if (mSelectedItem == R.id.nav_local_storage) {
+            updateContent();
+        }
+    }
+
+    @Override
+    public void onFavouritesChanged() {
+        if (mSelectedItem == R.id.nav_action_favourites) {
+            updateContent();
+        }
+    }
+
+    @Override
+    public void onHistoryChanged() {
+        if (mSelectedItem == R.id.nav_action_history) {
+            updateContent();
+        }
     }
 
     private class OpenLastTask extends AsyncTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {

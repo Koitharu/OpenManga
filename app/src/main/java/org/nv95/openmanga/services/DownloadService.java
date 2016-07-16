@@ -29,8 +29,8 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.MangaStore;
 
 import java.lang.ref.WeakReference;
@@ -330,7 +330,7 @@ public class DownloadService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            MangaChangesObserver.emitAdding(MangaChangesObserver.CATEGORY_LOCAL, mDownload);
+            ChangesObserver.getInstance().emitOnLocalChanged();
             mDownload.state = DownloadInfo.STATE_FINISHED;
             for (OnProgressUpdateListener o:mProgressListeners) {
                 o.onDataUpdated();

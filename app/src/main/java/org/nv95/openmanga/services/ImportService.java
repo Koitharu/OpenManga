@@ -15,8 +15,8 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.ZipBuilder;
 
@@ -254,7 +254,7 @@ public class ImportService extends Service {
                     .text(integer == -1 ? R.string.error : R.string.import_complete)
                     .update(NOTIFY_ID);
             mTaskReference = new WeakReference<>(null);
-            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
+            ChangesObserver.getInstance().emitOnLocalChanged();
         }
 
         @Override
@@ -262,7 +262,6 @@ public class ImportService extends Service {
             super.onCancelled();
             stopSelf();
             mTaskReference = new WeakReference<>(null);
-            MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_LOCAL);
             mNotificationHelper.dismiss(NOTIFY_ID);
         }
     }

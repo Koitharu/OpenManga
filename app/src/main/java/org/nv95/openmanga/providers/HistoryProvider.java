@@ -13,7 +13,6 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.MangaChangesObserver;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -169,7 +168,6 @@ public class HistoryProvider extends MangaProvider {
             database.insert(TABLE_NAME, null, cv);
         }
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -177,7 +175,6 @@ public class HistoryProvider extends MangaProvider {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -191,7 +188,6 @@ public class HistoryProvider extends MangaProvider {
         database.setTransactionSuccessful();
         database.endTransaction();
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
         return true;
     }
 
@@ -199,7 +195,6 @@ public class HistoryProvider extends MangaProvider {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.delete(TABLE_NAME, null, null);
         database.close();
-        MangaChangesObserver.queueChanges(MangaChangesObserver.CATEGORY_HISTORY);
     }
 
     public boolean has(MangaInfo mangaInfo) {

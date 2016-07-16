@@ -51,6 +51,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.utils.ChangesObserver;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -149,6 +150,12 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        ChangesObserver.getInstance().emitOnHistoryChanged();
+        super.onDestroy();
+    }
+
     private void saveHistory() {
         HistoryProvider.getInstacne(this).add(mMangaSumary, mMangaSumary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
     }
@@ -226,6 +233,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 if (favouritesProvider.has(mMangaSumary)) {
                     if (favouritesProvider.remove(mMangaSumary)) {
                         Snackbar.make(mPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+                        ChangesObserver.getInstance().emitOnFavouritesChanged();
                     }
                 } else {
                     FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
@@ -233,7 +241,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(ReadActivity.this)
                                     .storeChaptersCount(mMangaSumary.hashCode(), mMangaSumary.getChapters().size());
-
+                            ChangesObserver.getInstance().emitOnFavouritesChanged();
                         }
                     }, mMangaSumary);
                 }
