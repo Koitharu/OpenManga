@@ -311,7 +311,8 @@ public class DownloadService extends Service {
                 publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
             }
             publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
-            return 0;
+            mDownload.id = mangaId;
+            return mangaId;
         }
 
         @WorkerThread
@@ -330,7 +331,6 @@ public class DownloadService extends Service {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            ChangesObserver.getInstance().emitOnLocalChanged();
             mDownload.state = DownloadInfo.STATE_FINISHED;
             for (OnProgressUpdateListener o:mProgressListeners) {
                 o.onDataUpdated();
@@ -347,6 +347,7 @@ public class DownloadService extends Service {
                         .update(NOTIFY_ID);
                 return;
             }
+            ChangesObserver.getInstance().emitOnLocalChanged(mDownload.id, mDownload);
             if (pos == mDownloads.size() - 1) {
                 stopSelf();
                 mNotificationHelper

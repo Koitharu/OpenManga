@@ -5,11 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -220,7 +223,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
                 if (favouritesProvider.has(mMangaSummary)) {
                     if (favouritesProvider.remove(mMangaSummary)) {
-                        ChangesObserver.getInstance().emitOnFavouritesChanged();
+                        ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, -1);
                     }
                 } else {
                     FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
@@ -228,7 +231,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(MangaPreviewActivity.this)
                                     .storeChaptersCount(mMangaSummary.hashCode(), mMangaSummary.getChapters().size());
-                            ChangesObserver.getInstance().emitOnFavouritesChanged();
+                            ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, which);
                         }
                     }, mMangaSummary);
                 }
@@ -286,8 +289,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         if (idlist.size() == len) {
                             if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
                                 HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
+                                ChangesObserver.getInstance().emitOnLocalChanged(mMangaSummary.id, null);
+                                finish();
                             }
-                            finish();
                         } else {
                             final long[] ids = new long[idlist.size()];
                             for (int i = 0;i < idlist.size();i++) {
@@ -298,7 +302,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             } else {
                                 Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
                             }
-                            ChangesObserver.getInstance().emitOnLocalChanged();
                             new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
@@ -313,21 +316,23 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     }
 
     @Override
-    public void onLocalChanged() {
-
+    public void onLocalChanged(int id, @Nullable MangaInfo manga) {
+        if (id == mMangaSummary.id && manga == null) {
+            finish();
+        }
     }
 
     @Override
-    public void onFavouritesChanged() {
+    public void onFavouritesChanged(@NonNull MangaInfo manga, int category) {
         invalidateOptionsMenu();
     }
 
     @Override
-    public void onHistoryChanged() {
+    public void onHistoryChanged(@NonNull MangaInfo manga) {
 
     }
 
-    private class LoadInfoTask extends AsyncTask<Void, Void, MangaSummary> {
+    private class LoadInfoTask extends AsyncTask<Void, Void, Pair<MangaSummary, String>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -335,22 +340,22 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         }
 
         @Override
-        protected void onPostExecute(MangaSummary mangaSummary) {
+        protected void onPostExecute(Pair<MangaSummary, String> result) {
             mProgressBar.setVisibility(View.GONE);
             mFab.setEnabled(true);
-            super.onPostExecute(mangaSummary);
-            if (mangaSummary == null) {
+            super.onPostExecute(result);
+            if (result == null) {
                 mFab.hide();
                 Snackbar.make(mAppBarLayout, checkConnection() ? R.string.loading_error : R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.retry, MangaPreviewActivity.this)
                         .show();
                 return;
             }
-            MangaPreviewActivity.this.mMangaSummary = mangaSummary;
-            mTextViewDescription.setText(mangaSummary.getDescription());
-            mTextViewExtra.setText(mangaSummary.extra);
-            mImageView.updateImageAsync(mangaSummary.preview);
-            if (mangaSummary.getChapters().size() == 0) {
+            MangaPreviewActivity.this.mMangaSummary = result.first;
+            mTextViewDescription.setText(mMangaSummary.getDescription());
+            mTextViewExtra.setText(result.second);
+            mImageView.updateImageAsync(mMangaSummary.preview);
+            if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
                         .show();
@@ -368,7 +373,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         }
 
         @Override
-        protected MangaSummary doInBackground(Void... params) {
+        protected Pair<MangaSummary, String> doInBackground(Void... params) {
             try {
                 MangaProvider provider;
                 if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
@@ -377,15 +382,14 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                     provider = (MangaProvider) mMangaSummary.provider.newInstance();
                 }
                 MangaSummary ms = provider.getDetailedInfo(mMangaSummary);
+                String extra = null;
                 if (provider instanceof LocalMangaProvider) {
-                    ms.extra = getString(R.string.local_size,
+                    extra = getString(R.string.local_size,
                             Formatter.formatFileSize(MangaPreviewActivity.this, LocalMangaProvider.dirSize(new File(ms.path))));
                 } else if (ms.status != MangaInfo.STATUS_UNKNOWN) {
-                    ms.extra = getString(ms.isCompleted() ? R.string.status_completed : R.string.status_ongoing);
-                } else {
-                    ms.extra = null;
+                    extra = getString(ms.isCompleted() ? R.string.status_completed : R.string.status_ongoing);
                 }
-                return ms;
+                return new Pair<>(ms, extra);
             } catch (Exception e) {
                 return null;
             }

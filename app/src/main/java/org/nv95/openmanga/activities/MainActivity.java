@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -619,7 +620,7 @@ public class MainActivity extends BaseAppActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FavouritesProvider.getInstacne(MainActivity.this).move(ids, selected[0]);
-                        ChangesObserver.getInstance().emitOnFavouritesChanged();
+                        updateContent();
                     }
                 }).create().show();
     }
@@ -637,23 +638,50 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     @Override
-    public void onLocalChanged() {
-        if (mSelectedItem == R.id.nav_local_storage) {
-            updateContent();
+    public void onLocalChanged(int id, @Nullable MangaInfo manga) {
+        if (mSelectedItem ==  R.id.nav_local_storage) {
+            if (id == -1) {
+                updateContent();
+                return;
+            }
+            int pos = mListLoader.getList().indexOf(id);
+            if (pos == -1) {
+                mListLoader.addItem(manga, 0);
+            } else {
+                if (manga == null) {
+                    mListLoader.removeItem(pos);
+                } else {
+                    mListLoader.updateItem(pos, manga);
+                }
+            }
         }
     }
 
     @Override
-    public void onFavouritesChanged() {
-        if (mSelectedItem == R.id.nav_action_favourites) {
-            updateContent();
+    public void onFavouritesChanged(@NonNull MangaInfo manga, int category) {
+        if (mSelectedItem ==  R.id.nav_action_favourites) {
+            int pos = mListLoader.getList().indexOf(manga.id);
+            if (pos == -1) {
+                if (mGenre == 0 || category == mGenre) {
+                    mListLoader.addItem(manga, 0);
+                }
+            } else {
+                if (category != mGenre) {
+                    mListLoader.removeItem(pos);
+                }
+            }
         }
     }
 
     @Override
-    public void onHistoryChanged() {
-        if (mSelectedItem == R.id.nav_action_history) {
-            updateContent();
+    public void onHistoryChanged(@NonNull MangaInfo manga) {
+        if (mSelectedItem ==  R.id.nav_action_history) {
+            int pos = mListLoader.getList().indexOf(manga.id);
+            if (pos == -1) {
+                mListLoader.addItem(manga, 0);
+            } else {
+                mListLoader.moveItem(pos, 0);
+            }
         }
     }
 

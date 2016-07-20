@@ -152,7 +152,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
-        ChangesObserver.getInstance().emitOnHistoryChanged();
+        ChangesObserver.getInstance().emitOnHistoryChanged(mMangaSumary);
         super.onDestroy();
     }
 
@@ -233,7 +233,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 if (favouritesProvider.has(mMangaSumary)) {
                     if (favouritesProvider.remove(mMangaSumary)) {
                         Snackbar.make(mPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
-                        ChangesObserver.getInstance().emitOnFavouritesChanged();
+                        ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSumary, -1);
                     }
                 } else {
                     FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
@@ -241,7 +241,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(ReadActivity.this)
                                     .storeChaptersCount(mMangaSumary.hashCode(), mMangaSumary.getChapters().size());
-                            ChangesObserver.getInstance().emitOnFavouritesChanged();
+                            ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSumary, which);
                         }
                     }, mMangaSumary);
                 }

@@ -330,8 +330,6 @@ public class BackupRestoreUtil {
                     .setTitle(R.string.restore)
                     .setPositiveButton(R.string.close, null)
                     .create().show();
-            ChangesObserver.getInstance().emitOnFavouritesChanged();
-            ChangesObserver.getInstance().emitOnHistoryChanged();
         }
 
         @Nullable

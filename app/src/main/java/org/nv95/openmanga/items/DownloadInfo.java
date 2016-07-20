@@ -15,7 +15,6 @@ public class DownloadInfo extends MangaInfo {
 
     public String readLink;
     public String description;
-    public final int id;
     public final int max;
     public int pos;
     public int state;

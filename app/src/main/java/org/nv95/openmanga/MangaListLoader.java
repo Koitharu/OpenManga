@@ -86,10 +86,26 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         }
     }
 
+    public void moveItem(int from, int to) {
+        MangaInfo item = mList.get(from);
+        mList.remove(from);
+        mList.add(to - (from > to ? 0 : 1), item);
+        mAdapter.notifyItemMoved(from, to);
+    }
+
+    public void updateItem(int pos, MangaInfo data) {
+        mList.set(pos, data);
+        mAdapter.notifyItemChanged(pos);
+    }
+
     public void cancelLoading() {
         if (mTaskInstance != null && mTaskInstance.getStatus() != AsyncTask.Status.FINISHED) {
             mTaskInstance.cancel(true);
         }
+    }
+
+    public MangaList getList() {
+        return mList;
     }
 
     public int getContentSize() {
