@@ -220,8 +220,9 @@ public class FavouritesProvider extends MangaProvider {
         database.close();
     }
 
-    public static void dialog(final Context context, @Nullable final DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
+    public static void dialog(final Context context, @Nullable DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
         final int[] selected = new int[1];
+        final DialogInterface.OnClickListener listener = doneListener;
         CharSequence[] categories = (context.getString(R.string.category_no) + "," +
                 PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
                         .getString("fav.categories", context.getString(R.string.favourites_categories_default)))
@@ -240,8 +241,8 @@ public class FavouritesProvider extends MangaProvider {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getInstacne(context).add(mangaInfo, selected[0]);
-                        if (doneListener != null) {
-                            doneListener.onClick(dialog, which);
+                        if (listener != null) {
+                            listener.onClick(dialog, selected[0]);
                         }
                     }
                 }).create().show();

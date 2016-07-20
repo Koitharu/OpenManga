@@ -254,7 +254,7 @@ public class ImportService extends Service {
                     .text(integer == -1 ? R.string.error : R.string.import_complete)
                     .update(NOTIFY_ID);
             mTaskReference = new WeakReference<>(null);
-            ChangesObserver.getInstance().emitOnLocalChanged();
+            ChangesObserver.getInstance().emitOnLocalChanged(-1, null);
         }
 
         @Override

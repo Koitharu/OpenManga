@@ -15,6 +15,11 @@
 
 package org.nv95.openmanga.utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.nv95.openmanga.items.MangaInfo;
+
 import java.util.Vector;
 
 /**
@@ -37,28 +42,33 @@ public class ChangesObserver {
         mListeners.remove(listener);
     }
 
-    public void emitOnLocalChanged() {
+    /**
+     *
+     * @param id -1 to update all content, otherwise manga id
+     * @param manga
+     */
+    public void emitOnLocalChanged(int id, @Nullable MangaInfo manga) {
         for (OnMangaChangesListener o : mListeners) {
-            o.onLocalChanged();
+            o.onLocalChanged(id, manga);
         }
     }
 
-    public void emitOnFavouritesChanged() {
+    public void emitOnFavouritesChanged(@NonNull MangaInfo manga, int category) {
         for (OnMangaChangesListener o : mListeners) {
-            o.onFavouritesChanged();
+            o.onFavouritesChanged(manga, category);
         }
     }
 
-    public void emitOnHistoryChanged() {
+    public void emitOnHistoryChanged(@NonNull MangaInfo manga) {
         for (OnMangaChangesListener o : mListeners) {
-            o.onHistoryChanged();
+            o.onHistoryChanged(manga);
         }
     }
 
     public interface OnMangaChangesListener {
-        void onLocalChanged();
-        void onFavouritesChanged();
-        void onHistoryChanged();
+        void onLocalChanged(int id, @Nullable MangaInfo manga);
+        void onFavouritesChanged(@NonNull MangaInfo manga, int category);
+        void onHistoryChanged(@NonNull MangaInfo manga);
     }
 
 }

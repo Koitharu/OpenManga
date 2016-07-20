@@ -18,4 +18,17 @@ public class MangaList extends PagedList<MangaInfo> {
         }
         return result;
     }
+
+    public int indexOf(int id) {
+        for (int i=0;i<size();i++) {
+            if (get(i).id == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean inRange(int pos) {
+        return pos >= 0 && pos < size();
+    }
 }

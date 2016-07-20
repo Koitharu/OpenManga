@@ -150,7 +150,7 @@ public class StorageUpgradeTask extends AsyncTask<Void,Integer,Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         mProgressDialog.dismiss();
-        ChangesObserver.getInstance().emitOnLocalChanged();
+        ChangesObserver.getInstance().emitOnLocalChanged(-1, null);
     }
 
     public static void doUpgrade(Context context) {
