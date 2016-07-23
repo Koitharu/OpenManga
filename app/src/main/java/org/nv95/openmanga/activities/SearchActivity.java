@@ -21,7 +21,7 @@ import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -58,7 +58,7 @@ public class SearchActivity extends BaseAppActivity implements
         mQuery = extras.getString("query");
         mTitle = extras.getString("title");
         int provider = extras.getInt("provider");
-        mProvider = new MangaProviderManager(this).getMangaProvider(provider);
+        mProvider = new MangaProviderManager(this).getProvider(provider);
         if (mProvider == null) {
             finish();
             return;

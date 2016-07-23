@@ -22,7 +22,8 @@ import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
@@ -62,12 +63,12 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
+        ArrayList<ProviderSummary> providers = mProviderManager.getEnabledProviders();
         mProgressBar.setMax(providers.size());
         mProgressBar.setProgress(0);
         new SearchTask(LocalMangaProvider.getProviderSummary(this)).executeOnExecutor(mExecutor);
         if (checkConnectionWithDialog(this)) {
-            for (MangaProviderManager.ProviderSumm o : providers) {
+            for (ProviderSummary o : providers) {
                 new SearchTask(o).executeOnExecutor(mExecutor);
             }
         } else {
@@ -140,11 +141,11 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
     }
 
     @Override
-    public void onMoreClick(String title, MangaProviderManager.ProviderSumm provider) {
+    public void onMoreClick(String title, ProviderSummary provider) {
         startActivity(new Intent(MultipleSearchActivity.this, SearchActivity.class)
                 .putExtra("query", mQuery)
                 .putExtra("title", title)
-                .putExtra("provider", mProviderManager.indexOf(provider)));
+                .putExtra("provider", mProviderManager.getProviderIndex(provider)));
     }
 
     @Override
@@ -153,9 +154,9 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
     }
 
     private class SearchTask extends AsyncTask<Void, Void, MangaList> {
-        private final MangaProviderManager.ProviderSumm mProviderSummary;
+        private final ProviderSummary mProviderSummary;
 
-        private SearchTask(MangaProviderManager.ProviderSumm provider) {
+        private SearchTask(ProviderSummary provider) {
             this.mProviderSummary = provider;
         }
 

@@ -14,6 +14,9 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.staff.Languages;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
@@ -408,11 +411,11 @@ public class LocalMangaProvider extends MangaProvider {
         }
     }
 
-    public static MangaProviderManager.ProviderSumm getProviderSummary(Context context) {
-        return new MangaProviderManager.ProviderSumm(
+    public static ProviderSummary getProviderSummary(Context context) {
+        return new ProviderSummary(
                 context.getString(R.string.local_storage),
                 LocalMangaProvider.class,
-                MangaProviderManager.Languages.MULTI
+                Languages.MULTI
         );
     }
 }

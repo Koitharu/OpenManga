@@ -50,7 +50,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.services.DownloadService;
@@ -151,7 +151,7 @@ public class MainActivity extends BaseAppActivity implements
         initDrawerRemoteProviders();
 
         setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
-        mProvider = mProviderManager.getMangaProvider(defSection);
+        mProvider = mProviderManager.getProvider(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().getChoiceController().setCallback(this);
         mListLoader.getAdapter().getChoiceController().setEnabled(true);
@@ -385,7 +385,7 @@ public class MainActivity extends BaseAppActivity implements
                 mProvider = HistoryProvider.getInstacne(this);
                 break;
             default:
-                mProvider = mProviderManager.getMangaProvider(item.getItemId());
+                mProvider = mProviderManager.getProvider(item.getItemId());
                 break;
         }
         mSelectedItem = item.getItemId();
