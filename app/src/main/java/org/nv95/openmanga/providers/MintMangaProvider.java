@@ -41,7 +41,6 @@ public class MintMangaProvider extends MangaProvider {
             "tragedy", "thriller", "horror", "fantastic", "fantasy",
             "school", "erotica", "ecchi", "yuri", "yaoi"
     };
-    protected static boolean features[] = {true, true, false, true, true};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
@@ -151,8 +150,17 @@ public class MintMangaProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
+    public boolean hasSort() {return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 
     @Override

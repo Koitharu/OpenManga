@@ -163,8 +163,18 @@ public class MangaFoxProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 
     @Override

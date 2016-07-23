@@ -22,7 +22,6 @@ import java.util.ArrayList;
  */
 public class MangachanProvider extends MangaProvider {
 
-    protected static final boolean features[] = {true, true, false, true, false};
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};
     protected static final String sortUrls[] = {"manga/new", "mostfavorites", "manga/random"};
 
@@ -125,11 +124,6 @@ public class MangachanProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
-    }
-
-    @Override
     public String[] getSortTitles(Context context) {
         return super.getTitles(context, sorts);
     }
@@ -163,5 +157,15 @@ public class MangachanProvider extends MangaProvider {
             list.add(manga);
         }
         return list;
+    }
+
+    @Override
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 }

@@ -12,6 +12,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class EHentaiProvider extends MangaProvider {
     protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
     protected static final int genres[] = {R.string.genre_all, R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset, R.string.genre_cosplay, R.string.genre_asianporn, R.string.genre_misc};
     protected static final String genreUrls[] = {"f_doujinshi", "f_manga", "f_artistcg", "f_gamecg", "f_western", "f_non-h", "f_imageset", "f_cosplay", "f_asianporn", "f_misc"};
-    protected static final boolean features[] = {true, true, false, false, true};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
@@ -116,11 +116,6 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
-    }
-
-    @Override
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", DEF_COOKIE);
@@ -143,6 +138,16 @@ public class EHentaiProvider extends MangaProvider {
     @Nullable
     @Override
     public String[] getGenresTitles(Context context) {
-        return super.getTitles(context, genres);
+        return AppHelper.getStringArray(context, genres);
+    }
+
+    @Override
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 }

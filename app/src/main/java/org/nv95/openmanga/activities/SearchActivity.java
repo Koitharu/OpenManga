@@ -180,7 +180,7 @@ public class SearchActivity extends BaseAppActivity implements
 
     private void updateContent() {
         if (checkConnection()) {
-            mLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+            mLoader.loadContent(mProvider.isMultiPage(), true);
         } else {
             mLoader.clearItemsLazy();
             mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));

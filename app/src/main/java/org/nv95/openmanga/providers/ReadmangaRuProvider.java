@@ -22,8 +22,7 @@ import java.util.ArrayList;
  * provider for http://readmanga.me/
  */
 public class ReadmangaRuProvider extends MangaProvider {
-    
-    protected static final boolean features[] = {true, true, false, true, true};
+
     protected static final int sorts[] = {R.string.sort_popular, R.string.sort_latest, R.string.sort_updated, R.string.sort_rating};
     protected static final String sortUrls[] = {"popular","created", "updated", "votes"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
@@ -156,9 +155,20 @@ public class ReadmangaRuProvider extends MangaProvider {
         return "ReadManga";
     }
 
+
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 
     @Override
