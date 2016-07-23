@@ -21,6 +21,7 @@ import org.nv95.openmanga.adapters.GroupedAdapter;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProviderManager;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -64,6 +65,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
         mProgressBar.setMax(providers.size());
         mProgressBar.setProgress(0);
+        new SearchTask(LocalMangaProvider.getProviderSummary(this)).executeOnExecutor(mExecutor);
         if (checkConnectionWithDialog(this)) {
             for (MangaProviderManager.ProviderSumm o : providers) {
                 new SearchTask(o).executeOnExecutor(mExecutor);
@@ -160,7 +162,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         @Override
         protected MangaList doInBackground(Void... params) {
             try {
-                return mProviderSummary.instance().search(mQuery, 0);
+                return mProviderManager.instanceProvider(mProviderSummary.aClass).search(mQuery, 0);
             } catch (Exception e) {
                 return null;
             }
