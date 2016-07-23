@@ -2,12 +2,10 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -16,6 +14,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 /**
@@ -23,9 +22,9 @@ import java.util.ArrayList;
  */
 public class DesuMeProvider extends MangaProvider {
 
-    protected static final boolean features[] = {true, false, false, true, true};
-    protected static final int sorts[] = {R.string.sort_alphabetical, R.string.sort_popular, R.string.sort_updated};
-    protected static final String sortUrls[] = {"&order_by=title", "", "&order_by=update"};
+    protected static final boolean features[] = {true, true, false, true, true};
+    protected static final int sorts[] = {R.string.sort_popular, R.string.sort_alphabetical, R.string.sort_updated};
+    protected static final String sortUrls[] = {"popular", "name", "updated"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.web,
             R.string.genre_military, R.string.genre_harem, R.string.genre_youkai, R.string.genre_drama, R.string.genre_josei, R.string.genre_game,
             R.string.genre_historical, R.string.genre_comedy, R.string.genre_magic, R.string.genre_mecha, R.string.genre_mystery,
@@ -46,31 +45,33 @@ public class DesuMeProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://desu.me/manga/"
-                + "?page=" + (page + 1)
-                + (genre == 0 ? "" : "&genres=" + genreUrls[genre - 1])
-                + sortUrls[sort]
-        );
+        JSONObject jo = new JSONObject(getRawPage(
+                "http://desu.me/manga/api/?limit=20&order_by="
+                        + sortUrls[sort]
+                        + "&page="
+                        + (page + 1)
+                        + (genre == 0 ? "" : "&genres=" + genreUrls[genre - 1])
+        ));
         MangaInfo manga;
-        Element t;
-        Elements elements = document.body().select("li.primaryContent");
-        for (Element o : elements) {
+        JSONArray ja = jo.getJSONArray("respose");
+        for (int i=0; i<ja.length(); i++) {
+            jo = ja.getJSONObject(i);
             manga = new MangaInfo();
-
-            t = o.select("a.mangaTitle").first();
-            manga.name = t.text();
-            manga.path = "http://desu.me/" + t.attr("href");
-            t = o.select("span.img").first();
-            manga.preview = t.attr("style");
-            manga.preview = manga.preview.substring(
-                    manga.preview.indexOf("('") + 2,
-                    manga.preview.indexOf("')")
-            );
-            manga.subtitle = o.select("span.userTitle").first().text();
-            t = o.select("dd").first();
-            if (t != null) {
-                manga.genres = t.text();
+            manga.name = jo.getString("name");
+            manga.path = "http://desu.me/manga/api/" + jo.getInt("id");
+            manga.preview = jo.getJSONObject("image").getString("x225");
+            manga.subtitle = jo.getString("russian");
+            switch (jo.getString("status")) {
+                case "released":
+                    manga.status = MangaInfo.STATUS_COMPLETED;
+                    break;
+                case "ongoing":
+                    manga.status = MangaInfo.STATUS_ONGOING;
+                    break;
+                default:
+                    manga.status = MangaInfo.STATUS_UNKNOWN;
             }
+            manga.genres = jo.getString("genres");
             manga.provider = DesuMeProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
@@ -82,24 +83,24 @@ public class DesuMeProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            Document document = getPage(mangaInfo.path);
-            Element e = document.body();
+            JSONObject jo = new JSONObject(getRawPage(mangaInfo.path)).getJSONObject("respose");
             summary.readLink = summary.path;
-
-            summary.description = e.select("div.prgrph").first().text().trim();
-            summary.preview = e.select("img").first().attr("src");
+            summary.description = jo.getString("description");
+            summary.preview = jo.getJSONObject("image").getString("original");
             MangaChapter chapter;
-            e = e.select("ul.chlist").first();
-            for (Element o : e.select("a.tips")) {
+            JSONArray ja = jo.getJSONObject("chapters").getJSONArray("list");
+            for (int i=0; i<ja.length(); i++) {
                 chapter = new MangaChapter();
-                chapter.name = o.text();
-                chapter.readLink = "http://desu.me/" + o.attr("href");
+                jo = ja.getJSONObject(i);
+                chapter.number = i;
+                chapter.name = jo.isNull("title") ? "Chapter " + (i + 1) : jo.getString("title");
+                chapter.readLink = summary.path + "/chapter/" + jo.getInt("id");
                 chapter.provider = summary.provider;
-                summary.chapters.add(0, chapter);
+                summary.chapters.add(chapter);
             }
-            summary.chapters.enumerate();
             return summary;
         } catch (Exception e) {
+            Log.e("MP", e.getMessage());
             return null;
         }
     }
@@ -108,35 +109,57 @@ public class DesuMeProvider extends MangaProvider {
     public ArrayList<MangaPage> getPages(String readLink) {
         ArrayList<MangaPage> pages = new ArrayList<>();
         try {
-            Document document = getPage(readLink);
+            JSONObject jo = new JSONObject(getRawPage(readLink)).getJSONObject("respose");
+            JSONArray ja = jo.getJSONObject("pages").getJSONArray("list");
             MangaPage page;
-            int start = 0;
-            String s;
-            Elements es = document.head().select("script");
-            for (Element o : es) {
-                s = o.html();
-                start = s.indexOf("Reader.init(");
-                if (start != -1) {
-                    start += 12;
-                    int p = s.lastIndexOf("}") + 1;
-                    s = s.substring(start, p);
-                    final JSONObject jo = new JSONObject(s);
-                    JSONArray array = jo.getJSONArray("images");
-                    JSONArray o1;
-                    final String dir = jo.getString("dir");
-                    for (int i = 0; i < array.length(); i++) {
-                        o1 = array.getJSONArray(i);
-                        page = new MangaPage(dir + o1.getString(0));
-                        page.provider = DesuMeProvider.class;
-                        pages.add(page);
-                    }
-                    return pages;
-                }
+            for (int i = 0; i < ja.length(); i++) {
+                jo = ja.getJSONObject(i);
+                page = new MangaPage(jo.getString("img"));
+                page.provider = DesuMeProvider.class;
+                pages.add(page);
             }
+            return pages;
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    public MangaList search(String query, int page) throws Exception {
+        MangaList list = new MangaList();
+        JSONObject jo = new JSONObject(getRawPage(
+                "http://desu.me/manga/api/?limit=20"
+                        + "&page="
+                        + (page + 1)
+                        + "&search=" + URLDecoder.decode(query, "UTF-8")
+        ));
+        MangaInfo manga;
+        JSONArray ja = jo.getJSONArray("respose");
+        for (int i=0; i<ja.length(); i++) {
+            jo = ja.getJSONObject(i);
+            manga = new MangaInfo();
+            manga.name = jo.getString("name");
+            manga.path = "http://desu.me/manga/api" + jo.getInt("id");
+            manga.preview = jo.getJSONObject("image").getString("x225");
+            manga.subtitle = jo.getString("russian");
+            switch (jo.getString("status")) {
+                case "released":
+                    manga.status = MangaInfo.STATUS_COMPLETED;
+                    break;
+                case "ongoing":
+                    manga.status = MangaInfo.STATUS_ONGOING;
+                    break;
+                default:
+                    manga.status = MangaInfo.STATUS_UNKNOWN;
+            }
+            manga.genres = jo.getString("genres");
+            manga.provider = DesuMeProvider.class;
+            manga.id = manga.path.hashCode();
+            list.add(manga);
+        }
+        return list;
     }
 
     @Override

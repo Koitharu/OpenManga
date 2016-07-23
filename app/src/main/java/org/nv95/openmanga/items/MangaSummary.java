@@ -11,6 +11,7 @@ import org.nv95.openmanga.lists.ChaptersList;
  */
 public class MangaSummary extends MangaInfo {
 
+    @Deprecated
     public String readLink;
     public String description;
     @NonNull
