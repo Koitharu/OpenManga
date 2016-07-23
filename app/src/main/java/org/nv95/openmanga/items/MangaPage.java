@@ -12,7 +12,6 @@ public class MangaPage {
     public MangaPage() {
     }
 
-    @Deprecated
     public MangaPage(String path) {
         this.path = path;
     }
