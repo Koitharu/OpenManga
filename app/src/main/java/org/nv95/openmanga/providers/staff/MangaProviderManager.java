@@ -20,6 +20,7 @@ import org.nv95.openmanga.providers.MintMangaProvider;
 import org.nv95.openmanga.providers.PuzzmosProvider;
 import org.nv95.openmanga.providers.ReadmangaRuProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
+import org.nv95.openmanga.providers.SelfmangaRuProvider;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MangaProviderManager {
             new ProviderSummary("MintManga", MintMangaProvider.class, Languages.RU),
             new ProviderSummary("Манга-тян", MangachanProvider.class, Languages.RU),
             new ProviderSummary("Desu.me", DesuMeProvider.class, Languages.RU),
+            new ProviderSummary("SelfManga", SelfmangaRuProvider.class, Languages.RU),
             new ProviderSummary("MangaFox", MangaFoxProvider.class, Languages.EN),
             new ProviderSummary("MangaTown", MangaTownProvider.class, Languages.EN),
             new ProviderSummary("MangaReader", MangaReaderProvider.class, Languages.EN),

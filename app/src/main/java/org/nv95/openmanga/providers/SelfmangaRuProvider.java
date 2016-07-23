@@ -1,13 +1,11 @@
 package org.nv95.openmanga.providers;
 
-import android.content.Context;
 import android.text.Html;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
@@ -18,37 +16,15 @@ import org.nv95.openmanga.utils.FileLogger;
 import java.util.ArrayList;
 
 /**
- * Created by nv95 on 30.09.15.
- * provider for http://readmanga.me/
+ * Created by nv95 on 23.07.16.
  */
-public class ReadmangaRuProvider extends MangaProvider {
 
-    protected static final int sorts[] = {R.string.sort_popular, R.string.sort_latest, R.string.sort_updated, R.string.sort_rating};
-    protected static final String sortUrls[] = {"popular","created", "updated", "votes"};
-    protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
-            R.string.genre_genderbender, R.string.genre_hero_fantasy, R.string.genre_detective, R.string.genre_josei,
-            R.string.genre_doujinshi, R.string.genre_drama, R.string.genre_game, R.string.genre_historical,
-            R.string.genre_codomo, R.string.genre_comedy, R.string.maho_shoujo, R.string.genre_mecha, R.string.genre_mystery,
-            R.string.genre_sci_fi, R.string.genre_natural, R.string.genre_postapocalipse, R.string.genre_adventure,
-            R.string.genre_psychological, R.string.genre_romance, R.string.genre_samurai, R.string.genre_supernatural,
-            R.string.genre_shoujo, R.string.genre_shoujo_ai, R.string.genre_shounen, R.string.genre_shounen_ai,
-            R.string.genre_sports, R.string.genre_seinen, R.string.genre_tragedy, R.string.genre_thriller,
-            R.string.genre_horror, R.string.genre_fantastic, R.string.genre_fantasy,
-            R.string.genre_school, R.string.genre_ecchi, R.string.genre_yuri
-    };
-    protected static final String genreUrls[] = {"art", "action", "martial_arts", "vampires", "harem",
-            "gender_intriga", "heroic_fantasy", "detective", "josei", "doujinshi", "drama", "game",
-            "historical", "codomo", "comedy", "maho_shoujo", "mecha", "mystery",
-            "sci_fi", "natural", "postapocalipse", "adventure", "psychological", "romance", "samurai",
-            "supernatural", "shoujo", "shoujo_ai", "shounen", "shounen_ai", "sports", "seinen",
-            "tragedy", "thriller", "horror", "fantastic", "fantasy",
-            "school", "ecchi", "yuri"
-    };
+public class SelfmangaRuProvider extends ReadmangaRuProvider {
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://readmanga.me/list" +
+        Document document = getPage("http://selfmanga.ru/list" +
                 (genre == 0 ? "" : "/genre/" + genreUrls[genre - 1])
                 + "?sortType=" + sortUrls[sort] + "&offset=" + page * 70 + "&max=70");
         MangaInfo manga;
@@ -67,13 +43,13 @@ public class ReadmangaRuProvider extends MangaProvider {
                 manga.subtitle = "";
             }
             manga.genres = o.select("a.element-link").text();
-            manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
+            manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             try {
                 manga.preview = o.select("img").first().attr("src");
             } catch (Exception e) {
                 manga.preview = "";
             }
-            manga.provider = ReadmangaRuProvider.class;
+            manga.provider = SelfmangaRuProvider.class;
             if (!o.select("span.mangaCompleted").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
@@ -89,7 +65,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.readLink = "http://readmanga.me" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
+            summary.readLink = "http://selfmanga.ru" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
             String descr = e.select("div.manga-description").first().html();
             int p = descr.indexOf("<a h");
             if (p > 0)
@@ -101,7 +77,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = "http://readmanga.me" + o.attr("href") + "?mature=1";
+                chapter.readLink = "http://selfmanga.ru" + o.attr("href") + "?mature=1";
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -133,7 +109,7 @@ public class ReadmangaRuProvider extends MangaProvider {
                     for (int i = 0; i < array.length(); i++) {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
-                        page.provider = ReadmangaRuProvider.class;
+                        page.provider = SelfmangaRuProvider.class;
                         pages.add(page);
                     }
                     return pages;
@@ -146,41 +122,6 @@ public class ReadmangaRuProvider extends MangaProvider {
     }
 
     @Override
-    public String getPageImage(MangaPage mangaPage) {
-        return mangaPage.path;
-    }
-
-    @Override
-    public String getName() {
-        return "ReadManga";
-    }
-
-    @Override
-    public boolean hasGenres() {
-        return true;
-    }
-
-    @Override
-    public boolean hasSort() {
-        return true;
-    }
-
-    @Override
-    public boolean isSearchAvailable() {
-        return true;
-    }
-
-    @Override
-    public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
-    }
-
-    @Override
-    public String[] getGenresTitles(Context context) {
-        return super.getTitles(context, genres);
-    }
-
-    @Override
     public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
             return MangaList.empty();
@@ -189,19 +130,24 @@ public class ReadmangaRuProvider extends MangaProvider {
         String data[] = new String[]{
                 "q", query
         };
-        Document document = postPage("http://readmanga.me/search", data);
+        Document document = postPage("http://selfmanga.ru/search", data);
         MangaInfo manga;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
             manga.genres = o.select("a.element-link").text();
-            manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
+            manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
             manga.provider = ReadmangaRuProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
         return list;
+    }
+
+    @Override
+    public String getName() {
+        return "SelfManga";
     }
 }
