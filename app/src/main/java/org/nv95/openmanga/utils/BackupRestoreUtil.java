@@ -17,7 +17,6 @@ import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.providers.MangaProviderManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -124,8 +123,7 @@ public class BackupRestoreUtil {
     }
 
     public void backup(boolean[] what) {
-        new BackupTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false, false,
-                what[0], what[1]);
+        new BackupTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, what[0], what[1]);
     }
 
     public void restore(File what) {
@@ -166,7 +164,7 @@ public class BackupRestoreUtil {
 
             StorageHelper storageHelper = new StorageHelper(mContext);
             //backup history
-            if (params[MangaProviderManager.CATEGORY_HISTORY]) {
+            if (params[0]) {
                 publishProgress(R.string.action_history);
                 file = new File(dir, "history.json");
                 jsonArray = storageHelper.extractTableData("history");
@@ -175,7 +173,7 @@ public class BackupRestoreUtil {
                 }
             }
             //backup favourites
-            if (params[MangaProviderManager.CATEGORY_FAVOURITES]) {
+            if (params[1]) {
                 publishProgress(R.string.action_favourites);
                 file = new File(dir, "favourites.json");
                 jsonArray = storageHelper.extractTableData("favourites");

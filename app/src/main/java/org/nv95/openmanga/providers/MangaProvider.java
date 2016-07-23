@@ -35,7 +35,7 @@ public abstract class MangaProvider {
         return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
-    protected static String getRawPage(String url) throws Exception {
+    static String getRawPage(String url) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setConnectTimeout(15000);
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -78,17 +78,13 @@ public abstract class MangaProvider {
     protected static Document getPage(String url, String cookie) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setDoOutput(true);
-        /*DataOutputStream out = new DataOutputStream(con.getOutputStream());
-        out.writeBytes(cookies);
-        out.flush();
-        out.close();*/
         con.setRequestProperty("Cookie", cookie);
         con.setConnectTimeout(15000);
         InputStream is = con.getInputStream();
         return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
-    protected static Document postPage(String url, String[] data) throws Exception {
+    static Document postPage(String url, String[] data) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setConnectTimeout(15000);
         con.setRequestMethod("POST");
@@ -140,9 +136,6 @@ public abstract class MangaProvider {
 
     //other methods
     public abstract String getName();
-    //String[] getGenres();
-
-    public abstract boolean hasFeature(int feature);
 
     @Nullable
     public String[] getSortTitles(Context context) {
@@ -155,7 +148,27 @@ public abstract class MangaProvider {
     }
 
     @Deprecated
-    protected final String[] getTitles(Context context, int[] ids) {
+    final String[] getTitles(Context context, int[] ids) {
         return AppHelper.getStringArray(context, ids);
+    }
+
+    public boolean hasGenres() {
+        return false;
+    }
+
+    public boolean hasSort() {
+        return false;
+    }
+
+    public boolean isItemsRemovable() {
+        return false;
+    }
+
+    public boolean isSearchAvailable() {
+        return false;
+    }
+
+    public boolean isMultiPage() {
+        return true;
     }
 }

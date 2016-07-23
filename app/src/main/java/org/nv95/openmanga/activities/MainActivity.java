@@ -159,7 +159,7 @@ public class MainActivity extends BaseAppActivity implements
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
         StorageUpgradeTask.doUpgrade(this);
-        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        mListLoader.loadContent(mProvider.isMultiPage(), true);
 
         if (isDarkTheme()) {
             ColorStateList csl = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white_overlay_85));
@@ -218,10 +218,10 @@ public class MainActivity extends BaseAppActivity implements
             public boolean onQueryTextSubmit(String query) {
                 mSearchAdapter.addToHistory(query);
                 if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .getBoolean("qsearch", false) && mProvider.hasFeature(MangaProviderManager.FEAUTURE_SEARCH)) {
+                        .getBoolean("qsearch", false) && mProvider.isSearchAvailable()) {
                     startActivity(new Intent(MainActivity.this, SearchActivity.class)
                             .putExtra("query", query)
-                            .putExtra("provider", getMenuItemPosition()));
+                            .putExtra("provider", getCurrentProviderIndex()));
                 } else {
                     startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
                             .putExtra("query", query));
@@ -239,11 +239,12 @@ public class MainActivity extends BaseAppActivity implements
         return true;
     }
 
-    private int getMenuItemPosition(){
+    private int getCurrentProviderIndex(){
         switch (mSelectedItem){
-            case R.id.nav_local_storage: return MangaProviderManager.CATEGORY_LOCAL;
-            case R.id.nav_action_favourites: return MangaProviderManager.CATEGORY_FAVOURITES;
-            case R.id.nav_action_history: return MangaProviderManager.CATEGORY_HISTORY;
+            case R.id.nav_local_storage: return MangaProviderManager.PROVIDER_LOCAL;
+            case R.id.nav_action_favourites: return MangaProviderManager.PROVIDER_FAVOURITES;
+            case R.id.nav_action_history: return MangaProviderManager.PROVIDER_HISTORY;
+            case R.id.nav_action_recommendations: return MangaProviderManager.PROVIDER_RECOMMENDATIONS;
             default: return mSelectedItem;
         }
     }
@@ -318,15 +319,13 @@ public class MainActivity extends BaseAppActivity implements
                 if (mProvider instanceof RecommendationsProvider) {
                     new RecommendationsPrefDialog(this, this).show();
                 } else {
-                    final boolean hasGenres = mProvider.hasFeature(MangaProviderManager.FEAUTURE_GENRES);
-                    final boolean hasSort = mProvider.hasFeature(MangaProviderManager.FEAUTURE_SORT);
                     FilterSortDialog dialog = new FilterSortDialog(this, this);
-                    if (hasGenres) {
+                    if (mProvider.hasGenres()) {
                         dialog.genres(mProvider.getGenresTitles(this), mGenre,
                                 getString(mProvider instanceof FavouritesProvider
                                         ? R.string.action_category : R.string.action_genre));
                     }
-                    if (hasSort) {
+                    if (mProvider.hasSort()) {
                         dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.getSort(this, mProvider));
                     }
                     dialog.show();
@@ -538,7 +537,7 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     private void updateContent() {
-        mListLoader.loadContent(mProvider.hasFeature(MangaProviderManager.FUTURE_MULTIPAGE), true);
+        mListLoader.loadContent(mProvider.isMultiPage(), true);
     }
 
     @Override
@@ -550,7 +549,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
-        menu.findItem(R.id.action_remove).setVisible(mProvider.hasFeature(MangaProviderManager.FEAUTURE_REMOVE));
+        menu.findItem(R.id.action_remove).setVisible(mProvider.isItemsRemovable());
         menu.findItem(R.id.action_save).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_share).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_move).setVisible(mSelectedItem == R.id.nav_action_favourites);

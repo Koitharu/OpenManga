@@ -17,20 +17,10 @@ import java.util.Locale;
  */
 public class MangaProviderManager {
 
-    public static final int CATEGORY_LOCAL = 0;
-    public static final int CATEGORY_FAVOURITES = 2;
-    public static final int CATEGORY_HISTORY = 3;
-
     public static final int PROVIDER_LOCAL = -4;
     public static final int PROVIDER_RECOMMENDATIONS = -3;
     public static final int PROVIDER_FAVOURITES = -2;
     public static final int PROVIDER_HISTORY = -1;
-
-    public static final int FUTURE_MULTIPAGE = 0;
-    public static final int FEAUTURE_SEARCH = 1;
-    public static final int FEAUTURE_REMOVE = 2;
-    public static final int FEAUTURE_SORT = 3;
-    public static final int FEAUTURE_GENRES = 4;
 
     public static final ProviderSumm[] providers = {
             new ProviderSumm("ReadManga", ReadmangaRuProvider.class, Languages.RU),

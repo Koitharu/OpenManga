@@ -24,7 +24,6 @@ import java.util.Random;
  */
 public class RecommendationsProvider extends MangaProvider {
 
-    private static boolean features[] = {true, false, false, false, false};
     @NonNull
     private static WeakReference<RecommendationsProvider> instanceReference = new WeakReference<>(null);
     private final MangaProviderManager mProviderManager;
@@ -168,11 +167,6 @@ public class RecommendationsProvider extends MangaProvider {
     @Override
     public String getName() {
         return mContext.getString(R.string.action_recommendations);
-    }
-
-    @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
     }
 
     public void updateConfig() {

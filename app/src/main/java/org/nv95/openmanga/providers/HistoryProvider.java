@@ -27,7 +27,6 @@ import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
 public class HistoryProvider extends MangaProvider {
 
     private static final String TABLE_NAME = "history";
-    protected static final boolean features[] = {false, false, true, true, false};
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
     private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
     private static WeakReference<HistoryProvider> instanceReference = new WeakReference<>(null);
@@ -145,11 +144,6 @@ public class HistoryProvider extends MangaProvider {
         return mContext.getString(R.string.action_history);
     }
 
-    @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
-    }
-
     public boolean add(MangaInfo mangaInfo, int chapter, int page) {
         final ContentValues cv = new ContentValues();
         cv.put("id", mangaInfo.id);
@@ -242,5 +236,20 @@ public class HistoryProvider extends MangaProvider {
     @Override
     public String[] getSortTitles(Context context) {
         return AppHelper.getStringArray(context, sorts);
+    }
+
+    @Override
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isItemsRemovable() {
+        return true;
+    }
+
+    @Override
+    public boolean isMultiPage() {
+        return false;
     }
 }

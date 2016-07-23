@@ -22,7 +22,6 @@ import java.util.ArrayList;
  */
 public class DesuMeProvider extends MangaProvider {
 
-    protected static final boolean features[] = {true, true, false, true, true};
     protected static final int sorts[] = {R.string.sort_popular, R.string.sort_alphabetical, R.string.sort_updated};
     protected static final String sortUrls[] = {"popular", "name", "updated"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.web,
@@ -185,7 +184,17 @@ public class DesuMeProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 }

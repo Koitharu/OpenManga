@@ -23,7 +23,6 @@ public class MangaReaderProvider extends MangaProvider {
 
     protected static final int sorts[] = {R.string.sort_popular};
     protected static final String sortUrls[] = {""};
-    protected static boolean features[] = {true, true, false, true, false};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
@@ -113,8 +112,13 @@ public class MangaReaderProvider extends MangaProvider {
     }
 
     @Override
-    public boolean hasFeature(int feature) {
-        return features[feature];
+    public boolean hasSort() {
+        return true;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
     }
 
     //advanced--------
