@@ -89,7 +89,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
     public void moveItem(int from, int to) {
         MangaInfo item = mList.get(from);
         mList.remove(from);
-        mList.add(to - (from > to ? 0 : 1), item);
+        mList.add(to - (from >= to ? 0 : 1), item);
         mAdapter.notifyItemMoved(from, to);
     }
 
