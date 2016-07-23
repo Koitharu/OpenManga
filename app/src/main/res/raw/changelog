@@ -1,17 +1,6 @@
 <h1>Changelog</h1>
 <p>
-    + Pausing downloads<br>
-    + Showing manga's status (finished/ongoing) where supported and size for saved<br>
-    + Moving already saved manga to another directory<br>
-    + Paging animation<br>
-    + Invisible clickable areas in reader<br>
-    + Change default zoom in reader<br>
-    + Multiple choice in list; group saving<br>
-    + Move favourites between categories <br>
-    + Added dark and black themes<br>
-    + Options for recommendations<br>
-    * Keep chapters order after saving<br>
-    * Import manga from cbz in background<br>
-    * Enhanced UI<br>
-    * Other fixes<br>
+    + Add SelfManga provider (rus)<br>
+    + Search in local storage<br>
+    * Fixes and optimization<br>
 </p>

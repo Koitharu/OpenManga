@@ -5,9 +5,10 @@ OpenManga - Powerful manga reader for Android with online catalogues.
 [![Build Status](https://travis-ci.org/nv95/OpenManga.svg?branch=master)](https://travis-ci.org/nv95/OpenManga)
 
 ## Features
- - 9 online manga's catalogues with search
+ - 10 online manga's catalogues with search
  - Downloading manga to local storage
  - Material design UI
+ - Customizable reader
  - Favourites and history with remembering last viewed chapter and page
  - Selecting sort order
  - Filter by genre
