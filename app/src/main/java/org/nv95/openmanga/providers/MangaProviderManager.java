@@ -70,6 +70,15 @@ public class MangaProviderManager {
                 return i;
             }
         }
+        if (LocalMangaProvider.class.equals(providerSumm.aClass)) {
+            return PROVIDER_LOCAL;
+        } else if (RecommendationsProvider.class.equals(providerSumm.aClass)) {
+            return PROVIDER_RECOMMENDATIONS;
+        } else if (FavouritesProvider.class.equals(providerSumm.aClass)) {
+            return PROVIDER_FAVOURITES;
+        } else if (HistoryProvider.class.equals(providerSumm.aClass)) {
+            return PROVIDER_HISTORY;
+        }
         return -1;
     }
 
@@ -143,13 +152,32 @@ public class MangaProviderManager {
         return ni != null && ni.isAvailable() && ni.isConnected();
     }
 
+    public MangaProvider instanceProvider(Class<? extends MangaProvider> aClass) {
+        if (aClass.equals(LocalMangaProvider.class)) {
+            return LocalMangaProvider.getInstacne(mContext);
+        } else if (aClass.equals(RecommendationsProvider.class)) {
+            return RecommendationsProvider.getInstacne(mContext);
+        } else if (aClass.equals(FavouritesProvider.class)) {
+            return FavouritesProvider.getInstacne(mContext);
+        } else if (aClass.equals(HistoryProvider.class)) {
+            return HistoryProvider.getInstacne(mContext);
+        } else {
+            try {
+                return aClass.newInstance();
+            } catch (Exception e) {
+                FileLogger.getInstance().report(e);
+            }
+        }
+        return null;
+    }
+
     public static class ProviderSumm {
         public String name;
         @NonNull
-        public Class<?> aClass;
+        public Class<? extends MangaProvider> aClass;
         public int lang;
 
-        public ProviderSumm(String name, @NonNull Class<?> aClass, int lang) {
+        public ProviderSumm(String name, @NonNull Class<? extends MangaProvider> aClass, int lang) {
             this.name = name;
             this.aClass = aClass;
             this.lang = lang;
@@ -172,6 +200,7 @@ public class MangaProviderManager {
         }
 
         @Nullable
+        @Deprecated
         public MangaProvider instance() {
             try {
                 return (MangaProvider) aClass.newInstance();

@@ -335,7 +335,33 @@ public class LocalMangaProvider extends MangaProvider {
     @Nullable
     @Override
     public MangaList search(String query, int page) throws Exception {
-        return super.search(query, page); // TODO: 23.07.16 search on local storage
+        if (page > 0)
+            return null;
+        SQLiteDatabase database = mStore.getDatabase(false);
+        MangaList list;
+        MangaInfo manga;
+        try {
+            list = new MangaList();
+            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
+            if (cursor.moveToFirst()) {
+                do {
+                    manga = new MangaInfo();
+                    manga.id = cursor.getInt(0);
+                    manga.name = cursor.getString(1);
+                    manga.subtitle = cursor.getString(2);
+                    manga.genres = cursor.getString(3);
+                    manga.path = cursor.getString(4);
+                    manga.preview = manga.path + "/cover";
+                    manga.provider = LocalMangaProvider.class;
+                    manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
+                    list.add(manga);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        } finally {
+            database.close();
+        }
+        return list;
     }
 
     public static boolean moveDir(File source, String destination) {
@@ -380,5 +406,13 @@ public class LocalMangaProvider extends MangaProvider {
                 return false;
             }
         }
+    }
+
+    public static MangaProviderManager.ProviderSumm getProviderSummary(Context context) {
+        return new MangaProviderManager.ProviderSumm(
+                context.getString(R.string.local_storage),
+                LocalMangaProvider.class,
+                MangaProviderManager.Languages.MULTI
+        );
     }
 }
