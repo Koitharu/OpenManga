@@ -10,7 +10,8 @@ import android.widget.Checkable;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 
 /**
  * Created by nv95 on 12.07.16.
@@ -49,7 +50,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ProviderHolder) {
-            MangaProviderManager.ProviderSumm item = MangaProviderManager.providers[position];
+            ProviderSummary item = MangaProviderManager.providers[position];
             ((ProviderHolder)holder).text1.setText(item.name);
             ((ProviderHolder)holder).text2.setText(languages[item.lang]);
             ((ProviderHolder)holder).checkbox.setChecked(mProviderManager.isProviderEnabled(item.name));
@@ -69,7 +70,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onClick(View v) {
-        MangaProviderManager.ProviderSumm item = (MangaProviderManager.ProviderSumm) v.getTag();
+        ProviderSummary item = (ProviderSummary) v.getTag();
         mProviderManager.setProviderEnabled(
                 item.name,
                 ((Checkable)v).isChecked()

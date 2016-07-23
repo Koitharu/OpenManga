@@ -13,6 +13,8 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class RecommendationsProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         final ArrayList<String> genres = getStatGenres(mConfig[0], mConfig[1]);
-        final ArrayList<MangaProviderManager.ProviderSumm> providers = mProviderManager.getEnabledProviders();
+        final ArrayList<ProviderSummary> providers = mProviderManager.getEnabledProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
         final int groupCount = Math.min(providers.size(), 4);
@@ -121,7 +123,7 @@ public class RecommendationsProvider extends MangaProvider {
         for (int i=0; i<groupCount && mangas.size()<=20; i++) {
             try {
                 //noinspection ConstantConditions
-                tempList = providers.get(i).instance().getList(random.nextInt(10), 0, 0);
+                tempList = MangaProviderManager.instanceProvider(mContext, providers.get(i).aClass).getList(random.nextInt(10), 0, 0);
                 if (tempList == null) {
                     continue;
                 }

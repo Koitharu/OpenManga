@@ -15,7 +15,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.File;
 import java.io.FileOutputStream;

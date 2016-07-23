@@ -11,7 +11,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.providers.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public void append(MangaProviderManager.ProviderSumm group, ArrayList<MangaInfo> data) {
+    public void append(ProviderSummary group, ArrayList<MangaInfo> data) {
         int last = mDataset.size();
         mDataset.add(group);
         mDataset.addAll(data);
@@ -72,7 +72,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
             ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position), mThumbSize, false);
         } else {
-            ((GroupViewHolder) holder).fill((MangaProviderManager.ProviderSumm) mDataset.get(position));
+            ((GroupViewHolder) holder).fill((ProviderSummary) mDataset.get(position));
         }
     }
 
@@ -82,10 +82,10 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Nullable
-    public MangaProviderManager.ProviderSumm getGroup(int position) {
+    public ProviderSummary getGroup(int position) {
         for (int i = position; i > 0; i--) {
-            if (mDataset.get(i) instanceof MangaProviderManager.ProviderSumm) {
-                return (MangaProviderManager.ProviderSumm) mDataset.get(i);
+            if (mDataset.get(i) instanceof ProviderSummary) {
+                return (ProviderSummary) mDataset.get(i);
             }
         }
         return null;
@@ -110,13 +110,13 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnMoreClickListener {
-        void onMoreClick(String title, MangaProviderManager.ProviderSumm provider);
+        void onMoreClick(String title, ProviderSummary provider);
     }
 
     protected static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextView;
         private final OnMoreClickListener mMoreClickListener;
-        private MangaProviderManager.ProviderSumm mData;
+        private ProviderSummary mData;
 
         public GroupViewHolder(View itemView, OnMoreClickListener moreClickListener) {
             super(itemView);
@@ -125,7 +125,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mMoreClickListener = moreClickListener;
         }
 
-        public void fill(MangaProviderManager.ProviderSumm data) {
+        public void fill(ProviderSummary data) {
             mData = data;
             mTextView.setText(data.name);
         }
