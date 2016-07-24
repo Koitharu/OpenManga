@@ -30,12 +30,12 @@
         android:entryValues="@array/scale_values"
         android:key="scalemode"
         android:title="@string/scale_mode" />
-    <CheckBoxPreference
+    <!--CheckBoxPreference
         android:defaultValue="true"
         android:key="shifts"
         android:summary="@string/image_shifting_summary"
         android:title="@string/wrap_long_pages"
-        android:widgetLayout="@layout/pref_switchcompat" />
+        android:widgetLayout="@layout/pref_switchcompat" /-->
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="brightness"
