@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
@@ -154,12 +153,6 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         }
 
         @Override
-        public void onLoadingStarted(String imageUri, View view) {
-            super.onLoadingStarted(imageUri, view);
-            viewHolder.progressBar.setIndeterminate(false);
-        }
-
-        @Override
         protected void onLoadingComplete() {
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.ssiv.setDoubleTapZoomScale((viewHolder.ssiv.getMaxScale() + viewHolder.ssiv.getMinScale()) / 2.f);
@@ -185,22 +178,23 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         }
 
         @Override
-        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+        public void onLoadingFailed(Exception e) {
             viewHolder.progressBar.setVisibility(View.GONE);
             viewHolder.textView.setVisibility(View.VISIBLE);
             viewHolder.textView.setText(
                     Html.fromHtml(
                             viewHolder.textView.getContext().getString(
                                     R.string.error_loadimage_html,
-                                    FileLogger.getInstance().getFailMessage(viewHolder.textView.getContext(), failReason)
+                                    FileLogger.getInstance().getFailMessage(viewHolder.textView.getContext(), e)
                             )
                     )
             );
         }
 
         @Override
-        public void onProgressUpdate(String imageUri, View view, int current, int total) {
+        public void onProgressUpdate(int current, int total) {
             int progress = (current * 100 / total);
+            viewHolder.progressBar.setIndeterminate(false);
             viewHolder.progressBar.setProgress(progress);
         }
     }
