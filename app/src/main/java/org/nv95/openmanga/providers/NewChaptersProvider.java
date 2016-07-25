@@ -46,27 +46,6 @@ public class NewChaptersProvider {
         mStorageHelper = new StorageHelper(mContext);
     }
 
-    @Deprecated
-    public void markAsViewed(int mangaId, int chaptersCount) {
-        SQLiteDatabase database = null;
-        try {
-            database = mStorageHelper.getWritableDatabase();
-            ContentValues cv = new ContentValues();
-            cv.put("id", mangaId);
-            cv.put("chapters_last", chaptersCount);
-            cv.put("chapters", chaptersCount);
-            if (database.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(mangaId)}) == 0) {
-                database.insert(TABLE_NAME, null, cv);
-            }
-        } catch (Exception e) {
-            FileLogger.getInstance().report(e);
-        } finally {
-            if (database != null) {
-                database.close();
-            }
-        }
-    }
-
     public void markAsViewed(int mangaId) {
         int chaptersCount = -1;
         Cursor cursor = null;
@@ -151,8 +130,15 @@ public class NewChaptersProvider {
             database = mStorageHelper.getReadableDatabase();
             cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
+                int chpt;
                 do {
-                    map.put(cursor.getInt(COLUMN_ID), cursor.getInt(COLUMN_CHAPTERS) - cursor.getInt(COLUMN_CHAPTERS_LAST));
+                    chpt = cursor.getInt(COLUMN_CHAPTERS_LAST);
+                    if (chpt != 0) {
+                        chpt = cursor.getInt(COLUMN_CHAPTERS) - chpt;
+                        if (chpt > 0) {
+                            map.put(cursor.getInt(COLUMN_ID), chpt);
+                        }
+                    }
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -236,10 +222,17 @@ public class NewChaptersProvider {
             cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
-                    if (cursor.getInt(COLUMN_CHAPTERS) - cursor.getInt(COLUMN_CHAPTERS_LAST) > 0) {
-                        res = true;
-                        break;
-                    }
+                    int chpt;
+                    do {
+                        chpt = cursor.getInt(COLUMN_CHAPTERS_LAST);
+                        if (chpt != 0) {
+                            chpt = cursor.getInt(COLUMN_CHAPTERS) - chpt;
+                            if (chpt > 0) {
+                                res = true;
+                                break;
+                            }
+                        }
+                    } while (cursor.moveToNext());
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {

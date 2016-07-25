@@ -230,7 +230,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(MangaPreviewActivity.this)
-                                    .storeChaptersCount(mMangaSummary.hashCode(), mMangaSummary.getChapters().size());
+                                    .storeChaptersCount(mMangaSummary.id, mMangaSummary.getChapters().size());
                             ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, which);
                         }
                     }, mMangaSummary);
