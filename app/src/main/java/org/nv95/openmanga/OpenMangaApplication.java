@@ -2,9 +2,7 @@ package org.nv95.openmanga;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
 
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -14,7 +12,6 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.imagecontroller.ImageShifter;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -46,17 +43,6 @@ public class OpenMangaApplication extends Application {
 
         initImageLoader(this);
         ScheduledServiceReceiver.enable(this);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(ImageShifter.getInstance());
-        ImageShifter.getInstance().onSharedPreferenceChanged(prefs, "shifts");
-        ImageShifter.getInstance().onSharedPreferenceChanged(prefs, "direction");
-    }
-
-    @Override
-    public void onTerminate() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.unregisterOnSharedPreferenceChangeListener(ImageShifter.getInstance());
-        super.onTerminate();
     }
 
     public static ImageLoader initImageLoader(Context c) {
