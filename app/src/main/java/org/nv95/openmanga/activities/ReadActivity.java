@@ -416,6 +416,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     @Override
     public void onPageChange(int page) {
         mPager.setCurrentPageIndex(page);
+        mPager.getAdapter().notifyDataSetChanged();
     }
 
     private boolean hasNextChapter() {
