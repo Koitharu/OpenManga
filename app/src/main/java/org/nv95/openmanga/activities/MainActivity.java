@@ -50,9 +50,8 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
-import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.utils.ChangesObserver;
@@ -91,7 +90,6 @@ public class MainActivity extends BaseAppActivity implements
     private NavigationView mNavigationView;
     private int mSelectedItem;
     private DrawerHeaderImageTool mDrawerHeaderTool;
-    private boolean mUpdatesChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -475,10 +473,6 @@ public class MainActivity extends BaseAppActivity implements
                 showcase(R.id.action_search, R.string.tip_search_main);
             }
         }
-
-        if (!mUpdatesChecked && mProvider instanceof FavouritesProvider) {
-            new ChaptersUpdateChecker().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
     }
 
     @Override
@@ -771,35 +765,6 @@ public class MainActivity extends BaseAppActivity implements
         @Override
         public void onCancel(DialogInterface dialog) {
             this.cancel(false);
-        }
-    }
-
-
-    private class ChaptersUpdateChecker extends AsyncTask<Void,Void,Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                return NewChaptersProvider.getInstance(MainActivity.this)
-                        .hasStoredUpdates();
-            } catch (Exception e) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            mUpdatesChecked = true;
-            if (aBoolean) {
-                Snackbar.make(mRecyclerView, R.string.new_chapters, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.more, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(MainActivity.this, NewChaptersActivity.class));
-                            }
-                        }).show();
-            }
         }
     }
 }

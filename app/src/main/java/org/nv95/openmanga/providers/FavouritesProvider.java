@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
 
@@ -64,6 +65,8 @@ public class FavouritesProvider extends MangaProvider {
         final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         MangaList list = null;
         MangaInfo manga;
+        Map<Integer,Integer> updates = NewChaptersProvider.getInstance(mContext)
+                .getLastUpdates();
         //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
@@ -84,7 +87,8 @@ public class FavouritesProvider extends MangaProvider {
                         manga.provider = LocalMangaProvider.class;
                     }
                     manga.status = STATUS_UNKNOWN;
-                    manga.extra = null;
+                    manga.extra = updates.containsKey(manga.id) ?
+                            "+" + updates.get(manga.id) : null;
                     list.add(manga);
                 } while (cursor.moveToNext());
             }

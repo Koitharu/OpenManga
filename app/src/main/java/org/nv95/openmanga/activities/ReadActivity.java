@@ -240,7 +240,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(ReadActivity.this)
-                                    .storeChaptersCount(mMangaSumary.hashCode(), mMangaSumary.getChapters().size());
+                                    .storeChaptersCount(mMangaSumary.id, mMangaSumary.getChapters().size());
                             ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSumary, which);
                         }
                     }, mMangaSumary);
