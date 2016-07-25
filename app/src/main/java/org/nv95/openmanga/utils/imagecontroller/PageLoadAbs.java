@@ -81,7 +81,7 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
                         if (total > 0) {
                             publishProgress(current, total);
                         }
-                        return true;
+                        return !isCancelled();
                     }
                 });
                 file = DiskCacheUtils.findInCache(url, cache);
