@@ -394,7 +394,8 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 direction == 1,
                 direction > 1,
                 Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))),
-                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT)))
+                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT))),
+                prefs.getBoolean("tiling", true)
         );
         if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

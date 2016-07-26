@@ -38,6 +38,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
     private boolean isLandOrientation, isLight;
     private final InternalLinkMovement mLinkMovement;
     private int mScaleMode = SCALE_FIT;
+    private boolean mTile;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -45,11 +46,17 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         mLinkMovement = new InternalLinkMovement(this);
         isLight = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("theme", "0").equals("0");
+        mTile = PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean("tiling", true);
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
         this.isLandOrientation = isLandOrientation;
         notifyDataSetChanged();
+    }
+
+    public void setTiling(boolean tile) {
+        mTile = tile;
     }
 
     @Override
@@ -88,7 +95,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         holder.textView = (TextView) view.findViewById(R.id.textView_holder);
         holder.textView.setMovementMethod(mLinkMovement);
         holder.textView.setTag(holder);
-        holder.loadTask = new PageLoad(holder, page);
+        holder.loadTask = new PageLoad(holder, page, mTile);
         holder.loadTask.load();
         view.setTag(holder);
         container.addView(view, 0);
@@ -125,7 +132,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
                 }
                 final PageHolder holder = (PageHolder) tag;
                 MangaPage page = pages.get(holder.position);
-                holder.loadTask = new PageLoad(holder, page);
+                holder.loadTask = new PageLoad(holder, page, mTile);
                 holder.loadTask.load();
                 break;
         }
@@ -145,8 +152,8 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
     private static class PageLoad extends PageLoadAbs {
         private final PageHolder viewHolder;
 
-        PageLoad(PageHolder viewHolder, MangaPage page){
-            super(page, viewHolder.ssiv);
+        PageLoad(PageHolder viewHolder, MangaPage page, boolean tile){
+            super(page, viewHolder.ssiv, tile);
             this.viewHolder = viewHolder;
         }
 
