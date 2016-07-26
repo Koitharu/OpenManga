@@ -1,6 +1,7 @@
 package org.nv95.openmanga.utils.imagecontroller;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -20,13 +21,13 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
 
     private final MangaPage mPage;
     private final SubsamplingScaleImageView mView;
-    private final boolean mTiling;
+    @Nullable
+    private String mFileName;
     private AsyncTask<Void,Integer,String> mTask;
 
     public PageLoadAbs(MangaPage page, SubsamplingScaleImageView view, boolean tiling) {
         mPage = page;
         mView = view;
-        mTiling = tiling;
         mView.setOnImageEventListener(this);
     }
 
@@ -51,7 +52,11 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
 
     @Override
     public final void onImageLoadError(Exception e) {
-        onLoadingFailed(e);
+        if (mFileName != null) {
+            displayScaled();
+        } else {
+            onLoadingFailed(e);
+        }
     }
 
     @Override
@@ -107,7 +112,8 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
         protected void onPostExecute(String path) {
             super.onPostExecute(path);
             if (path != null) {
-                mView.setImage(ImageSource.uri(path).tiling(mTiling));
+                mFileName = path;
+                mView.setImage(ImageSource.uri(path).tilingEnabled());
             } else {
                 onLoadingFailed(null);
             }
@@ -115,6 +121,7 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
     }
 
     public void load() {
+        mFileName = null;
         preLoad();
         mTask = new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -127,4 +134,11 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
     public void onLoadingFailed(Exception e) {}
 
     public void onProgressUpdate(int current, int total) {}
+
+    private void displayScaled() {
+        mView.setBitmapDecoderClass(AutoScaleDecoder.class);
+        //noinspection ConstantConditions
+        mView.setImage(ImageSource.uri(mFileName).tilingDisabled());
+        mFileName = null;
+    }
 }
