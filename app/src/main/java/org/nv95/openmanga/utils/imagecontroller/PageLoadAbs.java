@@ -18,13 +18,15 @@ import java.net.URL;
 
 public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEventListener {
 
-    protected final MangaPage mPage;
+    private final MangaPage mPage;
     private final SubsamplingScaleImageView mView;
+    private final boolean mTiling;
     private AsyncTask<Void,Integer,String> mTask;
 
-    public PageLoadAbs(MangaPage page, SubsamplingScaleImageView view) {
+    public PageLoadAbs(MangaPage page, SubsamplingScaleImageView view, boolean tiling) {
         mPage = page;
         mView = view;
+        mTiling = tiling;
         mView.setOnImageEventListener(this);
     }
 
@@ -105,7 +107,7 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
         protected void onPostExecute(String path) {
             super.onPostExecute(path);
             if (path != null) {
-                mView.setImage(ImageSource.uri(path).tilingEnabled());
+                mView.setImage(ImageSource.uri(path).tiling(mTiling));
             } else {
                 onLoadingFailed(null);
             }
