@@ -26,7 +26,7 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,7 +63,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        ArrayList<ProviderSummary> providers = mProviderManager.getEnabledProviders();
+        List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
         mProgressBar.setMax(providers.size());
         mProgressBar.setProgress(0);
         new SearchTask(LocalMangaProvider.getProviderSummary(this)).executeOnExecutor(mExecutor);
@@ -145,7 +145,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         startActivity(new Intent(MultipleSearchActivity.this, SearchActivity.class)
                 .putExtra("query", mQuery)
                 .putExtra("title", title)
-                .putExtra("provider", mProviderManager.getProviderIndex(provider)));
+                .putExtra("provider", provider.id));
     }
 
     @Override

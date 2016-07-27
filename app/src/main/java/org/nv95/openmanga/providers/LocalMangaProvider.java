@@ -247,7 +247,7 @@ public class LocalMangaProvider extends MangaProvider {
             if (cursor.moveToFirst()) {
                 String providerName = cursor.getString(0);
                 if (providerName != null && providerName.length() != 0) {
-                    MangaProvider provider = MangaProviderManager.createProvider(providerName);
+                    MangaProvider provider = MangaProviderManager.instanceNewProvider(providerName);
                     if (provider != null) {
                         String link = cursor.getString(1);
                         MangaInfo mi = new MangaInfo();
@@ -413,6 +413,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     public static ProviderSummary getProviderSummary(Context context) {
         return new ProviderSummary(
+                -1,
                 context.getString(R.string.local_storage),
                 LocalMangaProvider.class,
                 Languages.MULTI

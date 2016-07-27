@@ -52,6 +52,7 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.utils.ChangesObserver;
@@ -64,6 +65,7 @@ import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
 import java.io.File;
+import java.util.List;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener, ChangesObserver.OnMangaChangesListener,
@@ -149,7 +151,7 @@ public class MainActivity extends BaseAppActivity implements
         initDrawerRemoteProviders();
 
         setTitle(getResources().getStringArray(R.array.section_names)[4 + defSection]);
-        mProvider = mProviderManager.getProvider(defSection);
+        mProvider = mProviderManager.getProviderById(defSection);
         mListLoader = new MangaListLoader(mRecyclerView, this);
         mListLoader.getAdapter().getChoiceController().setCallback(this);
         mListLoader.getAdapter().getChoiceController().setEnabled(true);
@@ -186,9 +188,9 @@ public class MainActivity extends BaseAppActivity implements
 
         SubMenu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
         navMenu.removeGroup(R.id.groupRemote);
-        String[] names = mProviderManager.getNames();
-        for (int i = 0; i < names.length; i++) {
-            navMenu.add(R.id.groupRemote, i, i, names[i]);
+        List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
+        for (int i = 0; i < providers.size(); i++) {
+            navMenu.add(R.id.groupRemote, providers.get(i).id, i, providers.get(i).name);
         }
         navMenu.setGroupCheckable(R.id.groupRemote, true, true);
     }
@@ -324,7 +326,7 @@ public class MainActivity extends BaseAppActivity implements
                                         ? R.string.action_category : R.string.action_genre));
                     }
                     if (mProvider.hasSort()) {
-                        dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.getSort(this, mProvider));
+                        dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.restoreSortOrder(this, mProvider));
                     }
                     dialog.show();
                 }
@@ -360,7 +362,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
         mGenre = genre;
         setSubtitle(genreName);
-        MangaProviderManager.setSort(MainActivity.this, mProvider, sort);
+        MangaProviderManager.saveSortOrder(MainActivity.this, mProvider, sort);
         updateContent();
     }
 
@@ -383,7 +385,7 @@ public class MainActivity extends BaseAppActivity implements
                 mProvider = HistoryProvider.getInstacne(this);
                 break;
             default:
-                mProvider = mProviderManager.getProvider(item.getItemId());
+                mProvider = mProviderManager.getProviderById(item.getItemId());
                 break;
         }
         mSelectedItem = item.getItemId();
@@ -455,7 +457,7 @@ public class MainActivity extends BaseAppActivity implements
             mTextViewHolder.setText(holder);
             mTextViewHolder.setVisibility(View.VISIBLE);
             if (!success) {
-                if (!checkConnection() && MangaProviderManager.needConnection(mProvider)) {
+                if (!checkConnection() && MangaProviderManager.needConnectionFor(mProvider)) {
                     mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
                 } else {
                     Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
@@ -469,7 +471,7 @@ public class MainActivity extends BaseAppActivity implements
                 }
             }
         } else {
-            if (MangaProviderManager.needConnection(mProvider)) { //returns true on online provider
+            if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
                 showcase(R.id.action_search, R.string.tip_search_main);
             }
         }
@@ -490,7 +492,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public MangaList onContentNeeded(int page) {
         try {
-            return mProvider.getList(page, MangaProviderManager.getSort(this, mProvider), mGenre);
+            return mProvider.getList(page, MangaProviderManager.restoreSortOrder(this, mProvider), mGenre);
         } catch (Exception e) {
             Log.e("OCN", e.getMessage());
             return null;

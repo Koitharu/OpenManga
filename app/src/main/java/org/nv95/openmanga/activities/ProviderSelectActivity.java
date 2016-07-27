@@ -3,16 +3,27 @@ package org.nv95.openmanga.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.ProvidersAdapter;
 import org.nv95.openmanga.components.DividerItemDecoration;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Selecting used manga providers
  * Created by nv95 on 14.10.15.
  */
-public class ProviderSelectActivity extends BaseAppActivity {
+public class ProviderSelectActivity extends BaseAppActivity implements ProvidersAdapter.OnStartDragListener {
+
+    private List<ProviderSummary> mProviders;
+    private MangaProviderManager mProviderManager;
+    private ProvidersAdapter mAdapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +32,60 @@ public class ProviderSelectActivity extends BaseAppActivity {
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
 
+        mProviderManager = new MangaProviderManager(this);
+        mProviders = mProviderManager.getOrderedProviders();
+
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         assert recyclerView != null;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ProvidersAdapter(this));
+        recyclerView.setAdapter(mAdapter = new ProvidersAdapter(this, mProviders, this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
+
+        mItemTouchHelper = new ItemTouchHelper(new OrderManager());
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    private class OrderManager extends ItemTouchHelper.Callback {
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(mProviders, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(mProviders, i, i - 1);
+                }
+            }
+
+            mAdapter.notifyItemMoved(fromPosition, toPosition);
+            mProviderManager.updateOrder(mProviders);
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
     }
 }

@@ -19,6 +19,7 @@ import org.nv95.openmanga.providers.staff.ProviderSummary;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -112,7 +113,7 @@ public class RecommendationsProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         final ArrayList<String> genres = getStatGenres(mConfig[0], mConfig[1]);
-        final ArrayList<ProviderSummary> providers = mProviderManager.getEnabledProviders();
+        final List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
         final int groupCount = Math.min(providers.size(), 4);

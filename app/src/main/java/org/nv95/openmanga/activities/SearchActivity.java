@@ -58,7 +58,7 @@ public class SearchActivity extends BaseAppActivity implements
         mQuery = extras.getString("query");
         mTitle = extras.getString("title");
         int provider = extras.getInt("provider");
-        mProvider = new MangaProviderManager(this).getProvider(provider);
+        mProvider = new MangaProviderManager(this).getProviderById(provider);
         if (mProvider == null) {
             finish();
             return;
