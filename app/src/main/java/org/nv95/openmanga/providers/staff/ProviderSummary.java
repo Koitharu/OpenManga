@@ -8,12 +8,15 @@ import org.nv95.openmanga.providers.MangaProvider;
  * Created by nv95 on 23.07.16.
  */
 public class ProviderSummary {
+
+    public int id;
     public String name;
     @NonNull
     public Class<? extends MangaProvider> aClass;
     public int lang;
 
-    public ProviderSummary(String name, @NonNull Class<? extends MangaProvider> aClass, int lang) {
+    public ProviderSummary(int id, String name, @NonNull Class<? extends MangaProvider> aClass, int lang) {
+        this.id = id;
         this.name = name;
         this.aClass = aClass;
         this.lang = lang;

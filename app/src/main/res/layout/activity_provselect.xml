@@ -10,8 +10,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
         android:scrollbars="vertical"/>
 
 </LinearLayout>
