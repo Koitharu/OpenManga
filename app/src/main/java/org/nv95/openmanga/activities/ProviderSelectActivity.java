@@ -40,6 +40,7 @@ public class ProviderSelectActivity extends BaseAppActivity implements Providers
         assert recyclerView != null;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new ProvidersAdapter(this, mProviders, this));
+        mAdapter.setActiveCount(mProviderManager.getProvidersCount());
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
         mItemTouchHelper = new ItemTouchHelper(new OrderManager());
@@ -63,6 +64,36 @@ public class ProviderSelectActivity extends BaseAppActivity implements Providers
             int fromPosition = viewHolder.getAdapterPosition();
             int toPosition = target.getAdapterPosition();
 
+            if (toPosition == mProviders.size() + 1 || toPosition == mAdapter.getActiveCount()) { //drop to footer/divider
+                return false;
+            }
+
+            if (viewHolder instanceof ProvidersAdapter.DividerHolder) { //divider
+                if (toPosition == 0) {
+                    return false; //enabled providers count must be > 0
+                }
+                mAdapter.setActiveCount(toPosition);
+                mAdapter.notifyItemMoved(fromPosition, toPosition);
+                mProviderManager.setProvidersCount(toPosition);
+                return true;
+            }
+
+            if (fromPosition > mAdapter.getActiveCount() && toPosition < mAdapter.getActiveCount()) {
+                return false;
+            }
+
+            if (fromPosition < mAdapter.getActiveCount() && toPosition > mAdapter.getActiveCount()) {
+                return false;
+            }
+
+            if (fromPosition > mAdapter.getActiveCount()) {
+                fromPosition--;
+            }
+
+            if (toPosition > mAdapter.getActiveCount()) {
+                toPosition--;
+            }
+
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
                     Collections.swap(mProviders, i, i + 1);
@@ -73,7 +104,7 @@ public class ProviderSelectActivity extends BaseAppActivity implements Providers
                 }
             }
 
-            mAdapter.notifyItemMoved(fromPosition, toPosition);
+            mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
             mProviderManager.updateOrder(mProviders);
             return true;
         }
