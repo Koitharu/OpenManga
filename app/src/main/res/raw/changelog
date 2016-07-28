@@ -1,6 +1,5 @@
 <h1>Changelog</h1>
 <p>
-    + Add SelfManga provider (rus)<br>
-    + Search in local storage<br>
-    * Fixes and optimization<br>
+    + You can sort your enabled manga sources<br>
+    * Fix pages loading and compressing<br>
 </p>
