@@ -189,7 +189,7 @@ public class MainActivity extends BaseAppActivity implements
         SubMenu navMenu = mNavigationView.getMenu().findItem(R.id.nav_remote_storage).getSubMenu();
         navMenu.removeGroup(R.id.groupRemote);
         List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
-        for (int i = 0; i < providers.size(); i++) {
+        for (int i = 0; i < mProviderManager.getProvidersCount(); i++) {
             navMenu.add(R.id.groupRemote, providers.get(i).id, i, providers.get(i).name);
         }
         navMenu.setGroupCheckable(R.id.groupRemote, true, true);

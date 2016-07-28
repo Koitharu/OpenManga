@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="4dp"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:background="@color/pressed_light"
+    android:paddingTop="4dp">
+
+    <ImageView
+        android:id="@+id/imageView_draghandle"
+        android:src="@drawable/ic_draghandle"
+        android:layout_width="wrap_content"
+        android:paddingRight="6dp"
+        android:background="?selectableItemBackground"
+        android:layout_height="match_parent"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItem"
+        android:text="@string/drag_divider_hint"
+        android:lines="1" />
+
+</LinearLayout>

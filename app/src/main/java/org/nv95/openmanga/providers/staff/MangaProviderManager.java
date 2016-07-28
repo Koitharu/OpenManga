@@ -148,10 +148,13 @@ public class MangaProviderManager {
     }
 
     public int getProvidersCount() {
-        return mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount());
+        return Math.min(
+                mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
+                mProviders.size()
+        );
     }
 
-    public void setEnabledCount(int count) {
+    public void setProvidersCount(int count) {
         mContext.getSharedPreferences("providers", Context.MODE_PRIVATE)
                 .edit()
                 .putInt("count", count)
