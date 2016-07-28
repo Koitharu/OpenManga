@@ -52,7 +52,7 @@ public class DesuMeProvider extends MangaProvider {
                         + (genre == 0 ? "" : "&genres=" + genreUrls[genre - 1])
         ));
         MangaInfo manga;
-        JSONArray ja = jo.getJSONArray("respose");
+        JSONArray ja = jo.getJSONArray("response");
         for (int i=0; i<ja.length(); i++) {
             jo = ja.getJSONObject(i);
             manga = new MangaInfo();
@@ -82,7 +82,7 @@ public class DesuMeProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            JSONObject jo = new JSONObject(getRawPage(mangaInfo.path)).getJSONObject("respose");
+            JSONObject jo = new JSONObject(getRawPage(mangaInfo.path)).getJSONObject("response");
             summary.readLink = summary.path;
             summary.description = jo.getString("description");
             summary.preview = jo.getJSONObject("image").getString("original");
@@ -108,7 +108,7 @@ public class DesuMeProvider extends MangaProvider {
     public ArrayList<MangaPage> getPages(String readLink) {
         ArrayList<MangaPage> pages = new ArrayList<>();
         try {
-            JSONObject jo = new JSONObject(getRawPage(readLink)).getJSONObject("respose");
+            JSONObject jo = new JSONObject(getRawPage(readLink)).getJSONObject("response");
             JSONArray ja = jo.getJSONObject("pages").getJSONArray("list");
             MangaPage page;
             for (int i = 0; i < ja.length(); i++) {
@@ -135,7 +135,7 @@ public class DesuMeProvider extends MangaProvider {
                         + "&search=" + URLDecoder.decode(query, "UTF-8")
         ));
         MangaInfo manga;
-        JSONArray ja = jo.getJSONArray("respose");
+        JSONArray ja = jo.getJSONArray("response");
         for (int i=0; i<ja.length(); i++) {
             jo = ja.getJSONObject(i);
             manga = new MangaInfo();
