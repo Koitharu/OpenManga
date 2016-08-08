@@ -157,7 +157,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     }
 
     private void saveHistory() {
-        HistoryProvider.getInstacne(this).add(mMangaSumary, mMangaSumary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
+        if (mChapterId >= 0 && mChapterId < mMangaSumary.chapters.size()) {
+            HistoryProvider.getInstacne(this).add(mMangaSumary, mMangaSumary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
+        }
     }
 
     @Override
@@ -182,7 +184,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 if (mLoader.getVisibility() == View.VISIBLE) {
                     return;
                 }
-                saveHistory();
                 int favId = FavouritesProvider.getInstacne(this)
                         .getCategory(mMangaSumary);
                 String fav;
