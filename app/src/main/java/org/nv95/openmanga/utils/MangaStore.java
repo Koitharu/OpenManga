@@ -32,14 +32,12 @@ public class MangaStore {
     public static final String TABLE_CHAPTERS = "chapters";
     public static final String TABLE_PAGES = "pages";
 
-    private static DatabaseHelper mDatabaseHelper = null;
+    private final DatabaseHelper mDatabaseHelper;
     private final Context mContext;
 
     public MangaStore(Context context) {
         mContext = context;
-        if (mDatabaseHelper == null) {
-            mDatabaseHelper = new DatabaseHelper(mContext);
-        }
+        mDatabaseHelper = new DatabaseHelper(mContext);
     }
 
     /**
@@ -295,7 +293,7 @@ public class MangaStore {
     }
 
     @Deprecated
-    public static File getMangaDir(Context context, int id) {
+    public File getMangaDir(Context context, int id) {
         File res = null;
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
         Cursor c = db.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
