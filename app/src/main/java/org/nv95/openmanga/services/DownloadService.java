@@ -20,7 +20,7 @@ import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
-import org.nv95.openmanga.components.BottomSheetDialog;
+import org.nv95.openmanga.dialogs.BottomSheet;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
@@ -73,37 +73,38 @@ public class DownloadService extends Service {
         final SparseBooleanArray checked = new SparseBooleanArray(len);
         boolean[] defs = new boolean[len];
         Arrays.fill(defs, false);
-        new BottomSheetDialog(context)
-                .addHeader(context.getString(R.string.chapters_total, manga.chapters.size()),
-                        R.string.check_all, 0, new DialogInterface.OnClickListener() {
+        new BottomSheet(context)
+                .setMultiChoiceItems(manga.chapters.getNames(), defs)
+                .addHeader(context.getString(dialogTitle),
+                        R.string.action_save, R.string.check_all, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((BottomSheetDialog) dialog).checkAll(true);
-                                for (int i = 0;i < len;i++) {
-                                    checked.put(i, true);
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        dialog.dismiss();
+                                        for (int i = 0;i < len;i++) {
+                                            if (checked.get(i, false)) {
+                                                mangaCopy.chapters.add(manga.chapters.get(i));
+                                            }
+                                        }
+                                        startNoConfirm(context, mangaCopy);
+                                        break;
+                                    case DialogInterface.BUTTON_NEUTRAL:
+                                        ((BottomSheet) dialog).checkAll(true);
+                                        for (int i = 0;i < len;i++) {
+                                            checked.put(i, true);
+                                        }
+                                        break;
                                 }
-                            }
+                                                            }
                         })
-                .setMultiChoiceItems(manga.chapters.getNames(), defs)
                 .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         checked.put(which, isChecked);
                     }
                 })
-                .setSheetTitle(dialogTitle)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0;i < len;i++) {
-                            if (checked.get(i, false)) {
-                                mangaCopy.chapters.add(manga.chapters.get(i));
-                            }
-                        }
-                        startNoConfirm(context, mangaCopy);
-                    }
-                }).show();
+                .show();
     }
 
     public static void startNoConfirm(Context context, MangaSummary manga) {

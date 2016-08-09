@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AsyncImageView;
-import org.nv95.openmanga.components.BottomSheetDialog;
+import org.nv95.openmanga.dialogs.BottomSheet;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
@@ -166,7 +166,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             return;
         }
         HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mMangaSummary);
-        BottomSheetDialog sheet = new BottomSheetDialog(this);
+        BottomSheet sheet = new BottomSheet(this);
+        sheet.setItems(mMangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1);
         if (lastChapter != null) {
             MangaChapter c = mMangaSummary.chapters.getByNumber(lastChapter.getChapter());
             if (c != null) {
@@ -182,8 +183,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 );
             }
         }
-        sheet.setItems(mMangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1)
-                .setSheetTitle(R.string.chapters_list)
+        sheet
+                //.setSheetTitle(R.string.chapters_list)
                 .setOnItemClickListener(this)
                 .show();
     }
@@ -256,55 +257,56 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         final SparseBooleanArray checked = new SparseBooleanArray(len);
         boolean[] defs = new boolean[len];
         Arrays.fill(defs, false);
-        new BottomSheetDialog(this)
-                .addHeader(getString(R.string.chapters_total, mMangaSummary.chapters.size()),
-                        R.string.check_all, 0, new DialogInterface.OnClickListener() {
+        new BottomSheet(this)
+                .setMultiChoiceItems(mMangaSummary.chapters.getNames(), defs)
+                .addHeader(getString(R.string.delete_manga),
+                        R.string.action_remove, R.string.check_all, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((BottomSheetDialog) dialog).checkAll(true);
-                                for (int i = 0;i < len;i++) {
-                                    checked.put(i, true);
+                                switch (which) {
+                                    case DialogInterface.BUTTON_NEUTRAL:
+                                        ((BottomSheet) dialog).checkAll(true);
+                                        for (int i = 0;i < len;i++) {
+                                            checked.put(i, true);
+                                        }
+                                        break;
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        dialog.dismiss();
+                                        final ArrayList<Long> idlist = new ArrayList<>();
+                                        for (int i = 0;i < len;i++) {
+                                            if (checked.get(i, false)) {
+                                                idlist.add((long) mMangaSummary.chapters.get(i).id);
+                                            }
+                                        }
+                                        if (idlist.size() == len) {
+                                            if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
+                                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
+                                                ChangesObserver.getInstance().emitOnLocalChanged(mMangaSummary.id, null);
+                                                finish();
+                                            }
+                                        } else {
+                                            final long[] ids = new long[idlist.size()];
+                                            for (int i = 0;i < idlist.size();i++) {
+                                                ids[i] = idlist.get(i);
+                                            }
+                                            if (new MangaStore(MangaPreviewActivity.this).dropChapters(mMangaSummary.id, ids)) {
+                                                Snackbar.make(mTextViewDescription, getString(R.string.chapters_removed, ids.length), Snackbar.LENGTH_SHORT).show();
+                                            } else {
+                                                Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
+                                            }
+                                            new LoadInfoTask().startLoading();
+                                        }
+                                        break;
                                 }
                             }
                         })
-                .setMultiChoiceItems(mMangaSummary.chapters.getNames(), defs)
                 .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         checked.put(which, isChecked);
                     }
                 })
-                .setSheetTitle(R.string.delete_manga)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final ArrayList<Long> idlist = new ArrayList<>();
-                        for (int i = 0;i < len;i++) {
-                            if (checked.get(i, false)) {
-                                idlist.add((long) mMangaSummary.chapters.get(i).id);
-                            }
-                        }
-                        if (idlist.size() == len) {
-                            if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
-                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
-                                ChangesObserver.getInstance().emitOnLocalChanged(mMangaSummary.id, null);
-                                finish();
-                            }
-                        } else {
-                            final long[] ids = new long[idlist.size()];
-                            for (int i = 0;i < idlist.size();i++) {
-                                ids[i] = idlist.get(i);
-                            }
-                            if (new MangaStore(MangaPreviewActivity.this).dropChapters(mMangaSummary.id, ids)) {
-                                Snackbar.make(mTextViewDescription, getString(R.string.chapters_removed, ids.length), Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
-                            }
-                            new LoadInfoTask().startLoading();
-                        }
-                    }
-                }).show();
+                .show();
     }
 
     @Override

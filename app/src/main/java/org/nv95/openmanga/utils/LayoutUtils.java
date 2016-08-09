@@ -129,4 +129,12 @@ public class LayoutUtils {
         });
         animator.start();
     }
+
+    public static Drawable getSelectableBackground(Context context) {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.selectableItemBackground });
+        Drawable d = a.getDrawable(0);
+        a.recycle();
+        return d;
+    }
 }
