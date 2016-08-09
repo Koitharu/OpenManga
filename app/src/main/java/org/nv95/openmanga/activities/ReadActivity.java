@@ -57,6 +57,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -82,6 +83,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private int mOverscrollSize;
     private BrightnessHelper mBrightnessHelper;
     private SwipeAnimationListener mSwipeAnimationListener = new SwipeAnimationListener();
+    List<AsyncTask> asyncLoaders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +155,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         ChangesObserver.getInstance().emitOnHistoryChanged(mMangaSumary);
+        for (AsyncTask asyncLoader : asyncLoaders) {
+            asyncLoader.cancel(true);
+        }
         super.onDestroy();
     }
 
@@ -620,12 +625,14 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         protected void onPreExecute() {
             super.onPreExecute();
             mLoader.setVisibility(View.VISIBLE);
+            asyncLoaders.add(this);
         }
 
         @Override
         protected void onPostExecute(ArrayList<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
-            if (isDestroyed()) {
+            asyncLoaders.remove(this);
+            if (isDestroyed() || isFinishing()) {
                 return;
             }
             mLoader.setVisibility(View.GONE);
