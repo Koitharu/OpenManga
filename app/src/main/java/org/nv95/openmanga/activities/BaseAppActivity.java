@@ -150,7 +150,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
 
     public void enableTransparentStatusBar(@ColorRes int color) {
         if (Build.VERSION.SDK_INT >= 21) {
-            final Window window = getWindow();
+            Window window = getWindow();
             window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -257,6 +257,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                 }
             }
         }
+        mLoaders = null;
         super.onDestroy();
     }
 
@@ -324,17 +325,14 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         @Override
         protected void onCancelled(Result result) {
             super.onCancelled(result);
-            if (!isDestroyed() && !isFinishing()) {
-                unregisterLoaderTask(this);
-            }
+            unregisterLoaderTask(this);
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            if (!isDestroyed() && !isFinishing()) {
-                unregisterLoaderTask(this);
-            }
+
+            unregisterLoaderTask(this);
         }
 
         @SafeVarargs
