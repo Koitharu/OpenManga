@@ -625,6 +625,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(ArrayList<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
+            if (isDestroyed()) {
+                return;
+            }
             mLoader.setVisibility(View.GONE);
             if (mangaPages == null) {
                 new AlertDialog.Builder(ReadActivity.this).setMessage(checkConnection() ? R.string.loading_error : R.string.no_network_connection)
