@@ -640,7 +640,13 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 new AlertDialog.Builder(ReadActivity.this).setMessage(checkConnection() ? R.string.loading_error : R.string.no_network_connection)
                         .setTitle(R.string.app_name)
                         .setOnCancelListener(this)
-                        .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            }
+                        })
+                        .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ReadActivity.this.finish();
