@@ -3,7 +3,6 @@ package org.nv95.openmanga.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -100,7 +99,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 mFab.setEnabled(true);
             }
         } else {
-            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadInfoTask().startLoading();
         }
 
         if(TextUtils.isEmpty(mMangaSummary.genres)){
@@ -136,7 +135,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 // TODO: 26.01.16
                 break;
             case R.id.snackbar_action:
-                new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new LoadInfoTask().startLoading();
                 break;
         }
     }
@@ -244,7 +243,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 return true;
             case R.id.action_save_more:
                 if (checkConnectionWithSnackbar(mTextViewDescription)) {
-                    new LoadSourceTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mMangaSummary);
+                    new LoadSourceTask().startLoading(mMangaSummary);
                 }
                 return true;
             default:
@@ -302,7 +301,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                             } else {
                                 Snackbar.make(mTextViewDescription, R.string.error, Snackbar.LENGTH_SHORT).show();
                             }
-                            new LoadInfoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new LoadInfoTask().startLoading();
                         }
                     }
                 }).show();
@@ -332,7 +331,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
 
     }
 
-    private class LoadInfoTask extends AsyncTask<Void, Void, Pair<MangaSummary, String>> {
+    private class LoadInfoTask extends LoaderTask<Void, Void, Pair<MangaSummary, String>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -341,9 +340,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(Pair<MangaSummary, String> result) {
+            super.onPostExecute(result);
             mProgressBar.setVisibility(View.GONE);
             mFab.setEnabled(true);
-            super.onPostExecute(result);
             if (result == null) {
                 mFab.hide();
                 Snackbar.make(mAppBarLayout, checkConnection() ? R.string.loading_error : R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE)
@@ -396,7 +395,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         }
     }
 
-    private class LoadSourceTask extends AsyncTask<MangaInfo,Void,MangaSummary> implements DialogInterface.OnCancelListener {
+    private class LoadSourceTask extends LoaderTask<MangaInfo,Void,MangaSummary> implements DialogInterface.OnCancelListener {
         private final ProgressDialog mProgressDialog;
 
         public LoadSourceTask() {

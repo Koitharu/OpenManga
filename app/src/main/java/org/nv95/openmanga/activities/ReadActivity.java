@@ -57,7 +57,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -83,7 +82,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private int mOverscrollSize;
     private BrightnessHelper mBrightnessHelper;
     private SwipeAnimationListener mSwipeAnimationListener = new SwipeAnimationListener();
-    List<AsyncTask> asyncLoaders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,9 +153,6 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         ChangesObserver.getInstance().emitOnHistoryChanged(mMangaSumary);
-        for (AsyncTask asyncLoader : asyncLoaders) {
-            asyncLoader.cancel(true);
-        }
         super.onDestroy();
     }
 
@@ -619,19 +614,17 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mSwipeFrame.setAlpha((Float) animation.getAnimatedValue());
     }
 
-    private class LoadPagesTask extends AsyncTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
+    private class LoadPagesTask extends LoaderTask<Void, Void, ArrayList<MangaPage>> implements DialogInterface.OnCancelListener {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mLoader.setVisibility(View.VISIBLE);
-            asyncLoaders.add(this);
         }
 
         @Override
         protected void onPostExecute(ArrayList<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
-            asyncLoaders.remove(this);
             if (isDestroyed() || isFinishing()) {
                 return;
             }
@@ -643,7 +636,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                new LoadPagesTask().startLoading();
                             }
                         })
                         .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
@@ -683,7 +676,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         }
     }
 
-    private class SaveImageTask extends AsyncTask<MangaPage, Void, File> {
+    private class SaveImageTask extends LoaderTask<MangaPage, Void, File> {
 
         @Override
         protected void onPreExecute() {

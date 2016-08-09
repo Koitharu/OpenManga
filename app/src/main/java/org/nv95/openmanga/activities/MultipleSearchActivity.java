@@ -3,7 +3,6 @@ package org.nv95.openmanga.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -153,7 +152,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         finish();
     }
 
-    private class SearchTask extends AsyncTask<Void, Void, MangaList> {
+    private class SearchTask extends LoaderTask<Void, Void, MangaList> {
         private final ProviderSummary mProviderSummary;
 
         private SearchTask(ProviderSummary provider) {
