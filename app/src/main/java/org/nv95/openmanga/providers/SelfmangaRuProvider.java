@@ -139,7 +139,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
-            manga.provider = ReadmangaRuProvider.class;
+            manga.provider = SelfmangaRuProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
