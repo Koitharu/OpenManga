@@ -94,6 +94,7 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     protected void onDestroy() {
         mListModeHelper.disable();
+        mLoader.cancelLoading();
         super.onDestroy();
     }
 

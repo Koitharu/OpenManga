@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -259,6 +258,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     protected void onDestroy() {
+        mListLoader.cancelLoading();
         ChangesObserver.getInstance().removeListener(this);
         mListModeHelper.disable();
         super.onDestroy();
@@ -423,7 +423,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, true);
+                new OpenLastTask().startLoading(true);
                 break;
         }
     }
@@ -432,7 +432,7 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false);
+                new OpenLastTask().startLoading(false);
                 return true;
             default:
                 return false;
@@ -680,7 +680,7 @@ public class MainActivity extends BaseAppActivity implements
         }
     }
 
-    private class OpenLastTask extends AsyncTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
+    private class OpenLastTask extends LoaderTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;
 
         OpenLastTask() {

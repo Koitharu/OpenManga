@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -29,6 +31,8 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 
+import java.util.ArrayList;
+
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 /**
@@ -45,6 +49,8 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     private boolean mActionBarVisible = false;
     private boolean mHomeAsUpEnabled = false;
     private int mTheme = 0;
+    @Nullable
+    private ArrayList<AsyncTask> mLoaders;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,17 +234,31 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkConnectionWithSnackbar(View view, View.OnClickListener callback) {
-        if (checkConnection()) {
-            return true;
-        } else {
-            Snackbar.make(view, R.string.no_network_connection, Snackbar.LENGTH_SHORT)
-                    .setAction(R.string.retry, callback)
-                    .show();
-            return false;
+    protected AsyncTask registerLoaderTask(AsyncTask task) {
+        if (mLoaders == null) {
+            mLoaders = new ArrayList<>();
+        }
+        mLoaders.add(task);
+        return task;
+    }
+
+    protected void unregisterLoaderTask(AsyncTask task) {
+        if (mLoaders != null) {
+            mLoaders.remove(task);
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (mLoaders != null) {
+            for (AsyncTask o : mLoaders) {
+                if (o != null && o.getStatus() != AsyncTask.Status.FINISHED) {
+                    o.cancel(true);
+                }
+            }
+        }
+        super.onDestroy();
+    }
 
     public boolean checkConnectionWithDialog(DialogInterface.OnDismissListener onDismissListener) {
         if (checkConnection()) {
@@ -285,5 +305,42 @@ public abstract class BaseAppActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    protected abstract class LoaderTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            registerLoaderTask(this);
+        }
+
+        @Override
+        protected void onPostExecute(Result result) {
+            super.onPostExecute(result);
+            unregisterLoaderTask(this);
+        }
+
+        @Override
+        protected void onCancelled(Result result) {
+            super.onCancelled(result);
+            if (!isDestroyed() && !isFinishing()) {
+                unregisterLoaderTask(this);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            if (!isDestroyed() && !isFinishing()) {
+                unregisterLoaderTask(this);
+            }
+        }
+
+        @SafeVarargs
+        @MainThread
+        public final AsyncTask<Params, Progress, Result> startLoading(Params... params) {
+            return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        }
     }
 }

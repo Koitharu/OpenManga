@@ -103,7 +103,7 @@ public class NewChaptersActivity extends BaseAppActivity {
         }
     }
 
-    private class LoadTask extends AsyncTask<Void,Void,MangaList> {
+    private class LoadTask extends LoaderTask<Void,Void,MangaList> {
 
         @Override
         protected void onPreExecute() {
