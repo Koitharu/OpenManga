@@ -96,18 +96,24 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case "backup":
-                BackupRestoreUtil.showBackupDialog(this);
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    BackupRestoreUtil.showBackupDialog(this);
+                }
                 return true;
             case "restore":
-                BackupRestoreUtil.showRestoreDialog(this);
+                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    BackupRestoreUtil.showRestoreDialog(this);
+                }
                 return true;
             case "ccache":
                 new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
             case "movemanga":
-                new LocalMoveDialog(this,
-                        LocalMangaProvider.getInstacne(this).getAllIds())
-                        .showSelectSource(null);
+                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new LocalMoveDialog(this,
+                            LocalMangaProvider.getInstacne(this).getAllIds())
+                            .showSelectSource(null);
+                }
                 return true;
             case "mangadir":
                 if (!checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -315,13 +321,13 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                preference.setSummary((String)newValue);
+                preference.setSummary((String) newValue);
                 return true;
             }
         });
     }
 
-    private class CheckUpdatesTask extends AsyncTask<Void,Void,AppUpdatesProvider> {
+    private class CheckUpdatesTask extends AsyncTask<Void, Void, AppUpdatesProvider> {
         private final Preference mPreference;
         private int mSelected = 0;
 
