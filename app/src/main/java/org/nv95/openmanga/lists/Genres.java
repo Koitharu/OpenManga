@@ -3,6 +3,7 @@ package org.nv95.openmanga.lists;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 /**
  * Created by nv95 on 22.06.16.
@@ -34,13 +35,7 @@ public class Genres implements Parcelable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (String o : mData) {
-            sb.append(o)
-                    .append(' ');
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        return TextUtils.join(" ", mData);
     }
 
     @Override

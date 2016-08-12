@@ -373,16 +373,16 @@ public class MainActivity extends BaseAppActivity implements
                 startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
                 return true;
             case R.id.nav_local_storage:
-                mProvider = LocalMangaProvider.getInstacne(this);
+                mProvider = LocalMangaProvider.getInstance(this);
                 break;
             case R.id.nav_action_recommendations:
-                mProvider = RecommendationsProvider.getInstacne(this);
+                mProvider = RecommendationsProvider.getInstance(this);
                 break;
             case R.id.nav_action_favourites:
-                mProvider = FavouritesProvider.getInstacne(this);
+                mProvider = FavouritesProvider.getInstance(this);
                 break;
             case R.id.nav_action_history:
-                mProvider = HistoryProvider.getInstacne(this);
+                mProvider = HistoryProvider.getInstance(this);
                 break;
             default:
                 mProvider = mProviderManager.getProviderById(item.getItemId());
@@ -614,7 +614,7 @@ public class MainActivity extends BaseAppActivity implements
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FavouritesProvider.getInstacne(MainActivity.this).move(ids, selected[0]);
+                        FavouritesProvider.getInstance(MainActivity.this).move(ids, selected[0]);
                         updateContent();
                     }
                 }).create().show();
@@ -701,7 +701,7 @@ public class MainActivity extends BaseAppActivity implements
         protected Pair<Integer, Intent> doInBackground(Boolean... params) {
             try {
                 Intent intent;
-                HistoryProvider historyProvider = HistoryProvider.getInstacne(MainActivity.this);
+                HistoryProvider historyProvider = HistoryProvider.getInstance(MainActivity.this);
                 MangaInfo info = historyProvider.getLast();
                 if (info == null) {
                     return new Pair<>(2, null);
@@ -713,7 +713,7 @@ public class MainActivity extends BaseAppActivity implements
                 }
                 MangaProvider provider;
                 if (info.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstacne(MainActivity.this);
+                    provider = LocalMangaProvider.getInstance(MainActivity.this);
                 } else {
                     if (!checkConnection()) {
                         return new Pair<>(1, null);

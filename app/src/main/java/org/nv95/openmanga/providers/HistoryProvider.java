@@ -38,7 +38,7 @@ public class HistoryProvider extends MangaProvider {
         mStorageHelper = new StorageHelper(context);
     }
 
-    public static HistoryProvider getInstacne(Context context) {
+    public static HistoryProvider getInstance(Context context) {
         HistoryProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new HistoryProvider(context);
