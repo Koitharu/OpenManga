@@ -49,7 +49,7 @@ public class LocalMangaProvider extends MangaProvider {
         mStore = new MangaStore(context);
     }
 
-    public static LocalMangaProvider getInstacne(Context context) {
+    public static LocalMangaProvider getInstance(Context context) {
         LocalMangaProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new LocalMangaProvider(context);
@@ -228,7 +228,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     @Override
     public boolean remove(long[] ids) {
-        return mStore.dropMangas(ids) && HistoryProvider.getInstacne(mContext).remove(ids);
+        return mStore.dropMangas(ids) && HistoryProvider.getInstance(mContext).remove(ids);
     }
 
     @Override

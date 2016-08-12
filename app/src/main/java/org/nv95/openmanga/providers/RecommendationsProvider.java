@@ -40,7 +40,7 @@ public class RecommendationsProvider extends MangaProvider {
         mStorageHelper = new StorageHelper(mContext);
     }
 
-    public static RecommendationsProvider getInstacne(Context context) {
+    public static RecommendationsProvider getInstance(Context context) {
         RecommendationsProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new RecommendationsProvider(context);

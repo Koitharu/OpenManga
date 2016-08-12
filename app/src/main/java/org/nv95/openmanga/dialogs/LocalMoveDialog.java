@@ -155,7 +155,7 @@ public class LocalMoveDialog {
 
         @Override
         protected List<LocalMangaInfo> doInBackground(Void... params) {
-            LocalMangaInfo[] infos = LocalMangaProvider.getInstacne(mContext)
+            LocalMangaInfo[] infos = LocalMangaProvider.getInstance(mContext)
                     .getLocalInfo(mIds);
             ArrayList<LocalMangaInfo> res = new ArrayList<>();
             for (LocalMangaInfo o : infos) {

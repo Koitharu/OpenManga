@@ -250,7 +250,7 @@ public class NewChaptersProvider {
 
     @WorkerThread
     public MangaUpdateInfo[] checkForNewChapters() {
-        FavouritesProvider favs = FavouritesProvider.getInstacne(mContext);
+        FavouritesProvider favs = FavouritesProvider.getInstance(mContext);
         try {
             MangaList mangas = favs.getList(0, 0, 0);
             Map<Integer, Integer> map = getChaptersMap();

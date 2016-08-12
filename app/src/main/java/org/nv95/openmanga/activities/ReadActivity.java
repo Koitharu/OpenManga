@@ -74,7 +74,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private ImageView mImageViewArrow;
     private View[] mClickAreas;
     //data
-    private MangaSummary mMangaSumary;
+    private MangaSummary mMangaSummary;
     private MangaChapter mChapter;
     private int mChapterId;
     private int mPageId;
@@ -115,8 +115,8 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         mPager.setOverScrollListener(this);
         mPager.onConfigurationChange(this);
         onOptionsChanged();
-        mMangaSumary = new MangaSummary(getIntent().getExtras());
-        if (mMangaSumary.getChapters().size() == 0) {
+        mMangaSummary = new MangaSummary(getIntent().getExtras());
+        if (mMangaSummary.getChapters().size() == 0) {
             Snackbar.make(mPager, R.string.loading_error, Snackbar.LENGTH_SHORT).show();
             finish();
             return;
@@ -124,7 +124,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
         initParams(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         mOverscrollSize = getResources().getDimensionPixelSize(R.dimen.overscroll_size);
-        mChapter = mMangaSumary.getChapters().get(mChapterId);
+        mChapter = mMangaSummary.getChapters().get(mChapterId);
         mPager.setOffscreenPageLimit(2);
         new LoadPagesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -152,13 +152,13 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
-        ChangesObserver.getInstance().emitOnHistoryChanged(mMangaSumary);
+        ChangesObserver.getInstance().emitOnHistoryChanged(mMangaSummary);
         super.onDestroy();
     }
 
     private void saveHistory() {
-        if (mChapterId >= 0 && mChapterId < mMangaSumary.chapters.size()) {
-            HistoryProvider.getInstacne(this).add(mMangaSumary, mMangaSumary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
+        if (mChapterId >= 0 && mChapterId < mMangaSummary.chapters.size()) {
+            HistoryProvider.getInstance(this).add(mMangaSummary, mMangaSummary.chapters.get(mChapterId).number, mPager.getCurrentPageIndex());
         }
     }
 
@@ -184,8 +184,8 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 if (mLoader.getVisibility() == View.VISIBLE) {
                     return;
                 }
-                int favId = FavouritesProvider.getInstacne(this)
-                        .getCategory(mMangaSumary);
+                int favId = FavouritesProvider.getInstance(this)
+                        .getCategory(mMangaSummary);
                 String fav;
                 switch (favId) {
                     case -1:
@@ -195,7 +195,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         fav = getString(R.string.category_no);
                         break;
                     default:
-                        String[] titles = FavouritesProvider.getInstacne(this)
+                        String[] titles = FavouritesProvider.getInstance(this)
                                 .getGenresTitles(this);
                         fav = (titles != null && favId < titles.length) ?
                                 titles[favId] : getString(R.string.category_no);
@@ -214,13 +214,13 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                                 mPager.getCurrentPageIndex(),
                                 mPager.getCount()
                         )
-                        .chapter(mMangaSumary.getChapters().get(mChapterId).name)
-                        .title(mMangaSumary.name)
+                        .chapter(mMangaSummary.getChapters().get(mChapterId).name)
+                        .title(mMangaSummary.name)
                         .show(isDarkTheme());
                 break;
             case R.id.button_save:
-                if (!LocalMangaProvider.class.equals(mMangaSumary.provider)) {
-                    DownloadService.start(this, mMangaSumary);
+                if (!LocalMangaProvider.class.equals(mMangaSummary.provider)) {
+                    DownloadService.start(this, mMangaSummary);
                 } else {
                     Snackbar.make(mPager, R.string.already_saved, Snackbar.LENGTH_SHORT).show();
                 }
@@ -230,25 +230,25 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
                 break;
             case R.id.button_fav:
-                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
-                if (favouritesProvider.has(mMangaSumary)) {
-                    if (favouritesProvider.remove(mMangaSumary)) {
+                FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(this);
+                if (favouritesProvider.has(mMangaSummary)) {
+                    if (favouritesProvider.remove(mMangaSummary)) {
                         Snackbar.make(mPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
-                        ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSumary, -1);
+                        ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, -1);
                     }
                 } else {
                     FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NewChaptersProvider.getInstance(ReadActivity.this)
-                                    .storeChaptersCount(mMangaSumary.id, mMangaSumary.getChapters().size());
-                            ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSumary, which);
+                                    .storeChaptersCount(mMangaSummary.id, mMangaSummary.getChapters().size());
+                            ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, which);
                         }
-                    }, mMangaSumary);
+                    }, mMangaSummary);
                 }
                 break;
             case R.id.button_share:
-                new ContentShareHelper(this).share(mMangaSumary);
+                new ContentShareHelper(this).share(mMangaSummary);
                 break;
             case R.id.button_img:
                 new SaveImageTask()
@@ -268,7 +268,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             case R.id.area_bottom_left:
                 if (mPager.getCurrentItem() > 0) {
                     mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-                } else if (mPager.isReverse() ? mChapterId < mMangaSumary.chapters.size() - 1 : mChapterId > 0){
+                } else if (mPager.isReverse() ? mChapterId < mMangaSummary.chapters.size() - 1 : mChapterId > 0){
                     mChapterId += mPager.isReverse() ? 1 : -1;
                     mPageId = mPager.isReverse() ? 0 : -1;
                     loadChapter();
@@ -279,7 +279,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             case R.id.area_bottom_right:
                 if (mPager.getCurrentItem() < mPager.getCount() - 1) {
                     mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-                } else if (mPager.isReverse() ? mChapterId > 0 : mChapterId < mMangaSumary.chapters.size() - 1) {
+                } else if (mPager.isReverse() ? mChapterId > 0 : mChapterId < mMangaSummary.chapters.size() - 1) {
                     mChapterId += mPager.isReverse() ? -1 : 1;
                     mPageId = mPager.isReverse() ? -1 : 0;
                     loadChapter();
@@ -330,7 +330,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
                 if (page < mPager.getCount() - 1) {
                     mPager.scrollToPage(page + 1);
-                } else if (mChapterId < mMangaSumary.chapters.size() - 1) {
+                } else if (mChapterId < mMangaSummary.chapters.size() - 1) {
                     mChapterId += 1;
                     mPageId = 0;
                     loadChapter();
@@ -425,13 +425,13 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         if (mPager.isReverse()) {
             return mChapterId > 0;
         } else {
-            return mChapterId < mMangaSumary.getChapters().size() - 1;
+            return mChapterId < mMangaSummary.getChapters().size() - 1;
         }
     }
 
     private boolean hasPrevChapter() {
         if (mPager.isReverse()) {
-            return mChapterId < mMangaSumary.getChapters().size() - 1;
+            return mChapterId < mMangaSummary.getChapters().size() - 1;
         } else {
             return mChapterId > 0;
         }
@@ -448,18 +448,18 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     }
 
     private void loadChapter(){
-        mChapter = mMangaSumary.getChapters().get(mChapterId);
+        mChapter = mMangaSummary.getChapters().get(mChapterId);
         new LoadPagesTask().execute();
     }
 
     private void showChaptersList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setSingleChoiceItems(mMangaSumary.getChapters().getNames(), mChapterId, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(mMangaSummary.getChapters().getNames(), mChapterId, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mChapterId = which;
                 mPageId = 0;
-                mChapter = mMangaSumary.getChapters().get(mChapterId);
+                mChapter = mMangaSummary.getChapters().get(mChapterId);
                 new LoadPagesTask().execute();
                 dialog.dismiss();
             }
@@ -563,13 +563,13 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 setArrowPosition(Gravity.LEFT);
                 mImageViewArrow.setRotation(-90);
                 mTextViewNext.setText(getString(mPager.isReverse() ? R.string.next_chapter : R.string.prev_chapter,
-                        mMangaSumary.chapters.get(mChapterId + (mPager.isReverse() ? 1 : -1)).name));
+                        mMangaSummary.chapters.get(mChapterId + (mPager.isReverse() ? 1 : -1)).name));
                 break;
             case OverScrollDetector.DIRECTION_RIGHT:
                 setArrowPosition(Gravity.RIGHT);
                 mImageViewArrow.setRotation(90);
                 mTextViewNext.setText(getString(mPager.isReverse() ? R.string.prev_chapter : R.string.next_chapter,
-                        mMangaSumary.chapters.get(mChapterId + (mPager.isReverse() ? -1 : 1)).name));
+                        mMangaSummary.chapters.get(mChapterId + (mPager.isReverse() ? -1 : 1)).name));
                 break;
             default:
                 return;
@@ -658,10 +658,10 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         protected ArrayList<MangaPage> doInBackground(Void... params) {
             try {
                 MangaProvider provider;
-                if (mMangaSumary.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstacne(ReadActivity.this);
+                if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
+                    provider = LocalMangaProvider.getInstance(ReadActivity.this);
                 } else {
-                    provider = (MangaProvider) mMangaSumary.provider.newInstance();
+                    provider = (MangaProvider) mMangaSummary.provider.newInstance();
                 }
                 return provider.getPages(mChapter.readLink);
             } catch (Exception ignored) {
@@ -688,10 +688,10 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
         protected File doInBackground(MangaPage... params) {
             try {
                 MangaProvider provider;
-                if (mMangaSumary.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstacne(ReadActivity.this);
+                if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
+                    provider = LocalMangaProvider.getInstance(ReadActivity.this);
                 } else {
-                    provider = (MangaProvider) mMangaSumary.provider.newInstance();
+                    provider = (MangaProvider) mMangaSummary.provider.newInstance();
                 }
                 String url = provider.getPageImage(params[0]);
                 File dest;

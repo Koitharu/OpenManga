@@ -146,7 +146,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             case R.id.fab_read:
                 Intent intent = new Intent(this, ReadActivity.class);
                 intent.putExtras(mMangaSummary.toBundle());
-                HistoryProvider.HistorySummary hs = HistoryProvider.getInstacne(this).get(mMangaSummary);
+                HistoryProvider.HistorySummary hs = HistoryProvider.getInstance(this).get(mMangaSummary);
                 if (hs != null) {
                     int index = mMangaSummary.chapters.indexByNumber(hs.getChapter());
                     if (index != -1) {
@@ -165,7 +165,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         if (mMangaSummary.getChapters().size() == 0) {
             return;
         }
-        HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstacne(this).get(mMangaSummary);
+        HistoryProvider.HistorySummary lastChapter = HistoryProvider.getInstance(this).get(mMangaSummary);
         BottomSheet sheet = new BottomSheet(this);
         sheet.setItems(mMangaSummary.getChapters().getNames(), android.R.layout.simple_list_item_1);
         if (lastChapter != null) {
@@ -203,7 +203,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (FavouritesProvider.getInstacne(this).has(mMangaSummary)) {
+        if (FavouritesProvider.getInstance(this).has(mMangaSummary)) {
             menu.findItem(R.id.action_favourite).setIcon(R.drawable.ic_favorite_light);
             menu.findItem(R.id.action_favourite).setTitle(R.string.action_unfavourite);
         } else {
@@ -220,7 +220,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
-                FavouritesProvider favouritesProvider = FavouritesProvider.getInstacne(this);
+                FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(this);
                 if (favouritesProvider.has(mMangaSummary)) {
                     if (favouritesProvider.remove(mMangaSummary)) {
                         ChangesObserver.getInstance().emitOnFavouritesChanged(mMangaSummary, -1);
@@ -280,7 +280,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                                         }
                                         if (idlist.size() == len) {
                                             if (new MangaStore(MangaPreviewActivity.this).dropMangas(new long[]{mMangaSummary.id})) {
-                                                HistoryProvider.getInstacne(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
+                                                HistoryProvider.getInstance(MangaPreviewActivity.this).remove(new long[]{mMangaSummary.id});
                                                 ChangesObserver.getInstance().emitOnLocalChanged(mMangaSummary.id, null);
                                                 finish();
                                             }
@@ -312,7 +312,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
-        HistoryProvider.getInstacne(this).add(mMangaSummary, mMangaSummary.chapters.get(which).number, 0);
+        HistoryProvider.getInstance(this).add(mMangaSummary, mMangaSummary.chapters.get(which).number, 0);
         startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
     }
 
@@ -378,7 +378,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             try {
                 MangaProvider provider;
                 if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstacne(MangaPreviewActivity.this);
+                    provider = LocalMangaProvider.getInstance(MangaPreviewActivity.this);
                 } else {
                     provider = (MangaProvider) mMangaSummary.provider.newInstance();
                 }
@@ -415,7 +415,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
 
         @Override
         protected MangaSummary doInBackground(MangaInfo... params) {
-            return LocalMangaProvider.getInstacne(MangaPreviewActivity.this)
+            return LocalMangaProvider.getInstance(MangaPreviewActivity.this)
                     .getSource(params[0]);
         }
 

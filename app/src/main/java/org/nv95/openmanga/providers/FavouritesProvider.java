@@ -43,7 +43,7 @@ public class FavouritesProvider extends MangaProvider {
         mStorageHelper = new StorageHelper(context);
     }
 
-    public static FavouritesProvider getInstacne(Context context) {
+    public static FavouritesProvider getInstance(Context context) {
         FavouritesProvider instance = instanceReference.get();
         if (instance == null) {
             instance = new FavouritesProvider(context);
@@ -258,7 +258,7 @@ public class FavouritesProvider extends MangaProvider {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        getInstacne(context).add(mangaInfo, selected[0]);
+                        getInstance(context).add(mangaInfo, selected[0]);
                         if (listener != null) {
                             listener.onClick(dialog, selected[0]);
                         }

@@ -113,7 +113,7 @@ public class NewChaptersActivity extends BaseAppActivity {
 
         @Override
         protected MangaList doInBackground(Void... params) {
-            final FavouritesProvider favs = FavouritesProvider.getInstacne(NewChaptersActivity.this);
+            final FavouritesProvider favs = FavouritesProvider.getInstance(NewChaptersActivity.this);
             final NewChaptersProvider news = NewChaptersProvider.getInstance(NewChaptersActivity.this);
             try {
                 news.checkForNewChapters();

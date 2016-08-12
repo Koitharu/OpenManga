@@ -57,13 +57,13 @@ public class MangaProviderManager {
         try {
             switch (index) {
                 case PROVIDER_LOCAL:
-                    return LocalMangaProvider.getInstacne(mContext);
+                    return LocalMangaProvider.getInstance(mContext);
                 case PROVIDER_FAVOURITES:
-                    return FavouritesProvider.getInstacne(mContext);
+                    return FavouritesProvider.getInstance(mContext);
                 case PROVIDER_HISTORY:
-                    return HistoryProvider.getInstacne(mContext);
+                    return HistoryProvider.getInstance(mContext);
                 case PROVIDER_RECOMMENDATIONS:
-                    return RecommendationsProvider.getInstacne(mContext);
+                    return RecommendationsProvider.getInstance(mContext);
                 default:
                     return Providers.getById(index).aClass.newInstance();
             }
@@ -101,13 +101,13 @@ public class MangaProviderManager {
     @Nullable
     public static MangaProvider instanceProvider(Context context, Class<? extends MangaProvider> aClass) {
         if (aClass.equals(LocalMangaProvider.class)) {
-            return LocalMangaProvider.getInstacne(context);
+            return LocalMangaProvider.getInstance(context);
         } else if (aClass.equals(RecommendationsProvider.class)) {
-            return RecommendationsProvider.getInstacne(context);
+            return RecommendationsProvider.getInstance(context);
         } else if (aClass.equals(FavouritesProvider.class)) {
-            return FavouritesProvider.getInstacne(context);
+            return FavouritesProvider.getInstance(context);
         } else if (aClass.equals(HistoryProvider.class)) {
-            return HistoryProvider.getInstacne(context);
+            return HistoryProvider.getInstance(context);
         } else {
             try {
                 return aClass.newInstance();

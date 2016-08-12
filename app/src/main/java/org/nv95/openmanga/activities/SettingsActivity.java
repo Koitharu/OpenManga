@@ -111,7 +111,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             case "movemanga":
                 if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new LocalMoveDialog(this,
-                            LocalMangaProvider.getInstacne(this).getAllIds())
+                            LocalMangaProvider.getInstance(this).getAllIds())
                             .showSelectSource(null);
                 }
                 return true;
