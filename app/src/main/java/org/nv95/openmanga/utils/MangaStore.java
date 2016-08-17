@@ -68,7 +68,7 @@ public class MangaStore {
                 database.insert(TABLE_MANGAS, null, cv);
             }
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
         } finally {
             if (database != null) {
                 database.close();
@@ -100,7 +100,7 @@ public class MangaStore {
                 database.insert(TABLE_CHAPTERS, null, cv);
             }
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             id = 0;
         } finally {
             if (database != null) {
@@ -139,7 +139,7 @@ public class MangaStore {
                 database.insert(TABLE_PAGES, null, cv);
             }
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             id = 0;
         } finally {
             if (database != null) {
@@ -179,7 +179,7 @@ public class MangaStore {
             database.setTransactionSuccessful();
             new DirRemoveHelper(dirs).runAsync();
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
             if (cursor != null) {
@@ -215,7 +215,7 @@ public class MangaStore {
                 database.setTransactionSuccessful();
             }
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
             if (cursor != null) {
@@ -243,7 +243,7 @@ public class MangaStore {
             }
             database.setTransactionSuccessful();
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
             if (database != null) {
@@ -266,7 +266,7 @@ public class MangaStore {
             new DirRemoveHelper(getMangaDir(mContext, database, mangaId), id + "_[-\\w]*").run();
             database.setTransactionSuccessful();
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
             if (database != null) {

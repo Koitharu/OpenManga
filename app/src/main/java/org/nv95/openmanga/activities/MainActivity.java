@@ -733,7 +733,7 @@ public class MainActivity extends BaseAppActivity implements
                 }
                 return new Pair<>(0, intent);
             } catch (Exception e) {
-                FileLogger.getInstance().report(e);
+                FileLogger.getInstance().report("OPENLAST", e);
                 return new Pair<>(3, null);
             }
         }
