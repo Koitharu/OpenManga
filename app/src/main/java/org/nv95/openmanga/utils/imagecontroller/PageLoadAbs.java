@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
 
 import java.io.File;
@@ -71,7 +72,7 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
             mView.setImage(ImageSource.uri(mFileName).tilingEnabled());
             mFileName = null;
         } else {
-            onLoadingFailed(new RuntimeException("Convert failed"));
+            onLoadingFailed(new RuntimeException(mView.getContext().getString(R.string.image_decode_error)));
         }
     }
 
