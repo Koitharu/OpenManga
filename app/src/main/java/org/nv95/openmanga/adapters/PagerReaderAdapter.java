@@ -91,6 +91,7 @@ public class PagerReaderAdapter extends PagerAdapter implements InternalLinkMove
         holder.land = isLandOrientation;
         holder.progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         holder.ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
+        //holder.ssiv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         holder.ssiv.setScaleAndCenter(isLandOrientation ? holder.ssiv.getMaxScale() -.2f : holder.ssiv.getMinScale(), new PointF(0,0));
         holder.textView = (TextView) view.findViewById(R.id.textView_holder);
         holder.textView.setMovementMethod(mLinkMovement);
