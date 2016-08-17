@@ -19,21 +19,10 @@ public class AutoScaleDecoder extends SkiaImageDecoder {
     @Override
     public Bitmap decode(Context context, Uri uri) throws Exception {
 
-
-        try {
-            Bitmap image = ImageLoader.getInstance().loadImageSync(uri.toString(),
-                    OpenMangaApplication.getImageLoaderOptionsBuilder()
-                            .imageScaleType(ImageScaleType.NONE)
-                            .build());
-            return ImageShifter.getInstance().process(image);
-        } catch (OutOfMemoryError e) {
-            // call garbage collector
-            System.gc();
-            return ImageLoader.getInstance().loadImageSync(uri.toString(),
-                    OpenMangaApplication.getImageLoaderOptionsBuilder()
-                            .imageScaleType(ImageScaleType.NONE_SAFE)
-                            .build());
-        }
-
+        return ImageLoader.getInstance().loadImageSync(uri.toString(),
+                OpenMangaApplication.getImageLoaderOptionsBuilder()
+                        .imageScaleType(ImageScaleType.NONE)
+                        .postProcessor(ImageShifter.getInstance())
+                        .build());
     }
 }
