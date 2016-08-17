@@ -140,7 +140,7 @@ public class DesuMeProvider extends MangaProvider {
             jo = ja.getJSONObject(i);
             manga = new MangaInfo();
             manga.name = jo.getString("name");
-            manga.path = "http://desu.me/manga/api" + jo.getInt("id");
+            manga.path = "http://desu.me/manga/api/" + jo.getInt("id");
             manga.preview = jo.getJSONObject("image").getString("x225");
             manga.subtitle = jo.getString("russian");
             switch (jo.getString("status")) {
