@@ -68,7 +68,7 @@ public class FileConverter implements Handler.Callback {
                 result = 0;
                 Log.d("CONVERT", "SUCCESS");
             } catch (Exception e) {
-                FileLogger.getInstance().report(e);
+                FileLogger.getInstance().report("CONVERT", e);
             } finally {
                 if (bitmap != null) {
                     bitmap.recycle();
