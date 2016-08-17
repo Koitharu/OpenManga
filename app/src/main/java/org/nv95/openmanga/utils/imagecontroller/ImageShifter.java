@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by admin on 19.05.16.
  */
+@Deprecated
 public class ImageShifter implements BitmapProcessor, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final ImageShifter instance = new ImageShifter();
