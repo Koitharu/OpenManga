@@ -20,7 +20,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     private static final ImageShifter instance = new ImageShifter();
 
     private int mSpace = 100;
-    private boolean mShift;
+    //private boolean mShift;
     private boolean mRtl;
 
     public static ImageShifter getInstance() {
@@ -28,7 +28,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     }
 
     private ImageShifter() {
-        mShift = true;
+        //mShift = true;
         mRtl = false;
     }
 
@@ -39,7 +39,7 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
 
     @Override
     public Bitmap process(Bitmap bitmap) {
-        if (!mShift || bitmap.getHeight() < GL10.GL_MAX_TEXTURE_SIZE || bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
+        if (bitmap.getHeight() < GL10.GL_MAX_TEXTURE_SIZE || bitmap.getHeight() <= bitmap.getWidth() * 2.4) {
             return scaleBitmap(bitmap);
         }
         final int count = Math.max((int) Math.sqrt(bitmap.getHeight() / bitmap.getWidth()) - 1, 2);
@@ -101,9 +101,9 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case "shifts":
+            /*case "shifts":
                 mShift = sharedPreferences.getBoolean("shifts", true);
-                break;
+                break;*/
             case "direction":
                 mRtl = "2".equals(sharedPreferences.getString("direction", "0"));
         }
