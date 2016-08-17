@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEventListener {
+public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
 
     private final MangaPage mPage;
     private final SubsamplingScaleImageView mView;
@@ -53,7 +53,8 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
     @Override
     public final void onImageLoadError(Exception e) {
         if (mFileName != null) {
-            displayScaled();
+            onProgressUpdate(-1, -1);
+            FileConverter.getInstance().convertAsync(mFileName, this);
         } else {
             onLoadingFailed(e);
         }
@@ -62,6 +63,16 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
     @Override
     public final void onTileLoadError(Exception e) {
 
+    }
+
+    @Override
+    public void onConvertDone(boolean success) {
+        if (success) {
+            mView.setImage(ImageSource.uri(mFileName).tilingEnabled());
+            mFileName = null;
+        } else {
+            onLoadingFailed(new RuntimeException("Convert failed"));
+        }
     }
 
     private class LoadTask extends AsyncTask<Void,Integer,String> {
@@ -134,24 +145,4 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
     public void onLoadingFailed(Exception e) {}
 
     public void onProgressUpdate(int current, int total) {}
-
-    private void displayScaled() {
-        new ConvertTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private class ConvertTask extends AsyncTask<Void,Void,Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            FileConverter.convertToRGB(mFileName);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mView.setImage(ImageSource.uri(mFileName).tilingEnabled());
-            mFileName = null;
-        }
-    }
 }
