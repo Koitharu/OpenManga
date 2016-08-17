@@ -123,6 +123,7 @@ public abstract class PageLoadAbs implements SubsamplingScaleImageView.OnImageEv
         @Override
         protected void onPostExecute(String path) {
             super.onPostExecute(path);
+            mTask = null;
             if (path != null) {
                 mFileName = path;
                 mView.setImage(ImageSource.uri(path).tilingEnabled());
