@@ -3,6 +3,7 @@ package org.nv95.openmanga;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -12,6 +13,8 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.imagecontroller.ImageShifter;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -22,8 +25,8 @@ public class OpenMangaApplication extends Application {
     public void onCreate() {
         super.onCreate();
         FileLogger.init(this);
-        final Resources resources = getResources();
-        final float aspectRatio = 6f / 4f;
+        Resources resources = getResources();
+        float aspectRatio = 6f / 4f;
         ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
                 resources.getDimensionPixelSize(R.dimen.thumb_width_list),
                 resources.getDimensionPixelSize(R.dimen.thumb_height_list)
@@ -43,6 +46,18 @@ public class OpenMangaApplication extends Application {
 
         initImageLoader(this);
         ScheduledServiceReceiver.enable(this);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(ImageShifter.getInstance());
+        ImageShifter.getInstance().setSpace(LayoutUtils.DpToPx(resources, 4));
+    }
+
+
+
+    @Override
+    public void onTerminate() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(ImageShifter.getInstance());
+        super.onTerminate();
     }
 
     public static ImageLoader initImageLoader(Context c) {
