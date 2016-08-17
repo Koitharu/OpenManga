@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import org.nv95.openmanga.utils.FileLogger;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,8 +35,10 @@ public class FileConverter implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
-        ConvertCallback callback = (ConvertCallback) msg.obj;
-        callback.onConvertDone(msg.what == 0);
+        ConvertCallback callback = (ConvertCallback) ((WeakReference) msg.obj).get();
+        if (callback != null) {
+            callback.onConvertDone(msg.what == 0);
+        }
         return true;
     }
 
@@ -44,11 +49,11 @@ public class FileConverter implements Handler.Callback {
     private class ConvertThread implements Runnable {
 
         private final String mFilename;
-        private final ConvertCallback mCallback;
+        private final WeakReference<ConvertCallback> mCallback;
 
         ConvertThread(String filename, ConvertCallback callback) {
             mFilename = filename;
-            mCallback = callback;
+            mCallback = new WeakReference<>(callback);
         }
 
         @Override
@@ -63,7 +68,7 @@ public class FileConverter implements Handler.Callback {
                 result = 0;
                 Log.d("CONVERT", "SUCCESS");
             } catch (Exception e) {
-                Log.e("CONVERT", e.getMessage());
+                FileLogger.getInstance().report(e);
             } finally {
                 if (bitmap != null) {
                     bitmap.recycle();
