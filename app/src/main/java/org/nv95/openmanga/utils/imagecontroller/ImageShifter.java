@@ -46,8 +46,9 @@ public class ImageShifter implements BitmapProcessor, SharedPreferences.OnShared
         final int sectHeight = bitmap.getHeight() / count;
         final Paint paint = new Paint();
         final Paint line = new Paint();
-        line.setColor(Color.BLACK);
-        line.setStrokeWidth(13f);
+        paint.setAntiAlias(true);
+        line.setColor(Color.GRAY);
+        line.setStrokeWidth(mSpace/2.f);
         final Bitmap res = Bitmap.createBitmap((bitmap.getWidth() + mSpace) * count - mSpace, sectHeight, bitmap.getConfig());
         final Canvas canvas = new Canvas(res);
         for (int i=0;i<count;i++) {
