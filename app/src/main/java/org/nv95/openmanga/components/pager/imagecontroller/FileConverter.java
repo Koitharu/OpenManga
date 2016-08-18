@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils.imagecontroller;
+package org.nv95.openmanga.components.pager.imagecontroller;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -91,4 +91,8 @@ public class FileConverter implements Handler.Callback {
     public interface ConvertCallback {
         void onConvertDone(boolean success);
     }
-}
+
+    public static class ConvertException extends Exception {
+
+    }
+ }

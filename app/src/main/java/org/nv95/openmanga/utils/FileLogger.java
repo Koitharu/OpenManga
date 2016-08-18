@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.components.pager.imagecontroller.FileConverter;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.UnknownHostException;
 
 /**
  * Created by nv95 on 16.10.15.
@@ -122,15 +124,17 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public String getFailMessage(Context context, @Nullable Exception e) {
-        if (e == null) {
+        if (e == null || e instanceof UnknownHostException) {
             return context.getString(
                     MangaProviderManager.checkConnection(context) ?
                             R.string.image_loading_error : R.string.no_network_connection
             );
+        } else if (e instanceof FileConverter.ConvertException) {
+            return context.getString(R.string.image_decode_error);
+        } else {
+            report("IMGLOAD", e);
+            return e.getMessage();
         }
-        report("** " + e.getMessage());
-        return e.getMessage();
-        // TODO: 24.07.16 messages for typical errors
     }
 
     @Override
