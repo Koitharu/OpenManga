@@ -153,4 +153,8 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
             onLoadingFail(e);
         }
     }
+
+    public PageLoader getLoader() {
+        return loader;
+    }
 }
