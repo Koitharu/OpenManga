@@ -416,8 +416,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     @Override
     public void onPageChange(int page) {
+        mPager.getReaderAdapter().freeze();
         mPager.setCurrentPageIndex(page);
-        mPager.getAdapter().notifyDataSetChanged();
+        mPager.getReaderAdapter().unfreeze();
     }
 
     private boolean hasNextChapter() {
@@ -646,7 +647,9 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             if (mPageId == -1) {
                 mPageId = mangaPages.size() - 1;
             }
+            mPager.getReaderAdapter().freeze();
             mPager.setPages(mangaPages, mPageId);
+            mPager.getReaderAdapter().unfreeze();
             showcase(findViewById(R.id.imageView_menu), R.string.tip_reader_menu);
         }
 

@@ -3,6 +3,7 @@ package org.nv95.openmanga.components.pager.imagecontroller;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -92,6 +93,7 @@ public class PageLoader implements FileConverter.ConvertCallback {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.d("LOADER", "Started");
             mCallback.onLoadingStarted();
         }
 
@@ -139,12 +141,14 @@ public class PageLoader implements FileConverter.ConvertCallback {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            Log.d("LOADER", "Cancelled");
             mTask = null;
         }
 
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            Log.d("LOADER", "Done");
             mStatus = STATUS_DONE;
             mTask = null;
             if (o == null) {

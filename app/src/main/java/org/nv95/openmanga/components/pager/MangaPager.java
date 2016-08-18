@@ -153,6 +153,10 @@ public class MangaPager extends ViewPager {
         setCurrentItem(mReverse ? mAdapter.getCount() - index - 1 : index, true);
     }
 
+    public PagerReaderAdapter getReaderAdapter() {
+        return mAdapter;
+    }
+
     public int getCount() {
         return mAdapter.getCount();
     }
