@@ -34,9 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.PagerReaderAdapter;
 import org.nv95.openmanga.components.pager.MangaPager;
 import org.nv95.openmanga.components.pager.OverScrollDetector;
+import org.nv95.openmanga.components.pager.imagecontroller.PageHolder;
 import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
@@ -395,8 +395,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                 direction == 1,
                 direction > 1,
                 Integer.parseInt(prefs.getString("animation", String.valueOf(MangaPager.TRANSFORM_MODE_SCROLL))),
-                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PagerReaderAdapter.SCALE_FIT))),
-                prefs.getBoolean("tiling", true)
+                Integer.parseInt(prefs.getString("scalemode", String.valueOf(PageHolder.SCALE_FIT)))
         );
         if (prefs.getBoolean("keep_screen", true)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
