@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class PagerReaderAdapter extends PagerAdapter {
     private boolean isLandOrientation, isLight;
     private int mScaleMode = PageHolder.SCALE_FIT;
     private boolean mFreezed;
+    private final SparseArray<PageHolder> mActiveHolders;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -30,6 +32,7 @@ public class PagerReaderAdapter extends PagerAdapter {
         isLight = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("theme", "0").equals("0");
         mFreezed = false;
+        mActiveHolders = new SparseArray<>();
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
@@ -45,6 +48,13 @@ public class PagerReaderAdapter extends PagerAdapter {
         if (mFreezed) {
             mFreezed = false;
             notifyDataSetChanged();
+        }
+    }
+
+    public void setTopPage(int position) {
+        for (int i=0;i<mActiveHolders.size();i++) {
+            int o = mActiveHolders.keyAt(i);
+            mActiveHolders.get(o).getLoader().setPrioritySafe(i == o ? Thread.MAX_PRIORITY : Thread.NORM_PRIORITY);
         }
     }
 
@@ -79,6 +89,7 @@ public class PagerReaderAdapter extends PagerAdapter {
         }
         if (!isFreezed()) {
             holder.loadPage(getItem(position), isLandOrientation, mScaleMode);
+            mActiveHolders.put(position, holder);
         }
         container.addView(holder.itemView, 0);
         return holder;
@@ -89,6 +100,7 @@ public class PagerReaderAdapter extends PagerAdapter {
         if (object instanceof PageHolder) {
             ((PageHolder) object).recycle();
             container.removeView(((PageHolder) object).itemView);
+            mActiveHolders.remove(position);
         }
     }
 
