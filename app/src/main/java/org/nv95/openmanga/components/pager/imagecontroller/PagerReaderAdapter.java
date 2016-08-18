@@ -22,17 +22,34 @@ public class PagerReaderAdapter extends PagerAdapter {
     private final ArrayList<MangaPage> pages;
     private boolean isLandOrientation, isLight;
     private int mScaleMode = PageHolder.SCALE_FIT;
+    private boolean mFreezed;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
         pages = mangaPages;
         isLight = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("theme", "0").equals("0");
+        mFreezed = false;
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
         this.isLandOrientation = isLandOrientation;
         notifyDataSetChanged();
+    }
+
+    public void freeze() {
+        mFreezed = true;
+    }
+
+    public void unfreeze() {
+        if (mFreezed) {
+            mFreezed = false;
+            notifyDataSetChanged();
+        }
+    }
+
+    public boolean isFreezed() {
+        return mFreezed;
     }
 
     @Override
@@ -60,7 +77,9 @@ public class PagerReaderAdapter extends PagerAdapter {
         if (isLight) {
             holder.itemView.setBackgroundColor(Color.WHITE);
         }
-        holder.loadPage(getItem(position), isLandOrientation, mScaleMode);
+        if (!isFreezed()) {
+            holder.loadPage(getItem(position), isLandOrientation, mScaleMode);
+        }
         container.addView(holder.itemView, 0);
         return holder;
     }
