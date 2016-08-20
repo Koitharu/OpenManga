@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.items.MangaSummary;
 
 import java.io.File;
 
@@ -21,13 +20,6 @@ public class ContentShareHelper {
     public ContentShareHelper(Context context) {
         mContext = context;
         mIntent = new Intent(Intent.ACTION_SEND);
-    }
-
-    public void share(MangaSummary manga) {
-        mIntent.setType("text/plain");
-        mIntent.putExtra(Intent.EXTRA_TEXT, manga.readLink);
-        mIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, manga.name);
-        mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.action_share)));
     }
 
     public void share(MangaInfo manga) {

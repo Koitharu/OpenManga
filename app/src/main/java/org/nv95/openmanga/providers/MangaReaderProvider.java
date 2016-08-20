@@ -70,7 +70,6 @@ public class MangaReaderProvider extends MangaProvider {
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
-            summary.readLink = summary.chapters.get(0).readLink;
             summary.chapters.enumerate();
             return summary;
         } catch (Exception e) {
