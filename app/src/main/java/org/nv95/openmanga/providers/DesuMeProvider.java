@@ -14,7 +14,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +33,7 @@ public class DesuMeProvider extends MangaProvider {
             R.string.genre_shounen, R.string.genre_shounen_ai, R.string.genre_thriller, R.string.genre_horror, R.string.genre_fantasy,
             R.string.genre_hentai, R.string.genre_school, R.string.genre_ecchi, R.string.genre_yuri, R.string.genre_yaoi
     };
-    protected static final String genreUrls[] = {
+    private static final String genreUrls[] = {
             "action", "martial%20arts", "vampire", "web", "military", "harem", "demons", "drama", "josei", "game",
             "historical", "comedy", "magic", "mecha", "mystery", "music", "sci-fi", "parody", "slice of life",
             "police", "adventure", "psychological", "romance", "samurai", "supernatural", "gender%20bender", "sports",
@@ -83,7 +83,6 @@ public class DesuMeProvider extends MangaProvider {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
             JSONObject jo = new JSONObject(getRawPage(mangaInfo.path)).getJSONObject("response");
-            summary.readLink = summary.path;
             summary.description = jo.getString("description");
             summary.preview = jo.getJSONObject("image").getString("original");
             MangaChapter chapter;
@@ -132,7 +131,7 @@ public class DesuMeProvider extends MangaProvider {
                 "http://desu.me/manga/api/?limit=20"
                         + "&page="
                         + (page + 1)
-                        + "&search=" + URLDecoder.decode(query, "UTF-8")
+                        + "&search=" + URLEncoder.encode(query, "UTF-8")
         ));
         MangaInfo manga;
         JSONArray ja = jo.getJSONArray("response");

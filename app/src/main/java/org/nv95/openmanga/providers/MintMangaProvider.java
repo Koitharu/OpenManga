@@ -82,7 +82,6 @@ public class MintMangaProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.readLink = "http://mintmanga.com" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
             String descr = e.select("div.manga-description").first().html();
             int p = descr.indexOf("<a h");
             if (p > 0)
