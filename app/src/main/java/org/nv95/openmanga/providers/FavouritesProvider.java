@@ -94,7 +94,7 @@ public class FavouritesProvider extends MangaProvider {
             }
             cursor.close();
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("FAV", e);
         } finally {
             database.close();
         }

@@ -61,8 +61,6 @@ public class MangachanProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.readLink = summary.path;
-
             summary.description = e.getElementById("description").text().trim();
             summary.preview = "http://mangachan.ru" + e.getElementById("cover").attr("src");
             MangaChapter chapter;

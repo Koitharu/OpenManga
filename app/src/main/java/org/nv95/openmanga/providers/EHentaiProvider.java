@@ -55,7 +55,6 @@ public class EHentaiProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            summary.readLink = summary.path;
             Document document = getPage(mangaInfo.path, DEF_COOKIE);
             StringBuilder builder = new StringBuilder();
             for (Element o : document.body().getElementById("taglist").select("tr")) {
