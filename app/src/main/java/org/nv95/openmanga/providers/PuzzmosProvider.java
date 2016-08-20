@@ -77,7 +77,6 @@ public class PuzzmosProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.readLink = summary.path;
             summary.description = e.select("p").first().text().trim();
             //genres.preview = e.select("img.thumbnail").first().attr("src");
             MangaChapter chapter;

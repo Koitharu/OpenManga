@@ -36,7 +36,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             R.string.genre_horror, R.string.genre_fantastic, R.string.genre_fantasy,
             R.string.genre_school, R.string.genre_ecchi, R.string.genre_yuri
     };
-    protected static final String genreUrls[] = {"art", "action", "martial_arts", "vampires", "harem",
+    static final String genreUrls[] = {"art", "action", "martial_arts", "vampires", "harem",
             "gender_intriga", "heroic_fantasy", "detective", "josei", "doujinshi", "drama", "game",
             "historical", "codomo", "comedy", "maho_shoujo", "mecha", "mystery",
             "sci_fi", "natural", "postapocalipse", "adventure", "psychological", "romance", "samurai",
@@ -89,7 +89,6 @@ public class ReadmangaRuProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.readLink = "http://readmanga.me" + e.select("span.read-first").first().child(0).attr("href") + "?mature=1";
             String descr = e.select("div.manga-description").first().html();
             int p = descr.indexOf("<a h");
             if (p > 0)

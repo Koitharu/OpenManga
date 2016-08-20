@@ -11,8 +11,6 @@ import org.nv95.openmanga.lists.ChaptersList;
  */
 public class MangaSummary extends MangaInfo {
 
-    @Deprecated
-    public String readLink;
     public String description;
     @NonNull
     public ChaptersList chapters;
@@ -28,7 +26,6 @@ public class MangaSummary extends MangaInfo {
         this.status = mangaInfo.status;
         this.extra = mangaInfo.extra;
         this.description = "";
-        this.readLink = "";
         this.chapters = new ChaptersList();
     }
 
@@ -41,7 +38,6 @@ public class MangaSummary extends MangaInfo {
         this.subtitle = mangaSummary.subtitle;
         this.provider = mangaSummary.provider;
         this.description = mangaSummary.description;
-        this.readLink = mangaSummary.readLink;
         this.status = mangaSummary.status;
         this.extra = mangaSummary.extra;
         this.chapters = new ChaptersList(mangaSummary.chapters);
@@ -49,7 +45,6 @@ public class MangaSummary extends MangaInfo {
 
     public MangaSummary(Bundle bundle) {
         super(bundle);
-        this.readLink = bundle.getString("readlink");
         this.description = bundle.getString("description");
         chapters = new ChaptersList(bundle);
     }
@@ -57,14 +52,9 @@ public class MangaSummary extends MangaInfo {
     @Override
     public Bundle toBundle() {
         Bundle bundle = super.toBundle();
-        bundle.putString("readlink", readLink);
         bundle.putString("description", description);
         bundle.putAll(chapters.toBundle());
         return bundle;
-    }
-
-    public String getReadLink() {
-        return readLink;
     }
 
     public String getDescription() {
@@ -76,15 +66,4 @@ public class MangaSummary extends MangaInfo {
         return chapters;
     }
 
-    /**
-     * Uses then manga has only one chapter
-     * If provider doesn't support table of contents
-     */
-    public void addDefaultChapter() {
-        MangaChapter chapter = new MangaChapter();
-        chapter.provider = this.provider;
-        chapter.name = this.name;
-        chapter.readLink = this.readLink;
-        chapters.add(chapter);
-    }
 }
