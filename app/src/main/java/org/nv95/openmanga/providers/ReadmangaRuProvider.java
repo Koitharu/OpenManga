@@ -97,6 +97,9 @@ public class ReadmangaRuProvider extends MangaProvider {
             summary.preview = e.select("div.picture-fotorama").first().child(0).attr("data-full");
             MangaChapter chapter;
             e = e.select("table.table").first();
+            if (e == null) {
+                return summary;
+            }
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();

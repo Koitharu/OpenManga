@@ -86,15 +86,14 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mImageView.setImageAsync(mMangaSummary.preview, false);
         mImageView.setOnClickListener(this);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey("readlink")) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("chapters")) {
             mMangaSummary = new MangaSummary(savedInstanceState);
             mProgressBar.setVisibility(View.GONE);
             mTextViewDescription.setText(mMangaSummary.getDescription());
             mImageView.setImageAsync(mMangaSummary.preview, false);
             if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
-                Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                noChaptersSnackbar();
             } else {
                 mFab.setEnabled(true);
             }
@@ -109,6 +108,18 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             mTextViewSummary.setText(mMangaSummary.genres);
         }
         ChangesObserver.getInstance().addListener(this);
+    }
+
+    private void noChaptersSnackbar() {
+        Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.action_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MangaPreviewActivity.this, MultipleSearchActivity.class)
+                                .putExtra("query", mMangaSummary.name));
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -358,8 +369,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             mImageView.updateImageAsync(mMangaSummary.preview);
             if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
-                Snackbar.make(mAppBarLayout, R.string.no_chapters_found, Snackbar.LENGTH_INDEFINITE)
-                        .show();
+                noChaptersSnackbar();
             }
             invalidateOptionsMenu();
             if (isFirstStart()) {
