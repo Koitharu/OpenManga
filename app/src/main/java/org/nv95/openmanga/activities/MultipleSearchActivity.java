@@ -5,27 +5,23 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.adapters.EndlessAdapter;
 import org.nv95.openmanga.adapters.GroupedAdapter;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
 
-import java.util.List;
+import java.util.ArrayDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,16 +29,15 @@ import java.util.concurrent.Executors;
  * Created by nv95 on 12.01.16.
  */
 public class MultipleSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
-        GroupedAdapter.OnMoreClickListener, DialogInterface.OnDismissListener {
+        GroupedAdapter.OnMoreClickListener, DialogInterface.OnDismissListener, EndlessAdapter.OnLoadMoreListener {
 
-    private ProgressBar mProgressBar;
-    private LinearLayout mMessageBlock;
     private String mQuery;
     private GroupedAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private MangaProviderManager mProviderManager;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private ListModeHelper mListModeHelper;
+    private ArrayDeque<ProviderSummary> mProviders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +47,17 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mQuery = getIntent().getStringExtra("query");
         enableHomeAsUp();
         setSubtitle(mQuery);
-        mMessageBlock = (LinearLayout) findViewById(R.id.block_message);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProviderManager = new MangaProviderManager(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new GroupedAdapter(this);
+        mAdapter = new GroupedAdapter(mRecyclerView, this);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnLoadMoreListener(this);
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
-        mProgressBar.setMax(providers.size());
-        mProgressBar.setProgress(0);
-        new SearchTask(LocalMangaProvider.getProviderSummary(this)).executeOnExecutor(mExecutor);
-        if (checkConnectionWithDialog(this)) {
-            for (ProviderSummary o : providers) {
-                new SearchTask(o).executeOnExecutor(mExecutor);
-            }
-        } else {
-            mMessageBlock.setVisibility(View.GONE);
-        }
+        mProviders = new ArrayDeque<>(mProviderManager.getOrderedProviders());
+        new SearchTask(mProviders.poll()).executeOnExecutor(mExecutor);
     }
 
     @Override
@@ -152,7 +137,13 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         finish();
     }
 
+    @Override
+    public void onLoadMore() {
+        new SearchTask(mProviders.poll()).executeOnExecutor(mExecutor);
+    }
+
     private class SearchTask extends LoaderTask<Void, Void, MangaList> {
+
         private final ProviderSummary mProviderSummary;
 
         private SearchTask(ProviderSummary provider) {
@@ -174,14 +165,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
             if (mangaInfos != null && mangaInfos.size() != 0) {
                 mAdapter.append(mProviderSummary, mangaInfos);
             }
-            mProgressBar.incrementProgressBy(1);
-            if (mProgressBar.getProgress() == mProgressBar.getMax()) {
-                mMessageBlock.setVisibility(View.GONE);
-                if (mAdapter.getItemCount() == 0) {
-                    Snackbar.make(mRecyclerView, R.string.no_manga_found, Snackbar.LENGTH_INDEFINITE)
-                            .show();
-                }
-            }
+            mAdapter.setLoaded(!mProviders.isEmpty());
         }
     }
 
@@ -194,7 +178,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
 
         @Override
         public int getSpanSize(int position) {
-            return mAdapter.getItemViewType(position) == 0 ? mCount : 1;
+            return mAdapter.getItemViewType(position) == 1 ? 1 : mCount;
         }
     }
 }
