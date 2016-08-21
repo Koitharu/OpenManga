@@ -15,6 +15,7 @@
 
 package org.nv95.openmanga.helpers;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;
@@ -31,12 +32,14 @@ public class DirRemoveHelper implements Runnable {
 
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
+    @Nullable
     private final File[] mFiles;
 
     public DirRemoveHelper(File file) {
         mFiles = new File[]{file};
     }
 
+    @SuppressWarnings("NullableProblems")
     public DirRemoveHelper(File files[]) {
         mFiles = files;
     }
@@ -72,6 +75,9 @@ public class DirRemoveHelper implements Runnable {
 
     @Override
     public void run() {
+        if (mFiles == null) {
+            return;
+        }
         for (File file : mFiles) {
             removeDir(file);
         }

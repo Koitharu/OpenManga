@@ -13,7 +13,6 @@ public class DownloadInfo extends MangaInfo {
     public static final int STATE_RUNNING = 1;
     public static final int STATE_FINISHED = 2;
 
-    public String readLink;
     public String description;
     public final int max;
     public int pos;
