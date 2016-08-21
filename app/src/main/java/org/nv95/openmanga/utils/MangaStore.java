@@ -52,7 +52,7 @@ public class MangaStore {
         try {
             database = mDatabaseHelper.getWritableDatabase();
             final ContentValues cv = new ContentValues();
-            id = manga.readLink.hashCode();
+            id = manga.path.hashCode();
             cv.put("id", id);
             cv.put("name", manga.name);
             cv.put("subtitle", manga.subtitle);
