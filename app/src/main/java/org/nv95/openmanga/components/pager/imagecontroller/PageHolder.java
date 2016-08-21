@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -129,6 +130,10 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
     public void onImageLoaded() {
         progressBar.setVisibility(View.GONE);
         textView.setVisibility(View.GONE);
+        AlphaAnimation aa = new AlphaAnimation(0.f, 1.f);
+        aa.setDuration(250);
+        aa.setRepeatCount(0);
+        ssiv.startAnimation(aa);
     }
 
     @Override
