@@ -13,28 +13,4 @@
         android:scrollbars="vertical"
         android:layout_weight="1" />
 
-    <LinearLayout
-        android:id="@+id/block_message"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="6dp"
-        android:background="@color/transparent_dark">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_overlay_85"
-            android:text="@string/loading"
-            android:id="@+id/textView" />
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar" />
-    </LinearLayout>
-
 </LinearLayout>

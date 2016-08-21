@@ -1,7 +1,6 @@
 package org.nv95.openmanga.adapters;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.ProgressBar;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.lists.PagedList;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 25.01.16.
@@ -24,7 +24,6 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     private int mLastVisibleItem, mTotalItemCount;
     private boolean mLoading;
     private OnLoadMoreListener mOnLoadMoreListener;
-    private GridLayoutManager mLayoutManager;
 
     public EndlessAdapter(PagedList<T> dataset, RecyclerView recyclerView) {
         mDataset = dataset;
@@ -32,8 +31,8 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                mTotalItemCount = mLayoutManager.getItemCount();
-                mLastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                mTotalItemCount = LayoutUtils.getItemCount(recyclerView);
+                mLastVisibleItem = LayoutUtils.findLastVisibleItemPosition(recyclerView);
                 if (!mLoading && isLoadEnabled() && mTotalItemCount <= (mLastVisibleItem + mVisibleThreshold)) {
                     // End has been reached
                     // Do something
@@ -44,12 +43,6 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
                 }
             }
         });
-        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-        onLayoutManagerChanged(mLayoutManager);
-    }
-
-    public void onLayoutManagerChanged(GridLayoutManager layoutManager) {
-        mLayoutManager = layoutManager;
     }
 
     @Override
@@ -106,7 +99,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.mOnLoadMoreListener = onLoadMoreListener;
+        mOnLoadMoreListener = onLoadMoreListener;
     }
 
     private boolean isLoadEnabled() {
