@@ -84,7 +84,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mFab.setOnLongClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
         mImageView.setImageAsync(mMangaSummary.preview, false);
-        mImageView.setOnClickListener(this);
 
         if (savedInstanceState != null && savedInstanceState.containsKey("chapters")) {
             mMangaSummary = new MangaSummary(savedInstanceState);
@@ -141,9 +140,6 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.fab_read:
                 showChaptersSheet();
-                break;
-            case R.id.imageView:
-                // TODO: 26.01.16
                 break;
             case R.id.snackbar_action:
                 new LoadInfoTask().startLoading();
@@ -248,7 +244,9 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 }
                 return true;
             case R.id.action_save:
-                DownloadService.start(this, mMangaSummary);
+                if (mMangaSummary.chapters.size() != 0) {
+                    DownloadService.start(this, mMangaSummary);
+                }
                 return true;
             case R.id.action_remove:
                 deleteDialog();

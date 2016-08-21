@@ -29,8 +29,8 @@ public class DownloadsActivity extends BaseAppActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_downloads);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        enableHomeAsUp();
-        final RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        enableHomeAsClose();
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         assert mRecyclerView != null;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
