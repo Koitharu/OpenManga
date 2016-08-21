@@ -56,7 +56,7 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
-        mProviders = new ArrayDeque<>(mProviderManager.getOrderedProviders());
+        mProviders = new ArrayDeque<>(mProviderManager.getEnabledOrderedProviders());
         new SearchTask(mProviders.poll()).executeOnExecutor(mExecutor);
     }
 

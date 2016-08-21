@@ -113,7 +113,7 @@ public class RecommendationsProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         final ArrayList<String> genres = getStatGenres(mConfig[0], mConfig[1]);
-        final List<ProviderSummary> providers = mProviderManager.getOrderedProviders();
+        final List<ProviderSummary> providers = mProviderManager.getEnabledOrderedProviders();
         final MangaList mangas = new MangaList();
         final Random random = new Random();
         final int groupCount = Math.min(providers.size(), 4);

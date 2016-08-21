@@ -147,6 +147,10 @@ public class MangaProviderManager {
         return mProviders;
     }
 
+    public List<ProviderSummary> getEnabledOrderedProviders() {
+        return mProviders.subList(0, getProvidersCount());
+    }
+
     public int getProvidersCount() {
         return Math.min(
                 mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
