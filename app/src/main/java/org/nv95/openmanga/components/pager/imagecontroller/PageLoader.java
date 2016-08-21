@@ -96,6 +96,7 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
         LoadThread lt = mThread.get();
         if (lt != null) {
             lt.setPriority(priority);
+            Log.d("LOADER", "Priority: " + priority);
         }
     }
 
