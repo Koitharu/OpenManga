@@ -19,8 +19,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by admin on 18.08.16.
@@ -39,8 +37,6 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
     private static final int MSG_PROGRESS = 2;
     private static final int MSG_DONE = 3;
     private static final int MSG_ERROR = 4;
-
-    private static final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
 
     @NonNull
     private final Callback mCallback;
@@ -63,7 +59,7 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
         mFilename = null;
         LoadThread lt = new LoadThread(page);
         mThread = new WeakReference<>(lt);
-        mExecutor.submit(lt);
+        lt.start();
     }
 
     public void cancelLoading() {
