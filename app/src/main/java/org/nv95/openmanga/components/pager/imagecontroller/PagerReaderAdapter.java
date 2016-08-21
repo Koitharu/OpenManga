@@ -54,7 +54,7 @@ public class PagerReaderAdapter extends PagerAdapter {
     public void setTopPage(int position) {
         for (int i=0;i<mActiveHolders.size();i++) {
             int o = mActiveHolders.keyAt(i);
-            mActiveHolders.get(o).getLoader().setPrioritySafe(i == o ? Thread.MAX_PRIORITY : Thread.NORM_PRIORITY);
+            mActiveHolders.get(o).getLoader().setPrioritySafe(position == o ? Thread.MAX_PRIORITY : Thread.NORM_PRIORITY);
         }
     }
 
