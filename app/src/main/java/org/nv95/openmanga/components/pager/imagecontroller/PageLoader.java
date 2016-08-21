@@ -120,7 +120,8 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
             case MSG_DONE:
                 Log.d("LOADER", "Done");
                 mStatus = STATUS_DONE;
-                mCallback.onLoadingComplete((String) msg.obj);
+                mFilename = (String) msg.obj;
+                mCallback.onLoadingComplete(mFilename);
                 mThread.clear();
                 break;
 
