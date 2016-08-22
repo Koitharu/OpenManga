@@ -362,8 +362,10 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
 
     @Override
     public void onPageSelected(int position) {
-        mPageId = mPager.getCurrentPageIndex();
-        mPager.getReaderAdapter().setTopPage(position);
+        if (mLoader.getVisibility() != View.VISIBLE && !mPager.getReaderAdapter().isFreezed()) {
+            mPageId = mPager.getCurrentPageIndex();
+            mPager.getReaderAdapter().setTopPage(position);
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.CallSuper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.MainThread;
@@ -310,28 +311,31 @@ public abstract class BaseAppActivity extends AppCompatActivity {
 
     protected abstract class LoaderTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
+        @CallSuper
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             registerLoaderTask(this);
         }
 
+        @CallSuper
         @Override
         protected void onPostExecute(Result result) {
             super.onPostExecute(result);
             unregisterLoaderTask(this);
         }
 
+        @CallSuper
         @Override
         protected void onCancelled(Result result) {
             super.onCancelled(result);
             unregisterLoaderTask(this);
         }
 
+        @CallSuper
         @Override
         protected void onCancelled() {
             super.onCancelled();
-
             unregisterLoaderTask(this);
         }
 
