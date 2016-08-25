@@ -24,7 +24,6 @@ public class PagerReaderAdapter extends PagerAdapter {
     private boolean isLandOrientation, isLight;
     private int mScaleMode = PageHolder.SCALE_FIT;
     private boolean mFreezed;
-    private final SparseArray<PageHolder> mActiveHolders;
 
     public PagerReaderAdapter(Context context, ArrayList<MangaPage> mangaPages) {
         inflater = LayoutInflater.from(context);
@@ -32,7 +31,6 @@ public class PagerReaderAdapter extends PagerAdapter {
         isLight = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("theme", "0").equals("0");
         mFreezed = false;
-        mActiveHolders = new SparseArray<>();
     }
 
     public void setIsLandOrientation(boolean isLandOrientation) {
@@ -48,13 +46,6 @@ public class PagerReaderAdapter extends PagerAdapter {
         if (mFreezed) {
             mFreezed = false;
             notifyDataSetChanged();
-        }
-    }
-
-    public void setTopPage(int position) {
-        for (int i=0;i<mActiveHolders.size();i++) {
-            int o = mActiveHolders.keyAt(i);
-            mActiveHolders.get(o).getLoader().setPrioritySafe(position == o ? Thread.MAX_PRIORITY : Thread.NORM_PRIORITY);
         }
     }
 
@@ -89,7 +80,6 @@ public class PagerReaderAdapter extends PagerAdapter {
         }
         if (!isFreezed()) {
             holder.loadPage(getItem(position), isLandOrientation, mScaleMode);
-            mActiveHolders.put(position, holder);
         }
         container.addView(holder.itemView, 0);
         return holder;
@@ -100,7 +90,6 @@ public class PagerReaderAdapter extends PagerAdapter {
         if (object instanceof PageHolder) {
             ((PageHolder) object).recycle();
             container.removeView(((PageHolder) object).itemView);
-            mActiveHolders.remove(position);
         }
     }
 
