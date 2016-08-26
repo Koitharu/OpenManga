@@ -111,6 +111,9 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
                     for (int i = 0; i < array.length(); i++) {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
+                        if (page.path.startsWith("/")) {
+                            page.path = "http://selfmanga.ru" + page.path;
+                        }
                         page.provider = SelfmangaRuProvider.class;
                         pages.add(page);
                     }
