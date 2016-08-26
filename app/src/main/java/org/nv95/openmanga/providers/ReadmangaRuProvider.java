@@ -135,6 +135,9 @@ public class ReadmangaRuProvider extends MangaProvider {
                     for (int i = 0; i < array.length(); i++) {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
+                        if (page.path.startsWith("/")) {
+                            page.path = "http://readmanga.me" + page.path;
+                        }
                         page.provider = ReadmangaRuProvider.class;
                         pages.add(page);
                     }
