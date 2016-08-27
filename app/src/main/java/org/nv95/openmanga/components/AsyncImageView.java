@@ -26,7 +26,6 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
@@ -35,6 +34,7 @@ import org.nv95.openmanga.items.ThumbSize;
 /**
  * Created by nv95 on 10.12.15.
  */
+@Deprecated
 public class AsyncImageView extends ImageView {
 
     private static Drawable mDrawableHolder;
@@ -100,7 +100,7 @@ public class AsyncImageView extends ImageView {
         mUrl = (url != null && url.charAt(0) == '/') ? "file://" + url : url;
         ImageLoader.getInstance().displayImage(mUrl, this, OpenMangaApplication
                 .getImageLoaderOptionsBuilder()
-                .displayer(new SimpleBitmapDisplayer())
+                .displayer(new TransitionDisplayer())
         .build());
     }
 }
