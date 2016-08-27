@@ -42,6 +42,7 @@ public class TopCropImageView extends AsyncImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        resetPadding();
         recomputeImgMatrix();
     }
 
@@ -49,6 +50,20 @@ public class TopCropImageView extends AsyncImageView {
     protected boolean setFrame(int l, int t, int r, int b) {
         recomputeImgMatrix();
         return super.setFrame(l, t, r, b);
+    }
+
+    /**
+     * fix top padding below transparent status bar
+     */
+    private void resetPadding() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setPadding(
+                    getPaddingLeft(),
+                    0,
+                    getPaddingRight(),
+                    getPaddingBottom()
+            );
+        }
     }
 
     private void recomputeImgMatrix() {
