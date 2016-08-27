@@ -179,7 +179,11 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
             }
             mList.appendPage(list);
             if (list.size() != 0) {
-                mAdapter.notifyItemRangeInserted(mList.size() - 1, mList.size() - list.size());
+                if (mList.size() == list.size()) {
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    mAdapter.notifyItemRangeInserted(mList.size() - 1, mList.size() - list.size());
+                }
                 mList.setHasNext(mAppendable);
             } else {
                 mList.setHasNext(false);
