@@ -42,8 +42,16 @@ public class MangaProviderManager {
             Collections.addAll(mProviders, Providers.getAll());
         } else {
             String[] ss = ids.split("\\|");
+            int i;
+            int count = Providers.getCount();
             for (String o : ss) {
-                mProviders.add(Providers.getById(Integer.parseInt(o)));
+                i = Integer.parseInt(o);
+                if (i < count) {
+                    mProviders.add(Providers.getById(i));
+                }
+            }
+            for (i=ss.length;i<count;i++) {
+                mProviders.add(Providers.getById(i));
             }
         }
     }
