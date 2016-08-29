@@ -174,6 +174,9 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     }
 
     boolean checkPermission(String permission) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         if (ContextCompat.checkSelfPermission(this,
                 permission) == PackageManager.PERMISSION_GRANTED) {
             return true;
