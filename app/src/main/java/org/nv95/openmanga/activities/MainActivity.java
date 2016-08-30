@@ -1,10 +1,12 @@
 package org.nv95.openmanga.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -178,6 +180,9 @@ public class MainActivity extends BaseAppActivity implements
         }
 
         ChangesObserver.getInstance().addListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
     }
 
     /**
