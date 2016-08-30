@@ -20,8 +20,8 @@ public class ScheduledServiceReceiver extends BroadcastReceiver {
     public static void enable(Context context) {
         final Intent intent = new Intent(context, ScheduledService.class);
         final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
-                SCHEDULE_INTERVAL, SCHEDULE_INTERVAL,
+        alarmManager.setInexactRepeating(AlarmManager.RTC,
+                System.currentTimeMillis() + SCHEDULE_INTERVAL, SCHEDULE_INTERVAL,
                 PendingIntent.getService(context, 478, intent, 0));
     }
 
@@ -29,6 +29,7 @@ public class ScheduledServiceReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()) {
             case Intent.ACTION_BOOT_COMPLETED:
+            case "android.intent.action.QUICKBOOT_POWERON":
                 enable(context);
                 break;
             case ConnectivityManager.CONNECTIVITY_ACTION:
