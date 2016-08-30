@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by admin on 18.08.16.
@@ -66,7 +67,7 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
         mStatus = STATUS_CANCELLED;
         LoadThread lt = mThread.get();
         if (lt != null) {
-            lt.interrupt();
+            lt.cancel();
         }
     }
 
@@ -125,9 +126,14 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
     private class LoadThread extends Thread {
 
         private final MangaPage mPage;
+        private final AtomicBoolean mCancelled = new AtomicBoolean(false);
 
         LoadThread(MangaPage page) {
             mPage = page;
+        }
+
+        public void cancel() {
+            mCancelled.set(true);
         }
 
         @Override
@@ -155,9 +161,12 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
                         if (total > 0) {
                             updateProgress(current * 100 / total);
                         }
-                        return !isInterrupted();
+                        return !mCancelled.get();
                     }
                 });
+                if (mCancelled.get()) {
+                    return;
+                }
                 file = DiskCacheUtils.findInCache(url, cache);
                 if (file != null) {
                     returnValue(file.getAbsolutePath());
