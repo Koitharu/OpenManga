@@ -16,14 +16,11 @@ import org.nv95.openmanga.utils.FileLogger;
 public class ScheduledServiceReceiver extends BroadcastReceiver {
 
     public static final long SCHEDULE_INTERVAL = AlarmManager.INTERVAL_HOUR / 30;
-    private static PendingIntent pIntent = null;
 
     public static void enable(Context context) {
-        if (pIntent == null) {
-            Intent intent = new Intent(context, ScheduledService.class);
-            pIntent = PendingIntent.getService(context, 478, intent, 0);
-        }
-        final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ScheduledService.class);
+        PendingIntent pIntent = PendingIntent.getService(context, 478, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,
                 SCHEDULE_INTERVAL, SCHEDULE_INTERVAL, pIntent);
     }

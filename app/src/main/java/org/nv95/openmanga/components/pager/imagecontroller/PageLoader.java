@@ -1,10 +1,8 @@
 package org.nv95.openmanga.components.pager.imagecontroller;
 
-import android.os.Handler;
-import android.os.Message;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -19,13 +17,12 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by admin on 18.08.16.
  */
 
-public class PageLoader implements FileConverter.ConvertCallback, Handler.Callback {
+public class PageLoader implements FileConverter.ConvertCallback {
 
     public static final int STATUS_READY = 0;
     public static final int STATUS_LOADING = 1;
@@ -34,40 +31,34 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
     public static final int STATUS_CONVERTED = 4;
     public static final int STATUS_FAILED = 4;
 
-    private static final int MSG_STARTS = 1;
-    private static final int MSG_PROGRESS = 2;
-    private static final int MSG_DONE = 3;
-    private static final int MSG_ERROR = 4;
-
     @NonNull
     private final Callback mCallback;
-    private WeakReference<LoadThread> mThread;
+    @NonNull
+    private WeakReference<LoadTask> mTask;
     @Nullable
     private String mFilename;
     private int mStatus;
-    private final Handler mHandler;
 
     public PageLoader(@NonNull Callback callback) {
         mCallback = callback;
-        mHandler = new Handler(this);
         mStatus = STATUS_READY;
-        mThread = new WeakReference<>(null);
+        mTask = new WeakReference<>(null);
     }
 
     public void loadPage(MangaPage page) {
         mStatus = STATUS_LOADING;
         cancelLoading();
         mFilename = null;
-        LoadThread lt = new LoadThread(page);
-        mThread = new WeakReference<>(lt);
-        lt.start();
+        LoadTask lt = new LoadTask();
+        mTask = new WeakReference<>(lt);
+        lt.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, page);
     }
 
     public void cancelLoading() {
         mStatus = STATUS_CANCELLED;
-        LoadThread lt = mThread.get();
+        LoadTask lt = mTask.get();
         if (lt != null) {
-            lt.cancel();
+            lt.cancel(false);
         }
     }
 
@@ -97,59 +88,26 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
         return mStatus;
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_STARTS:
-                Log.d("LOADER", "Started");
-                mCallback.onLoadingStarted();
-                break;
-            case MSG_PROGRESS:
-                mCallback.onProgressUpdated((Integer) msg.obj);
-                break;
-            case MSG_ERROR:
-                mCallback.onLoadingFail((Exception) msg.obj);
-                mThread.clear();
-                break;
-            case MSG_DONE:
-                Log.d("LOADER", "Done");
-                mStatus = STATUS_DONE;
-                mFilename = (String) msg.obj;
-                mCallback.onLoadingComplete(mFilename);
-                mThread.clear();
-                break;
+    private class LoadTask extends AsyncTask<MangaPage, Integer, Object> {
 
-        }
-        return true;
-    }
-
-    private class LoadThread extends Thread {
-
-        private final MangaPage mPage;
-        private final AtomicBoolean mCancelled = new AtomicBoolean(false);
-
-        LoadThread(MangaPage page) {
-            mPage = page;
-        }
-
-        public void cancel() {
-            mCancelled.set(true);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mCallback.onLoadingStarted();
         }
 
         @Override
-        public void run() {
-            mHandler.sendEmptyMessage(MSG_STARTS);
+        protected Object doInBackground(MangaPage... params) {
             try {
-                if (mPage.path.startsWith("/")) {
-                    returnValue(mPage.path);
-                    return;
+                Thread.currentThread().setPriority(Thread.NORM_PRIORITY + 2);
+                if (params[0].path.startsWith("/")) {
+                    return params[0].path;
                 }
-                String url =  mPage.provider.newInstance().getPageImage(mPage);
+                String url =  params[0].provider.newInstance().getPageImage(params[0]);
                 DiskCache cache = ImageLoader.getInstance().getDiskCache();
                 File file = DiskCacheUtils.findInCache(url, cache);
                 if (file != null) {
-                    returnValue(file.getAbsolutePath());
-                    return;
+                    return file.getAbsolutePath();
                 }
                 HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                 connection.connect();
@@ -159,48 +117,50 @@ public class PageLoader implements FileConverter.ConvertCallback, Handler.Callba
                     @Override
                     public boolean onBytesCopied(int current, int total) {
                         if (total > 0) {
-                            updateProgress(current * 100 / total);
+                            publishProgress(current, total);
                         }
-                        return !mCancelled.get();
+                        return !isCancelled();
                     }
                 });
-                if (mCancelled.get()) {
-                    return;
-                }
                 file = DiskCacheUtils.findInCache(url, cache);
                 if (file != null) {
-                    returnValue(file.getAbsolutePath());
+                    return file.getAbsolutePath();
                 } else {
-                    returnError(null);
+                    return null;
                 }
             } catch (Exception e) {
-                returnError(e);
+                return e;
             }
         }
 
-        private void returnValue(String value) {
-            Message msg = new Message();
-            msg.what = MSG_DONE;
-            msg.obj = value;
-            mHandler.sendMessage(msg);
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mCallback.onProgressUpdated(values[0] * 100 / values[1]);
         }
 
-        private void returnError(Exception e) {
-            Message msg = new Message();
-            msg.what = MSG_ERROR;
-            msg.obj = e;
-            mHandler.sendMessage(msg);
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mTask.clear();
         }
 
-        private void updateProgress(int percent) {
-            Message msg = new Message();
-            msg.what = MSG_PROGRESS;
-            msg.obj = percent;
-            mHandler.sendMessage(msg);
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            mStatus = STATUS_DONE;
+            mTask.clear();
+            if (o == null) {
+                mCallback.onLoadingFail(null);
+            } else if (o instanceof String) {
+                mFilename = (String) o;
+                mCallback.onLoadingComplete(mFilename);
+            } else if (o instanceof Exception) {
+                mCallback.onLoadingFail((Exception) o);
+            }
         }
     }
 
-    public interface Callback {
+    interface Callback {
         void onLoadingStarted();
         void onProgressUpdated(int percent);
         void onLoadingComplete(String filename);
