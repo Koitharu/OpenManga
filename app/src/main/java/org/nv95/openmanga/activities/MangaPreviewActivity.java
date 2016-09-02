@@ -19,11 +19,11 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.dialogs.BottomSheet;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -36,6 +36,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
 
 import java.io.File;
@@ -52,7 +53,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     private MangaSummary mMangaSummary;
     //views
     private FloatingActionButton mFab;
-    private AsyncImageView mImageView;
+    private ImageView mImageView;
     private ProgressBar mProgressBar;
     private TextView mTextViewSummary;
     private TextView mTextViewDescription;
@@ -71,7 +72,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mMangaSummary = new MangaSummary(new MangaInfo(getIntent().getExtras()));
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_container);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);
-        mImageView = (AsyncImageView) findViewById(R.id.imageView);
+        mImageView = (ImageView) findViewById(R.id.imageView);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mTextViewSummary = (TextView) findViewById(R.id.textView_summary);
@@ -83,13 +84,13 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         mFab.setOnClickListener(this);
         mFab.setOnLongClickListener(this);
         mImageView.setColorFilter(ContextCompat.getColor(this, R.color.preview_filter));
-        mImageView.setImageAsync(mMangaSummary.preview, false);
+        ImageUtils.setImage(mImageView, mMangaSummary.preview);
 
         if (savedInstanceState != null && savedInstanceState.containsKey("chapters")) {
             mMangaSummary = new MangaSummary(savedInstanceState);
             mProgressBar.setVisibility(View.GONE);
             mTextViewDescription.setText(mMangaSummary.getDescription());
-            mImageView.setImageAsync(mMangaSummary.preview, false);
+            ImageUtils.setImage(mImageView, mMangaSummary.preview);
             if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 noChaptersSnackbar();
@@ -364,7 +365,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             MangaPreviewActivity.this.mMangaSummary = result.first;
             mTextViewDescription.setText(mMangaSummary.getDescription());
             mTextViewExtra.setText(result.second);
-            mImageView.updateImageAsync(mMangaSummary.preview);
+            ImageUtils.updateImage(mImageView, mMangaSummary.preview);
             if (mMangaSummary.getChapters().size() == 0) {
                 mFab.setEnabled(false);
                 noChaptersSnackbar();

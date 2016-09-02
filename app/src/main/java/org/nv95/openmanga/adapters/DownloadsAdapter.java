@@ -25,14 +25,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.utils.ImageUtils;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -128,7 +129,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     }
 
     protected static class DownloadHolder extends RecyclerView.ViewHolder {
-        private final AsyncImageView mAsyncImageView;
+        private final ImageView mImageView;
         private final TextView mTextViewTitle;
         private final TextView mTextViewSubtitle;
         private final TextView mTextViewState;
@@ -138,7 +139,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
         public DownloadHolder(View itemView) {
             super(itemView);
-            mAsyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
+            mImageView = (ImageView) itemView.findViewById(R.id.imageView);
             mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
             mTextViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             mTextViewState = (TextView) itemView.findViewById(R.id.textView_state);
@@ -150,7 +151,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         @SuppressLint("SetTextI18n")
         public void fill(DownloadInfo data) {
             mTextViewTitle.setText(data.name);
-            mAsyncImageView.setImageThumbAsync(data.preview, ThumbSize.THUMB_SIZE_LIST);
+            ImageUtils.setThumbnail(mImageView, data.preview, ThumbSize.THUMB_SIZE_LIST);
             switch (data.state) {
                 case DownloadInfo.STATE_IDLE:
                     mTextViewState.setText(R.string.queue);

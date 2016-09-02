@@ -6,13 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.MangaPreviewActivity;
-import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.ImageUtils;
 
 /**
  * Created by nv95 on 17.04.16.
@@ -43,14 +44,14 @@ public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.
 
     static class UpdatesHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextViewTitle;
-        private final AsyncImageView mAsyncImageView;
+        private final ImageView imageView;
         private final TextView mTextViewBadge;
         private final TextView mTextViewSubtitle;
         private MangaInfo mData;
 
         public UpdatesHolder(View itemView) {
             super(itemView);
-            mAsyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
             mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
             mTextViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             mTextViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
@@ -59,7 +60,7 @@ public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.
 
         public void fill(MangaInfo manga) {
             mData = manga;
-            mAsyncImageView.setImageAsync(mData.preview);
+            ImageUtils.setThumbnail(imageView, mData.preview);
             mTextViewTitle.setText(mData.name);
             mTextViewSubtitle.setText(mData.subtitle);
             mTextViewBadge.setText(mData.extra);
