@@ -9,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.MangaPreviewActivity;
-import org.nv95.openmanga.components.AsyncImageView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
+import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
 
@@ -82,7 +83,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private TextView textViewSubtitle;
         private TextView textViewSummary;
         private TextView textViewBadge;
-        private AsyncImageView asyncImageView;
+        private ImageView imageView;
         private MangaInfo mData;
         @Nullable
         private OnHolderClickListener mListener;
@@ -93,7 +94,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
             textViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
-            asyncImageView = (AsyncImageView) itemView.findViewById(R.id.imageView);
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
             itemView.setOnLongClickListener(this);
@@ -117,7 +118,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 textViewSubtitle.setVisibility(View.VISIBLE);
             }
             textViewSummary.setText(mData.genres);
-            asyncImageView.setImageThumbAsync(mData.preview, thumbSize);
+            ImageUtils.setThumbnail(imageView, data.preview, thumbSize);
             // TODO: 17.02.16
             //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
             if (mData.extra == null) {

@@ -8,7 +8,7 @@
     tools:context=".activities.MangaPreviewActivity"
     android:orientation="horizontal">
 
-    <org.nv95.openmanga.components.AsyncImageView
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

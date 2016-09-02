@@ -20,7 +20,7 @@
     android:orientation="horizontal"
     android:padding="12dp">
 
-    <org.nv95.openmanga.components.AsyncImageView
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="122dp"
         android:layout_height="164dp"

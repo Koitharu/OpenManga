@@ -9,7 +9,7 @@
         android:layout_margin="@dimen/padding8"
         android:background="?attr/selectableItemBackground">
 
-        <org.nv95.openmanga.components.AsyncImageView
+        <ImageView
             android:id="@+id/imageView"
             android:layout_width="@dimen/thumb_width_list"
             android:layout_height="@dimen/thumb_height_list"
