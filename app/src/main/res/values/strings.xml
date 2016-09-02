@@ -284,4 +284,7 @@
     <string name="tip_save">Click to save manga to your device and read it anytime and anywhere without internet connection</string>
     <string name="tip_save_more">This is not full manga? Click to download missing chapters</string>
     <string name="drag_divider_hint">Disabled sources</string>
+    <string name="max_cache_size">Max. cache size</string>
+    <string name="invalid_value">Invalid value</string>
+    <string name="too_small_free_space">You have too few free space on your device\'s storage</string>
 </resources>
