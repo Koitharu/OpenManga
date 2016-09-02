@@ -52,6 +52,11 @@
         <Preference
             android:key="ccache"
             android:title="@string/action_clear_cache" />
+        <EditTextPreference
+            android:key="maxcache"
+            android:title="@string/max_cache_size"
+            android:inputType="numberDecimal"
+            android:defaultValue="100" />
         <Preference
             android:key="backup"
             android:title="@string/backup" />

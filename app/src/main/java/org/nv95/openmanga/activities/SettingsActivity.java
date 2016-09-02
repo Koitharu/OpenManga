@@ -29,6 +29,7 @@ import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
 
@@ -215,6 +216,32 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
             bindPreferenceSummary((ListPreference) findPreference("theme"));
             bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
+            EditTextPreference etp = (EditTextPreference) findPreference("maxcache");
+            try {
+                etp.setSummary(StorageUtils.formatSizeMb(Integer.valueOf(etp.getText())));
+            } catch (NumberFormatException e) {
+                etp.setSummary("100 MB");
+            }
+            etp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    try {
+                        int size = Integer.valueOf((String) newValue);
+                        if (size >= 20) {
+                            int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
+                            if (size >= aval - 50) {
+                                Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                            preference.setSummary(StorageUtils.formatSizeMb(size));
+                            return true;
+                        }
+                    } catch (Exception e) {
+                    }
+                    Toast.makeText(preference.getContext(), R.string.invalid_value, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
 
             p = findPreference("mangadir");
             try {

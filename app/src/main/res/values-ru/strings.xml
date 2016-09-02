@@ -259,4 +259,7 @@
     <string name="tip_favourite">Добавьте мангу в избранное, чтобы держать её под рукой. Также можно включить уведомления о новых главах</string>
     <string name="tip_save">Сохраните мангу на устройстве и читайте её когда угодно и где угодно без подключения к сети</string>
     <string name="tip_save_more">Сохранили лишь часть манги? Нажмите, чтобы скачать недостающие главы</string>
+    <string name="max_cache_size">Макс. размер кэша</string>
+    <string name="invalid_value">Некорректное значение</string>
+    <string name="too_small_free_space">У Вас слишком мало свободного места в памяти устройства</string>
 </resources>

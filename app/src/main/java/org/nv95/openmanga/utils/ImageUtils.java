@@ -2,6 +2,7 @@ package org.nv95.openmanga.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -30,9 +31,16 @@ public class ImageUtils {
 
     public static void init(Context context) {
         if (!ImageLoader.getInstance().isInited()) {
+            int cacheMb = 100;
+            try {
+                cacheMb = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+                        .getString("maxcache", "100"));
+            } catch (NumberFormatException e) {
+                FileLogger.getInstance().report("PREF", e);
+            }
             ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                     .defaultDisplayImageOptions(getImageLoaderOptionsBuilder().build())
-                    .diskCacheSize(100 * 1024 * 1024)        //100 Mb
+                    .diskCacheSize(cacheMb * 1024 * 1024)        //100 Mb
                     .diskCacheFileCount(100)
                     .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
                     .build();
