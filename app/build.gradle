@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
@@ -29,6 +29,7 @@ android {
         }
 
         debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.debug
