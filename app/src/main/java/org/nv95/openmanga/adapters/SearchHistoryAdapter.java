@@ -56,10 +56,7 @@ public class SearchHistoryAdapter extends CursorAdapter {
         Cursor newCursor = mDatabase.query(TABLE_NAME, null,
                 query == null ? null : "query LIKE ?",
                 query == null ? null : new String[] {query + "%"}, null, null, null); // исключает неправельные символы в запросе
-        Cursor oldCursor = swapCursor(newCursor);
-        if (oldCursor != null) {
-            oldCursor.close();
-        }
+        changeCursor(newCursor);
         notifyDataSetChanged();
     }
 
@@ -78,16 +75,12 @@ public class SearchHistoryAdapter extends CursorAdapter {
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
-        //database.close();
     }
 
     @Override
     protected void finalize() throws Throwable {
         if (mCursor != null) {
             mCursor.close();
-        }
-        if (mDatabase != null) {
-            mDatabase.close();
         }
         if (mStorageHelper != null) {
             mStorageHelper.close();

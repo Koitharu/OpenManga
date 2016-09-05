@@ -126,7 +126,7 @@ public class ImportService extends Service {
 
         @Override
         protected Integer doInBackground(String... params) {
-            SQLiteDatabase database = null;
+            SQLiteDatabase database;
             ZipInputStream zipInputStream = null;
             int pages = 0;
             try {
@@ -192,7 +192,6 @@ public class ImportService extends Service {
                     //remove all
                     database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(mangaId)});
                     new DirRemoveHelper(dest).run();
-                    database.close();
                     try {
                         zipInputStream.close();
                     } catch (IOException ignored) {
@@ -220,9 +219,6 @@ public class ImportService extends Service {
                 FileLogger.getInstance().report(e);
                 pages = -1;
             } finally {
-                if (database != null) {
-                    database.close();
-                }
                 if (zipInputStream != null) {
                     try {
                         zipInputStream.close();

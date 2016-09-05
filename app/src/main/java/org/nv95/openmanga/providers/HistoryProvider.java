@@ -48,12 +48,11 @@ public class HistoryProvider extends MangaProvider {
     }
 
     public MangaInfo getLast() {
-        SQLiteDatabase database = null;
         Cursor cursor = null;
         MangaInfo last = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
-            cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[0]);
+            cursor = mStorageHelper.getReadableDatabase()
+                    .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[0]);
             if (cursor.moveToFirst()) {
                 last = new MangaInfo();
                 last.id = cursor.getInt(0);
@@ -74,9 +73,6 @@ public class HistoryProvider extends MangaProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return last;
     }
@@ -91,36 +87,32 @@ public class HistoryProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) throws IOException {
         if (page > 0)
             return null;
-        SQLiteDatabase database = mStorageHelper.getReadableDatabase();
         MangaList list;
         MangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
-        try {
-            list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[sort]);
-            if (cursor.moveToFirst()) {
-                do {
-                    manga = new MangaInfo();
-                    manga.id = cursor.getInt(0);
-                    manga.name = cursor.getString(1);
-                    manga.subtitle = cursor.getString(2);
-                    manga.genres = cursor.getString(3);
-                    manga.preview = cursor.getString(4);
-                    manga.path = cursor.getString(5);
-                    try {
-                        manga.provider = Class.forName(cursor.getString(6));
-                    } catch (ClassNotFoundException e) {
-                        manga.provider = LocalMangaProvider.class;
-                    }
-                    manga.status = STATUS_UNKNOWN;
-                    manga.extra = null;
-                    list.add(manga);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } finally {
-            database.close();
+        list = new MangaList();
+        Cursor cursor = mStorageHelper.getReadableDatabase()
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[sort]);
+        if (cursor.moveToFirst()) {
+            do {
+                manga = new MangaInfo();
+                manga.id = cursor.getInt(0);
+                manga.name = cursor.getString(1);
+                manga.subtitle = cursor.getString(2);
+                manga.genres = cursor.getString(3);
+                manga.preview = cursor.getString(4);
+                manga.path = cursor.getString(5);
+                try {
+                    manga.provider = Class.forName(cursor.getString(6));
+                } catch (ClassNotFoundException e) {
+                    manga.provider = LocalMangaProvider.class;
+                }
+                manga.status = STATUS_UNKNOWN;
+                manga.extra = null;
+                list.add(manga);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return list;
     }
 
@@ -161,14 +153,11 @@ public class HistoryProvider extends MangaProvider {
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
-        database.close();
         return true;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
-        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        database.delete(TABLE_NAME, "id=" + mangaInfo.id, null);
-        database.close();
+        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "id=" + mangaInfo.id, null);
         return true;
     }
 
@@ -181,21 +170,17 @@ public class HistoryProvider extends MangaProvider {
         }
         database.setTransactionSuccessful();
         database.endTransaction();
-        database.close();
         return true;
     }
 
     public void clear() {
-        final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        database.delete(TABLE_NAME, null, null);
-        database.close();
+        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
     }
 
     public boolean has(MangaInfo mangaInfo) {
         boolean res;
         SQLiteDatabase database = mStorageHelper.getReadableDatabase();
-        res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
-        database.close();
+        res = StorageHelper.getRowCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
         return res;
     }
 
@@ -211,7 +196,6 @@ public class HistoryProvider extends MangaProvider {
             res.page = c.getInt(2);
         }
         c.close();
-        database.close();
         return res;
     }
 

@@ -69,10 +69,6 @@ public class MangaStore {
             }
         } catch (Exception e) {
             FileLogger.getInstance().report("STORE", e);
-        } finally {
-            if (database != null) {
-                database.close();
-            }
         }
         return id;
     }
@@ -85,16 +81,15 @@ public class MangaStore {
      */
     @WorkerThread
     public int pushChapter(MangaChapter chapter, int mangaId) {
-        SQLiteDatabase database = null;
         int id = chapter.readLink.hashCode();
         try {
             final ContentValues cv = new ContentValues();
             cv.put("id", id);
             cv.put("mangaid", mangaId);
             cv.put("name", chapter.name);
-            database = mDatabaseHelper.getWritableDatabase();
+            SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
             cv.put("number", chapter.number == -1 ?
-                    StorageHelper.getColumnCount(database, TABLE_CHAPTERS, "mangaid=" + mangaId)
+                    StorageHelper.getRowCount(database, TABLE_CHAPTERS, "mangaid=" + mangaId)
                     : chapter.number);
             if (database.update(TABLE_CHAPTERS,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_CHAPTERS, null, cv);
@@ -102,10 +97,6 @@ public class MangaStore {
         } catch (Exception e) {
             FileLogger.getInstance().report("STORE", e);
             id = 0;
-        } finally {
-            if (database != null) {
-                database.close();
-            }
         }
         return id;
     }
@@ -119,7 +110,6 @@ public class MangaStore {
      */
     @WorkerThread
     public int pushPage(MangaPage page, int mangaId, int chapterId) {
-        SQLiteDatabase database = null;
         int id = page.path.hashCode();
         try {
             ContentValues cv = new ContentValues();
@@ -133,18 +123,14 @@ public class MangaStore {
                 return 0;
             }
             cv.put("file", dest.getName());
-            database = mDatabaseHelper.getWritableDatabase();
-            cv.put("number", StorageHelper.getColumnCount(database, TABLE_PAGES, "chapterid=" + chapterId));
+            SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
+            cv.put("number", StorageHelper.getRowCount(database, TABLE_PAGES, "chapterid=" + chapterId));
             if (database.update(TABLE_PAGES,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_PAGES, null, cv);
             }
         } catch (Exception e) {
             FileLogger.getInstance().report("STORE", e);
             id = 0;
-        } finally {
-            if (database != null) {
-                database.close();
-            }
         }
         return id;
     }
@@ -182,12 +168,11 @@ public class MangaStore {
             FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
             if (database != null) {
                 database.endTransaction();
-                database.close();
+            }
+            if (cursor != null) {
+                cursor.close();
             }
         }
         return result;
@@ -211,19 +196,16 @@ public class MangaStore {
             cursor.close();
             cursor = null;
             database.update(TABLE_MANGAS, cv, "id=?", new String[]{String.valueOf(id)});
-            if (result) {
-                database.setTransactionSuccessful();
-            }
+            database.setTransactionSuccessful();
         } catch (Exception e) {
             FileLogger.getInstance().report("STORE", e);
             result = false;
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
             if (database != null) {
                 database.endTransaction();
-                database.close();
+            }
+            if (cursor != null) {
+                cursor.close();
             }
         }
         return result;
@@ -248,7 +230,6 @@ public class MangaStore {
         } finally {
             if (database != null) {
                 database.endTransaction();
-                database.close();
             }
         }
         return result;
@@ -271,7 +252,6 @@ public class MangaStore {
         } finally {
             if (database != null) {
                 database.endTransaction();
-                database.close();
             }
         }
         return result;
@@ -292,25 +272,8 @@ public class MangaStore {
         return res;
     }
 
-    @Deprecated
     public File getMangaDir(Context context, int id) {
-        File res = null;
-        SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-        Cursor c = db.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
-        if (c.moveToFirst()) {
-            res = new File(c.getString(0));
-        }
-        c.close();
-        db.close();
-        if (res != null && res.exists()) {
-            return res;
-        }
-        res = new File(getMangasDir(context), String.valueOf(id));
-        if (!res.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            res.mkdirs();
-        }
-        return res;
+        return getMangaDir(context, getDatabase(false), id);
     }
 
     public static File getMangaDir(Context context, SQLiteDatabase database, int id) {
@@ -329,6 +292,12 @@ public class MangaStore {
             res.mkdirs();
         }
         return res;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        mDatabaseHelper.close();
+        super.finalize();
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
