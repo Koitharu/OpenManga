@@ -88,49 +88,41 @@ public class LocalMangaProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) {
         if (page > 0)
             return null;
-        SQLiteDatabase database = mStore.getDatabase(false);
         MangaList list;
         MangaInfo manga;
-        try {
-            list = new MangaList();
-            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, null, null, null, null, sortUrls[sort]);
-            if (cursor.moveToFirst()) {
-                do {
-                    manga = new MangaInfo();
-                    manga.id = cursor.getInt(0);
-                    manga.name = cursor.getString(1);
-                    manga.subtitle = cursor.getString(2);
-                    manga.genres = cursor.getString(3);
-                    manga.path = cursor.getString(4);
-                    manga.preview = manga.path + "/cover";
-                    manga.provider = LocalMangaProvider.class;
-                    manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
-                    list.add(manga);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } finally {
-            database.close();
+        list = new MangaList();
+        Cursor cursor = mStore.getDatabase(false)
+                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, null, null, null, null, sortUrls[sort]);
+        if (cursor.moveToFirst()) {
+            do {
+                manga = new MangaInfo();
+                manga.id = cursor.getInt(0);
+                manga.name = cursor.getString(1);
+                manga.subtitle = cursor.getString(2);
+                manga.genres = cursor.getString(3);
+                manga.path = cursor.getString(4);
+                manga.preview = manga.path + "/cover";
+                manga.provider = LocalMangaProvider.class;
+                manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
+                list.add(manga);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return list;
     }
 
     public int getCount() {
-        SQLiteDatabase database = null;
         Cursor cursor = null;
         int res = 0;
         try {
-            database = mStore.getDatabase(false);
-            cursor = database.query(MangaStore.TABLE_MANGAS, null, null, null, null, null, null);
+            cursor = mStore.getDatabase(false)
+                    .query(MangaStore.TABLE_MANGAS, null, null, null, null, null, null);
             res = cursor.getCount();
         } catch (Exception e) {
             res = -1;
         } finally {
             if (cursor != null) {
                 cursor.close();
-            }
-            if (database != null) {
-                database.close();
             }
         }
         return res;
@@ -142,57 +134,49 @@ public class LocalMangaProvider extends MangaProvider {
         SQLiteDatabase database = mStore.getDatabase(false);
         ChaptersList list = new ChaptersList();
         MangaChapter chapter;
-
-        try {
-            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"description", "source"}, "id=" + mangaInfo.id, null, null, null, null);
-            if (cursor.moveToFirst()) {
-                summary.description = cursor.getString(0);
-                summary.status = cursor.getString(1) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
-            }
-            cursor.close();
-            cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
-            if (cursor.moveToFirst()) {
-                do {
-                    chapter = new MangaChapter();
-                    chapter.id = cursor.getInt(0);
-                    chapter.name = cursor.getString(1);
-                    chapter.number = cursor.getInt(2);
-                    chapter.readLink = String.valueOf(chapter.id) + "\n" + String.valueOf(mangaInfo.id) + "\n" + mangaInfo.path;
-                    chapter.provider = LocalMangaProvider.class;
-                    list.add(chapter);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } finally {
-            database.close();
+        Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"description", "source"}, "id=" + mangaInfo.id, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            summary.description = cursor.getString(0);
+            summary.status = cursor.getString(1) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
         }
+        cursor.close();
+        cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
+        if (cursor.moveToFirst()) {
+            do {
+                chapter = new MangaChapter();
+                chapter.id = cursor.getInt(0);
+                chapter.name = cursor.getString(1);
+                chapter.number = cursor.getInt(2);
+                chapter.readLink = String.valueOf(chapter.id) + "\n" + String.valueOf(mangaInfo.id) + "\n" + mangaInfo.path;
+                chapter.provider = LocalMangaProvider.class;
+                list.add(chapter);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
         summary.chapters = list;
         return summary;
     }
 
     @Override
     public ArrayList<MangaPage> getPages(String readLink) {
-        SQLiteDatabase database = mStore.getDatabase(false);
         ArrayList<MangaPage> list = new ArrayList<>();
         MangaPage page;
         final String[] data = readLink.split("\n");
         final String dir = data[2] + "/";
-        //
-        try {
-            Cursor cursor = database.query(TABLE_PAGES, new String[]{"id", "file"}, "chapterid=? AND mangaid=?", new String[]{data[0], data[1]}, null, null, "number");
-            if (cursor.moveToFirst()) {
-                do {
-                    page = new MangaPage();
-                    page.id = cursor.getInt(0);
-                    page.path = dir + cursor.getString(1);
-                    page.provider = LocalMangaProvider.class;
-                    list.add(page);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } finally {
-            database.close();
+
+        Cursor cursor = mStore.getDatabase(false)
+                .query(TABLE_PAGES, new String[]{"id", "file"}, "chapterid=? AND mangaid=?", new String[]{data[0], data[1]}, null, null, "number");
+        if (cursor.moveToFirst()) {
+            do {
+                page = new MangaPage();
+                page.id = cursor.getInt(0);
+                page.path = dir + cursor.getString(1);
+                page.provider = LocalMangaProvider.class;
+                list.add(page);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
+
         return list;
     }
 
@@ -240,10 +224,9 @@ public class LocalMangaProvider extends MangaProvider {
     @Nullable
     public MangaSummary getSource(MangaInfo manga) {
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStore.getDatabase(false);
-            cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"provider", "source"}, "id=?", new String[]{String.valueOf(manga.id)}, null, null, null);
+            cursor = mStore.getDatabase(false)
+                    .query(MangaStore.TABLE_MANGAS, new String[]{"provider", "source"}, "id=?", new String[]{String.valueOf(manga.id)}, null, null, null);
             if (cursor.moveToFirst()) {
                 String providerName = cursor.getString(0);
                 if (providerName != null && providerName.length() != 0) {
@@ -269,9 +252,6 @@ public class LocalMangaProvider extends MangaProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return null;
     }
@@ -279,10 +259,9 @@ public class LocalMangaProvider extends MangaProvider {
     public long[] getAllIds() {
         ArrayList<Long> ids = new ArrayList<>();
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStore.getDatabase(false);
-            cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id"}, null, null, null, null, null);
+            cursor = mStore.getDatabase(false)
+                    .query(MangaStore.TABLE_MANGAS, new String[]{"id"}, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
                     ids.add(cursor.getLong(0));
@@ -294,12 +273,9 @@ public class LocalMangaProvider extends MangaProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         long[] ids_a = new long[ids.size()];
-        for (int i=0;i<ids.size();i++) {
+        for (int i = 0; i < ids.size(); i++) {
             ids_a[i] = ids.get(i);
         }
         return ids_a;
@@ -309,11 +285,10 @@ public class LocalMangaProvider extends MangaProvider {
     public LocalMangaInfo[] getLocalInfo(long[] ids) {
         LocalMangaInfo[] infos = new LocalMangaInfo[ids.length];
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStore.getDatabase(false);
-            for (int i=0;i<ids.length;i++) {
-                cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"name", "dir"}, "id=?", new String[]{String.valueOf(ids[i])}, null, null, null);
+            for (int i = 0; i < ids.length; i++) {
+                cursor = mStore.getDatabase(false)
+                        .query(MangaStore.TABLE_MANGAS, new String[]{"name", "dir"}, "id=?", new String[]{String.valueOf(ids[i])}, null, null, null);
                 if (cursor.moveToFirst()) {
                     infos[i] = new LocalMangaInfo();
                     infos[i].id = ids[i];
@@ -328,9 +303,6 @@ public class LocalMangaProvider extends MangaProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return infos;
     }
@@ -340,30 +312,26 @@ public class LocalMangaProvider extends MangaProvider {
     public MangaList search(String query, int page) throws Exception {
         if (page > 0)
             return null;
-        SQLiteDatabase database = mStore.getDatabase(false);
         MangaList list;
         MangaInfo manga;
-        try {
-            list = new MangaList();
-            Cursor cursor = database.query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
-            if (cursor.moveToFirst()) {
-                do {
-                    manga = new MangaInfo();
-                    manga.id = cursor.getInt(0);
-                    manga.name = cursor.getString(1);
-                    manga.subtitle = cursor.getString(2);
-                    manga.genres = cursor.getString(3);
-                    manga.path = cursor.getString(4);
-                    manga.preview = manga.path + "/cover";
-                    manga.provider = LocalMangaProvider.class;
-                    manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
-                    list.add(manga);
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } finally {
-            database.close();
+        list = new MangaList();
+        Cursor cursor = mStore.getDatabase(false)
+                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
+        if (cursor.moveToFirst()) {
+            do {
+                manga = new MangaInfo();
+                manga.id = cursor.getInt(0);
+                manga.name = cursor.getString(1);
+                manga.subtitle = cursor.getString(2);
+                manga.genres = cursor.getString(3);
+                manga.path = cursor.getString(4);
+                manga.preview = manga.path + "/cover";
+                manga.provider = LocalMangaProvider.class;
+                manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
+                list.add(manga);
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return list;
     }
 
@@ -374,7 +342,7 @@ public class LocalMangaProvider extends MangaProvider {
             if (list != null) {
                 String dirDest = destination + File.separatorChar + source.getName();
                 for (File o : list) {
-                     res = (o.renameTo(new File(dirDest, o.getName())) || moveDir(o, dirDest)) && res;
+                    res = (o.renameTo(new File(dirDest, o.getName())) || moveDir(o, dirDest)) && res;
                 }
             }
             source.delete();
@@ -384,9 +352,8 @@ public class LocalMangaProvider extends MangaProvider {
             OutputStream out = null;
             try {
                 //create output directory if it doesn't exist
-                File dir = new File (destination);
-                if (!dir.exists())
-                {
+                File dir = new File(destination);
+                if (!dir.exists()) {
                     dir.mkdirs();
                 }
                 in = new FileInputStream(source);

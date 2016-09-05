@@ -105,13 +105,11 @@ public class StorageHelper extends SQLiteOpenHelper {
     @Nullable
     public JSONArray extractTableData(String tableName) {
         JSONArray jsonArray = null;
-        SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
             jsonArray = new JSONArray();
             JSONObject jsonObject;
-            database = getReadableDatabase();
-            cursor = database.query(tableName, null, null, null, null, null, null, null);
+            cursor = getReadableDatabase().query(tableName, null, null, null, null, null, null, null);
             String[] columns = cursor.getColumnNames();
             if (cursor.moveToFirst()) {
                 do {
@@ -142,9 +140,6 @@ public class StorageHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return jsonArray;
     }
@@ -154,6 +149,7 @@ public class StorageHelper extends SQLiteOpenHelper {
         boolean success = true;
         try {
             database = getWritableDatabase();
+            database.beginTransaction();
             JSONObject o;
             Object value;
             ContentValues cv;
@@ -185,12 +181,13 @@ public class StorageHelper extends SQLiteOpenHelper {
                     }
                 }
             }
+            database.setTransactionSuccessful();
         } catch (Exception e) {
             success = false;
             FileLogger.getInstance().report(e);
         } finally {
             if (database != null) {
-                database.close();
+                database.endTransaction();
             }
         }
         return success;
@@ -237,7 +234,7 @@ public class StorageHelper extends SQLiteOpenHelper {
         return tables.contains(tableName);
     }
 
-    public static int getColumnCount(SQLiteDatabase database, String table, @Nullable String where) {
+    public static int getRowCount(SQLiteDatabase database, String table, @Nullable String where) {
         Cursor cursor = database.rawQuery("select count(*) from "
                 + table
                 + (where == null ? "" : " where " + where), null);

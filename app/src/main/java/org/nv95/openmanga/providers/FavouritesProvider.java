@@ -95,8 +95,6 @@ public class FavouritesProvider extends MangaProvider {
             cursor.close();
         } catch (Exception e) {
             FileLogger.getInstance().report("FAV", e);
-        } finally {
-            database.close();
         }
         return list;
     }
@@ -138,16 +136,12 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("timestamp", new Date().getTime());
         cv.put("category", category);
         SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        boolean res = (database.insert(TABLE_NAME, null, cv) != -1);
-        database.close();
-        return res;
+        return (database.insert(TABLE_NAME, null, cv) != -1);
     }
 
     public boolean remove(MangaInfo mangaInfo) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        int c = database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)});
-        database.close();
-        return c > 0;
+        return database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)}) > 0;
     }
 
     @Override
@@ -159,34 +153,26 @@ public class FavouritesProvider extends MangaProvider {
         }
         database.setTransactionSuccessful();
         database.endTransaction();
-        database.close();
         return true;
     }
 
 
     public boolean has(MangaInfo mangaInfo) {
         final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
-        boolean res = StorageHelper.getColumnCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
-        database.close();
-        return res;
+        return StorageHelper.getRowCount(database, TABLE_NAME, "id=" + mangaInfo.id) != 0;
     }
 
     public int getCategory(MangaInfo mangaInfo) {
         int res = -1;
-        SQLiteDatabase database = null;
         Cursor cursor = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
-            cursor = database.query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
+            cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
                 res = cursor.getInt(0);
             }
         } finally {
             if (cursor != null) {
                 cursor.close();
-            }
-            if (database != null) {
-                database.close();
             }
         }
         return res;
@@ -215,7 +201,6 @@ public class FavouritesProvider extends MangaProvider {
         }
         database.setTransactionSuccessful();
         database.endTransaction();
-        database.close();
     }
 
     @Override
