@@ -192,7 +192,7 @@ public class MangaStore {
             cursor = database.query(TABLE_MANGAS, new String[]{"dir"}, "id=?", new String[]{String.valueOf(id)}, null, null, null);
             cursor.moveToFirst();
             dir = new File(cursor.getString(0));
-            LocalMangaProvider.moveDir(dir, destDir);
+            StorageUtils.moveDir(dir, destDir);
             cursor.close();
             cursor = null;
             database.update(TABLE_MANGAS, cv, "id=?", new String[]{String.valueOf(id)});

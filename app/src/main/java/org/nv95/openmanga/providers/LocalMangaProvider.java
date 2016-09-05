@@ -20,13 +20,9 @@ import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -56,32 +52,6 @@ public class LocalMangaProvider extends MangaProvider {
             instanceReference = new WeakReference<>(instance);
         }
         return instance;
-    }
-
-    public static void copyFile(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
-
-    public static long dirSize(File dir) {
-        if (!dir.exists()) {
-            return 0;
-        }
-        long size = 0;
-        for (File file : dir.listFiles()) {
-            if (file.isFile()) {
-                size += file.length();
-            } else
-                size += dirSize(file);
-        }
-        return size;
     }
 
     @Override
@@ -294,7 +264,7 @@ public class LocalMangaProvider extends MangaProvider {
                     infos[i].id = ids[i];
                     infos[i].name = cursor.getString(0);
                     infos[i].path = cursor.getString(1);
-                    infos[i].size = LocalMangaProvider.dirSize(new File(infos[i].path));
+                    infos[i].size = StorageUtils.dirSize(new File(infos[i].path));
                 }
             }
         } catch (Exception e) {
@@ -333,49 +303,6 @@ public class LocalMangaProvider extends MangaProvider {
         }
         cursor.close();
         return list;
-    }
-
-    public static boolean moveDir(File source, String destination) {
-        if (source.isDirectory()) {
-            boolean res = true;
-            File[] list = source.listFiles();
-            if (list != null) {
-                String dirDest = destination + File.separatorChar + source.getName();
-                for (File o : list) {
-                    res = (o.renameTo(new File(dirDest, o.getName())) || moveDir(o, dirDest)) && res;
-                }
-            }
-            source.delete();
-            return res;
-        } else {
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                //create output directory if it doesn't exist
-                File dir = new File(destination);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                in = new FileInputStream(source);
-                out = new FileOutputStream(destination + File.separatorChar + source.getName());
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-                in.close();
-                in = null;
-                // write the output file
-                out.flush();
-                out.close();
-                out = null;
-                // delete the original file
-                source.delete();
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
     }
 
     public static ProviderSummary getProviderSummary(Context context) {
