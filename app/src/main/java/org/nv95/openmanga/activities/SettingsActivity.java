@@ -262,7 +262,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 @Override
                 protected Float doInBackground(Void... params) {
                     try {
-                        return LocalMangaProvider.dirSize(getActivity().getExternalCacheDir()) / 1048576f;
+                        return StorageUtils.dirSize(getActivity().getExternalCacheDir()) / 1048576f;
                     } catch (Exception e) {
                         return null;
                     }

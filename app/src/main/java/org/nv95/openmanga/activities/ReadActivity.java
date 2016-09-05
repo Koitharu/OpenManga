@@ -52,6 +52,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -292,7 +293,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
     private void saveImage(final File file) {
         File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
         try {
-            LocalMangaProvider.copyFile(file, dest);
+            StorageUtils.copyFile(file, dest);
             MediaScannerConnection.scanFile(ReadActivity.this,
                     new String[]{dest.getPath()}, null,
                     new MediaScannerConnection.OnScanCompletedListener() {
