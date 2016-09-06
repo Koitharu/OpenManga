@@ -268,7 +268,7 @@
     <string name="local_size" formatted="false">Size: %s</string>
     <string name="scale_mode">Scale mode</string>
     <string name="scale_source">Source size</string>
-    <string name="scale_auto">Auto</string>
+    <string name="automatic">Auto</string>
     <string name="scale_crop">Zoom in</string>
     <string name="scale_fit">Fit screen</string>
     <string name="scroll_by_click">Scrolling by click</string>
@@ -287,4 +287,5 @@
     <string name="max_cache_size">Max. cache size</string>
     <string name="invalid_value">Invalid value</string>
     <string name="too_small_free_space">You have too few free space on your device\'s storage</string>
+    <string name="app_language">Application language</string>
 </resources>

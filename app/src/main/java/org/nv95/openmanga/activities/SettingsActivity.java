@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
+import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
@@ -201,6 +202,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("movemanga").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            // TODO: 06.09.16 REFACTOR
 
             Preference p = findPreference("update");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -216,33 +218,50 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             bindPreferenceSummary((ListPreference) findPreference("defsection"));
             bindPreferenceSummary((ListPreference) findPreference("theme"));
             bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
-            EditTextPreference etp = (EditTextPreference) findPreference("maxcache");
-            try {
-                etp.setSummary(StorageUtils.formatSizeMb(Integer.valueOf(etp.getText())));
-            } catch (NumberFormatException e) {
-                etp.setSummary("100 MB");
-            }
-            etp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    try {
-                        int size = Integer.valueOf((String) newValue);
-                        if (size >= 20) {
-                            int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
-                            if (size >= aval - 50) {
-                                Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
-                                return false;
-                            }
-                            preference.setSummary(StorageUtils.formatSizeMb(size));
-                            return true;
-                        }
-                    } catch (Exception e) {
-                    }
-                    Toast.makeText(preference.getContext(), R.string.invalid_value, Toast.LENGTH_SHORT).show();
-                    return false;
+            {
+                EditTextPreference etp = (EditTextPreference) findPreference("maxcache");
+                try {
+                    etp.setSummary(StorageUtils.formatSizeMb(Integer.valueOf(etp.getText())));
+                } catch (NumberFormatException e) {
+                    etp.setSummary("100 MB");
                 }
-            });
-
+                etp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        try {
+                            int size = Integer.valueOf((String) newValue);
+                            if (size >= 20) {
+                                int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
+                                if (size >= aval - 50) {
+                                    Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
+                                    return false;
+                                }
+                                preference.setSummary(StorageUtils.formatSizeMb(size));
+                                return true;
+                            }
+                        } catch (Exception ignored) {
+                        }
+                        Toast.makeText(preference.getContext(), R.string.invalid_value, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+            }
+            {
+                ListPreference listPreference = (ListPreference) findPreference("lang");
+                int index = listPreference.findIndexOfValue(listPreference.getValue());
+                String summ = listPreference.getEntries()[index].toString();
+                listPreference.setSummary(summ);
+                listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        OpenMangaApplication.setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
+                        int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
+                        String summ = ((ListPreference) preference).getEntries()[index].toString();
+                        preference.setSummary(summ);
+                        return true;
+                    }
+                });
+            }
             p = findPreference("mangadir");
             try {
                 p.setSummary(MangaStore.getMangasDir(activity).getPath());

@@ -76,7 +76,7 @@
     <string-array name="scale_modes">
         <item>@string/scale_fit</item>
         <item>@string/scale_crop</item>
-        <item>@string/scale_auto</item>
+        <item>@string/automatic</item>
         <item>@string/scale_source</item>
     </string-array>
     <string-array name="clickareas">
@@ -88,5 +88,17 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="app_languages">
+        <item>@string/automatic</item>
+        <item>English</item>
+        <item>Русский</item>
+        <item>Türk</item>
+    </string-array>
+    <string-array name="app_languages_values">
+        <item></item>
+        <item>en</item>
+        <item>ru</item>
+        <item>tr</item>
     </string-array>
 </resources>

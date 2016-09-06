@@ -213,7 +213,7 @@
     <string name="retry">Tekrar dene</string>
     <string name="save_image">Resmi kaydet</string>
     <string name="saving_manga">Manga indiriliyor</string>
-    <string name="scale_auto">Otomatik</string>
+    <string name="automatic">Otomatik</string>
     <string name="scale_crop">Yakınlaştır</string>
     <string name="scale_fit">Ekrana sığdır</string>
     <string name="scale_mode">Okuma boyutu ayarları</string>
