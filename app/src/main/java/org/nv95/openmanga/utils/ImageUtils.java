@@ -35,6 +35,9 @@ public class ImageUtils {
             try {
                 cacheMb = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
                         .getString("maxcache", "100"));
+                if (cacheMb <= 20) {
+                    cacheMb = 100;
+                }
             } catch (NumberFormatException e) {
                 FileLogger.getInstance().report("PREF", e);
             }
