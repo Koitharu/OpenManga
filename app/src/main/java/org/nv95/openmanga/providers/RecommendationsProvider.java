@@ -86,9 +86,6 @@ public class RecommendationsProvider extends MangaProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return genres;
     }

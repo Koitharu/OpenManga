@@ -273,7 +273,7 @@ public class BackupRestoreUtil {
             dir.mkdir();
             File file = new File(dir, "backup.zip");
             try {
-                LocalMangaProvider.copyFile(params[0], file);
+                StorageUtils.copyFile(params[0], file);
             } catch (IOException e) {
                 return false;
             }

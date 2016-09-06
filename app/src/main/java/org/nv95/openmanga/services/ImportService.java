@@ -14,10 +14,10 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
-import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.ZipBuilder;
 
 import java.io.File;
@@ -126,7 +126,7 @@ public class ImportService extends Service {
 
         @Override
         protected Integer doInBackground(String... params) {
-            SQLiteDatabase database = null;
+            SQLiteDatabase database;
             ZipInputStream zipInputStream = null;
             int pages = 0;
             try {
@@ -183,7 +183,7 @@ public class ImportService extends Service {
                             publishProgress(pages, total);
                             if (preview == null) {
                                 preview = new File(dest, "cover");
-                                LocalMangaProvider.copyFile(outFile, preview);
+                                StorageUtils.copyFile(outFile, preview);
                             }
                         }
                     }
@@ -192,7 +192,6 @@ public class ImportService extends Service {
                     //remove all
                     database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(mangaId)});
                     new DirRemoveHelper(dest).run();
-                    database.close();
                     try {
                         zipInputStream.close();
                     } catch (IOException ignored) {
@@ -220,9 +219,6 @@ public class ImportService extends Service {
                 FileLogger.getInstance().report(e);
                 pages = -1;
             } finally {
-                if (database != null) {
-                    database.close();
-                }
                 if (zipInputStream != null) {
                     try {
                         zipInputStream.close();

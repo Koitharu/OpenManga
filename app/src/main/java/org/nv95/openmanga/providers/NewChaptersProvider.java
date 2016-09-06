@@ -49,9 +49,8 @@ public class NewChaptersProvider {
     public void markAsViewed(int mangaId) {
         int chaptersCount = -1;
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
+            SQLiteDatabase database = mStorageHelper.getReadableDatabase();
             cursor = database.query(TABLE_NAME, null, "id=?", new String[]{String.valueOf(mangaId)}, null, null, null);
             if (cursor.moveToFirst()) {
                 chaptersCount = cursor.getInt(COLUMN_CHAPTERS);
@@ -59,7 +58,6 @@ public class NewChaptersProvider {
             cursor.close();
             cursor = null;
             if (chaptersCount != -1) {
-                database.close();
                 database = mStorageHelper.getWritableDatabase();
                 ContentValues cv = new ContentValues();
                 cv.put("id", mangaId);
@@ -74,9 +72,6 @@ public class NewChaptersProvider {
         } finally {
             if (cursor != null) {
                 cursor.close();
-            }
-            if (database != null) {
-                database.close();
             }
         }
     }
@@ -95,10 +90,9 @@ public class NewChaptersProvider {
             }
             cursor.close();
             cursor = null;
-            database.close();
             database = mStorageHelper.getWritableDatabase();
             database.beginTransaction();
-            for (Integer o:map.keySet()) {
+            for (Integer o : map.keySet()) {
                 ContentValues cv = new ContentValues();
                 cv.put("id", o);
                 cv.put("chapters_last", map.get(o));
@@ -108,7 +102,6 @@ public class NewChaptersProvider {
                 }
             }
             database.setTransactionSuccessful();
-            database.endTransaction();
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
         } finally {
@@ -116,7 +109,7 @@ public class NewChaptersProvider {
                 cursor.close();
             }
             if (database != null) {
-                database.close();
+                database.endTransaction();
             }
         }
     }
@@ -125,10 +118,9 @@ public class NewChaptersProvider {
     public Map<Integer, Integer> getLastUpdates() {
         Map<Integer, Integer> map = new TreeMap<>();
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
-            cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+            cursor = mStorageHelper.getReadableDatabase()
+                    .query(TABLE_NAME, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 int chpt;
                 do {
@@ -147,16 +139,12 @@ public class NewChaptersProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return map;
     }
 
     /**
-     *
-     * @param mangaId id of manga
+     * @param mangaId  id of manga
      * @param chapters count of chapters in manga now
      */
     public void storeChaptersCount(int mangaId, int chapters) {
@@ -172,25 +160,19 @@ public class NewChaptersProvider {
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
-        } finally {
-            if (database != null) {
-                database.close();
-            }
         }
     }
 
     /**
-     *
      * @return map of numbers of last user viewed chapters
      */
     @NonNull
     private Map<Integer, Integer> getChaptersMap() {
         Map<Integer, Integer> map = new TreeMap<>();
         Cursor cursor = null;
-        SQLiteDatabase database = null;
         try {
-            database = mStorageHelper.getReadableDatabase();
-            cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+            cursor = mStorageHelper.getReadableDatabase()
+                    .query(TABLE_NAME, null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
                     map.put(cursor.getInt(COLUMN_ID), cursor.getInt(COLUMN_CHAPTERS_LAST));
@@ -202,15 +184,11 @@ public class NewChaptersProvider {
             if (cursor != null) {
                 cursor.close();
             }
-            if (database != null) {
-                database.close();
-            }
         }
         return map;
     }
 
     /**
-     *
      * @return #true if has as minimum one update
      */
     public boolean hasStoredUpdates() {
@@ -240,9 +218,6 @@ public class NewChaptersProvider {
         } finally {
             if (cursor != null) {
                 cursor.close();
-            }
-            if (database != null) {
-                database.close();
             }
         }
         return res;
