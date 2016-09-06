@@ -2,10 +2,15 @@ package org.nv95.openmanga;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
+
+import java.util.Locale;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -37,5 +42,13 @@ public class OpenMangaApplication extends Application {
 
         ImageUtils.init(this);
         ScheduledServiceReceiver.enable(this);
+        setLanguage(getResources(), PreferenceManager.getDefaultSharedPreferences(this).getString("lang", ""));
+    }
+
+    public static void setLanguage(Resources res, String lang) {
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = TextUtils.isEmpty(lang) ? Locale.getDefault() : new Locale(lang);
+        res.updateConfiguration(conf, dm);
     }
 }
