@@ -21,7 +21,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.UnknownHostException;
 
 /**
  * Created by nv95 on 16.10.15.
@@ -124,7 +123,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public String getFailMessage(Context context, @Nullable Exception e) {
-        if (e == null || e instanceof UnknownHostException) {
+        if (e == null || e instanceof IOException) {
             return context.getString(
                     MangaProviderManager.checkConnection(context) ?
                             R.string.image_loading_error : R.string.no_network_connection

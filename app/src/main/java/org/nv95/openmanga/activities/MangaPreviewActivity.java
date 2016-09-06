@@ -38,6 +38,7 @@ import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -395,7 +396,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 String extra = null;
                 if (provider instanceof LocalMangaProvider) {
                     extra = getString(R.string.local_size,
-                            Formatter.formatFileSize(MangaPreviewActivity.this, LocalMangaProvider.dirSize(new File(ms.path))));
+                            Formatter.formatFileSize(MangaPreviewActivity.this, StorageUtils.dirSize(new File(ms.path))));
                 } else if (ms.status != MangaInfo.STATUS_UNKNOWN) {
                     extra = getString(ms.isCompleted() ? R.string.status_completed : R.string.status_ongoing);
                 }
