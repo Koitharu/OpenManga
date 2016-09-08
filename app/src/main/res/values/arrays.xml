@@ -94,11 +94,13 @@
         <item>English</item>
         <item>Русский</item>
         <item>Türk</item>
+        <item>Українська</item>
     </string-array>
     <string-array name="app_languages_values">
-        <item></item>
+        <item />
         <item>en</item>
         <item>ru</item>
         <item>tr</item>
+        <item>uk</item>
     </string-array>
 </resources>
