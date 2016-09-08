@@ -29,6 +29,7 @@ import org.nv95.openmanga.services.UpdateService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.StorageUtils;
 
@@ -230,9 +231,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         try {
                             int size = Integer.valueOf((String) newValue);
-                            if (size >= 20) {
+                            if (size >= ImageUtils.CACHE_MIN_MB && size <= ImageUtils.CACHE_MAX_MB) {
                                 int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
-                                if (size >= aval - 50) {
+                                if (aval != 0 && size >= aval - 50) {
                                     Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
                                     return false;
                                 }
@@ -241,7 +242,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                             }
                         } catch (Exception ignored) {
                         }
-                        Toast.makeText(preference.getContext(), R.string.invalid_value, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(preference.getContext(), getString(R.string.cache_size_invalid, ImageUtils.CACHE_MIN_MB, ImageUtils.CACHE_MAX_MB), Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 });
