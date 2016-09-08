@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -31,6 +30,7 @@ import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.PreferencesUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
@@ -203,7 +203,6 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("movemanga").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-            // TODO: 06.09.16 REFACTOR
 
             Preference p = findPreference("update");
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -216,53 +215,39 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             p.setSummary(String.format(activity.getString(R.string.version),
                     BuildConfig.VERSION_NAME));
 
-            bindPreferenceSummary((ListPreference) findPreference("defsection"));
-            bindPreferenceSummary((ListPreference) findPreference("theme"));
-            bindPreferenceSummary((EditTextPreference) findPreference("fav.categories"));
-            {
-                EditTextPreference etp = (EditTextPreference) findPreference("maxcache");
-                try {
-                    etp.setSummary(StorageUtils.formatSizeMb(Integer.valueOf(etp.getText())));
-                } catch (NumberFormatException e) {
-                    etp.setSummary("100 MB");
-                }
-                etp.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        try {
-                            int size = Integer.valueOf((String) newValue);
-                            if (size >= ImageUtils.CACHE_MIN_MB && size <= ImageUtils.CACHE_MAX_MB) {
-                                int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
-                                if (aval != 0 && size >= aval - 50) {
-                                    Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
-                                    return false;
-                                }
-                                preference.setSummary(StorageUtils.formatSizeMb(size));
-                                return true;
+            PreferencesUtils.bindPreferenceSummary(findPreference("defsection"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("theme"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("fav.categories"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("maxcache"), new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    try {
+                        int size = Integer.valueOf((String) newValue);
+                        if (size >= ImageUtils.CACHE_MIN_MB && size <= ImageUtils.CACHE_MAX_MB) {
+                            int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
+                            if (aval != 0 && size >= aval - 50) {
+                                Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
+                                return false;
                             }
-                        } catch (Exception ignored) {
+                            return true;
                         }
-                        Toast.makeText(preference.getContext(), getString(R.string.cache_size_invalid, ImageUtils.CACHE_MIN_MB, ImageUtils.CACHE_MAX_MB), Toast.LENGTH_SHORT).show();
-                        return false;
+                    } catch (Exception ignored) {
                     }
-                });
-            }
-            {
-                ListPreference listPreference = (ListPreference) findPreference("lang");
-                int index = listPreference.findIndexOfValue(listPreference.getValue());
-                String summ = listPreference.getEntries()[index].toString();
-                listPreference.setSummary(summ);
-                listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        OpenMangaApplication.setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
-                        int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
-                        String summ = ((ListPreference) preference).getEntries()[index].toString();
-                        preference.setSummary(summ);
-                        return true;
-                    }
-                });
-            }
+                    Toast.makeText(preference.getContext(), getString(R.string.cache_size_invalid, ImageUtils.CACHE_MIN_MB, ImageUtils.CACHE_MAX_MB), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }, "%s Mb");
+            PreferencesUtils.bindPreferenceSummary(findPreference("lang"), new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    OpenMangaApplication.setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
+                    int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
+                    String summ = ((ListPreference) preference).getEntries()[index].toString();
+                    preference.setSummary(summ);
+                    Toast.makeText(preference.getContext(), R.string.need_restart, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
             p = findPreference("mangadir");
             try {
                 p.setSummary(MangaStore.getMangasDir(activity).getPath());
@@ -313,10 +298,10 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             super.onActivityCreated(savedInstanceState);
             Activity activity = getActivity();
             activity.setTitle(R.string.action_reading_options);
-            bindPreferenceSummary((ListPreference) findPreference("direction"));
-            bindPreferenceSummary((ListPreference) findPreference("animation"));
-            bindPreferenceSummary((ListPreference) findPreference("scalemode"));
-            bindPreferenceSummary((ListPreference) findPreference("clickareas"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("direction"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("animation"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("scalemode"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("clickareas"));
         }
     }
 
@@ -345,33 +330,6 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
             super.onPostExecute(aVoid);
         }
-    }
-
-    public static void bindPreferenceSummary(ListPreference listPreference) {
-        int index = listPreference.findIndexOfValue(listPreference.getValue());
-        String summ = listPreference.getEntries()[index].toString();
-        listPreference.setSummary(summ);
-        listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
-                String summ = ((ListPreference) preference).getEntries()[index].toString();
-                preference.setSummary(summ);
-                return true;
-            }
-        });
-    }
-
-    public static void bindPreferenceSummary(EditTextPreference editTextPreference) {
-        String summ = editTextPreference.getText();
-        editTextPreference.setSummary(summ);
-        editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                preference.setSummary((String) newValue);
-                return true;
-            }
-        });
     }
 
     private class CheckUpdatesTask extends AsyncTask<Void, Void, AppUpdatesProvider> {
