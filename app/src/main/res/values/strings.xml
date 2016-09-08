@@ -285,8 +285,8 @@
     <string name="tip_save_more">This is not full manga? Click to download missing chapters</string>
     <string name="drag_divider_hint">Disabled sources</string>
     <string name="max_cache_size">Max. cache size</string>
-    <string name="invalid_value">Invalid value</string>
     <string name="too_small_free_space">You have too few free space on your device\'s storage</string>
     <string name="app_language">Application language</string>
-    <string name="cache_size_invalid" formatted="false">Cache size must be between %d and %d</string>
+    <string name="cache_size_invalid" formatted="false">Cache size must be between %d and %d Mb</string>
+    <string name="need_restart">Restart application to apply changes</string>
 </resources>
