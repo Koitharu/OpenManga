@@ -26,6 +26,9 @@ import org.nv95.openmanga.items.ThumbSize;
 
 public class ImageUtils {
 
+    public static final int CACHE_MAX_MB = 1024;
+    public static final int CACHE_MIN_MB = 20;
+
     private static DisplayImageOptions mOptionsThumb = null;
     private static DisplayImageOptions mOptionsUpdate = null;
 
@@ -35,8 +38,10 @@ public class ImageUtils {
             try {
                 cacheMb = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
                         .getString("maxcache", "100"));
-                if (cacheMb <= 20) {
-                    cacheMb = 100;
+                if (cacheMb < CACHE_MIN_MB) {
+                    cacheMb = CACHE_MIN_MB;
+                } else if (cacheMb > CACHE_MAX_MB) {
+                    cacheMb = CACHE_MAX_MB;
                 }
             } catch (NumberFormatException e) {
                 FileLogger.getInstance().report("PREF", e);

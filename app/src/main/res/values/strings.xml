@@ -288,4 +288,5 @@
     <string name="invalid_value">Invalid value</string>
     <string name="too_small_free_space">You have too few free space on your device\'s storage</string>
     <string name="app_language">Application language</string>
+    <string name="cache_size_invalid" formatted="false">Cache size must be between %d and %d</string>
 </resources>
