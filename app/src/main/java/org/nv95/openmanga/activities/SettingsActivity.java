@@ -236,7 +236,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     Toast.makeText(preference.getContext(), getString(R.string.cache_size_invalid, ImageUtils.CACHE_MIN_MB, ImageUtils.CACHE_MAX_MB), Toast.LENGTH_SHORT).show();
                     return false;
                 }
-            }, "%s Mb");
+            }, activity.getString(R.string.size_mb));
             PreferencesUtils.bindPreferenceSummary(findPreference("lang"), new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
