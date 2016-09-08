@@ -260,6 +260,10 @@
     <string name="tip_save">Сохраните мангу на устройстве и читайте её когда угодно и где угодно без подключения к сети</string>
     <string name="tip_save_more">Сохранили лишь часть манги? Нажмите, чтобы скачать недостающие главы</string>
     <string name="max_cache_size">Макс. размер кэша</string>
-    <string name="invalid_value">Некорректное значение</string>
     <string name="too_small_free_space">У Вас слишком мало свободного места в памяти устройства</string>
+    <string name="app_language">Язык приложения</string>
+    <string name="cache_size_invalid" formatted="false">Размер кэша должен быть между %d и %d Мб</string>
+    <string name="need_restart">Перезапустите приложение для применения изменений</string>
+    <string name="drag_divider_hint">Отключенные источники</string>
+    <string name="size_mb" formatted="false">%s Мб</string>
 </resources>
