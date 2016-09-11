@@ -10,6 +10,7 @@ import org.nv95.openmanga.providers.MintMangaProvider;
 import org.nv95.openmanga.providers.PuzzmosProvider;
 import org.nv95.openmanga.providers.ReadmangaRuProvider;
 import org.nv95.openmanga.providers.SelfmangaRuProvider;
+import org.nv95.openmanga.providers.YaoiChanProvider;
 
 /**
  * Created by nv95 on 27.07.16.
@@ -27,7 +28,8 @@ public class Providers {
             new ProviderSummary(6, "MangaTown", MangaTownProvider.class, Languages.EN),
             new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN),
             new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI),
-            new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR)
+            new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR),
+            new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU)
     };
 
     public static ProviderSummary[] getAll() {
