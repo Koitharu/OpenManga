@@ -20,7 +20,7 @@
     <string name="wait">Зачекайте…</string>
     <string name="search_results">Результати пошуку</string>
     <string name="action_share">Поділитися</string>
-    <string name="action_reading_options">Параметри чтиння</string>
+    <string name="action_reading_options">Параметри читання</string>
     <string name="scrolling_direction">Напрямок листання</string>
     <string name="keep_screen">Тримати екран увімкненим</string>
     <string name="cancelling">Відміна…</string>
@@ -36,7 +36,7 @@
     <string name="send">Відправити</string>
     <string name="bug_report">Звіт про помилку</string>
     <string name="bug_report_summ">Відправити лог розробнику</string>
-    <!--string name="bug_report_message">Отправив отчёт об ошибке Вы поможете разработчикам. Отладочный лог может содержать адреса некоторых просмотренных страниц.</string-->
+    <string name="bug_report_message">Надіславши звіт про помилку Ви допоможете розробникам. Лог може містити адреси деяких переглянутих сторінок.</string>
     <string name="action_unfavourite">Видалити з улюбленного</string>
     <string name="help">Допомога</string>
     <string name="history_empty">Історія порожня</string>
@@ -112,159 +112,158 @@
     <string name="queue">У черзі</string>
     <string name="manga_updates">Оновлена манга</string>
     <string name="mark_all_viewed">Помітити усе переглянутим</string>
-    <!--incomplete-->
-    <string name="mark_all_viewed_confirm">Пометить все обновления просмотренными?</string>
-    <string name="new_chapters_count" formatted="false">Новых глав: %d</string>
-    <string name="over_wifi_only">Только через WiFi</string>
-    <string name="prefer_qsearch">Предпочесть быстрый поиск</string>
-    <string name="prefer_qsearch_summ">По возможости искать в текущем источнике</string>
-    <string name="search_on_another_sources">Поиск в других источниках</string>
-    <string name="show_at_startup">Показывать при запуске</string>
-    <string name="welcome">Добро пожаловать</string>
+    <string name="mark_all_viewed_confirm">Помітити всі обновлення переглянутими?</string>
+    <string name="new_chapters_count" formatted="false">Нових глав: %d</string>
+    <string name="over_wifi_only">Тільки через WiFi</string>
+    <string name="prefer_qsearch">Надати перевагу швидкому пошуку</string>
+    <string name="prefer_qsearch_summ">За можливості шукати в поточному джерелі</string>
+    <string name="search_on_another_sources">Пошук в інших джерелах</string>
+    <string name="show_at_startup">Показувати при запуску</string>
+    <string name="welcome">Ласкаво просимо</string>
     <string name="genre_detective">Детектив</string>
     <string name="genre_codomo">Кодомо</string>
-    <string name="genre_game">Игра</string>
-    <string name="genre_genderbender">Гендерная интрига</string>
-    <string name="genre_historical">История</string>
-    <string name="genre_josei">Дзёсей</string>
+    <string name="genre_game">Гра</string>
+    <string name="genre_genderbender">Гендерна інтрига</string>
+    <string name="genre_historical">Історія</string>
+    <string name="genre_josei">Джьосей</string>
     <string name="genre_mecha">Меха</string>
-    <string name="genre_natural">Повседневность</string>
-    <string name="genre_psychological">Психология</string>
-    <string name="genre_samurai">Самураи</string>
-    <string name="genre_sci_fi">Научная фантастика</string>
-    <string name="genre_shoujo_ai">Сёдзё-ай</string>
-    <string name="genre_shounen_ai">Сёнен-ай</string>
-    <string name="genre_tragedy">Трагедия</string>
-    <string name="genre_hero_fantasy">Героическое фэнтези</string>
-    <string name="maho_shoujo">Махо-сёдзё</string>
-    <string name="send_mail">Отправить емейл</string>
+    <string name="genre_natural">Повсякденність</string>
+    <string name="genre_psychological">Психологія</string>
+    <string name="genre_samurai">Самураї</string>
+    <string name="genre_sci_fi">Научна фантастика</string>
+    <string name="genre_shoujo_ai">Шьоджьо-ай</string>
+    <string name="genre_shounen_ai">Шьонен-ай</string>
+    <string name="genre_tragedy">Трагедія</string>
+    <string name="genre_hero_fantasy">Героїчне фентезі</string>
+    <string name="maho_shoujo">Махо-шьоджьо</string>
+    <string name="send_mail">Відправити емейл</string>
     <string name="genre_sports">Спорт</string>
-    <string name="backup">Резервное копирование</string>
-    <string name="backup_done">Резервное копирование завершено</string>
-    <string name="data">Данные</string>
+    <string name="backup">Резервне копіювання</string>
+    <string name="backup_done">Резервне копіювання завершено</string>
+    <string name="data">Дані</string>
     <string name="done">Готово</string>
-    <string name="genre_cyberpunk">Киберпанк</string>
-    <string name="genre_erotica">Эротика</string>
-    <string name="restore">Восстановление данных</string>
-    <string name="restore_done">Восстановлие данных завершено</string>
-    <string name="select_backup">Выберите резервную копию</string>
-    <string name="import_file">Импорт</string>
-    <string name="export_file">Экспрот</string>
-    <string name="direction_ltr">Слева направо</string>
-    <string name="direction_ttb">Сверху вниз</string>
-    <string name="direction_rtl">Справа налево</string>
-    <string name="interval_4hours">Каждые 4 часа</string>
-    <string name="interval_twice_day">Дважды в день</string>
-    <string name="interval_once_day">Каждый день</string>
-    <string name="interval_two_days">Каждые два дня</string>
-    <string name="open_on_start">Открывать при запуске</string>
-    <string name="reset">Сброс</string>
-    <string name="nothing_selected">Ничего не выбрано</string>
-    <string name="view_mode">Отображение</string>
-    <string name="view_mode_grid_large">Крупная сетка</string>
-    <string name="view_mode_grid_medium">Средняя сетка</string>
-    <string name="view_mode_grid_small">Мелкая сетка</string>
-    <string name="genre_music">Музыка</string>
-    <string name="genre_parodi">Пародия</string>
-    <string name="genre_postapocalipse">Постапокалиптика</string>
-    <string name="select_file">Выброр файла</string>
-    <string name="more">Ещё</string>
-    <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
+    <string name="genre_cyberpunk">Кіберпанк</string>
+    <string name="genre_erotica">Еротика</string>
+    <string name="restore">Відновлення даних</string>
+    <string name="restore_done">Відновлення даних завершено</string>
+    <string name="select_backup">Виберіть резервну копію</string>
+    <string name="import_file">Імпорт</string>
+    <string name="export_file">Експорт</string>
+    <string name="direction_ltr">Зліва направо</string>
+    <string name="direction_ttb">Зверху вниз</string>
+    <string name="direction_rtl">Справа наліво</string>
+    <string name="interval_4hours">Кожні 4 години</string>
+    <string name="interval_twice_day">Двічі на день</string>
+    <string name="interval_once_day">Кожний день</string>
+    <string name="interval_two_days">Кажді два дні</string>
+    <string name="open_on_start">Відкривати при запуску</string>
+    <string name="reset">Скидання</string>
+    <string name="nothing_selected">Нічого не вибрано</string>
+    <string name="view_mode">Відображення</string>
+    <string name="view_mode_grid_large">Велика сітка</string>
+    <string name="view_mode_grid_medium">Середня сітка</string>
+    <string name="view_mode_grid_small">Маленька сітка</string>
+    <string name="genre_music">Музика</string>
+    <string name="genre_parodi">Пародія</string>
+    <string name="genre_postapocalipse">Постапокаліптика</string>
+    <string name="select_file">Вибір файла</string>
+    <string name="more">Ще</string>
+    <string name="import_progress" formatted="false" >Імпортовано сторінок: %d з %d</string>
     <string name="import_complete">Завершено</string>
-    <string name="action_category">Раздел</string>
-    <string name="category_no">Без метки</string>
-    <string name="favourites_categories">Разделы избранного</string>
-    <string name="favourites_categories_default">В процессе, Прочесть позже</string>
-    <string name="favourites_categories_description">Введите названия, разделяя их запятой</string>
-    <string name="adjust_brightness">Установить яркость</string>
+    <string name="action_category">Розділ</string>
+    <string name="category_no">Без мітки</string>
+    <string name="favourites_categories">Розділи обраного</string>
+    <string name="favourites_categories_default">В процесі, Прочитати позніше</string>
+    <string name="favourites_categories_description">Введіть назву, разділяючи їх комами</string>
+    <string name="adjust_brightness">Встановити яскравість</string>
     <string name="action_options">Опції</string>
-    <string name="brightness_value">Яркость экрана</string>
-    <string name="save_image">Сохранить изображение</string>
-    <string name="unfavourited">Удалено из избранного</string>
-    <string name="unknown">Неизвестно</string>
-    <string name="update">Обновление</string>
-    <string name="no_app_updates">Обновлений не найдено</string>
-    <string name="last_update_check" formatted="false">Последняя проверка: %s</string>
-    <string name="click_to_install">Нажмите для установки</string>
-    <string name="check_updates">Проверить обновления</string>
-    <string name="genre_genderch">Смена пола</string>
+    <string name="brightness_value">Яскравість екрану</string>
+    <string name="save_image">Зберегти зображення</string>
+    <string name="unfavourited">Видалити з обраного</string>
+    <string name="unknown">Невідомо</string>
+    <string name="update">Оновлення</string>
+    <string name="no_app_updates">Оновлення не знайдено</string>
+    <string name="last_update_check" formatted="false">Остання перевірка: %s</string>
+    <string name="click_to_install">Нажміть для установки</string>
+    <string name="check_updates">Перевірити оновлення</string>
+    <string name="genre_genderch">Зміна статі</string>
     <string name="genre_hentai">Хентай</string>
-    <string name="genre_slice_of_life">Повседневность</string>
-    <string name="got_it">Понятно</string>
+    <string name="genre_slice_of_life">Повсякденність</string>
+    <string name="got_it">Зрозуміло</string>
     <string name="menu">Меню</string>
-    <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
-    <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
-    <string name="select_image">Выберите картинку</string>
+    <string name="tip_chapter_checking">Увімкнути автоматичну перевірку, щоб отримувати повідомлення про нові глави в манзі, що додана в обране</string>
+    <string name="tip_reader_menu">Нажміть, щоб відкрити меню</string>
+    <string name="select_image">Виберіть зображення</string>
     <string name="genre">Жанр</string>
     <string name="description">Докладніше</string>
-    <string name="app_update_avaliable">Доступно обновление приложения</string>
-    <string name="check_updates_auto">Автоматическая проверка обновлений</string>
-    <string name="chapters_total" formatted="false">Всего глав: %d</string>
-    <string name="check_all">Выбрать все</string>
+    <string name="app_update_avaliable">Доступно оновлення додатка</string>
+    <string name="check_updates_auto">Автоматична перевірка оновлень</string>
+    <string name="chapters_total" formatted="false">Всього глав: %d</string>
+    <string name="check_all">Вибрати все</string>
     <string name="action_recommendations">Рекомендації</string>
-    <string name="no_options_available">Нет доступных опций</string>
-    <string name="downloads_cancel_confirm">Все загрузки будут отменены. Вы уверены?</string>
-    <string name="next_chapter" formatted="false">Следующая глава\n\n%s</string>
-    <string name="prev_chapter" formatted="false">Предыдущая глава\n\n%s</string>
+    <string name="no_options_available">Нема доступних опцій</string>
+    <string name="downloads_cancel_confirm">Всі загрузки будут відмінені. Ви впевнені?</string>
+    <string name="next_chapter" formatted="false">Наступна глава\n\n%s</string>
+    <string name="prev_chapter" formatted="false">Попередня глава\n\n%s</string>
     <string name="filter">Фільтр</string>
-    <string name="wrap_long_pages">Переносить длинные изображения</string>
-    <string name="image_shifting_summary">Полезно для страниц нестандартного размера</string>
-    <string name="action_save_add">Сохранить недостающие главы</string>
-    <string name="chapters_removed" formatted="false">Удалено %d глав</string>
+    <string name="wrap_long_pages">Переносити довгі зображення</string>
+    <string name="image_shifting_summary">Корисно для сторінок нестандартного розміру</string>
+    <string name="action_save_add">Зберегти відсутні глави</string>
+    <string name="chapters_removed" formatted="false">Видалено %d глав</string>
     <string name="download">Завантажити</string>
-    <string name="storage_upgrading">Обновление локальных данных…</string>
-    <string name="no_network_connection">Подключение к сети отсутствует</string>
-    <string name="no_network_connection_html"><![CDATA[Подключение к сети отсутствует.<br/>Включите <a href=\"settings:network\">передачу данных</a> или <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><h4><a href=\"app:update\">Попробовать снова</a></h4>]]></string>
-    <string name="error_loadimage_html" formatted="false"><![CDATA[Не удалось загрузить изображение<br/><h3><a href=\"app:retry\">Повторить</a></h3><br/><br/>Подробности:<br/>%s]]></string>
+    <string name="storage_upgrading">Оновлення локальних даних…</string>
+    <string name="no_network_connection">Підключення до мережі відсутнє</string>
+    <string name="no_network_connection_html"><![CDATA[Підключення до мережі відсутнє.<br/>Ввімкніть <a href=\"settings:network\">передачу даних</a> або <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><h4><a href=\"app:update\">Спробувати знову</a></h4>]]></string>
+    <string name="error_loadimage_html" formatted="false"><![CDATA[Не вдалося завантажити зображення<br/><h3><a href=\"app:retry\">Повторити</a></h3><br/><br/>Подробиці:<br/>%s]]></string>
     <string name="sources">Джерела</string>
-    <string name="full_match">Полное соответствие</string>
-    <string name="wait_for_complete">Дождитесь завешения операции</string>
+    <string name="full_match">Повна відповідність</string>
+    <string name="wait_for_complete">Дочекайтесь завершення операції</string>
     <string name="theme">Тема</string>
     <string name="theme_light">Світла</string>
     <string name="theme_dark">Темна</string>
     <string name="theme_black">Чорна</string>
-    <string name="import_file_confirm" formatted="false">Импортировать файл %s ?</string>
-    <string name="delete_mangas_confirm">Удалить выделенную мангу?</string>
-    <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всего %d глав)</string>
-    <string name="scrolling_animation">Анимация листания</string>
+    <string name="import_file_confirm" formatted="false">Імпортувати файл %s ?</string>
+    <string name="delete_mangas_confirm">Видалити виділену мангу?</string>
+    <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всього %d глав)</string>
+    <string name="scrolling_animation">Анімація листання</string>
     <string name="scrolling">Прокрутка</string>
-    <string name="sliding">Сдвиг</string>
-    <string name="action_move">Переместить в</string>
+    <string name="sliding">Зміщення</string>
+    <string name="action_move">Перемістити в</string>
     <string name="pause">Пауза</string>
-    <string name="resume">Продолжить</string>
-    <string name="show_resume_fab">Отображать плавающую кнопку \"Продолжить\"</string>
+    <string name="resume">Продовжити</string>
+    <string name="show_resume_fab">Відображати плаваючу кнопку \"Продовжити\"</string>
     <string name="next">Далі</string>
     <string name="mangas_moved_done" formatted="false">Manga successfully moved to\n%s\n(total %s)</string>
-    <string name="moving_files">Перемещение файлов…</string>
-    <string name="status_completed">Выпуск завершён</string>
-    <string name="status_ongoing">Онгоинг</string>
-    <string name="local_size" formatted="false">Размер: %s</string>
-    <string name="scale_mode">Масштабирование</string>
-    <string name="scale_source">Исходный размер</string>
+    <string name="moving_files">Переміщенння файлу…</string>
+    <string name="status_completed">Випуск завершений</string>
+    <string name="status_ongoing">Онгоінг</string>
+    <string name="local_size" formatted="false">Розмір: %s</string>
+    <string name="scale_mode">Маштабування</string>
+    <string name="scale_source">Початковий розмір</string>
     <string name="automatic">Автоматично</string>
     <string name="scale_crop">Збільшити</string>
-    <string name="scale_fit">Под экран</string>
-    <string name="scroll_by_click">Листание нажатием</string>
-    <string name="bottom">Унизу</string>
+    <string name="scale_fit">Під екран</string>
+    <string name="scroll_by_click">Перегортання натисканням</string>
+    <string name="bottom">Внизу</string>
     <string name="at_sides">По бокам</string>
-    <string name="delete_manga">Удалить мангу</string>
-    <string name="imported_from" formatted="false">Импортировано из %s</string>
-    <string name="move_saved">Переместить сохранённую мангу</string>
-    <string name="image_decode_error">Не удалось декодировать изображение</string>
-    <string name="image_loading_error">Не удалось загрузить изображение</string>
-    <string name="out_of_memory">Недостаточно памяти</string>
-    <string name="goto_page" formatted="false">Перейти к: %d/%d</string>
-    <string name="current_page" formatted="false">Текущая страница: %d</string>
-    <string name="tip_search_main">Ищите что-нибудь?\nВоспользуйтесь поиском по онлайн-каталогам</string>
-    <string name="tip_filter">Нажмите, чтобы выбрать жанр и порядок сортировки</string>
-    <string name="tip_favourite">Добавьте мангу в избранное, чтобы держать её под рукой. Также можно включить уведомления о новых главах</string>
-    <string name="tip_save">Сохраните мангу на устройстве и читайте её когда угодно и где угодно без подключения к сети</string>
-    <string name="tip_save_more">Сохранили лишь часть манги? Нажмите, чтобы скачать недостающие главы</string>
+    <string name="delete_manga">Видалити мангу</string>
+    <string name="imported_from" formatted="false">Імпортовано з %s</string>
+    <string name="move_saved">Перемістити збережену мангу</string>
+    <string name="image_decode_error">Не вдалося декодувати зображення</string>
+    <string name="image_loading_error">Не вдалося загрузити зображення</string>
+    <string name="out_of_memory">Недостатньо пам\'яті</string>
+    <string name="goto_page" formatted="false">Перейти до: %d/%d</string>
+    <string name="current_page" formatted="false">Поточна сторінка: %d</string>
+    <string name="tip_search_main">Шукаєте що-небудь?\nСкористайтеся пошуком по онлайн-каталогам</string>
+    <string name="tip_filter">Натисніть, щоб обрати жанр та порядок сортування</string>
+    <string name="tip_favourite">Додайте мангу в обране, щоб тримати її під рукою. Також можна ввімкнути повідомлення про нові глави</string>
+    <string name="tip_save">Збережіть мангу на пристрої і читайте її коли завгодно і де завгодно без підключення до мережі</string>
+    <string name="tip_save_more">Зберегли лише частину манги? Натисніть, щоб завантажити відсутні глави</string>
     <string name="max_cache_size">Макс. розмір кешу</string>
-    <string name="too_small_free_space">У Вас слишком мало свободного места в памяти устройства</string>
+    <string name="too_small_free_space">У Вас дуже мало вільного місця в пам\'яті пристрою</string>
     <string name="app_language">Мова програми</string>
-    <string name="cache_size_invalid" formatted="false">Размер кэша должен быть между %d и %d Мб</string>
-    <string name="need_restart">Перезапустите приложение для применения изменений</string>
-    <string name="drag_divider_hint">Отключенные источники</string>
+    <string name="cache_size_invalid" formatted="false">Размір кешу повинен бути між %d та %d Мб</string>
+    <string name="need_restart">Перезапустіть програму для прийняття змін</string>
+    <string name="drag_divider_hint">Вимкнені джерела</string>
     <string name="size_mb" formatted="false">%s Мб</string>
 </resources>
