@@ -264,7 +264,22 @@
     <string name="view_mode_list">Liste görünümü</string>
     <string name="wait">Bekleyin…</string>
     <string name="wait_for_complete">İşlemlerin bitmesini bekleyin</string>
-    <string name="web">Webtoon</string>
+    <string name="web">Web</string>
     <string name="welcome">Hoşgeldiniz</string>
     <string name="wrap_long_pages">Uzun resimleri toparla</string>
+	<string name="image_decode_error">Kod çözülürken hata oluştu</string>
+    <string name="out_of_memory">Yetersiz hafıza</string>
+    <string name="image_loading_error">Yüklenirken hata oluştu</string>
+    <string name="tip_search_main">Bir şey mi aradın?\nOnline kataloglar arasında aramayı kullan</string>
+    <string name="tip_filter">Tür seçmek ve sıralamak için tıkla</string>
+    <string name="tip_favourite">Mangaya hızlı erişmek için favorilerine ekle. Ayrıca yeni bölüm eklendiğinde uyarılmayı da aktif edebilirsin</string>
+    <string name="tip_save">Mangayı indirip internet kullanmadan istediğin zaman okumak için tıkla</string>
+    <string name="tip_save_more">Manganın tamamı inmemiş mi? Tamamlamak için tıkla</string>
+    <string name="drag_divider_hint">Kaynakları kapat</string>
+    <string name="max_cache_size">Max. önbellek boyutu</string>
+    <string name="too_small_free_space">Hafıza kartında çok az boş alan kalmış</string>
+    <string name="app_language">Uygulama dili</string>
+    <string name="cache_size_invalid" formatted="false">Önbellek boyutu mb cinsinden ve %d ile %d arasında olmalı</string>
+    <string name="need_restart">Değişiklikleri uygulamak için uygulamayı yeniden başlat</string>
+    <string name="size_mb" formatted="false">%s Mb</string>
 </resources>
