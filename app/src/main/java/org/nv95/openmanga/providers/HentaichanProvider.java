@@ -15,6 +15,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -66,6 +67,10 @@ public class HentaichanProvider extends MangaProvider {
             summary.preview = e.getElementById("cover").attr("src");
             if (!summary.preview.startsWith("http://")) {
                 summary.preview = "http://hentaichan.me" + summary.preview;
+            }
+            Element dd = e.getElementById("description");
+            if (dd != null) {
+                summary.description += "\n\n" + dd.text();
             }
             String et = e.select("div.extaraNavi").text();
             if (!(et.contains("части") || et.contains("главы"))) {
@@ -162,11 +167,16 @@ public class HentaichanProvider extends MangaProvider {
     @Nullable
     @Override
     public MangaList search(String query, int page) throws Exception {
-        if (page > 0) {
+        boolean byTag = query.startsWith(":");
+        if (!byTag && page > 0) {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://hentaichan.me/?do=search&subaction=search&story=" + query);
+        String url = "http://hentaichan.me/"
+                + (byTag ?
+                "tags/" + URLEncoder.encode(query.substring(1), "UTF-8") + "&sort=manga?offset=" + (page * 20)
+                : "?do=search&subaction=search&story=" + URLEncoder.encode(query, "UTF-8"));
+        Document document = getPage(url);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -177,8 +187,14 @@ public class HentaichanProvider extends MangaProvider {
             t = t.child(0);
             manga.name = t.text();
             manga.path = t.attr("href");
+            if (!manga.path.startsWith("http://")) {
+                manga.path = "http://hentaichan.me" + manga.path;
+            }
             t = o.select("img").first();
-            manga.preview = "http://hentaichan.me" + t.attr("src");
+            manga.preview = t.attr("src");
+            if (!manga.preview.startsWith("http://")) {
+                manga.preview = "http://hentaichan.me" + manga.preview;
+            }
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
