@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers.staff;
 import org.nv95.openmanga.providers.DesuMeProvider;
 import org.nv95.openmanga.providers.EHentaiProvider;
 import org.nv95.openmanga.providers.HentaiBoxProvider;
+import org.nv95.openmanga.providers.HentaichanProvider;
 import org.nv95.openmanga.providers.MangaFoxProvider;
 import org.nv95.openmanga.providers.MangaReaderProvider;
 import org.nv95.openmanga.providers.MangaTownProvider;
@@ -31,7 +32,8 @@ public class Providers {
             new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI),
             new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR),
             new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU),
-            new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI)
+            new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI),
+            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU)
     };
 
     public static ProviderSummary[] getAll() {
