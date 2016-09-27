@@ -42,7 +42,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.name = o.select("a").first().text();
             manga.subtitle = "";
             manga.genres = "";
-            manga.path = o.select("a").first().attr("href");
+            manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
             manga.id = manga.path.hashCode();
@@ -67,8 +67,8 @@ public class EHentaiProvider extends MangaProvider {
             MangaChapter chapter;
             for (Element o : els.select("a")) {
                 chapter = new MangaChapter();
-                chapter.name = "Chapter " + o.text();
-                chapter.readLink = o.attr("href");
+                chapter.name = mangaInfo.name + " [" + o.text() + "]";
+                chapter.readLink = concatUrl("http://g.e-hentai.org/", o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -89,7 +89,7 @@ public class EHentaiProvider extends MangaProvider {
             Elements elements = document.body().select("div.gdtm");
             for (Element o : elements) {
                 s = o.select("a").first().attr("href");
-                page = new MangaPage(s);
+                page = new MangaPage(concatUrl("http://g.e-hentai.org/", s));
                 page.provider = EHentaiProvider.class;
                 pages.add(page);
             }
@@ -103,7 +103,7 @@ public class EHentaiProvider extends MangaProvider {
     public String getPageImage(MangaPage mangaPage) {
         try {
             Document document = getPage(mangaPage.path, DEF_COOKIE);
-            return document.body().select("img").get(4).attr("src");
+            return concatUrl("http://g.e-hentai.org/", document.body().select("img").get(4).attr("src"));
         } catch (Exception e) {
             return null;
         }
@@ -125,7 +125,7 @@ public class EHentaiProvider extends MangaProvider {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
             manga.genres = "";
-            manga.path = o.select("a").first().attr("href");
+            manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
             manga.id = manga.path.hashCode();

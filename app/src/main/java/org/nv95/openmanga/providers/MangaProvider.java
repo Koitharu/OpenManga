@@ -171,4 +171,8 @@ public abstract class MangaProvider {
     public boolean isMultiPage() {
         return true;
     }
+
+    static String concatUrl(String root, String url) {
+        return url == null || url.startsWith("http://") || url.startsWith("https://") ? url : root + (url.startsWith("/") ? url.substring(1) : url);
+    }
 }

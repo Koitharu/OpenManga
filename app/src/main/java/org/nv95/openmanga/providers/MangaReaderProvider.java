@@ -66,7 +66,7 @@ public class MangaReaderProvider extends MangaProvider {
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text() + o.parent().ownText();
-                chapter.readLink = "http://www.mangareader.net" + o.attr("href");
+                chapter.readLink = concatUrl("http://www.mangareader.net/", o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -141,7 +141,7 @@ public class MangaReaderProvider extends MangaProvider {
                 manga.subtitle = "";
             }
             manga.genres = o.select("div.manga_genre").first().text();
-            manga.path = "http://www.mangareader.net" + o.select("a").first().attr("href");
+            manga.path = concatUrl("http://www.mangareader.net/", o.select("a").first().attr("href"));
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
             manga.provider = MangaReaderProvider.class;

@@ -147,7 +147,7 @@ public class MangaFoxProvider extends MangaProvider {
             manga.provider = MangaFoxProvider.class;
             manga.preview = "http://c.mfcdn.net/store/manga/" + o.getString(0) + "/cover.jpg";
             manga.name = o.getString(1);
-            manga.path = "http://mangafox.me/manga/" + o.getString(2);
+            manga.path = concatUrl("http://mangafox.me/manga/", o.getString(2));
             manga.subtitle = null;
             manga.genres = o.getString(3);
             manga.id = manga.path.hashCode();
