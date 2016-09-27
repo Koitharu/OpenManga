@@ -115,7 +115,7 @@
     <string name="mark_all_viewed_confirm">Пометить все обновления просмотренными?</string>
     <string name="new_chapters_count" formatted="false">Новых глав: %d</string>
     <string name="over_wifi_only">Только через WiFi</string>
-    <string name="prefer_qsearch">Предпочесть быстрый поиск</string>
+    <string name="prefer_qsearch">Быстрый поиск</string>
     <string name="prefer_qsearch_summ">По возможости искать в текущем источнике</string>
     <string name="search_on_another_sources">Поиск в других источниках</string>
     <string name="show_at_startup">Показывать при запуске</string>
