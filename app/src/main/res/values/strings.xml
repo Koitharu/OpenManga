@@ -130,7 +130,7 @@
     <string name="send_mail">Send email</string>
     <string name="welcome">Welcome</string>
     <string name="show_at_startup">Show at startup</string>
-    <string name="prefer_qsearch">Prefer quick search</string>
+    <string name="prefer_qsearch">Quick search</string>
     <string name="prefer_qsearch_summ">Search in current source, if possible</string>
     <string name="search_on_another_sources">Search on another sources</string>
     <string name="genre_hero_fantasy">Heroic fantasy</string>
