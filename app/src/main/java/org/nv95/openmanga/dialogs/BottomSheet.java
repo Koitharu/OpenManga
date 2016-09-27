@@ -10,14 +10,12 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Checkable;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
@@ -62,19 +60,6 @@ public class BottomSheet implements DialogInterface {
         return this;
     }
 
-    public BottomSheet setMultiChoiceItems(String[] items, @Nullable boolean[] checkedItems) {
-        mAdapter = new ChecksAdapter(items, R.layout.item_multiple_choice);
-        if (checkedItems != null) {
-            for (int i=checkedItems.length - 1;i>=0;i--) {
-                if (checkedItems[i]) {
-                    ((ChecksAdapter) mAdapter).mChecked.put(i, true);
-                }
-            }
-        }
-        mRecyclerView.setAdapter(mAdapter);
-        return this;
-    }
-
     public BottomSheet addHeader(String itemTitle, @Nullable String buttonPositive,
                                           @Nullable String buttonNeutral, final DialogInterface.OnClickListener callback) {
         View view = LayoutInflater.from(mRecyclerView.getContext()).inflate(R.layout.bottomsheet_header, mRecyclerView, false);
@@ -104,15 +89,6 @@ public class BottomSheet implements DialogInterface {
         }
         mAdapter.addHeader(view, 0);
         return this;
-    }
-
-    public void checkAll(boolean checked) {
-        if (mAdapter instanceof ChecksAdapter) {
-            for (int i=mAdapter.getDataItemCount() - 1;i>=0;i--) {
-                ((ChecksAdapter) mAdapter).mChecked.put(i, true);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
     public BottomSheet setOnItemCheckListener(OnMultiChoiceClickListener listener) {
@@ -186,53 +162,6 @@ public class BottomSheet implements DialogInterface {
         public void onClick(View v) {
             if (mItemClickListener != null) {
                 mItemClickListener.onClick(BottomSheet.this, getAdapterPosition() - mAdapter.getHeadersCount());
-            }
-        }
-    }
-
-    private class ChecksAdapter extends HeaderedAdapter<CheckableHolder> {
-
-        private final String[] mDataset;
-        @LayoutRes
-        private final int mItemLayout;
-        final SparseBooleanArray mChecked;
-
-        ChecksAdapter(String[] items, @LayoutRes int layoutId) {
-            mDataset = items;
-            mItemLayout = layoutId;
-            mChecked = new SparseBooleanArray();
-        }
-
-        @Override
-        public CheckableHolder onCreateDataViewHolder(ViewGroup parent, int viewType) {
-            return new CheckableHolder(parent, mItemLayout);
-        }
-
-        @Override
-        public void onBindDataViewHolder(CheckableHolder holder, int position) {
-            holder.primaryTextView.setText(mDataset[position]);
-            ((Checkable)holder.primaryTextView).setChecked(mChecked.get(position, false));
-        }
-
-        @Override
-        public int getDataItemCount() {
-            return mDataset.length;
-        }
-    }
-
-    class CheckableHolder extends BasicHolder implements View.OnClickListener {
-
-        CheckableHolder(ViewGroup parent, @LayoutRes int layout) {
-            super(parent, layout);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (v instanceof Checkable) {
-                ((Checkable) v).toggle();
-                if (mMultiChoiceClickListener != null) {
-                    mMultiChoiceClickListener.onClick(BottomSheet.this, getAdapterPosition() - mAdapter.getHeadersCount(), ((Checkable) v).isChecked());
-                }
             }
         }
     }
