@@ -128,9 +128,7 @@ public class MintMangaProvider extends MangaProvider {
                     for (int i = 0; i < array.length(); i++) {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
-                        if (page.path.startsWith("/")) {
-                            page.path = "http://mintmanga.com" + page.path;
-                        }
+                        page.path = concatUrl("http://mintmanga.com/", page.path);
                         page.provider = MintMangaProvider.class;
                         pages.add(page);
                         p++;
@@ -197,7 +195,7 @@ public class MintMangaProvider extends MangaProvider {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
             manga.genres = o.select("a.element-link").text();
-            manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
+            manga.path = concatUrl("http://mintmanga.com/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = MintMangaProvider.class;
             manga.id = manga.path.hashCode();

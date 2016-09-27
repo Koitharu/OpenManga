@@ -41,10 +41,7 @@ public class HentaiBoxProvider extends MangaProvider {
             t = t.children().last();
             manga.name = t.text();
             t = o.select("img").first();
-            manga.preview = t.attr("src");
-            if (manga.preview != null && !manga.preview.startsWith("http://")) {
-                manga.preview = "http://www.hentaibox.net" + manga.preview;
-            }
+            manga.preview = concatUrl("http://www.hentaibox.net/", t.attr("src"));
             t = o.select("div.pagination").last();
             if (t != null) {
                 manga.genres = t.text();
@@ -130,10 +127,7 @@ public class HentaiBoxProvider extends MangaProvider {
             t = t.children().last();
             manga.name = t.text();
             t = o.select("img").first();
-            manga.preview = t.attr("src");
-            if (manga.preview != null && !manga.preview.startsWith("http://")) {
-                manga.preview = "http://www.hentaibox.net" + manga.preview;
-            }
+            manga.preview = concatUrl("http://www.hentaibox.net/", t.attr("src"));
             t = o.select("div.pagination").last();
             if (t != null) {
                 manga.genres = t.text();

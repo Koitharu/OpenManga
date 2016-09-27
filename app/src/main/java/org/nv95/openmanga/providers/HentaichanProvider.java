@@ -40,12 +40,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = "http://hentaichan.me" + t.attr("href");
+            manga.path = concatUrl("http://hentaichan.me/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = t.attr("src");
-            if (manga.preview != null && !manga.preview.startsWith("http://")) {
-                manga.preview = "http://hentaichan.me" + manga.preview;
-            }
+            manga.preview = concatUrl("http://hentaichan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -64,10 +61,7 @@ public class HentaichanProvider extends MangaProvider {
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("info_wrap").select("div.row").text();
-            summary.preview = e.getElementById("cover").attr("src");
-            if (!summary.preview.startsWith("http://")) {
-                summary.preview = "http://hentaichan.me" + summary.preview;
-            }
+            summary.preview = concatUrl("http://hentaichan.me/", e.getElementById("cover").attr("src"));
             Element dd = e.getElementById("description");
             if (dd != null) {
                 summary.description += "\n\n" + dd.text();
@@ -90,10 +84,7 @@ public class HentaichanProvider extends MangaProvider {
                 }
                 chapter = new MangaChapter();
                 chapter.name = e.text();
-                chapter.readLink = e.attr("href").replace("/manga/", "/online/");
-                if (!chapter.readLink.startsWith("http://")) {
-                    chapter.readLink = "http://hentaichan.me" + chapter.readLink;
-                }
+                chapter.readLink = concatUrl("http://hentaichan.me/", e.attr("href").replace("/manga/", "/online/"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -186,15 +177,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = t.attr("href");
-            if (!manga.path.startsWith("http://")) {
-                manga.path = "http://hentaichan.me" + manga.path;
-            }
+            manga.path = concatUrl("http://hentaichan.me/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = t.attr("src");
-            if (!manga.preview.startsWith("http://")) {
-                manga.preview = "http://hentaichan.me" + manga.preview;
-            }
+            manga.preview = concatUrl("http://hentaichan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();

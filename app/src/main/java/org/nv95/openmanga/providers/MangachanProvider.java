@@ -38,12 +38,9 @@ public class MangachanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = "http://mangachan.ru" + t.attr("href");
+            manga.path = concatUrl("http://mangachan.ru/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = t.attr("src");
-            if (manga.preview != null && !manga.preview.startsWith("http://")) {
-                manga.preview = "http://mangachan.ru" + manga.preview;
-            }
+            manga.preview = concatUrl("http://mangachan.ru/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -62,14 +59,14 @@ public class MangachanProvider extends MangaProvider {
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
-            summary.preview = "http://mangachan.ru" + e.getElementById("cover").attr("src");
+            summary.preview = concatUrl("http://mangachan.ru/", e.getElementById("cover").attr("src"));
             MangaChapter chapter;
             Elements els = e.select("table.table_cha");
             els = els.select("a");
             for (Element o : els) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = "http://mangachan.ru" + o.attr("href");
+                chapter.readLink = concatUrl("http://mangachan.ru/", o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -145,7 +142,7 @@ public class MangachanProvider extends MangaProvider {
             manga.name = t.text();
             manga.path = t.attr("href");
             t = o.select("img").first();
-            manga.preview = "http://mangachan.ru" + t.attr("src");
+            manga.preview = concatUrl("http://mangachan.ru/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
