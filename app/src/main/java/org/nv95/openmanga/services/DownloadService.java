@@ -16,11 +16,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.WorkerThread;
 import android.support.v7.app.AlertDialog;
-import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
-import org.nv95.openmanga.dialogs.BottomSheet;
+import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
@@ -35,7 +34,6 @@ import org.nv95.openmanga.utils.MangaStore;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -66,8 +64,9 @@ public class DownloadService extends Service {
                 mangas);
     }
 
-    public static void start(final Context context, final MangaSummary manga, @StringRes int dialogTitle) {
-        final int len = manga.chapters.size();
+    public static void start(Context context, MangaSummary manga, @StringRes int dialogTitle) {
+        new ChaptersSelectDialog(context).showSave(manga, dialogTitle);
+        /*final int len = manga.chapters.size();
         final MangaSummary mangaCopy = new MangaSummary(manga);
         mangaCopy.chapters.clear();
         final SparseBooleanArray checked = new SparseBooleanArray(len);
@@ -104,7 +103,7 @@ public class DownloadService extends Service {
                         checked.put(which, isChecked);
                     }
                 })
-                .show();
+                .show();*/
     }
 
     public static void startNoConfirm(Context context, MangaSummary manga) {
