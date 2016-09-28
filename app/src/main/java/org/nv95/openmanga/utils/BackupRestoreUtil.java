@@ -16,7 +16,6 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
-import org.nv95.openmanga.providers.LocalMangaProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -177,11 +176,6 @@ public class BackupRestoreUtil {
                 publishProgress(R.string.action_favourites);
                 file = new File(dir, "favourites.json");
                 jsonArray = storageHelper.extractTableData("favourites");
-                if (jsonArray == null || !writeToFile(file, jsonArray.toString())) {
-                    errors++;
-                }
-                file = new File(dir, "updates.json");
-                jsonArray = storageHelper.extractTableData("updates");
                 if (jsonArray == null || !writeToFile(file, jsonArray.toString())) {
                     errors++;
                 }
