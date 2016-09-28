@@ -649,6 +649,8 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
             }
             if (mPageId == -1) {
                 mPageId = mangaPages.size() - 1;
+            } else if (mPageId >= mangaPages.size()) {
+                mPageId = 0;
             }
             mPager.getReaderAdapter().freeze();
             mPager.setPages(mangaPages, mPageId);
