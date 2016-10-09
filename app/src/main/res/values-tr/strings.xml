@@ -282,4 +282,6 @@
     <string name="cache_size_invalid" formatted="false">Önbellek boyutu mb cinsinden ve %d ile %d arasında olmalı</string>
     <string name="need_restart">Değişiklikleri uygulamak için uygulamayı yeniden başlat</string>
     <string name="size_mb" formatted="false">%s Mb</string>
+    <string name="navigate_tip">Input page number</string>
+    <string name="invalid_value">Invalid value</string>
 </resources>

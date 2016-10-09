@@ -32,4 +32,8 @@ public class PagedList<T> extends ArrayList<T> {
     public void setHasNext(boolean hasNext) {
         this.mHasNext = hasNext;
     }
+
+    public void setPagesCount(int count) {
+        mPages = Math.max(count, 0);
+    }
 }

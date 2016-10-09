@@ -266,4 +266,6 @@
     <string name="need_restart">Перезапустите приложение для применения изменений</string>
     <string name="drag_divider_hint">Отключенные источники</string>
     <string name="size_mb" formatted="false">%s Мб</string>
+    <string name="navigate_tip">Введите номер страницы</string>
+    <string name="invalid_value">Некорректное значение</string>
 </resources>

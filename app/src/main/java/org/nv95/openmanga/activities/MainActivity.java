@@ -40,6 +40,8 @@ import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
+import org.nv95.openmanga.dialogs.NavigationListener;
+import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
@@ -71,7 +73,7 @@ import java.util.List;
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener, ChangesObserver.OnMangaChangesListener,
         ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
-        InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener {
+        InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener, NavigationListener {
 
     private static final int REQUEST_IMPORT = 792;
     private static final int REQUEST_SETTINGS = 795;
@@ -258,6 +260,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.setGroupVisible(R.id.group_local, mSelectedItem == R.id.nav_local_storage);
         menu.setGroupVisible(R.id.group_history, mSelectedItem == R.id.nav_action_history);
         menu.setGroupVisible(R.id.group_favourites, mSelectedItem == R.id.nav_action_favourites);
+        menu.findItem(R.id.action_goto).setVisible(mProvider.isMultiPage());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -316,6 +319,11 @@ public class MainActivity extends BaseAppActivity implements
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class)
                         .putExtra(FileSelectActivity.EXTRA_FILTER, "cbz"), REQUEST_IMPORT);
+                return true;
+            case R.id.action_goto:
+                new PageNumberDialog(this)
+                        .setNavigationListener(this)
+                        .show(mListLoader.getCurrentPage());
                 return true;
             case R.id.action_filter:
                 if (mProvider == null) {
@@ -483,8 +491,8 @@ public class MainActivity extends BaseAppActivity implements
     }
 
     @Override
-    public void onLoadingStarts(int page) {
-        if (page == 0) {
+    public void onLoadingStarts(boolean hasItems) {
+        if (!hasItems) {
             mProgressBar.setVisibility(View.VISIBLE);
             mListLoader.getAdapter().getChoiceController().clearSelection();
         } else {
@@ -683,6 +691,11 @@ public class MainActivity extends BaseAppActivity implements
                 mListLoader.moveItem(pos, 0);
             }
         }
+    }
+
+    @Override
+    public void onPageChange(int page) {
+        mListLoader.loadFromPage(page - 1);
     }
 
     private class OpenLastTask extends LoaderTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {

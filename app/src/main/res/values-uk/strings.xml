@@ -266,4 +266,6 @@
     <string name="need_restart">Перезапустіть програму для прийняття змін</string>
     <string name="drag_divider_hint">Вимкнені джерела</string>
     <string name="size_mb" formatted="false">%s Мб</string>
+    <string name="navigate_tip">Введіть номер сторінки</string>
+    <string name="invalid_value">Невірне значення</string>
 </resources>

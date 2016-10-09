@@ -4,34 +4,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
- * Created by nv95 on 16.10.15.
+ * Created by nv95 on 09.10.16.
  */
-public class NavigationDialog implements DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener {
+
+public class PageNumberDialog implements DialogInterface.OnClickListener, SeekBar.OnSeekBarChangeListener, DialogInterface.OnShowListener {
 
     private AlertDialog mDialog;
     private NavigationListener mNavigationListener;
     private Context mContext;
     //controls
-    private SeekBar mSeekBar;
+    private EditText mEditText;
     private TextView mTextView;
-    private int mPos;
 
-    public NavigationDialog(Context context, int size, int pos) {
-        this.mPos = pos;
+    public PageNumberDialog(Context context) {
         this.mContext = context;
-        View view = View.inflate(context, R.layout.dialog_navigation, null);
-        mSeekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        View view = View.inflate(context, R.layout.dialog_pagenumber, null);
+        mEditText = (EditText) view.findViewById(R.id.editText);
         mTextView = (TextView) view.findViewById(R.id.textView);
-        ((TextView) view.findViewById(R.id.textView_summary)).setText(context.getString(R.string.current_page, pos + 1));
-        mSeekBar.setOnSeekBarChangeListener(this);
-        mSeekBar.setMax(size - 1);
-        mSeekBar.setProgress(pos);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
         builder.setTitle(R.string.navigate);
@@ -43,6 +41,7 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
         });
         builder.setPositiveButton(android.R.string.ok, this);
         mDialog = builder.create();
+        mDialog.setOnShowListener(this);
     }
 
     @Override
@@ -60,18 +59,35 @@ public class NavigationDialog implements DialogInterface.OnClickListener, SeekBa
 
     }
 
-    public void show() {
+    public void show(int current) {
+        mEditText.setText(String.valueOf(current));
         mDialog.show();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (mNavigationListener != null && mPos != mSeekBar.getProgress())
-            mNavigationListener.onPageChange(mSeekBar.getProgress());
+        if (mNavigationListener != null)
+            try {
+                int num = Integer.parseInt(mEditText.getText().toString());
+                if (num < 0) {
+                    Toast.makeText(mContext, R.string.invalid_value, Toast.LENGTH_SHORT).show();
+                } else {
+                    mNavigationListener.onPageChange(num);
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(mContext, R.string.invalid_value, Toast.LENGTH_SHORT).show();
+            }
     }
 
-    public NavigationDialog setNavigationListener(NavigationListener navigationListener) {
+    public PageNumberDialog setNavigationListener(NavigationListener navigationListener) {
         this.mNavigationListener = navigationListener;
         return this;
     }
+
+    @Override
+    public void onShow(DialogInterface dialog) {
+        mEditText.setSelection(mEditText.getText().length());
+        LayoutUtils.showSoftKeyboard(mEditText);
+    }
 }
+

@@ -51,6 +51,19 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         }
     }
 
+    public int getCurrentPage() {
+        return mList.getPagesCount();
+    }
+
+    public void loadFromPage(int page) {
+        mList.clear();
+        mAdapter.notifyDataSetChanged();
+        mList.setPagesCount(page);
+        mList.setHasNext(true);
+        cancelLoading();
+        new LoadContentTask(page, true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     public void loadContent(boolean appendable, boolean invalidate) {
         if (invalidate) {
             mList.clear();
@@ -120,7 +133,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
     public interface OnContentLoadListener {
         void onContentLoaded(boolean success);
 
-        void onLoadingStarts(int page);
+        void onLoadingStarts(boolean hasItems);
 
         @Nullable
         MangaList onContentNeeded(int page);
@@ -160,7 +173,7 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mContentLoadListener.onLoadingStarts(mPage);
+            mContentLoadListener.onLoadingStarts(!mList.isEmpty());
         }
 
         @Override
