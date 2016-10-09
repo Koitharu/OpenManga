@@ -290,4 +290,6 @@
     <string name="cache_size_invalid" formatted="false">Cache size must be between %d and %d Mb</string>
     <string name="need_restart">Restart application to apply changes</string>
     <string name="size_mb" formatted="false">%s Mb</string>
+    <string name="navigate_tip">Input page number</string>
+    <string name="invalid_value">Invalid value</string>
 </resources>

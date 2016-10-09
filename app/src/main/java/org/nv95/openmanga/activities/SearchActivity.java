@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.dialogs.NavigationListener;
+import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
@@ -30,7 +32,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
  */
 public class SearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
-        ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener {
+        ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener, NavigationListener {
 
     //views
     private RecyclerView mRecyclerView;
@@ -77,6 +79,12 @@ public class SearchActivity extends BaseAppActivity implements
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_goto).setVisible(mProvider.isMultiPage());
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
         menu.findItem(R.id.action_search).setVisible(mTitle == null);
@@ -104,6 +112,11 @@ public class SearchActivity extends BaseAppActivity implements
             case R.id.action_listmode:
                 mListModeHelper.showDialog();
                 return true;
+            case R.id.action_goto:
+                new PageNumberDialog(this)
+                        .setNavigationListener(this)
+                        .show(mLoader.getCurrentPage());
+                return true;
             case R.id.action_search:
                 onClick(null);
                 return true;
@@ -129,8 +142,8 @@ public class SearchActivity extends BaseAppActivity implements
     }
 
     @Override
-    public void onLoadingStarts(int page) {
-        if (page == 0) {
+    public void onLoadingStarts(boolean hasItems) {
+        if (!hasItems) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
         mTextViewHolder.setVisibility(View.GONE);
@@ -187,5 +200,10 @@ public class SearchActivity extends BaseAppActivity implements
             mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
             mTextViewHolder.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onPageChange(int page) {
+        mLoader.loadFromPage(page - 1);
     }
 }

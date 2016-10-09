@@ -38,6 +38,7 @@ import org.nv95.openmanga.components.pager.MangaPager;
 import org.nv95.openmanga.components.pager.OverScrollDetector;
 import org.nv95.openmanga.components.pager.imagecontroller.PageHolder;
 import org.nv95.openmanga.dialogs.NavigationDialog;
+import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ReaderMenuDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
  * Created by nv95 on 30.09.15.
  */
 public class ReadActivity extends BaseAppActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, NavigationDialog.NavigationListener,
+        ViewPager.OnPageChangeListener, NavigationListener,
         MangaPager.OverScrollListener, ValueAnimator.AnimatorUpdateListener {
 
     private static final int REQUEST_SETTINGS = 1299;
