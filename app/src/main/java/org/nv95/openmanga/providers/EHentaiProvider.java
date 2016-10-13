@@ -16,6 +16,8 @@ import org.nv95.openmanga.utils.AppHelper;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -40,7 +42,8 @@ public class EHentaiProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
-            manga.subtitle = "";
+            manga.subtitle = getFromBrackets(manga.name);
+            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
             manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
@@ -56,12 +59,14 @@ public class EHentaiProvider extends MangaProvider {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path, DEF_COOKIE);
+            Element body = document.body();
             StringBuilder builder = new StringBuilder();
-            for (Element o : document.body().getElementById("taglist").select("tr")) {
+            for (Element o : body.getElementById("taglist").select("tr")) {
                 builder.append(o.text()).append('\n');
             }
             summary.description = builder.toString().trim();
-            Elements els = document.body().select("table.ptt").first().select("td");
+            summary.preview = body.getElementById("gd1").select("img").first().attr("src");
+            Elements els = body.select("table.ptt").first().select("td");
             els.remove(els.size() - 1);
             els.remove(0);
             MangaChapter chapter;
@@ -124,6 +129,8 @@ public class EHentaiProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
+            manga.subtitle = getFromBrackets(manga.name);
+            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
             manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
@@ -148,5 +155,23 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public boolean isSearchAvailable() {
         return true;
+    }
+
+    private String getFromBrackets(String src) {
+        Matcher m = Pattern.compile("\\[[^\\[,\\]]+\\]").matcher(src);
+        StringBuilder sb = new StringBuilder();
+        String t;
+        boolean firstTime = true;
+        while (m.find()) {
+            t = m.group(0);
+            t = t.substring(1, t.length() - 2);
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(t);
+        }
+        return sb.toString();
     }
 }
