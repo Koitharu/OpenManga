@@ -3,12 +3,15 @@ package org.nv95.openmanga.utils;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.StatFs;
+import android.support.annotation.NonNull;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 /**
@@ -107,5 +110,31 @@ public class StorageUtils {
                 size += dirSize(file);
         }
         return size;
+    }
+
+    public static boolean isImageFile(String name) {
+        int p = name.lastIndexOf(".");
+        if (p <= 0) {
+            return false;
+        }
+        String ext = name.substring(p + 1).toLowerCase();
+        return "png".equals(ext) || "jpg".equals(ext) || "jpeg".equals(ext) || "webp".equals(ext);
+    }
+
+    @NonNull
+    public static String tail(InputStream is, int maxLines) {
+        try {
+            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+            StringBuilder result = new StringBuilder();
+            String line;
+            int i = maxLines;
+            while ((line = r.readLine()) != null && i > 0) {
+                result.append(line).append('\n');
+                i--;
+            }
+            return result.toString();
+        } catch (IOException e) {
+            return "";
+        }
     }
 }

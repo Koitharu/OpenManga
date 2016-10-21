@@ -129,6 +129,7 @@ public class ImportService extends Service {
             SQLiteDatabase database;
             ZipInputStream zipInputStream = null;
             int pages = 0;
+            String info = getString(R.string.imported_from, new File(params[0]).getName());
             try {
                 //reading info
                 final ZipEntry[] entries = ZipBuilder.enumerateEntries(params[0]);
@@ -154,43 +155,47 @@ public class ImportService extends Service {
                 final byte[] buffer = new byte[1024];
                 publishProgress(0, entries.length);
                 //importing
-                database = new MangaStore(ImportService.this).getDatabase(true);
+                MangaStore ms = new MangaStore(ImportService.this);
                 ContentValues cv;
                 //all pages
-                chapterId = 0;
+                chapterId = mangaId;
                 File outFile;
                 ZipEntry entry;
                 FileOutputStream outputStream;
                 while ((entry = zipInputStream.getNextEntry()) != null && !isCancelled()) {
                     if (!entry.isDirectory()) {
-                        pageId = entry.getName().hashCode();
-                        outFile = new File(dest, chapterId + "_" + pageId);
-                        if (outFile.exists() || outFile.createNewFile()) {
-                            outputStream = new FileOutputStream(outFile);
-                            int len;
-                            while ((len = zipInputStream.read(buffer)) > 0) {
-                                outputStream.write(buffer, 0, len);
+                        if (StorageUtils.isImageFile(entry.getName())) {
+                            pageId = entry.getName().hashCode();
+                            outFile = new File(dest, chapterId + "_" + pageId);
+                            if (outFile.exists() || outFile.createNewFile()) {
+                                outputStream = new FileOutputStream(outFile);
+                                int len;
+                                while ((len = zipInputStream.read(buffer)) > 0) {
+                                    outputStream.write(buffer, 0, len);
+                                }
+                                outputStream.close();
+                                cv = new ContentValues();
+                                cv.put("id", pageId);
+                                cv.put("chapterid", chapterId);
+                                cv.put("mangaid", mangaId);
+                                cv.put("file", outFile.getName());
+                                cv.put("number", pages);
+                                ms.getDatabase(true).insert(TABLE_PAGES, null, cv);
+                                pages++;
+                                publishProgress(pages, total);
+                                if (preview == null) {
+                                    preview = new File(dest, "cover");
+                                    StorageUtils.copyFile(outFile, preview);
+                                }
                             }
-                            outputStream.close();
-                            cv = new ContentValues();
-                            cv.put("id", pageId);
-                            cv.put("chapterid", chapterId);
-                            cv.put("mangaid", mangaId);
-                            cv.put("file", outFile.getName());
-                            cv.put("number", pages);
-                            database.insert(TABLE_PAGES, null, cv);
-                            pages++;
-                            publishProgress(pages, total);
-                            if (preview == null) {
-                                preview = new File(dest, "cover");
-                                StorageUtils.copyFile(outFile, preview);
-                            }
+                        } else if (entry.getName().toLowerCase().endsWith("info.txt")) {
+                            info = StorageUtils.tail(zipInputStream, 20) + "\n" + info;
                         }
                     }
                 }
                 if (isCancelled()) {
                     //remove all
-                    database.delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(mangaId)});
+                    ms.getDatabase(true).delete(TABLE_PAGES, "mangaid=?", new String[]{String.valueOf(mangaId)});
                     new DirRemoveHelper(dest).run();
                     try {
                         zipInputStream.close();
@@ -204,17 +209,21 @@ public class ImportService extends Service {
                 cv.put("mangaid", mangaId);
                 cv.put("name", "default");
                 cv.put("number", 0);
-                database.insert(TABLE_CHAPTERS, null, cv);
+                if (ms.getDatabase(true).update(TABLE_CHAPTERS, cv, "id=? AND mangaid=?", new String[]{String.valueOf(chapterId), String.valueOf(mangaId)}) == 0) {
+                    ms.getDatabase(true).insertOrThrow(TABLE_CHAPTERS, null, cv);
+                }
                 //save manga
                 cv = new ContentValues();
                 cv.put("id", mangaId);
                 cv.put("name", name);
                 cv.put("subtitle", "");
                 cv.put("summary", "");
-                cv.put("description", getString(R.string.imported_from, new File(params[0]).getName()));
-                cv.put("dir", MangaStore.getMangaDir(ImportService.this, database, mangaId).getPath());
+                cv.put("description", info);
+                cv.put("dir", MangaStore.getMangaDir(ImportService.this, ms.getDatabase(true), mangaId).getPath());
                 cv.put("timestamp", new Date().getTime());
-                database.insert(TABLE_MANGAS, null, cv);
+                if (ms.getDatabase(true).update(TABLE_MANGAS, cv, "id=?", new String[]{String.valueOf(mangaId)}) == 0) {
+                    ms.getDatabase(true).insertOrThrow(TABLE_MANGAS, null, cv);
+                }
             } catch (Exception e) {
                 FileLogger.getInstance().report(e);
                 pages = -1;
