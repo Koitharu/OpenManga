@@ -83,6 +83,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private TextView textViewSubtitle;
         private TextView textViewSummary;
         private TextView textViewBadge;
+        private TextView textViewRating;
         private ImageView imageView;
         private MangaInfo mData;
         @Nullable
@@ -94,6 +95,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
             textViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
+            textViewRating = (TextView) itemView.findViewById(R.id.textView_rating);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
@@ -118,6 +120,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 textViewSubtitle.setVisibility(View.VISIBLE);
             }
             textViewSummary.setText(mData.genres);
+            textViewRating.setText(mData.rating);
             ImageUtils.setThumbnail(imageView, data.preview, thumbSize);
             // TODO: 17.02.16
             //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);

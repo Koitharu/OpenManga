@@ -78,6 +78,7 @@ public class ReadmangaRuProvider extends MangaProvider {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
             manga.id = manga.path.hashCode();
+            manga.rating = "Рэйтинг: " + o.select("div.rating").first().attr("title").substring(0, 3);
             list.add(manga);
         }
         return list;
