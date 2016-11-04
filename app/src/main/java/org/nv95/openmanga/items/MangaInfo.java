@@ -24,6 +24,7 @@ public class MangaInfo {
     public int status;
     @Nullable
     public String extra;
+    public String rating;
 
     public MangaInfo(String name, String genres, String path, String preview) {
         this.name = name;
@@ -48,6 +49,7 @@ public class MangaInfo {
         }
         status = bundle.getInt("status", 0);
         extra = bundle.getString("extra");
+        rating = bundle.getString("rating");
     }
 
     public MangaInfo() {
