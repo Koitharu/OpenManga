@@ -65,5 +65,14 @@
             android:textColor="@color/white_overlay_85"
             android:visibility="gone" />
 
+        <TextView
+            android:text="Small Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_rating"
+            android:layout_below="@+id/textView_subtitle"
+            android:layout_toRightOf="@+id/imageView"
+            tools:ignore="RtlHardcoded" />
+
     </RelativeLayout>
 </org.nv95.openmanga.components.FrameCheckLayout>
