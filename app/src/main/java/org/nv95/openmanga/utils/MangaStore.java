@@ -325,7 +325,7 @@ public class MangaStore {
 
             db.execSQL("CREATE TABLE " + TABLE_CHAPTERS + " ("
                     + "id INTEGER PRIMARY KEY,"
-                    + "mangaid INTEGER PRIMARY KEY,"
+                    + "mangaid INTEGER,"
                     + "name TEXT,"
                     + "number INTEGER"
                     + ");");
