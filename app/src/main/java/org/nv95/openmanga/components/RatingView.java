@@ -4,9 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class RatingView extends TextView {
             Color.parseColor("#e5483a")
     };
 
-    private VectorDrawableCompat mStarDrawable;
+    private Drawable mStarDrawable;
 
     public RatingView(Context context) {
         super(context);
@@ -50,8 +51,8 @@ public class RatingView extends TextView {
 
     private void init(Context context) {
         setLines(1);
-        mStarDrawable = VectorDrawableCompat.create(context.getResources(), R.drawable.ic_star, null);
-        mStarDrawable.setAlpha(124);
+        mStarDrawable = ContextCompat.getDrawable(context, R.drawable.ic_star);
+        mStarDrawable.setAlpha(200);
         setCompoundDrawablesWithIntrinsicBounds(mStarDrawable, null, null, null);
     }
 
