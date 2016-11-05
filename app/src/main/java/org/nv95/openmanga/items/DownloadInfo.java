@@ -29,6 +29,7 @@ public class DownloadInfo extends MangaInfo {
         this.preview = mangaSummary.preview;
         this.subtitle = mangaSummary.subtitle;
         this.provider = mangaSummary.provider;
+        this.rating = mangaSummary.rating;
         this.description = mangaSummary.description;
         this.chapters = mangaSummary.chapters;
         this.max = chapters.size();

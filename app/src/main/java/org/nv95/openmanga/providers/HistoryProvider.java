@@ -52,7 +52,7 @@ public class HistoryProvider extends MangaProvider {
         MangaInfo last = null;
         try {
             cursor = mStorageHelper.getReadableDatabase()
-                    .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[0]);
+                    .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"}, null, null, null, null, sortUrls[0]);
             if (cursor.moveToFirst()) {
                 last = new MangaInfo();
                 last.id = cursor.getInt(0);
@@ -66,6 +66,7 @@ public class HistoryProvider extends MangaProvider {
                 } catch (ClassNotFoundException e) {
                     last.provider = LocalMangaProvider.class;
                 }
+                last.rating = (byte) cursor.getInt(7);
                 last.status = STATUS_UNKNOWN;
                 last.extra = null;
             }
@@ -92,7 +93,7 @@ public class HistoryProvider extends MangaProvider {
         //noinspection TryFinallyCanBeTryWithResources
         list = new MangaList();
         Cursor cursor = mStorageHelper.getReadableDatabase()
-                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"}, null, null, null, null, sortUrls[sort]);
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"}, null, null, null, null, sortUrls[sort]);
         if (cursor.moveToFirst()) {
             do {
                 manga = new MangaInfo();
@@ -107,6 +108,7 @@ public class HistoryProvider extends MangaProvider {
                 } catch (ClassNotFoundException e) {
                     manga.provider = LocalMangaProvider.class;
                 }
+                manga.rating = (byte) cursor.getInt(7);
                 manga.status = STATUS_UNKNOWN;
                 manga.extra = null;
                 list.add(manga);
@@ -148,6 +150,7 @@ public class HistoryProvider extends MangaProvider {
         cv.put("timestamp", new Date().getTime());
         cv.put("chapter", chapter);
         cv.put("page", page);
+        cv.put("rating", mangaInfo.rating);
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         int updCount = database.update(TABLE_NAME, cv, "id=" + mangaInfo.id, null);
         if (updCount == 0) {

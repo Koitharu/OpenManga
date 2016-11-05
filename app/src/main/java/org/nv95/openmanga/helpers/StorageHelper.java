@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class StorageHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 15;
+    private static final int DB_VERSION = 16;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -39,7 +39,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "provider TEXT,"
                 + "path TEXT,"
                 + "timestamp INTEGER,"
-                + "category INTEGER DEFAULT 0"
+                + "category INTEGER DEFAULT 0,"
+                + "rating INTEGER DEFAULT 0"
                 + ");");
 
         db.execSQL("CREATE TABLE history ("
@@ -53,7 +54,8 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "timestamp INTEGER,"
                 + "chapter INTEGER,"
                 + "page INTEGER,"
-                + "size INTEGER"
+                + "size INTEGER,"
+                + "rating INTEGER DEFAULT 0"
                 + ");");
 
         db.execSQL("CREATE TABLE search_history ("
@@ -96,10 +98,14 @@ public class StorageHelper extends SQLiteOpenHelper {
         columnsFavourites = getColumsNames(db, "history");
         if(!columnsFavourites.contains("summary"))
             db.execSQL("ALTER TABLE history ADD COLUMN summary TEXT");
+        if(!columnsFavourites.contains("rating"))
+            db.execSQL("ALTER TABLE history ADD COLUMN rating INTEGER DEFAULT 0");
         // favourites
         columnsFavourites = getColumsNames(db, "favourites");
         if(!columnsFavourites.contains("summary"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN summary TEXT");
+        if(!columnsFavourites.contains("rating"))
+            db.execSQL("ALTER TABLE favourites ADD COLUMN rating INTEGER DEFAULT 0");
     }
 
     @Nullable

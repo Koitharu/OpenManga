@@ -71,6 +71,7 @@ public class DesuMeProvider extends MangaProvider {
                     manga.status = MangaInfo.STATUS_UNKNOWN;
             }
             manga.genres = jo.getString("genres");
+            manga.rating = (byte) (jo.getDouble("score") * 10);
             manga.provider = DesuMeProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
@@ -153,6 +154,7 @@ public class DesuMeProvider extends MangaProvider {
                     manga.status = MangaInfo.STATUS_UNKNOWN;
             }
             manga.genres = jo.getString("genres");
+            manga.rating = (byte) (jo.getDouble("score") * 10);
             manga.provider = DesuMeProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);

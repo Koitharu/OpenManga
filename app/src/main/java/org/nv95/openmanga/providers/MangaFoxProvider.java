@@ -39,7 +39,6 @@ public class MangaFoxProvider extends MangaProvider {
             "seinen", "shoujo", "shoujo-ai", "shounen", "shounen-ai", "slice-of-life", "smut", "sports",
             "supernatural", "tragedy", "webtoons", "yaoi", "yuri"
     };
-    private static boolean features[] = {true, true, false, true, true};
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
@@ -54,7 +53,7 @@ public class MangaFoxProvider extends MangaProvider {
             manga.name = o.select("a.title").first().text();
             manga.subtitle = null;
             try {
-                manga.genres = o.select("p.info").first().text();
+                manga.genres = o.select("p.info").first().attr("title");
             } catch (Exception e) {
                 manga.genres = "";
             }
@@ -64,6 +63,7 @@ public class MangaFoxProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.preview = "";
             }
+            manga.rating = (byte) (Byte.parseByte(o.select("span.rate").first().text().substring(0,3).replace(".","")) * 2);
             manga.provider = MangaFoxProvider.class;
             if (!o.select("em.tag_completed").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;

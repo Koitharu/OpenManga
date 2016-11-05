@@ -78,7 +78,8 @@ public class ReadmangaRuProvider extends MangaProvider {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
             manga.id = manga.path.hashCode();
-            manga.rating = Byte.parseByte(o.select("div.rating").first().attr("title").substring(0, 3).replace(".",""));
+            t = o.select("div.rating").first();
+            manga.rating = t == null ? 0 : Byte.parseByte(t.attr("title").substring(0, 3).replace(".",""));
             list.add(manga);
         }
         return list;
@@ -197,6 +198,7 @@ public class ReadmangaRuProvider extends MangaProvider {
         };
         Document document = postPage("http://readmanga.me/search", data);
         MangaInfo manga;
+        Element r;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
@@ -204,6 +206,8 @@ public class ReadmangaRuProvider extends MangaProvider {
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
+            r = o.select("div.rating").first();
+            manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));
             manga.provider = ReadmangaRuProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);

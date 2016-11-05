@@ -25,6 +25,7 @@ public class MangaSummary extends MangaInfo {
         this.provider = mangaInfo.provider;
         this.status = mangaInfo.status;
         this.extra = mangaInfo.extra;
+        this.rating = mangaInfo.rating;
         this.description = "";
         this.chapters = new ChaptersList();
     }
@@ -40,6 +41,7 @@ public class MangaSummary extends MangaInfo {
         this.description = mangaSummary.description;
         this.status = mangaSummary.status;
         this.extra = mangaSummary.extra;
+        this.rating = mangaSummary.rating;
         this.chapters = new ChaptersList(mangaSummary.chapters);
     }
 

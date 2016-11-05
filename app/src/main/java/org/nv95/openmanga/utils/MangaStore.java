@@ -63,6 +63,7 @@ public class MangaStore {
             cv.put("timestamp", new Date().getTime());
             cv.put("provider", manga.provider.getName());
             cv.put("source", manga.path);
+            cv.put("rating", manga.rating);
             if (database.update(TABLE_MANGAS,cv, "id=" + id, null) == 0) {
                 database.insert(TABLE_MANGAS, null, cv);
             }
@@ -301,7 +302,7 @@ public class MangaStore {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        private static final int DB_VERSION = 2;
+        private static final int DB_VERSION = 3;
 
         DatabaseHelper(Context context) {
             super(context, "mangastore", null, DB_VERSION);
@@ -318,7 +319,8 @@ public class MangaStore {
                     + "dir TEXT,"             //каталог с файлами
                     + "timestamp INTEGER,"
                     + "source TEXT,"        //link to source manga
-                    + "provider TEXT"       //source provider
+                    + "provider TEXT,"       //source provider
+                    + "rating INTEGER DEFAULT 0"
                     + ");");
 
             db.execSQL("CREATE TABLE " + TABLE_CHAPTERS + " ("
@@ -345,6 +347,9 @@ public class MangaStore {
             }
             if (!tables.contains("provider")) {
                 db.execSQL("ALTER TABLE " + TABLE_MANGAS + " ADD COLUMN provider TEXT");
+            }
+            if (!tables.contains("rating")) {
+                db.execSQL("ALTER TABLE " + TABLE_MANGAS + " ADD COLUMN rating INTEGER DEFAULT 0");
             }
         }
     }

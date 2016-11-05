@@ -45,6 +45,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.subtitle = getFromBrackets(manga.name);
             manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
+            manga.rating = parseRating(o.select("div.id43").first().attr("style"));
             manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
@@ -52,6 +53,49 @@ public class EHentaiProvider extends MangaProvider {
             list.add(manga);
         }
         return list;
+    }
+
+    private byte parseRating(String r) {
+        //background-position:0px -1px; opacity:1; margin-top:2px - 5.0 - 100
+        //background-position:0px -21px; opacity:1; margin-top:2px - 4.5 - 90
+        //background-position:-16px -1px; opacity:1; margin-top:2px - 4.0 - 80
+        //background-position:-16px -21px; opacity:1; margin-top:2px - 3.5 - 70
+        //background-position:-32px -1px; opacity:1; margin-top:2px - 3.0 - 60
+        //background-position:-32px -21px; opacity:1; margin-top:2px - 2.5 - 50
+        //background-position:-48px -1px; opacity:1; margin-top:2px - 2.0 - 40
+        //background-position:-48px -21px; opacity:1; margin-top:2px - 1.5 - 30
+        //background-position:-64px -1px; opacity:1; margin-top:2px - 1.0 - 20
+        //background-position:-64px -21px; opacity:1; margin-top:2px - 0.5 - 10
+        //background-position:-80px -1px; opacity:1; margin-top:2px - 0.0 - 0
+        r = r.substring(
+                r.indexOf(":") + 1,
+                r.indexOf(";")
+        );
+        String[] a = r.split(" ");
+        byte res;
+        switch (a[0].trim()) {
+            case "0px":
+                res = 90;
+                break;
+            case "-16px":
+                res = 70;
+                break;
+            case "-32px":
+                res = 50;
+                break;
+            case "-48px":
+                res = 30;
+                break;
+            case "-64px":
+                res = 10;
+                break;
+            default:
+                res = 0;
+        }
+        if (a.length > 1 && res != 0 && "-1px".equals(a[1])) {
+            res += 10;
+        }
+        return res;
     }
 
     @Override
@@ -132,6 +176,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.subtitle = getFromBrackets(manga.name);
             manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
+            manga.rating = parseRating(o.select("div.id43").first().attr("style"));
             manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;

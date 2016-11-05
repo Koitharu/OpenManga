@@ -62,7 +62,7 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         list = new MangaList();
         Cursor cursor = mStore.getDatabase(false)
-                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, null, null, null, null, sortUrls[sort]);
+                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source", "rating"}, null, null, null, null, sortUrls[sort]);
         if (cursor.moveToFirst()) {
             do {
                 manga = new MangaInfo();
@@ -74,6 +74,7 @@ public class LocalMangaProvider extends MangaProvider {
                 manga.preview = manga.path + "/cover";
                 manga.provider = LocalMangaProvider.class;
                 manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
+                manga.rating = (byte) cursor.getInt(6);
                 list.add(manga);
             } while (cursor.moveToNext());
         }
@@ -211,6 +212,7 @@ public class LocalMangaProvider extends MangaProvider {
                         mi.id = manga.id;
                         mi.status = manga.status;
                         mi.genres = manga.genres;
+                        mi.rating = manga.rating;
                         mi.path = link;
                         return provider.getDetailedInfo(mi);
                     }
@@ -286,7 +288,7 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         list = new MangaList();
         Cursor cursor = mStore.getDatabase(false)
-                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
+                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source", "rating"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
         if (cursor.moveToFirst()) {
             do {
                 manga = new MangaInfo();
@@ -298,6 +300,7 @@ public class LocalMangaProvider extends MangaProvider {
                 manga.preview = manga.path + "/cover";
                 manga.provider = LocalMangaProvider.class;
                 manga.status = cursor.getString(5) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
+                manga.rating = (byte) cursor.getInt(6);
                 list.add(manga);
             } while (cursor.moveToNext());
         }

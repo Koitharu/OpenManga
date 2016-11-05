@@ -155,6 +155,7 @@ public class SearchActivity extends BaseAppActivity implements
         try {
             return mProvider.search(mQuery, page);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

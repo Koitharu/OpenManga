@@ -70,6 +70,8 @@ public class MintMangaProvider extends MangaProvider {
             if (!o.select("span.mangaCompleted").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
+            t = o.select("div.rating").first();
+            manga.rating = t == null ? 0 : Byte.parseByte(t.attr("title").substring(0, 3).replace(".",""));
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
@@ -190,6 +192,7 @@ public class MintMangaProvider extends MangaProvider {
         };
         Document document = postPage("http://mintmanga.com/search", data);
         MangaInfo manga;
+        Element r;
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
@@ -197,6 +200,8 @@ public class MintMangaProvider extends MangaProvider {
             manga.genres = o.select("a.element-link").text();
             manga.path = concatUrl("http://mintmanga.com/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
+            r = o.select("div.rating").first();
+            manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));
             manga.provider = MintMangaProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);

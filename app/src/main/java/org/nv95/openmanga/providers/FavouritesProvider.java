@@ -70,7 +70,7 @@ public class FavouritesProvider extends MangaProvider {
         //noinspection TryFinallyCanBeTryWithResources
         try {
             list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider"},
+            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
                     genre == 0 ? null : "category=" + genre, null, null, null, sortUrls[sort]);
             if (cursor.moveToFirst()) {
                 do {
@@ -87,6 +87,7 @@ public class FavouritesProvider extends MangaProvider {
                         manga.provider = LocalMangaProvider.class;
                     }
                     manga.status = STATUS_UNKNOWN;
+                    manga.rating = (byte) cursor.getInt(7);
                     manga.extra = updates.containsKey(manga.id) ?
                             "+" + updates.get(manga.id) : null;
                     list.add(manga);
@@ -135,6 +136,7 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("path", mangaInfo.path);
         cv.put("timestamp", new Date().getTime());
         cv.put("category", category);
+        cv.put("rating", mangaInfo.rating);
         SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         return (database.insert(TABLE_NAME, null, cv) != -1);
     }
