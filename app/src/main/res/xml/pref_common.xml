@@ -42,6 +42,11 @@
         android:title="@string/app_language" />
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="hide_toolbars"
+        android:title="@string/hide_toolbar"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="fab"
         android:title="@string/show_resume_fab"
         android:widgetLayout="@layout/pref_switchcompat" />

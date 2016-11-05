@@ -48,8 +48,10 @@ public class MultipleSearchActivity extends BaseAppActivity implements ListModeH
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multisearch);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setContentView(R.layout.activity_search);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setupToolbarScrolling(toolbar);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mQuery = getIntent().getStringExtra("query");

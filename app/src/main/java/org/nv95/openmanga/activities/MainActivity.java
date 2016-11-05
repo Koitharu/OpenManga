@@ -103,6 +103,7 @@ public class MainActivity extends BaseAppActivity implements
         enableTransparentStatusBar(android.R.color.transparent);
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
+        setupToolbarScrolling(toolbar);
         if (WelcomeActivity.show(this)) {
             //MangaProviderManager.configure(this, MangaProviderManager.Languages.fromLocale(Locale.getDefault()));
         }
@@ -298,6 +299,7 @@ public class MainActivity extends BaseAppActivity implements
                 recreate();
                 return;
             }
+            setupToolbarScrolling((Toolbar) findViewById(R.id.toolbar));
             mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                     .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
             if (mProviderManager != null && mNavigationView != null){

@@ -17,6 +17,7 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -90,7 +91,16 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     @Override
     public void setSupportActionBar(@Nullable Toolbar toolbar) {
         super.setSupportActionBar(toolbar);
-        mActionBarVisible = true;
+        mActionBarVisible = toolbar != null;
+    }
+
+    void setupToolbarScrolling(Toolbar toolbar) {
+        if (toolbar == null || !(toolbar.getParent() instanceof AppBarLayout)) {
+            return;
+        }
+        boolean scrolls = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("hide_toolbars", true);
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(scrolls ? AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
     }
 
     public void setSupportActionBar(@IdRes int toolbarId) {
