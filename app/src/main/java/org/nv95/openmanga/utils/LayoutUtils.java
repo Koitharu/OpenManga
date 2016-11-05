@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -78,7 +79,7 @@ public class LayoutUtils {
             } else if (o instanceof TextView) {
                 for (Drawable d : ((TextView)o).getCompoundDrawables()) {
                     if (d != null) {
-                        d.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                        DrawableCompat.setTint(d, color);
                     }
                 }
             } else if (o instanceof ViewGroup) {

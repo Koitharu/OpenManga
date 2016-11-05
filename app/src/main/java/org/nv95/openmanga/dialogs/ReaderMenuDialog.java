@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -56,12 +57,33 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         mButtonNav = (TextView) mRootView.findViewById(R.id.textView_goto);
         mButtonNav.setOnClickListener(this);
         mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progressBar);
+        initIcons(context);
         mDialog = new AlertDialog.Builder(context)
                 .setView(mRootView)
                 .setCancelable(true)
                 .setOnDismissListener(this)
                 .setOnCancelListener(this)
                 .create();
+    }
+
+    private void initIcons(Context context) {
+        Drawable[] icons = LayoutUtils.getThemedIcons(
+                context,
+                R.drawable.ic_favorite_dark,
+                R.drawable.ic_swap_horiz_dark,
+                R.drawable.ic_image_dark,
+                R.drawable.ic_save_dark,
+                R.drawable.ic_share_dark,
+                R.drawable.ic_settings_dark,
+                R.drawable.ic_drop_down_dark
+        );
+        mButtonFav.setCompoundDrawablesWithIntrinsicBounds(icons[0], null, null, null);
+        mButtonNav.setCompoundDrawablesWithIntrinsicBounds(null, null, icons[1], null);
+        mButtonImg.setCompoundDrawablesWithIntrinsicBounds(icons[2], null, null, null);
+        mButtonSave.setCompoundDrawablesWithIntrinsicBounds(icons[3], null, null, null);
+        mButtonShare.setCompoundDrawablesWithIntrinsicBounds(icons[4], null, null, null);
+        mButtonOpts.setCompoundDrawablesWithIntrinsicBounds(icons[5], null, null, null);
+        mTextViewSubtitle.setCompoundDrawablesWithIntrinsicBounds(null, null, icons[6], null);
     }
 
     public ReaderMenuDialog callback(View.OnClickListener clickListener) {
@@ -82,7 +104,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
     public ReaderMenuDialog favourites(@Nullable String title) {
         if (title != null) {
             mButtonFav.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite_dark, 0, 0, 0
+                    LayoutUtils.getThemedIcons(mDialog.getContext(), R.drawable.ic_favorite_dark)[0], null, null, null
             );
             mButtonFav.setText(title);
         }
@@ -97,10 +119,7 @@ public class ReaderMenuDialog implements View.OnClickListener, DialogInterface.O
         return this;
     }
 
-    public void show(boolean dark) {
-        if (dark) {
-            LayoutUtils.setAllImagesColor(mRootView, R.color.white_overlay_85);
-        }
+    public void show() {
         mDialog.show();
     }
 

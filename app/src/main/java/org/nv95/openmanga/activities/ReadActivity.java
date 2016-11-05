@@ -218,7 +218,7 @@ public class ReadActivity extends BaseAppActivity implements View.OnClickListene
                         )
                         .chapter(mMangaSummary.getChapters().get(mChapterId).name)
                         .title(mMangaSummary.name)
-                        .show(isDarkTheme());
+                        .show();
                 break;
             case R.id.button_save:
                 if (!LocalMangaProvider.class.equals(mMangaSummary.provider)) {

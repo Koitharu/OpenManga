@@ -36,8 +36,6 @@
             android:layout_alignTop="@+id/textView_subtitle"
             android:background="?selectableItemBackground"
             android:clickable="true"
-            android:drawableEnd="@drawable/ic_swap_horiz_dark"
-            android:drawableRight="@drawable/ic_swap_horiz_dark"
             android:gravity="center_vertical"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingLeft="4dp"
@@ -56,8 +54,6 @@
             android:layout_toStartOf="@+id/textView_goto"
             android:background="?selectableItemBackground"
             android:clickable="true"
-            android:drawableEnd="@drawable/ic_drop_down_dark"
-            android:drawableRight="@drawable/ic_drop_down_dark"
             android:ellipsize="middle"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -93,8 +89,6 @@
         style="@style/FlatMenuButtonSimple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_favorite_outline_dark"
-        android:drawableStart="@drawable/ic_favorite_outline_dark"
         android:text="@string/action_favourite" />
 
     <TextView
@@ -102,8 +96,6 @@
         style="@style/FlatMenuButtonSimple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_save_dark"
-        android:drawableStart="@drawable/ic_save_dark"
         android:text="@string/action_save" />
 
     <TextView
@@ -111,8 +103,6 @@
         style="@style/FlatMenuButtonSimple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_share_dark"
-        android:drawableStart="@drawable/ic_share_dark"
         android:text="@string/action_share" />
 
     <TextView
@@ -120,8 +110,6 @@
         style="@style/FlatMenuButtonSimple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_image_dark"
-        android:drawableStart="@drawable/ic_image_dark"
         android:text="@string/save_image" />
 
     <TextView
@@ -130,7 +118,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/padding8"
-        android:drawableLeft="@drawable/ic_settings_dark"
-        android:drawableStart="@drawable/ic_settings_dark"
         android:text="@string/action_settings" />
 </LinearLayout>
