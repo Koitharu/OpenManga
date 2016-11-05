@@ -20,13 +20,13 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
-        tools:context=".activities.MangaPreviewActivity">
+        android:layout_weight="2">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar_container"
             android:layout_width="match_parent"
             android:layout_height="192dp"
+            android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.design.widget.CollapsingToolbarLayout
