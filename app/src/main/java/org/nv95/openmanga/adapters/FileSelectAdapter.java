@@ -150,7 +150,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
             if (icons == null) {
                 icons = LayoutUtils.getThemedIcons(
                         mTextView.getContext(),
-                        R.drawable.ic_return_dark,
+                        R.drawable.ic_arrow_up,
                         R.drawable.ic_directory_dark,
                         R.drawable.ic_directory_null_dark,
                         R.drawable.ic_file_dark

@@ -29,7 +29,7 @@ public class DirSelectDialog implements DialogInterface.OnClickListener, Adapter
         ListView listView = new ListView(context);
         mAdapter = new DirAdapter(context, MangaStore.getMangasDir(context));
         mHeaderUp = (TextView) View.inflate(context, R.layout.item_dir, null);
-        mHeaderUp.setCompoundDrawablesWithIntrinsicBounds(LayoutUtils.getThemedIcons(context, R.drawable.ic_return_dark)[0],
+        mHeaderUp.setCompoundDrawablesWithIntrinsicBounds(LayoutUtils.getThemedIcons(context, R.drawable.ic_arrow_up)[0],
                 null, null, null);
         mHeaderUp.setMaxLines(2);
         mHeaderUp.setText(mAdapter.getCurrentDir().getPath());

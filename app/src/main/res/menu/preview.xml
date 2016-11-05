@@ -15,7 +15,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_save_more"
-        android:icon="@drawable/ic_save_more_light"
+        android:icon="@drawable/ic_save_more"
         android:orderInCategory="100"
         android:title="@string/action_save_add"
         android:visible="false"
