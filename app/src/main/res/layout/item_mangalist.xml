@@ -65,14 +65,24 @@
             android:textColor="@color/white_overlay_85"
             android:visibility="gone" />
 
-        <TextView
-            android:text="Small Text"
+        <org.nv95.openmanga.components.RatingView
+            android:text="5.0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView_rating"
+            android:id="@+id/ratingView"
+            android:layout_marginEnd="8dp"
             android:layout_below="@+id/textView_subtitle"
-            android:layout_toRightOf="@+id/imageView"
-            tools:ignore="RtlHardcoded" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView_subtitle"
+            android:layout_toEndOf="@id/imageView"
+            android:layout_toRightOf="@id/imageView"
+            android:id="@+id/imageView_status"/>
 
     </RelativeLayout>
 </org.nv95.openmanga.components.FrameCheckLayout>

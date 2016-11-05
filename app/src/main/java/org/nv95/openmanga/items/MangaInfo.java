@@ -24,7 +24,7 @@ public class MangaInfo {
     public int status;
     @Nullable
     public String extra;
-    public String rating;
+    public byte rating; //0..100
 
     public MangaInfo(String name, String genres, String path, String preview) {
         this.name = name;
@@ -49,7 +49,7 @@ public class MangaInfo {
         }
         status = bundle.getInt("status", 0);
         extra = bundle.getString("extra");
-        rating = bundle.getString("rating");
+        rating = bundle.getByte("rating");
     }
 
     public MangaInfo() {
@@ -68,6 +68,7 @@ public class MangaInfo {
         bundle.putString("provider", provider.getName());
         bundle.putInt("status", status);
         bundle.putString("extra", extra);
+        bundle.putByte("rating", rating);
         return bundle;
     }
 

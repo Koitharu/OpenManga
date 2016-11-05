@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.MangaPreviewActivity;
+import org.nv95.openmanga.components.RatingView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
@@ -83,8 +84,9 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private TextView textViewSubtitle;
         private TextView textViewSummary;
         private TextView textViewBadge;
-        private TextView textViewRating;
+        private RatingView ratingView;
         private ImageView imageView;
+        private final ImageView imageViewStatus;
         private MangaInfo mData;
         @Nullable
         private OnHolderClickListener mListener;
@@ -95,8 +97,9 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
             textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
             textViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
-            textViewRating = (TextView) itemView.findViewById(R.id.textView_rating);
+            ratingView = (RatingView) itemView.findViewById(R.id.ratingView);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageViewStatus = (ImageView) itemView.findViewById(R.id.imageView_status);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
             itemView.setOnLongClickListener(this);
@@ -120,10 +123,16 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 textViewSubtitle.setVisibility(View.VISIBLE);
             }
             textViewSummary.setText(mData.genres);
-            textViewRating.setText(mData.rating);
+            ratingView.setRating(mData.rating);
             ImageUtils.setThumbnail(imageView, data.preview, thumbSize);
             // TODO: 17.02.16
             //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
+            if (mData.status == MangaInfo.STATUS_UNKNOWN) {
+                imageViewStatus.setVisibility(View.INVISIBLE);
+            } else {
+                imageViewStatus.setImageResource(mData.isCompleted() ? R.drawable.ic_completed : R.drawable.ic_ongoing);
+                imageViewStatus.setVisibility(View.VISIBLE);
+            }
             if (mData.extra == null) {
                 textViewBadge.setVisibility(View.GONE);
             } else {

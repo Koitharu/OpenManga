@@ -4,12 +4,14 @@
         <item name="colorPrimaryDark">@color/primary_dark_dark</item>
         <item name="colorAccent">@color/accent_light</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="colorTranslucent">#d2ffffff</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@color/primary_darkest</item>
         <item name="colorAccent">@color/accent_light_light</item>
         <item name="windowActionModeOverlay">true</item>
+        <item name="colorTranslucent">#d2414141</item>
     </style>
 
     <style name="AppTheme.Black" parent="Theme.AppCompat.NoActionBar">
@@ -18,6 +20,7 @@
         <item name="colorAccent">@color/accent_dark</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@android:color/black</item>
+        <item name="colorTranslucent">#d2000000</item>
     </style>
 
     <style name="FlatMenuButtonSimple" >

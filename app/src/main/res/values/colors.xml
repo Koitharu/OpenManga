@@ -5,8 +5,8 @@
     <color name="accent_light">#b71c1c</color>
     <color name="accent_light_light">#ef5350</color>
     <color name="accent_dark">#2e7d32</color>
-    <color name="primary_darker">#424242</color>
-    <color name="primary_darkest">#212121</color>
+    <color name="primary_darker">#212121</color>
+    <color name="primary_darkest">#000000</color>
 
     <color name="transparent_dark">#98000000</color>
     <color name="light_background">#f4f4f4</color>
