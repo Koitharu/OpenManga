@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 92
-        versionName "2.3.1"
+        versionCode 94
+        versionName "2.4"
     }
 
     signingConfigs {
