@@ -155,7 +155,7 @@
     <string name="interval_4hours">Кожні 4 години</string>
     <string name="interval_twice_day">Двічі на день</string>
     <string name="interval_once_day">Кожний день</string>
-    <string name="interval_two_days">Кажді два дні</string>
+    <string name="interval_two_days">Кожні два дні</string>
     <string name="open_on_start">Відкривати при запуску</string>
     <string name="reset">Скидання</string>
     <string name="nothing_selected">Нічого не вибрано</string>
