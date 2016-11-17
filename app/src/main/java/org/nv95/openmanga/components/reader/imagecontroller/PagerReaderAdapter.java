@@ -1,10 +1,9 @@
-package org.nv95.openmanga.components.pager.imagecontroller;
+package org.nv95.openmanga.components.reader.imagecontroller;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

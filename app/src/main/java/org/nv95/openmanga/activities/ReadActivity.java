@@ -36,7 +36,7 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.pager.MangaPager;
 import org.nv95.openmanga.components.pager.OverScrollDetector;
-import org.nv95.openmanga.components.pager.imagecontroller.PageHolder;
+import org.nv95.openmanga.components.reader.imagecontroller.PageHolder;
 import org.nv95.openmanga.dialogs.NavigationDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ReaderMenuDialog;

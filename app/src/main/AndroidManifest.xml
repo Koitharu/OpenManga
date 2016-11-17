@@ -40,8 +40,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity
-            android:name=".activities.ReadActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:name=".activities.ReadActivity2" />
         <activity
             android:name=".activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"

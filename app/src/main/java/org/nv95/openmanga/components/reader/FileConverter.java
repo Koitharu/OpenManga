@@ -1,4 +1,4 @@
-package org.nv95.openmanga.components.pager.imagecontroller;
+package org.nv95.openmanga.components.reader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

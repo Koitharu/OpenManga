@@ -1,27 +1,20 @@
-package org.nv95.openmanga.components.pager.imagecontroller;
+package org.nv95.openmanga.components.reader.imagecontroller;
 
-import android.graphics.PointF;
-import android.support.annotation.Nullable;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaPage;
-import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.InternalLinkMovement;
 
 /**
  * Created by admin on 18.08.16.
  */
 
-public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnLinkClickListener, SubsamplingScaleImageView.OnImageEventListener {
+public class PageHolder {
 
     public static final int SCALE_FIT = 0;
     public static final int SCALE_CROP = 1;
@@ -32,7 +25,7 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
     private final ProgressBar progressBar;
     private final SubsamplingScaleImageView ssiv;
     private final TextView textView;
-    private final PageLoader loader;
+    //private final PageLoader loader;
     private MangaPage mPage;
     private boolean land;
     private int scale;
@@ -42,23 +35,23 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         ssiv = (SubsamplingScaleImageView) view.findViewById(R.id.ssiv);
         textView = (TextView) view.findViewById(R.id.textView_holder);
-        loader = new PageLoader(this);
-        textView.setMovementMethod(new InternalLinkMovement(this));
-        ssiv.setOnImageEventListener(this);
+        //loader = new PageLoader(this);
+        //textView.setMovementMethod(new InternalLinkMovement(this));
+        //ssiv.setOnImageEventListener(this);
     }
 
     public void recycle() {
-        loader.cancelLoading();
+        //loader.cancelLoading();
         ssiv.recycle();
     }
 
     public void loadPage(MangaPage page, boolean isLandscape, int scaleMode) {
         land = isLandscape;
         scale = scaleMode;
-        loader.loadPage(mPage = page);
+        //loader.loadPage(mPage = page);
     }
 
-    @Override
+    /*@Override
     public void onLoadingStarted() {
         textView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
@@ -116,7 +109,7 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
     public void onLinkClicked(TextView view, String scheme, String url) {
         switch (url) {
             case "retry":
-                loader.loadPage(mPage);
+                //loader.loadPage(mPage);
                 break;
         }
     }
@@ -143,9 +136,9 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
 
     @Override
     public void onImageLoadError(Exception e) {
-        if (loader.getStatus() == PageLoader.STATUS_DONE) {
-            loader.convert();
-        } else {
+        //if (loader.getStatus() == PageLoader.STATUS_DONE) {
+            //loader.convert();
+        //} else {
             onLoadingFail(e);
         }
     }
@@ -161,5 +154,5 @@ public class PageHolder implements PageLoader.Callback, InternalLinkMovement.OnL
 
     public PageLoader getLoader() {
         return loader;
-    }
+    }*/
 }

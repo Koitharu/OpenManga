@@ -151,7 +151,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                Intent intent = new Intent(this, ReadActivity.class);
+                Intent intent = new Intent(this, ReadActivity2.class);
                 intent.putExtras(mMangaSummary.toBundle());
                 HistoryProvider.HistorySummary hs = HistoryProvider.getInstance(this).get(mMangaSummary);
                 if (hs != null) {
@@ -288,7 +288,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();
         HistoryProvider.getInstance(this).add(mMangaSummary, mMangaSummary.chapters.get(which).number, 0);
-        startActivity(new Intent(this, ReadActivity.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
+        startActivity(new Intent(this, ReadActivity2.class).putExtra("chapter", which).putExtras(mMangaSummary.toBundle()));
     }
 
     @Override

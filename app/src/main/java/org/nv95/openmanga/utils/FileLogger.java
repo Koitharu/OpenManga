@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.pager.imagecontroller.FileConverter;
+import org.nv95.openmanga.components.reader.FileConverter;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.File;

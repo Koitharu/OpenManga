@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.Surface;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.pager.imagecontroller.PagerReaderAdapter;
+import org.nv95.openmanga.components.reader.imagecontroller.PagerReaderAdapter;
 import org.nv95.openmanga.items.MangaPage;
 
 import java.util.ArrayList;

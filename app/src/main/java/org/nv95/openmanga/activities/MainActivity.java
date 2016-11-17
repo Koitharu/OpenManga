@@ -741,7 +741,7 @@ public class MainActivity extends BaseAppActivity implements
                     provider = (MangaProvider) info.provider.newInstance();
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
-                intent = new Intent(MainActivity.this, ReadActivity.class);
+                intent = new Intent(MainActivity.this, ReadActivity2.class);
                 intent.putExtras(summary.toBundle());
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
                 if (hs != null) {
