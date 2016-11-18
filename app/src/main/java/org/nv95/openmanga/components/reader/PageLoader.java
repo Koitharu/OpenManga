@@ -69,6 +69,9 @@ public class PageLoader implements PageLoadListener {
     }
 
     public void cancelLoading(int pos) {
+        if (pos >= mWrappers.size()) {
+            return;
+        }
         PageWrapper wrapper = mWrappers.get(pos);
         PageLoadTask task = wrapper.getLoadTask();
         if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {

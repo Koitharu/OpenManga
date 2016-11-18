@@ -9,19 +9,21 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
+import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
-import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
@@ -37,7 +39,6 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
-import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
@@ -47,7 +48,7 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -57,6 +58,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     private ReaderAdapter mAdapter;
     private ReaderMenu mMenuPanel;
     private ImageView mMenuButton;
+    private FrameLayout mOverScrollFrame;
+    private ImageView mOverScrollArrow;
+    private TextView mOverScrollText;
 
     private MangaSummary mManga;
     private int mChapter;
@@ -72,6 +76,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mMenuPanel = (ReaderMenu) findViewById(R.id.menuPanel);
         mReader = (MangaReader) findViewById(R.id.reader);
         mMenuButton = (ImageView) findViewById(R.id.imageView_menu);
+        mOverScrollFrame = (FrameLayout) findViewById(R.id.overscrollFrame);
+        mOverScrollArrow = (ImageView) findViewById(R.id.imageView_arrow);
+        mOverScrollText = (TextView) findViewById(R.id.textView_title);
 
         if (isDarkTheme()) {
             mMenuButton.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
@@ -82,6 +89,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mAdapter = new ReaderAdapter();
         mReader.setAdapter(mAdapter);
         mReader.addOnPageChangedListener(mMenuPanel);
+        mReader.setOnOverScrollListener(this);
 
         Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mManga = new MangaSummary(extras);
@@ -268,6 +276,69 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         builder.create().show();
     }
 
+    @Override
+    public void onOverScrollFlying(int direction, float factor) {
+        mOverScrollFrame.setAlpha(Math.abs(factor / 50f));
+    }
+
+    @Override
+    public void onOverScrollCancelled(int direction) {
+        mOverScrollFrame.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onOverScrollStarted(int direction) {
+        if (getRealDirection(direction) == -1) {
+            //prev chapter
+            if (mChapter > 0) {
+                mOverScrollText.setText(getString(R.string.prev_chapter, mManga.getChapters().get(mChapter - 1).name));
+            } else {
+                return;
+            }
+        } else {
+            //next chapter
+            if (mChapter < mManga.getChapters().size() - 1) {
+                mOverScrollText.setText(getString(R.string.next_chapter, mManga.getChapters().get(mChapter + 1).name));
+            } else {
+                return;
+            }
+        }
+        mOverScrollFrame.setAlpha(0f);
+        mOverScrollFrame.setVisibility(View.VISIBLE);
+        if (direction == TOP) {
+            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.CENTER;
+            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            mOverScrollArrow.setRotation(0f);
+        } else if (direction == LEFT) {
+            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
+            mOverScrollArrow.setRotation(-90f);
+        } else if (direction == BOTTOM) {
+            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.CENTER;
+            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            mOverScrollArrow.setRotation(180f);
+        } else if (direction == RIGHT) {
+            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+            mOverScrollArrow.setRotation(90f);
+        }
+    }
+
+    @Override
+    public void onOverScrolled(int direction) {
+        if (mOverScrollFrame.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        mOverScrollFrame.setVisibility(View.GONE);
+        int rd = getRealDirection(direction);
+        mChapter += rd;
+        new ChapterLoadTask(rd == -1 ? -1 : 0).startLoading(mManga.getChapters().get(mChapter));
+    }
+
+    private int getRealDirection(int direction) {
+        return direction == TOP || direction == LEFT ? mReader.isReversed() ? 1 : -1 : mReader.isReversed() ? -1 : 1;
+    }
+
     private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> {
 
         private final int mPageIndex;
@@ -303,10 +374,10 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mAdapter.getLoader().setEnabled(false);
             mAdapter.setPages(mangaPages);
             mAdapter.notifyDataSetChanged();
-            int pos = mPageIndex == -1 ? mAdapter.getItemCount() : mPageIndex;
+            int pos = mPageIndex == -1 ? mAdapter.getItemCount() - 1 : mPageIndex;
             mReader.scrollToPosition(pos);
             mAdapter.getLoader().setEnabled(true);
-            mAdapter.notifyItemChanged(pos);
+            mAdapter.notifyDataSetChanged();
             mMenuPanel.setChapterSize(mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
         }
