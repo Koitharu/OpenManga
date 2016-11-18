@@ -92,6 +92,10 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         return mLoader.getWrappersList().size();
     }
 
+    public PageWrapper getItem(int position) {
+        return mLoader.getWrappersList().get(position);
+    }
+
     static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener, SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
 
         static int scaleMode;

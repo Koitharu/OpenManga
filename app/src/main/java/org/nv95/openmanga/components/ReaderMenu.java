@@ -205,11 +205,9 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
                 if (LocalMangaProvider.class.equals(mManga.provider)) {
                     menu.findItem(R.id.action_save).setVisible(false);
                     menu.findItem(R.id.action_save_more).setVisible(mManga.status == MangaInfo.STATUS_ONGOING);
-                    menu.findItem(R.id.action_remove).setVisible(true);
                 } else {
                     menu.findItem(R.id.action_save).setVisible(true);
                     menu.findItem(R.id.action_save_more).setVisible(false);
-                    menu.findItem(R.id.action_remove).setVisible(false);
                 }
                 mSaveMenu.show();
                 break;

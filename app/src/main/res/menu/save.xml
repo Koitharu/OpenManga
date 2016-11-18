@@ -4,9 +4,6 @@
         android:id="@+id/action_save"
         android:title="@string/save_manga" />
     <item
-        android:id="@+id/action_remove"
-        android:title="@string/action_remove" />
-    <item
         android:id="@+id/action_save_more"
         android:title="@string/action_save_add" />
     <item

@@ -1,9 +1,14 @@
 package org.nv95.openmanga.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -135,6 +140,25 @@ public class StorageUtils {
             return result.toString();
         } catch (IOException e) {
             return "";
+        }
+    }
+
+    @Nullable
+    public static File saveToGallery(Context context, File file) {
+        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
+        try {
+            StorageUtils.copyFile(file, dest);
+            MediaScannerConnection.scanFile(context,
+                    new String[]{dest.getPath()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            //....
+                        }
+                    });
+            return dest;
+        } catch (IOException e) {
+            return null;
         }
     }
 }

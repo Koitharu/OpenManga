@@ -6,29 +6,41 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
+import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
+import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.items.SimpleDownload;
+import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.StorageUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -203,6 +215,15 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case android.R.id.title:
                 showChaptersList();
                 break;
+            case R.id.action_save:
+                DownloadService.start(this, mManga);
+                break;
+            case R.id.action_save_more:
+                new LoadSourceTask().startLoading(mManga);
+                break;
+            case R.id.action_save_image:
+                new ImageSaveTask().startLoading(mAdapter.getItem(mReader.getCurrentPosition()));
+                break;
             case R.id.menuitem_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class)
                         .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
@@ -289,5 +310,93 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mMenuPanel.setChapterSize(mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
         }
+    }
+
+    private class ImageSaveTask extends LoaderTask<PageWrapper,Void,File> {
+
+        @Override
+        protected void onPreExecute() {
+            mProgressFrame.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected File doInBackground(PageWrapper... pageWrappers) {
+            if (pageWrappers[0].isLoaded()) {
+                //noinspection ConstantConditions
+                return new File(pageWrappers[0].getFilename());
+            }
+            try {
+                MangaProvider provider;
+                provider = pageWrappers[0].page.provider.newInstance();
+                String url = provider.getPageImage(pageWrappers[0].page);
+                File dest;
+                dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
+                final SimpleDownload dload = new SimpleDownload(url, dest);
+                dload.run();
+                return dload.isSuccess() ? dest : null;
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            super.onPostExecute(file);
+            mProgressFrame.setVisibility(View.GONE);
+            if (file != null && file.exists()) {
+                final File destFile = StorageUtils.saveToGallery(ReadActivity2.this, file);
+                if (destFile != null) {
+                    Snackbar.make(mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action_share, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    new ContentShareHelper(ReadActivity2.this).shareImage(destFile);
+                                }
+                            })
+                            .show();
+                } else {
+                    Snackbar.make(mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
+                }
+            } else {
+                Snackbar.make(mContainer, R.string.image_loading_error, Snackbar.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    private class LoadSourceTask extends LoaderTask<MangaInfo,Void,MangaSummary> {
+
+        @Override
+        protected void onPreExecute() {
+            mProgressFrame.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected MangaSummary doInBackground(MangaInfo... params) {
+            return LocalMangaProvider.getInstance(ReadActivity2.this)
+                    .getSource(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(MangaSummary sourceManga) {
+            super.onPostExecute(sourceManga);
+            mProgressFrame.setVisibility(View.GONE);
+            if (sourceManga == null) {
+                Snackbar.make(mContainer, R.string.loading_error, Snackbar.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+            ChaptersList newChapters = sourceManga.chapters.complementByName(mManga.chapters);
+            if (sourceManga.chapters.size() <= mManga.chapters.size()) {
+                Snackbar.make(mContainer, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                sourceManga.chapters = newChapters;
+                DownloadService.start(ReadActivity2.this, sourceManga, R.string.action_save_add);
+            }
+        }
+
     }
 }
