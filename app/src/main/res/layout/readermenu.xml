@@ -11,7 +11,7 @@
         android:background="@color/transparent_dark"
         android:clickable="true"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@android:id/home"
@@ -86,7 +86,7 @@
         android:background="@color/transparent_dark"
         android:clickable="true"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/menuitem_favourite"

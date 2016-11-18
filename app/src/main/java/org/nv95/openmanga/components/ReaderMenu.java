@@ -8,6 +8,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -158,24 +160,34 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         if (mVisible) {
             return;
         }
-        mMenus[0].setVisibility(VISIBLE);
-        mMenus[1].setVisibility(VISIBLE);
         mVisible = true;
         if (mCallback != null) {
             mCallback.onVisibilityChanged(true);
         }
+        mMenus[0].setTranslationY(-mMenus[0].getHeight());
+        mMenus[1].setTranslationY(mMenus[1].getHeight());
+        ViewPropertyAnimatorCompat[] animators = new ViewPropertyAnimatorCompat[] {
+                ViewCompat.animate(mMenus[0]).translationY(0f).setDuration(250).withStartAction(mShowRunnable),
+                ViewCompat.animate(mMenus[1]).translationY(0f).setDuration(250).withStartAction(mShowRunnable)
+        };
+        animators[0].start();
+        animators[1].start();
     }
 
     public void hide() {
         if (!mVisible) {
             return;
         }
-        mMenus[0].setVisibility(GONE);
-        mMenus[1].setVisibility(GONE);
         mVisible = false;
         if (mCallback != null) {
             mCallback.onVisibilityChanged(false);
         }
+        ViewPropertyAnimatorCompat[] animators = new ViewPropertyAnimatorCompat[] {
+                ViewCompat.animate(mMenus[0]).translationY(-mMenus[0].getHeight()).setDuration(250).withEndAction(mHideRunnable),
+                ViewCompat.animate(mMenus[1]).translationY(mMenus[1].getHeight()).setDuration(250).withEndAction(mHideRunnable)
+        };
+        animators[0].start();
+        animators[1].start();
     }
 
     @Override
@@ -315,4 +327,20 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
                     }
                 };
     }
+
+    private final Runnable mShowRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mMenus[0].setVisibility(VISIBLE);
+            mMenus[1].setVisibility(VISIBLE);
+        }
+    };
+
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mMenus[0].setVisibility(INVISIBLE);
+            mMenus[1].setVisibility(INVISIBLE);
+        }
+    };
 }
