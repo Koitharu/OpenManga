@@ -3,39 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         android:defaultValue="0"
+        android:entries="@array/r2_modes"
+        android:entryValues="@array/r2_modes_values"
+        android:key="r2_mode"
+        android:title="@string/mode" />
+    <ListPreference
+        android:defaultValue="0"
         android:entries="@array/directions"
         android:entryValues="@array/directions_values"
         android:key="direction"
         android:title="@string/scrolling_direction" />
     <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/animations"
-        android:entryValues="@array/animation_values"
-        android:key="animation"
-        android:title="@string/scrolling_animation" />
+        android:defaultValue="1"
+        android:entries="@array/preloadings"
+        android:entryValues="@array/preloadings_values"
+        android:key="preload"
+        android:title="@string/preloading" />
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="volkeyscroll"
         android:title="@string/scroll_by_volkeys"
         android:widgetLayout="@layout/pref_switchcompat" />
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/clickareas"
-        android:entryValues="@array/clickareas_values"
-        android:key="clickareas"
-        android:title="@string/scroll_by_click" />
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/scale_modes"
-        android:entryValues="@array/scale_values"
-        android:key="scalemode"
-        android:title="@string/scale_mode" />
-    <!--CheckBoxPreference
-        android:defaultValue="true"
-        android:key="shifts"
-        android:summary="@string/image_shifting_summary"
-        android:title="@string/wrap_long_pages"
-        android:widgetLayout="@layout/pref_switchcompat" /-->
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="brightness"
@@ -53,4 +41,31 @@
         android:key="keep_screen"
         android:title="@string/keep_screen"
         android:widgetLayout="@layout/pref_switchcompat" />
+
+
+
+    <!--<ListPreference
+        android:defaultValue="0"
+        android:entries="@array/animations"
+        android:entryValues="@array/animation_values"
+        android:key="animation"
+        android:title="@string/scrolling_animation" />-->
+    <!--<ListPreference
+        android:defaultValue="0"
+        android:entries="@array/clickareas"
+        android:entryValues="@array/clickareas_values"
+        android:key="clickareas"
+        android:title="@string/scroll_by_click" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/scale_modes"
+        android:entryValues="@array/scale_values"
+        android:key="scalemode"
+        android:title="@string/scale_mode" />-->
+    <!--CheckBoxPreference
+        android:defaultValue="true"
+        android:key="shifts"
+        android:summary="@string/image_shifting_summary"
+        android:title="@string/wrap_long_pages"
+        android:widgetLayout="@layout/pref_switchcompat" /-->
 </PreferenceScreen>

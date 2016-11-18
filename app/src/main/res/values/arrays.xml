@@ -103,4 +103,22 @@
         <item>tr</item>
         <item>uk</item>
     </string-array>
+    <string-array name="r2_modes">
+        <item>@string/pages</item>
+        <item>@string/scroll</item>
+    </string-array>
+    <string-array name="r2_modes_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="preloadings">
+        <item>@string/enabled</item>
+        <item>@string/over_wifi_only</item>
+        <item>@string/disabled</item>
+    </string-array>
+    <string-array name="preloadings_values">
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
 </resources>

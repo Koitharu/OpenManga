@@ -16,12 +16,15 @@ import java.util.List;
 public class PageLoader implements PageLoadListener {
 
     private boolean mEnabled;
+    private boolean mPreloadEnabled;
     private final HashSet<PageLoadListener> mListeners;
     private final ArrayList<PageWrapper> mWrappers;
 
     public PageLoader() {
         mListeners = new HashSet<>(5);
         mWrappers = new ArrayList<>();
+        mEnabled = true;
+        mPreloadEnabled = false;
     }
 
     public void setPages(List<MangaPage> pages) {
@@ -49,7 +52,7 @@ public class PageLoader implements PageLoadListener {
     }
 
     public void shadowLoad(int pos) {
-        if (!mEnabled || pos < 0 || pos >= mWrappers.size()) {
+        if (!mEnabled || !mPreloadEnabled || pos < 0 || pos >= mWrappers.size()) {
             return;
         }
         PageWrapper wrapper = mWrappers.get(pos);
@@ -123,5 +126,9 @@ public class PageLoader implements PageLoadListener {
 
     public void setEnabled(boolean b) {
         mEnabled = b;
+    }
+
+    public void setPreloadEnabled(boolean b) {
+        mPreloadEnabled = b;
     }
 }

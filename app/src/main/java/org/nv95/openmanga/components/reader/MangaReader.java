@@ -52,4 +52,26 @@ public class MangaReader extends RecyclerViewPager {
     public boolean isReversed() {
         return mLayoutManager != null && mLayoutManager.getReverseLayout();
     }
+
+    void scrollToPosition(int pos, boolean animate) {
+        if (animate) {
+            smoothScrollToPosition(pos);
+        } else {
+            scrollToPosition(pos);
+        }
+    }
+
+    public void scrollToNext(boolean animate) {
+        int pos = getCurrentPosition();
+        if (pos < getItemCount() - 1) {
+            scrollToPosition(pos + 1);
+        }
+    }
+
+    public void scrollToPrevious(boolean animate) {
+        int pos = getCurrentPosition();
+        if (pos > 0) {
+            scrollToPosition(pos - 1);
+        }
+    }
 }

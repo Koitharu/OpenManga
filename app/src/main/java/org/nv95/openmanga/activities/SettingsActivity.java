@@ -299,9 +299,8 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             Activity activity = getActivity();
             activity.setTitle(R.string.action_reading_options);
             PreferencesUtils.bindPreferenceSummary(findPreference("direction"));
-            PreferencesUtils.bindPreferenceSummary(findPreference("animation"));
-            PreferencesUtils.bindPreferenceSummary(findPreference("scalemode"));
-            PreferencesUtils.bindPreferenceSummary(findPreference("clickareas"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("r2_mode"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("preload"));
         }
     }
 

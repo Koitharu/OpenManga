@@ -137,6 +137,9 @@ public class RecyclerViewPager extends RecyclerView {
 
     @Override
     public boolean fling(int velocityX, int velocityY) {
+        if (!mSticky) {
+            return super.fling(velocityX, velocityY);
+        }
         boolean flinging = super.fling((int) (velocityX * mFlingFactor), (int) (velocityY * mFlingFactor));
         if (flinging) {
             if (getLayoutManager().canScrollHorizontally()) {
@@ -234,7 +237,7 @@ public class RecyclerViewPager extends RecyclerView {
         });
     }
 
-    private int getItemCount() {
+    public int getItemCount() {
         return mViewPagerAdapter == null ? 0 : mViewPagerAdapter.getItemCount();
     }
 

@@ -102,6 +102,12 @@ public class MangaProviderManager {
         return ni != null && ni.isAvailable() && ni.isConnected();
     }
 
+    public static boolean isWlan(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        return ni != null && ni.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
     public MangaProvider instanceProvider(Class<? extends MangaProvider> aClass) {
         return instanceProvider(mContext, aClass);
     }

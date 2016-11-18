@@ -132,6 +132,8 @@ public class ReaderMenuPanel extends LinearLayout implements View.OnClickListene
                     }
                 }, mManga);
                 break;
+            case R.id.menuitem_settings:
+                hide();
             default:
                 if (mClickListener != null) {
                     mClickListener.onClick(view);

@@ -1,10 +1,13 @@
 package org.nv95.openmanga.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -12,12 +15,14 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.ReaderMenuPanel;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
+import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.ChangesObserver;
 
 import java.util.List;
@@ -28,6 +33,8 @@ import java.util.List;
 
 public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener {
 
+    private static final int REQUEST_SETTINGS = 1299;
+
     private FrameLayout mContainer;
     private FrameLayout mProgressFrame;
     private MangaReader mReader;
@@ -36,6 +43,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     private MangaSummary mManga;
     private int mChapter;
+    private ReaderConfig mConfig;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +63,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         imageViewMenu.setOnClickListener(this);
 
         mAdapter = new ReaderAdapter();
-        mReader.applyConfig(false, false, true);
         mReader.setAdapter(mAdapter);
         mReader.addOnPageChangedListener(mMenuPanel);
         mMenuPanel.setOnClickListener(this);
@@ -66,6 +73,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         int page = extras.getInt("page", 0);
 
         mMenuPanel.setData(mManga);
+        updateConfig();
         new ChapterLoadTask(page).startLoading(mManga.getChapters().get(mChapter));
     }
 
@@ -89,6 +97,21 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         outState.putInt("chapter", mChapter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_SETTINGS:
+                int pageIndex = mReader.getCurrentPosition();
+                updateConfig();
+                mAdapter.getLoader().setEnabled(false);
+                mReader.scrollToPosition(pageIndex);
+                mAdapter.getLoader().setEnabled(true);
+                mAdapter.notifyItemChanged(pageIndex);
+                break;
+        }
+    }
+
     private void saveHistory() {
         if (mChapter >= 0 && mChapter < mManga.chapters.size()) {
             HistoryProvider.getInstance(this).add(mManga, mManga.chapters.get(mChapter).number, mReader.getCurrentPosition());
@@ -101,11 +124,56 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case R.id.imageView_menu:
                 mMenuPanel.show();
                 break;
+            case R.id.menuitem_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class)
+                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
+                break;
             case R.id.menuitem_rotation:
                 setRequestedOrientation(
                         getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            onClick(findViewById(R.id.imageView_menu));
+            return super.onKeyDown(keyCode, event);
+        }
+        if (mConfig.scrollByVolumeKeys) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                mReader.scrollToNext(true);
+                return true;
+            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                mReader.scrollToPrevious(true);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        return mConfig.scrollByVolumeKeys &&
+                (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) ||
+                super.onKeyUp(keyCode, event);
+    }
+
+    private void updateConfig() {
+        mConfig = ReaderConfig.load(this);
+        mReader.applyConfig(
+                mConfig.scrollDirection == ReaderConfig.DIRECTION_VERTICAL,
+                mConfig.scrollDirection == ReaderConfig.DIRECTION_REVERSED,
+                mConfig.mode == ReaderConfig.MODE_PAGES
+        );
+        if (mConfig.keepScreenOn) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        mAdapter.getLoader().setPreloadEnabled(mConfig.preload == ReaderConfig.PRELOAD_ALWAYS
+                || (mConfig.preload == ReaderConfig.PRELOAD_WLAN_ONLY && MangaProviderManager.isWlan(this)));
     }
 
     private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> {
@@ -143,8 +211,10 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mAdapter.getLoader().setEnabled(false);
             mAdapter.setPages(mangaPages);
             mAdapter.notifyDataSetChanged();
-            mReader.scrollToPosition(mPageIndex == -1 ? mAdapter.getItemCount() : mPageIndex);
+            int pos = mPageIndex == -1 ? mAdapter.getItemCount() : mPageIndex;
+            mReader.scrollToPosition(pos);
             mAdapter.getLoader().setEnabled(true);
+            mAdapter.notifyItemChanged(pos);
             mProgressFrame.setVisibility(View.GONE);
         }
     }
