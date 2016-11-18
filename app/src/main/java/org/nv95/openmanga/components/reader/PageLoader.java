@@ -1,6 +1,7 @@
 package org.nv95.openmanga.components.reader;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.nv95.openmanga.items.MangaPage;
@@ -39,6 +40,7 @@ public class PageLoader implements PageLoadListener {
         return mWrappers;
     }
 
+    @Nullable
     public PageWrapper requestPage(int pos) {
         if (!mEnabled || pos < 0 || pos >= mWrappers.size()) {
             throw new ArrayIndexOutOfBoundsException(pos);
@@ -47,8 +49,10 @@ public class PageLoader implements PageLoadListener {
         if (wrapper.mState == PageWrapper.STATE_QUEUED) {
             Log.d("PGL", "#current " + wrapper.toString());
             wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(2);
+            return null;
+        } else {
+            return wrapper;
         }
-        return wrapper;
     }
 
     public void shadowLoad(int pos) {

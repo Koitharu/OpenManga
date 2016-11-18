@@ -26,6 +26,7 @@ public class PageWrapper {
     Exception mError;
     @Nullable
     WeakReference<PageLoadTask> mTaskRef;
+    private boolean mConverted;
 
     public PageWrapper(MangaPage page, int position) {
         this.page = page;
@@ -39,6 +40,7 @@ public class PageWrapper {
         }
         mError = null;
         mTaskRef = null;
+        mConverted = false;
     }
 
     @Nullable
@@ -62,6 +64,14 @@ public class PageWrapper {
     @Nullable
     PageLoadTask getLoadTask() {
         return mTaskRef == null ? null : mTaskRef.get();
+    }
+
+    public void setConverted() {
+        mConverted = true;
+    }
+
+    public boolean isConverted() {
+        return mConverted;
     }
 
     @Override

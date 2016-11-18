@@ -1,5 +1,6 @@
 package org.nv95.openmanga.components.reader;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -46,11 +47,6 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     }
 
     @Override
-    public void onViewAttachedToWindow(PageHolder holder) {
-        super.onViewAttachedToWindow(holder);
-    }
-
-    @Override
     public void onViewDetachedFromWindow(PageHolder holder) {
         super.onViewDetachedFromWindow(holder);
         mLoader.removeListener(holder);
@@ -63,16 +59,18 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         holder.reset();
         holder.position = position;
         PageWrapper wrapper = mLoader.requestPage(position);
-        switch (wrapper.getState()) {
-            case PageWrapper.STATE_PROGRESS:
-                holder.onLoadingStarted(wrapper);
-                break;
-            case PageWrapper.STATE_LOADED:
-                if (wrapper.mFilename != null) {
-                    holder.onLoadingComplete(wrapper);
-                } else {
-                    holder.onLoadingFail(wrapper);
-                }
+        if (wrapper != null) {
+            switch (wrapper.getState()) {
+                case PageWrapper.STATE_PROGRESS:
+                    holder.onLoadingStarted(wrapper);
+                    break;
+                case PageWrapper.STATE_LOADED:
+                    if (wrapper.mFilename != null) {
+                        holder.onLoadingComplete(wrapper);
+                    } else {
+                        holder.onLoadingFail(wrapper);
+                    }
+            }
         }
     }
 
@@ -88,12 +86,14 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         return mLoader.getWrappersList().size();
     }
 
-    static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener, SubsamplingScaleImageView.OnImageEventListener {
+    static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener, SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
 
         final ProgressBar progressBar;
         final SubsamplingScaleImageView ssiv;
         final TextView textView;
         int position;
+        @Nullable
+        PageWrapper pageWrapper;
 
         PageHolder(View itemView) {
             super(itemView);
@@ -105,6 +105,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         }
 
         void reset() {
+            pageWrapper = null;
             ssiv.recycle();
             textView.setVisibility(View.GONE);
         }
@@ -125,13 +126,19 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
                 progressBar.setIndeterminate(false);
                 progressBar.setProgress(percent);
                 textView.setText(textView.getContext().getString(R.string.loading_percent, percent));
+                progressBar.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public void onLoadingComplete(PageWrapper page) {
             if (page.position == position) {
+                textView.setText(R.string.wait);
+                textView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 progressBar.setIndeterminate(true);
+                pageWrapper = page;
                 //noinspection ConstantConditions
                 ssiv.setImage(ImageSource.uri(page.getFilename()).tilingEnabled());
             }
@@ -148,6 +155,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         public void onLoadingCancelled(PageWrapper page) {
             if (page.position == getAdapterPosition()) {
                 progressBar.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
             }
         }
 
@@ -161,7 +169,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             progressBar.setVisibility(View.GONE);
             textView.setVisibility(View.GONE);
             AlphaAnimation aa = new AlphaAnimation(0.f, 1.f);
-            aa.setDuration(250);
+            aa.setDuration(100);
             aa.setRepeatCount(0);
             ssiv.startAnimation(aa);
         }
@@ -173,6 +181,10 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
 
         @Override
         public void onImageLoadError(Exception e) {
+            if (pageWrapper != null && !pageWrapper.isConverted() && pageWrapper.mFilename != null) {
+                FileConverter.getInstance().convertAsync(pageWrapper.getFilename(), this);
+                return;
+            }
             progressBar.setVisibility(View.GONE);
             textView.setVisibility(View.VISIBLE);
             textView.setText(
@@ -193,6 +205,18 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         @Override
         public void onPreviewReleased() {
 
+        }
+
+        @Override
+        public void onConvertDone(boolean success) {
+            if (pageWrapper != null) {
+                pageWrapper.setConverted();
+                if (success) {
+                    onLoadingComplete(pageWrapper);
+                } else {
+                    onImageLoadError(new FileConverter.ConvertException());
+                }
+            }
         }
     }
 }

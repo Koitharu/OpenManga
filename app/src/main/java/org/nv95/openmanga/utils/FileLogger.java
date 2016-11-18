@@ -17,6 +17,7 @@ import org.nv95.openmanga.components.reader.FileConverter;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -123,16 +124,15 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public String getFailMessage(Context context, @Nullable Exception e) {
-        if (e == null || e instanceof IOException) {
-            return context.getString(
-                    MangaProviderManager.checkConnection(context) ?
-                            R.string.image_loading_error : R.string.no_network_connection
-            );
+        if (MangaProviderManager.checkConnection(context) && (e == null || e instanceof IOException)) {
+            return context.getString(R.string.no_network_connection);
+        } else if (e instanceof FileNotFoundException) {
+            return context.getString(R.string.file_not_found);
         } else if (e instanceof FileConverter.ConvertException) {
             return context.getString(R.string.image_decode_error);
         } else {
             report("IMGLOAD", e);
-            return e.getMessage();
+            return context.getString(R.string.image_loading_error);
         }
     }
 
