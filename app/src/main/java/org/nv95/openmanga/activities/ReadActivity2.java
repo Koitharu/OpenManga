@@ -1,11 +1,15 @@
 package org.nv95.openmanga.activities;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.components.ReaderMenuPanel;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
 import org.nv95.openmanga.items.MangaChapter;
@@ -22,12 +26,13 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener {
 
     private FrameLayout mContainer;
     private FrameLayout mProgressFrame;
     private MangaReader mReader;
     private ReaderAdapter mAdapter;
+    private ReaderMenuPanel mMenuPanel;
 
     private MangaSummary mManga;
     private int mChapter;
@@ -39,17 +44,28 @@ public class ReadActivity2 extends BaseAppActivity {
         enableTransparentStatusBar(android.R.color.transparent);
         mContainer = (FrameLayout) findViewById(R.id.container);
         mProgressFrame = (FrameLayout) findViewById(R.id.loader);
+        mMenuPanel = (ReaderMenuPanel) findViewById(R.id.menuPanel);
         mReader = (MangaReader) findViewById(R.id.reader);
+
+        ImageView imageViewMenu = (ImageView) findViewById(R.id.imageView_menu);
+        assert imageViewMenu != null;
+        if (isDarkTheme()) {
+            imageViewMenu.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
+        }
+        imageViewMenu.setOnClickListener(this);
 
         mAdapter = new ReaderAdapter();
         mReader.applyConfig(false, false, true);
         mReader.setAdapter(mAdapter);
+        mReader.addOnPageChangedListener(mMenuPanel);
+        mMenuPanel.setOnClickListener(this);
 
         Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mManga = new MangaSummary(extras);
         mChapter = extras.getInt("chapter", 0);
         int page = extras.getInt("page", 0);
 
+        mMenuPanel.setData(mManga);
         new ChapterLoadTask(page).startLoading(mManga.getChapters().get(mChapter));
     }
 
@@ -76,6 +92,19 @@ public class ReadActivity2 extends BaseAppActivity {
     private void saveHistory() {
         if (mChapter >= 0 && mChapter < mManga.chapters.size()) {
             HistoryProvider.getInstance(this).add(mManga, mManga.chapters.get(mChapter).number, mReader.getCurrentPosition());
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imageView_menu:
+                mMenuPanel.show();
+                break;
+            case R.id.menuitem_rotation:
+                setRequestedOrientation(
+                        getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
         }
     }
 

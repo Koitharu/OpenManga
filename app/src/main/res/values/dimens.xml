@@ -16,5 +16,6 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="size_selector">2dp</dimen>
     <dimen name="clickable_area_size">86dp</dimen>
+    <dimen name="toolbutton_size">48dp</dimen>
 
 </resources>

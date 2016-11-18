@@ -294,4 +294,5 @@
     <string name="invalid_value">Invalid value</string>
     <string name="hide_toolbar">Hide toolbar when scroll</string>
     <string name="loading_percent">Loading: %d%%</string>
+    <string name="favourited">Added to favourites</string>
 </resources>

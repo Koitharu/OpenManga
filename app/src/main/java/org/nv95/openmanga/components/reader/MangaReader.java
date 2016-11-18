@@ -2,7 +2,6 @@ package org.nv95.openmanga.components.reader;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import org.nv95.openmanga.components.reader.recyclerpager.PreCachingLayoutManager;
@@ -34,13 +33,6 @@ public class MangaReader extends RecyclerViewPager {
 
     private void init(Context context) {
         mLayoutManager = null;
-    }
-
-    private void completeScroll() {
-        int pos = getCurrentPosition();
-        if (pos != RecyclerView.NO_POSITION) {
-            smoothScrollToPosition(pos);
-        }
     }
 
     public void applyConfig(boolean vertical, boolean reverse, boolean sticky) {

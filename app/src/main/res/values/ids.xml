@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="menuitem_favourite" type="id"/>
+    <item name="menuitem_unfavourite" type="id"/>
+    <item name="menuitem_rotation" type="id"/>
+    <item name="menuitem_thumbgrid" type="id"/>
+    <item name="menuitem_settings" type="id"/>
+</resources>

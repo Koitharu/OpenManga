@@ -189,5 +189,10 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         public void onTileLoadError(Exception e) {
 
         }
+
+        @Override
+        public void onPreviewReleased() {
+
+        }
     }
 }
