@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  */
 public class AutoHeightLayout extends FrameCheckLayout {
 
-    private static final double ASPECT_RATIO = 1.6f;
+    private double mAspectRatio = 1.6f;
 
     public AutoHeightLayout(Context context) {
         super(context);
@@ -29,10 +29,18 @@ public class AutoHeightLayout extends FrameCheckLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    public void setAspectRatio(float value) {
+        mAspectRatio = value;
+    }
+
+    public void setAspectRatio(int height, int width) {
+        mAspectRatio = height / (float)width;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int originalWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int calculatedHeight = (int) (originalWidth * ASPECT_RATIO);
+        int calculatedHeight = (int) (originalWidth * mAspectRatio);
         super.onMeasure(
                 MeasureSpec.makeMeasureSpec(originalWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(calculatedHeight, MeasureSpec.EXACTLY)

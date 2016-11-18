@@ -24,6 +24,8 @@ import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
+import org.nv95.openmanga.dialogs.NavigationListener;
+import org.nv95.openmanga.dialogs.ThumbnailsDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
@@ -48,7 +50,7 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener, NavigationListener {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -232,6 +234,11 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case R.id.action_save_image:
                 new ImageSaveTask().startLoading(mAdapter.getItem(mReader.getCurrentPosition()));
                 break;
+            case R.id.menuitem_thumblist:
+                new ThumbnailsDialog(this, mAdapter.getLoader())
+                        .setNavigationListener(this)
+                        .show(mReader.getCurrentPosition());
+                break;
             case R.id.menuitem_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class)
                         .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
@@ -337,6 +344,11 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     private int getRealDirection(int direction) {
         return direction == TOP || direction == LEFT ? mReader.isReversed() ? 1 : -1 : mReader.isReversed() ? -1 : 1;
+    }
+
+    @Override
+    public void onPageChange(int page) {
+        mReader.scrollToPosition(page);
     }
 
     private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> {
