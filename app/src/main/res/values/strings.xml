@@ -299,4 +299,10 @@
     <string name="preloading">Preload pages</string>
     <string name="pages">Pages</string>
     <string name="scroll">Scroll</string>
+    <string name="save_manga">Save manga</string>
+    <string name="action_thumbnails">Thumbnails</string>
+    <string name="action_bookmark_add">Add bookmark</string>
+    <string name="screen_rotation">Screen rotation</string>
+    <string name="landscape">Landscape</string>
+    <string name="portrait">Portrait</string>
 </resources>

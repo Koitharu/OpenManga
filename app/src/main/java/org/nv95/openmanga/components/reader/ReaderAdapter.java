@@ -14,8 +14,10 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.SsivUtils;
 
 import java.util.List;
 
@@ -33,6 +35,10 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
 
     public void setPages(List<MangaPage> pages) {
         mLoader.setPages(pages);
+    }
+
+    public void setScaleMode(int mode) {
+        PageHolder.scaleMode = mode;
     }
 
     public PageLoader getLoader() {
@@ -87,6 +93,8 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     }
 
     static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener, SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
+
+        static int scaleMode;
 
         final ProgressBar progressBar;
         final SubsamplingScaleImageView ssiv;
@@ -168,6 +176,23 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         public void onImageLoaded() {
             progressBar.setVisibility(View.GONE);
             textView.setVisibility(View.GONE);
+            switch (scaleMode) {
+                case ReaderConfig.SCALE_FIT:
+                    SsivUtils.setScaleFit(ssiv);
+                    break;
+                case ReaderConfig.SCALE_FIT_W:
+                    SsivUtils.setScaleWidthTop(ssiv);
+                    break;
+                case ReaderConfig.SCALE_FIT_H:
+                    SsivUtils.setScaleHeightLeft(ssiv);
+                    break;
+                case ReaderConfig.SCALE_FIT_H_REV:
+                    SsivUtils.setScaleHeightRight(ssiv);
+                    break;
+                case ReaderConfig.SCALE_ZOOM:
+                    SsivUtils.setScaleZoomSrc(ssiv);
+                    break;
+            }
             AlphaAnimation aa = new AlphaAnimation(0.f, 1.f);
             aa.setDuration(100);
             aa.setRepeatCount(0);

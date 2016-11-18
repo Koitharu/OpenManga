@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/menu_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbutton_size"
+        android:layout_gravity="top"
+        android:background="@color/transparent_dark"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@android:id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/close"
+            android:minWidth="@dimen/toolbutton_size"
+            android:scaleType="center"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <ImageView
+            android:id="@+id/menuitem_thumblist"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_thumbnails"
+            android:minWidth="@dimen/toolbutton_size"
+            android:scaleType="center"
+            android:src="@drawable/ic_view_grid_white" />
+
+        <org.nv95.openmanga.components.AppCompatProgressBar
+            android:id="@+id/progressBar"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toEndOf="@android:id/home"
+            android:layout_toLeftOf="@id/menuitem_thumblist"
+            android:layout_toRightOf="@android:id/home"
+            android:layout_toStartOf="@id/menuitem_thumblist"
+            android:progress="13" />
+
+        <org.nv95.openmanga.components.MarqueeTextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/progressBar"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@android:id/home"
+            android:layout_toLeftOf="@id/menuitem_thumblist"
+            android:layout_toRightOf="@android:id/home"
+            android:layout_toStartOf="@id/menuitem_thumblist"
+            android:drawableEnd="@drawable/ic_drop_down_white"
+            android:drawableRight="@drawable/ic_drop_down_white"
+            android:gravity="bottom"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/menu_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbutton_size"
+        android:layout_gravity="bottom"
+        android:background="@color/transparent_dark"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/menuitem_favourite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_favourite"
+            android:scaleType="center"
+            android:src="@drawable/ic_favorite_outline_light" />
+
+        <ImageView
+            android:id="@+id/menuitem_unfavourite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_unfavourite"
+            android:scaleType="center"
+            android:src="@drawable/ic_favorite_light"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/menuitem_save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_save"
+            android:scaleType="center"
+            android:src="@drawable/ic_save_light" />
+
+        <ImageView
+            android:id="@+id/menuitem_bookmark"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_bookmark_add"
+            android:scaleType="center"
+            android:src="@drawable/ic_bookmark_outline_light" />
+
+        <ImageView
+            android:id="@+id/menuitem_rotation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/screen_rotation"
+            android:scaleType="center"
+            android:src="@drawable/ic_screen_rotation_white" />
+
+        <ImageView
+            android:id="@+id/menuitem_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/action_settings"
+            android:scaleType="center"
+            android:src="@drawable/ic_preferences_light" />
+
+    </LinearLayout>
+
+</FrameLayout>

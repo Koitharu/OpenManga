@@ -300,6 +300,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             activity.setTitle(R.string.action_reading_options);
             PreferencesUtils.bindPreferenceSummary(findPreference("direction"));
             PreferencesUtils.bindPreferenceSummary(findPreference("r2_mode"));
+            PreferencesUtils.bindPreferenceSummary(findPreference("scalemode"));
             PreferencesUtils.bindPreferenceSummary(findPreference("preload"));
         }
     }

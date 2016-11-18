@@ -75,8 +75,8 @@
     </string-array>
     <string-array name="scale_modes">
         <item>@string/scale_fit</item>
-        <item>@string/scale_crop</item>
-        <item>@string/automatic</item>
+        <item>@string/scale_fit_w</item>
+        <item>@string/scale_fit_h</item>
         <item>@string/scale_source</item>
     </string-array>
     <string-array name="clickareas">
@@ -121,4 +121,6 @@
         <item>1</item>
         <item>0</item>
     </string-array>
+    <string name="scale_fit_w">Fit to width</string>
+    <string name="scale_fit_h">Fit to height</string>
 </resources>

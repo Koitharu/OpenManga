@@ -9,6 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <org.nv95.openmanga.components.ReaderMenu
+        android:id="@+id/menuPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/imageView_menu"
         android:layout_width="wrap_content"
@@ -20,14 +25,6 @@
         android:minWidth="?actionBarSize"
         android:scaleType="center"
         android:src="@drawable/ic_action_navigation_more_vert" />
-
-    <org.nv95.openmanga.components.ReaderMenuPanel
-        android:id="@+id/menuPanel"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:background="@color/black_owerlay_60"
-        android:visibility="gone"
-        android:layout_height="@dimen/toolbutton_size" />
 
     <FrameLayout
         android:id="@+id/loader"

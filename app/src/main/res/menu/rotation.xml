@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single" android:id="@+id/group_rotation">
+        <item
+            android:id="@+id/rotation_auto"
+            android:title="@string/automatic" />
+        <item
+            android:id="@+id/rotation_portait"
+            android:title="@string/portrait" />
+        <item
+            android:id="@+id/rotation_landscape"
+            android:title="@string/landscape" />
+    </group>
+</menu>

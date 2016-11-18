@@ -1,10 +1,13 @@
 package org.nv95.openmanga.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,9 +15,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.components.ReaderMenuPanel;
+import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
+import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
@@ -31,7 +35,7 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -39,33 +43,33 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     private FrameLayout mProgressFrame;
     private MangaReader mReader;
     private ReaderAdapter mAdapter;
-    private ReaderMenuPanel mMenuPanel;
+    private ReaderMenu mMenuPanel;
+    private ImageView mMenuButton;
 
     private MangaSummary mManga;
     private int mChapter;
     private ReaderConfig mConfig;
+    private BrightnessHelper mBrightnessHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader2);
-        enableTransparentStatusBar(android.R.color.transparent);
         mContainer = (FrameLayout) findViewById(R.id.container);
         mProgressFrame = (FrameLayout) findViewById(R.id.loader);
-        mMenuPanel = (ReaderMenuPanel) findViewById(R.id.menuPanel);
+        mMenuPanel = (ReaderMenu) findViewById(R.id.menuPanel);
         mReader = (MangaReader) findViewById(R.id.reader);
+        mMenuButton = (ImageView) findViewById(R.id.imageView_menu);
 
-        ImageView imageViewMenu = (ImageView) findViewById(R.id.imageView_menu);
-        assert imageViewMenu != null;
         if (isDarkTheme()) {
-            imageViewMenu.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
+            mMenuButton.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
         }
-        imageViewMenu.setOnClickListener(this);
+        mMenuButton.setOnClickListener(this);
 
+        mBrightnessHelper = new BrightnessHelper(getWindow());
         mAdapter = new ReaderAdapter();
         mReader.setAdapter(mAdapter);
         mReader.addOnPageChangedListener(mMenuPanel);
-        mMenuPanel.setOnClickListener(this);
 
         Bundle extras = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
         mManga = new MangaSummary(extras);
@@ -73,8 +77,23 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         int page = extras.getInt("page", 0);
 
         mMenuPanel.setData(mManga);
+        mMenuPanel.setCallback(this);
         updateConfig();
         new ChapterLoadTask(page).startLoading(mManga.getChapters().get(mChapter));
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        /*if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }*/
     }
 
     @Override
@@ -107,7 +126,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 mAdapter.getLoader().setEnabled(false);
                 mReader.scrollToPosition(pageIndex);
                 mAdapter.getLoader().setEnabled(true);
-                mAdapter.notifyItemChanged(pageIndex);
+                mAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -124,21 +143,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case R.id.imageView_menu:
                 mMenuPanel.show();
                 break;
-            case R.id.menuitem_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class)
-                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
-                break;
-            case R.id.menuitem_rotation:
-                setRequestedOrientation(
-                        getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ? ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                break;
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            onClick(findViewById(R.id.imageView_menu));
+            onClick(mMenuButton);
             return super.onKeyDown(keyCode, event);
         }
         if (mConfig.scrollByVolumeKeys) {
@@ -174,6 +185,66 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
         mAdapter.getLoader().setPreloadEnabled(mConfig.preload == ReaderConfig.PRELOAD_ALWAYS
                 || (mConfig.preload == ReaderConfig.PRELOAD_WLAN_ONLY && MangaProviderManager.isWlan(this)));
+        mAdapter.setScaleMode(mConfig.scaleMode);
+        if (mConfig.adjustBrightness) {
+            mBrightnessHelper.setBrightness(mConfig.brightnessValue);
+        } else {
+            mBrightnessHelper.reset();
+        }
+    }
+
+    @Override
+    public void onActionClick(int id) {
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.progressBar:
+            case android.R.id.title:
+                showChaptersList();
+                break;
+            case R.id.menuitem_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class)
+                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
+                break;
+            case R.id.menuitem_rotation:
+                int orientation = getResources().getConfiguration().orientation;
+                setRequestedOrientation(orientation == Configuration.ORIENTATION_LANDSCAPE ?
+                        ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                break;
+        }
+    }
+
+    @Override
+    public void onPageChanged(int index) {
+        mReader.scrollToPosition(index);
+    }
+
+    @Override
+    public void onVisibilityChanged(boolean visible) {
+        mMenuButton.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
+    }
+
+
+    private void showChaptersList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setSingleChoiceItems(mManga.getChapters().getNames(), mChapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mMenuPanel.hide();
+                mChapter = which;
+                new ChapterLoadTask(0).startLoading(mManga.getChapters().get(mChapter));
+                dialog.dismiss();
+            }
+        });
+        builder.setTitle(R.string.chapters_list);
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
     }
 
     private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> {
@@ -215,6 +286,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mReader.scrollToPosition(pos);
             mAdapter.getLoader().setEnabled(true);
             mAdapter.notifyItemChanged(pos);
+            mMenuPanel.setChapterSize(mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
         }
     }

@@ -18,6 +18,11 @@ public class ReaderConfig {
     public static final int PRELOAD_DISABLED = 0;
     public static final int PRELOAD_WLAN_ONLY = 1;
     public static final int PRELOAD_ALWAYS = 2;
+    public static final int SCALE_FIT = 0;
+    public static final int SCALE_FIT_W = 1;
+    public static final int SCALE_FIT_H = 2;
+    public static final int SCALE_FIT_H_REV = 5;
+    public static final int SCALE_ZOOM = 3;
 
     public final boolean keepScreenOn;
     public final boolean scrollByVolumeKeys;
@@ -26,6 +31,7 @@ public class ReaderConfig {
     public final int scrollDirection;
     public final int mode;
     public final int preload;
+    public final int scaleMode;
 
     private ReaderConfig(SharedPreferences prefs) {
         keepScreenOn = prefs.getBoolean("keep_screen", true);
@@ -35,6 +41,11 @@ public class ReaderConfig {
         scrollDirection = Integer.parseInt(prefs.getString("direction", "0"));
         mode = Integer.parseInt(prefs.getString("r2_mode", "0"));
         preload = Integer.parseInt(prefs.getString("preload", "1"));
+        int scalemode = Integer.parseInt(prefs.getString("scalemode", "0"));
+        if (scalemode == SCALE_FIT_H && scrollDirection == DIRECTION_REVERSED) {
+            scalemode = SCALE_FIT_H_REV;
+        }
+        scaleMode = scalemode;
     }
 
     public static ReaderConfig load(Context context) {
