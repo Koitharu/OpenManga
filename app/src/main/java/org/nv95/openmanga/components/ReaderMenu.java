@@ -270,6 +270,10 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         }
     }
 
+    public boolean isVisible() {
+        return mVisible;
+    }
+
     public interface Callback {
         void onActionClick(int id);
         void onPageChanged(int index);
