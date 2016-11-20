@@ -1,5 +1,0 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <ripple android:color="@color/pressed_light" />
-    </item>
-</selector>

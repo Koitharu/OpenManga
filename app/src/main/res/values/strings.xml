@@ -36,7 +36,6 @@
     <string name="select_sources">Select manga\'s sources</string>
     <string name="navigate">Go to</string>
     <string name="goto_page" formatted="false">Go to: %d/%d</string>
-    <string name="current_page" formatted="false">Current page: %d</string>
     <string name="bug_report">Send a bug report</string>
     <string name="bug_report_summ">Send debug log to developer</string>
     <string name="log_not_found">Error log not found!</string>
@@ -48,7 +47,6 @@
     <string name="history_empty">History is empty</string>
     <string name="no_favourites">No favourites</string>
     <string name="help">Help</string>
-    <string name="already_saved">This manga is already saved on your device</string>
     <string name="action_clear_cache">Clear image cache</string>
     <string name="cache_clearing">Clearing cache…</string>
     <string name="cache_size" formatted="false">Cache size: %.1f Mb</string>
@@ -217,7 +215,6 @@
     <string name="menu">Menu</string>
     <string name="genre_superpower">Super power</string>
     <string name="genre_hentai">Hentai</string>
-    <string name="tip_reader_menu">Click to open menu</string>
     <string name="tip_chapter_checking">Enable automatic checking and receive notifications about new chapters for favourite mangas</string>
     <string name="select_image">Select image</string>
     <string name="genre">Genre</string>
@@ -232,9 +229,6 @@
     <string name="next_chapter" formatted="false">Next chapter\n\n%s</string>
     <string name="prev_chapter" formatted="false">Previous chapter\n\n%s</string>
     <string name="filter">Filter</string>
-    <string name="wrap_long_pages">Wraps long page images</string>
-    <string name="image_shifting_summary">Useful if page has non standard proportions</string>
-    <string name="delete_manga">Delete manga</string>
     <string name="storage_upgrading">Upgrading local database…</string>
     <string name="chapters_removed" formatted="false">Removed %d chapters</string>
     <string name="imported_from" formatted="false">Imported from %s</string>
@@ -253,9 +247,6 @@
     <string name="import_file_confirm" formatted="false">Are you want to import file %s to local storage?</string>
     <string name="delete_mangas_confirm">Remove selected mangas?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (total %d chapters)</string>
-    <string name="scrolling_animation">Paging animation</string>
-    <string name="scrolling">Scrolling</string>
-    <string name="sliding">Sliding</string>
     <string name="action_move">Move to</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>
@@ -269,14 +260,9 @@
     <string name="scale_mode">Scale mode</string>
     <string name="scale_source">Source size</string>
     <string name="automatic">Auto</string>
-    <string name="scale_crop">Zoom in</string>
     <string name="scale_fit">Fit screen</string>
-    <string name="scroll_by_click">Scrolling by click</string>
-    <string name="bottom">Bottom</string>
-    <string name="at_sides">At sides</string>
     <string name="move_saved">Move saved manga</string>
     <string name="image_decode_error">Decoding error</string>
-    <string name="out_of_memory">Out of memory</string>
     <string name="image_loading_error">Loading error</string>
     <string name="tip_search_main">Looking for anything?\nUse search across online catalogues</string>
     <string name="tip_filter">Tap to select genre and sort order</string>
@@ -303,6 +289,4 @@
     <string name="action_thumbnails">Thumbnails</string>
     <string name="action_bookmark_add">Add bookmark</string>
     <string name="screen_rotation">Screen rotation</string>
-    <string name="landscape">Landscape</string>
-    <string name="portrait">Portrait</string>
 </resources>

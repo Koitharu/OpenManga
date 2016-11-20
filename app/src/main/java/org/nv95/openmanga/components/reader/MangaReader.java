@@ -20,7 +20,7 @@ import org.nv95.openmanga.components.reader.recyclerpager.overscroll.VerticalOve
 
 public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateListener, IOverScrollStateListener {
 
-    private static final float OVERSCROLL_THRESHOLD = 140;
+    private static final float OVERSCROLL_THRESHOLD = 80;
 
     @Nullable
     private IOverScrollDecor mOverScrollDecor;

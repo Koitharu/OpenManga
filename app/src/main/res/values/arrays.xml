@@ -58,14 +58,6 @@
         <item>@string/theme_dark</item>
         <item>@string/theme_black</item>
     </string-array>
-    <string-array name="animations" >
-        <item>@string/scrolling</item>
-        <item>@string/sliding</item>
-    </string-array>
-    <string-array name="animation_values">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
 
     <string-array name="scale_values">
         <item>0</item>
@@ -78,16 +70,6 @@
         <item>@string/scale_fit_w</item>
         <item>@string/scale_fit_h</item>
         <item>@string/scale_source</item>
-    </string-array>
-    <string-array name="clickareas">
-        <item>@string/disabled</item>
-        <item>@string/bottom</item>
-        <item>@string/at_sides</item>
-    </string-array>
-    <string-array name="clickareas_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
     <string-array name="app_languages">
         <item>@string/automatic</item>

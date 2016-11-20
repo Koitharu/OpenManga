@@ -22,12 +22,9 @@
     <string name="action_sort">Sıralama</string>
     <string name="action_unfavourite">Favorilerden kaldır</string>
     <string name="adjust_brightness">Parlaklığı Ayarla</string>
-    <string name="already_saved">Bu mangayı zaten indirmişsin</string>
     <string name="app_update_avaliable">Güncelleme Mevcut</string>
-    <string name="at_sides">Kenarlara tıklandığında</string>
     <string name="backup">Verileri Yedekle</string>
     <string name="backup_done">Yedekleme tamamlandı</string>
-    <string name="bottom">Aşağıya tıklandığında</string>
     <string name="brightness_value">Parlaklık değeri</string>
     <string name="bug_report">Hata Raporu gönder</string>
     <string name="bug_report_message">Hataları raporlayarak bu uygulamanın gelişmesine yardımcı olmuş olacaksınız.</string>
@@ -52,7 +49,6 @@
     <string name="completed">Tamamlandı</string>
     <string name="continue_reading">Devam et</string>
     <string name="data">Veri</string>
-    <string name="delete_manga">Manga sil</string>
     <string name="delete_mangas_confirm">Seçili mangalar silinsin mi?</string>
     <string name="description">Açıklama</string>
     <string name="dir_no_access">Bu klasöre yazma izni yok</string>
@@ -154,7 +150,6 @@
     <string name="history_empty">Geçmiş boş</string>
     <string name="history_will_cleared">Geçmiş temizlendi</string>
     <string name="image_saved">Resim başarıyla kaydedildi</string>
-    <string name="image_shifting_summary">Sayfa standart orana sahip değilse faydalıdır</string>
     <string name="import_complete">Aktarım tamamlandı</string>
     <string name="import_file">İçeri aktar</string>
     <string formatted="false" name="import_file_confirm">%s dosyasını içeri aktarmak istiyor musun?</string>
@@ -214,14 +209,10 @@
     <string name="save_image">Resmi kaydet</string>
     <string name="saving_manga">Manga indiriliyor</string>
     <string name="automatic">Otomatik</string>
-    <string name="scale_crop">Yakınlaştır</string>
     <string name="scale_fit">Ekrana sığdır</string>
     <string name="scale_mode">Okuma boyutu ayarları</string>
     <string name="scale_source">Kaynağın kullandığı gibi</string>
-    <string name="scroll_by_click">Tıklanınca sayfa kaydır</string>
     <string name="scroll_by_volkeys">Ses tuşlarıyla sayfa kaydır</string>
-    <string name="scrolling">Direk geç</string>
-    <string name="scrolling_animation">Sayfa geçiş animasyonu</string>
     <string name="scrolling_direction">Akış yönü</string>
     <string name="search_on_another_sources">Diğer kaynaklarda ara</string>
     <string name="search_results">Arama Sonuçları</string>
@@ -234,7 +225,6 @@
     <string name="show_at_startup">Başlangıçta göster</string>
     <string name="show_resume_fab">Askıdaki  \"Devam et\" butonunu göster</string>
     <string name="size_calculating">Boyut hesaplanıyor…</string>
-    <string name="sliding">Kayarak geç</string>
     <string name="sort_alphabetical">A\'dan Z\'ye</string>
     <string name="sort_latest">Son eklenen</string>
     <string name="sort_popular">En Popüler</string>
@@ -251,7 +241,6 @@
     <string name="theme_dark">Siyah</string>
     <string name="theme_light">Kırmızı</string>
     <string name="tip_chapter_checking">Bu kısmı açmanız durumunda favori mangalarınıza bölüm eklendiğinde bildirim alacaksınız.</string>
-    <string name="tip_reader_menu">Menüyü açmak için tıklayın</string>
     <string name="unable_to_save_image">Resim kaydedilemiyor</string>
     <string name="unfavourited">Favorilerden silindi</string>
     <string name="unknown">Bilinmiyor</string>
@@ -266,9 +255,7 @@
     <string name="wait_for_complete">İşlemlerin bitmesini bekleyin</string>
     <string name="web">Web</string>
     <string name="welcome">Hoşgeldiniz</string>
-    <string name="wrap_long_pages">Uzun resimleri toparla</string>
-	<string name="image_decode_error">Kod çözülürken hata oluştu</string>
-    <string name="out_of_memory">Yetersiz hafıza</string>
+    <string name="image_decode_error">Kod çözülürken hata oluştu</string>
     <string name="image_loading_error">Yüklenirken hata oluştu</string>
     <string name="tip_search_main">Bir şey mi aradın?\nOnline kataloglar arasında aramayı kullan</string>
     <string name="tip_filter">Tür seçmek ve sıralamak için tıkla</string>

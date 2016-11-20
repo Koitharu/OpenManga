@@ -43,7 +43,6 @@
     <string name="no_favourites">Нет избранных</string>
     <string name="no_manga_found">Ничего не найдено</string>
     <string name="no_saved_manga">Нет сохранённой манги</string>
-    <string name="already_saved">Эта манга уже сохранена</string>
     <string name="cache_clearing">Очистка кэша…</string>
     <string name="cache_size" formatted="false">Размер кэша: %.1f Мб</string>
     <string name="action_clear_cache">Очистить кэш изображений</string>
@@ -192,7 +191,6 @@
     <string name="got_it">Понятно</string>
     <string name="menu">Меню</string>
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
-    <string name="tip_reader_menu">Нажмите, чтобы открыть меню</string>
     <string name="select_image">Выберите картинку</string>
     <string name="genre">Жанр</string>
     <string name="description">Описание</string>
@@ -206,8 +204,6 @@
     <string name="next_chapter" formatted="false">Следующая глава\n\n%s</string>
     <string name="prev_chapter" formatted="false">Предыдущая глава\n\n%s</string>
     <string name="filter">Фильтр</string>
-    <string name="wrap_long_pages">Переносить длинные изображения</string>
-    <string name="image_shifting_summary">Полезно для страниц нестандартного размера</string>
     <string name="action_save_add">Сохранить недостающие главы</string>
     <string name="chapters_removed" formatted="false">Удалено %d глав</string>
     <string name="download">Загрузить</string>
@@ -225,9 +221,6 @@
     <string name="import_file_confirm" formatted="false">Импортировать файл %s ?</string>
     <string name="delete_mangas_confirm">Удалить выделенную мангу?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всего %d глав)</string>
-    <string name="scrolling_animation">Анимация листания</string>
-    <string name="scrolling">Прокрутка</string>
-    <string name="sliding">Сдвиг</string>
     <string name="action_move">Переместить в</string>
     <string name="pause">Пауза</string>
     <string name="resume">Продолжить</string>
@@ -241,19 +234,12 @@
     <string name="scale_mode">Масштабирование</string>
     <string name="scale_source">Исходный размер</string>
     <string name="automatic">Автоматически</string>
-    <string name="scale_crop">Увеличить</string>
     <string name="scale_fit">Под экран</string>
-    <string name="scroll_by_click">Листание нажатием</string>
-    <string name="bottom">Снизу</string>
-    <string name="at_sides">По бокам</string>
-    <string name="delete_manga">Удалить мангу</string>
     <string name="imported_from" formatted="false">Импортировано из %s</string>
     <string name="move_saved">Переместить сохранённую мангу</string>
     <string name="image_decode_error">Не удалось декодировать изображение</string>
     <string name="image_loading_error">Не удалось загрузить изображение</string>
-    <string name="out_of_memory">Недостаточно памяти</string>
     <string name="goto_page" formatted="false">Перейти к: %d/%d</string>
-    <string name="current_page" formatted="false">Текущая страница: %d</string>
     <string name="tip_search_main">Ищите что-нибудь?\nВоспользуйтесь поиском по онлайн-каталогам</string>
     <string name="tip_filter">Нажмите, чтобы выбрать жанр и порядок сортировки</string>
     <string name="tip_favourite">Добавьте мангу в избранное, чтобы держать её под рукой. Также можно включить уведомления о новых главах</string>
