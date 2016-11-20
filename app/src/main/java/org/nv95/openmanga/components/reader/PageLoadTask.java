@@ -23,19 +23,17 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
     private final PageWrapper mPageWrapper;
     @Nullable
     private PageLoadListener mListener;
-    @Nullable
-    private WeakReference<PageLoadTask> mSelfReference; //не помню, зачем это
+    private boolean mIsShadow;
 
     public PageLoadTask(PageWrapper pageWrapper, @Nullable PageLoadListener listener) {
         mPageWrapper = pageWrapper;
         mListener = listener;
-        mSelfReference = null;
     }
 
-    public WeakReference<PageLoadTask> start(int priority) {
-        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, priority);
-        mSelfReference = new WeakReference<>(this);
-        return mSelfReference;
+    public WeakReference<PageLoadTask> start(boolean shadow) {
+        mIsShadow = shadow;
+        executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, shadow ? 0 : 2);
+        return new WeakReference<>(this);
     }
 
     @Override
@@ -43,7 +41,7 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
         super.onPreExecute();
         mPageWrapper.mState = PageWrapper.STATE_PROGRESS;
         if (mListener != null) {
-            mListener.onLoadingStarted(mPageWrapper);
+            mListener.onLoadingStarted(mPageWrapper, mIsShadow);
         }
     }
 
@@ -89,19 +87,24 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         if (mListener != null) {
-            mListener.onProgressUpdated(mPageWrapper, values[0]);
+            mListener.onProgressUpdated(mPageWrapper, mIsShadow, values[0]);
         }
     }
 
     @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        mPageWrapper.mState = PageWrapper.STATE_QUEUED;
-        if (mListener != null) {
-            mListener.onLoadingCancelled(mPageWrapper);
-        }
-        if (mSelfReference != null) {
-            mSelfReference.clear();
+    protected void onCancelled(Object o) {
+        super.onCancelled(o);
+        if (o != null && o instanceof String) {
+            mPageWrapper.mState = PageWrapper.STATE_LOADED;
+            mPageWrapper.mFilename = (String) o;
+            if (mListener != null) {
+                mListener.onLoadingComplete(mPageWrapper, mIsShadow);
+            }
+        } else {
+            mPageWrapper.mState = PageWrapper.STATE_QUEUED;
+            if (mListener != null) {
+                mListener.onLoadingCancelled(mPageWrapper, mIsShadow);
+            }
         }
     }
 
@@ -111,21 +114,18 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
         mPageWrapper.mState = PageWrapper.STATE_LOADED;
         if (o == null) {
             if (mListener != null) {
-                mListener.onLoadingFail(mPageWrapper);
+                mListener.onLoadingFail(mPageWrapper, mIsShadow);
             }
         } else if (o instanceof String) {
             mPageWrapper.mFilename = (String) o;
             if (mListener != null) {
-                mListener.onLoadingComplete(mPageWrapper);
+                mListener.onLoadingComplete(mPageWrapper, mIsShadow);
             }
         } else if (o instanceof Exception) {
             mPageWrapper.mError = (Exception) o;
             if (mListener != null) {
-                mListener.onLoadingFail(mPageWrapper);
+                mListener.onLoadingFail(mPageWrapper, mIsShadow);
             }
-        }
-        if (mSelfReference != null) {
-            mSelfReference.clear();
         }
     }
 }

@@ -76,29 +76,29 @@ public class ThumbnailsDialog implements DialogInterface.OnDismissListener, Page
     }
 
     @Override
-    public void onLoadingStarted(PageWrapper page) {
+    public void onLoadingStarted(PageWrapper page, boolean shadow) {
 
     }
 
     @Override
-    public void onProgressUpdated(PageWrapper page, int percent) {
+    public void onProgressUpdated(PageWrapper page, boolean shadow, int percent) {
 
     }
 
     @Override
-    public void onLoadingComplete(PageWrapper page) {
+    public void onLoadingComplete(PageWrapper page, boolean shadow) {
         if (mAdapter != null) {
             mAdapter.notifyItemChanged(page.position);
         }
     }
 
     @Override
-    public void onLoadingFail(PageWrapper page) {
+    public void onLoadingFail(PageWrapper page, boolean shadow) {
 
     }
 
     @Override
-    public void onLoadingCancelled(PageWrapper page) {
+    public void onLoadingCancelled(PageWrapper page, boolean shadow) {
 
     }
 

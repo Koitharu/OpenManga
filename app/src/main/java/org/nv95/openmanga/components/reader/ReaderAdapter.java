@@ -31,6 +31,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
 
     public ReaderAdapter() {
         mLoader = new PageLoader();
+        setHasStableIds(true);
     }
 
     public void setPages(List<MangaPage> pages) {
@@ -48,7 +49,6 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     @Override
     public PageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         PageHolder holder = new PageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, parent, false));
-        //mLoader.addListener(holder);
         return holder;
     }
 
@@ -60,29 +60,31 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
 
     @Override
     public void onBindViewHolder(PageHolder holder, int position) {
-        mLoader.cancelLoading(holder.position);
         mLoader.addListener(holder);
         holder.reset();
-        holder.position = position;
         PageWrapper wrapper = mLoader.requestPage(position);
         if (wrapper != null) {
             switch (wrapper.getState()) {
                 case PageWrapper.STATE_PROGRESS:
-                    holder.onLoadingStarted(wrapper);
+                    holder.onLoadingStarted(wrapper, false);
                     break;
                 case PageWrapper.STATE_LOADED:
                     if (wrapper.mFilename != null) {
-                        holder.onLoadingComplete(wrapper);
+                        holder.onLoadingComplete(wrapper, false);
                     } else {
-                        holder.onLoadingFail(wrapper);
+                        holder.onLoadingFail(wrapper, false);
                     }
             }
         }
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public void onViewRecycled(PageHolder holder) {
-        mLoader.cancelLoading(holder.position);
         holder.reset();
         super.onViewRecycled(holder);
     }
@@ -96,14 +98,14 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         return mLoader.getWrappersList().get(position);
     }
 
-    static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener, SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
+    static class PageHolder extends RecyclerView.ViewHolder implements PageLoadListener,
+            SubsamplingScaleImageView.OnImageEventListener, FileConverter.ConvertCallback {
 
         static int scaleMode;
 
         final ProgressBar progressBar;
         final SubsamplingScaleImageView ssiv;
         final TextView textView;
-        int position;
         @Nullable
         PageWrapper pageWrapper;
 
@@ -123,8 +125,8 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         }
 
         @Override
-        public void onLoadingStarted(PageWrapper page) {
-            if (page.position == position) {
+        public void onLoadingStarted(PageWrapper page, boolean shadow) {
+            if (page.position == getAdapterPosition()) {
                 textView.setText(R.string.loading);
                 textView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
@@ -133,8 +135,8 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         }
 
         @Override
-        public void onProgressUpdated(PageWrapper page, int percent) {
-            if (page.position == position) {
+        public void onProgressUpdated(PageWrapper page, boolean shadow, int percent) {
+            if (page.position == getAdapterPosition()) {
                 progressBar.setIndeterminate(false);
                 progressBar.setProgress(percent);
                 textView.setText(textView.getContext().getString(R.string.loading_percent, percent));
@@ -144,8 +146,8 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         }
 
         @Override
-        public void onLoadingComplete(PageWrapper page) {
-            if (page.position == position) {
+        public void onLoadingComplete(PageWrapper page, boolean shadow) {
+            if (page.position == getAdapterPosition()) {
                 textView.setText(R.string.wait);
                 textView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
@@ -157,14 +159,14 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         }
 
         @Override
-        public void onLoadingFail(PageWrapper page) {
-            if (page.position == position) {
+        public void onLoadingFail(PageWrapper page, boolean shadow) {
+            if (page.position == getAdapterPosition()) {
                 onImageLoadError(page.getError());
             }
         }
 
         @Override
-        public void onLoadingCancelled(PageWrapper page) {
+        public void onLoadingCancelled(PageWrapper page, boolean shadow) {
             if (page.position == getAdapterPosition()) {
                 progressBar.setVisibility(View.GONE);
                 textView.setVisibility(View.GONE);
@@ -241,7 +243,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             if (pageWrapper != null) {
                 pageWrapper.setConverted();
                 if (success) {
-                    onLoadingComplete(pageWrapper);
+                    onLoadingComplete(pageWrapper, false);
                 } else {
                     onImageLoadError(new FileConverter.ConvertException());
                 }

@@ -390,6 +390,8 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
             mProgressFrame.setVisibility(View.VISIBLE);
+            mAdapter.getLoader().cancelAll();
+            mAdapter.getLoader().setEnabled(false);
             super.onPreExecute();
         }
 
@@ -411,7 +413,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         @Override
         protected void onPostExecute(List<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
-            mAdapter.getLoader().setEnabled(false);
             mAdapter.setPages(mangaPages);
             mAdapter.notifyDataSetChanged();
             int pos = mPageIndex == -1 ? mAdapter.getItemCount() - 1 : mPageIndex;

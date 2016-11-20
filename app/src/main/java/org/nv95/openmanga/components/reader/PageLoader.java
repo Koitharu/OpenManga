@@ -16,14 +16,21 @@ import java.util.List;
 
 public class PageLoader implements PageLoadListener {
 
+    private static final int MAX_SHADOW_THREADS = 2;
+
     private boolean mEnabled;
     private boolean mPreloadEnabled;
     private final HashSet<PageLoadListener> mListeners;
     private final ArrayList<PageWrapper> mWrappers;
+    private int mActiveLoads;
+    private int mShadowLoads;
+
 
     public PageLoader() {
         mListeners = new HashSet<>(5);
         mWrappers = new ArrayList<>();
+        mActiveLoads = 0;
+        mShadowLoads = 0;
         mEnabled = true;
         mPreloadEnabled = false;
     }
@@ -43,28 +50,30 @@ public class PageLoader implements PageLoadListener {
     @Nullable
     public PageWrapper requestPage(int pos) {
         if (!mEnabled || pos < 0 || pos >= mWrappers.size()) {
-            throw new ArrayIndexOutOfBoundsException(pos);
+            Log.w("PGL", "#null " + pos + " of " + mWrappers.size());
+            return null;
         }
         PageWrapper wrapper = mWrappers.get(pos);
         if (wrapper.mState == PageWrapper.STATE_QUEUED) {
             Log.d("PGL", "#current " + wrapper.toString());
-            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(2);
-            return null;
-        } else {
-            return wrapper;
+            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(false);
         }
+        return wrapper;
     }
 
     public void shadowLoad(int pos) {
         if (!mEnabled || !mPreloadEnabled || pos < 0 || pos >= mWrappers.size()) {
             return;
         }
-        PageWrapper wrapper = mWrappers.get(pos);
-        if (wrapper.getState() == PageWrapper.STATE_QUEUED) {
-            Log.d("PGL", "#shadow " + wrapper.toString());
-            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(0);
-        } else {
-            shadowLoad(pos + 1);
+        PageWrapper wrapper = null;
+        for (int i=pos;i<mWrappers.size();i++) {
+            wrapper = mWrappers.get(i);
+            if (wrapper.getState() == PageWrapper.STATE_QUEUED) {
+                break;
+            }
+        }
+        if (wrapper != null) {
+            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(true);
         }
     }
 
@@ -80,42 +89,70 @@ public class PageLoader implements PageLoadListener {
     }
 
     @Override
-    public void onLoadingStarted(PageWrapper page) {
-        Log.d("PGL", "Started " + page.toString());
+    public void onLoadingStarted(PageWrapper page, boolean shadow) {
+        Log.d("PGL", "Started " + page.toString() + (shadow ? "#" : "%"));
+        if (shadow) {
+            mShadowLoads++;
+        } else {
+            mActiveLoads++;
+        }
         for (PageLoadListener o : mListeners) {
-            o.onLoadingStarted(page);
+            o.onLoadingStarted(page, shadow);
         }
     }
 
     @Override
-    public void onProgressUpdated(PageWrapper page, int percent) {
+    public void onProgressUpdated(PageWrapper page, boolean shadow, int percent) {
         for (PageLoadListener o : mListeners) {
-            o.onProgressUpdated(page, percent);
+            o.onProgressUpdated(page, shadow, percent);
         }
     }
 
     @Override
-    public void onLoadingComplete(PageWrapper page) {
-        Log.d("PGL", "Complete " + page.toString());
+    public void onLoadingComplete(PageWrapper page, boolean shadow) {
+        Log.d("PGL", "Complete " + page.toString() + (shadow ? "#" : "%"));
         for (PageLoadListener o : mListeners) {
-            o.onLoadingComplete(page);
+            o.onLoadingComplete(page, shadow);
         }
-        shadowLoad(page.position + 1);
+        if (shadow) {
+            mShadowLoads--;
+            if (mShadowLoads <= MAX_SHADOW_THREADS) {
+                shadowLoad(page.position + 1);
+            }
+        } else {
+            mActiveLoads--;
+            if (mActiveLoads <= 0) {
+                shadowLoad(page.position + 1);
+            }
+        }
     }
 
     @Override
-    public void onLoadingFail(PageWrapper page) {
-        Log.d("PGL", "Fail " + page.toString());
+    public void onLoadingFail(PageWrapper page, boolean shadow) {
+        Log.d("PGL", "Fail " + page.toString() + (shadow ? "#" : "%"));
         for (PageLoadListener o : mListeners) {
-            o.onLoadingFail(page);
+            o.onLoadingFail(page, shadow);
+        }
+        if (shadow) {
+            mShadowLoads--;
+            if (mShadowLoads <= MAX_SHADOW_THREADS) {
+                shadowLoad(page.position + 1);
+            }
+        } else {
+            mActiveLoads--;
         }
     }
 
     @Override
-    public void onLoadingCancelled(PageWrapper page) {
-        Log.d("PGL", "Cancelled " + page.toString());
+    public void onLoadingCancelled(PageWrapper page, boolean shadow) {
+        Log.d("PGL", "Cancelled " + page.toString() + (shadow ? "#" : "%"));
         for (PageLoadListener o : mListeners) {
-            o.onLoadingCancelled(page);
+            o.onLoadingCancelled(page, shadow);
+        }
+        if (shadow) {
+            mShadowLoads--;
+        } else {
+            mActiveLoads--;
         }
     }
 
@@ -137,5 +174,15 @@ public class PageLoader implements PageLoadListener {
 
     public void setPreloadEnabled(boolean b) {
         mPreloadEnabled = b;
+    }
+
+    public void cancelAll() {
+        PageLoadTask task;
+        for (PageWrapper o : mWrappers) {
+            task = o.getLoadTask();
+            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+                task.cancel(false);
+            }
+        }
     }
 }

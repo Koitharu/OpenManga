@@ -6,9 +6,9 @@ package org.nv95.openmanga.components.reader;
 
 public interface PageLoadListener {
 
-    void onLoadingStarted(PageWrapper page);
-    void onProgressUpdated(PageWrapper page, int percent);
-    void onLoadingComplete(PageWrapper page);
-    void onLoadingFail(PageWrapper page);
-    void onLoadingCancelled(PageWrapper page);
+    void onLoadingStarted(PageWrapper page, boolean shadow);
+    void onProgressUpdated(PageWrapper page, boolean shadow, int percent);
+    void onLoadingComplete(PageWrapper page, boolean shadow);
+    void onLoadingFail(PageWrapper page, boolean shadow);
+    void onLoadingCancelled(PageWrapper page, boolean shadow);
 }
