@@ -103,6 +103,4 @@
         <item>1</item>
         <item>0</item>
     </string-array>
-    <string name="scale_fit_w">Fit to width</string>
-    <string name="scale_fit_h">Fit to height</string>
 </resources>

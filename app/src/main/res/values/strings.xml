@@ -289,4 +289,6 @@
     <string name="action_thumbnails">Thumbnails</string>
     <string name="action_bookmark_add">Add bookmark</string>
     <string name="screen_rotation">Screen rotation</string>
+    <string name="scale_fit_w">Fit to width</string>
+    <string name="scale_fit_h">Fit to height</string>
 </resources>

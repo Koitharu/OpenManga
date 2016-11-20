@@ -255,4 +255,16 @@
     <string name="navigate_tip">Введите номер страницы</string>
     <string name="invalid_value">Некорректное значение</string>
     <string name="hide_toolbar">Прятать заголовок при прокрутке</string>
+    <string name="loading_percent">Загрузка: %d%%</string>
+    <string name="favourited">Добавлено в избранное</string>
+    <string name="mode">Режим</string>
+    <string name="preloading">Предзагрузка страниц</string>
+    <string name="pages">Страницы</string>
+    <string name="scroll">Свиток</string>
+    <string name="save_manga">Сохранить мангу</string>
+    <string name="action_thumbnails">Эскизы</string>
+    <string name="action_bookmark_add">Добавить закладку</string>
+    <string name="screen_rotation">Поворот экрана</string>
+    <string name="scale_fit_w">По ширине</string>
+    <string name="scale_fit_h">По высоте</string>
 </resources>
