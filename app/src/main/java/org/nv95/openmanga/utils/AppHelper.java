@@ -86,4 +86,12 @@ public class AppHelper {
         }
         return res;
     }
+
+    public static String ellipsize(String str, int len) {
+        if (str.length() <= len) {
+            return str;
+        } else {
+            return str.substring(0, len - 1) + '…';
+        }
+    }
 }

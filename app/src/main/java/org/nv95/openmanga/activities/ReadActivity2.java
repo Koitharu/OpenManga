@@ -37,12 +37,14 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.SimpleDownload;
 import org.nv95.openmanga.lists.ChaptersList;
+import org.nv95.openmanga.providers.BookmarksProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
@@ -228,6 +230,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     @Override
     public void onActionClick(int id) {
+        final int pos = mReader.getCurrentPosition();
         switch (id) {
             case android.R.id.home:
                 finish();
@@ -243,16 +246,30 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 new LoadSourceTask().startLoading(mManga);
                 break;
             case R.id.action_save_image:
-                new ImageSaveTask().startLoading(mAdapter.getItem(mReader.getCurrentPosition()));
+                new ImageSaveTask().startLoading(mAdapter.getItem(pos));
                 break;
             case R.id.menuitem_thumblist:
                 new ThumbnailsDialog(this, mAdapter.getLoader())
                         .setNavigationListener(this)
-                        .show(mReader.getCurrentPosition());
+                        .show(pos);
                 break;
             case R.id.menuitem_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class)
                         .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
+                break;
+            case R.id.menuitem_bookmark:
+                mMenuPanel.onBookmarkAdded(
+                        BookmarksProvider.getInstance(this)
+                        .add(mManga, mManga.chapters.get(mChapter).number, pos, mAdapter.getItem(pos).getFilename())
+                );
+                LayoutUtils.centeredToast(this, R.string.bookmark_added);
+                break;
+            case R.id.menuitem_unbookmark:
+                if (BookmarksProvider.getInstance(this)
+                        .remove(mManga, mManga.chapters.get(mChapter).number, pos)) {
+                    mMenuPanel.onBookmarkRemoved(pos);
+                    LayoutUtils.centeredToast(this, R.string.bookmark_removed);
+                }
                 break;
             case R.id.menuitem_rotation:
                 int orientation = getResources().getConfiguration().orientation;
@@ -419,7 +436,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mReader.scrollToPosition(pos);
             mAdapter.getLoader().setEnabled(true);
             mAdapter.notifyDataSetChanged();
-            mMenuPanel.setChapterSize(mangaPages.size());
+            mMenuPanel.onChapterChanged(mManga.chapters.get(mChapter) ,mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
         }
     }

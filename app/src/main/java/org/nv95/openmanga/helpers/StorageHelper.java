@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class StorageHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 16;
+    private static final int DB_VERSION = 17;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -68,6 +68,16 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
                 + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
                 + ");");
+
+        db.execSQL("CREATE TABLE bookmarks ("
+                + "_id INTEGER PRIMARY KEY,"
+                + "manga_id INTEGER,"
+                + "page INTEGER,"
+                + "chapter INTEGER,"
+                + "name TEXT,"
+                + "thumbnail TEXT,"
+                + "timestamp INTEGER"
+                + ");");
     }
 
     @Override
@@ -85,6 +95,18 @@ public class StorageHelper extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE search_history ("
                     + "_id INTEGER PRIMARY KEY,"
                     + "query TEXT"
+                    + ");");
+        }
+
+        if (!tables.contains("bookmarks")) {
+            db.execSQL("CREATE TABLE bookmarks ("
+                    + "_id INTEGER PRIMARY KEY,"
+                    + "manga_id INTEGER,"
+                    + "page INTEGER,"
+                    + "chapter INTEGER,"
+                    + "name TEXT,"
+                    + "thumbnail TEXT,"
+                    + "timestamp INTEGER"
                     + ");");
         }
 

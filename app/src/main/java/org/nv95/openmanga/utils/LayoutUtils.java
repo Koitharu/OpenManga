@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.OrientationHelper;
@@ -20,12 +21,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.ThumbSize;
@@ -208,5 +211,11 @@ public class LayoutUtils {
         view.requestFocus();
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, 0);
+    }
+
+    public static void centeredToast(Context context, @StringRes int message) {
+        Toast t = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        t.setGravity(Gravity.CENTER, 0, 0);
+        t.show();
     }
 }

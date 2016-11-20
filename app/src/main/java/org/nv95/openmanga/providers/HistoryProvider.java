@@ -160,7 +160,8 @@ public class HistoryProvider extends MangaProvider {
     }
 
     public boolean remove(MangaInfo mangaInfo) {
-        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "id=" + mangaInfo.id, null);
+        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)});
+        mStorageHelper.getWritableDatabase().delete("bookmarks", "manga_id=?", new String[]{String.valueOf(mangaInfo.id)});
         return true;
     }
 
@@ -169,7 +170,8 @@ public class HistoryProvider extends MangaProvider {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.beginTransaction();
         for (long o : ids) {
-            database.delete(TABLE_NAME, "id=" + o, null);
+            database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(o)});
+            database.delete("bookmarks", "manga_id=?", new String[]{String.valueOf(o)});
         }
         database.setTransactionSuccessful();
         database.endTransaction();
@@ -177,6 +179,7 @@ public class HistoryProvider extends MangaProvider {
     }
 
     public void clear() {
+        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
         mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
     }
 
@@ -200,6 +203,33 @@ public class HistoryProvider extends MangaProvider {
         }
         c.close();
         return res;
+    }
+
+    @Nullable
+    public MangaInfo get(int id) {
+        MangaInfo manga = null;
+        Cursor cursor = mStorageHelper.getReadableDatabase()
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                        "id=?", new String[]{String.valueOf(id)}, null, null, sortUrls[0]);
+        if (cursor.moveToFirst()) {
+            manga = new MangaInfo();
+            manga.id = cursor.getInt(0);
+            manga.name = cursor.getString(1);
+            manga.subtitle = cursor.getString(2);
+            manga.genres = cursor.getString(3);
+            manga.preview = cursor.getString(4);
+            manga.path = cursor.getString(5);
+            try {
+                manga.provider = Class.forName(cursor.getString(6));
+            } catch (ClassNotFoundException e) {
+                manga.provider = LocalMangaProvider.class;
+            }
+            manga.rating = (byte) cursor.getInt(7);
+            manga.status = STATUS_UNKNOWN;
+            manga.extra = null;
+        }
+        cursor.close();
+        return manga;
     }
 
     public static class HistorySummary {

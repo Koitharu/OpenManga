@@ -34,6 +34,11 @@
     </group>
     <group android:id="@+id/group_history">
         <item
+            android:id="@+id/action_bookmarks"
+            android:orderInCategory="100"
+            android:title="@string/bookmarks"
+            app:showAsAction="never" />
+        <item
             android:id="@+id/action_histclear"
             android:orderInCategory="100"
             android:title="@string/action_histclear"

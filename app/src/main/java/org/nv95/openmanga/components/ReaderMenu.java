@@ -27,12 +27,18 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.dialogs.NavigationListener;
+import org.nv95.openmanga.items.Bookmark;
+import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.providers.BookmarksProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.ChangesObserver;
+
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * Created by nv95 on 17.11.16.
@@ -51,6 +57,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     private ProgressBar mProgressBar;
     private View[] mMenus;
     private boolean mVisible;
+    private TreeSet<Integer> mBookmarks;
 
     private PopupMenu mSaveMenu;
 
@@ -84,6 +91,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
 
     private void init(Context context) {
         mVisible = false;
+        mBookmarks = new TreeSet<>();
         LayoutInflater.from(context).inflate(R.layout.readermenu, this, true);
         mLimitYStatusBar = getContext().getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -100,7 +108,8 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
                 (ImageView) findViewById(R.id.menuitem_bookmark),
                 (ImageView) findViewById(R.id.menuitem_rotation),
                 (ImageView) findViewById(R.id.menuitem_settings),
-                (ImageView) findViewById(R.id.menuitem_thumblist)
+                (ImageView) findViewById(R.id.menuitem_thumblist),
+                (ImageView) findViewById(R.id.menuitem_unbookmark),
         };
         for (ImageView o : mButtons) {
             o.setOnClickListener(this);
@@ -146,6 +155,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     public void setData(MangaSummary manga) {
         mManga = manga;
         mTitle.setText(manga.name);
+        mBookmarks.clear();
     }
 
     public void updateMenu() {
@@ -230,6 +240,22 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         }
     }
 
+    public void onBookmarkAdded(Bookmark bookmark) {
+        mBookmarks.add(bookmark.page);
+        if (bookmark.page == mProgressBar.getProgress()) {
+            mButtons[4].setVisibility(GONE);
+            mButtons[8].setVisibility(VISIBLE);
+        }
+    }
+
+    public void onBookmarkRemoved(int pos) {
+        mBookmarks.remove(pos);
+        if (pos == mProgressBar.getProgress()) {
+            mButtons[8].setVisibility(GONE);
+            mButtons[4].setVisibility(VISIBLE);
+        }
+    }
+
     @Override
     public boolean onLongClick(View view) {
         if (view instanceof ImageView) {
@@ -245,6 +271,13 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     @Override
     public void OnPageChanged(int oldPosition, int newPosition) {
         mProgressBar.setProgress(newPosition);
+        if (mBookmarks.contains(newPosition)) {
+            mButtons[4].setVisibility(GONE);
+            mButtons[8].setVisibility(VISIBLE);
+        } else {
+            mButtons[8].setVisibility(GONE);
+            mButtons[4].setVisibility(VISIBLE);
+        }
     }
 
     @Override
@@ -259,8 +292,14 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         return true;
     }
 
-    public void setChapterSize(int size) {
-        mProgressBar.setMax(size);
+    public void onChapterChanged(MangaChapter chapter, int pagesCount) {
+        mBookmarks.clear();
+        mProgressBar.setMax(pagesCount);
+        ArrayList<Bookmark> bookmarks = BookmarksProvider.getInstance(getContext())
+                .getAll(mManga.id, chapter.number);
+        for (Bookmark o : bookmarks) {
+            mBookmarks.add(o.page);
+        }
     }
 
     @Override

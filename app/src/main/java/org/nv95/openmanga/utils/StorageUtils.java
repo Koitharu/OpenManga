@@ -2,13 +2,18 @@ package org.nv95.openmanga.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.nv95.openmanga.items.ThumbSize;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -160,5 +165,34 @@ public class StorageUtils {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    public static boolean saveBitmap(Bitmap bitmap, String filename) {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static boolean copyThumbnail(String source, String dest, ThumbSize size) {
+        Bitmap full = BitmapFactory.decodeFile(source);
+        Bitmap thumb = ThumbnailUtils.extractThumbnail(full, size.getWidth(), size.getHeight());
+        boolean res = saveBitmap(thumb, dest);
+        full.recycle();
+        thumb.recycle();
+        return res;
     }
 }

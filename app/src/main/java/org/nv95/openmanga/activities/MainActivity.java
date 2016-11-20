@@ -39,6 +39,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.FilterSortDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.PageNumberDialog;
@@ -345,6 +346,9 @@ public class MainActivity extends BaseAppActivity implements
                     }
                     dialog.show();
                 }
+                return true;
+            case R.id.action_bookmarks:
+                new BookmarksDialog(this).show();
                 return true;
             case R.id.action_histclear:
                 if (mProvider instanceof HistoryProvider) {
