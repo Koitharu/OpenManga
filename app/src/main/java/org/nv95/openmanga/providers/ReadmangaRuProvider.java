@@ -56,13 +56,13 @@ public class ReadmangaRuProvider extends MangaProvider {
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
-            t = o.select("h3").first();
+            t = o.select("h4").first();//h3
             if (t == null) {
                 continue;
             }
             manga.name = t.text();
             try {
-                manga.subtitle = o.select("h4").first().text();
+                manga.subtitle = o.select("h3").first().text(); //h4
             } catch (Exception e) {
                 manga.subtitle = "";
             }
@@ -202,7 +202,12 @@ public class ReadmangaRuProvider extends MangaProvider {
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h3").first().text();
+            manga.name = o.select("h4").first().text(); //h3
+            try {
+                manga.subtitle = o.select("h3").first().text(); //h4
+            } catch (Exception e) {
+                manga.subtitle = "";
+            }
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://readmanga.me" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
