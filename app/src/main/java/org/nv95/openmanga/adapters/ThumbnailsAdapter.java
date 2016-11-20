@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AutoHeightLayout;
@@ -47,8 +48,10 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
         PageWrapper pw = mPages.get(position);
         if (pw.isLoaded()) {
             ImageUtils.setThumbnail(holder.imageView, "file://" + pw.getFilename());
+            holder.textView.setText(null);
         } else {
             holder.imageView.setImageResource(R.drawable.placeholder);
+            holder.textView.setText(String.valueOf(position + 1));
         }
         holder.imageView.setTag(position);
     }
@@ -69,11 +72,13 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
     static class ThumbHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
 
         final ImageView imageView;
+        final TextView textView;
         final View selector;
 
         ThumbHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            textView = (TextView) itemView.findViewById(R.id.textView);
             selector = itemView.findViewById(R.id.selector);
             ((AutoHeightLayout)(itemView)).setAspectRatio(1.3f);
             imageView.setOnTouchListener(this);
