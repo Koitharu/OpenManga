@@ -267,4 +267,10 @@
     <string name="screen_rotation">Поворот экрана</string>
     <string name="scale_fit_w">По ширине</string>
     <string name="scale_fit_h">По высоте</string>
+    <string name="action_bookmark_remove">Удалить закладку</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="no_bookmarks_tip">Нет закладок</string>
+    <string name="bookmark_pos" formatted="false">Глава %d стр %d</string>
+    <string name="bookmark_removed">Закладка удалена</string>
+    <string name="bookmark_added">Закладка добавлена</string>
 </resources>
