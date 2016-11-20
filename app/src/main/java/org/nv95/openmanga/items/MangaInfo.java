@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MangaProvider;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -20,7 +21,7 @@ public class MangaInfo {
     public String genres;
     public String path;
     public String preview;
-    public Class<?> provider;
+    public Class<? extends MangaProvider> provider;
     public int status;
     @Nullable
     public String extra;
@@ -43,7 +44,7 @@ public class MangaInfo {
         preview = bundle.getString("preview");
         subtitle = bundle.getString("subtitle");
         try {
-            provider = Class.forName(bundle.getString("provider"));
+            provider = (Class<? extends MangaProvider>) Class.forName(bundle.getString("provider"));
         } catch (ClassNotFoundException e) {
             provider = LocalMangaProvider.class;
         }

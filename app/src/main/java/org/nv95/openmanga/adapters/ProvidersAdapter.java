@@ -1,6 +1,7 @@
 package org.nv95.openmanga.adapters;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
@@ -8,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.activities.ProviderPreferencesActivity;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -21,7 +24,7 @@ import java.util.List;
  * Created by nv95 on 12.07.16.
  */
 
-public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private static final int ITEM_VIEW = 0;
     private static final int ITEM_FOOTER = 1;
@@ -30,9 +33,11 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<ProviderSummary> mDataset;
     private final String[] languages;
     private final OnStartDragListener mDragListener;
+    private final Activity mActivity;
     private int mActiveCount = 4;
 
-    public ProvidersAdapter(Context context, List<ProviderSummary> providers, OnStartDragListener dragListener) {
+    public ProvidersAdapter(Activity context, List<ProviderSummary> providers, OnStartDragListener dragListener) {
+        mActivity = context;
         mDataset = providers;
         mDragListener = dragListener;
         languages = context.getResources().getStringArray(R.array.languages);
@@ -42,11 +47,13 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW:
-                return new ProviderHolder(
+                ProviderHolder pholder = new ProviderHolder(
                         LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_provider, parent, false),
                         mDragListener
                 );
+                pholder.imageButton.setOnClickListener(this);
+                return pholder;
             case ITEM_DIVIDER:
                 return new DividerHolder(
                         LayoutInflater.from(parent.getContext())
@@ -67,6 +74,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ProviderSummary item = getItem(position);
             ((ProviderHolder)holder).text1.setText(item.name);
             ((ProviderHolder)holder).text2.setText(languages[item.lang]);
+            ((ProviderHolder)holder).imageButton.setVisibility(item.preferences == 0 ? View.GONE : View.VISIBLE);
+            ((ProviderHolder)holder).imageButton.setTag(item);
         }
     }
 
@@ -101,16 +110,26 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mActiveCount;
     }
 
+    @Override
+    public void onClick(View view) {
+        Object tag = view.getTag();
+        if (tag != null && tag instanceof ProviderSummary) {
+            mActivity.startActivity(new Intent(mActivity, ProviderPreferencesActivity.class).putExtra("provider", ((ProviderSummary) tag).id));
+        }
+    }
+
     private static class ProviderHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
 
         final TextView text1;
         final TextView text2;
+        final ImageView imageButton;
         private final OnStartDragListener mStartDragListener;
 
         ProviderHolder(View itemView, OnStartDragListener sdl) {
             super(itemView);
             text1 = (TextView) itemView.findViewById(android.R.id.text1);
             text2 = (TextView) itemView.findViewById(android.R.id.text2);
+            imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
             mStartDragListener = sdl;
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);
             if (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())

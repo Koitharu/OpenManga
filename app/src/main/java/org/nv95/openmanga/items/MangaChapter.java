@@ -3,6 +3,7 @@ package org.nv95.openmanga.items;
 import android.os.Bundle;
 
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MangaProvider;
 
 /**
  * Created by nv95 on 02.10.15.
@@ -13,7 +14,7 @@ public class MangaChapter {
     public String name;
     public int number;
     public String readLink;
-    public Class<?> provider;
+    public Class<? extends MangaProvider> provider;
 
     public MangaChapter() {
         number = -1;
@@ -25,7 +26,7 @@ public class MangaChapter {
         readLink = bundle.getString("readLink");
         number = bundle.getInt("number");
         try {
-            provider = Class.forName(bundle.getString("provider"));
+            provider = (Class<? extends MangaProvider>) Class.forName(bundle.getString("provider"));
         } catch (ClassNotFoundException e) {
             provider = LocalMangaProvider.class;
         }

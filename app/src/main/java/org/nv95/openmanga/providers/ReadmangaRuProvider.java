@@ -45,6 +45,11 @@ public class ReadmangaRuProvider extends MangaProvider {
             "school", "ecchi", "yuri"
     };
 
+    @SuppressWarnings("WeakerAccess")
+    public ReadmangaRuProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
@@ -54,15 +59,16 @@ public class ReadmangaRuProvider extends MangaProvider {
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.col-sm-6");
+        final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            t = o.select("h4").first();//h3
+            t = o.select(lc ? "h4" : "h3").first();//h3
             if (t == null) {
                 continue;
             }
             manga.name = t.text();
             try {
-                manga.subtitle = o.select("h3").first().text(); //h4
+                manga.subtitle = o.select(lc ? "h3" : "h4").first().text(); //h4
             } catch (Exception e) {
                 manga.subtitle = "";
             }
@@ -199,12 +205,13 @@ public class ReadmangaRuProvider extends MangaProvider {
         Document document = postPage("http://readmanga.me/search", data);
         MangaInfo manga;
         Element r;
+        final boolean lc = getBooleanPreference("localized_names", true);
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h4").first().text(); //h3
+            manga.name = o.select(lc ? "h4" : "h3").first().text(); //h3
             try {
-                manga.subtitle = o.select("h3").first().text(); //h4
+                manga.subtitle = o.select(lc ? "h3" : "h4").first().text(); //h4
             } catch (Exception e) {
                 manga.subtitle = "";
             }

@@ -41,6 +41,10 @@ public class DesuMeProvider extends MangaProvider {
             "shounen", "shounen%20ai", "thriller", "horror", "fantasy", "hentai", "school", "ecchi", "yuri", "yaoi"
     };
 
+    public DesuMeProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

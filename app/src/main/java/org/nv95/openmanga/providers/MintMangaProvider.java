@@ -42,6 +42,10 @@ public class MintMangaProvider extends MangaProvider {
             "school", "erotica", "ecchi", "yuri", "yaoi"
     };
 
+    public MintMangaProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
@@ -51,15 +55,16 @@ public class MintMangaProvider extends MangaProvider {
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.col-sm-6");
+        final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            t = o.select("h3").first();
+            t = o.select(lc ? "h4" : "h3").first();
             if (t == null) {
                 continue;
             }
             manga.name = t.text();
             try {
-                manga.subtitle = o.select("h4").first().text();
+                manga.subtitle = o.select(lc ? "h3" : "h4").first().text();
             } catch (Exception e) {
                 manga.subtitle = "";
             }
@@ -194,9 +199,11 @@ public class MintMangaProvider extends MangaProvider {
         MangaInfo manga;
         Element r;
         Elements elements = document.body().select("div.col-sm-6");
+        final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h3").first().text();
+            manga.name = o.select(lc ? "h4" : "h3").first().text();
+            manga.subtitle = o.select(lc ? "h3" : "h4").first().text();
             manga.genres = o.select("a.element-link").text();
             manga.path = concatUrl("http://mintmanga.com/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");

@@ -3,7 +3,6 @@ package org.nv95.openmanga.providers.staff;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -13,6 +12,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +73,7 @@ public class MangaProviderManager {
                 case PROVIDER_RECOMMENDATIONS:
                     return RecommendationsProvider.getInstance(mContext);
                 default:
-                    return Providers.getById(index).aClass.newInstance();
+                    return Providers.getById(index).aClass.getDeclaredConstructor(Context.class).newInstance(mContext);
             }
         } catch (Exception e) {
             FileLogger.getInstance().report(e);
@@ -81,15 +81,27 @@ public class MangaProviderManager {
         }
     }
 
-    @Nullable
-    public static MangaProvider instanceNewProvider(String className) {
+    public static MangaProvider instanceProvider(Context context, String className) {
         try {
-            Class aClass = Class.forName(className);
-            return (MangaProvider) aClass.newInstance();
+            return instanceProvider(context, (Class<? extends MangaProvider>) Class.forName(className));
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
             return null;
         }
+    }
+
+    public static MangaProvider instanceProvider(Context context, Class<? extends MangaProvider> aClass) {
+        try {
+            Method m = aClass.getMethod("getInstance", Context.class);
+            return (MangaProvider) m.invoke(null, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            return aClass.getDeclaredConstructor(Context.class).newInstance(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static boolean needConnectionFor(MangaProvider provider) {
@@ -110,26 +122,6 @@ public class MangaProviderManager {
 
     public MangaProvider instanceProvider(Class<? extends MangaProvider> aClass) {
         return instanceProvider(mContext, aClass);
-    }
-
-    @Nullable
-    public static MangaProvider instanceProvider(Context context, Class<? extends MangaProvider> aClass) {
-        if (aClass.equals(LocalMangaProvider.class)) {
-            return LocalMangaProvider.getInstance(context);
-        } else if (aClass.equals(RecommendationsProvider.class)) {
-            return RecommendationsProvider.getInstance(context);
-        } else if (aClass.equals(FavouritesProvider.class)) {
-            return FavouritesProvider.getInstance(context);
-        } else if (aClass.equals(HistoryProvider.class)) {
-            return HistoryProvider.getInstance(context);
-        } else {
-            try {
-                return aClass.newInstance();
-            } catch (Exception e) {
-                FileLogger.getInstance().report(e);
-            }
-        }
-        return null;
     }
 
     public static void saveSortOrder(Context context, MangaProvider provider, int sort) {

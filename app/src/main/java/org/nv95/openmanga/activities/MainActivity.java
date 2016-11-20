@@ -742,7 +742,7 @@ public class MainActivity extends BaseAppActivity implements
                     if (!checkConnection()) {
                         return new Pair<>(1, null);
                     }
-                    provider = (MangaProvider) info.provider.newInstance();
+                    provider = MangaProviderManager.instanceProvider(MainActivity.this, info.provider);
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
                 intent = new Intent(MainActivity.this, ReadActivity2.class);

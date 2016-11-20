@@ -1,6 +1,8 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.jsoup.Jsoup;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 public abstract class MangaProvider {
 
     protected boolean features[];
+    private final SharedPreferences mPrefs;
 
     //******************************static*********************************
     protected static Document getPage(String url) throws Exception {
@@ -35,6 +38,7 @@ public abstract class MangaProvider {
         return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
+    @NonNull
     static String getRawPage(String url) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setConnectTimeout(15000);
@@ -48,6 +52,7 @@ public abstract class MangaProvider {
         return out.toString();
     }
 
+    @NonNull
     protected static String postRawPage(String url, String[] data) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setConnectTimeout(15000);
@@ -103,6 +108,23 @@ public abstract class MangaProvider {
         }
         InputStream is = con.getInputStream();
         return Jsoup.parse(is, con.getContentEncoding(), url);
+    }
+
+    public MangaProvider(Context context) {
+        mPrefs = context.getSharedPreferences("prov_" + this.getClass().getSimpleName(), Context.MODE_PRIVATE);
+    }
+
+    @NonNull
+    protected String getStringPreference(@NonNull String key, @NonNull String defValue) {
+        return mPrefs.getString(key, defValue);
+    }
+
+    protected boolean getBooleanPreference(@NonNull String key, boolean defValue) {
+        return mPrefs.getBoolean(key, defValue);
+    }
+
+    protected int getIntPreference(@NonNull String key, int defValue) {
+        return mPrefs.getInt(key, defValue);
     }
 
     //content access methods

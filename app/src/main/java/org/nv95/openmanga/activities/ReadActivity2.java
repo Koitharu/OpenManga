@@ -92,7 +92,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mMenuButton.setOnClickListener(this);
 
         mBrightnessHelper = new BrightnessHelper(getWindow());
-        mAdapter = new ReaderAdapter();
+        mAdapter = new ReaderAdapter(ReadActivity2.this);
         mReader.setAdapter(mAdapter);
         mReader.addOnPageChangedListener(mMenuPanel);
         mReader.setOnOverScrollListener(this);
@@ -184,7 +184,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            onClick(mMenuButton);
+            if (mProgressFrame.getVisibility() != View.VISIBLE) {
+                if (mMenuPanel.isShown()) {
+                    mMenuPanel.hide();
+                } else {
+                    mMenuPanel.show();
+                }
+            }
             return super.onKeyDown(keyCode, event);
         }
         if (mConfig.scrollByVolumeKeys) {
@@ -415,12 +421,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         @Override
         protected List<MangaPage> doInBackground(MangaChapter... mangaChapters) {
             try {
-                MangaProvider provider;
-                if (mangaChapters[0].provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstance(ReadActivity2.this);
-                } else {
-                    provider = (MangaProvider) mangaChapters[0].provider.newInstance();
-                }
+                MangaProvider provider = MangaProviderManager.instanceProvider(ReadActivity2.this, mangaChapters[0].provider);
                 return provider.getPages(mangaChapters[0].readLink);
             } catch (Exception ignored) {
                 return null;
@@ -457,7 +458,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             }
             try {
                 MangaProvider provider;
-                provider = pageWrappers[0].page.provider.newInstance();
+                provider = MangaProviderManager.instanceProvider(ReadActivity2.this, pageWrappers[0].page.provider);
                 String url = provider.getPageImage(pageWrappers[0].page);
                 File dest;
                 dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));

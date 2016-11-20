@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers.staff;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.DesuMeProvider;
 import org.nv95.openmanga.providers.EHentaiProvider;
 import org.nv95.openmanga.providers.HentaiBoxProvider;
@@ -21,19 +22,19 @@ import org.nv95.openmanga.providers.YaoiChanProvider;
 public class Providers {
 
     private static final ProviderSummary[] mAllProviders = {
-            new ProviderSummary(0, "ReadManga", ReadmangaRuProvider.class, Languages.RU),
-            new ProviderSummary(1, "MintManga", MintMangaProvider.class, Languages.RU),
-            new ProviderSummary(2, "Манга-тян", MangachanProvider.class, Languages.RU),
-            new ProviderSummary(3, "Desu.me", DesuMeProvider.class, Languages.RU),
-            new ProviderSummary(4, "SelfManga", SelfmangaRuProvider.class, Languages.RU),
-            new ProviderSummary(5, "MangaFox", MangaFoxProvider.class, Languages.EN),
-            new ProviderSummary(6, "MangaTown", MangaTownProvider.class, Languages.EN),
-            new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN),
-            new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI),
-            new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR),
-            new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU),
-            new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI),
-            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU)
+            new ProviderSummary(0, "ReadManga", ReadmangaRuProvider.class, Languages.RU, R.xml.pref_readmanga),
+            new ProviderSummary(1, "MintManga", MintMangaProvider.class, Languages.RU, R.xml.pref_readmanga),
+            new ProviderSummary(2, "Манга-тян", MangachanProvider.class, Languages.RU, 0),
+            new ProviderSummary(3, "Desu.me", DesuMeProvider.class, Languages.RU, 0),
+            new ProviderSummary(4, "SelfManga", SelfmangaRuProvider.class, Languages.RU, 0),
+            new ProviderSummary(5, "MangaFox", MangaFoxProvider.class, Languages.EN, 0),
+            new ProviderSummary(6, "MangaTown", MangaTownProvider.class, Languages.EN, 0),
+            new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN, 0),
+            new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI, 0),
+            new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR, 0),
+            new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, 0),
+            new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI, 0),
+            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, 0)
     };
 
     public static ProviderSummary[] getAll() {
@@ -41,7 +42,7 @@ public class Providers {
     }
 
     public static ProviderSummary getById(int id) {
-        return mAllProviders[id];
+        return id < 0 || id >= mAllProviders.length ? null : mAllProviders[id];
     }
 
     public static int getCount() {

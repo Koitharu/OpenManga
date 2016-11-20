@@ -26,6 +26,10 @@ public class HentaiBoxProvider extends MangaProvider {
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};
     private static final String sortUrls[] = {"shownew=new", "shownew=rating", "random=Manga"};
 
+    public HentaiBoxProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

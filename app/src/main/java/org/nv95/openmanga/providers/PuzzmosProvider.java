@@ -36,6 +36,10 @@ public class PuzzmosProvider extends MangaProvider {
             "robotlar", "shounen", "shoujo", "romantizm", "seinen", "smut", "spor", "şeytanlar", "tarihi", "trajedi", "uzay",
             "vampir", "webtoon", "yetişkin", "yuri", "yaoi"};
 
+    public PuzzmosProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

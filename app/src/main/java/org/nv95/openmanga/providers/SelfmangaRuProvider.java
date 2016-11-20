@@ -1,5 +1,6 @@
 package org.nv95.openmanga.providers;
 
+import android.content.Context;
 import android.text.Html;
 
 import org.json.JSONArray;
@@ -20,6 +21,10 @@ import java.util.ArrayList;
  */
 
 public class SelfmangaRuProvider extends ReadmangaRuProvider {
+
+    public SelfmangaRuProvider(Context context) {
+        super(context);
+    }
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {

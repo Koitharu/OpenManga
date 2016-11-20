@@ -41,4 +41,14 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:contentDescription="@string/action_settings"
+        android:padding="2dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_preferences_dark" />
+
 </LinearLayout>

@@ -42,6 +42,9 @@
         <activity
             android:name=".activities.ReadActivity2" />
         <activity
+            android:label="@string/action_settings"
+            android:name=".activities.ProviderPreferencesActivity" />
+        <activity
             android:name=".activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/downloads_queue"

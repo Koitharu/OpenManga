@@ -28,6 +28,7 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
@@ -240,7 +241,7 @@ public class DownloadService extends Service {
             MangaProvider provider;
             final MangaStore store = new MangaStore(DownloadService.this);
             try {
-                provider = (MangaProvider) mDownload.provider.newInstance();
+                provider = MangaProviderManager.instanceProvider(DownloadService.this, mDownload.provider);
             } catch (Exception e) {
                 FileLogger.getInstance().report(e);
                 return null;
@@ -482,7 +483,7 @@ public class DownloadService extends Service {
             publishProgress(0, params.length);
             for (int i=0;i<params.length && !isCancelled();i++) {
                 try {
-                    provider = (MangaProvider) params[i].provider.newInstance();
+                    provider = MangaProviderManager.instanceProvider(mContext, params[i].provider);
                     if (provider instanceof LocalMangaProvider) {
                         summaries[i] = null;
                     } else {

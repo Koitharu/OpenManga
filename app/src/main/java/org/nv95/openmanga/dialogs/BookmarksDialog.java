@@ -192,7 +192,7 @@ public class BookmarksDialog implements View.OnClickListener {
                     if (!MangaProviderManager.checkConnection(mActivity)) {
                         return new Pair<>(1, null);
                     }
-                    provider = (MangaProvider) info.provider.newInstance();
+                    provider = MangaProviderManager.instanceProvider(mActivity, info.provider);
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
                 intent = new Intent(mActivity, ReadActivity2.class);

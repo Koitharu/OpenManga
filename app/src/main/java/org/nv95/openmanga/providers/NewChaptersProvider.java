@@ -11,6 +11,7 @@ import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.lang.ref.WeakReference;
@@ -237,7 +238,7 @@ public class NewChaptersProvider {
                     continue;
                 }
                 try {
-                    provider = (MangaProvider) o.provider.newInstance();
+                    provider = MangaProviderManager.instanceProvider(mContext, o.provider);
                     key = o.hashCode();
                     MangaUpdateInfo upd = new MangaUpdateInfo(key);
                     upd.mangaName = o.name;

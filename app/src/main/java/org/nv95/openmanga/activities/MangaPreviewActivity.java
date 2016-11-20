@@ -34,6 +34,7 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
@@ -350,12 +351,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
         @Override
         protected Pair<MangaSummary, String> doInBackground(Void... params) {
             try {
-                MangaProvider provider;
-                if (mMangaSummary.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstance(MangaPreviewActivity.this);
-                } else {
-                    provider = (MangaProvider) mMangaSummary.provider.newInstance();
-                }
+                MangaProvider provider = MangaProviderManager.instanceProvider(MangaPreviewActivity.this, mMangaSummary.provider);
                 MangaSummary ms = provider.getDetailedInfo(mMangaSummary);
                 String extra = null;
                 if (provider instanceof LocalMangaProvider) {

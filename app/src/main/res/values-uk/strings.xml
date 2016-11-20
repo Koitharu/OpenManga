@@ -210,7 +210,6 @@
     <string name="storage_upgrading">Оновлення локальних даних…</string>
     <string name="no_network_connection">Підключення до мережі відсутнє</string>
     <string name="no_network_connection_html"><![CDATA[Підключення до мережі відсутнє.<br/>Ввімкніть <a href=\"settings:network\">передачу даних</a> або <a href=\"settings:wifi\">Wi-Fi</a>.<br/><br/><h4><a href=\"app:update\">Спробувати знову</a></h4>]]></string>
-    <string name="error_loadimage_html" formatted="false"><![CDATA[Не вдалося завантажити зображення<br/><h3><a href=\"app:retry\">Повторити</a></h3><br/><br/>Подробиці:<br/>%s]]></string>
     <string name="sources">Джерела</string>
     <string name="full_match">Повна відповідність</string>
     <string name="wait_for_complete">Дочекайтесь завершення операції</string>

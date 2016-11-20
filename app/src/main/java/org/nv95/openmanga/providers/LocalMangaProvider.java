@@ -41,6 +41,7 @@ public class LocalMangaProvider extends MangaProvider {
     private final MangaStore mStore;
 
     public LocalMangaProvider(Context context) {
+        super(context);
         mContext = context;
         mStore = new MangaStore(context);
     }
@@ -201,7 +202,7 @@ public class LocalMangaProvider extends MangaProvider {
             if (cursor.moveToFirst()) {
                 String providerName = cursor.getString(0);
                 if (providerName != null && providerName.length() != 0) {
-                    MangaProvider provider = MangaProviderManager.instanceNewProvider(providerName);
+                    MangaProvider provider = MangaProviderManager.instanceProvider(mContext, providerName);
                     if (provider != null) {
                         String link = cursor.getString(1);
                         MangaInfo mi = new MangaInfo();
@@ -313,7 +314,8 @@ public class LocalMangaProvider extends MangaProvider {
                 -1,
                 context.getString(R.string.local_storage),
                 LocalMangaProvider.class,
-                Languages.MULTI
+                Languages.MULTI,
+                0
         );
     }
 }

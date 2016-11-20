@@ -38,7 +38,8 @@ public class FavouritesProvider extends MangaProvider {
     private final StorageHelper mStorageHelper;
     private final Context mContext;
 
-    public FavouritesProvider(Context context) {
+    private FavouritesProvider(Context context) {
+        super(context);
         mContext = context;
         mStorageHelper = new StorageHelper(context);
     }
@@ -82,7 +83,7 @@ public class FavouritesProvider extends MangaProvider {
                     manga.preview = cursor.getString(4);
                     manga.path = cursor.getString(5);
                     try {
-                        manga.provider = Class.forName(cursor.getString(6));
+                        manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
                     } catch (ClassNotFoundException e) {
                         manga.provider = LocalMangaProvider.class;
                     }

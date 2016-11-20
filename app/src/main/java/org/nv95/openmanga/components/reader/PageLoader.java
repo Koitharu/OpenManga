@@ -1,5 +1,6 @@
 package org.nv95.openmanga.components.reader;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -24,9 +25,11 @@ public class PageLoader implements PageLoadListener {
     private final ArrayList<PageWrapper> mWrappers;
     private int mActiveLoads;
     private int mShadowLoads;
+    private final Context mContext;
 
 
-    public PageLoader() {
+    public PageLoader(Context context) {
+        mContext = context;
         mListeners = new HashSet<>(5);
         mWrappers = new ArrayList<>();
         mActiveLoads = 0;
@@ -56,7 +59,7 @@ public class PageLoader implements PageLoadListener {
         PageWrapper wrapper = mWrappers.get(pos);
         if (wrapper.mState == PageWrapper.STATE_QUEUED) {
             Log.d("PGL", "#current " + wrapper.toString());
-            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(false);
+            wrapper.mTaskRef = new PageLoadTask(mContext, wrapper, this).start(false);
         }
         return wrapper;
     }
@@ -73,7 +76,7 @@ public class PageLoader implements PageLoadListener {
             }
         }
         if (wrapper != null) {
-            wrapper.mTaskRef = new PageLoadTask(wrapper, this).start(true);
+            wrapper.mTaskRef = new PageLoadTask(mContext, wrapper, this).start(true);
         }
     }
 

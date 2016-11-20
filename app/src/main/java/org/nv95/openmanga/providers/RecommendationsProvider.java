@@ -34,7 +34,8 @@ public class RecommendationsProvider extends MangaProvider {
     private final StorageHelper mStorageHelper;
     private final boolean[] mConfig = new boolean[3];
 
-    public RecommendationsProvider(Context context) {
+    private RecommendationsProvider(Context context) {
+        super(context);
         mContext = context;
         mProviderManager = new MangaProviderManager(mContext);
         mStorageHelper = new StorageHelper(mContext);

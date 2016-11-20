@@ -40,6 +40,10 @@ public class MangaFoxProvider extends MangaProvider {
             "supernatural", "tragedy", "webtoons", "yaoi", "yuri"
     };
 
+    public MangaFoxProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

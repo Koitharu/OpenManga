@@ -65,7 +65,6 @@
     <string name="drawer_open">Navigasyon penceresini aç</string>
     <string name="enabled">Açık</string>
     <string name="error">Bir hata oluştu</string>
-    <string formatted="false" name="error_loadimage_html">Resim yüklenemedi&lt;br/>&lt;h3>&lt;a href=\"app:retry\">Tekrar deneyin&lt;/a>&lt;/h3>&lt;br/>&lt;br/>Detaylar:&lt;br/>%s</string>
     <string name="export_file">Dışarı aktar</string>
     <string name="favourites_categories">Favori kategoriler</string>
     <string name="favourites_categories_default">Şuan okuduklarım, Sonra okuyacaklarım, Önceden okuduklarım</string>

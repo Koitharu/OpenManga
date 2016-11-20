@@ -1,6 +1,7 @@
 package org.nv95.openmanga.providers.staff;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.XmlRes;
 
 import org.nv95.openmanga.providers.MangaProvider;
 
@@ -14,12 +15,16 @@ public class ProviderSummary {
     @NonNull
     public Class<? extends MangaProvider> aClass;
     public int lang;
+    @XmlRes
+    public final int preferences;
 
-    public ProviderSummary(int id, String name, @NonNull Class<? extends MangaProvider> aClass, int lang) {
+    public ProviderSummary(int id, String name, @NonNull Class<? extends MangaProvider> aClass,
+                           int lang, @XmlRes int preferences) {
         this.id = id;
         this.name = name;
         this.aClass = aClass;
         this.lang = lang;
+        this.preferences = preferences;
     }
 
     @Override

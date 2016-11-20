@@ -33,7 +33,8 @@ public class HistoryProvider extends MangaProvider {
     private final StorageHelper mStorageHelper;
     private final Context mContext;
 
-    public HistoryProvider(Context context) {
+    private HistoryProvider(Context context) {
+        super(context);
         mContext = context;
         mStorageHelper = new StorageHelper(context);
     }
@@ -62,7 +63,7 @@ public class HistoryProvider extends MangaProvider {
                 last.preview = cursor.getString(4);
                 last.path = cursor.getString(5);
                 try {
-                    last.provider = Class.forName(cursor.getString(6));
+                    last.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
                 } catch (ClassNotFoundException e) {
                     last.provider = LocalMangaProvider.class;
                 }
@@ -104,7 +105,7 @@ public class HistoryProvider extends MangaProvider {
                 manga.preview = cursor.getString(4);
                 manga.path = cursor.getString(5);
                 try {
-                    manga.provider = Class.forName(cursor.getString(6));
+                    manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
                 } catch (ClassNotFoundException e) {
                     manga.provider = LocalMangaProvider.class;
                 }
@@ -220,7 +221,7 @@ public class HistoryProvider extends MangaProvider {
             manga.preview = cursor.getString(4);
             manga.path = cursor.getString(5);
             try {
-                manga.provider = Class.forName(cursor.getString(6));
+                manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
             } catch (ClassNotFoundException e) {
                 manga.provider = LocalMangaProvider.class;
             }

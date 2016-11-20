@@ -1,5 +1,6 @@
 package org.nv95.openmanga.components.reader;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -29,8 +30,8 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
 
     private final PageLoader mLoader;
 
-    public ReaderAdapter() {
-        mLoader = new PageLoader();
+    public ReaderAdapter(Context context) {
+        mLoader = new PageLoader(context);
         setHasStableIds(true);
     }
 

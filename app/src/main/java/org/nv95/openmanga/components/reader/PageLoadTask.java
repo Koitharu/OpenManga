@@ -1,5 +1,6 @@
 package org.nv95.openmanga.components.reader;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
@@ -7,6 +8,9 @@ import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.nostra13.universalimageloader.utils.IoUtils;
+
+import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -24,10 +28,12 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
     @Nullable
     private PageLoadListener mListener;
     private boolean mIsShadow;
+    private final MangaProvider mProvider;
 
-    public PageLoadTask(PageWrapper pageWrapper, @Nullable PageLoadListener listener) {
+    public PageLoadTask(Context context, PageWrapper pageWrapper, @Nullable PageLoadListener listener) {
         mPageWrapper = pageWrapper;
         mListener = listener;
+        mProvider = MangaProviderManager.instanceProvider(context, mPageWrapper.page.provider);
     }
 
     public WeakReference<PageLoadTask> start(boolean shadow) {
@@ -53,7 +59,7 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
             if (mPageWrapper.page.path.startsWith("/")) {
                 return mPageWrapper.page.path;
             }
-            String url =  mPageWrapper.page.provider.newInstance().getPageImage(mPageWrapper.page);
+            String url = mProvider.getPageImage(mPageWrapper.page);
             DiskCache cache = ImageLoader.getInstance().getDiskCache();
             File file = DiskCacheUtils.findInCache(url, cache);
             if (file != null) {

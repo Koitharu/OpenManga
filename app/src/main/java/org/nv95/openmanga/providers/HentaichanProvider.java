@@ -27,6 +27,10 @@ public class HentaichanProvider extends MangaProvider {
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_rating, R.string.sort_random};
     protected static final String sortUrls[] = {"manga/new", "mostdownloads&sort=manga", "mostfavorites&sort=manga", "manga/random"};
 
+    public HentaichanProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();

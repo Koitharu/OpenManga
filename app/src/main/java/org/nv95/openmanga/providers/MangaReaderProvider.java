@@ -24,6 +24,10 @@ public class MangaReaderProvider extends MangaProvider {
     protected static final int sorts[] = {R.string.sort_popular};
     protected static final String sortUrls[] = {""};
 
+    public MangaReaderProvider(Context context) {
+        super(context);
+    }
+
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
