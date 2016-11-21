@@ -1,5 +1,6 @@
 package org.nv95.openmanga.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
+import android.view.LayoutInflater;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -35,9 +36,9 @@ public class ThumbnailsDialog implements DialogInterface.OnDismissListener, Page
     @Nullable
     private NavigationListener mNavigationListener;
 
+    @SuppressLint("InflateParams")
     public ThumbnailsDialog(Context context, PageLoader loader) {
-        mRecyclerView = new RecyclerView(context);
-        mRecyclerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mRecyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.dialog_thumbs, null, false);
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, LayoutUtils.getOptimalColumnsCount(context.getResources(), ThumbSize.THUMB_SIZE_MEDIUM)));
         mDialog = new Dialog(context, R.style.FullScreenDialog);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
