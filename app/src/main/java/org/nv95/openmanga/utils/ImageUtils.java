@@ -51,6 +51,7 @@ public class ImageUtils {
                     .defaultDisplayImageOptions(getImageLoaderOptionsBuilder().build())
                     .diskCacheSize(cacheMb * 1024 * 1024)        //100 Mb
                     .diskCacheFileCount(100)
+                    .imageDownloader(new ExImageDownloader(context))
                     .memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
                     .build();
 
@@ -72,7 +73,7 @@ public class ImageUtils {
         }
     }
 
-    public static DisplayImageOptions.Builder getImageLoaderOptionsBuilder() {
+    private static DisplayImageOptions.Builder getImageLoaderOptionsBuilder() {
         return new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)

@@ -1,7 +1,9 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +15,11 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.CookieParser;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -24,19 +30,25 @@ import java.util.regex.Pattern;
  */
 public class EHentaiProvider extends MangaProvider {
 
-    protected static final String DEF_COOKIE = "nw=1; uconfig=tl_m-uh_y-rc_0-cats_0-xns_0-ts_m-tr_2-prn_y-dm_t-ar_0-rx_0-ry_0-ms_n-mt_n-cs_a-to_a-pn_0-sc_0-sa_y-oi_n-qb_n-tf_n-hp_-hk_-xl_";
-    protected static final int genres[] = {R.string.genre_all, R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset, R.string.genre_cosplay, R.string.genre_asianporn, R.string.genre_misc};
-    protected static final String genreUrls[] = {"f_doujinshi", "f_manga", "f_artistcg", "f_gamecg", "f_western", "f_non-h", "f_imageset", "f_cosplay", "f_asianporn", "f_misc"};
+    private static final String DEF_COOKIE = "nw=1; uconfig=dm_t";
+    private static final int genres[] = {R.string.genre_all, R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset, R.string.genre_cosplay, R.string.genre_asianporn, R.string.genre_misc};
+    private static final String genreUrls[] = {"f_doujinshi", "f_manga", "f_artistcg", "f_gamecg", "f_western", "f_non-h", "f_imageset", "f_cosplay", "f_asianporn", "f_misc"};
+    @NonNull
+    private static String sAuthCookie = "";
+    private final String mDomain;
 
     public EHentaiProvider(Context context) {
         super(context);
+        mDomain = !TextUtils.isEmpty(getStringPreference("login", ""))
+                && !TextUtils.isEmpty(getStringPreference("password", ""))
+                && getBooleanPreference("exhentai", false) ? "http://exhentai.org/" : "http://g.e-hentai.org/";
     }
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://g.e-hentai.org/?page=" + page +
-                (genre == 0 ? "" : "&" + genreUrls[genre - 1] + "=on&f_apply=Apply+Filter"), DEF_COOKIE);
+        Document document = getPage(mDomain + "?page=" + page +
+                (genre == 0 ? "" : "&" + genreUrls[genre - 1] + "=on&f_apply=Apply+Filter"), getCookie());
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
@@ -50,7 +62,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
             manga.rating = parseRating(o.select("div.id43").first().attr("style"));
-            manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
+            manga.path = concatUrl(mDomain, o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
             manga.id = manga.path.hashCode();
@@ -60,17 +72,6 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     private byte parseRating(String r) {
-        //background-position:0px -1px; opacity:1; margin-top:2px - 5.0 - 100
-        //background-position:0px -21px; opacity:1; margin-top:2px - 4.5 - 90
-        //background-position:-16px -1px; opacity:1; margin-top:2px - 4.0 - 80
-        //background-position:-16px -21px; opacity:1; margin-top:2px - 3.5 - 70
-        //background-position:-32px -1px; opacity:1; margin-top:2px - 3.0 - 60
-        //background-position:-32px -21px; opacity:1; margin-top:2px - 2.5 - 50
-        //background-position:-48px -1px; opacity:1; margin-top:2px - 2.0 - 40
-        //background-position:-48px -21px; opacity:1; margin-top:2px - 1.5 - 30
-        //background-position:-64px -1px; opacity:1; margin-top:2px - 1.0 - 20
-        //background-position:-64px -21px; opacity:1; margin-top:2px - 0.5 - 10
-        //background-position:-80px -1px; opacity:1; margin-top:2px - 0.0 - 0
         r = r.substring(
                 r.indexOf(":") + 1,
                 r.indexOf(";")
@@ -106,7 +107,7 @@ public class EHentaiProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            Document document = getPage(mangaInfo.path, DEF_COOKIE);
+            Document document = getPage(mangaInfo.path, getCookie());
             Element body = document.body();
             StringBuilder builder = new StringBuilder();
             for (Element o : body.getElementById("taglist").select("tr")) {
@@ -121,7 +122,7 @@ public class EHentaiProvider extends MangaProvider {
             for (Element o : els.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = mangaInfo.name + " [" + o.text() + "]";
-                chapter.readLink = concatUrl("http://g.e-hentai.org/", o.attr("href"));
+                chapter.readLink = concatUrl(mDomain, o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -138,11 +139,11 @@ public class EHentaiProvider extends MangaProvider {
         String s;
         MangaPage page;
         try {
-            Document document = getPage(readLink, DEF_COOKIE);
+            Document document = getPage(readLink, getCookie());
             Elements elements = document.body().select("div.gdtm");
             for (Element o : elements) {
                 s = o.select("a").first().attr("href");
-                page = new MangaPage(concatUrl("http://g.e-hentai.org/", s));
+                page = new MangaPage(concatUrl(mDomain, s));
                 page.provider = EHentaiProvider.class;
                 pages.add(page);
             }
@@ -155,8 +156,8 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.path, DEF_COOKIE);
-            return concatUrl("http://g.e-hentai.org/", document.body().select("img").get(4).attr("src"));
+            Document document = getPage(mangaPage.path, getCookie());
+            return concatUrl(mDomain, document.body().select("img").get(4).attr("src"));
         } catch (Exception e) {
             return null;
         }
@@ -164,13 +165,13 @@ public class EHentaiProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return "E-Hentai";
+        return mDomain.length() == 20 ? "ExHentai" : "E-Hentai";
     }
 
     @Override
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://g.e-hentai.org/?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", DEF_COOKIE);
+        Document document = getPage(mDomain + "?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", getCookie());
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
@@ -181,7 +182,7 @@ public class EHentaiProvider extends MangaProvider {
             manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
             manga.genres = "";
             manga.rating = parseRating(o.select("div.id43").first().attr("style"));
-            manga.path = concatUrl("http://g.e-hentai.org/", o.select("a").first().attr("href"));
+            manga.path = concatUrl(mDomain, o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
             manga.provider = EHentaiProvider.class;
             manga.id = manga.path.hashCode();
@@ -222,5 +223,49 @@ public class EHentaiProvider extends MangaProvider {
             sb.append(t);
         }
         return sb.toString();
+    }
+
+    private String getCookie() {
+        if ("".equals(sAuthCookie)) {
+            auth();
+        }
+        return sAuthCookie + DEF_COOKIE;
+    }
+
+    private boolean auth() {
+        String login = getStringPreference("login", "");
+        String password = getStringPreference("password", "");
+        return !TextUtils.isEmpty(login) && !TextUtils.isEmpty(password) && auth(login, password);
+    }
+
+    public static String getAuthCookie() {
+        return sAuthCookie;
+    }
+
+    public static boolean auth(String login, String password) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL("https://forums.e-hentai.org/index.php?act=Login&CODE=01").openConnection();
+            con.setConnectTimeout(15000);
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setInstanceFollowRedirects(true);
+            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            String query = "referer=https://forums.e-hentai.org/index.php&UserName="
+                    + URLEncoder.encode(login, "UTF-8") + "&PassWord=" + URLEncoder.encode(password, "UTF-8") + "&CookieDate=1";
+            out.writeBytes(query);
+            out.flush();
+            out.close();
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String cookie = new CookieParser(con.getHeaderFields().get("Set-Cookie")).toString("ipb_session_id", "ipb_member_id", "ipb_pass_hash");
+                sAuthCookie = "yay=louder; " + cookie.trim() + "; igneous=fc045b695; "; //some magic
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

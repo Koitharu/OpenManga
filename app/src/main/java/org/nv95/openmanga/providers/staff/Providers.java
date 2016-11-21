@@ -30,7 +30,7 @@ public class Providers {
             new ProviderSummary(5, "MangaFox", MangaFoxProvider.class, Languages.EN, 0),
             new ProviderSummary(6, "MangaTown", MangaTownProvider.class, Languages.EN, 0),
             new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN, 0),
-            new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI, 0),
+            new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI, R.xml.pref_ehentai),
             new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR, 0),
             new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, 0),
             new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI, 0),

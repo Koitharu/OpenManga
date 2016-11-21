@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:title="Login"
+        android:key="login"
+        android:defaultValue="" />
+    <EditTextPreference
+        android:title="Password"
+        android:key="password"
+        android:inputType="textPassword"
+        android:dependency="login"
+        android:defaultValue="" />
+    <CheckBoxPreference
+        android:title="Use ExHentai domain"
+        android:dependency="password"
+        android:key="exhentai"
+        android:defaultValue="false" />
+</PreferenceScreen>
