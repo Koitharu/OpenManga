@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 95
-        versionName "3.0 preview"
+        versionCode 97
+        versionName "3.0 preview 2"
     }
 
     signingConfigs {

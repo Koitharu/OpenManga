@@ -20,6 +20,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.LocalMoveDialog;
+import org.nv95.openmanga.dialogs.StorageSelectDialog;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
@@ -122,7 +123,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 if (!checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     return true;
                 }
-                new DirSelectDialog(this)
+                new StorageSelectDialog(this)
                         .setDirSelectListener(new DirSelectDialog.OnDirSelectListener() {
                             @Override
                             public void onDirSelected(final File dir) {

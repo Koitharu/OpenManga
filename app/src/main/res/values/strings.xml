@@ -297,4 +297,9 @@
     <string name="bookmark_pos" formatted="false">Ch. %d page %d</string><!--Chapter %d page %d-->
     <string name="bookmark_removed">Bookmark removed</string>
     <string name="bookmark_added">Bookmark added</string>
+    <string name="another">Another…</string>
+    <string name="custom_path">Custom path</string>
+    <string name="size_free" formatted="false">%s free</string>
+    <string name="pick_dir">Pick directory</string>
+    <string name="select_storage">Select storage</string>
 </resources>

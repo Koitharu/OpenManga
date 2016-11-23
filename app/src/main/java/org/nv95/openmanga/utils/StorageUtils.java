@@ -12,17 +12,23 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.nv95.openmanga.items.ThumbSize;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by admin on 02.09.16.
@@ -194,5 +200,60 @@ public class StorageUtils {
         full.recycle();
         thumb.recycle();
         return res;
+    }
+
+    public static HashSet<String> getExternalMounts() {
+        final HashSet<String> out = new HashSet<String>();
+        String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
+        String s = "";
+        try {
+            final Process process = new ProcessBuilder().command("mount")
+                    .redirectErrorStream(true).start();
+            process.waitFor();
+            final InputStream is = process.getInputStream();
+            final byte[] buffer = new byte[1024];
+            while (is.read(buffer) != -1) {
+                s = s + new String(buffer);
+            }
+            is.close();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        // parse output
+        final String[] lines = s.split("\n");
+        for (String line : lines) {
+            if (!line.toLowerCase(Locale.US).contains("asec")) {
+                if (line.matches(reg)) {
+                    String[] parts = line.split(" ");
+                    for (String part : parts) {
+                        if (part.startsWith("/"))
+                            if (!part.toLowerCase(Locale.US).contains("vold"))
+                                out.add(part);
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
+    public static List<File> getAvailableStorages(Context context) {
+        final String appcat = TextUtils.join(File.separator, new String[]{"Android","data", context.getPackageName()});
+        File storageRoot = new File("/storage");
+        File[] storages = storageRoot.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                File appRoot = new File(file, appcat);
+                return appRoot.exists() && appRoot.canWrite();
+            }
+        });
+        return Arrays.asList(storages);
+    }
+
+    public static File getFilesDir(Context context, File root, String type) {
+        final String appcat = TextUtils.join(File.separator, new String[]{"Android","data", context.getPackageName(), "files", type});
+        File file = new File(root, appcat);
+        file.mkdirs();
+        return file;
     }
 }
