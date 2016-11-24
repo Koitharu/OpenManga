@@ -67,13 +67,14 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
             }
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.connect();
+            final int contentLength = connection.getContentLength();
             InputStream is = connection.getInputStream();
 
             cache.save(url, is, new IoUtils.CopyListener() {
                 @Override
-                public boolean onBytesCopied(int current, int total) {
-                    int percent = total > 0 ? current * 100 / total : 0;
-                    if (total > 0) {
+                public boolean onBytesCopied(int current, int total) {  //total is incorrect
+                    int percent = contentLength > 0 ? current * 100 / contentLength : 0;
+                    if (contentLength > 0) {
                         publishProgress(percent);
                     }
                     return !isCancelled() || percent > 80;
