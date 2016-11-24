@@ -67,44 +67,6 @@ public class DownloadService extends Service {
 
     public static void start(Context context, MangaSummary manga, @StringRes int dialogTitle) {
         new ChaptersSelectDialog(context).showSave(manga, dialogTitle);
-        /*final int len = manga.chapters.size();
-        final MangaSummary mangaCopy = new MangaSummary(manga);
-        mangaCopy.chapters.clear();
-        final SparseBooleanArray checked = new SparseBooleanArray(len);
-        boolean[] defs = new boolean[len];
-        Arrays.fill(defs, false);
-        new BottomSheet(context)
-                .setMultiChoiceItems(manga.chapters.getNames(), defs)
-                .addHeader(context.getString(dialogTitle),
-                        R.string.action_save, R.string.check_all, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        dialog.dismiss();
-                                        for (int i = 0;i < len;i++) {
-                                            if (checked.get(i, false)) {
-                                                mangaCopy.chapters.add(manga.chapters.get(i));
-                                            }
-                                        }
-                                        startNoConfirm(context, mangaCopy);
-                                        break;
-                                    case DialogInterface.BUTTON_NEUTRAL:
-                                        ((BottomSheet) dialog).checkAll(true);
-                                        for (int i = 0;i < len;i++) {
-                                            checked.put(i, true);
-                                        }
-                                        break;
-                                }
-                                                            }
-                        })
-                .setOnItemCheckListener(new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        checked.put(which, isChecked);
-                    }
-                })
-                .show();*/
     }
 
     public static void startNoConfirm(Context context, MangaSummary manga) {
@@ -217,7 +179,7 @@ public class DownloadService extends Service {
                             paused ? R.drawable.sym_resume : R.drawable.sym_pause,
                             paused ? R.string.resume : R.string.pause)
                     .icon(paused ? R.drawable.ic_stat_paused : android.R.drawable.stat_sys_download)
-                    .text(R.string.saving_manga)
+                    .text(mDownload.name)
                     .update(NOTIFY_ID);
         }
 
@@ -238,14 +200,12 @@ public class DownloadService extends Service {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            MangaProvider provider;
-            final MangaStore store = new MangaStore(DownloadService.this);
-            try {
-                provider = MangaProviderManager.instanceProvider(DownloadService.this, mDownload.provider);
-            } catch (Exception e) {
-                FileLogger.getInstance().report(e);
+            MangaProvider provider = MangaProviderManager.instanceProvider(DownloadService.this, mDownload.provider);
+            if (provider == null) {
+                FileLogger.getInstance().report("Cannot instantiate provider!");
                 return null;
             }
+            final MangaStore store = new MangaStore(DownloadService.this);
             final int mangaId = store.pushManga(mDownload);
             //собственно, скачивание
             ArrayList<MangaPage> pages;
@@ -448,6 +408,15 @@ public class DownloadService extends Service {
             DownloadTask task = mTaskReference.get();
             if (task != null) {
                 task.setPaused(paused);
+            }
+        }
+
+        public boolean removeFromQueue(int pos) {
+            if (mDownloads.get(pos).state == DownloadInfo.STATE_IDLE) {
+                mDownloads.remove(pos);
+                return true;
+            } else {
+                return false;
             }
         }
     }

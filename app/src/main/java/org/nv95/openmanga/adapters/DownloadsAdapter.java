@@ -17,10 +17,12 @@ package org.nv95.openmanga.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +36,13 @@ import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 03.01.16.
  */
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadHolder>
-        implements ServiceConnection, DownloadService.OnProgressUpdateListener {
+        implements ServiceConnection, DownloadService.OnProgressUpdateListener, View.OnClickListener {
 
     private final Intent mIntent;
     @Nullable
@@ -78,8 +81,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     @Override
     public DownloadHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new DownloadHolder(LayoutInflater.from(parent.getContext())
+        DownloadHolder holder = new DownloadHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_download, parent, false));
+        holder.imageButtonRemove.setImageDrawable(LayoutUtils.getThemedIcons(parent.getContext(), R.drawable.ic_clear_dark)[0]);
+        holder.imageButtonRemove.setOnClickListener(this);
+        holder.imageButtonRemove.setTag(holder);
+        return holder;
     }
 
     @Override
@@ -128,7 +135,30 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         }
     }
 
-    protected static class DownloadHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onClick(View view) {
+        Object tag = view.getTag();
+        if (tag != null && tag instanceof DownloadHolder) {
+            final DownloadHolder holder = (DownloadHolder) tag;
+            new AlertDialog.Builder(view.getContext())
+                    .setMessage(view.getContext().getString(R.string.download_unqueue_confirm, holder.mTextViewTitle.getText()))
+                    .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            int pos = holder.getAdapterPosition();
+                            if (mBinder != null && mBinder.removeFromQueue(pos)) {
+                                notifyItemRemoved(pos);
+                            }
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create()
+                    .show();
+        }
+    }
+
+    static class DownloadHolder extends RecyclerView.ViewHolder {
+
         private final ImageView mImageView;
         private final TextView mTextViewTitle;
         private final TextView mTextViewSubtitle;
@@ -136,8 +166,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         private final TextView mTextViewPercent;
         private final ProgressBar mProgressBarPrimary;
         private final ProgressBar mProgressBarSecondary;
+        final ImageView imageButtonRemove;
 
-        public DownloadHolder(View itemView) {
+        DownloadHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.imageView);
             mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
@@ -146,6 +177,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             mProgressBarPrimary = (ProgressBar) itemView.findViewById(R.id.progressBar_primary);
             mProgressBarSecondary = (ProgressBar) itemView.findViewById(R.id.progressBar_secondary);
             mTextViewPercent = (TextView) itemView.findViewById(R.id.textView_percent);
+            imageButtonRemove = (ImageView) itemView.findViewById(R.id.imageButtonRemove);
         }
 
         @SuppressLint("SetTextI18n")
@@ -155,12 +187,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             switch (data.state) {
                 case DownloadInfo.STATE_IDLE:
                     mTextViewState.setText(R.string.queue);
+                    imageButtonRemove.setVisibility(View.VISIBLE);
                     break;
                 case DownloadInfo.STATE_FINISHED:
                     mTextViewState.setText(R.string.completed);
+                    imageButtonRemove.setVisibility(View.GONE);
                     break;
                 case DownloadInfo.STATE_RUNNING:
                     mTextViewState.setText(R.string.saving_manga);
+                    imageButtonRemove.setVisibility(View.GONE);
                     break;
             }
             if (data.pos < data.max) {

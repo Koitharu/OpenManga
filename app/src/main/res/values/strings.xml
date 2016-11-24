@@ -302,4 +302,5 @@
     <string name="size_free" formatted="false">%s free</string>
     <string name="pick_dir">Pick directory</string>
     <string name="select_storage">Select storage</string>
+    <string name="download_unqueue_confirm" formatted="false">Remove \"%s\" from download queue?</string>
 </resources>
