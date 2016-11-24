@@ -321,7 +321,7 @@ public class MainActivity extends BaseAppActivity implements
         switch (item.getItemId()) {
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class)
-                        .putExtra(FileSelectActivity.EXTRA_FILTER, "cbz"), REQUEST_IMPORT);
+                        .putExtra(FileSelectActivity.EXTRA_FILTER, "cbz;zip"), REQUEST_IMPORT);
                 return true;
             case R.id.action_goto:
                 new PageNumberDialog(this)

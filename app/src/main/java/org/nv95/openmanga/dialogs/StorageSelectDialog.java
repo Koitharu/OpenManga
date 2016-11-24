@@ -28,8 +28,14 @@ public class StorageSelectDialog implements DialogInterface.OnClickListener, Sim
     private final SimpleAdapter mAdapter;
     private final List<File> mStorages;
     private DirSelectDialog.OnDirSelectListener mDirSelectListener;
+    private final boolean mOnlyRoots;
 
-    public StorageSelectDialog(final Context context) {
+    public StorageSelectDialog(Context context) {
+        this(context, false);
+    }
+
+    public StorageSelectDialog(final Context context, boolean onlyRoots) {
+        mOnlyRoots = onlyRoots;
         mStorages = StorageUtils.getAvailableStorages(context);
         final Drawable[] icons = LayoutUtils.getThemedIcons(
                 context,
@@ -46,11 +52,13 @@ public class StorageSelectDialog implements DialogInterface.OnClickListener, Sim
             m.put("icon", icons[0]);
             data.add(m);
         }
-        m = new HashMap<>();
-        m.put("title", context.getString(R.string.custom_path));
-        m.put("subtitle", context.getString(R.string.pick_dir));
-        m.put("icon", icons[1]);
-        data.add(m);
+        if (!onlyRoots) {
+            m = new HashMap<>();
+            m.put("title", context.getString(R.string.custom_path));
+            m.put("subtitle", context.getString(R.string.pick_dir));
+            m.put("icon", icons[1]);
+            data.add(m);
+        }
         mAdapter = new SimpleAdapter(
                 context,
                 data,
@@ -83,8 +91,11 @@ public class StorageSelectDialog implements DialogInterface.OnClickListener, Sim
                     .setDirSelectListener(mDirSelectListener)
                     .show();
         } else if (mDirSelectListener != null) {
-            mDirSelectListener.onDirSelected(StorageUtils.getFilesDir(mDialog.getContext(),
-                    mStorages.get(position), "saved"));
+            File dir = mStorages.get(position);
+            if (!mOnlyRoots) {
+                dir = StorageUtils.getFilesDir(mDialog.getContext(), dir, "saved");
+            }
+            mDirSelectListener.onDirSelected(dir);
         }
     }
 
