@@ -13,8 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="56dp"
-        android:paddingRight="56dp"
         android:orientation="vertical">
 
         <TextView
@@ -25,12 +23,13 @@
             android:textAllCaps="true"
             android:visibility="gone" />
 
-        <ProgressBar
+        <org.nv95.openmanga.components.AppCompatProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="8dp"
             android:indeterminate="true" />
 
     </LinearLayout>
