@@ -24,7 +24,7 @@ public class Providers {
     private static final ProviderSummary[] mAllProviders = {
             new ProviderSummary(0, "ReadManga", ReadmangaRuProvider.class, Languages.RU, R.xml.pref_readmanga),
             new ProviderSummary(1, "MintManga", MintMangaProvider.class, Languages.RU, R.xml.pref_readmanga),
-            new ProviderSummary(2, "Манга-тян", MangachanProvider.class, Languages.RU, 0),
+            new ProviderSummary(2, "Манга-тян", MangachanProvider.class, Languages.RU, R.xml.pref_anychan),
             new ProviderSummary(3, "Desu.me", DesuMeProvider.class, Languages.RU, 0),
             new ProviderSummary(4, "SelfManga", SelfmangaRuProvider.class, Languages.RU, 0),
             new ProviderSummary(5, "MangaFox", MangaFoxProvider.class, Languages.EN, 0),
@@ -32,9 +32,9 @@ public class Providers {
             new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN, 0),
             new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI, R.xml.pref_ehentai),
             new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR, 0),
-            new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, 0),
+            new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, R.xml.pref_anychan),
             new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI, 0),
-            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, 0)
+            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, R.xml.pref_anychan)
     };
 
     public static ProviderSummary[] getAll() {

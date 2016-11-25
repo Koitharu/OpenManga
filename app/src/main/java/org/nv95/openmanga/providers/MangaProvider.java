@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -83,7 +84,9 @@ public abstract class MangaProvider {
     protected static Document getPage(String url, String cookie) throws Exception {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setDoOutput(true);
-        con.setRequestProperty("Cookie", cookie);
+        if (!TextUtils.isEmpty(cookie)) {
+            con.setRequestProperty("Cookie", cookie);
+        }
         con.setConnectTimeout(15000);
         InputStream is = con.getInputStream();
         return Jsoup.parse(is, con.getContentEncoding(), url);

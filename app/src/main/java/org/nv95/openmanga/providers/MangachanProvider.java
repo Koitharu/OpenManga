@@ -2,6 +2,7 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
@@ -13,8 +14,14 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -25,14 +32,19 @@ public class MangachanProvider extends MangaProvider {
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};
     protected static final String sortUrls[] = {"manga/new", "mostfavorites", "manga/random"};
 
+    static String sAuthCookie = null;
+
     public MangachanProvider(Context context) {
         super(context);
+        if ("".equals(sAuthCookie)) {
+            sAuthCookie = null;
+        }
     }
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.ru/" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage("http://mangachan.ru/" + sortUrls[sort] + "?offset=" + page * 20, getAuthCookie());
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -60,7 +72,7 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            final Document document = getPage(mangaInfo.path);
+            final Document document = getPage(mangaInfo.path, getAuthCookie());
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
             summary.preview = concatUrl("http://mangachan.ru/", e.getElementById("cover").attr("src"));
@@ -85,7 +97,7 @@ public class MangachanProvider extends MangaProvider {
     public ArrayList<MangaPage> getPages(String readLink) {
         ArrayList<MangaPage> pages = new ArrayList<>();
         try {
-            Document document = getPage(readLink);
+            Document document = getPage(readLink, getAuthCookie());
             MangaPage page;
             int start = 0;
             String s;
@@ -124,7 +136,7 @@ public class MangachanProvider extends MangaProvider {
 
     @Override
     public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
 
     @Nullable
@@ -134,7 +146,7 @@ public class MangachanProvider extends MangaProvider {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.ru/?do=search&subaction=search&story=" + query);
+        Document document = getPage("http://mangachan.ru/?do=search&subaction=search&story=" + query, getAuthCookie());
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -166,5 +178,46 @@ public class MangachanProvider extends MangaProvider {
     @Override
     public boolean isSearchAvailable() {
         return true;
+    }
+
+
+    private String getAuthCookie() {
+        if (sAuthCookie == null) {
+            sAuthCookie = "";
+            String login = getStringPreference("login", "");
+            String password = getStringPreference("password", "");
+            if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
+                auth("http://mangachan.ru/", login, password);
+            }
+        }
+        return sAuthCookie;
+    }
+
+    public static boolean auth(String domain, String login, String password) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(domain + "index.php").openConnection();
+            con.setConnectTimeout(15000);
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setInstanceFollowRedirects(true);
+            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            String query = "login=submit&login_name="
+                    + URLEncoder.encode(login, "UTF-8") + "&login_password=" + URLEncoder.encode(password, "UTF-8") + "&image=yay";
+            out.writeBytes(query);
+            out.flush();
+            out.close();
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String cookie = new CookieParser(con.getHeaderFields().get("Set-Cookie")).toString("PHPSESSID", "dle_user_id", "dle_password", "dle_newpm");
+                //broken
+                sAuthCookie = cookie;
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

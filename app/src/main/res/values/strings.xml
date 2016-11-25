@@ -303,4 +303,6 @@
     <string name="pick_dir">Pick directory</string>
     <string name="select_storage">Select storage</string>
     <string name="download_unqueue_confirm" formatted="false">Remove \"%s\" from download queue?</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
 </resources>

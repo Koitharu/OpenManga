@@ -10,9 +10,4 @@
         android:inputType="textPassword"
         android:dependency="login"
         android:defaultValue="" />
-    <CheckBoxPreference
-        android:title="Use ExHentai domain"
-        android:dependency="password"
-        android:key="exhentai"
-        android:defaultValue="false" />
 </PreferenceScreen>
