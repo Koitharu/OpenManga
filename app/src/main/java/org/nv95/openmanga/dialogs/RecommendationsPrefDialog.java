@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,10 @@ import org.nv95.openmanga.adapters.GenresSortAdapter;
 public class RecommendationsPrefDialog implements View.OnClickListener {
 
     private final Dialog mDialog;
+    @Nullable
     private final GenresSortAdapter.Callback mCallback;
 
-    public RecommendationsPrefDialog(final Context context, GenresSortAdapter.Callback callback) {
+    public RecommendationsPrefDialog(final Context context, @Nullable GenresSortAdapter.Callback callback) {
         @SuppressLint("InflateParams")
         View contentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_recommendprefs, null);
@@ -43,7 +45,7 @@ public class RecommendationsPrefDialog implements View.OnClickListener {
         mDialog = new AlertDialog.Builder(context)
                 .setView(contentView)
                 .setCancelable(true)
-                .setTitle(R.string.action_recommendations)
+                .setTitle(R.string.recommendations_options)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -52,9 +54,11 @@ public class RecommendationsPrefDialog implements View.OnClickListener {
                                 .putBoolean("hist", checkedTextViewHist.isChecked())
                                 .putBoolean("match", checkedTextViewMatch.isChecked())
                                 .apply();
-                        mCallback.onApply(
-                                0, checkedTextViewMatch.isChecked() ? 100 : 50, null, null
-                        );
+                        if (mCallback != null) {
+                            mCallback.onApply(
+                                    0, checkedTextViewMatch.isChecked() ? 100 : 50, null, null
+                            );
+                        }
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)

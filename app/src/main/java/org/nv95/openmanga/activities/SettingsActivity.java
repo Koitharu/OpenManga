@@ -2,7 +2,7 @@ package org.nv95.openmanga.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,11 +20,13 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.LocalMoveDialog;
+import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.dialogs.StorageSelectDialog;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.staff.Providers;
 import org.nv95.openmanga.services.UpdateService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
@@ -42,7 +44,11 @@ import java.io.File;
  */
 public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
+    public static final int REQUEST_SOURCES = 114;
+
     public static final int SECTION_READER = 2;
+
+    private PreferenceFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +58,15 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         enableHomeAsUp();
 
         int section = getIntent().getIntExtra("section", 0);
-        Fragment fragment;
         switch (section) {
             case SECTION_READER:
-                fragment = new ReadSettingsFragment();
+                mFragment = new ReadSettingsFragment();
                 break;
             default:
-                fragment = new CommonSettingsFragment();
+                mFragment = new CommonSettingsFragment();
         }
         getFragmentManager().beginTransaction()
-                .replace(R.id.content, fragment)
+                .replace(R.id.content, mFragment)
                 .commit();
 
     }
@@ -87,7 +92,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                         .commit();
                 return true;
             case "srcselect":
-                startActivity(new Intent(this, ProviderSelectActivity.class));
+                startActivityForResult(new Intent(this, ProviderSelectActivity.class), REQUEST_SOURCES);
                 return true;
             case "bugreport":
                 FileLogger.sendLog(this);
@@ -98,6 +103,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 return true;
             case "about":
                 startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case "recommendations":
+                new RecommendationsPrefDialog(this, null).show();
                 return true;
             case "backup":
                 if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -161,6 +169,16 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     }
                 }
                 break;
+            case REQUEST_SOURCES:
+                Preference p = mFragment.findPreference("srcselect");
+                if (p != null) {
+                    int active = Math.min(
+                            getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
+                            Providers.getCount()
+                    );
+                    p.setSummary(getString(R.string.providers_pref_summary, active, Providers.getCount()));
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -198,6 +216,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             activity.setTitle(R.string.action_settings);
             findPreference("srcselect").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("readeropt").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("recommendations").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("csearchhist").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("backup").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -256,6 +275,15 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 p.setSummary(R.string.unknown);
             }
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+
+            p = findPreference("srcselect");
+            if (p != null) {
+                int active = Math.min(
+                        activity.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
+                        Providers.getCount()
+                );
+                p.setSummary(getString(R.string.providers_pref_summary, active, Providers.getCount()));
+            }
 
             new AsyncTask<Void, Void, Float>() {
 
