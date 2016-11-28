@@ -56,18 +56,12 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     public PageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         PageHolder holder = new PageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, parent, false));
         holder.textView.setMovementMethod(mMovement);
+        mLoader.addListener(holder);
         return holder;
     }
 
     @Override
-    public void onViewDetachedFromWindow(PageHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        mLoader.removeListener(holder);
-    }
-
-    @Override
     public void onBindViewHolder(PageHolder holder, int position) {
-        mLoader.addListener(holder);
         holder.reset();
         PageWrapper wrapper = mLoader.requestPage(position);
         if (wrapper != null) {
@@ -83,6 +77,11 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
                     }
             }
         }
+    }
+
+    public void finish() {
+        mLoader.clearListeners();
+        mLoader.cancelAll();
     }
 
     @Override

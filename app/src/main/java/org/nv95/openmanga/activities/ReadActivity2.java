@@ -140,6 +140,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
+        mAdapter.finish();
         ChangesObserver.getInstance().emitOnHistoryChanged(mManga);
         super.onDestroy();
     }

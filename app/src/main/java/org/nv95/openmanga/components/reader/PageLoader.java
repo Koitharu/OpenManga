@@ -161,14 +161,17 @@ public class PageLoader implements PageLoadListener {
     }
 
     public void addListener(PageLoadListener listener) {
+        Log.d("LIST", "Added; total: " + mListeners.size());
         mListeners.add(listener);
     }
 
     public void removeListener(PageLoadListener listener) {
+        Log.d("LIST", "Removed; total: " + mListeners.size());
         mListeners.remove(listener);
     }
 
     public void clearListeners() {
+        Log.d("LIST", "Cleared!");
         mListeners.clear();
     }
 
