@@ -44,6 +44,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 
@@ -54,7 +55,7 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener, NavigationListener {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener, NavigationListener, InternalLinkMovement.OnLinkClickListener {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -92,7 +93,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mMenuButton.setOnClickListener(this);
 
         mBrightnessHelper = new BrightnessHelper(getWindow());
-        mAdapter = new ReaderAdapter(ReadActivity2.this);
+        mAdapter = new ReaderAdapter(ReadActivity2.this, this);
         mReader.setAdapter(mAdapter);
         mReader.addOnPageChangedListener(mMenuPanel);
         mReader.setOnOverScrollListener(this);
@@ -405,7 +406,20 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mReader.scrollToPosition(page);
     }
 
-    private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> {
+    @Override
+    public void onLinkClicked(TextView view, String scheme, String url) {
+        switch (scheme) {
+            case "app":
+                switch (url) {
+                    case "retry":
+                        mAdapter.notifyItemChanged(mReader.getCurrentPosition());
+                        break;
+                }
+                break;
+        }
+    }
+
+    private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> implements DialogInterface.OnCancelListener {
 
         private final int mPageIndex;
 
@@ -431,9 +445,34 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             }
         }
 
+        private void onFailed() {
+            new AlertDialog.Builder(ReadActivity2.this)
+                    .setMessage(checkConnection() ? R.string.loading_error : R.string.no_network_connection)
+                    .setTitle(R.string.app_name)
+                    .setOnCancelListener(this)
+                    .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new ChapterLoadTask(mPageIndex).startLoading(mManga.getChapters().get(mChapter));
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+
         @Override
         protected void onPostExecute(List<MangaPage> mangaPages) {
             super.onPostExecute(mangaPages);
+            if (mangaPages == null) {
+                onFailed();
+                return;
+            }
             mAdapter.setPages(mangaPages);
             mAdapter.notifyDataSetChanged();
             int pos = mPageIndex == -1 ? mAdapter.getItemCount() - 1 : mPageIndex;
@@ -442,6 +481,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mAdapter.notifyDataSetChanged();
             mMenuPanel.onChapterChanged(mManga.chapters.get(mChapter) ,mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            if (mReader.getItemCount() == 0) {
+                ReadActivity2.this.finish();
+            }
         }
     }
 
