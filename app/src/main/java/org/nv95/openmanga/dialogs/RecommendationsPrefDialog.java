@@ -12,6 +12,7 @@ import android.widget.Checkable;
 import android.widget.CheckedTextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.adapters.GenresSortAdapter;
 
 /**
  * Created by nv95 on 22.06.16.
@@ -20,9 +21,9 @@ import org.nv95.openmanga.R;
 public class RecommendationsPrefDialog implements View.OnClickListener {
 
     private final Dialog mDialog;
-    private final FilterSortDialog.Callback mCallback;
+    private final GenresSortAdapter.Callback mCallback;
 
-    public RecommendationsPrefDialog(final Context context, FilterSortDialog.Callback callback) {
+    public RecommendationsPrefDialog(final Context context, GenresSortAdapter.Callback callback) {
         @SuppressLint("InflateParams")
         View contentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_recommendprefs, null);
