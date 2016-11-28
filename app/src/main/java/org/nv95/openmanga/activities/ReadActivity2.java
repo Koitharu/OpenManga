@@ -213,7 +213,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     }
 
     private void updateConfig() {
-        mConfig = ReaderConfig.load(this);
+        mConfig = ReaderConfig.load(this, mManga);
         mReader.applyConfig(
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_VERTICAL,
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_REVERSED,
@@ -259,7 +259,10 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                         .setNavigationListener(this)
                         .show(pos);
                 break;
-            case R.id.menuitem_settings:
+            case R.id.action_webmode:
+                updateConfig();
+                break;
+            case R.id.nav_action_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class)
                         .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
                 break;

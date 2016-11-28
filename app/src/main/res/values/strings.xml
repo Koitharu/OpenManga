@@ -307,4 +307,5 @@
     <string name="password">Password</string>
     <string name="recommendations_options">Recommendations options</string>
     <string name="providers_pref_summary" formatted="false">Enabled %d from %d</string>
+    <string name="webmode">Webtoon mode</string>
 </resources>

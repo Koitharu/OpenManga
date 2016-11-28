@@ -233,6 +233,23 @@ public class HistoryProvider extends MangaProvider {
         return manga;
     }
 
+    public boolean isWebMode(MangaInfo manga) {
+        boolean res = false;
+        SQLiteDatabase database = mStorageHelper.getReadableDatabase();
+        Cursor c = database.query(TABLE_NAME, new String[]{"isweb"}, "id=" + manga.id, null, null, null, null);
+        if (c.moveToFirst()) {
+            res = c.getInt(0) != 0;
+        }
+        c.close();
+        return res;
+    }
+
+    public void setWebMode(MangaInfo manga, boolean isWeb) {
+        final ContentValues cv = new ContentValues();
+        cv.put("isweb", isWeb);
+        mStorageHelper.getWritableDatabase().update(TABLE_NAME, cv, "id=" + manga.id, null);
+    }
+
     public static class HistorySummary {
         protected int chapter;
         protected int page;
