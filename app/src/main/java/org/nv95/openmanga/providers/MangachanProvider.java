@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
@@ -232,8 +233,10 @@ public class MangachanProvider extends MangaProvider {
                 "yay"
         );
         if (cp == null || TextUtils.isEmpty(cp.getValue("dle_user_id")) || "deleted".equals(cp.getValue("dle_user_id"))) {
+            Log.d("AUTH", "fail");
             return false;
         } else {
+            Log.d("AUTH", "OK");
             sAuthCookie = cp.toString();
             return true;
         }
