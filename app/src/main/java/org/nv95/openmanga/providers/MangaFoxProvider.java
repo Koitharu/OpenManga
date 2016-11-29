@@ -142,7 +142,7 @@ public class MangaFoxProvider extends MangaProvider {
             return MangaList.empty();
         }
         MangaList list = new MangaList();
-        JSONArray jsonArray = new JSONArray(getRawPage("http://mangafox.me/ajax/search.php?term=" + query));
+        JSONArray jsonArray = new JSONArray(getRaw("http://mangafox.me/ajax/search.php?term=" + query));
         JSONArray o;
         MangaInfo manga;
         for (int i = 0; i < jsonArray.length(); i++) {

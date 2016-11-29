@@ -4,23 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.NetworkUtils;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -31,86 +24,21 @@ public abstract class MangaProvider {
     protected boolean features[];
     private final SharedPreferences mPrefs;
 
-    //******************************static*********************************
-    protected static Document getPage(String url) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        InputStream is = con.getInputStream();
-        return Jsoup.parse(is, con.getContentEncoding(), url);
+    protected final Document getPage(String url) throws IOException {
+        return NetworkUtils.httpGet(url, getAuthCookie());
+    }
+
+    protected final Document getPage(String url, @NonNull String cookie) throws IOException {
+        return NetworkUtils.httpGet(url, AppHelper.concatStr(getAuthCookie(), cookie));
+    }
+
+    protected final Document postPage(String url, String... data) throws IOException {
+        return NetworkUtils.httpPost(url, getAuthCookie(), data);
     }
 
     @NonNull
-    static String getRawPage(String url) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuilder out = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            out.append(line);
-        }
-        reader.close();
-        return out.toString();
-    }
-
-    @NonNull
-    protected static String postRawPage(String url, String[] data) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        con.setRequestMethod("POST");
-        if (data != null) {
-            con.setDoOutput(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            String query = "";
-            for (int i = 0; i < data.length; i = i + 2) {
-                query += URLEncoder.encode(data[i], "UTF-8") + "=" + URLEncoder.encode(data[i + 1], "UTF-8");
-                query += "&";
-            }
-            if (query.length() > 1) query = query.substring(0, query.length() - 1);
-            out.writeBytes(query);
-            out.flush();
-            out.close();
-        }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuilder out = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            out.append(line);
-        }
-        reader.close();
-        return out.toString();
-    }
-
-    protected static Document getPage(String url, String cookie) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setDoOutput(true);
-        if (!TextUtils.isEmpty(cookie)) {
-            con.setRequestProperty("Cookie", cookie);
-        }
-        con.setConnectTimeout(15000);
-        InputStream is = con.getInputStream();
-        return Jsoup.parse(is, con.getContentEncoding(), url);
-    }
-
-    static Document postPage(String url, String[] data) throws Exception {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        con.setRequestMethod("POST");
-        if (data != null) {
-            con.setDoOutput(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            String query = "";
-            for (int i = 0; i < data.length; i = i + 2) {
-                query += URLEncoder.encode(data[i], "UTF-8") + "=" + URLEncoder.encode(data[i + 1], "UTF-8");
-                query += "&";
-            }
-            if (query.length() > 1) query = query.substring(0, query.length() - 1);
-            out.writeBytes(query);
-            out.flush();
-            out.close();
-        }
-        InputStream is = con.getInputStream();
-        return Jsoup.parse(is, con.getContentEncoding(), url);
+    protected final String getRaw(String url) throws IOException {
+        return NetworkUtils.getRaw(url, getAuthCookie());
     }
 
     public MangaProvider(Context context) {
@@ -195,6 +123,11 @@ public abstract class MangaProvider {
 
     public boolean isMultiPage() {
         return true;
+    }
+
+    @Nullable
+    protected String getAuthCookie() {
+        return null;
     }
 
     static String concatUrl(String root, String url) {

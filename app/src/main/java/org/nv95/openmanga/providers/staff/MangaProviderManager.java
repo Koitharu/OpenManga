@@ -61,6 +61,7 @@ public class MangaProviderManager {
      * @param index < 0 for standard providers, otherwise - id
      * @return provider class instance
      */
+    @SuppressWarnings("ConstantConditions")
     public MangaProvider getProviderById(int index) {
         try {
             switch (index) {

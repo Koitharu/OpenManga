@@ -17,11 +17,8 @@ import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.NetworkUtils;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -29,10 +26,20 @@ import java.util.ArrayList;
  */
 public class MangachanProvider extends MangaProvider {
 
-    protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};
-    protected static final String sortUrls[] = {"manga/new", "mostfavorites", "manga/random"};
+    protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_alphabetical};
+    protected static final String sortUrls[] = {"datedesc", "favdesc", "abcasc"};
 
-    static String sAuthCookie = null;
+    protected static final int genres[] = {
+            R.string.genre_all, R.string.genre_art, R.string.genre_martialarts,
+            R.string.genre_vampires, R.string.genre_webtoon
+
+    };
+    private static final String genreUrls[] = {
+            "%D0%B0%D1%80%D1%82", "%D0%B1%D0%BE%D0%B5%D0%B2%D1%8B%D0%B5_%D0%B8%D1%81%D0%BA%D1%83%D1%81%D1%81%D1%82%D0%B2%D0%B0",
+            "%D0%B2%D0%B0%D0%BC%D0%BF%D0%B8%D1%80%D1%8B", "%D0%B2%D0%B5%D0%B1"
+    };
+
+    private static String sAuthCookie = null;
 
     public MangachanProvider(Context context) {
         super(context);
@@ -44,7 +51,7 @@ public class MangachanProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.ru/" + sortUrls[sort] + "?offset=" + page * 20, getAuthCookie());
+        Document document = getPage("http://mangachan.me/" + (genre == 0 ? "manga/new" : "tags/" + genreUrls[genre-1]) + "&n=" + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -54,9 +61,9 @@ public class MangachanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://mangachan.ru/", t.attr("href"));
+            manga.path = concatUrl("http://mangachan.me/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://mangachan.ru/", t.attr("src"));
+            manga.preview = concatUrl("http://mangachan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -72,17 +79,17 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            final Document document = getPage(mangaInfo.path, getAuthCookie());
+            final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
-            summary.preview = concatUrl("http://mangachan.ru/", e.getElementById("cover").attr("src"));
+            summary.preview = concatUrl("http://mangachan.me/", e.getElementById("cover").attr("src"));
             MangaChapter chapter;
             Elements els = e.select("table.table_cha");
             els = els.select("a");
             for (Element o : els) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = concatUrl("http://mangachan.ru/", o.attr("href"));
+                chapter.readLink = concatUrl("http://mangachan.me/", o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -97,7 +104,7 @@ public class MangachanProvider extends MangaProvider {
     public ArrayList<MangaPage> getPages(String readLink) {
         ArrayList<MangaPage> pages = new ArrayList<>();
         try {
-            Document document = getPage(readLink, getAuthCookie());
+            Document document = getPage(readLink);
             MangaPage page;
             int start = 0;
             String s;
@@ -141,12 +148,18 @@ public class MangachanProvider extends MangaProvider {
 
     @Nullable
     @Override
+    public String[] getGenresTitles(Context context) {
+        return AppHelper.getStringArray(context, genres);
+    }
+
+    @Nullable
+    @Override
     public MangaList search(String query, int page) throws Exception {
         if (page > 0) {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.ru/?do=search&subaction=search&story=" + query, getAuthCookie());
+        Document document = getPage("http://mangachan.me/?do=search&subaction=search&story=" + query);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -158,7 +171,7 @@ public class MangachanProvider extends MangaProvider {
             manga.name = t.text();
             manga.path = t.attr("href");
             t = o.select("img").first();
-            manga.preview = concatUrl("http://mangachan.ru/", t.attr("src"));
+            manga.preview = concatUrl("http://mangachan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -176,48 +189,46 @@ public class MangachanProvider extends MangaProvider {
     }
 
     @Override
+    public boolean hasGenres() {
+        return true;
+    }
+
+    @Override
     public boolean isSearchAvailable() {
         return true;
     }
 
-
-    private String getAuthCookie() {
+    @Override
+    protected String getAuthCookie() {
         if (sAuthCookie == null) {
             sAuthCookie = "";
             String login = getStringPreference("login", "");
             String password = getStringPreference("password", "");
             if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-                auth("http://mangachan.me/", login, password);
+                auth(login, password);
             }
         }
         return sAuthCookie;
     }
 
-    public static boolean auth(String domain, String login, String password) {
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(domain).openConnection();
-            con.setConnectTimeout(15000);
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            con.setInstanceFollowRedirects(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            String query = "login=submit&login_name="
-                    + URLEncoder.encode(login, "UTF-8") + "&login_password=" + URLEncoder.encode(password, "UTF-8") + "&image=yay";
-            out.writeBytes(query);
-            out.flush();
-            out.close();
-            con.connect();
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String cookie = new CookieParser(con.getHeaderFields().get("Set-Cookie")).toString("PHPSESSID", "dle_user_id", "dle_password", "dle_newpm");
-                //broken
-                sAuthCookie = cookie;
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    @SuppressWarnings("WeakerAccess")
+    public static boolean auth(String login, String password) {
+        CookieParser cp = NetworkUtils.authorize(
+                "http://mangachan.me/",
+                "login",
+                "submit",
+                "login_name",
+                login,
+                "login_password",
+                password,
+                "image",
+                "yay"
+        );
+        if (cp == null || TextUtils.isEmpty(cp.getValue("dle_user_id")) || "deleted".equals(cp.getValue("dle_user_id"))) {
             return false;
+        } else {
+            sAuthCookie = cp.toString();
+            return true;
         }
     }
 }

@@ -127,4 +127,18 @@ public class AppHelper {
         }
         return spanned;
     }
+
+    /**
+     * Ignore nulls
+     */
+    @NonNull
+    public static String concatStr(String... args) {
+        final StringBuilder builder = new StringBuilder();
+        for (String o : args) {
+            if (o != null) {
+                builder.append(o);
+            }
+        }
+        return builder.toString();
+    }
 }

@@ -1,13 +1,22 @@
 package org.nv95.openmanga.activities;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.providers.staff.Providers;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by nv95 on 21.11.16.
@@ -49,6 +58,78 @@ public class ProviderPreferencesActivity extends BaseAppActivity {
             mProvider = Providers.getById(getArguments().getInt("provider"));
             getPreferenceManager().setSharedPreferencesName("prov_" + mProvider.aClass.getSimpleName());
             addPreferencesFromResource(mProvider.preferences);
+
+            Preference testPref = findPreference("auth_test");
+            if (testPref != null) {
+                testPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+                        new TestAuthTask(getActivity()).executeOnExecutor(
+                                AsyncTask.THREAD_POOL_EXECUTOR,
+                                prefs.getString("login",""),
+                                prefs.getString("password","")
+                        );
+                        return true;
+                    }
+                });
+            }
+        }
+
+        private class TestAuthTask extends AsyncTask<String,Void,Boolean> implements DialogInterface.OnCancelListener {
+
+            private final Activity mActivity;
+            private final ProgressDialog mDialog;
+
+            TestAuthTask(Activity activity) {
+                this.mActivity = activity;
+                mDialog = new ProgressDialog(mActivity);
+                mDialog.setOwnerActivity(mActivity);
+                mDialog.setMessage(mActivity.getString(R.string.wait));
+                mDialog.setOnCancelListener(this);
+                mDialog.setCancelable(true);
+                mDialog.setCanceledOnTouchOutside(true);
+                mDialog.setIndeterminate(true);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                mDialog.show();
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Boolean doInBackground(String... strings) {
+                try {
+                    Method m = mProvider.aClass.getMethod("auth", String.class, String.class);
+                    return (Boolean) m.invoke(null, strings[0], strings[1]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                int msg = R.string.error;
+                if (Boolean.TRUE.equals(aBoolean)) {
+                    msg = R.string.successfully;
+                } else if (Boolean.FALSE.equals(aBoolean)) {
+                    msg = R.string.auth_failed;
+                }
+                mDialog.dismiss();
+                new AlertDialog.Builder(mActivity)
+                        .setMessage(msg)
+                        .setPositiveButton(R.string.close, null)
+                        .create()
+                        .show();
+            }
+
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                this.cancel(false);
+            }
         }
     }
 }

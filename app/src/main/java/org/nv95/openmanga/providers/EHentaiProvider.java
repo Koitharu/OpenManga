@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import org.jsoup.nodes.Document;
@@ -16,10 +17,8 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.CookieParser;
+import org.nv95.openmanga.utils.NetworkUtils;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -48,7 +47,7 @@ public class EHentaiProvider extends MangaProvider {
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
         Document document = getPage(mDomain + "?page=" + page +
-                (genre == 0 ? "" : "&" + genreUrls[genre - 1] + "=on&f_apply=Apply+Filter"), getCookie());
+                (genre == 0 ? "" : "&" + genreUrls[genre - 1] + "=on&f_apply=Apply+Filter"), DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
@@ -107,7 +106,7 @@ public class EHentaiProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            Document document = getPage(mangaInfo.path, getCookie());
+            Document document = getPage(mangaInfo.path, DEF_COOKIE);
             Element body = document.body();
             StringBuilder builder = new StringBuilder();
             for (Element o : body.getElementById("taglist").select("tr")) {
@@ -139,7 +138,7 @@ public class EHentaiProvider extends MangaProvider {
         String s;
         MangaPage page;
         try {
-            Document document = getPage(readLink, getCookie());
+            Document document = getPage(readLink, DEF_COOKIE);
             Elements elements = document.body().select("div.gdtm");
             for (Element o : elements) {
                 s = o.select("a").first().attr("href");
@@ -156,7 +155,7 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public String getPageImage(MangaPage mangaPage) {
         try {
-            Document document = getPage(mangaPage.path, getCookie());
+            Document document = getPage(mangaPage.path, DEF_COOKIE);
             return concatUrl(mDomain, document.body().select("img").get(4).attr("src"));
         } catch (Exception e) {
             return null;
@@ -171,7 +170,7 @@ public class EHentaiProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage(mDomain + "?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", getCookie());
+        Document document = getPage(mDomain + "?page=" + page + "&f_search=" + URLEncoder.encode(query, "UTF-8") + "&f_apply=Apply+Filter", DEF_COOKIE);
         Element root = document.body().select("div.itg").first();
         MangaInfo manga;
         Elements elements = root.select("div.id1");
@@ -225,47 +224,43 @@ public class EHentaiProvider extends MangaProvider {
         return sb.toString();
     }
 
-    private String getCookie() {
-        if ("".equals(sAuthCookie)) {
-            auth();
-        }
-        return sAuthCookie + DEF_COOKIE;
-    }
-
     private boolean auth() {
         String login = getStringPreference("login", "");
         String password = getStringPreference("password", "");
         return !TextUtils.isEmpty(login) && !TextUtils.isEmpty(password) && auth(login, password);
     }
 
-    public static String getAuthCookie() {
+    @Override
+    protected String getAuthCookie() {
+        if ("".equals(sAuthCookie)) {
+            auth();
+        }
         return sAuthCookie;
     }
 
+    @NonNull
+    public static String getCookie() {
+        return AppHelper.concatStr(sAuthCookie, DEF_COOKIE);
+    }
+
+    @WorkerThread
     public static boolean auth(String login, String password) {
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL("https://forums.e-hentai.org/index.php?act=Login&CODE=01").openConnection();
-            con.setConnectTimeout(15000);
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            con.setInstanceFollowRedirects(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
-            String query = "referer=https://forums.e-hentai.org/index.php&UserName="
-                    + URLEncoder.encode(login, "UTF-8") + "&PassWord=" + URLEncoder.encode(password, "UTF-8") + "&CookieDate=1";
-            out.writeBytes(query);
-            out.flush();
-            out.close();
-            con.connect();
-            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String cookie = new CookieParser(con.getHeaderFields().get("Set-Cookie")).toString("ipb_session_id", "ipb_member_id", "ipb_pass_hash");
-                sAuthCookie = "yay=louder; " + cookie.trim() + "; igneous=fc045b695; "; //some magic
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        CookieParser cp = NetworkUtils.authorize(
+                "https://forums.e-hentai.org/index.php?act=Login&CODE=01",
+                "referer",
+                "https://forums.e-hentai.org/index.php",
+                "UserName",
+                login,
+                "PassWord",
+                password,
+                "CookieDate",
+                "1"
+        );
+        if (cp == null || TextUtils.isEmpty(cp.getValue("ipb_pass_hash"))) {
             return false;
+        } else {
+            sAuthCookie = cp.toString();
+            return true;
         }
     }
 }

@@ -2,6 +2,7 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
@@ -13,7 +14,9 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -27,8 +30,13 @@ public class HentaichanProvider extends MangaProvider {
     protected static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_rating, R.string.sort_random};
     protected static final String sortUrls[] = {"manga/new", "mostdownloads&sort=manga", "mostfavorites&sort=manga", "manga/random"};
 
+    private static String sAuthCookie = null;
+
     public HentaichanProvider(Context context) {
         super(context);
+        if ("".equals(sAuthCookie)) {
+            sAuthCookie = null;
+        }
     }
 
     @Override
@@ -203,5 +211,39 @@ public class HentaichanProvider extends MangaProvider {
     @Override
     public boolean isSearchAvailable() {
         return true;
+    }
+
+    @Override
+    protected String getAuthCookie() {
+        if (sAuthCookie == null) {
+            sAuthCookie = "";
+            String login = getStringPreference("login", "");
+            String password = getStringPreference("password", "");
+            if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
+                auth(login, password);
+            }
+        }
+        return sAuthCookie;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static boolean auth(String login, String password) {
+        CookieParser cp = NetworkUtils.authorize(
+                "http://hentaichan.me/",
+                "login",
+                "submit",
+                "login_name",
+                login,
+                "login_password",
+                password,
+                "image",
+                "yay"
+        );
+        if (cp == null || TextUtils.isEmpty(cp.getValue("dle_user_id")) || "deleted".equals(cp.getValue("dle_user_id"))) {
+            return false;
+        } else {
+            sAuthCookie = cp.toString();
+            return true;
+        }
     }
 }

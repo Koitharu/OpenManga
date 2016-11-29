@@ -2,6 +2,7 @@ package org.nv95.openmanga.providers;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
@@ -12,7 +13,9 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -22,8 +25,13 @@ import java.util.ArrayList;
 
 public class YaoiChanProvider extends MangachanProvider {
 
+    private static String sAuthCookie = null;
+
     public YaoiChanProvider(Context context) {
         super(context);
+        if ("".equals(sAuthCookie)) {
+            sAuthCookie = null;
+        }
     }
 
     @Override
@@ -124,7 +132,7 @@ public class YaoiChanProvider extends MangachanProvider {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://yaoichan.me/?do=search&subaction=search&story=" + query);
+        Document document = getPage("http://yaoichan.me/?do=search&subaction=search&story=" + query, getAuthCookie());
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -146,5 +154,39 @@ public class YaoiChanProvider extends MangachanProvider {
             list.add(manga);
         }
         return list;
+    }
+
+    @Override
+    protected String getAuthCookie() {
+        if (sAuthCookie == null) {
+            sAuthCookie = "";
+            String login = getStringPreference("login", "");
+            String password = getStringPreference("password", "");
+            if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
+                auth(login, password);
+            }
+        }
+        return sAuthCookie;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static boolean auth(String login, String password) {
+        CookieParser cp = NetworkUtils.authorize(
+                "http://yaoichan.me/",
+                "login",
+                "submit",
+                "login_name",
+                login,
+                "login_password",
+                password,
+                "image",
+                "yay"
+        );
+        if (cp == null || TextUtils.isEmpty(cp.getValue("dle_user_id")) || "deleted".equals(cp.getValue("dle_user_id"))) {
+            return false;
+        } else {
+            sAuthCookie = cp.toString();
+            return true;
+        }
     }
 }

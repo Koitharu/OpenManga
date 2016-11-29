@@ -6,6 +6,7 @@ import android.support.annotation.WorkerThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class AppUpdatesProvider {
     public AppUpdatesProvider() {
         JSONObject response;
         try {
-            response = new JSONObject(MangaProvider.getRawPage(CHECKER_URL));
+            response = NetworkUtils.getJsonObject(CHECKER_URL);
         } catch (Exception e) {
             response = null;
         }

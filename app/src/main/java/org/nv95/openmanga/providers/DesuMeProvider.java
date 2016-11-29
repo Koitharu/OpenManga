@@ -48,7 +48,7 @@ public class DesuMeProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        JSONObject jo = new JSONObject(getRawPage(
+        JSONObject jo = new JSONObject(getRaw(
                 "http://desu.me/manga/api/?limit=20&order_by="
                         + sortUrls[sort]
                         + "&page="
@@ -87,7 +87,7 @@ public class DesuMeProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            JSONObject jo = new JSONObject(getRawPage(mangaInfo.path)).getJSONObject("response");
+            JSONObject jo = new JSONObject(getRaw(mangaInfo.path)).getJSONObject("response");
             summary.description = jo.getString("description");
             summary.preview = jo.getJSONObject("image").getString("original");
             MangaChapter chapter;
@@ -112,7 +112,7 @@ public class DesuMeProvider extends MangaProvider {
     public ArrayList<MangaPage> getPages(String readLink) {
         ArrayList<MangaPage> pages = new ArrayList<>();
         try {
-            JSONObject jo = new JSONObject(getRawPage(readLink)).getJSONObject("response");
+            JSONObject jo = new JSONObject(getRaw(readLink)).getJSONObject("response");
             JSONArray ja = jo.getJSONObject("pages").getJSONArray("list");
             MangaPage page;
             for (int i = 0; i < ja.length(); i++) {
@@ -132,7 +132,7 @@ public class DesuMeProvider extends MangaProvider {
     @Override
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
-        JSONObject jo = new JSONObject(getRawPage(
+        JSONObject jo = new JSONObject(getRaw(
                 "http://desu.me/manga/api/?limit=20"
                         + "&page="
                         + (page + 1)

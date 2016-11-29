@@ -30,7 +30,7 @@ public class ExImageDownloader extends BaseImageDownloader {
                 extra
         );
         if (url.contains("//exhentai")) {
-            conn.addRequestProperty("Cookie", EHentaiProvider.getAuthCookie());
+            conn.addRequestProperty("Cookie", EHentaiProvider.getCookie());
         }
         return conn;
     }

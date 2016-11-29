@@ -308,4 +308,8 @@
     <string name="recommendations_options">Recommendations options</string>
     <string name="providers_pref_summary" formatted="false">Enabled %d from %d</string>
     <string name="webmode">Webtoon mode</string>
+    <string name="successfully">Successfully</string>
+    <string name="auth_failed">Authorization failed</string>
+    <string name="check_credentials">Check credentials</string>
+    <string name="genre_webtoon">Webtoon</string>
 </resources>
