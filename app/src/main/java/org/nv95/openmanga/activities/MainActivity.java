@@ -23,6 +23,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -38,9 +39,9 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
-import org.nv95.openmanga.dialogs.FilterSortDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
@@ -73,7 +74,7 @@ import java.util.List;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener, ChangesObserver.OnMangaChangesListener,
-        ListModeHelper.OnListModeListener, FilterSortDialog.Callback, NavigationView.OnNavigationItemSelectedListener,
+        ListModeHelper.OnListModeListener, GenresSortAdapter.Callback, NavigationView.OnNavigationItemSelectedListener,
         InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener, NavigationListener {
 
     private static final int REQUEST_IMPORT = 792;
@@ -92,7 +93,7 @@ public class MainActivity extends BaseAppActivity implements
     private ListModeHelper mListModeHelper;
     //data
     private MangaProvider mProvider;
-    private int mGenre = 0;
+    private GenresSortAdapter mGenresAdapter;
     private NavigationView mNavigationView;
     private int mSelectedItem;
     private DrawerHeaderImageTool mDrawerHeaderTool;
@@ -117,6 +118,10 @@ public class MainActivity extends BaseAppActivity implements
         mNavigationView = ((NavigationView) findViewById(R.id.navigation_drawer_bottom));
         mNavigationView.getChildAt(0).setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        RecyclerView genresRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewGenres);
+        genresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        genresRecyclerView.setAdapter(mGenresAdapter = new GenresSortAdapter(this));
 
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         mFab.setOnClickListener(this);
@@ -164,6 +169,7 @@ public class MainActivity extends BaseAppActivity implements
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
         StorageUpgradeTask.doUpgrade(this);
+        mGenresAdapter.fromProvider(this, mProvider);
         mListLoader.loadContent(mProvider.isMultiPage(), true);
 
         if (isDarkTheme()) {
@@ -263,6 +269,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.setGroupVisible(R.id.group_history, mSelectedItem == R.id.nav_action_history);
         menu.setGroupVisible(R.id.group_favourites, mSelectedItem == R.id.nav_action_favourites);
         menu.findItem(R.id.action_goto).setVisible(mProvider.isMultiPage());
+        menu.findItem(R.id.action_recommend_opts).setVisible(mSelectedItem == R.id.nav_action_recommendations);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -328,24 +335,11 @@ public class MainActivity extends BaseAppActivity implements
                         .setNavigationListener(this)
                         .show(mListLoader.getCurrentPage());
                 return true;
+            case R.id.action_recommend_opts:
+                new RecommendationsPrefDialog(this, this).show();
+                return true;
             case R.id.action_filter:
-                if (mProvider == null) {
-                    return true;
-                }
-                if (mProvider instanceof RecommendationsProvider) {
-                    new RecommendationsPrefDialog(this, this).show();
-                } else {
-                    FilterSortDialog dialog = new FilterSortDialog(this, this);
-                    if (mProvider.hasGenres()) {
-                        dialog.genres(mProvider.getGenresTitles(this), mGenre,
-                                getString(mProvider instanceof FavouritesProvider
-                                        ? R.string.action_category : R.string.action_genre));
-                    }
-                    if (mProvider.hasSort()) {
-                        dialog.sort(mProvider.getSortTitles(this), MangaProviderManager.restoreSortOrder(this, mProvider));
-                    }
-                    dialog.show();
-                }
+                mDrawerLayout.openDrawer(GravityCompat.END);
                 return true;
             case R.id.action_bookmarks:
                 new BookmarksDialog(this).show();
@@ -379,14 +373,14 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onApply(int genre, int sort, @Nullable String genreName, @Nullable String sortName) {
-        mGenre = genre;
-        setSubtitle(genreName);
+        mDrawerLayout.closeDrawer(GravityCompat.END);
+        setSubtitle(genre == 0 ? null : genreName);
         MangaProviderManager.saveSortOrder(MainActivity.this, mProvider, sort);
         updateContent();
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_action_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
@@ -408,7 +402,7 @@ public class MainActivity extends BaseAppActivity implements
                 break;
         }
         mSelectedItem = item.getItemId();
-        mGenre = 0;
+        mGenresAdapter.fromProvider(this, mProvider);
         setSubtitle(null);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         setTitle(mProvider.getName());
@@ -431,7 +425,9 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -511,7 +507,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public MangaList onContentNeeded(int page) {
         try {
-            return mProvider.getList(page, MangaProviderManager.restoreSortOrder(this, mProvider), mGenre);
+            return mProvider.getList(page, mGenresAdapter.getSelectedSort(), mGenresAdapter.getSelectedGenre());
         } catch (Exception e) {
             Log.e("OCN", e.getMessage());
             return null;
@@ -676,11 +672,11 @@ public class MainActivity extends BaseAppActivity implements
         if (mSelectedItem ==  R.id.nav_action_favourites) {
             int pos = mListLoader.getList().indexOf(manga.id);
             if (pos == -1) {
-                if (mGenre == 0 || category == mGenre) {
+                if (mGenresAdapter.getSelectedGenre() == 0 || category == mGenresAdapter.getSelectedGenre()) {
                     mListLoader.addItem(manga, 0);
                 }
             } else {
-                if (category != mGenre) {
+                if (category != mGenresAdapter.getSelectedGenre()) {
                     mListLoader.removeItem(pos);
                 }
             }

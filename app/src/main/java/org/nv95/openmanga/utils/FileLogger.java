@@ -124,7 +124,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public String getFailMessage(Context context, @Nullable Exception e) {
-        if (MangaProviderManager.checkConnection(context) && (e == null || e instanceof IOException)) {
+        if ((e == null || e instanceof IOException) && !MangaProviderManager.checkConnection(context)) {
             return context.getString(R.string.no_network_connection);
         } else if (e instanceof FileNotFoundException) {
             return context.getString(R.string.file_not_found);

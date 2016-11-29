@@ -3,8 +3,12 @@ package org.nv95.openmanga.components;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 
 /**
  * Created by nv95 on 12.02.16.
@@ -26,8 +31,10 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
     private AppCompatSeekBar mSeekBar;
     private int mValue;
     private int mMax;
+    @Nullable
     private Drawable mIcon;
     private boolean mValueSet;
+    private final boolean mDarkTheme;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,6 +45,8 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
         mValue = 20;
         a.recycle();
         mValueSet = false;
+        mDarkTheme = (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("theme", "0")) != BaseAppActivity.APP_THEME_LIGHT);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -58,7 +67,24 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
         }
         mTextView = (TextView) layout.findViewById(R.id.value);
         mTextView.setText(String.valueOf(mValue));
+        updateIcon();
         return layout;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        updateIcon();
+    }
+
+    private void updateIcon() {
+        if (mIcon != null) {
+            int color = ContextCompat.getColor(
+                    getContext(),
+                    isEnabled() ? (mDarkTheme ? R.color.white_overlay_85 : android.R.color.black) : (mDarkTheme ? R.color.dark_disabled : R.color.white_overlay_85)
+            );
+            mIcon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     @Override

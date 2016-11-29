@@ -3,11 +3,10 @@
     android:id="@+id/textView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/storages_remote"
     android:paddingTop="@dimen/padding8"
     android:paddingBottom="@dimen/padding8"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
     android:background="?selectableItemBackground"
-    android:textColor="?android:textColorSecondary" />
+    android:textColor="?colorAccent" />

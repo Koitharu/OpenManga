@@ -23,6 +23,9 @@
         android:summary="@string/prefer_qsearch_summ"
         android:title="@string/prefer_qsearch"
         android:widgetLayout="@layout/pref_switchcompat" />
+    <Preference
+        android:key="recommendations"
+        android:title="@string/recommendations_options" />
     <EditTextPreference
         android:key="fav.categories"
         android:title="@string/favourites_categories"

@@ -2,6 +2,7 @@ package org.nv95.openmanga.components.reader;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -38,7 +39,7 @@ public class PageLoader implements PageLoadListener {
         mPreloadEnabled = false;
     }
 
-    public void setPages(List<MangaPage> pages) {
+    public void setPages(@NonNull List<MangaPage> pages) {
         mWrappers.clear();
         for (int i=0;i<pages.size();i++) {
             mWrappers.add(new PageWrapper(pages.get(i),i));
@@ -160,14 +161,17 @@ public class PageLoader implements PageLoadListener {
     }
 
     public void addListener(PageLoadListener listener) {
+        Log.d("LIST", "Added; total: " + mListeners.size());
         mListeners.add(listener);
     }
 
     public void removeListener(PageLoadListener listener) {
+        Log.d("LIST", "Removed; total: " + mListeners.size());
         mListeners.remove(listener);
     }
 
     public void clearListeners() {
+        Log.d("LIST", "Cleared!");
         mListeners.clear();
     }
 

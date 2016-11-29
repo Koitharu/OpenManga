@@ -33,6 +33,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.BookmarksProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.ChangesObserver;
@@ -60,6 +61,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     private TreeSet<Integer> mBookmarks;
 
     private PopupMenu mSaveMenu;
+    private PopupMenu mOptionsMenu;
 
     @Nullable
     private Callback mCallback;
@@ -120,6 +122,10 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         mSaveMenu = new PopupMenu(context, mButtons[3]);
         mSaveMenu.inflate(R.menu.save);
         mSaveMenu.setOnMenuItemClickListener(this);
+
+        mOptionsMenu = new PopupMenu(context, mButtons[4]);
+        mOptionsMenu.inflate(R.menu.read_prefs);
+        mOptionsMenu.setOnMenuItemClickListener(this);
     }
 
     /**
@@ -222,8 +228,15 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
                     }
                 }, mManga);
                 break;
+            case R.id.menuitem_settings:
+                Menu menu = mOptionsMenu.getMenu();
+                menu.findItem(R.id.action_webmode).setChecked(
+                        HistoryProvider.getInstance(view.getContext()).isWebMode(mManga)
+                );
+                mOptionsMenu.show();
+                break;
             case R.id.menuitem_save:
-                Menu menu = mSaveMenu.getMenu();
+                menu = mSaveMenu.getMenu();
                 if (LocalMangaProvider.class.equals(mManga.provider)) {
                     menu.findItem(R.id.action_save).setVisible(false);
                     menu.findItem(R.id.action_save_more).setVisible(mManga.status == MangaInfo.STATUS_ONGOING);
@@ -283,7 +296,9 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-
+            case R.id.action_webmode:
+                menuItem.setChecked(!menuItem.isChecked());
+                HistoryProvider.getInstance(getContext()).setWebMode(mManga, menuItem.isChecked());
             default:
                 if (mCallback != null) {
                     mCallback.onActionClick(menuItem.getItemId());

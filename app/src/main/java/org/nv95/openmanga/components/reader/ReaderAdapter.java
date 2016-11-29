@@ -1,9 +1,9 @@
 package org.nv95.openmanga.components.reader;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,13 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaPage;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.SsivUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by nv95 on 15.11.16.
@@ -29,13 +32,15 @@ import java.util.List;
 public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder> {
 
     private final PageLoader mLoader;
+    private final InternalLinkMovement mMovement;
 
-    public ReaderAdapter(Context context) {
+    public ReaderAdapter(Context context, InternalLinkMovement.OnLinkClickListener linkListener) {
         mLoader = new PageLoader(context);
+        mMovement = new InternalLinkMovement(linkListener);
         setHasStableIds(true);
     }
 
-    public void setPages(List<MangaPage> pages) {
+    public void setPages(@NonNull List<MangaPage> pages) {
         mLoader.setPages(pages);
     }
 
@@ -50,18 +55,13 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     @Override
     public PageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         PageHolder holder = new PageHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_page, parent, false));
+        holder.textView.setMovementMethod(mMovement);
+        mLoader.addListener(holder);
         return holder;
     }
 
     @Override
-    public void onViewDetachedFromWindow(PageHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        mLoader.removeListener(holder);
-    }
-
-    @Override
     public void onBindViewHolder(PageHolder holder, int position) {
-        mLoader.addListener(holder);
         holder.reset();
         PageWrapper wrapper = mLoader.requestPage(position);
         if (wrapper != null) {
@@ -77,6 +77,11 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
                     }
             }
         }
+    }
+
+    public void finish() {
+        mLoader.clearListeners();
+        mLoader.cancelAll();
     }
 
     @Override
@@ -128,7 +133,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         @Override
         public void onLoadingStarted(PageWrapper page, boolean shadow) {
             if (page.position == getAdapterPosition()) {
-                textView.setText(R.string.loading);
+                textView.setText(textView.getContext().getString(R.string.loading).toUpperCase(Locale.getDefault()));
                 textView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.setIndeterminate(true);
@@ -140,7 +145,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             if (page.position == getAdapterPosition()) {
                 progressBar.setIndeterminate(false);
                 progressBar.setProgress(percent);
-                textView.setText(textView.getContext().getString(R.string.loading_percent, percent));
+                textView.setText(textView.getContext().getString(R.string.loading_percent, percent).toUpperCase(Locale.getDefault()));
                 progressBar.setVisibility(View.VISIBLE);
                 textView.setVisibility(View.VISIBLE);
             }
@@ -149,7 +154,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
         @Override
         public void onLoadingComplete(PageWrapper page, boolean shadow) {
             if (page.position == getAdapterPosition()) {
-                textView.setText(R.string.wait);
+                textView.setText(textView.getContext().getString(R.string.wait).toUpperCase(Locale.getDefault()));
                 textView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.setIndeterminate(true);
@@ -220,12 +225,10 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             progressBar.setVisibility(View.GONE);
             textView.setVisibility(View.VISIBLE);
             textView.setText(
-                    Html.fromHtml(
-                            textView.getContext().getString(
-                                    R.string.error_loadimage_html,
-                                    FileLogger.getInstance().getFailMessage(textView.getContext(), e)
-                            )
-                    )
+                    AppHelper.fromHtml(textView.getContext().getString(
+                            R.string.error_loadimage_html,
+                            FileLogger.getInstance().getFailMessage(textView.getContext(), e)
+                    ), true)
             );
         }
 

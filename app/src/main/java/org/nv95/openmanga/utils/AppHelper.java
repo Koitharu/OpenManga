@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.format.DateUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -93,5 +97,34 @@ public class AppHelper {
         } else {
             return str.substring(0, len - 1) + '…';
         }
+    }
+
+    public static Spanned spannedToUpperCase(@NonNull Spanned s) {
+        Object[] spans = s.getSpans(0,
+                s.length(), Object.class);
+        SpannableString spannableString = new SpannableString(s.toString().toUpperCase());
+
+        // reapply the spans to the now uppercase string
+        for (Object span : spans) {
+            spannableString.setSpan(span,
+                    s.getSpanStart(span),
+                    s.getSpanEnd(span),
+                    0);
+        }
+
+        return spannableString;
+    }
+
+    public static Spanned fromHtml(String html, boolean allCaps) {
+        Spanned spanned;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            spanned = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            spanned = Html.fromHtml(html);
+        }
+        if (allCaps) {
+            spanned = spannedToUpperCase(spanned);
+        }
+        return spanned;
     }
 }
