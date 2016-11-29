@@ -187,7 +187,7 @@ public class MangachanProvider extends MangaProvider {
             String login = getStringPreference("login", "");
             String password = getStringPreference("password", "");
             if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-                auth("http://mangachan.ru/", login, password);
+                auth("http://mangachan.me/", login, password);
             }
         }
         return sAuthCookie;
@@ -195,7 +195,7 @@ public class MangachanProvider extends MangaProvider {
 
     public static boolean auth(String domain, String login, String password) {
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(domain + "index.php").openConnection();
+            HttpURLConnection con = (HttpURLConnection) new URL(domain).openConnection();
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             con.setDoOutput(true);
