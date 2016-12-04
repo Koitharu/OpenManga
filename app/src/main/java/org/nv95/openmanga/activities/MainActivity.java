@@ -487,7 +487,7 @@ public class MainActivity extends BaseAppActivity implements
             }
         } else {
             if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
-                showcase(R.id.action_search, R.string.tip_search_main);
+                showcase(R.id.action_search, R.string.action_search, R.string.tip_search_main);
             }
         }
     }
@@ -498,7 +498,7 @@ public class MainActivity extends BaseAppActivity implements
             mProgressBar.setVisibility(View.VISIBLE);
             mListLoader.getAdapter().getChoiceController().clearSelection();
         } else {
-            showcase(R.id.action_filter, R.string.tip_filter);
+            // TODO: 04.12.16
         }
         mTextViewHolder.setVisibility(View.GONE);
     }

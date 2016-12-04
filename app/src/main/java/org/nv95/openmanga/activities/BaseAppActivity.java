@@ -31,11 +31,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+
 import org.nv95.openmanga.R;
 
 import java.util.ArrayList;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 /**
  * Created by nv95 on 19.02.16.
@@ -290,24 +291,40 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         }
     }
 
-    void showcase(View view, @StringRes int text) {
-        if (view != null && view.getVisibility() == View.VISIBLE) {
-            new MaterialShowcaseView.Builder(this)
-                    .setTarget(view)
-                    .setDismissText(getString(R.string.got_it).toUpperCase())
-                    .setContentText(text)
-                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
-                    .singleUse(String.valueOf(text)) // provide a unique ID used to ensure it is only shown once
-                    .setDismissTextColor(ContextCompat.getColor(this, R.color.selector_frame))
-                    .show();
+    boolean showcase(final View view, @StringRes int title, @StringRes int body) {
+        return showcase(view, title, body, false);
+    }
+
+    boolean showcase(final View view, @StringRes int title, @StringRes int body, boolean tint) {
+        if (view != null && view.getVisibility() == View.VISIBLE
+                && !getSharedPreferences("tips", MODE_PRIVATE).getBoolean(getClass().getSimpleName() + "_" + view.getId(), false)) {
+            TapTargetView.showFor(this,
+                    TapTarget.forView(view, getString(title), getString(body))
+                            .transparentTarget(!tint)
+                            .tintTarget(tint),
+                    new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                        @Override
+                        public void onTargetClick(TapTargetView view) {
+                            super.onTargetClick(view);
+                            SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
+                            prefs.edit().putBoolean(getClass().getSimpleName() + "_" + view.getId(), true).apply();
+                        }
+                    });
+            return true;
+        } else {
+            return false;
         }
     }
 
-    void showcase(@IdRes int menuItemId, int text) {
+    /**
+     * @param menuItemId
+     * @param title
+     * @param body
+     * @return true if showcase shown
+     */
+    boolean showcase(@IdRes final int menuItemId, @StringRes int title, @StringRes int body) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            showcase(toolbar.findViewById(menuItemId), text);
-        }
+        return toolbar != null && showcase(toolbar.findViewById(menuItemId), title, body, true);
     }
 
     /**

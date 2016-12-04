@@ -123,7 +123,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         mSaveMenu.inflate(R.menu.save);
         mSaveMenu.setOnMenuItemClickListener(this);
 
-        mOptionsMenu = new PopupMenu(context, mButtons[4]);
+        mOptionsMenu = new PopupMenu(context, mButtons[6]);
         mOptionsMenu.inflate(R.menu.read_prefs);
         mOptionsMenu.setOnMenuItemClickListener(this);
     }

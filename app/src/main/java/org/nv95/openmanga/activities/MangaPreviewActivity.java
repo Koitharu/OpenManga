@@ -337,13 +337,13 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 noChaptersSnackbar();
             }
             invalidateOptionsMenu();
-            if (isFirstStart()) {
-                showcase(R.id.action_favourite, R.string.tip_favourite);
+            if (showcase(R.id.action_favourite, R.string.action_favourite, R.string.tip_favourite)) {
+
             } else {
                 if (LocalMangaProvider.class.equals(mMangaSummary.provider)) {
-                    showcase(R.id.action_save_more, R.string.tip_save_more);
+                    showcase(R.id.action_save_more, R.string.action_save_add,  R.string.tip_save_more);
                 } else {
-                    showcase(R.id.action_save, R.string.tip_save);
+                    showcase(R.id.action_save, R.string.save_manga, R.string.tip_save);
                 }
             }
         }

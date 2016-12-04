@@ -482,6 +482,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             mAdapter.notifyDataSetChanged();
             mMenuPanel.onChapterChanged(mManga.chapters.get(mChapter) ,mangaPages.size());
             mProgressFrame.setVisibility(View.GONE);
+            showcase(mMenuButton, R.string.menu, R.string.tip_reader_menu);
         }
 
         @Override

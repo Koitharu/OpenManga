@@ -40,7 +40,7 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
         } else {
-            showcase(toggle, R.string.tip_chapter_checking);
+            showcase(toggle, R.string.check_updates_auto, R.string.tip_chapter_checking);
         }
     }
 
