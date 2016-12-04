@@ -313,4 +313,9 @@
     <string name="check_credentials">Check credentials</string>
     <string name="genre_webtoon">Webtoon</string>
     <string name="tip_reader_menu">Click here to open menu</string>
+    <string name="no_backups">No backups found</string>
+    <string name="tip_sources">Select manga sources, reorder and configure it at your discretion</string>
+    <string name="tip_storage">Select path for local manga storage. Downloaded manga will be store here</string>
+    <string name="tip_ui_theme">Select UI theme that you prefer</string>
+    <string name="tip_restore">Have a backup? Restore your history and favourites from it</string>
 </resources>

@@ -82,15 +82,19 @@ public class BackupRestoreUtil {
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new BackupRestoreUtil(context).restore(files[which]);
-                    }
-                })
                 .setTitle(R.string.select_backup)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setCancelable(true);
+        if (items.length != 0) {
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new BackupRestoreUtil(context).restore(files[which]);
+                }
+            });
+        } else {
+            builder.setMessage(R.string.no_backups);
+        }
         if (context instanceof Activity) {
             final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
