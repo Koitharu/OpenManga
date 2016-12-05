@@ -156,7 +156,8 @@ public class StorageUtils {
 
     @Nullable
     public static File saveToGallery(Context context, File file) {
-        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), file.getName());
+        File dest = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                file.getName() + "." + getFileExtFromBytes(file));
         try {
             StorageUtils.copyFile(file, dest);
             MediaScannerConnection.scanFile(context,
@@ -255,5 +256,34 @@ public class StorageUtils {
         File file = new File(root, appcat);
         file.mkdirs();
         return file;
+    }
+
+    @Nullable
+    public static String getFileExtFromBytes(File f) { //beta
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(f);
+            byte[] buf = new byte[5]; //max ext size + 1
+            fis.read(buf, 0, buf.length);
+            StringBuilder builder = new StringBuilder(buf.length);
+            for (int i=1;i<buf.length && buf[i] != '\r' && buf[i] != '\n';i++) {
+                builder.append((char)buf[i]);
+            }
+            String res = builder.toString().toLowerCase();
+            FileLogger.getInstance().report("FILE EXT " + res);
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            FileLogger.getInstance().report("FILE EXT", e);
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

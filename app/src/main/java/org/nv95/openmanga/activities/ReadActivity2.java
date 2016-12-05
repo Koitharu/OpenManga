@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,7 +16,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -255,7 +255,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 new LoadSourceTask().startLoading(mManga);
                 break;
             case R.id.action_save_image:
-                new ImageSaveTask().startLoading(mAdapter.getItem(pos));
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new ImageSaveTask().startLoading(mAdapter.getItem(pos));
+                }
                 break;
             case R.id.menuitem_thumblist:
                 new ThumbnailsDialog(this, mAdapter.getLoader())
@@ -500,6 +502,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
             mProgressFrame.setVisibility(View.VISIBLE);
+            mMenuPanel.hide();
             super.onPreExecute();
         }
 
@@ -514,7 +517,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 provider = MangaProviderManager.instanceProvider(ReadActivity2.this, pageWrappers[0].page.provider);
                 String url = provider.getPageImage(pageWrappers[0].page);
                 File dest;
-                dest = new File(getExternalFilesDir("temp"), url.hashCode() + "." + MimeTypeMap.getFileExtensionFromUrl(url));
+                dest = new File(getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
                 final SimpleDownload dload = new SimpleDownload(url, dest);
                 dload.run();
                 return dload.isSuccess() ? dest : null;
