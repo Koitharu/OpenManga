@@ -120,6 +120,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_fab_read"
         app:borderWidth="0dp"
+        app:fabSize="normal"
         app:layout_anchor="@+id/appbar_container"
         app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>

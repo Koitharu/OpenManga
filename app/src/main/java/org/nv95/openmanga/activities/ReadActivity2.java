@@ -26,6 +26,7 @@ import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.ReaderAdapter;
+import org.nv95.openmanga.dialogs.HintDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ThumbnailsDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
@@ -263,6 +264,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 break;
             case R.id.action_webmode:
                 updateConfig();
+                HintDialog.showOnce(this, R.string.tip_webtoon);
                 break;
             case R.id.nav_action_settings:
                 startActivityForResult(new Intent(this, SettingsActivity.class)

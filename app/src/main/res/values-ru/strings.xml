@@ -272,4 +272,26 @@
     <string name="bookmark_pos" formatted="false">Глава %d стр %d</string>
     <string name="bookmark_removed">Закладка удалена</string>
     <string name="bookmark_added">Закладка добавлена</string>
+    <string name="another">Другой…</string>
+    <string name="custom_path">Пользовательский</string>
+    <string name="size_free" formatted="false">Свободно %s</string>
+    <string name="pick_dir">Выбрать каталог</string>
+    <string name="select_storage">Выбор накопителя</string>
+    <string name="download_unqueue_confirm" formatted="false">Удлить \"%s\" из очереди загрузки?</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="recommendations_options">Параметры рекомендаций</string>
+    <string name="providers_pref_summary" formatted="false">Включено %d из %d</string>
+    <string name="webmode">Режим webtoon</string>
+    <string name="successfully">Успешно</string>
+    <string name="auth_failed">Авторизация не удалась</string>
+    <string name="check_credentials">Проверить учётные данные</string>
+    <string name="genre_webtoon">Webtoon</string>
+    <string name="tip_reader_menu">Нажмите сюда, чтобы открыть меню</string>
+    <string name="no_backups">Не найдено резервных копий</string>
+    <string name="tip_sources">Выберите источники манги, отсортируйте их и настройте по своему усмотрению</string>
+    <string name="tip_storage">Укажите путь для хранения манги на устройстве. Вся скачиваемая манга будет сохраняться сюда</string>
+    <string name="tip_ui_theme">Выберите тему оформления приложения</string>
+    <string name="tip_restore">Есть резервная копия данных? Восстановите свою историю и закладки</string>
+    <string name="tip_webtoon">Режим Webtoon меняет некоторые настройки для конкретной манги, делая чтение вебманги более удобным</string>
 </resources>
