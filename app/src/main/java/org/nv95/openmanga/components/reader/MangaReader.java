@@ -2,6 +2,7 @@ package org.nv95.openmanga.components.reader;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import org.nv95.openmanga.components.reader.recyclerpager.PreCachingLayoutManager;
@@ -51,6 +52,7 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
     }
 
     public void applyConfig(boolean vertical, boolean reverse, boolean sticky) {
+        int oldPos = getCurrentPosition();
         setLayoutManager(mLayoutManager = new PreCachingLayoutManager(
                 getContext(),
                 vertical ? PreCachingLayoutManager.VERTICAL : PreCachingLayoutManager.HORIZONTAL,
@@ -66,6 +68,9 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
                 : new HorizontalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(this));
         mOverScrollDecor.setOverScrollUpdateListener(this);
         mOverScrollDecor.setOverScrollStateListener(this);
+        if (oldPos != RecyclerView.NO_POSITION) {
+            scrollToPosition(oldPos);
+        }
     }
 
     public boolean isVertical() {

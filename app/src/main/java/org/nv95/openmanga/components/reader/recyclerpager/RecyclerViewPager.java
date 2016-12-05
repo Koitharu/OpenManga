@@ -245,8 +245,12 @@ public class RecyclerViewPager extends RecyclerView {
      * get item position in center of viewpager
      */
     public int getCurrentPosition() {
+        LayoutManager lm = getLayoutManager();
+        if (lm == null) {
+            return RecyclerView.NO_POSITION;
+        }
         int curPosition;
-        if (getLayoutManager().canScrollHorizontally()) {
+        if (lm.canScrollHorizontally()) {
             curPosition = ViewUtils.getCenterXChildPosition(this);
         } else {
             curPosition = ViewUtils.getCenterYChildPosition(this);
