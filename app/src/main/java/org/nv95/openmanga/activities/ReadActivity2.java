@@ -5,8 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -520,32 +523,37 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 dest = new File(getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
                 final SimpleDownload dload = new SimpleDownload(url, dest);
                 dload.run();
-                return dload.isSuccess() ? dest : null;
+                if (!dload.isSuccess()) {
+                    return null;
+                }
+                File dest2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), String.valueOf(url.hashCode()));
+                Bitmap b = BitmapFactory.decodeFile(dest.getPath());
+                if (!StorageUtils.saveBitmap(b, dest2.getPath())) {
+                    dest2 = null;
+                }
+                b.recycle();
+                return dest2;
             } catch (Exception ignored) {
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(File file) {
+        protected void onPostExecute(final File file) {
             super.onPostExecute(file);
             mProgressFrame.setVisibility(View.GONE);
             if (file != null && file.exists()) {
-                final File destFile = StorageUtils.saveToGallery(ReadActivity2.this, file);
-                if (destFile != null) {
-                    Snackbar.make(mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.action_share, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    new ContentShareHelper(ReadActivity2.this).shareImage(destFile);
-                                }
-                            })
-                            .show();
-                } else {
-                    Snackbar.make(mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
-                }
+                StorageUtils.addToGallery(ReadActivity2.this, file);
+                Snackbar.make(mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action_share, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new ContentShareHelper(ReadActivity2.this).shareImage(file);
+                            }
+                        })
+                        .show();
             } else {
-                Snackbar.make(mContainer, R.string.image_loading_error, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
             }
 
         }
