@@ -304,10 +304,10 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                             .tintTarget(tint),
                     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                         @Override
-                        public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);
+                        public void onTargetClick(TapTargetView view1) {
+                            super.onTargetClick(view1);
                             SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
-                            prefs.edit().putBoolean(getClass().getSimpleName() + "_" + view.getId(), true).apply();
+                            prefs.edit().putBoolean(BaseAppActivity.this.getClass().getSimpleName() + "_" + view.getId(), true).apply();
                         }
                     });
             return true;
