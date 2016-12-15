@@ -306,10 +306,10 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                         @Override
                         public void onTargetClick(TapTargetView view1) {
                             super.onTargetClick(view1);
-                            SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
-                            prefs.edit().putBoolean(BaseAppActivity.this.getClass().getSimpleName() + "_" + view.getId(), true).apply();
                         }
                     });
+            SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
+            prefs.edit().putBoolean(BaseAppActivity.this.getClass().getSimpleName() + "_" + view.getId(), true).apply();
             return true;
         } else {
             return false;
