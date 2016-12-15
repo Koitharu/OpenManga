@@ -38,7 +38,7 @@ public class CookieParser {
         for (Map.Entry<String,String> o : mCookies.entrySet()) {
             res.append(o.getKey()).append("=").append(o.getValue()).append("; ");
         }
-        res.delete(res.length() - 2, res.length() - 1);
+        //res.delete(res.length() - 2, res.length() - 1);
         return res.toString();
     }
 
