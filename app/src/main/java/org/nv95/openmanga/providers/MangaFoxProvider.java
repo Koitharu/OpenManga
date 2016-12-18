@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.Html;
 
-import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -14,6 +14,7 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -138,22 +139,33 @@ public class MangaFoxProvider extends MangaProvider {
     @Nullable
     @Override
     public MangaList search(String query, int page) throws Exception {
-        if (page != 0) {
+        if (page > 0) {
             return MangaList.empty();
         }
         MangaList list = new MangaList();
-        JSONArray jsonArray = new JSONArray(getRaw("http://mangafox.me/ajax/search.php?term=" + query));
-        JSONArray o;
+        Document document = getPage("http://m.mangafox.me/search?k=" + URLEncoder.encode(query, "UTF-8"));
         MangaInfo manga;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            o = jsonArray.getJSONArray(i);
+        Element r;
+        String s;
+        Elements elements = document.body().select("ul.post-list").select("li");
+        for (Element o : elements) {
             manga = new MangaInfo();
+            r = o.select("div.cover-info").first();
+            manga.path = o.select("a").first().attr("href");
+            manga.path = manga.path.replace("http://m.","http://");
+            manga.path = concatUrl("http://mangafox.me/", manga.path);
+            manga.name = r.child(0).text();
+            manga.genres = r.child(1).text();
+            s = r.child(2).text().toLowerCase();
+            if (s.contains("ongoing")) {
+                manga.status = MangaInfo.STATUS_ONGOING;
+            } else if (s.contains("complete")) {
+                manga.status = MangaInfo.STATUS_COMPLETED;
+            }
+            r = o.select("img").first();
+            manga.preview = r.attr("src");
+            manga.subtitle = r.attr("title");
             manga.provider = MangaFoxProvider.class;
-            manga.preview = "http://c.mfcdn.net/store/manga/" + o.getString(0) + "/cover.jpg";
-            manga.name = o.getString(1);
-            manga.path = concatUrl("http://mangafox.me/manga/", o.getString(2));
-            manga.subtitle = null;
-            manga.genres = o.getString(3);
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
