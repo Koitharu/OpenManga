@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  */
 public class EHentaiProvider extends MangaProvider {
 
-    private static final String DEF_COOKIE = "nw=1; uconfig=dm_t";
+    private static final String DEF_COOKIE = "nw=1; uconfig=dm_t; igneous=0";
     private static final int genres[] = {R.string.genre_all, R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset, R.string.genre_cosplay, R.string.genre_asianporn, R.string.genre_misc};
     private static final String genreUrls[] = {"f_doujinshi", "f_manga", "f_artistcg", "f_gamecg", "f_western", "f_non-h", "f_imageset", "f_cosplay", "f_asianporn", "f_misc"};
     @NonNull

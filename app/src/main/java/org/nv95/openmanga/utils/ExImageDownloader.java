@@ -13,14 +13,10 @@ import java.net.HttpURLConnection;
  * Created by nv95 on 21.11.16.
  */
 
-public class ExImageDownloader extends BaseImageDownloader {
+class ExImageDownloader extends BaseImageDownloader {
 
-    public ExImageDownloader(Context context) {
+    ExImageDownloader(Context context) {
         super(context);
-    }
-
-    public ExImageDownloader(Context context, int connectTimeout, int readTimeout) {
-        super(context, connectTimeout, readTimeout);
     }
 
     @Override
