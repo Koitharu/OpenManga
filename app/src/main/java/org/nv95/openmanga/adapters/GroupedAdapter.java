@@ -95,7 +95,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case VIEW_HEADER:
-                return new GroupViewHolder(inflater.inflate(R.layout.header_group, parent, false), mOnMoreClickListener);
+                return new GroupViewHolder(inflater.inflate(R.layout.header_group_more, parent, false), mOnMoreClickListener);
             case VIEW_FOOTER:
                 ButtonViewHolder holder = new ButtonViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.footer_button, parent, false));
@@ -181,13 +181,16 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private final TextView mTextView;
+        private final TextView mTextViewMore;
         private final OnMoreClickListener mMoreClickListener;
         private ProviderSummary mData;
 
         public GroupViewHolder(View itemView, OnMoreClickListener moreClickListener) {
             super(itemView);
             mTextView = (TextView) itemView.findViewById(R.id.textView);
+            mTextViewMore = (TextView) itemView.findViewById(R.id.text2);
             itemView.setOnClickListener(this);
             mMoreClickListener = moreClickListener;
         }
@@ -195,6 +198,15 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public void fill(ProviderSummary data) {
             mData = data;
             mTextView.setText(data.name);
+        }
+
+        public void setEnabled(boolean value) {
+            mTextViewMore.setVisibility(value ? View.VISIBLE : View.INVISIBLE);
+            itemView.setClickable(value);
+        }
+
+        public boolean isEnabled() {
+            return mTextViewMore.getVisibility() == View.VISIBLE;
         }
 
         @Override

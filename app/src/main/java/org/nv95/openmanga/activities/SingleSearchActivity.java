@@ -10,9 +10,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,12 +35,13 @@ import org.nv95.openmanga.utils.LayoutUtils;
 /**
  * Created by nv95 on 01.10.15.
  */
-public class SearchActivity extends BaseAppActivity implements
+public class SingleSearchActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener,
-        ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener, NavigationListener {
+        ListModeHelper.OnListModeListener, InternalLinkMovement.OnLinkClickListener, NavigationListener, TextView.OnEditorActionListener {
 
     //views
     private RecyclerView mRecyclerView;
+    private EditText mEditTextQuery;
     private ProgressBar mProgressBar;
     private TextView mTextViewHolder;
     //utils
@@ -45,40 +50,45 @@ public class SearchActivity extends BaseAppActivity implements
     private ListModeHelper mListModeHelper;
     //data
     private String mQuery;
-    @Nullable
-    private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_fastsearch);
+        setContentView(R.layout.activity_fastsearch);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupToolbarScrolling(toolbar);
+        disableTitle();
+        enableHomeAsUp();
+        mEditTextQuery = (EditText) findViewById(R.id.editTextQuery);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mTextViewHolder.setMovementMethod(new InternalLinkMovement(this));
         Bundle extras = getIntent().getExtras();
         mQuery = extras.getString("query");
-        mTitle = extras.getString("title");
         int provider = extras.getInt("provider");
         mProvider = new MangaProviderManager(this).getProviderById(provider);
         if (mProvider == null) {
             finish();
             return;
         }
-        if (mTitle != null) {
-            setTitle(mQuery);
-        }
-        enableHomeAsUp();
-        setSubtitle(mTitle == null ? mQuery : mTitle);
+        mEditTextQuery.setOnEditorActionListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mLoader = new MangaListLoader(mRecyclerView, this);
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
         updateContent();
+        if (TextUtils.isEmpty(mQuery)) {
+            LayoutUtils.showSoftKeyboard(mEditTextQuery);
+        } else {
+            mEditTextQuery.setText(mQuery);
+            LayoutUtils.hideSoftKeyboard(mEditTextQuery);
+            mRecyclerView.requestFocus();
+            updateContent();
+        }
     }
 
     @Override
@@ -90,7 +100,7 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
-        menu.findItem(R.id.action_search).setVisible(mTitle == null);
+        menu.findItem(R.id.action_search).setVisible(mQuery == null);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -130,7 +140,7 @@ public class SearchActivity extends BaseAppActivity implements
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(SearchActivity.this, FastSearchActivity.class)
+        startActivity(new Intent(SingleSearchActivity.this, FastSearchActivity.class)
                 .putExtra("query", mQuery));
     }
 
@@ -209,5 +219,18 @@ public class SearchActivity extends BaseAppActivity implements
     @Override
     public void onPageChange(int page) {
         mLoader.loadFromPage(page - 1);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            mQuery = textView.getText().toString();
+            LayoutUtils.hideSoftKeyboard(textView);
+            mRecyclerView.requestFocus();
+            updateContent();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

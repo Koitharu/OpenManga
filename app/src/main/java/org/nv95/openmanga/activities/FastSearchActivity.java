@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -86,6 +87,7 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
         if (TextUtils.isEmpty(mQuery)) {
             LayoutUtils.showSoftKeyboard(mEditTextQuery);
         } else {
+            mEditTextQuery.setText(mQuery);
             LayoutUtils.hideSoftKeyboard(mEditTextQuery);
             mRecyclerView.requestFocus();
             doSearch(STAGE_NONE);
@@ -102,7 +104,9 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
 
     @Override
     public void onMoreClick(String title, ProviderSummary provider) {
-
+        startActivity(new Intent(this, SingleSearchActivity.class)
+                .putExtra("provider", provider.id)
+                .putExtra("query", mQuery));
     }
 
     @Override
