@@ -1,7 +1,9 @@
 package org.nv95.openmanga.adapters;
 
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,66 +15,51 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
-import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
 
 /**
  * Created by nv95 on 31.01.16.
  */
-public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private static final int VIEW_ITEM = 1;
     private static final int VIEW_HEADER = 0;
-    private static final int VIEW_PROGRESS = 2;
+    private static final int VIEW_FOOTER = 2;
+
+    private static final int FOOTER_NONE = 0;
+    private static final int FOOTER_BUTTON = 1;
+    private static final int FOOTER_PROGRESS = 2;
 
     private final ArrayList<Object> mDataset;
     private boolean mGrid;
     private ThumbSize mThumbSize;
     private final OnMoreClickListener mOnMoreClickListener;
-    private final int mVisibleThreshold = 2;
-    private int mLastVisibleItem, mTotalItemCount;
-    private boolean mHasNext;
-    private boolean mLoading;
-    private EndlessAdapter.OnLoadMoreListener mOnLoadMoreListener;
+    private int mFooter;
+    private CharSequence mFooterText;
 
-    public GroupedAdapter(RecyclerView recyclerView, OnMoreClickListener moreClickListener) {
+    public GroupedAdapter(OnMoreClickListener moreClickListener) {
         mDataset = new ArrayList<>();
         mOnMoreClickListener = moreClickListener;
         mGrid = false;
-        mHasNext = true;
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mTotalItemCount = LayoutUtils.getItemCount(recyclerView);
-                mLastVisibleItem = LayoutUtils.findLastVisibleItemPosition(recyclerView);
-                if (!mLoading && isLoadEnabled() && mTotalItemCount <= (mLastVisibleItem + mVisibleThreshold)) {
-                    // End has been reached
-                    // Do something
-                    if (mOnLoadMoreListener != null) {
-                        mOnLoadMoreListener.onLoadMore();
-                        mLoading = true;
-                    }
-                }
-            }
-        });
+        mFooter = FOOTER_NONE;
+        mFooterText = null;
     }
 
-    public void setOnLoadMoreListener(EndlessAdapter.OnLoadMoreListener onLoadMoreListener) {
-        mOnLoadMoreListener = onLoadMoreListener;
+    public void hideFooter() {
+        mFooter = FOOTER_NONE;
+        notifyItemChanged(mDataset.size());
     }
 
-    public void setLoaded(boolean hasNext) {
-        mLoading = false;
-        if (mHasNext != hasNext) {
-            mHasNext = hasNext;
-            notifyItemChanged(mDataset.size());
-        }
+    public void setFooterProgress() {
+        mFooter = FOOTER_PROGRESS;
+        notifyItemChanged(mDataset.size());
     }
 
-    private boolean isLoadEnabled() {
-        return mDataset.size() != 0 && mHasNext;
+    public void setFooterButton(CharSequence title) {
+        mFooter = FOOTER_BUTTON;
+        mFooterText = title;
+        notifyItemChanged(mDataset.size());
     }
 
     public boolean setGrid(boolean grid) {
@@ -109,9 +96,11 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (viewType) {
             case VIEW_HEADER:
                 return new GroupViewHolder(inflater.inflate(R.layout.header_group, parent, false), mOnMoreClickListener);
-            case VIEW_PROGRESS:
-                return new GroupedAdapter.ProgressViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.footer_loading, parent, false));
+            case VIEW_FOOTER:
+                ButtonViewHolder holder = new ButtonViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.footer_button, parent, false));
+                holder.textView.setOnClickListener(this);
+                return holder;
             default:
                 return new MangaListAdapter.MangaViewHolder(inflater
                         .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), null);
@@ -122,8 +111,10 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
             ((MangaListAdapter.MangaViewHolder) holder).fill(getItem(position), mThumbSize, false);
-        } else if (holder instanceof GroupedAdapter.ProgressViewHolder) {
-            ((GroupedAdapter.ProgressViewHolder) holder).setVisible(isLoadEnabled());
+        } else if (holder instanceof ButtonViewHolder) {
+            ((ButtonViewHolder) holder).textView.setText(mFooterText);
+            ((ButtonViewHolder) holder).textView.setVisibility(mFooter == FOOTER_BUTTON ? View.VISIBLE : View.GONE);
+            ((ButtonViewHolder) holder).progressBar.setVisibility(mFooter == FOOTER_PROGRESS ? View.VISIBLE : View.GONE);
         } else {
             ((GroupViewHolder) holder).fill((ProviderSummary) mDataset.get(position));
         }
@@ -153,7 +144,7 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         if (position == mDataset.size()) {
-            return VIEW_PROGRESS;
+            return VIEW_FOOTER;
         } else {
             return mDataset.get(position) instanceof MangaInfo ? VIEW_ITEM : VIEW_HEADER;
         }
@@ -166,11 +157,30 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
-    public interface OnMoreClickListener {
-        void onMoreClick(String title, ProviderSummary provider);
+    public AutoSpanSizeLookup getSpanSizeLookup(int spans) {
+        return new AutoSpanSizeLookup(spans);
     }
 
-    protected static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public void onClick(View view) {
+        mOnMoreClickListener.onMoreButtonClick();
+    }
+
+    public boolean hasItems() {
+        return !mDataset.isEmpty();
+    }
+
+    public void clearItems() {
+        mDataset.clear();
+        notifyDataSetChanged();
+    }
+
+    public interface OnMoreClickListener {
+        void onMoreClick(String title, ProviderSummary provider);
+        void onMoreButtonClick();
+    }
+
+    private static class GroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTextView;
         private final OnMoreClickListener mMoreClickListener;
         private ProviderSummary mData;
@@ -193,16 +203,31 @@ public class GroupedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private static class ProgressViewHolder extends RecyclerView.ViewHolder {
-        private final ProgressBar mProgressBar;
+    private static class ButtonViewHolder extends RecyclerView.ViewHolder {
 
-        ProgressViewHolder(View v) {
+        public final ProgressBar progressBar;
+        public final TextView textView;
+
+        ButtonViewHolder(View v) {
             super(v);
-            mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            textView = (TextView) v.findViewById(R.id.textView);
+            boolean light = PreferenceManager.getDefaultSharedPreferences(v.getContext())
+                    .getString("theme", "0").equals("0");
+            textView.setBackgroundResource(light ? R.drawable.background_button : R.drawable.background_button_light);
+        }
+    }
+
+    public class AutoSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+        final int mCount;
+
+        public AutoSpanSizeLookup(int mCount) {
+            this.mCount = mCount;
         }
 
-        public void setVisible(boolean visible) {
-            mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        @Override
+        public int getSpanSize(int position) {
+            return getItemViewType(position) == VIEW_ITEM ? 1 : mCount;
         }
     }
 }

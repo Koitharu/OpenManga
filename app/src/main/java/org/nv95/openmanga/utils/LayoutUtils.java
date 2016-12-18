@@ -218,4 +218,9 @@ public class LayoutUtils {
         t.setGravity(Gravity.CENTER, 0, 0);
         t.show();
     }
+
+    public static void hideSoftKeyboard(@NonNull View view) {
+        InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

@@ -32,11 +32,7 @@
         <activity
             android:name=".activities.MangaPreviewActivity" />
         <activity
-            android:name=".activities.SearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/search_results" />
-        <activity
-            android:name=".activities.MultipleSearchActivity"
+            android:name=".activities.FastSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity

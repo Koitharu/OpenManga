@@ -130,7 +130,7 @@ public class SearchActivity extends BaseAppActivity implements
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(SearchActivity.this, MultipleSearchActivity.class)
+        startActivity(new Intent(SearchActivity.this, FastSearchActivity.class)
                 .putExtra("query", mQuery));
     }
 

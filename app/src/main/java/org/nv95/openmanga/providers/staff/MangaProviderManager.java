@@ -158,6 +158,16 @@ public class MangaProviderManager {
         return mProviders.subList(0, getProvidersCount());
     }
 
+
+    public List<ProviderSummary> getDisabledOrderedProviders() {
+        return mProviders.subList(getProvidersCount(), mProviders.size());
+    }
+
+    public boolean hasDisabledProviders() {
+        int count = mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount());
+        return count < mProviders.size();
+    }
+
     public int getProvidersCount() {
         return Math.min(
                 mContext.getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),

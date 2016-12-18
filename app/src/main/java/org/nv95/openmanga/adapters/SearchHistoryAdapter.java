@@ -9,6 +9,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
@@ -17,7 +18,7 @@ import org.nv95.openmanga.helpers.StorageHelper;
 /**
  * Created by nv95 on 02.01.16.
  */
-public class SearchHistoryAdapter extends CursorAdapter {
+public class SearchHistoryAdapter extends CursorAdapter implements Filterable {
 
     private static final String TABLE_NAME = "search_history";
     

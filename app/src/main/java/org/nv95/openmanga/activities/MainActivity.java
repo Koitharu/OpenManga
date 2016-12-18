@@ -17,7 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,7 +24,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -89,7 +87,6 @@ public class MainActivity extends BaseAppActivity implements
     //utils
     private MangaListLoader mListLoader;
     private MangaProviderManager mProviderManager;
-    private SearchHistoryAdapter mSearchAdapter;
     private ListModeHelper mListModeHelper;
     //data
     private MangaProvider mProvider;
@@ -132,7 +129,6 @@ public class MainActivity extends BaseAppActivity implements
         mNavigationView.setNavigationItemSelectedListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mProviderManager = new MangaProviderManager(this);
-        mSearchAdapter = new SearchHistoryAdapter(this);
         int defSection = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                 .getString("defsection", String.valueOf(MangaProviderManager.PROVIDER_LOCAL)));
         final MenuItem menuItem = mNavigationView.getMenu().getItem(4 + defSection);
@@ -212,45 +208,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem menuItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        searchView.setSuggestionsAdapter(mSearchAdapter);
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-                searchView.setQuery(mSearchAdapter.getString(position), false);
-                return true;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                mSearchAdapter.addToHistory(query);
-                if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                        .getBoolean("qsearch", false) && mProvider.isSearchAvailable()) {
-                    startActivity(new Intent(MainActivity.this, SearchActivity.class)
-                            .putExtra("query", query)
-                            .putExtra("provider", getCurrentProviderIndex()));
-                } else {
-                    startActivity(new Intent(MainActivity.this, MultipleSearchActivity.class)
-                            .putExtra("query", query));
-                }
-                menu.findItem(R.id.action_search).collapseActionView();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mSearchAdapter.updateContent(newText);
-                return false;
-            }
-        });
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     private int getCurrentProviderIndex(){
@@ -326,6 +284,10 @@ public class MainActivity extends BaseAppActivity implements
             return true;
         }
         switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(MainActivity.this, FastSearchActivity.class)
+                        .putExtra("provider", getCurrentProviderIndex()));
+                return true;
             case R.id.action_import:
                 startActivityForResult(new Intent(this, FileSelectActivity.class)
                         .putExtra(FileSelectActivity.EXTRA_FILTER, "cbz;zip"), REQUEST_IMPORT);
