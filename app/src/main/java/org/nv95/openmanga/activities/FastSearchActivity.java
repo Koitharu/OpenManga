@@ -1,62 +1,55 @@
 package org.nv95.openmanga.activities;
 
-import android.content.Intent;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.GroupedAdapter;
+import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.components.SearchLayout;
+import org.nv95.openmanga.fragments.BaseAppFragment;
+import org.nv95.openmanga.fragments.MultipleSearchFragment;
+import org.nv95.openmanga.fragments.Searchable;
+import org.nv95.openmanga.fragments.SingleSearchFragment;
 import org.nv95.openmanga.helpers.ListModeHelper;
-import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.providers.staff.ProviderSummary;
-import org.nv95.openmanga.providers.staff.Providers;
+import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
-
-import java.util.ArrayDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by nv95 on 15.12.16.
  */
 
-public class FastSearchActivity extends BaseAppActivity implements GroupedAdapter.OnMoreClickListener,
-        ListModeHelper.OnListModeListener, TextView.OnEditorActionListener {
+public class FastSearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
+        TextView.OnEditorActionListener, View.OnFocusChangeListener,
+        FragmentManager.OnBackStackChangedListener, SearchHistoryAdapter.OnHistoryEventListener, TextWatcher {
 
-    private static final int STAGE_NONE = 0;
-    private static final int STAGE_CURRENT = 1;
-    private static final int STAGE_ENABLED = 2;
-    private static final int STAGE_DISABLED = 3;
-
-    private int mStage;
     private String mQuery;
-    private TextView mTextViewHolder;
     private EditText mEditTextQuery;
-    private ProgressBar mProgressBar;
-    private GroupedAdapter mAdapter;
-    private RecyclerView mRecyclerView;
-    private MangaProviderManager mProviderManager;
-    private int mCurrentProvider;
-    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private SearchLayout mSearchLayout;
+    private FrameLayout mFrameContent;
+    private FrameLayout mFrameSearch;
+    private RecyclerView mRecyclerViewSearch;
+    private TextView mTextViewHolder;
+    private SearchHistoryAdapter mHistoryAdapter;
     private ListModeHelper mListModeHelper;
-    private ArrayDeque<ProviderSummary> mProviders;
+    @Nullable
+    private BaseAppFragment mFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,30 +60,37 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
         setupToolbarScrolling(toolbar);
         disableTitle();
         enableHomeAsUp();
-        mEditTextQuery = (EditText) findViewById(R.id.editTextQuery);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mSearchLayout = (SearchLayout) findViewById(R.id.search);
+        mFrameContent = (FrameLayout) findViewById(R.id.content);
+        mFrameSearch = (FrameLayout) findViewById(R.id.search_frame);
+        mRecyclerViewSearch = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
+        mEditTextQuery = mSearchLayout.getEditText();
         mQuery = getIntent().getStringExtra("query");
-        mCurrentProvider = getIntent().getIntExtra("provider", -5);
         mEditTextQuery.setText(mQuery);
-        mProviderManager = new MangaProviderManager(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        mAdapter = new GroupedAdapter(this);
-        mRecyclerView.setAdapter(mAdapter);
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
+        mFragment = null;
+        mHistoryAdapter = new SearchHistoryAdapter(this, this);
+        mRecyclerViewSearch.setAdapter(mHistoryAdapter);
+
         mEditTextQuery.setOnEditorActionListener(this);
-        mProviders = new ArrayDeque<>();
+        mSearchLayout.setOnEditFocusChangeListener(this);
+        mEditTextQuery.addTextChangedListener(this);
+        getFragmentManager().addOnBackStackChangedListener(this);
 
         if (TextUtils.isEmpty(mQuery)) {
-            LayoutUtils.showSoftKeyboard(mEditTextQuery);
+            mEditTextQuery.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LayoutUtils.showSoftKeyboard(mEditTextQuery);
+                }
+            }, 250);
         } else {
             mEditTextQuery.setText(mQuery);
             LayoutUtils.hideSoftKeyboard(mEditTextQuery);
-            mRecyclerView.requestFocus();
-            doSearch(STAGE_NONE);
+            doSearch(mQuery);
         }
     }
 
@@ -103,21 +103,15 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
     }
 
     @Override
-    public void onMoreClick(String title, ProviderSummary provider) {
-        startActivity(new Intent(this, SingleSearchActivity.class)
-                .putExtra("provider", provider.id)
-                .putExtra("query", mQuery));
-    }
-
-    @Override
-    public void onMoreButtonClick() {
-        doSearch(mStage);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_multiple, menu);
+        getMenuInflater().inflate(R.menu.search, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_goto).setVisible(mFragment instanceof SingleSearchFragment && !TextUtils.isEmpty(mQuery));
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -127,41 +121,15 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
                 mListModeHelper.showDialog();
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return (mFragment != null && mFragment.onOptionsItemSelected(item)) || super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     public void onListModeChanged(boolean grid, int sizeMode) {
-        int spans;
-        ThumbSize thumbSize;
-        switch (sizeMode) {
-            case -1:
-                spans = LayoutUtils.isTabletLandscape(this) ? 2 : 1;
-                thumbSize = ThumbSize.THUMB_SIZE_LIST;
-                break;
-            case 0:
-                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_SMALL);
-                break;
-            case 1:
-                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_MEDIUM);
-                break;
-            case 2:
-                spans = LayoutUtils.getOptimalColumnsCount(getResources(), thumbSize = ThumbSize.THUMB_SIZE_LARGE);
-                break;
-            default:
-                return;
+        if (mFragment instanceof ListModeHelper.OnListModeListener) {
+            ((ListModeHelper.OnListModeListener) mFragment).onListModeChanged(grid, sizeMode);
         }
-
-        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
-        int position = layoutManager.findFirstCompletelyVisibleItemPosition();
-        layoutManager.setSpanCount(spans);
-        layoutManager.setSpanSizeLookup(mAdapter.getSpanSizeLookup(spans));
-        mAdapter.setThumbnailsSize(thumbSize);
-        if (mAdapter.setGrid(grid)) {
-            mRecyclerView.setAdapter(mAdapter);
-        }
-        mRecyclerView.scrollToPosition(position);
     }
 
     @Override
@@ -170,103 +138,97 @@ public class FastSearchActivity extends BaseAppActivity implements GroupedAdapte
         super.onDestroy();
     }
 
-    private void doSearch(int currentStage) {
-        mProviders.clear();
-        switch (currentStage) {
-            case STAGE_NONE:
-                mProviders.addFirst(LocalMangaProvider.getProviderSummary(this));
-                if (mCurrentProvider >= 0) {
-                    mProviders.add(Providers.getById(mCurrentProvider));
-                }
-                mStage = STAGE_CURRENT;
-                break;
-            case STAGE_CURRENT:
-                mProviders.addAll(mProviderManager.getEnabledOrderedProviders());
-                mStage = STAGE_ENABLED;
-                break;
-            case STAGE_ENABLED:
-                mProviders.addAll(mProviderManager.getDisabledOrderedProviders());
-                mStage = STAGE_DISABLED;
-                break;
-        }
-        if (mProviders.isEmpty()) {
-            mAdapter.hideFooter();
-            mTextViewHolder.setVisibility(mAdapter.hasItems() ? View.GONE : View.VISIBLE);
-            return;
-        }
-        if (mAdapter.hasItems()) {
-            mAdapter.setFooterProgress();
-            mProgressBar.setVisibility(View.GONE);
-        } else {
-            mAdapter.hideFooter();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-        new SearchTask(LocalMangaProvider.getProviderSummary(this)).executeOnExecutor(mExecutor);
-    }
-
     @Override
     public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            mAdapter.clearItems();
-            mQuery = textView.getText().toString();
+            String query = textView.getText().toString();
+            SearchHistoryAdapter.addToHistory(this, query);
             LayoutUtils.hideSoftKeyboard(textView);
-            mRecyclerView.requestFocus();
-            doSearch(STAGE_NONE);
+            doSearch(query);
             return true;
         } else {
             return false;
         }
     }
 
-    private class SearchTask extends LoaderTask<Void, Void, MangaList> {
-
-        private final ProviderSummary mProviderSummary;
-
-        private SearchTask(ProviderSummary provider) {
-            this.mProviderSummary = provider;
+    private void doSearch(String query) {
+        mQuery = query;
+        if (mFragment != null && mFragment instanceof Searchable) {
+            ((Searchable) mFragment).search(query);
+        } else {
+            changeFragment(new MultipleSearchFragment(), null, false);
         }
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
         }
+    }
 
-        @Override
-        protected MangaList doInBackground(Void... params) {
-            try {
-                return mProviderManager.instanceProvider(mProviderSummary.aClass).search(mQuery, 0);
-            } catch (Exception e) {
-                return null;
+    public void changeFragment(BaseAppFragment newFragment, @Nullable Bundle extras, boolean backStack) {
+        Bundle args = getIntent().getExtras();
+        args.putString("query", mQuery);
+        if (extras != null) {
+            args.putAll(extras);
+        }
+        newFragment.setArguments(args);
+        mFragment = newFragment;
+        FragmentTransaction tran = getFragmentManager().beginTransaction()
+                .replace(R.id.content, newFragment);
+        if (backStack) {
+            tran.addToBackStack(null);
+        }
+        tran.commit();
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (b) {
+            mTextViewHolder.setVisibility(View.GONE);
+            AnimUtils.crossfade(mFrameContent, mFrameSearch);
+            mHistoryAdapter.requery(null);
+            if (mHistoryAdapter.getItemCount() == 0) {
+                mTextViewHolder.setVisibility(View.VISIBLE);
             }
+        } else {
+            AnimUtils.crossfade(mFrameSearch, mFrameContent);
         }
+    }
 
-        @Override
-        protected void onPostExecute(MangaList mangaInfos) {
-            super.onPostExecute(mangaInfos);
-            if (mangaInfos != null && !mangaInfos.isEmpty()) {
-                boolean wasEmpty = !mAdapter.hasItems();
-                mAdapter.append(mProviderSummary, mangaInfos);
-                if (wasEmpty) {
-                    mProgressBar.setVisibility(View.GONE);
-                    mAdapter.setFooterProgress();
-                }
+    @Override
+    public void onBackStackChanged() {
+        mFragment = (BaseAppFragment) getFragmentManager().findFragmentById(R.id.content);
+    }
 
-            }
-            if (mProviders.isEmpty()) {
-                //end of stage
-                if (mStage == STAGE_DISABLED || (mStage == STAGE_ENABLED && !mProviderManager.hasDisabledProviders())) {
-                    mAdapter.hideFooter();
-                    mTextViewHolder.setVisibility(mAdapter.hasItems() ? View.GONE : View.VISIBLE);
-                } else {
-                    if (mAdapter.hasItems()) {
-                        mAdapter.setFooterButton(getString(R.string.search_on_another_sources));
-                    } else {
-                        doSearch(mStage);
-                    }
-                }
-            } else {
-                new SearchTask(mProviders.poll()).executeOnExecutor(mExecutor);
-            }
+    @Override
+    public void onHistoryItemClick(String text, boolean apply) {
+        mEditTextQuery.setText(text);
+        if (apply) {
+            LayoutUtils.hideSoftKeyboard(mEditTextQuery);
+            doSearch(text);
+        } else {
+            mEditTextQuery.setSelection(text.length());
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        mHistoryAdapter.requery(charSequence.toString());
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

@@ -33,11 +33,7 @@
             android:name=".activities.MangaPreviewActivity" />
         <activity
             android:name=".activities.FastSearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/search_results" />
-        <activity
-            android:name=".activities.SingleSearchActivity"
-            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/search_results" />
         <activity
             android:name=".activities.ReadActivity2" />

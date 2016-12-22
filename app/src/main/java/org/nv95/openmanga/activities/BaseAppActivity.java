@@ -1,11 +1,8 @@
 package org.nv95.openmanga.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +32,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -225,10 +223,9 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         showToast(getString(text), gravity, delay);
     }
 
+    @Deprecated
     public boolean checkConnection() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isAvailable() && ni.isConnected();
+        return NetworkUtils.checkConnection(this);
     }
 
     public boolean checkConnectionWithToast() {

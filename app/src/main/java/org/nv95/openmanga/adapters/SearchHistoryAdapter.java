@@ -4,71 +4,155 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by nv95 on 02.01.16.
  */
-public class SearchHistoryAdapter extends CursorAdapter implements Filterable {
+public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.ItemHolder> {
 
     private static final String TABLE_NAME = "search_history";
-    
+
     private final StorageHelper mStorageHelper;
-    private final SQLiteDatabase mDatabase;
+    @Nullable
+    private Cursor mCursor;
+    @Nullable
+    private static WeakReference<StorageHelper> sStorageHelperRef;
+    @NonNull
+    private final OnHistoryEventListener mClickListener;
 
-    public SearchHistoryAdapter(Context context) {
-        super(context, null, true);
+    public SearchHistoryAdapter(Context context, @NonNull OnHistoryEventListener clickListener) {
         mStorageHelper = new StorageHelper(context);
-        mDatabase = mStorageHelper.getReadableDatabase();
-        updateContent(null);
-    }
-
-    public static void clearHistory(Context context) {
-        StorageHelper storageHelper = new StorageHelper(context);
-        SQLiteDatabase database = storageHelper.getWritableDatabase();
-        database.beginTransaction();
-        database.delete(TABLE_NAME, null, null);
-        database.setTransactionSuccessful();
-        database.endTransaction();
-        storageHelper.close();
+        sStorageHelperRef = new WeakReference<StorageHelper>(mStorageHelper);
+        setHasStableIds(true);
+        mClickListener = clickListener;
+        mCursor = null;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context)
-                .inflate(R.layout.item_search, parent, false);
+    protected void finalize() throws Throwable {
+        mStorageHelper.close();
+        if (sStorageHelperRef != null) {
+            sStorageHelperRef.clear();
+            sStorageHelperRef = null;
+        }
+        super.finalize();
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ((TextView) view).setText(cursor.getString(1));
+    public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false), mClickListener);
     }
 
-    public void updateContent(@Nullable String query) {
-        Cursor newCursor = mDatabase.query(TABLE_NAME, null,
-                query == null ? null : "query LIKE ?",
-                query == null ? null : new String[] {query + "%"}, null, null, null); // исключает неправельные символы в запросе
-        changeCursor(newCursor);
+    @Override
+    public void onBindViewHolder(ItemHolder holder, int position) {
+        if (mCursor != null) {
+            mCursor.moveToPosition(position);
+            holder.fill(mCursor.getString(1));
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (mCursor != null) {
+            mCursor.moveToPosition(position);
+            return mCursor.getInt(0);
+        } else {
+            return 0;
+        }
+    }
+
+    private void swapCursor(@Nullable Cursor newCursor) {
+        Cursor oldCursor = mCursor;
+        mCursor = newCursor;
+        if (oldCursor != null) {
+            oldCursor.close();
+        }
         notifyDataSetChanged();
     }
 
-    public String getString(int position) {
-        Cursor c = getCursor();
-        c.moveToPosition(position);
-        return c.getString(1);
+    public void requery(@Nullable String prefix) {
+        Cursor cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
+                prefix == null ? null : "query LIKE ?",
+                prefix == null ? null : new String[] {prefix + "%"}, null, null, null);
+        swapCursor(cursor);
     }
 
-    public void addToHistory(String what) {
-        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+    @Override
+    public int getItemCount() {
+        return mCursor == null ? 0 : mCursor.getCount();
+    }
+
+    static class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final OnHistoryEventListener mClickListener;
+        private String mText;
+        final TextView textView;
+        final ImageView imageButton;
+
+        ItemHolder(View itemView, OnHistoryEventListener listener) {
+            super(itemView);
+            mClickListener = listener;
+            textView = (TextView) itemView.findViewById(android.R.id.text1);
+            imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
+            imageButton.setOnClickListener(this);
+            textView.setOnClickListener(this);
+        }
+
+        public void fill(String text) {
+            mText = text;
+            textView.setText(text);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mClickListener.onHistoryItemClick(mText, view.getId() != imageButton.getId());
+        }
+    }
+
+    public interface OnHistoryEventListener {
+        void onHistoryItemClick(String text, boolean apply);
+    }
+
+    public static void clearHistory(Context context) {
+        StorageHelper storageHelper = null;
+        boolean reused = true;
+        if (sStorageHelperRef != null) {
+            storageHelper = sStorageHelperRef.get();
+        }
+        if (storageHelper == null) {
+            storageHelper = new StorageHelper(context);
+            reused = false;
+        }
+        storageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+        if (!reused) {
+            storageHelper.close();
+        }
+    }
+
+    public static void addToHistory(Context context, String what) {
+        StorageHelper storageHelper = null;
+        boolean reused = true;
+        if (sStorageHelperRef != null) {
+            storageHelper = sStorageHelperRef.get();
+        }
+        if (storageHelper == null) {
+            storageHelper = new StorageHelper(context);
+            reused = false;
+        }
+        SQLiteDatabase database = storageHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("_id", what.hashCode());
         cv.put("query", what);
@@ -76,16 +160,8 @@ public class SearchHistoryAdapter extends CursorAdapter implements Filterable {
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        if (mCursor != null) {
-            mCursor.close();
+        if (!reused) {
+            storageHelper.close();
         }
-        if (mStorageHelper != null) {
-            mStorageHelper.close();
-        }
-        super.finalize();
     }
 }

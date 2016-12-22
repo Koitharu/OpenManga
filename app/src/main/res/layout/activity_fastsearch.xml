@@ -5,9 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SingleSearchActivity">
+    tools:context=".activities.FastSearchActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -22,46 +23,45 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <EditText
-                android:id="@+id/editTextQuery"
+            <org.nv95.openmanga.components.SearchLayout
+                android:id="@+id/search"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/action_search"
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:padding="4dp" />
+                android:layout_height="match_parent" />
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <FrameLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <TextView
-        android:id="@+id/textView_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_manga_found"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="gone"
-        app:layout_anchor="@id/recyclerView"
-        app:layout_anchorGravity="center" />
+    <FrameLayout
+        android:id="@+id/search_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_anchor="@id/recyclerView"
-        app:layout_anchorGravity="center" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager" />
+
+        <TextView
+            android:id="@+id/textView_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_history_is_empty"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="?android:textColorTertiary"
+            android:padding="12dp"/>
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

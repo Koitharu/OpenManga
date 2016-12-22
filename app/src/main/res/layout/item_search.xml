@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    style="textv"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/light_background"
-    android:drawableLeft="@drawable/ic_history_dark"
-    android:drawablePadding="4dp"
-    android:drawableStart="@drawable/ic_history_dark"
-    android:foreground="?android:selectableItemBackground"
-    android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeightSmall"
-    android:paddingEnd="?android:listPreferredItemPaddingEnd"
-    android:paddingLeft="?android:listPreferredItemPaddingLeft"
-    android:paddingRight="?android:listPreferredItemPaddingRight"
-    android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:textAppearance="?android:textAppearanceMedium"
-    android:textColor="@android:color/black"
-    android:maxLines="1" />
+    android:layout_height="?listPreferredItemHeightSmall"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="@string/action_clear_cache"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:gravity="center_vertical"
+        android:paddingLeft="?android:listPreferredItemPaddingLeft"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:drawableLeft="@drawable/ic_history_dark"
+        android:drawableStart="@drawable/ic_history_dark"
+        android:drawablePadding="4dp"
+        android:background="?selectableItemBackground"
+        android:layout_height="match_parent"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/imageButton"
+        android:layout_width="?listPreferredItemHeightSmall"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:background="?selectableItemBackground"
+        android:src="@drawable/ic_launch_black"/>
+
+</LinearLayout>

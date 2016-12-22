@@ -27,6 +27,10 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
     public EndlessAdapter(PagedList<T> dataset, RecyclerView recyclerView) {
         mDataset = dataset;
+        attach(recyclerView);
+    }
+
+    public void attach(RecyclerView recyclerView) {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

@@ -17,7 +17,7 @@ import org.nv95.openmanga.lists.MangaList;
  */
 public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
 
-    private final RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     @NonNull
     private final MangaListAdapter mAdapter;
     private final OnContentLoadListener mContentLoadListener;
@@ -33,6 +33,12 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         mAdapter = new MangaListAdapter(mList, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnLoadMoreListener(this);
+    }
+
+    public void attach(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+        mAdapter.attach(recyclerView);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
