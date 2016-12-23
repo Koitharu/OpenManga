@@ -20,7 +20,7 @@ public class AnimUtils {
         } else {
             return;
         }
-        if (whatShow != null) {
+        if (whatShow != null && whatShow.getVisibility() != View.VISIBLE) {
             whatShow.setAlpha(0f);
             whatShow.setVisibility(View.VISIBLE);
             whatShow.animate()
@@ -29,7 +29,7 @@ public class AnimUtils {
                     .setListener(null);
         }
 
-        if (whatHide != null) {
+        if (whatHide != null && whatHide.getVisibility() == View.VISIBLE) {
             whatHide.animate()
                     .alpha(0f)
                     .setDuration(duration)
@@ -52,7 +52,7 @@ public class AnimUtils {
         } else {
             return;
         }
-        if (whatShow != null) {
+        if (whatShow != null && whatShow.getVisibility() != View.VISIBLE) {
             whatShow.setScaleX(0f);
             whatShow.setScaleY(0f);
             whatShow.setVisibility(View.VISIBLE);
@@ -63,7 +63,7 @@ public class AnimUtils {
                     .setListener(null);
         }
 
-        if (whatHide != null) {
+        if (whatHide != null && whatHide.getVisibility() == View.VISIBLE) {
             whatHide.animate()
                     .scaleX(0f)
                     .scaleY(0f)
@@ -87,7 +87,7 @@ public class AnimUtils {
         } else {
             return;
         }
-        if (whatShow != null) {
+        if (whatShow != null && whatShow.getVisibility() != View.VISIBLE) {
             whatShow.setScaleX(0f);
             whatShow.setScaleY(0f);
             whatShow.setAlpha(0f);
@@ -100,7 +100,7 @@ public class AnimUtils {
                     .setListener(null);
         }
 
-        if (whatHide != null) {
+        if (whatHide != null && whatHide.getVisibility() == View.VISIBLE) {
             whatHide.animate()
                     .scaleX(0f)
                     .scaleY(0f)

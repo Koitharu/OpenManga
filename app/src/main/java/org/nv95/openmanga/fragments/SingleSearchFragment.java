@@ -3,20 +3,13 @@ package org.nv95.openmanga.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.dialogs.NavigationListener;
-import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;
@@ -30,34 +23,18 @@ import org.nv95.openmanga.utils.NetworkUtils;
  * Created by nv95 on 22.12.16.
  */
 
-public class SingleSearchFragment extends BaseAppFragment implements ListModeHelper.OnListModeListener,
-        Searchable, MangaListLoader.OnContentLoadListener, InternalLinkMovement.OnLinkClickListener,
+public class SingleSearchFragment extends SearchFragmentAbs implements MangaListLoader.OnContentLoadListener,
+        InternalLinkMovement.OnLinkClickListener,
         NavigationListener {
 
     private int mProviderId;
-    private String mQuery;
-    private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
-    private TextView mTextViewHolder;
     private MangaListLoader mLoader;
     private MangaProvider mProvider;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle extras = savedInstanceState != null ? savedInstanceState : getArguments();
-        mQuery = extras.getString("query");
+    protected void onInit(Bundle extras) {
+        super.onInit(extras);
         mProviderId = extras.getInt("provider");
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mTextViewHolder = (TextView) view.findViewById(R.id.textView_holder);
-        return view;
     }
 
     @Override
@@ -67,24 +44,19 @@ public class SingleSearchFragment extends BaseAppFragment implements ListModeHel
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
-        if (mLoader == null) {
-            mProvider = new MangaProviderManager(activity).getProviderById(mProviderId);
-            if (mProvider == null) {
-                mTextViewHolder.setText(R.string.error);
-                return;
-            }
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 1));
-            mLoader = new MangaListLoader(mRecyclerView, this);
-            if (!TextUtils.isEmpty(mQuery)) {
-                updateContent();
-            }
-        } else {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 1));
-            mLoader.attach(mRecyclerView);
+    protected void onActivityCreated(Activity activity) {
+        super.onActivityCreated(activity);
+        mProvider = new MangaProviderManager(activity).getProviderById(mProviderId);
+        if (mProvider == null) {
+            mTextViewHolder.setText(R.string.error);
         }
+        mLoader = new MangaListLoader(mRecyclerView, this);
+    }
+
+    @Override
+    protected void onRestoredFromBackStack(Activity activity) {
+        super.onRestoredFromBackStack(activity);
+        mLoader.attach(mRecyclerView);
     }
 
     @Override
@@ -93,12 +65,6 @@ public class SingleSearchFragment extends BaseAppFragment implements ListModeHel
         if (mLoader.getContentSize() == 0) {
             AnimUtils.crossfade(null, mTextViewHolder);//mTextViewHolder.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mRecyclerView.requestFocus();
     }
 
     @Override
@@ -173,5 +139,11 @@ public class SingleSearchFragment extends BaseAppFragment implements ListModeHel
     public void search(String query) {
         mQuery = query;
         updateContent();
+    }
+
+    @Override
+    public void onDestroy() {
+        mLoader.cancelLoading();
+        super.onDestroy();
     }
 }
