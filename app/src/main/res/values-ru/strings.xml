@@ -114,8 +114,6 @@
     <string name="mark_all_viewed_confirm">Пометить все обновления просмотренными?</string>
     <string name="new_chapters_count" formatted="false">Новых глав: %d</string>
     <string name="over_wifi_only">Только через WiFi</string>
-    <string name="prefer_qsearch">Быстрый поиск</string>
-    <string name="prefer_qsearch_summ">По возможости искать в текущем источнике</string>
     <string name="search_on_another_sources">Поиск в других источниках</string>
     <string name="show_at_startup">Показывать при запуске</string>
     <string name="welcome">Добро пожаловать</string>
@@ -156,7 +154,6 @@
     <string name="interval_once_day">Каждый день</string>
     <string name="interval_two_days">Каждые два дня</string>
     <string name="open_on_start">Открывать при запуске</string>
-    <string name="reset">Сброс</string>
     <string name="nothing_selected">Ничего не выбрано</string>
     <string name="view_mode">Отображение</string>
     <string name="view_mode_grid_large">Крупная сетка</string>
@@ -166,7 +163,6 @@
     <string name="genre_parodi">Пародия</string>
     <string name="genre_postapocalipse">Постапокалиптика</string>
     <string name="select_file">Выброр файла</string>
-    <string name="more">Ещё</string>
     <string name="import_progress" formatted="false" >Импортировано страниц: %d из %d</string>
     <string name="import_complete">Завершено</string>
     <string name="action_category">Раздел</string>
@@ -188,7 +184,6 @@
     <string name="genre_genderch">Смена пола</string>
     <string name="genre_hentai">Хентай</string>
     <string name="genre_slice_of_life">Повседневность</string>
-    <string name="got_it">Понятно</string>
     <string name="menu">Меню</string>
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
     <string name="select_image">Выберите картинку</string>
@@ -240,7 +235,6 @@
     <string name="image_loading_error">Не удалось загрузить изображение</string>
     <string name="goto_page" formatted="false">Перейти к: %d/%d</string>
     <string name="tip_search_main">Ищите что-нибудь?\nВоспользуйтесь поиском по онлайн-каталогам</string>
-    <string name="tip_filter">Нажмите, чтобы выбрать жанр и порядок сортировки</string>
     <string name="tip_favourite">Добавьте мангу в избранное, чтобы держать её под рукой. Также можно включить уведомления о новых главах</string>
     <string name="tip_save">Сохраните мангу на устройстве и читайте её когда угодно и где угодно без подключения к сети</string>
     <string name="tip_save_more">Сохранили лишь часть манги? Нажмите, чтобы скачать недостающие главы</string>
@@ -272,7 +266,6 @@
     <string name="bookmark_pos" formatted="false">Глава %d стр %d</string>
     <string name="bookmark_removed">Закладка удалена</string>
     <string name="bookmark_added">Закладка добавлена</string>
-    <string name="another">Другой…</string>
     <string name="custom_path">Пользовательский</string>
     <string name="size_free" formatted="false">Свободно %s</string>
     <string name="pick_dir">Выбрать каталог</string>

@@ -144,7 +144,6 @@
     <string name="genre_yetiskin">Yetişkin</string>
     <string name="genre_youkai">Youkai</string>
     <string name="genre_yuri">Yuri</string>
-    <string name="got_it">Anladım</string>
     <string name="help">Yardım</string>
     <string name="history_empty">Geçmiş boş</string>
     <string name="history_will_cleared">Geçmiş temizlendi</string>
@@ -172,7 +171,6 @@
     <string name="mark_all_viewed">Tümünü okundu olarak işaretle</string>
     <string name="mark_all_viewed_confirm">Güncellenen mangaların tümünü okundu olarak işaretle</string>
     <string name="menu">Menü</string>
-    <string name="more">Daha fazla</string>
     <string name="move_saved">Kayıtlı mangaları taşı</string>
     <string name="moving_files">Dosyalar taşınıyor</string>
     <string formatted="false" name="multiple_save_confirm">%d manga kaydedilecek (toplam %d bölüm)</string>
@@ -195,12 +193,9 @@
     <string name="open_on_start">Açılış sayfası</string>
     <string name="over_wifi_only">Sadece WiFi kullanıldığında</string>
     <string name="pause">Durdur</string>
-    <string name="prefer_qsearch">Hızlı aramayı aç</string>
-    <string name="prefer_qsearch_summ">Sadece bulunduğunuz kaynakta arama yapar</string>
     <string name="preparing">Hazırlanıyor…</string>
     <string formatted="false" name="prev_chapter">Önceki bölüm\n\n%s</string>
     <string name="queue">Sırada</string>
-    <string name="reset">Yediden başlat</string>
     <string name="restore">Veri Al</string>
     <string name="restore_done">Veri başarıyla alındı</string>
     <string name="resume">Devam et</string>
@@ -257,7 +252,6 @@
     <string name="image_decode_error">Kod çözülürken hata oluştu</string>
     <string name="image_loading_error">Yüklenirken hata oluştu</string>
     <string name="tip_search_main">Bir şey mi aradın?\nOnline kataloglar arasında aramayı kullan</string>
-    <string name="tip_filter">Tür seçmek ve sıralamak için tıkla</string>
     <string name="tip_favourite">Mangaya hızlı erişmek için favorilerine ekle. Ayrıca yeni bölüm eklendiğinde uyarılmayı da aktif edebilirsin</string>
     <string name="tip_save">Mangayı indirip internet kullanmadan istediğin zaman okumak için tıkla</string>
     <string name="tip_save_more">Manganın tamamı inmemiş mi? Tamamlamak için tıkla</string>

@@ -114,8 +114,6 @@
     <string name="mark_all_viewed_confirm">Помітити всі обновлення переглянутими?</string>
     <string name="new_chapters_count" formatted="false">Нових глав: %d</string>
     <string name="over_wifi_only">Тільки через WiFi</string>
-    <string name="prefer_qsearch">Швидкий пошук</string>
-    <string name="prefer_qsearch_summ">За можливості шукати в поточному джерелі</string>
     <string name="search_on_another_sources">Пошук в інших джерелах</string>
     <string name="show_at_startup">Показувати при запуску</string>
     <string name="welcome">Ласкаво просимо</string>
@@ -156,7 +154,6 @@
     <string name="interval_once_day">Кожний день</string>
     <string name="interval_two_days">Кожні два дні</string>
     <string name="open_on_start">Відкривати при запуску</string>
-    <string name="reset">Скидання</string>
     <string name="nothing_selected">Нічого не вибрано</string>
     <string name="view_mode">Відображення</string>
     <string name="view_mode_grid_large">Велика сітка</string>
@@ -166,7 +163,6 @@
     <string name="genre_parodi">Пародія</string>
     <string name="genre_postapocalipse">Постапокаліптика</string>
     <string name="select_file">Вибір файла</string>
-    <string name="more">Ще</string>
     <string name="import_progress" formatted="false" >Імпортовано сторінок: %d з %d</string>
     <string name="import_complete">Завершено</string>
     <string name="action_category">Розділ</string>
@@ -188,7 +184,6 @@
     <string name="genre_genderch">Зміна статі</string>
     <string name="genre_hentai">Хентай</string>
     <string name="genre_slice_of_life">Повсякденність</string>
-    <string name="got_it">Зрозуміло</string>
     <string name="menu">Меню</string>
     <string name="tip_chapter_checking">Увімкнути автоматичну перевірку, щоб отримувати повідомлення про нові глави в манзі, що додана в обране</string>
     <string name="select_image">Виберіть зображення</string>
@@ -240,7 +235,6 @@
     <string name="image_loading_error">Не вдалося загрузити зображення</string>
     <string name="goto_page" formatted="false">Перейти до: %d/%d</string>
     <string name="tip_search_main">Шукаєте що-небудь?\nСкористайтеся пошуком по онлайн-каталогам</string>
-    <string name="tip_filter">Натисніть, щоб обрати жанр та порядок сортування</string>
     <string name="tip_favourite">Додайте мангу в обране, щоб тримати її під рукою. Також можна ввімкнути повідомлення про нові глави</string>
     <string name="tip_save">Збережіть мангу на пристрої і читайте її коли завгодно і де завгодно без підключення до мережі</string>
     <string name="tip_save_more">Зберегли лише частину манги? Натисніть, щоб завантажити відсутні глави</string>

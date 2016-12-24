@@ -26,12 +26,6 @@
         <item>@string/action_favourites</item>
         <item>@string/action_history</item>
     </string-array>
-    <string-array name="view_modes">
-        <item>@string/view_mode_list</item>
-        <item>@string/view_mode_grid_small</item>
-        <item>@string/view_mode_grid_medium</item>
-        <item>@string/view_mode_grid_large</item>
-    </string-array>
     <string-array name="directions_values">
         <item>0</item>
         <item>1</item>

@@ -116,7 +116,7 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
                 .setAction(R.string.action_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(MangaPreviewActivity.this, FastSearchActivity.class)
+                        startActivity(new Intent(MangaPreviewActivity.this, SearchActivity.class)
                                 .putExtra("query", mMangaSummary.name));
                     }
                 })

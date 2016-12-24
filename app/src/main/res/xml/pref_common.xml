@@ -17,12 +17,6 @@
         android:title="@string/checking_new_chapters">
         <intent android:action="org.nv95.openmanga.chupd" />
     </Preference>
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="qsearch"
-        android:summary="@string/prefer_qsearch_summ"
-        android:title="@string/prefer_qsearch"
-        android:widgetLayout="@layout/pref_switchcompat" />
     <Preference
         android:key="recommendations"
         android:title="@string/recommendations_options" />

@@ -128,8 +128,6 @@
     <string name="send_mail">Send email</string>
     <string name="welcome">Welcome</string>
     <string name="show_at_startup">Show at startup</string>
-    <string name="prefer_qsearch">Quick search</string>
-    <string name="prefer_qsearch_summ">Search in current source, if possible</string>
     <string name="search_on_another_sources">Search on another sources</string>
     <string name="genre_hero_fantasy">Heroic fantasy</string>
     <string name="genre_detective">Detective</string>
@@ -163,7 +161,6 @@
     <string name="select_backup">Select backup</string>
     <string name="import_file">Import</string>
     <string name="export_file">Export</string>
-    <string name="reset">Reset</string>
 
     <string name="direction_ltr">Left to right</string>
     <string name="direction_ttb">Top to bottom</string>
@@ -191,7 +188,6 @@
     <string name="genre_adult">Adult</string>
     <string name="genre_mature">Mature</string>
     <string name="genre_slice_of_life">Slice of Life</string>
-    <string name="more">More</string>
     <string name="select_file">Select file</string>
     <string name="import_progress" formatted="false">Pages imported: %d from %d</string>
     <string name="import_complete">Importing completed</string>
@@ -211,7 +207,6 @@
     <string name="last_update_check" formatted="false">Last check: %s</string>
     <string name="no_app_updates">No updates found</string>
     <string name="click_to_install">Click to install</string>
-    <string name="got_it">Got it</string>
     <string name="menu">Menu</string>
     <string name="genre_superpower">Super power</string>
     <string name="genre_hentai">Hentai</string>
@@ -265,7 +260,6 @@
     <string name="image_decode_error">Decoding error</string>
     <string name="image_loading_error">Loading error</string>
     <string name="tip_search_main">Looking for anything?\nUse search across online catalogues</string>
-    <string name="tip_filter">Tap to select genre and sort order</string>
     <string name="tip_favourite">Add manga to favourites for getting quick access to it. You also can enable notifications about new chapters</string>
     <string name="tip_save">Click to save manga to your device and read it anytime and anywhere without internet connection</string>
     <string name="tip_save_more">This is not full manga? Click to download missing chapters</string>
@@ -297,7 +291,6 @@
     <string name="bookmark_pos" formatted="false">Ch. %d page %d</string><!--Chapter %d page %d-->
     <string name="bookmark_removed">Bookmark removed</string>
     <string name="bookmark_added">Bookmark added</string>
-    <string name="another">Another…</string>
     <string name="custom_path">Custom path</string>
     <string name="size_free" formatted="false">%s free</string>
     <string name="pick_dir">Pick directory</string>
@@ -319,5 +312,4 @@
     <string name="tip_ui_theme">Select UI theme that you prefer</string>
     <string name="tip_restore">Have a backup? Restore your history and favourites from it</string>
     <string name="tip_webtoon">Webtoon mode override some settings only for current manga and make it more comfortable for reading webtoons</string>
-    <string name="search_history_is_empty">Search history is empty</string>
 </resources>
