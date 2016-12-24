@@ -35,6 +35,9 @@
             android:name=".activities.FastSearchActivity"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/search_results" />
+        <activity android:name=".activities.SearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/search_results" />
         <activity
             android:name=".activities.ReadActivity2" />
         <activity

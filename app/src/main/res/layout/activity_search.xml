@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SingleSearchActivity">
+    tools:context=".activities.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +20,14 @@
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+
+            <org.nv95.openmanga.components.SearchInput
+                android:id="@+id/searchInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -48,6 +55,25 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         app:layout_anchor="@id/recyclerView"
+        android:visibility="gone"
         app:layout_anchorGravity="center" />
+
+
+    <FrameLayout
+        android:id="@+id/search_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_dark"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:background="?android:windowBackground"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

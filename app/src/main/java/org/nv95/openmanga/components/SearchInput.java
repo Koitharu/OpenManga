@@ -24,7 +24,7 @@ import org.nv95.openmanga.utils.AnimUtils;
  * Created by nv95 on 22.12.16.
  */
 
-public class SearchLayout extends FrameLayout implements TextWatcher, View.OnFocusChangeListener {
+public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocusChangeListener {
 
     private EditText mEditText;
     private ImageView mImageViewClear;
@@ -32,23 +32,23 @@ public class SearchLayout extends FrameLayout implements TextWatcher, View.OnFoc
     @Nullable
     private OnFocusChangeListener mFocusChangeListener;
 
-    public SearchLayout(@NonNull Context context) {
+    public SearchInput(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public SearchLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public SearchInput(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SearchLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public SearchInput(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public SearchLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public SearchInput(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
@@ -110,12 +110,16 @@ public class SearchLayout extends FrameLayout implements TextWatcher, View.OnFoc
         }
     }
 
-    @Nullable
     public EditText getEditText() {
         return mEditText;
     }
 
     public void setOnEditFocusChangeListener(@Nullable OnFocusChangeListener listener) {
         mFocusChangeListener = listener;
+    }
+
+    public void setText(CharSequence charSequence) {
+        mEditText.setText(charSequence);
+        mEditText.setSelection(mEditText.getText().length());
     }
 }

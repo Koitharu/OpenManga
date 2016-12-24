@@ -11,7 +11,7 @@ public class MangaList extends PagedList<MangaInfo> {
         return new MangaList();
     }
 
-    public MangaList start(final int size) {
+    public MangaList first(int size) {
         final MangaList result = new MangaList();
         for (int i=0;i<size;i++) {
             result.add(get(i));

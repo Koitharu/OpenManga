@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
-import org.nv95.openmanga.components.SearchLayout;
+import org.nv95.openmanga.components.SearchInput;
 import org.nv95.openmanga.fragments.MultipleSearchFragment;
 import org.nv95.openmanga.fragments.SearchFragmentAbs;
 import org.nv95.openmanga.utils.AnimUtils;
@@ -34,7 +34,7 @@ public class FastSearchActivity extends BaseAppActivity implements TextView.OnEd
 
     private String mQuery;
     private EditText mEditTextQuery;
-    private SearchLayout mSearchLayout;
+    private SearchInput mSearchInput;
     private FrameLayout mFrameContent;
     private FrameLayout mFrameSearch;
     private RecyclerView mRecyclerViewSearch;
@@ -52,12 +52,12 @@ public class FastSearchActivity extends BaseAppActivity implements TextView.OnEd
         setupToolbarScrolling(toolbar);
         disableTitle();
         enableHomeAsUp();
-        mSearchLayout = (SearchLayout) findViewById(R.id.search);
+        mSearchInput = (SearchInput) findViewById(R.id.search);
         mFrameContent = (FrameLayout) findViewById(R.id.content);
         mFrameSearch = (FrameLayout) findViewById(R.id.search_frame);
         mRecyclerViewSearch = (RecyclerView) findViewById(R.id.recyclerView);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
-        mEditTextQuery = mSearchLayout.getEditText();
+        mEditTextQuery = mSearchInput.getEditText();
         mQuery = getIntent().getStringExtra("query");
         mEditTextQuery.setText(mQuery);
         mFragment = null;
@@ -65,7 +65,7 @@ public class FastSearchActivity extends BaseAppActivity implements TextView.OnEd
         mRecyclerViewSearch.setAdapter(mHistoryAdapter);
 
         mEditTextQuery.setOnEditorActionListener(this);
-        mSearchLayout.setOnEditFocusChangeListener(this);
+        mSearchInput.setOnEditFocusChangeListener(this);
         mEditTextQuery.addTextChangedListener(this);
         getFragmentManager().addOnBackStackChangedListener(this);
 

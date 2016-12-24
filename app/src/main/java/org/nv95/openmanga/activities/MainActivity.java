@@ -286,7 +286,7 @@ public class MainActivity extends BaseAppActivity implements
         }
         switch (item.getItemId()) {
             case R.id.action_search:
-                startActivity(new Intent(MainActivity.this, FastSearchActivity.class)
+                startActivity(new Intent(MainActivity.this, SearchActivity.class)
                         .putExtra("provider", getCurrentProviderIndex()));
                 return true;
             case R.id.action_import:

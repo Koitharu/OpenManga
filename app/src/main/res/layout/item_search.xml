@@ -14,8 +14,6 @@
         android:gravity="center_vertical"
         android:paddingLeft="?android:listPreferredItemPaddingLeft"
         android:paddingStart="?android:listPreferredItemPaddingStart"
-        android:drawableLeft="@drawable/ic_history_dark"
-        android:drawableStart="@drawable/ic_history_dark"
         android:drawablePadding="4dp"
         android:background="?selectableItemBackground"
         android:layout_height="match_parent"
@@ -26,7 +24,6 @@
         android:layout_width="?listPreferredItemHeightSmall"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:background="?selectableItemBackground"
-        android:src="@drawable/ic_launch_black"/>
+        android:background="?selectableItemBackground" />
 
 </LinearLayout>

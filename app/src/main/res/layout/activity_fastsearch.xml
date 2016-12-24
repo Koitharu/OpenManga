@@ -23,7 +23,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <org.nv95.openmanga.components.SearchLayout
+            <org.nv95.openmanga.components.SearchInput
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

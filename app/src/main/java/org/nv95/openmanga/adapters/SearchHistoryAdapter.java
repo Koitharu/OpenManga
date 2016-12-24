@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -24,6 +27,7 @@ import java.lang.ref.WeakReference;
 public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.ItemHolder> {
 
     private static final String TABLE_NAME = "search_history";
+    private final Drawable[] mIcons;
 
     private final StorageHelper mStorageHelper;
     @Nullable
@@ -39,6 +43,7 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         setHasStableIds(true);
         mClickListener = clickListener;
         mCursor = null;
+        mIcons = LayoutUtils.getThemedIcons(context, R.drawable.ic_history_dark, R.drawable.ic_launch_black);
     }
 
     @Override
@@ -53,7 +58,10 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false), mClickListener);
+        ItemHolder holder = new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false), mClickListener);
+        holder.textView.setCompoundDrawablesWithIntrinsicBounds(mIcons[0], null, null, null);
+        holder.imageButton.setImageDrawable(mIcons[1]);
+        return holder;
     }
 
     @Override
@@ -85,8 +93,8 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 
     public void requery(@Nullable String prefix) {
         Cursor cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
-                prefix == null ? null : "query LIKE ?",
-                prefix == null ? null : new String[] {prefix + "%"}, null, null, null);
+                TextUtils.isEmpty(prefix) ? null : "query LIKE ?",
+                TextUtils.isEmpty(prefix) ? null : new String[] {prefix + "%"}, null, null, null);
         swapCursor(cursor);
     }
 
