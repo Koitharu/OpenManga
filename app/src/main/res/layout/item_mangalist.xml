@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding8"
-        android:background="?attr/selectableItemBackground">
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding8">
 
         <ImageView
             android:id="@+id/imageView"
@@ -17,71 +18,76 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/textView_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_toRightOf="@+id/imageView"
-            android:maxLines="1"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:textColorPrimary" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_title"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_toRightOf="@+id/imageView"
-            android:maxLines="1"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary" />
+            <TextView
+                android:id="@+id/textView_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Medium Text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView_summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_subtitle"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_toRightOf="@+id/imageView"
-            android:maxLines="1"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorPrimary" />
+            <TextView
+                android:id="@+id/textView_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Small Text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="?android:textColorSecondary" />
 
-        <TextView
-            android:id="@+id/textView_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/background_badge"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white_overlay_85"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/textView_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Small Text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="?android:textColorTertiary" />
 
-        <org.nv95.openmanga.components.RatingView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ratingView"
-            android:layout_marginEnd="8dp"
-            android:layout_below="@+id/textView_subtitle"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="8dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView_subtitle"
-            android:layout_toEndOf="@id/imageView"
-            android:layout_toRightOf="@id/imageView"
-            android:id="@+id/imageView_status"/>
+                <org.nv95.openmanga.components.RatingView
+                    android:id="@+id/ratingView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageView_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textView_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_margin="4dp"
+        android:background="@drawable/background_badge"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white_overlay_85"
+        android:visibility="gone" />
+
 </org.nv95.openmanga.components.FrameCheckLayout>

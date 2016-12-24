@@ -5,7 +5,7 @@
     <dimen name="details_margin_top">280dp</dimen>
 
     <dimen name="thumb_width_list">64dp</dimen>
-    <dimen name="thumb_height_list">82dp</dimen>
+    <dimen name="thumb_height_list">84dp</dimen>
 
     <dimen name="thumb_width_small">86dp</dimen>
     <dimen name="thumb_width_medium">118dp</dimen>

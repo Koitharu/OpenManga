@@ -39,6 +39,7 @@ import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
@@ -323,7 +324,8 @@ public class MangaPreviewActivity extends BaseAppActivity implements View.OnClic
             mFab.setEnabled(true);
             if (result == null) {
                 mFab.hide();
-                Snackbar.make(mAppBarLayout, checkConnection() ? R.string.loading_error : R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(mAppBarLayout, NetworkUtils.checkConnection(MangaPreviewActivity.this) ?
+                        R.string.loading_error : R.string.no_network_connection, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.retry, MangaPreviewActivity.this)
                         .show();
                 return;
