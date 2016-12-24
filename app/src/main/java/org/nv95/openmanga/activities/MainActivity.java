@@ -228,6 +228,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.setGroupVisible(R.id.group_favourites, mSelectedItem == R.id.nav_action_favourites);
         menu.findItem(R.id.action_goto).setVisible(mProvider.isMultiPage());
         menu.findItem(R.id.action_recommend_opts).setVisible(mSelectedItem == R.id.nav_action_recommendations);
+        mListModeHelper.onPrepareOptionsMenu(menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -325,11 +326,8 @@ public class MainActivity extends BaseAppActivity implements
             case R.id.action_updates:
                 startActivity(new Intent(this, NewChaptersActivity.class));
                 return true;
-            case R.id.action_listmode:
-                mListModeHelper.showDialog();
-                return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
         }
     }
 

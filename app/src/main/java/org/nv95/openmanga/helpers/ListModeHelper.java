@@ -1,10 +1,10 @@
 package org.nv95.openmanga.helpers;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.nv95.openmanga.R;
 
@@ -15,48 +15,76 @@ public class ListModeHelper implements SharedPreferences.OnSharedPreferenceChang
 
     private static final String PREF_KEY = "view_mode";
 
-    private final Context mContext;
+    private static final int LISTMODE_LIST = 0;
+    private static final int LISTMODE_GRID_SMALL = 1;
+    private static final int LISTMODE_GRID_MEDIUM = 2;
+    private static final int LISTMODE_GRID_LARGE = 3;
+
+    private static final int[] ITEMS_IDS = new int[] {
+            R.id.listmode_list,
+            R.id.listmode_grid_small,
+            R.id.listmode_grid_medium,
+            R.id.listmode_grid_large
+    };
+
+    private final SharedPreferences mPreferences;
     private final OnListModeListener mListModeListener;
 
     public ListModeHelper(final Context context, OnListModeListener callback) {
         mListModeListener = callback;
-        mContext = context;
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void showDialog() {
-        final int mode = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getInt(PREF_KEY, 0);
-        new AlertDialog.Builder(mContext)
-                .setSingleChoiceItems(R.array.view_modes, mode, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PreferenceManager.getDefaultSharedPreferences(mContext)
-                                .edit().putInt(PREF_KEY, which).apply();
-                        dialog.dismiss();
-                    }
-                })
-                .create().show();
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_listmode);
+        if (item == null) {
+            return false;
+        }
+        Menu submenu = item.getSubMenu();
+        if (submenu == null) {
+            return false;
+        }
+        int mode = mPreferences.getInt(PREF_KEY, 0);
+        submenu.findItem(ITEMS_IDS[mode]).setChecked(true);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.listmode_list:
+                mPreferences.edit().putInt(PREF_KEY, LISTMODE_LIST).apply();
+                return true;
+            case R.id.listmode_grid_small:
+                mPreferences.edit().putInt(PREF_KEY, LISTMODE_GRID_SMALL).apply();
+                return true;
+            case R.id.listmode_grid_medium:
+                mPreferences.edit().putInt(PREF_KEY, LISTMODE_GRID_MEDIUM).apply();
+                return true;
+            case R.id.listmode_grid_large:
+                mPreferences.edit().putInt(PREF_KEY, LISTMODE_GRID_LARGE).apply();
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void applyCurrent() {
-        onSharedPreferenceChanged(PreferenceManager.getDefaultSharedPreferences(mContext), PREF_KEY);
+        onSharedPreferenceChanged(mPreferences, PREF_KEY);
     }
 
     public void enable() {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .registerOnSharedPreferenceChangeListener(this);
+        mPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public void disable() {
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .unregisterOnSharedPreferenceChangeListener(this);
+        mPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (PREF_KEY.equals(key)) {
             final int mode = sharedPreferences.getInt(PREF_KEY, 0);
-            mListModeListener.onListModeChanged(mode != 0, mode - 1);
+            mListModeListener.onListModeChanged(mode != LISTMODE_LIST, mode - 1);
         }
     }
 

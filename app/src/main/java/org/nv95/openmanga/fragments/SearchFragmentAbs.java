@@ -85,13 +85,7 @@ public abstract class SearchFragmentAbs extends BaseAppFragment implements ListM
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_listmode:
-                mListModeHelper.showDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
