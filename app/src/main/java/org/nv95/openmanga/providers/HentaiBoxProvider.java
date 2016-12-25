@@ -104,7 +104,7 @@ public class HentaiBoxProvider extends MangaProvider {
     public String getPageImage(MangaPage mangaPage) {
         try {
             Document document = getPage(mangaPage.path);
-            return document.body().select("img").get(1).attr("src");
+            return document.body().select("img").get(2).attr("src");
         } catch (Exception e) {
             return null;
         }
