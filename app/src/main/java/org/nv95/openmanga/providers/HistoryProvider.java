@@ -12,6 +12,9 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.staff.Languages;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.AppHelper;
 
 import java.io.IOException;
@@ -160,6 +163,48 @@ public class HistoryProvider extends MangaProvider {
         return true;
     }
 
+    @Nullable
+    @Override
+    public MangaList search(String query, int page) throws Exception {
+        if (page > 0)
+            return null;
+        MangaList list;
+        MangaInfo manga;
+        //noinspection TryFinallyCanBeTryWithResources
+        list = new MangaList();
+        Cursor cursor = mStorageHelper.getReadableDatabase()
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                        "name LIKE ? OR subtitle LIKE ?", new String[]{"%" + query + "%", "%" + query + "%"},
+                        null, null, sortUrls[0]);
+        if (cursor.moveToFirst()) {
+            do {
+                manga = new MangaInfo();
+                manga.id = cursor.getInt(0);
+                manga.name = cursor.getString(1);
+                manga.subtitle = cursor.getString(2);
+                manga.genres = cursor.getString(3);
+                manga.preview = cursor.getString(4);
+                manga.path = cursor.getString(5);
+                try {
+                    manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
+                } catch (ClassNotFoundException e) {
+                    manga.provider = LocalMangaProvider.class;
+                }
+                manga.rating = (byte) cursor.getInt(7);
+                manga.status = STATUS_UNKNOWN;
+                manga.extra = null;
+                list.add(manga);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    @Override
+    public boolean isSearchAvailable() {
+        return true;
+    }
+
     public boolean remove(MangaInfo mangaInfo) {
         mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)});
         mStorageHelper.getWritableDatabase().delete("bookmarks", "manga_id=?", new String[]{String.valueOf(mangaInfo.id)});
@@ -286,5 +331,15 @@ public class HistoryProvider extends MangaProvider {
     @Override
     public boolean isMultiPage() {
         return false;
+    }
+
+    public static ProviderSummary getProviderSummary(Context context) {
+        return new ProviderSummary(
+                MangaProviderManager.PROVIDER_HISTORY,
+                context.getString(R.string.action_history),
+                HistoryProvider.class,
+                Languages.MULTI,
+                0
+        );
     }
 }

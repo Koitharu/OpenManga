@@ -23,6 +23,7 @@ import org.nv95.openmanga.components.SearchInput;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
@@ -205,10 +206,12 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
             mProviders.clear();
             if (prov == null) {
                 mProviders.add(LocalMangaProvider.getProviderSummary(this));
+                mProviders.add(HistoryProvider.getProviderSummary(this));
                 mProviders.addAll(mProviderManager.getEnabledOrderedProviders());
                 mStage = 1;
             } else {
                 mProviders.add(LocalMangaProvider.getProviderSummary(this));
+                mProviders.add(HistoryProvider.getProviderSummary(this));
                 mProviders.add(prov);
             }
             new SearchTask().startLoading();

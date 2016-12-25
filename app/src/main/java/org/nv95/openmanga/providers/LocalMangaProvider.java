@@ -289,7 +289,9 @@ public class LocalMangaProvider extends MangaProvider {
         MangaInfo manga;
         list = new MangaList();
         Cursor cursor = mStore.getDatabase(false)
-                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source", "rating"}, "name LIKE ?", new String[]{"%" + query + "%"}, null, null, sortUrls[0]);
+                .query(MangaStore.TABLE_MANGAS, new String[]{"id", "name", "subtitle", "summary", "dir", "source", "rating"},
+                        "name LIKE ? OR subtitle LIKE ?", new String[]{"%" + query + "%", "%" + query + "%"},
+                        null, null, sortUrls[0]);
         if (cursor.moveToFirst()) {
             do {
                 manga = new MangaInfo();
@@ -311,7 +313,7 @@ public class LocalMangaProvider extends MangaProvider {
 
     public static ProviderSummary getProviderSummary(Context context) {
         return new ProviderSummary(
-                -1,
+                MangaProviderManager.PROVIDER_LOCAL,
                 context.getString(R.string.local_storage),
                 LocalMangaProvider.class,
                 Languages.MULTI,
