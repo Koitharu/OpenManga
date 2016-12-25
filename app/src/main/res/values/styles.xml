@@ -1,5 +1,6 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="colorPrimary">@color/primary_dark</item>
         <item name="colorPrimaryDark">@color/primary_dark_dark</item>
         <item name="colorAccent">@color/accent_light</item>
@@ -8,6 +9,7 @@
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="colorPrimaryDark">@color/primary_darkest</item>
         <item name="colorAccent">@color/accent_light_light</item>
         <item name="windowActionModeOverlay">true</item>
@@ -15,6 +17,7 @@
     </style>
 
     <style name="AppTheme.Black" parent="Theme.AppCompat.NoActionBar">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="colorPrimary">@color/primary_darker</item>
         <item name="colorPrimaryDark">@color/primary_darkest</item>
         <item name="colorAccent">@color/accent_dark</item>
@@ -43,4 +46,15 @@
         <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="behavior_peekHeight">@dimen/bottomsheet_peek_height</item>
+    </style>
+
 </resources>

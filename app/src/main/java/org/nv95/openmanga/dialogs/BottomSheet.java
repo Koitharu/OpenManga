@@ -44,8 +44,10 @@ public class BottomSheet implements DialogInterface {
         mSheetDialog = new BottomSheetDialog(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = mSheetDialog.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ContextCompat.getColor(context, R.color.transparent_dark));
+            if (window != null) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(ContextCompat.getColor(context, R.color.transparent_dark));
+            }
         }
         mSheetDialog.setContentView(view);
     }
