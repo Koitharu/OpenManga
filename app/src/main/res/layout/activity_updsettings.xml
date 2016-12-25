@@ -18,13 +18,24 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         tools:ignore="UnusedAttribute">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switch_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="12dp" />
     </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_toggle"
+        android:text="@string/off"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:paddingStart="46dp"
+        android:paddingLeft="46dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@android:color/white"
+        android:foreground="?selectableItemBackground"
+        android:gravity="start|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="?colorPrimary"
+        android:layout_gravity="right|center_vertical" />
 
     <FrameLayout
         android:id="@+id/content"

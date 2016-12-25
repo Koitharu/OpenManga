@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:layout="@layout/pref_info"
-        android:selectable="false"
-        android:title="@string/check_chapters_summary" />
     <ListPreference
         android:defaultValue="12"
         android:entries="@array/intervals"
@@ -15,4 +11,8 @@
         android:key="chupd.wifionly"
         android:title="@string/over_wifi_only"
         android:widgetLayout="@layout/pref_switchcompat" />
+    <Preference
+        android:layout="@layout/pref_info"
+        android:selectable="false"
+        android:title="@string/check_chapters_summary" />
 </PreferenceScreen>

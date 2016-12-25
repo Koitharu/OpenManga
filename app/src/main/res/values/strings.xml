@@ -312,4 +312,6 @@
     <string name="tip_ui_theme">Select UI theme that you prefer</string>
     <string name="tip_restore">Have a backup? Restore your history and favourites from it</string>
     <string name="tip_webtoon">Webtoon mode override some settings only for current manga and make it more comfortable for reading webtoons</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
 </resources>

@@ -35,6 +35,7 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
 
         mSettingsFragment = new SettingsFragment();
         if (toggle.isChecked()) {
+            toggle.setText(R.string.on);
             getFragmentManager().beginTransaction()
                     .add(R.id.content, mSettingsFragment)
                     .commit();
@@ -51,11 +52,13 @@ public class UpdatesSettingsActivity extends BaseAppActivity implements View.OnC
                 .putBoolean("chupd", checked)
                 .apply();
         if (checked) {
+            ((SwitchCompat) v).setText(R.string.on);
             getFragmentManager().beginTransaction()
                     .add(R.id.content, mSettingsFragment)
                     .commit();
             findViewById(R.id.textView).setVisibility(View.GONE);
         } else {
+            ((SwitchCompat) v).setText(R.string.off);
             getFragmentManager().beginTransaction()
                     .remove(mSettingsFragment)
                     .commit();
