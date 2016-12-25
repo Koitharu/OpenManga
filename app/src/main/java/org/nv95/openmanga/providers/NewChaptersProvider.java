@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
@@ -244,6 +245,7 @@ public class NewChaptersProvider {
                     upd.mangaName = o.name;
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
                     upd.chapters = provider.getDetailedInfo(o).getChapters().size();
+                    Log.d("UPD", upd.mangaName + ": " + upd.lastChapters + " -> " + upd.chapters);
                     if (upd.chapters > upd.lastChapters) {
                         if (upd.lastChapters == -1) {
                             upd.lastChapters = upd.chapters;
