@@ -287,4 +287,6 @@
     <string name="tip_ui_theme">Выберите тему оформления приложения</string>
     <string name="tip_restore">Есть резервная копия данных? Восстановите свою историю и закладки</string>
     <string name="tip_webtoon">Режим Webtoon меняет некоторые настройки для конкретной манги, делая чтение вебманги более удобным</string>
+    <string name="off">Выкл</string>
+    <string name="on">Вкл</string>
 </resources>

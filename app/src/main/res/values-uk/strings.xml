@@ -266,4 +266,22 @@
     <string name="bookmark_pos" formatted="false">Гл. %d стор. %d</string>
     <string name="bookmark_removed">Закладку видалено</string>
     <string name="bookmark_added">Закладку додано</string>
+
+    <string name="custom_path">Інший</string>
+    <string name="size_free" formatted="false">Вільно %s</string>
+    <string name="pick_dir">Обрати каталог</string>
+    <string name="select_storage">Вибір накопичувача</string>
+    <string name="download_unqueue_confirm" formatted="false">Видалити \"%s\" з черги завантажень?</string>
+    <string name="login">Логін</string>
+    <string name="password">Пароль</string>
+    <string name="recommendations_options">Опції рекомендацій</string>
+    <string name="providers_pref_summary" formatted="false">Ввімкнено %d из %d</string>
+    <string name="webmode">Режим webtoon</string>
+    <string name="successfully">Успішно</string>
+    <string name="auth_failed">Авторизація невдала</string>
+    <string name="check_credentials">Перевірити облікові дані</string>
+    <string name="genre_webtoon">Webtoon</string>
+    <string name="tip_reader_menu">Натисніть сюди, щоб відкрити меню</string>
+    <string name="off">Викл</string>
+    <string name="on">Вкл</string>
 </resources>
