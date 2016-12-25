@@ -58,11 +58,13 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
+import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
@@ -416,8 +418,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onContentLoaded(boolean success) {
-        mProgressBar.setVisibility(View.GONE);
-
+        AnimUtils.crossfade(mProgressBar, null);
         if (mListLoader.getContentSize() == 0) {
             String holder;
             if (mProvider instanceof LocalMangaProvider) {
@@ -430,9 +431,9 @@ public class MainActivity extends BaseAppActivity implements
                 holder = getString(R.string.no_manga_found);
             }
             mTextViewHolder.setText(holder);
-            mTextViewHolder.setVisibility(View.VISIBLE);
+            AnimUtils.crossfade(null, mTextViewHolder);
             if (!success) {
-                if (!checkConnection() && MangaProviderManager.needConnectionFor(mProvider)) {
+                if (!NetworkUtils.checkConnection(this) && MangaProviderManager.needConnectionFor(mProvider)) {
                     mTextViewHolder.setText(Html.fromHtml(getString(R.string.no_network_connection_html)));
                 } else {
                     Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
@@ -455,12 +456,11 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public void onLoadingStarts(boolean hasItems) {
         if (!hasItems) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            AnimUtils.crossfade(mTextViewHolder, mProgressBar);
             mListLoader.getAdapter().getChoiceController().clearSelection();
         } else {
             // TODO: 04.12.16
         }
-        mTextViewHolder.setVisibility(View.GONE);
     }
 
     @Nullable

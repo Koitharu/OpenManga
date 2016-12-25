@@ -21,6 +21,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.io.IOException;
@@ -138,16 +139,19 @@ public class NewChaptersActivity extends BaseAppActivity {
         @Override
         protected void onPostExecute(MangaList mangaInfos) {
             super.onPostExecute(mangaInfos);
-            mProgressBar.setVisibility(View.GONE);
             if (mangaInfos == null) {
-                mTextViewHolder.setVisibility(View.VISIBLE);
+                AnimUtils.crossfade(mProgressBar, mTextViewHolder);
                 Toast.makeText(NewChaptersActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
-                return;
+            } else {
+                if (mangaInfos.isEmpty()) {
+                    AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+                } else {
+                    mList.clear();
+                    mList.addAll(mangaInfos);
+                    mAdapter.notifyDataSetChanged();
+                    AnimUtils.crossfade(mProgressBar, mRecyclerView);
+                }
             }
-            mTextViewHolder.setVisibility(mangaInfos.size() == 0 ? View.VISIBLE : View.GONE);
-            mList.clear();
-            mList.addAll(mangaInfos);
-            mAdapter.notifyDataSetChanged();
         }
     }
 }
