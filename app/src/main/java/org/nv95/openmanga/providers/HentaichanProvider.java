@@ -43,7 +43,7 @@ public class HentaichanProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://hentaichan.me/" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage("http://henchan.me/" + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -53,9 +53,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://hentaichan.me/", t.attr("href"));
+            manga.path = concatUrl("http://henchan.me/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://hentaichan.me/", t.attr("src"));
+            manga.preview = concatUrl("http://henchan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -74,7 +74,7 @@ public class HentaichanProvider extends MangaProvider {
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("info_wrap").select("div.row").text();
-            summary.preview = concatUrl("http://hentaichan.me/", e.getElementById("cover").attr("src"));
+            summary.preview = concatUrl("http://henchan.me/", e.getElementById("cover").attr("src"));
             Element dd = e.getElementById("description");
             if (dd != null) {
                 summary.description += "\n\n" + dd.text();
@@ -97,7 +97,7 @@ public class HentaichanProvider extends MangaProvider {
                 }
                 chapter = new MangaChapter();
                 chapter.name = e.text();
-                chapter.readLink = concatUrl("http://hentaichan.me/", e.attr("href").replace("/manga/", "/online/"));
+                chapter.readLink = concatUrl("http://henchan.me/", e.attr("href").replace("/manga/", "/online/"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -176,7 +176,7 @@ public class HentaichanProvider extends MangaProvider {
             return null;
         }
         MangaList list = new MangaList();
-        String url = "http://hentaichan.me/"
+        String url = "http://henchan.me/"
                 + (byTag ?
                 "tags/" + URLEncoder.encode(query.substring(1), "UTF-8") + "&sort=manga?offset=" + (page * 20)
                 : "?do=search&subaction=search&story=" + URLEncoder.encode(query, "UTF-8"));
@@ -190,9 +190,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://hentaichan.me/", t.attr("href"));
+            manga.path = concatUrl("http://henchan.me/", t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://hentaichan.me/", t.attr("src"));
+            manga.preview = concatUrl("http://henchan.me/", t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -230,7 +230,7 @@ public class HentaichanProvider extends MangaProvider {
     @SuppressWarnings("WeakerAccess")
     public static boolean auth(String login, String password) {
         CookieParser cp = NetworkUtils.authorize(
-                "http://hentaichan.me/",
+                "http://henchan.me/",
                 "login",
                 "submit",
                 "login_name",
