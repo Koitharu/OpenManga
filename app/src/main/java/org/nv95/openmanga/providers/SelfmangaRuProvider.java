@@ -14,6 +14,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -140,7 +141,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
         }
         MangaList list = new MangaList();
         String data[] = new String[]{
-                "q", query
+                "q", URLEncoder.encode(query, "UTF-8")
         };
         Document document = postPage("http://selfmanga.ru/search", data);
         MangaInfo manga;
@@ -149,6 +150,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             manga.name = o.select("h3").first().text();
+            manga.subtitle = "";
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");

@@ -15,6 +15,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -54,20 +55,15 @@ public class MintMangaProvider extends MangaProvider {
                 + "?sortType=" + ReadmangaRuProvider.sortUrls[sort] + "&offset=" + page * 70 + "&max=70");
         MangaInfo manga;
         Element t;
+        Element h3, h4;
         Elements elements = document.body().select("div.col-sm-6");
         final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            t = o.select(lc ? "h4" : "h3").first();
-            if (t == null) {
-                continue;
-            }
-            manga.name = t.text();
-            try {
-                manga.subtitle = o.select(lc ? "h3" : "h4").first().text();
-            } catch (Exception e) {
-                manga.subtitle = "";
-            }
+            h4 = o.select("h4").first();
+            h3 = o.select("h3").first();
+            manga.name = lc && h4 != null ? h4.text() : h3.text();
+            manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");
@@ -193,17 +189,20 @@ public class MintMangaProvider extends MangaProvider {
         }
         MangaList list = new MangaList();
         String data[] = new String[]{
-                "q", query
+                "q", URLEncoder.encode(query, "UTF-8")
         };
         Document document = postPage("http://mintmanga.com/search", data);
         MangaInfo manga;
         Element r;
+        Element h3, h4;
         Elements elements = document.body().select("div.col-sm-6");
         final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            manga.name = o.select(lc ? "h4" : "h3").first().text();
-            manga.subtitle = o.select(lc ? "h3" : "h4").first().text();
+            h4 = o.select("h4").first();
+            h3 = o.select("h3").first();
+            manga.name = lc && h4 != null ? h4.text() : h3.text();
+            manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = concatUrl("http://mintmanga.com/", o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("src");
