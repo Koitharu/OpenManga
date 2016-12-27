@@ -34,20 +34,15 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
                 (genre == 0 ? "" : "/genre/" + genreUrls[genre - 1])
                 + "?sortType=" + sortUrls[sort] + "&offset=" + page * 70 + "&max=70");
         MangaInfo manga;
-        Element t;
+        Element t, h3, h4;
+        final boolean lc = getBooleanPreference("localized_names", true);
         Elements elements = document.body().select("div.col-sm-6");
         for (Element o : elements) {
             manga = new MangaInfo();
-            t = o.select("h3").first();
-            if (t == null) {
-                continue;
-            }
-            manga.name = t.text();
-            try {
-                manga.subtitle = o.select("h4").first().text();
-            } catch (Exception e) {
-                manga.subtitle = "";
-            }
+            h4 = o.select("h4").first();
+            h3 = o.select("h3").first();
+            manga.name = lc && h4 != null ? h4.text() : h3.text();
+            manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             try {
@@ -145,12 +140,15 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
         };
         Document document = postPage("http://selfmanga.ru/search", data);
         MangaInfo manga;
-        Element r;
+        Element r, h3, h4;
         Elements elements = document.body().select("div.col-sm-6");
+        final boolean lc = getBooleanPreference("localized_names", true);
         for (Element o : elements) {
             manga = new MangaInfo();
-            manga.name = o.select("h3").first().text();
-            manga.subtitle = "";
+            h4 = o.select("h4").first();
+            h3 = o.select("h3").first();
+            manga.name = lc && h4 != null ? h4.text() : h3.text();
+            manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             manga.preview = o.select("img").first().attr("src");

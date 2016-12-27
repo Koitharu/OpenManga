@@ -26,7 +26,7 @@ public class Providers {
             new ProviderSummary(1, "MintManga", MintMangaProvider.class, Languages.RU, R.xml.pref_readmanga),
             new ProviderSummary(2, "Манга-тян", MangachanProvider.class, Languages.RU, R.xml.pref_anychan),
             new ProviderSummary(3, "Desu.me", DesuMeProvider.class, Languages.RU, 0),
-            new ProviderSummary(4, "SelfManga", SelfmangaRuProvider.class, Languages.RU, 0),
+            new ProviderSummary(4, "SelfManga", SelfmangaRuProvider.class, Languages.RU, R.xml.pref_readmanga),
             new ProviderSummary(5, "MangaFox", MangaFoxProvider.class, Languages.EN, 0),
             new ProviderSummary(6, "MangaTown", MangaTownProvider.class, Languages.EN, 0),
             new ProviderSummary(7, "MangaReader", MangaReaderProvider.class, Languages.EN, 0),
