@@ -5,11 +5,11 @@ OpenManga - Powerful manga reader for Android with online catalogues.
 [![Build Status](https://travis-ci.org/nv95/OpenManga.svg?branch=master)](https://travis-ci.org/nv95/OpenManga)
 
 ## Features
- - 11 online manga's catalogues with search
+ - 13 online manga's catalogues with search
  - Downloading manga to local storage
  - Material design UI
  - Customizable reader
- - Favourites and history with remembering last viewed chapter and page
+ - Favourites, bookmarks and history with remembering last viewed chapter and page
  - Selecting sort order
  - Filter by genre
  - Notifications about new chapters
@@ -19,6 +19,15 @@ OpenManga - Powerful manga reader for Android with online catalogues.
  - Data synchronization
  
 You can help translate this app and add online catalogues.
+
+## Screenshots
+
+![screenshot_2016-12-30-21-24-31](https://cloud.githubusercontent.com/assets/8948226/21576637/ee62bed0-cf3f-11e6-8e59-a68d5f61b217.png)
+![screenshot_2016-12-30-21-24-49](https://cloud.githubusercontent.com/assets/8948226/21576638/eea8c8c6-cf3f-11e6-9b6b-3e42e793a5c1.png)
+![screenshot_2016-12-30-21-25-38](https://cloud.githubusercontent.com/assets/8948226/21576639/eeaa76a8-cf3f-11e6-90ec-1ec37d2a2dce.png)
+![screenshot_2016-12-30-21-26-17](https://cloud.githubusercontent.com/assets/8948226/21576642/ef540e2a-cf3f-11e6-9aef-cd3aeb845aea.png)
+![screenshot_2016-12-30-21-26-38](https://cloud.githubusercontent.com/assets/8948226/21576640/ef35288e-cf3f-11e6-822e-abefe873f6aa.png)
+![screenshot_2016-12-30-21-27-13](https://cloud.githubusercontent.com/assets/8948226/21576641/ef355192-cf3f-11e6-8a0e-4eb44d2a13c2.png)
 
 ## License
 
