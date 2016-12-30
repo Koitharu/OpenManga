@@ -11,8 +11,4 @@
         android:key="chupd.wifionly"
         android:title="@string/over_wifi_only"
         android:widgetLayout="@layout/pref_switchcompat" />
-    <Preference
-        android:layout="@layout/pref_info"
-        android:selectable="false"
-        android:title="@string/check_chapters_summary" />
 </PreferenceScreen>
