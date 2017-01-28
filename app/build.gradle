@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 101
-        versionName "3.0-rc1"
+        versionCode 102
+        versionName "3.0"
     }
 
     signingConfigs {
@@ -50,9 +50,9 @@ android {
 dependencies {
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'org.jsoup:jsoup:1.10.1'
+    compile 'org.jsoup:jsoup:1.10.2'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.5.3'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.7.0'
 }
