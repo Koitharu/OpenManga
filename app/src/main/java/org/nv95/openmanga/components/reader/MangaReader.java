@@ -96,14 +96,14 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
     public void scrollToNext(boolean animate) {
         int pos = getCurrentPosition();
         if (pos < getItemCount() - 1) {
-            scrollToPosition(pos + 1);
+            scrollToPosition(pos + 1, animate);
         }
     }
 
     public void scrollToPrevious(boolean animate) {
         int pos = getCurrentPosition();
         if (pos > 0) {
-            scrollToPosition(pos - 1);
+            scrollToPosition(pos - 1, animate);
         }
     }
 
