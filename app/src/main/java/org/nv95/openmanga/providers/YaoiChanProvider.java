@@ -38,7 +38,7 @@ public class YaoiChanProvider extends MangachanProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://yaoichan.me/" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage("http://yaoichan.me/manga/new&n=" + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
