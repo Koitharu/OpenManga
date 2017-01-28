@@ -15,7 +15,6 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.FileLogger;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -189,7 +188,7 @@ public class MintMangaProvider extends MangaProvider {
         }
         MangaList list = new MangaList();
         String data[] = new String[]{
-                "q", URLEncoder.encode(query, "UTF-8")
+                "q", query.replace(' ','_')
         };
         Document document = postPage("http://mintmanga.com/search", data);
         MangaInfo manga;
