@@ -3,6 +3,7 @@ package org.nv95.openmanga.providers.staff;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -82,6 +83,7 @@ public class MangaProviderManager {
         }
     }
 
+    @Nullable
     public static MangaProvider instanceProvider(Context context, String className) {
         try {
             return instanceProvider(context, (Class<? extends MangaProvider>) Class.forName(className));
@@ -90,17 +92,16 @@ public class MangaProviderManager {
         }
     }
 
+    @Nullable
     public static MangaProvider instanceProvider(Context context, Class<? extends MangaProvider> aClass) {
         try {
             Method m = aClass.getMethod("getInstance", Context.class);
             return (MangaProvider) m.invoke(null, context);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         try {
             return aClass.getDeclaredConstructor(Context.class).newInstance(context);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return null;
     }
