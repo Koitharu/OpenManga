@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.ReaderMenu;
@@ -201,11 +202,31 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
         if (mConfig.scrollByVolumeKeys) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                mReader.scrollToNext(true);
-                return true;
+				if (!mReader.scrollToNext(true)) {
+					if (mChapter < mManga.getChapters().size() - 1) {
+						mChapter++;
+						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+						t.setGravity(Gravity.TOP, 0, 0);
+						t.show();
+						new ChapterLoadTask(0).startLoading(mManga.getChapters().get(mChapter));
+						return true;
+					}
+				} else {
+					return true;
+				}
             } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                mReader.scrollToPrevious(true);
-                return true;
+				if (!mReader.scrollToPrevious(true)) {
+					if (mChapter > 0) {
+						mChapter--;
+						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+						t.setGravity(Gravity.TOP, 0, 0);
+						t.show();
+						new ChapterLoadTask(-1).startLoading(mManga.getChapters().get(mChapter));
+						return true;
+					}
+				} else {
+					return true;
+				}
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -296,10 +317,29 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                         ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
 			case R.id.nav_left:
-				mReader.scrollToPrevious(true);
-				break;
 			case R.id.nav_right:
-				mReader.scrollToNext(true);
+				int rd = getRealDirection(id == R.id.nav_left ? OnOverScrollListener.LEFT : OnOverScrollListener.RIGHT);
+				if (rd == -1) {
+					if (!mReader.scrollToPrevious(true)) {
+						if (mChapter > 0) {
+							mChapter--;
+							Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+							t.setGravity(Gravity.TOP, 0, 0);
+							t.show();
+							new ChapterLoadTask(-1).startLoading(mManga.getChapters().get(mChapter));
+						}
+					}
+				} else {
+					if (!mReader.scrollToNext(true)) {
+						if (mChapter < mManga.getChapters().size() - 1) {
+							mChapter++;
+							Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+							t.setGravity(Gravity.TOP, 0, 0);
+							t.show();
+							new ChapterLoadTask(0).startLoading(mManga.getChapters().get(mChapter));
+						}
+					}
+				}
 				break;
         }
     }
