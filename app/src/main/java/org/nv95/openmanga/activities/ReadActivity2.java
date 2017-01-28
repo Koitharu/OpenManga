@@ -238,6 +238,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         } else {
             mBrightnessHelper.reset();
         }
+        mMenuPanel.setTapNavs(mConfig.tapNavs);
     }
 
     @Override
@@ -294,6 +295,12 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 setRequestedOrientation(orientation == Configuration.ORIENTATION_LANDSCAPE ?
                         ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
+			case R.id.nav_left:
+				mReader.scrollToPrevious(true);
+				break;
+			case R.id.nav_right:
+				mReader.scrollToNext(true);
+				break;
         }
     }
 

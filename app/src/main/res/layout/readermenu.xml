@@ -3,6 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+		android:layout_width="96dp"
+		android:layout_height="match_parent"
+		android:id="@+id/nav_left"
+		android:layout_gravity="left"
+		android:visibility="gone"
+		android:background="?selectableItemBackground" />
+	
+	<View
+		android:layout_width="96dp"
+		android:layout_height="match_parent"
+		android:id="@+id/nav_right"
+		android:layout_gravity="right"
+		android:visibility="gone"
+		android:background="?selectableItemBackground" />
+	
     <RelativeLayout
         android:id="@+id/menu_top"
         android:layout_width="match_parent"
@@ -74,8 +90,7 @@
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
-
-
+    
     <LinearLayout
         android:id="@+id/menu_bottom"
         android:layout_width="match_parent"
