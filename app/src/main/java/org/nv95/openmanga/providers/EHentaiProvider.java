@@ -41,7 +41,7 @@ public class EHentaiProvider extends MangaProvider {
         super(context);
         mDomain = !TextUtils.isEmpty(getStringPreference("login", ""))
                 && !TextUtils.isEmpty(getStringPreference("password", ""))
-                && getBooleanPreference("exhentai", false) ? "http://exhentai.org/" : "http://g.e-hentai.org/";
+                && getBooleanPreference("exhentai", false) ? "http://exhentai.org/" : "http://e-hentai.org/";
     }
 
     @Override
