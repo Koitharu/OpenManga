@@ -54,7 +54,6 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     private MangaSummary mManga;
 
     private ImageView[] mButtons;
-    private View[] mNavs;
     private TextView mTitle;
     private ProgressBar mProgressBar;
     private View[] mMenus;
@@ -103,10 +102,6 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
                 findViewById(R.id.menu_top),
                 findViewById(R.id.menu_bottom)
         };
-        mNavs = new View[] {
-                findViewById(R.id.nav_left),
-                findViewById(R.id.nav_right)
-        };
         mButtons = new ImageView[] {
                 (ImageView) findViewById(android.R.id.home),
                 (ImageView) findViewById(R.id.menuitem_favourite),
@@ -121,9 +116,6 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         for (ImageView o : mButtons) {
             o.setOnClickListener(this);
             o.setOnLongClickListener(this);
-        }
-        for (View o : mNavs) {
-            o.setOnClickListener(this);
         }
         mTitle.setOnClickListener(this);
         mProgressBar.setOnClickListener(this);
@@ -165,7 +157,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         }
         return mIsStatusBar || super.onTouchEvent(ev);
     }
-
+    
     public void setData(MangaSummary manga) {
         mManga = manga;
         mTitle.setText(manga.name);
@@ -176,12 +168,6 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         int fav = FavouritesProvider.getInstance(getContext()).getCategory(mManga);
         mButtons[1].setVisibility(fav == -1 ? VISIBLE : GONE);
         mButtons[2].setVisibility(fav != -1 ? VISIBLE : GONE);
-    }
-    
-    public void setTapNavs(boolean val) {
-        for (View o : mNavs) {
-            o.setVisibility(val ? VISIBLE : GONE);
-        }
     }
 
     public void show() {

@@ -259,7 +259,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         } else {
             mBrightnessHelper.reset();
         }
-        mMenuPanel.setTapNavs(mConfig.tapNavs);
+        mReader.setTapNavs(mConfig.tapNavs);
     }
 
     @Override
@@ -316,7 +316,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 setRequestedOrientation(orientation == Configuration.ORIENTATION_LANDSCAPE ?
                         ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
-			case R.id.nav_left:
+			/*case R.id.nav_left:
 			case R.id.nav_right:
 				int rd = getRealDirection(id == R.id.nav_left ? OnOverScrollListener.LEFT : OnOverScrollListener.RIGHT);
 				if (rd == -1) {
@@ -340,7 +340,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 						}
 					}
 				}
-				break;
+				break;*/
         }
     }
 

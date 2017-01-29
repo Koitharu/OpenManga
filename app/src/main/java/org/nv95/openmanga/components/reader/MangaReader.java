@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import org.nv95.openmanga.components.reader.recyclerpager.PreCachingLayoutManager;
 import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
@@ -31,6 +32,8 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
     private OnOverScrollListener mOverScrollListener;
     private int mOverScrollDirection;
     private float mOverScrollFactor;
+    private boolean mNavEnabled;
+    private float[] mNavPoint;
 
     public MangaReader(Context context) {
         super(context);
@@ -46,9 +49,59 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
         super(context, attrs, defStyle);
         init(context);
     }
+    
+    private int getSide(float x) {
+        final int w = getResources().getDisplayMetrics().widthPixels;
+        final float sw = w / 3.f;
+        if (x < sw) {
+            return -1;
+        } else if (x > (sw * 2.f)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     private void init(Context context) {
         mLayoutManager = null;
+        mNavEnabled = false;
+        mNavPoint = new float[2];
+        addOnItemTouchListener(new OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent ev) {
+                if (mNavEnabled && rv.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                    switch (ev.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            mNavPoint[0] = ev.getX();
+                            if (getSide(mNavPoint[0]) == 0) {
+                                return false;
+                            }
+                            mNavPoint[1] = ev.getY();
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            float dx = mNavPoint[0] - ev.getX();
+                            float dy = mNavPoint[1] - ev.getY();
+                            double delta = Math.sqrt(dx * dx + dy * dy);
+                            if (delta < 10) {
+                                int d = getSide(mNavPoint[0]) * (isReversed() ? -1 : 1);
+                                smoothScrollToPosition(getCurrentPosition() + d);
+                            }
+                            break;
+                    }
+                }
+                return false;
+            }
+    
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        
+            }
+    
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        
+            }
+        });
     }
 
     public void applyConfig(boolean vertical, boolean reverse, boolean sticky) {
@@ -83,6 +136,10 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
 
     public void setOnOverScrollListener(OnOverScrollListener listener) {
         mOverScrollListener = listener;
+    }
+    
+    public void setTapNavs(boolean val) {
+        mNavEnabled = val;
     }
 
     void scrollToPosition(int pos, boolean animate) {
