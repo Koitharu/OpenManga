@@ -25,9 +25,10 @@ import java.util.Calendar;
 public class AppHelper {
 
     public static String getRawString(Context context, int res) {
+        InputStream is = null;
         try {
             Resources resources = context.getResources();
-            InputStream is = resources.openRawResource(res);
+            is = resources.openRawResource(res);
             String myText;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int i = is.read();
@@ -36,10 +37,17 @@ public class AppHelper {
                 i = is.read();
             }
             myText = baos.toString();
-            is.close();
             return myText;
         } catch (IOException e) {
             return e.getMessage();
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
