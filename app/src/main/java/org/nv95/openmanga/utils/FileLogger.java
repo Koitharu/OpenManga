@@ -109,10 +109,14 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    public void report(String tag, Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        report(tag + "\n" + e.getMessage() + "\n\tStack trace:\n" + sw.toString());
+    public void report(String tag, @Nullable Exception e) {
+        if (e != null) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            report(tag + "\n" + e.getMessage() + "\n\tStack trace:\n" + sw.toString());
+        } else {
+            report("Null exception");
+        }
     }
 
     @Deprecated
