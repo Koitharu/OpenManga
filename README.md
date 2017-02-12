@@ -1,7 +1,7 @@
 # OpenManga
 
 OpenManga - Powerful manga reader for Android with online catalogues.
-
+[![Get it on F-Droid](https://cloud.githubusercontent.com/assets/8948226/22860847/7476f5c4-f112-11e6-9031-5ac233d26678.png)](https://f-droid.org/repository/browse/?fdid=org.nv95.openmanga)
 [![Build Status](https://travis-ci.org/nv95/OpenManga.svg?branch=master)](https://travis-ci.org/nv95/OpenManga)
 
 ## Features
@@ -40,5 +40,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
 
 ---
+
 
 If you want to use this app or parts of it, please, add link to this repo and DO NOT include ads or any paid options.
