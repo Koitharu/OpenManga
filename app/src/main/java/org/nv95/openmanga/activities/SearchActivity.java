@@ -222,12 +222,20 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
             }
             mPage = 0;
             mCurrentProvider = null;
-            if (mProgressBar.getVisibility() != View.VISIBLE) {
-                mResultsAdapter.setFooterProgress();
+            if (mProviders.isEmpty()) {
+                if (mResultsAdapter.hasItems()) {
+                    mResultsAdapter.hideFooter();
+                } else {
+                    AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+                }
             } else {
-                mResultsAdapter.hideFooter();
+                if (mProgressBar.getVisibility() != View.VISIBLE) {
+                    mResultsAdapter.setFooterProgress();
+                } else {
+                    mResultsAdapter.hideFooter();
+                }
+                new SearchTask().startLoading();
             }
-            new SearchTask().startLoading();
             mStage = 1;
         }
     }
