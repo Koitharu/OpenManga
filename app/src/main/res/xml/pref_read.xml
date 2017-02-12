@@ -29,6 +29,12 @@
         android:key="tap_navs"
         android:title="@string/scroll_by_click"
         android:widgetLayout="@layout/pref_switchcompat" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="hide_menu"
+        android:title="@string/hide_menu_button"
+        android:summary="@string/hide_menu_summary"
+        android:widgetLayout="@layout/pref_switchcompat" />
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/scale_modes"

@@ -24,8 +24,7 @@
         android:contentDescription="@string/menu"
         android:minHeight="?actionBarSize"
         android:minWidth="?actionBarSize"
-        android:scaleType="center"
-        android:src="@drawable/ic_action_navigation_more_vert" />
+        android:scaleType="center" />
 
     <FrameLayout
         android:id="@+id/overscrollFrame"

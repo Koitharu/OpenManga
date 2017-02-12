@@ -37,11 +37,13 @@ public class ReaderConfig {
     public final int preload;
     public final int scaleMode;
     public final boolean tapNavs;
+    public final boolean hideMenuButton;
 
     private ReaderConfig(SharedPreferences prefs, boolean isWeb) {
         keepScreenOn = prefs.getBoolean("keep_screen", true);
         scrollByVolumeKeys = prefs.getBoolean("volkeyscroll", false);
         adjustBrightness = prefs.getBoolean("brightness", false);
+        hideMenuButton = prefs.getBoolean("hide_menu", false);
         brightnessValue = prefs.getInt("brightness_value", 20);
         tapNavs = prefs.getBoolean("tap_navs", false);
         scrollDirection = isWeb ? DIRECTION_VERTICAL : Integer.parseInt(prefs.getString("direction", "0"));

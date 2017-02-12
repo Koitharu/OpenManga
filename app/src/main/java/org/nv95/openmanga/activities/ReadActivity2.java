@@ -251,6 +251,11 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+        if (mConfig.hideMenuButton) {
+            mMenuButton.setImageDrawable(null);
+        } else {
+            mMenuButton.setImageResource(R.drawable.ic_action_navigation_more_vert);
+        }
         mAdapter.getLoader().setPreloadEnabled(mConfig.preload == ReaderConfig.PRELOAD_ALWAYS
                 || (mConfig.preload == ReaderConfig.PRELOAD_WLAN_ONLY && MangaProviderManager.isWlan(this)));
         mAdapter.setScaleMode(mConfig.scaleMode);
