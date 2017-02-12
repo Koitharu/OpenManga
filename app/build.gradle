@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 102
-        versionName "3.0"
+        versionCode 103
+        versionName "3.0.1"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
     }
 
