@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.NotificationHelper;
 
@@ -29,8 +30,10 @@ public class UpdateService extends Service {
     private NotificationHelper mNotificationHelper;
 
     public static void start(Context context, String url) {
-        context.startService(new Intent(context, UpdateService.class)
-                .putExtra("url", url));
+        if (BuildConfig.SELFUPDATE_ENABLED) {
+            context.startService(new Intent(context, UpdateService.class)
+                    .putExtra("url", url));
+        }
     }
 
     @Override

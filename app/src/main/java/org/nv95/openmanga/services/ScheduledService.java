@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.NewChaptersActivity;
 import org.nv95.openmanga.helpers.NotificationHelper;
@@ -52,7 +53,8 @@ public class ScheduledService extends Service {
         mChaptersCheckEnabled = prefs.getBoolean("chupd", false);
         mChaptersCheckInterval = Integer.parseInt(prefs.getString("chupd.interval", "12"));
         mChapterCheckWifiOnly = prefs.getBoolean("chupd.wifionly", false);
-        mAutoUpdate = prefs.getBoolean("autoupdate", true);
+        //noinspection ConstantConditions
+        mAutoUpdate = BuildConfig.SELFUPDATE_ENABLED && prefs.getBoolean("autoupdate", true);
     }
 
     @Override

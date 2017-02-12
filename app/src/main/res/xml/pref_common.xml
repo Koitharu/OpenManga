@@ -72,7 +72,7 @@
             android:key="restore"
             android:title="@string/restore" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/help">
+    <PreferenceCategory android:key="cat_help" android:title="@string/help">
         <Preference
             android:key="about"
             android:title="@string/about" />

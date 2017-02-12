@@ -10,6 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 102
         versionName "3.0"
+        buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
     }
 
     signingConfigs {
