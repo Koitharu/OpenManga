@@ -96,21 +96,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.6.0" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.5" level="project" />
-    <orderEntry type="library" exported="" name="design-25.1.1" level="project" />
+    <orderEntry type="library" exported="" name="design-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.10.2" level="project" />
-    <orderEntry type="library" exported="" name="transition-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-25.1.1" level="project" />
+    <orderEntry type="library" exported="" name="transition-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-compat-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="android-crop-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-core-ui-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-25.1.1" level="project" />
+    <orderEntry type="library" exported="" name="support-media-compat-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-core-ui-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="taptargetview-1.8.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-25.1.1" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-25.1.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-core-utils-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-fragment-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-25.2.0" level="project" />
   </component>
 </module>
