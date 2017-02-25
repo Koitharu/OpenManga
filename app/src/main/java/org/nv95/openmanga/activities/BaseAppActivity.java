@@ -32,6 +32,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -298,6 +299,8 @@ public abstract class BaseAppActivity extends AppCompatActivity {
             TapTargetView.showFor(this,
                     TapTarget.forView(view, getString(title), getString(body))
                             .transparentTarget(!tint)
+                            .descriptionTextColorInt(LayoutUtils.getAttrColor(this, android.R.attr.textColorSecondary))
+                            .titleTextColorInt(LayoutUtils.getAttrColor(this, android.R.attr.textColorPrimary))
                             .tintTarget(tint),
                     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                         @Override
