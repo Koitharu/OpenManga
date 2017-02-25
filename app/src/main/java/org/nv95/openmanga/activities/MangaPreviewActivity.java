@@ -47,6 +47,7 @@ import java.io.File;
 /**
  * Created by nv95 on 30.09.15.
  */
+@Deprecated
 public class MangaPreviewActivity extends BaseAppActivity implements View.OnClickListener,
         DialogInterface.OnClickListener, View.OnLongClickListener, ChangesObserver.OnMangaChangesListener {
 

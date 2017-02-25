@@ -31,6 +31,8 @@
         </activity>
         <activity
             android:name=".activities.MangaPreviewActivity" />
+        <activity
+            android:name=".activities.PreviewActivity2" />
         <activity android:name=".activities.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />

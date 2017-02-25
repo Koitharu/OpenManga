@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.MangaPreviewActivity;
+import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.ImageUtils;
@@ -69,7 +69,7 @@ public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.
         @Override
         public void onClick(View v) {
             Context context = v.getContext();
-            Intent intent = new Intent(context, MangaPreviewActivity.class);
+            Intent intent = new Intent(context, PreviewActivity2.class);
             intent.putExtras(mData.toBundle());
             context.startActivity(intent);
         }

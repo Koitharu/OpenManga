@@ -14,12 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.ReadActivity2;
+import org.nv95.openmanga.adapters.BookmarksAdapter;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
@@ -28,8 +27,6 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,7 @@ import java.util.ArrayList;
  * Created by nv95 on 20.11.16.
  */
 
-public class BookmarksDialog implements View.OnClickListener {
+public class BookmarksDialog implements BookmarksAdapter.OnBookmarkClickListener, View.OnClickListener {
 
     private final Activity mActivity;
     private final AlertDialog mDialog;
@@ -87,7 +84,7 @@ public class BookmarksDialog implements View.OnClickListener {
 
     public void show() {
         mBookmarks = BookmarksProvider.getInstance(mActivity).getAll();
-        mRecyclerView.setAdapter(new BookmarksAdapter());
+        mRecyclerView.setAdapter(new BookmarksAdapter(mBookmarks, this));
         showHideHolder();
         mDialog.show();
     }
@@ -95,7 +92,7 @@ public class BookmarksDialog implements View.OnClickListener {
     public void show(MangaInfo manga) {
         mToolbar.setSubtitle(manga.name);
         mBookmarks = BookmarksProvider.getInstance(mActivity).getAll(manga.id);
-        mRecyclerView.setAdapter(new BookmarksAdapter());
+        mRecyclerView.setAdapter(new BookmarksAdapter(mBookmarks, this));
         showHideHolder();
         mDialog.show();
     }
@@ -109,55 +106,19 @@ public class BookmarksDialog implements View.OnClickListener {
             mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
-
-
+    
+    @Override
+    public void onBookmarkSelected(Bookmark bookmark) {
+        mDialog.dismiss();
+        new BookmarkOpenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bookmark);
+    }
+    
     @Override
     public void onClick(View v) {
         mDialog.dismiss();
-        Object tag = v.getTag();
-        if (tag != null && tag instanceof Bookmark) {
-            new BookmarkOpenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Bookmark) tag);
-        }
     }
-
-    private class BookmarksAdapter extends RecyclerView.Adapter<BookmarkHolder> {
-
-        @Override
-        public BookmarkHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            BookmarkHolder holder = new BookmarkHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bookmark, parent, false));
-            holder.itemView.setOnClickListener(BookmarksDialog.this);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(BookmarkHolder holder, int position) {
-            Bookmark o = mBookmarks.get(position);
-            ImageUtils.setThumbnail(holder.imageView, "file://" + o.thumbnailFile);
-            holder.textView1.setText(o.name + "\n" + mActivity.getString(R.string.bookmark_pos, o.chapter, o.page));
-            holder.textView2.setText(AppHelper.getReadableDateTimeRelative(o.datetime));
-            holder.itemView.setTag(o);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBookmarks.size();
-        }
-    }
-
-    private static class BookmarkHolder extends RecyclerView.ViewHolder {
-
-        final ImageView imageView;
-        final TextView textView1;
-        final TextView textView2;
-
-        BookmarkHolder(View itemView) {
-            super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            textView1 = (TextView) itemView.findViewById(R.id.textView_title);
-            textView2 = (TextView) itemView.findViewById(R.id.textView_subtitle);
-        }
-    }
-
+    
+    
     private class BookmarkOpenTask extends AsyncTask<Bookmark,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
 
         private final ProgressDialog mProgressDialog;

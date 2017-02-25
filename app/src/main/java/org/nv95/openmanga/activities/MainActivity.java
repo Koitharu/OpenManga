@@ -38,7 +38,6 @@ import android.widget.TextView;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
-import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.PageNumberDialog;
@@ -687,7 +686,7 @@ public class MainActivity extends BaseAppActivity implements
                     return new Pair<>(2, null);
                 }
                 if (params.length != 0 && !params[0]) {
-                    intent = new Intent(MainActivity.this, MangaPreviewActivity.class);
+                    intent = new Intent(MainActivity.this, PreviewActivity2.class);
                     intent.putExtras(info.toBundle());
                     return new Pair<>(0, intent);
                 }

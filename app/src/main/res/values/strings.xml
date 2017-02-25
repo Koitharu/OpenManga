@@ -317,4 +317,5 @@
 	<string name="scroll_by_click">Scroll by click on sides</string>
     <string name="hide_menu_button">Hide menu button</string>
     <string name="hide_menu_summary">Make it invisible, but still clickable</string>
+    <string name="chapters">Chapters</string>
 </resources>

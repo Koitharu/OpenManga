@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -113,9 +114,14 @@ public class LayoutUtils {
         return ds;
     }
 
+    @Deprecated
     public static int getAccentColor(Context context) {
+        return getAttrColor(context, R.attr.colorAccent);
+    }
+    
+    public static int getAttrColor(Context context, @AttrRes int what) {
         TypedValue typedValue = new TypedValue();
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorAccent });
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { what });
         int color = a.getColor(0, 0);
         a.recycle();
         return color;

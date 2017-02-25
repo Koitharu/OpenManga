@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.MangaPreviewActivity;
+import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.components.RatingView;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
@@ -149,7 +149,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         public void onClick(View v) {
             if (mListener == null || !mListener.onClick(this)) {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, MangaPreviewActivity.class);
+                Intent intent = new Intent(context, PreviewActivity2.class);
                 intent.putExtras(mData.toBundle());
                 context.startActivity(intent);
             }
