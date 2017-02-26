@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 /**
  * Created by nv95 on 18.12.15.
@@ -140,5 +141,10 @@ public class AppHelper {
             }
         }
         return builder.toString();
+    }
+    
+    public static boolean isEnglish(CharSequence str) {
+        final Pattern pattern = Pattern.compile("^[A-Za-z0-9. -]+$");
+        return pattern.matcher(str).matches();
     }
 }

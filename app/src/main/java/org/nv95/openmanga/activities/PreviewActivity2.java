@@ -37,11 +37,13 @@ import org.nv95.openmanga.providers.BookmarksProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.providers.MALProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.AnimUtils;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
@@ -383,6 +385,9 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             } else {
                 AnimUtils.crossfade(mProgressBar, null);
             }
+            if (Boolean.TRUE.equals(MALProvider.getConfig(getApplicationContext(), "description", true))) {
+                new MalLoadTask().startLoading();
+            }
         }
     }
     
@@ -431,6 +436,25 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         @Override
         public void onCancel(DialogInterface dialog) {
             this.cancel(true);
+        }
+    }
+    
+    private class MalLoadTask extends LoaderTask<Void,Void,MALProvider.MALManga> {
+    
+        @Override
+        protected MALProvider.MALManga doInBackground(Void... params) {
+            List<MALProvider.MALManga> list = MALProvider.getInstance(PreviewActivity2.this).findEquals(mManga);
+            return (list == null || list.isEmpty()) ? null : list.get(0);
+        }
+    
+        @Override
+        protected void onPostExecute(MALProvider.MALManga malManga) {
+            super.onPostExecute(malManga);
+            if (malManga != null) {
+                mTextViewDescription.append("\n\nMAL:\n\n" + malManga.title + "\n\n" + AppHelper.fromHtml(malManga.synopsis, false));
+            } else {
+                mTextViewDescription.append("\n\nMAL:\nNot found");
+            }
         }
     }
 }

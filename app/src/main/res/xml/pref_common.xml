@@ -25,12 +25,18 @@
         android:title="@string/favourites_categories"
         android:dialogMessage="@string/favourites_categories_description"
         android:defaultValue="@string/favourites_categories_default" />
+    <Preference
+        android:key="mal"
+        android:title="@string/mal">
+        <intent android:action="org.nv95.openmanga.mal" />
+    </Preference>
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/themes_names"
         android:entryValues="@array/themes"
         android:key="theme"
         android:title="@string/theme" />
+    <!--suppress AndroidDomInspection -->
     <ListPreference
         android:defaultValue=""
         android:entries="@array/app_languages"

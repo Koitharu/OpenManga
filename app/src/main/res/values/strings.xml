@@ -318,4 +318,6 @@
     <string name="hide_menu_button">Hide menu button</string>
     <string name="hide_menu_summary">Make it invisible, but still clickable</string>
     <string name="chapters">Chapters</string>
+    <string name="mal">My Anime List</string>
+    <string name="mal_load_description">Load manga\'s description</string>
 </resources>

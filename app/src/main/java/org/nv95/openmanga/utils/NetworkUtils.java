@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
 
 /**
  * Created by nv95 on 29.11.16.
@@ -66,6 +68,25 @@ public class NetworkUtils {
             con.setRequestProperty("Cookie", cookie);
         }
         con.setConnectTimeout(15000);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder out = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            out.append(line);
+        }
+        reader.close();
+        return out.toString();
+    }
+    
+    @NonNull
+    public static String getRaw(@NonNull String url, @NonNull String login, @NonNull String password) throws IOException {
+        String authString = login + ":" + password;
+        byte[] authEncBytes = Base64.encode(authString.getBytes(), Base64.NO_WRAP);
+        String authStringEnc = new String(authEncBytes);
+        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+        con.setRequestProperty("Authorization", "Basic " + authStringEnc);
+        con.setConnectTimeout(15000);
+    
         BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
         StringBuilder out = new StringBuilder();
         String line;
