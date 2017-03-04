@@ -94,7 +94,10 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         mTextViewState = (TextView) findViewById(R.id.textView_state);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mToolbarMenu = (Toolbar) findViewById(R.id.toolbarMenu);
-        ((AppBarLayout)findViewById(R.id.appbar_container)).addOnOffsetChangedListener(this);
+        AppBarLayout appBar = ((AppBarLayout)findViewById(R.id.appbar_container));
+        if (appBar != null) {
+            appBar.addOnOffsetChangedListener(this);
+        }
     
         mPagerAdapter = new SimpleViewPagerAdapter();
         //
