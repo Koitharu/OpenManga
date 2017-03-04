@@ -114,7 +114,12 @@ public class EHentaiProvider extends MangaProvider {
                 builder.append(o.text()).append('\n');
             }
             summary.description = builder.toString().trim();
-            summary.preview = body.getElementById("gd1").select("img").first().attr("src");
+            try {
+                String pvw = body.getElementById("gd1").child(0).attr("style");
+                int p = pvw.indexOf("url(") + 4;
+                summary.preview = pvw.substring(p, pvw.indexOf(')', p));
+            } catch (Exception ignored) {
+            }
             Elements els = body.select("table.ptt").first().select("td");
             els.remove(els.size() - 1);
             els.remove(0);

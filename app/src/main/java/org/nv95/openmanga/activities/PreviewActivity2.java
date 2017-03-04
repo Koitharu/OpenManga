@@ -368,20 +368,26 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         @Override
         protected void onPostExecute(MangaSummary mangaSummary) {
             super.onPostExecute(mangaSummary);
-            mManga = mangaSummary;
-            invalidateOptionsMenu();
-            invalidateMenuBar();
-            mTextViewSummary.setText(mManga.genres);
-            mTextViewDescription.setText(mManga.description);
-            ImageUtils.updateImage(mImageView, mManga.preview);
-            mChaptersAdapter.setData(mManga.chapters);
-            mChaptersAdapter.setExtra(HistoryProvider.getInstance(PreviewActivity2.this).get(mManga));
-            mChaptersAdapter.notifyDataSetChanged();
-            if (mangaSummary.chapters.isEmpty()) {
-                mTextViewChaptersHolder.setText(R.string.no_chapters_found);
-                AnimUtils.crossfade(mProgressBar, mTextViewChaptersHolder);
+            if (mangaSummary != null) {
+                mManga = mangaSummary;
+                invalidateOptionsMenu();
+                invalidateMenuBar();
+                mTextViewSummary.setText(mManga.genres);
+                mTextViewDescription.setText(mManga.description);
+                ImageUtils.updateImage(mImageView, mManga.preview);
+                mChaptersAdapter.setData(mManga.chapters);
+                mChaptersAdapter.setExtra(HistoryProvider.getInstance(PreviewActivity2.this).get(mManga));
+                mChaptersAdapter.notifyDataSetChanged();
+                if (mangaSummary.chapters.isEmpty()) {
+                    mTextViewChaptersHolder.setText(R.string.no_chapters_found);
+                    AnimUtils.crossfade(mProgressBar, mTextViewChaptersHolder);
+                } else {
+                    AnimUtils.crossfade(mProgressBar, null);
+                }
             } else {
-                AnimUtils.crossfade(mProgressBar, null);
+                mTextViewChaptersHolder.setText(R.string.loading_error);
+                AnimUtils.crossfade(mProgressBar, mTextViewChaptersHolder);
+                mTextViewDescription.setText(R.string.loading_error);
             }
         }
     }
