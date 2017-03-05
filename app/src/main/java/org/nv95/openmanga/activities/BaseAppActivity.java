@@ -294,13 +294,15 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     }
 
     boolean showcase(final View view, @StringRes int title, @StringRes int body, boolean tint) {
+        boolean dark = isDarkTheme();
         if (view != null && view.getVisibility() == View.VISIBLE
                 && !getSharedPreferences("tips", MODE_PRIVATE).getBoolean(getClass().getSimpleName() + "_" + view.getId(), false)) {
             TapTargetView.showFor(this,
                     TapTarget.forView(view, getString(title), getString(body))
                             .transparentTarget(!tint)
-                            .descriptionTextColorInt(Color.LTGRAY)
-                            .titleTextColorInt(Color.WHITE)
+                            .textColorInt(Color.WHITE)
+                            .outerCircleColorInt(Color.BLACK)
+                            .dimColorInt(dark ? Color.BLACK : Color.WHITE)
                             .tintTarget(tint),
                     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                         @Override
@@ -324,7 +326,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
      */
     boolean showcase(@IdRes final int menuItemId, @StringRes int title, @StringRes int body) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        return toolbar != null && showcase(toolbar.findViewById(menuItemId), title, body, true);
+        return toolbar != null && showcase(toolbar.findViewById(menuItemId), title, body, false);
     }
 
     /**

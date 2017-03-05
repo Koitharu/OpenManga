@@ -386,6 +386,13 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                     AnimUtils.crossfade(mProgressBar, mTextViewChaptersHolder);
                 } else {
                     AnimUtils.crossfade(mProgressBar, null);
+                    if (!showcase(mToolbarMenu.findViewById(R.id.action_favourite), R.string.action_favourite, R.string.tip_favourite)) {
+                        if (LocalMangaProvider.class.equals(mManga.provider)) {
+                            showcase(mToolbarMenu.findViewById(R.id.action_save_more), R.string.action_save_add,  R.string.tip_save_more);
+                        } else {
+                            showcase(mToolbarMenu.findViewById(R.id.action_save), R.string.save_manga, R.string.tip_save);
+                        }
+                    }
                 }
             } else {
                 mTextViewChaptersHolder.setText(R.string.loading_error);
