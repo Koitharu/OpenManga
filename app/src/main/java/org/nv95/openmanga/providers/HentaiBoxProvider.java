@@ -21,6 +21,8 @@ import java.util.ArrayList;
  * Created by nv95 on 14.09.16.
  */
 
+@Deprecated
+// not available
 public class HentaiBoxProvider extends MangaProvider {
 
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_popular, R.string.sort_random};

@@ -1,9 +1,10 @@
 package org.nv95.openmanga.providers.staff;
 
+import android.support.annotation.Nullable;
+
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.DesuMeProvider;
 import org.nv95.openmanga.providers.EHentaiProvider;
-import org.nv95.openmanga.providers.HentaiBoxProvider;
 import org.nv95.openmanga.providers.HentaichanProvider;
 import org.nv95.openmanga.providers.MangaFoxProvider;
 import org.nv95.openmanga.providers.MangaReaderProvider;
@@ -33,7 +34,7 @@ public class Providers {
             new ProviderSummary(8, "E-Hentai", EHentaiProvider.class, Languages.MULTI, R.xml.pref_ehentai),
             new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR, 0),
             new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, R.xml.pref_anychan),
-            new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI, 0),
+            //new ProviderSummary(11, "HentaiBox", HentaiBoxProvider.class, Languages.MULTI, 0),
             new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, R.xml.pref_anychan)
     };
 
@@ -41,8 +42,14 @@ public class Providers {
         return mAllProviders;
     }
 
+    @Nullable
     public static ProviderSummary getById(int id) {
-        return id < 0 || id >= mAllProviders.length ? null : mAllProviders[id];
+        for (ProviderSummary o : mAllProviders) {
+            if (id == o.id) {
+                return o;
+            }
+        }
+        return null;
     }
 
     public static int getCount() {
