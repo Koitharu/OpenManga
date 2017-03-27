@@ -8,9 +8,9 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 108
-        versionName "3.1"
-        buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
+        versionCode 109
+        versionName "3.2"
+        buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
     }
 
     signingConfigs {
@@ -49,8 +49,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
