@@ -31,6 +31,8 @@ public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocu
     private boolean mClearVisible;
     @Nullable
     private OnFocusChangeListener mFocusChangeListener;
+    @Nullable
+    private OnTextChangedListener mTextChangedListener;
 
     public SearchInput(@NonNull Context context) {
         super(context);
@@ -77,16 +79,9 @@ public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocu
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (TextUtils.isEmpty(charSequence)) {
-            if (mClearVisible) {
-                AnimUtils.zooma(mImageViewClear, null);
-                mClearVisible = false;
-            }
-        } else {
-            if (!mClearVisible) {
-                AnimUtils.zooma(null, mImageViewClear);
-                mClearVisible = true;
-            }
+        updateClearButton(!TextUtils.isEmpty(charSequence) && mEditText.hasFocus());
+        if (mTextChangedListener != null) {
+            mTextChangedListener.onTextChanged(charSequence);
         }
     }
 
@@ -97,16 +92,20 @@ public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocu
 
     @Override
     public void onFocusChange(View view, boolean b) {
-        if (!b) {
-            if (mClearVisible) {
-                AnimUtils.zooma(mImageViewClear, null);
-                mClearVisible = false;
-            }
-        } else {
-            onTextChanged(mEditText.getText(), 0 ,0 ,0);
-        }
+        updateClearButton(!TextUtils.isEmpty(mEditText.getText()) && b);
         if (mFocusChangeListener != null) {
             mFocusChangeListener.onFocusChange(view, b);
+        }
+    }
+
+    private void updateClearButton(boolean show) {
+        if (show != mClearVisible) {
+            mClearVisible = show;
+            if (show) {
+                AnimUtils.zooma(null, mImageViewClear);
+            } else {
+                AnimUtils.zooma(mImageViewClear, null);
+            }
         }
     }
 
@@ -118,8 +117,16 @@ public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocu
         mFocusChangeListener = listener;
     }
 
+    public void setOnTextChangedListener(@Nullable OnTextChangedListener listener) {
+        mTextChangedListener = listener;
+    }
+
     public void setText(CharSequence charSequence) {
         mEditText.setText(charSequence);
         mEditText.setSelection(mEditText.getText().length());
+    }
+
+    public interface OnTextChangedListener {
+        void onTextChanged(CharSequence text);
     }
 }

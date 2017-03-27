@@ -95,10 +95,14 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     }
 
     void setupToolbarScrolling(Toolbar toolbar) {
+        setToolbarScrollingLock(toolbar, false);
+    }
+
+    void setToolbarScrollingLock(Toolbar toolbar, boolean lock) {
         if (toolbar == null || !(toolbar.getParent() instanceof AppBarLayout)) {
             return;
         }
-        boolean scrolls = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("hide_toolbars", true);
+        boolean scrolls = !lock && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("hide_toolbars", true);
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(scrolls ? AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS : 0);
     }

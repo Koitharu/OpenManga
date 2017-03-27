@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +16,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.jsoup.helper.StringUtil;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.adapters.SearchResultsAdapter;
@@ -38,7 +41,9 @@ import java.util.ArrayDeque;
  * Created by nv95 on 24.12.16.
  */
 
-public class SearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener, SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventListener, TextView.OnEditorActionListener, View.OnFocusChangeListener, View.OnClickListener {
+public class SearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
+SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventListener, TextView.OnEditorActionListener,
+        View.OnFocusChangeListener, View.OnClickListener, SearchInput.OnTextChangedListener {
 
     @Nullable
     private String mQuery;
@@ -47,6 +52,7 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
     private TextView mTextViewHolder;
     private ProgressBar mProgressBar;
     private FrameLayout mFrameSearch;
+    private Toolbar mToolbar;
     private ListModeHelper mListModeHelper;
     private SearchHistoryAdapter mHistoryAdapter;
     private SearchResultsAdapter mResultsAdapter;
@@ -61,10 +67,10 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         enableHomeAsUp();
-        setupToolbarScrolling(toolbar);
+        setupToolbarScrolling(mToolbar);
 
         Bundle extras = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         mQuery = extras.getString("query");
@@ -84,6 +90,7 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
         mResultsAdapter = new SearchResultsAdapter(mRecyclerView);
         mResultsAdapter.setOnLoadMoreListener(this);
         mSearchInput.setOnEditFocusChangeListener(this);
+        mSearchInput.setOnTextChangedListener(this);
 
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
@@ -241,9 +248,19 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
     }
 
     @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+    public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             mQuery = v.getText().toString();
+            if (StringUtil.isBlank(mQuery)) {
+                showToast(R.string.search_query_empty, Gravity.TOP, Toast.LENGTH_SHORT);
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutUtils.showSoftKeyboard(v);
+                    }
+                }, 500);
+                return true;
+            }
             SearchHistoryAdapter.addToHistory(this, mQuery);
             LayoutUtils.hideSoftKeyboard(v);
             mRecyclerView.requestFocus();
@@ -257,18 +274,29 @@ public class SearchActivity extends BaseAppActivity implements ListModeHelper.On
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-            mHistoryAdapter.requery(mQuery);
+            mHistoryAdapter.requeryAsync(mQuery);
             AnimUtils.crossfade(null, mFrameSearch);
+            setToolbarScrollingLock(mToolbar, true);
         } else {
             AnimUtils.crossfade(mFrameSearch, null);
             mSearchInput.getEditText().setText(mQuery);
+            setToolbarScrollingLock(mToolbar, false);
         }
     }
 
     @Override
     public void onClick(View v) {
-        LayoutUtils.hideSoftKeyboard(v);
-        mRecyclerView.requestFocus();
+        if (TextUtils.isEmpty(mQuery)) {
+            finish();
+        } else {
+            LayoutUtils.hideSoftKeyboard(v);
+            mRecyclerView.requestFocus();
+        }
+    }
+
+    @Override
+    public void onTextChanged(CharSequence text) {
+        mHistoryAdapter.requeryAsync(text.toString());
     }
 
     private class SearchTask extends LoaderTask<Void,Void,MangaList> {

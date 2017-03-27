@@ -318,4 +318,5 @@
     <string name="hide_menu_button">Hide menu button</string>
     <string name="hide_menu_summary">Make it invisible, but still clickable</string>
     <string name="chapters">Chapters</string>
+    <string name="search_query_empty">Search query is empty</string>
 </resources>

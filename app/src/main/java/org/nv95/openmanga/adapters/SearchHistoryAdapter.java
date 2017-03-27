@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -36,10 +37,12 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     private static WeakReference<StorageHelper> sStorageHelperRef;
     @NonNull
     private final OnHistoryEventListener mClickListener;
+    @Nullable
+    private WeakReference<QueryTask> mQueryTaskRef = null;
 
     public SearchHistoryAdapter(Context context, @NonNull OnHistoryEventListener clickListener) {
         mStorageHelper = new StorageHelper(context);
-        sStorageHelperRef = new WeakReference<StorageHelper>(mStorageHelper);
+        sStorageHelperRef = new WeakReference<>(mStorageHelper);
         setHasStableIds(true);
         mClickListener = clickListener;
         mCursor = null;
@@ -91,11 +94,30 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         notifyDataSetChanged();
     }
 
+    @Deprecated
     public void requery(@Nullable String prefix) {
+        cancelTask();
         Cursor cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
                 TextUtils.isEmpty(prefix) ? null : "query LIKE ?",
                 TextUtils.isEmpty(prefix) ? null : new String[] {prefix + "%"}, null, null, null);
         swapCursor(cursor);
+    }
+
+    public void requeryAsync(@Nullable String prefix) {
+        cancelTask();
+        QueryTask task = new QueryTask();
+        mQueryTaskRef = new WeakReference<QueryTask>(task);
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, prefix);
+    }
+
+    private void cancelTask() {
+        if (mQueryTaskRef != null) {
+            QueryTask task = mQueryTaskRef.get();
+            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+                task.cancel(false);
+            }
+        }
+        mQueryTaskRef = null;
     }
 
     @Override
@@ -170,6 +192,22 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         }
         if (!reused) {
             storageHelper.close();
+        }
+    }
+
+    private class QueryTask extends AsyncTask<String,Void,Cursor> {
+
+        @Override
+        protected Cursor doInBackground(String... strings) {
+            String prefix = strings.length > 0 ? strings[0] : null;
+            return mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
+                    TextUtils.isEmpty(prefix) ? null : "query LIKE ?",
+                    TextUtils.isEmpty(prefix) ? null : new String[] {prefix + "%"}, null, null, null);
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            swapCursor(cursor);
         }
     }
 }
