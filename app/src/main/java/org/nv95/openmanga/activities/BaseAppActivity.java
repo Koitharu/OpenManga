@@ -42,9 +42,20 @@ import java.util.ArrayList;
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
 
-    public static final int APP_THEME_LIGHT = 0;
-    public static final int APP_THEME_DARK = 1;
-    public static final int APP_THEME_BLACK = 2;
+    private static final int[] THEMES = new int[]{
+            R.style.AppTheme_Classic,
+            R.style.AppTheme_Grey,
+            R.style.AppTheme_Teal,
+            R.style.AppTheme_Blue,
+            R.style.AppTheme_Purple,
+            R.style.AppTheme_Ambiance,
+            R.style.AppThemeDark_Classic,
+            R.style.AppThemeDark_Blue,
+            R.style.AppThemeDark_Teal,
+            R.style.AppThemeDark_Miku,
+            R.style.AppThemeBlack_Grey,
+            R.style.AppThemeBlack_Red
+    };
 
     private static final int REQUEST_PERMISSION = 112;
 
@@ -59,9 +70,16 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mTheme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("theme", "0"));
-        if (mTheme != APP_THEME_LIGHT) {
-            setTheme(mTheme == APP_THEME_BLACK ? R.style.AppTheme_Black : R.style.AppTheme_Dark);
-        }
+        setTheme(THEMES[mTheme]);
+    }
+
+
+    public boolean isDarkTheme() {
+        return isDarkTheme(mTheme);
+    }
+
+    public static boolean isDarkTheme(int theme) {
+        return theme > 5;
     }
 
     public void enableHomeAsUp() {
@@ -142,10 +160,6 @@ public abstract class BaseAppActivity extends AppCompatActivity {
 
     public boolean isActionBarVisible() {
         return mActionBarVisible;
-    }
-
-    public boolean isDarkTheme() {
-        return mTheme != APP_THEME_LIGHT;
     }
 
     public int getActivityTheme() {

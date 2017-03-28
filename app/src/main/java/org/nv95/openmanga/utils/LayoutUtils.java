@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.items.ThumbSize;
 
 /**
@@ -99,8 +100,8 @@ public class LayoutUtils {
     }
 
     public static Drawable[] getThemedIcons(Context context, int... ids) {
-        boolean dark = !PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("theme", "0").equals("0");
+        boolean dark = BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("theme", "0")));
         PorterDuffColorFilter cf = dark ?
                 new PorterDuffColorFilter(ContextCompat.getColor(context, R.color.white_overlay_85), PorterDuff.Mode.SRC_ATOP)
                 : null;

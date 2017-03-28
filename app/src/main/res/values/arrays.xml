@@ -46,11 +46,29 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
     </string-array>
     <string-array name="themes_names">
-        <item>@string/theme_light</item>
-        <item>@string/theme_dark</item>
-        <item>@string/theme_black</item>
+        <item>@string/theme_classic</item>
+        <item>@string/theme_grey</item>
+        <item>@string/theme_teal</item>
+        <item>@string/theme_blue</item>
+        <item>@string/theme_purple</item>
+        <item>@string/theme_ambiance</item>
+        <item>@string/theme_dark_classic</item>
+        <item>@string/theme_dark_blue</item>
+        <item>@string/theme_dark_teal</item>
+        <item>@string/theme_dark_miku</item>
+        <item>@string/theme_black_grey</item>
+        <item>@string/theme_black_red</item>
     </string-array>
 
     <string-array name="scale_values">
@@ -97,4 +115,16 @@
         <item>1</item>
         <item>0</item>
     </string-array>
+    <string name="theme_classic">Classic</string>
+    <string name="theme_grey">Light grey</string>
+    <string name="theme_teal">Light teal</string>
+    <string name="theme_blue">Light blue</string>
+    <string name="theme_purple">Light purple</string>
+    <string name="theme_black_red">Amoled Red</string>
+    <string name="theme_black_grey">Amoled grey</string>
+    <string name="theme_dark_classic">Dark classic</string>
+    <string name="theme_dark_blue">Dark blue</string>
+    <string name="theme_dark_teal">Dark teal</string>
+    <string name="theme_ambiance">Ambiance</string>
+    <string name="theme_dark_miku">Dark Miku</string>
 </resources>

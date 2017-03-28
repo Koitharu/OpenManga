@@ -132,8 +132,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
             mStartDragListener = sdl;
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);
-            if (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
-                    .getString("theme", "0")) != BaseAppActivity.APP_THEME_LIGHT) {
+            if (BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
+                    .getString("theme", "0")))) {
                 LayoutUtils.setAllImagesColor((ViewGroup) itemView, R.color.white_overlay_85);
             }
         }
@@ -162,8 +162,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         DividerHolder(View itemView, OnStartDragListener startDragListener) {
             super(itemView);
             mStartDragListener = startDragListener;
-            if (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
-                    .getString("theme", "0")) != BaseAppActivity.APP_THEME_LIGHT) {
+            if (BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
+                    .getString("theme", "0")))) {
                 LayoutUtils.setAllImagesColor((ViewGroup) itemView, R.color.white_overlay_85);
             }
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);

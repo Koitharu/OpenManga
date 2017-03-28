@@ -45,8 +45,8 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
         mValue = 20;
         a.recycle();
         mValueSet = false;
-        mDarkTheme = (Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("theme", "0")) != BaseAppActivity.APP_THEME_LIGHT);
+        mDarkTheme = BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("theme", "0")));
     }
 
     @SuppressLint("MissingSuperCall")
