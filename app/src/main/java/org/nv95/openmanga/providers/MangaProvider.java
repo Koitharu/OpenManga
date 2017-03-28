@@ -46,15 +46,15 @@ public abstract class MangaProvider {
     }
 
     @NonNull
-    protected String getStringPreference(@NonNull String key, @NonNull String defValue) {
+    protected final String getStringPreference(@NonNull String key, @NonNull String defValue) {
         return mPrefs.getString(key, defValue);
     }
 
-    protected boolean getBooleanPreference(@NonNull String key, boolean defValue) {
+    protected final boolean getBooleanPreference(@NonNull String key, boolean defValue) {
         return mPrefs.getBoolean(key, defValue);
     }
 
-    protected int getIntPreference(@NonNull String key, int defValue) {
+    protected final int getIntPreference(@NonNull String key, int defValue) {
         return mPrefs.getInt(key, defValue);
     }
 

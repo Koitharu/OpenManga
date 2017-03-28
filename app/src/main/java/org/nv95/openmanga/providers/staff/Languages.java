@@ -12,6 +12,7 @@ public class Languages {
     public static final int JP = 2;
     public static final int TR = 3;
     public static final int MULTI = 4;
+    public static final int VIE = 5;
 
     public static int fromLocale(Locale locale) {
         switch (locale.getLanguage()) {

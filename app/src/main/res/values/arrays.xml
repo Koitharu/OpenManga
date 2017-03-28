@@ -7,6 +7,7 @@
         <item>Japanese</item>
         <item>Turkish</item>
         <item>Multilanguage</item>
+        <item>Vietnamese</item>
     </string-array>
     <string-array name="intervals_hours">
         <item>4</item>
