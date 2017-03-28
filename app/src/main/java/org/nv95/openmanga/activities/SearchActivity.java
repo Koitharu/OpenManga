@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -91,6 +92,20 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mResultsAdapter.setOnLoadMoreListener(this);
         mSearchInput.setOnEditFocusChangeListener(this);
         mSearchInput.setOnTextChangedListener(this);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                long id = viewHolder.getItemId();
+                SearchHistoryAdapter.removeFromHistory(SearchActivity.this, id);
+                mHistoryAdapter.requery(mSearchInput.getEditText().getText().toString());
+            }
+        }).attachToRecyclerView(recyclerViewSearch);
 
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();

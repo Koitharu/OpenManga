@@ -94,7 +94,6 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         notifyDataSetChanged();
     }
 
-    @Deprecated
     public void requery(@Nullable String prefix) {
         cancelTask();
         Cursor cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
@@ -190,6 +189,23 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
+        if (!reused) {
+            storageHelper.close();
+        }
+    }
+
+    public static void removeFromHistory(Context context, long what) {
+        StorageHelper storageHelper = null;
+        boolean reused = true;
+        if (sStorageHelperRef != null) {
+            storageHelper = sStorageHelperRef.get();
+        }
+        if (storageHelper == null) {
+            storageHelper = new StorageHelper(context);
+            reused = false;
+        }
+        SQLiteDatabase database = storageHelper.getWritableDatabase();
+        database.delete(TABLE_NAME, "_id=" + what, null);
         if (!reused) {
             storageHelper.close();
         }

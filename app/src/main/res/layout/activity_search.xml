@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:background="?android:windowBackground"
+            android:overScrollMode="never"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
     </FrameLayout>
