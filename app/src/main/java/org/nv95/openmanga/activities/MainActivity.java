@@ -262,8 +262,7 @@ public class MainActivity extends BaseAppActivity implements
                     })
                     .create().show();
         } else if (requestCode == REQUEST_SETTINGS || requestCode == WelcomeActivity.REQUEST_ONBOARDING) {
-            if (getActivityTheme() != Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
-                    .getString("theme", "0"))) {
+            if (getActivityTheme() != LayoutUtils.getAppTheme(this)) {
                 recreate();
                 return;
             }

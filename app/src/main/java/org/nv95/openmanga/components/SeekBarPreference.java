@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSeekBar;
@@ -20,7 +19,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 12.02.16.
@@ -45,8 +44,7 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
         mValue = 20;
         a.recycle();
         mValueSet = false;
-        mDarkTheme = BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("theme", "0")));
+        mDarkTheme = LayoutUtils.isAppThemeDark(context);
     }
 
     @SuppressLint("MissingSuperCall")

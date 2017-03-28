@@ -33,6 +33,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -68,18 +69,12 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTheme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("theme", "0"));
+        mTheme = LayoutUtils.getAppTheme(this);
         setTheme(THEMES[mTheme]);
     }
 
-
     public boolean isDarkTheme() {
-        return isDarkTheme(mTheme);
-    }
-
-    public static boolean isDarkTheme(int theme) {
-        return theme > 5;
+        return mTheme > 5;
     }
 
     public void enableHomeAsUp() {

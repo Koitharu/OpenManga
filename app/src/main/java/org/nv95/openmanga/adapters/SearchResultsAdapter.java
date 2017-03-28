@@ -1,6 +1,5 @@
 package org.nv95.openmanga.adapters;
 
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -208,8 +207,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
             textView = (TextView) v.findViewById(R.id.textView);
-            boolean light = PreferenceManager.getDefaultSharedPreferences(v.getContext())
-                    .getString("theme", "0").equals("0");
+            boolean light = !LayoutUtils.isAppThemeDark(v.getContext());
             textView.setBackgroundResource(light ? R.drawable.background_button : R.drawable.background_button_light);
         }
     }

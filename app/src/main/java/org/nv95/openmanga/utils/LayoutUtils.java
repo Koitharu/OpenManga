@@ -32,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.items.ThumbSize;
 
 /**
@@ -100,8 +99,7 @@ public class LayoutUtils {
     }
 
     public static Drawable[] getThemedIcons(Context context, int... ids) {
-        boolean dark = BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("theme", "0")));
+        boolean dark = isAppThemeDark(context);
         PorterDuffColorFilter cf = dark ?
                 new PorterDuffColorFilter(ContextCompat.getColor(context, R.color.white_overlay_85), PorterDuff.Mode.SRC_ATOP)
                 : null;
@@ -229,5 +227,18 @@ public class LayoutUtils {
     public static void hideSoftKeyboard(@NonNull View view) {
         InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static int getAppTheme(Context context) {
+        try {
+            return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+                    .getString("theme", "0"));
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public static boolean isAppThemeDark(Context context) {
+        return getAppTheme(context) > 5;
     }
 }

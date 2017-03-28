@@ -2,7 +2,6 @@ package org.nv95.openmanga.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.activities.ProviderPreferencesActivity;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
@@ -132,8 +130,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
             mStartDragListener = sdl;
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);
-            if (BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
-                    .getString("theme", "0")))) {
+            if (LayoutUtils.isAppThemeDark(itemView.getContext())) {
                 LayoutUtils.setAllImagesColor((ViewGroup) itemView, R.color.white_overlay_85);
             }
         }
@@ -162,8 +159,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         DividerHolder(View itemView, OnStartDragListener startDragListener) {
             super(itemView);
             mStartDragListener = startDragListener;
-            if (BaseAppActivity.isDarkTheme(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(itemView.getContext())
-                    .getString("theme", "0")))) {
+            if (LayoutUtils.isAppThemeDark(itemView.getContext())) {
                 LayoutUtils.setAllImagesColor((ViewGroup) itemView, R.color.white_overlay_85);
             }
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);
