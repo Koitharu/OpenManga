@@ -231,9 +231,6 @@
     <string name="storage_upgrading">Yerel veritabanı güncelleniyor…</string>
     <string name="storages_remote">Manga Siteleri</string>
     <string name="theme">Tema</string>
-    <string name="theme_black">Mavi</string>
-    <string name="theme_dark">Siyah</string>
-    <string name="theme_light">Kırmızı</string>
     <string name="tip_chapter_checking">Bu kısmı açmanız durumunda favori mangalarınıza bölüm eklendiğinde bildirim alacaksınız.</string>
     <string name="unable_to_save_image">Resim kaydedilemiyor</string>
     <string name="unfavourited">Favorilerden silindi</string>

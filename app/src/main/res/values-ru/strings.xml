@@ -209,9 +209,6 @@
     <string name="full_match">Полное соответствие</string>
     <string name="wait_for_complete">Дождитесь завешения операции</string>
     <string name="theme">Тема</string>
-    <string name="theme_light">Светлая</string>
-    <string name="theme_dark">Тёмная</string>
-    <string name="theme_black">Чёрная</string>
     <string name="import_file_confirm" formatted="false">Импортировать файл %s ?</string>
     <string name="delete_mangas_confirm">Удалить выделенную мангу?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всего %d глав)</string>
@@ -289,5 +286,8 @@
     <string name="tip_webtoon">Режим манхвы меняет некоторые настройки для конкретной манги, делая чтение манхвы более комфортным</string>
     <string name="off">Выкл</string>
     <string name="on">Вкл</string>
-    <string name="hide_menu_button">Hide menu button</string>
+    <string name="hide_menu_button">Скрыть кнопку Меню</string>
+    <string name="chapters">Главы</string>
+    <string name="search_query_empty">Пустой поисковый запрос</string>
+    <string name="scroll_by_click">Листание нажатиями по краям</string>
 </resources>

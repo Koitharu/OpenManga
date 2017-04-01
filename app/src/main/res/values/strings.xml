@@ -117,7 +117,7 @@
     <string name="retry">Retry</string>
     <string name="manga_local_dir">Local manga\'s directory</string>
     <string name="dir_no_access">No write access to this directory</string>
-    <string name="downloads_queue">Downloads queue</string>
+    <string name="downloads_queue">Downloads</string>
     <string name="no_downloads">No queued downloads</string>
     <string name="queue">In queue</string>
     <string name="new_chapters_count" formatted="false">New chapters: %d</string>
@@ -236,9 +236,6 @@
     <string name="full_match">Full match</string>
     <string name="wait_for_complete">Wait for the completion of operations</string>
     <string name="theme">Theme</string>
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
-    <string name="theme_black">Black</string>
     <string name="import_file_confirm" formatted="false">Are you want to import file %s to local storage?</string>
     <string name="delete_mangas_confirm">Remove selected mangas?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (total %d chapters)</string>

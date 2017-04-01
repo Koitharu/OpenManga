@@ -209,9 +209,6 @@
     <string name="full_match">Повна відповідність</string>
     <string name="wait_for_complete">Дочекайтесь завершення операції</string>
     <string name="theme">Тема</string>
-    <string name="theme_light">Світла</string>
-    <string name="theme_dark">Темна</string>
-    <string name="theme_black">Чорна</string>
     <string name="import_file_confirm" formatted="false">Імпортувати файл %s ?</string>
     <string name="delete_mangas_confirm">Видалити виділену мангу?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всього %d глав)</string>
