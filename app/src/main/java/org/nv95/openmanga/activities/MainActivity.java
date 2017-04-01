@@ -113,10 +113,6 @@ public class MainActivity extends BaseAppActivity implements
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        mNavigationView = ((NavigationView) findViewById(R.id.navigation_drawer_bottom));
-        mNavigationView.getChildAt(0).setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mNavigationView.setNavigationItemSelectedListener(this);
-
         RecyclerView genresRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewGenres);
         genresRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         genresRecyclerView.setAdapter(mGenresAdapter = new GenresSortAdapter(this));
@@ -325,6 +321,9 @@ public class MainActivity extends BaseAppActivity implements
                 return true;
             case R.id.action_updates:
                 startActivity(new Intent(this, NewChaptersActivity.class));
+                return true;
+            case R.id.action_settings:
+                startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
                 return true;
             default:
                 return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);

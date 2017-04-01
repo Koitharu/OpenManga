@@ -77,4 +77,8 @@
             android:title="@string/check_new_chapters"
             app:showAsAction="never" />
     </group>
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="200"
+        app:showAsAction="never" />
 </menu>

@@ -27,12 +27,10 @@
         </menu>
     </item>
 
-    <group android:id="@+id/group1" android:checkableBehavior="none">
-        <!--вот такие костыли-->
+    <group android:id="@+id/group1" android:checkableBehavior="none" >
         <item
-            android:checkable="false"
-            android:enabled="false"
-            android:orderInCategory="200"
-            android:title="" />
+            android:id="@+id/nav_action_settings"
+            android:icon="@drawable/ic_nav_settings"
+            android:title="@string/action_settings"/>
     </group>
 </menu>
