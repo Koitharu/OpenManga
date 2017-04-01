@@ -10,7 +10,7 @@ android {
         targetSdkVersion 25
         versionCode 1102
         versionName "3.2"
-        buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
+        buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
     }
 
     signingConfigs {
