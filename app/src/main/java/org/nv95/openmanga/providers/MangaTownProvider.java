@@ -5,13 +5,16 @@ import android.text.Html;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -66,6 +69,7 @@ public class MangaTownProvider extends MangaProvider {
             Element e = document.body();
             summary.description = Html.fromHtml(e.getElementById("show").html()).toString().trim();
             summary.preview = e.select("img").first().attr("src");
+
             MangaChapter chapter;
             e = e.select("ul.detail-ch-list").first();
             for (Element o : e.select("li")) {
@@ -113,6 +117,40 @@ public class MangaTownProvider extends MangaProvider {
     }
 
     @Override
+    public MangaList search(String query, int page) throws Exception {
+        MangaList list = new MangaList();
+        Document document =
+                getPage("http://www.mangatown.com/search/" + page + ".html?name="
+                        + URLEncoder.encode(query, "UTF-8"));
+        MangaInfo manga;
+        Element ul = document.body().select("ul.post-list").first();
+        for (Element o : ul.select("li"))
+        {
+            manga = new MangaInfo();
+            manga.name = o.select("a").first().attr("rel");
+            manga.subtitle = "";
+            manga.path = o.select("a").first().attr("href");
+            try {
+                manga.genres = o.select("p").get(1).text();
+            } catch (Exception e) {
+                manga.genres = "";
+            }
+
+            manga.provider = MangaTownProvider.class;
+            try {
+                manga.preview = o.select("img").first().attr("src");
+            } catch (Exception e) {
+                manga.preview = "";
+            }
+
+            manga.path.hashCode();
+
+            list.add(manga);
+        }
+        return list;
+    }
+
+    @Override
     public String getName() {
         return "MangaTown";
     }
@@ -128,12 +166,15 @@ public class MangaTownProvider extends MangaProvider {
     }
 
     @Override
+    public boolean isSearchAvailable() { return true; }
+
+    @Override
     public String[] getSortTitles(Context context) {
-        return super.getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
 
     @Override
     public String[] getGenresTitles(Context context) {
-        return super.getTitles(context, genres);
+        return AppHelper.getStringArray(context, genres);
     }
 }
