@@ -453,7 +453,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     public void onLoadingStarts(boolean hasItems) {
         if (!hasItems) {
-            AnimUtils.crossfade(mTextViewHolder, mProgressBar);
+            AnimUtils.noanim(mTextViewHolder, mProgressBar);
             mListLoader.getAdapter().getChoiceController().clearSelection();
         } else {
             // TODO: 04.12.16

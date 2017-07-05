@@ -39,6 +39,7 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:visibility="gone"
         app:layout_anchor="@id/recyclerView"
+        app:layout_behavior="org.nv95.openmanga.components.CenterAlignBehavior"
         app:layout_anchorGravity="center" />
 
     <org.nv95.openmanga.components.AppCompatProgressBar
@@ -48,6 +49,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_anchor="@id/recyclerView"
+        app:layout_behavior="org.nv95.openmanga.components.CenterAlignBehavior"
         app:layout_anchorGravity="center" />
 
     <android.support.design.widget.FloatingActionButton
@@ -61,6 +63,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/recyclerView"
         app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="org.nv95.openmanga.components.FABScrollBehavior" />
+        app:layout_behavior="org.nv95.openmanga.components.FABScrollBehavior"/>
+        <!---->
 
 </android.support.design.widget.CoordinatorLayout>

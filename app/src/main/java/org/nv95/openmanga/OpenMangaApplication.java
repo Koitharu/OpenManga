@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import org.nv95.openmanga.items.ThumbSize;
+import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
 
@@ -22,7 +23,7 @@ public class OpenMangaApplication extends Application {
         super.onCreate();
         FileLogger.init(this);
         Resources resources = getResources();
-        float aspectRatio = 6f / 4f;
+        final float aspectRatio = 6f / 4f;
         ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
                 resources.getDimensionPixelSize(R.dimen.thumb_width_list),
                 resources.getDimensionPixelSize(R.dimen.thumb_height_list)
@@ -41,6 +42,7 @@ public class OpenMangaApplication extends Application {
         );
 
         ImageUtils.init(this);
+        AnimUtils.init(this);
         ScheduledServiceReceiver.enable(this);
         setLanguage(getResources(), PreferenceManager.getDefaultSharedPreferences(this).getString("lang", ""));
     }

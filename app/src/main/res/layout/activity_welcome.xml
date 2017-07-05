@@ -53,9 +53,7 @@
         android:id="@+id/page_onboarding1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?colorPrimary"
         android:orientation="vertical"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:visibility="gone">
 
         <ScrollView
@@ -96,8 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
-                    android:ellipsize="middle"
-                    android:lines="1"
+                    android:singleLine="true"
                     android:textAllCaps="true" />
 
                 <TextView
@@ -125,11 +122,10 @@
 
                 <Button
                     android:id="@+id/buttonRestore"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/restore"
-                    android:textColor="@android:color/white" />
+                    android:text="@string/restore" />
             </LinearLayout>
         </ScrollView>
 

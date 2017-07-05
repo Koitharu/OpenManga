@@ -107,6 +107,7 @@
         android:indeterminate="true"
         app:layout_anchor="@id/pager"
         app:layout_anchorGravity="center"
+        app:layout_behavior="org.nv95.openmanga.components.CenterAlignBehavior"
         style="?android:progressBarStyleLarge"/>
 
 </android.support.design.widget.CoordinatorLayout>
