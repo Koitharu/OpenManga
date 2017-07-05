@@ -46,10 +46,9 @@ public class MangaStore {
      */
     @WorkerThread
     public int pushManga(DownloadInfo manga) {
-        SQLiteDatabase database = null;
         int id = 0;
         try {
-            database = mDatabaseHelper.getWritableDatabase();
+            SQLiteDatabase database = mDatabaseHelper.getWritableDatabase();
             final ContentValues cv = new ContentValues();
             id = manga.path.hashCode();
             cv.put("id", id);

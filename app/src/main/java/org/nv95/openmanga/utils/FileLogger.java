@@ -53,18 +53,26 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
     }
 
     private void upgrade() {
+        FileOutputStream ostream = null;
         try {
             mLogFile.delete();
-            FileOutputStream ostream = new FileOutputStream(mLogFile, true);
+            ostream = new FileOutputStream(mLogFile, true);
             ostream.write(("Init logger: " + AppHelper.getReadableDateTime(System.currentTimeMillis())
                     + "\nApp version: " + BuildConfig.VERSION_CODE
                     + " (" + BuildConfig.VERSION_NAME
                     + ")\n\nDevice info:\n" + Build.FINGERPRINT
                     + "\nAndroid: " + Build.VERSION.RELEASE + " (API v" + Build.VERSION.SDK_INT + ")\n\n").getBytes());
             ostream.flush();
-            ostream.close();
         } catch (Exception e) {
             //ну и фиг с ним
+        } finally {
+            try {
+                if (ostream != null) {
+                    ostream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -97,8 +105,9 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
     }
 
     public synchronized void report(String msg) {
+        FileOutputStream ostream = null;
         try {
-            FileOutputStream ostream = new FileOutputStream(mLogFile, true);
+            ostream = new FileOutputStream(mLogFile, true);
             msg += "\n **************** \n";
             ostream.write(msg.getBytes());
             ostream.flush();
@@ -106,6 +115,14 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
             //Toast.makeText(context, R.string.exception_logged, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ostream != null) {
+                    ostream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();;
+            }
         }
     }
 
