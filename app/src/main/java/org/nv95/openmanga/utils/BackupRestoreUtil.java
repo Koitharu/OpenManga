@@ -229,13 +229,22 @@ public class BackupRestoreUtil {
         }
 
         private boolean writeToFile(File file, String data) {
+            OutputStreamWriter outputStreamWriter = null;
             try {
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file));
+                outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file));
                 outputStreamWriter.write(data);
                 outputStreamWriter.close();
                 return true;
             } catch (IOException e) {
                 return false;
+            } finally {
+                try {
+                    if (outputStreamWriter != null) {
+                        outputStreamWriter.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -330,8 +339,9 @@ public class BackupRestoreUtil {
 
         @Nullable
         private String readFromFile(File file) {
+            BufferedReader bufferedReader = null;
             try {
-                BufferedReader bufferedReader = new BufferedReader(
+                bufferedReader = new BufferedReader(
                         new InputStreamReader(new FileInputStream(file))
                 );
                 String receiveString = "";
@@ -339,10 +349,17 @@ public class BackupRestoreUtil {
                 while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString);
                 }
-                bufferedReader.close();
                 return stringBuilder.toString();
             } catch (Exception e) {
                 return null;
+            } finally {
+                try {
+                    if (bufferedReader != null) {
+                        bufferedReader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -86,31 +86,47 @@ public class StorageUtils {
                 while ((read = in.read(buffer)) != -1) {
                     out.write(buffer, 0, read);
                 }
-                in.close();
-                in = null;
                 // write the output file
                 out.flush();
-                out.close();
-                out = null;
                 // delete the original file
                 source.delete();
                 return true;
             } catch (Exception e) {
                 return false;
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public static void copyFile(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = new FileInputStream(src);
+            out = new FileOutputStream(dst);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
         }
-        in.close();
-        out.close();
     }
 
     public static long dirSize(File dir) {
@@ -198,18 +214,26 @@ public class StorageUtils {
         final HashSet<String> out = new HashSet<String>();
         String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
         String s = "";
+        InputStream is = null;
         try {
             final Process process = new ProcessBuilder().command("mount")
                     .redirectErrorStream(true).start();
             process.waitFor();
-            final InputStream is = process.getInputStream();
+            is = process.getInputStream();
             final byte[] buffer = new byte[1024];
             while (is.read(buffer) != -1) {
                 s = s + new String(buffer);
             }
-            is.close();
         } catch (final Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // parse output

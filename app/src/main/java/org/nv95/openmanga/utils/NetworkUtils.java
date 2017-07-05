@@ -29,51 +29,71 @@ import java.net.URLEncoder;
 public class NetworkUtils {
 
     public static Document httpGet(@NonNull String url, @Nullable String cookie) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        //con.setDoOutput(true);
-        if (!TextUtils.isEmpty(cookie)) {
-            con.setRequestProperty("Cookie", cookie);
+        InputStream is = null;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            //con.setDoOutput(true);
+            if (!TextUtils.isEmpty(cookie)) {
+                con.setRequestProperty("Cookie", cookie);
+            }
+            con.setConnectTimeout(15000);
+            is = con.getInputStream();
+            return Jsoup.parse(is, con.getContentEncoding(), url);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
         }
-        con.setConnectTimeout(15000);
-        InputStream is = con.getInputStream();
-        return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
     public static Document httpPost(@NonNull String url, @Nullable String cookie, @Nullable String[] data) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setConnectTimeout(15000);
-        con.setRequestMethod("POST");
-        if (!TextUtils.isEmpty(cookie)) {
-            con.setRequestProperty("Cookie", cookie);
-        }
-        if (data != null) {
-            con.setDoOutput(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        InputStream is = null;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            con.setConnectTimeout(15000);
+            con.setRequestMethod("POST");
+            if (!TextUtils.isEmpty(cookie)) {
+                con.setRequestProperty("Cookie", cookie);
+            }
+            if (data != null) {
+                con.setDoOutput(true);
+                DataOutputStream out = new DataOutputStream(con.getOutputStream());
 
-            out.writeBytes(makeQuery(data));
-            out.flush();
-            out.close();
+                out.writeBytes(makeQuery(data));
+                out.flush();
+                out.close();
+            }
+            is = con.getInputStream();
+            return Jsoup.parse(is, con.getContentEncoding(), url);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
         }
-        InputStream is = con.getInputStream();
-        return Jsoup.parse(is, con.getContentEncoding(), url);
     }
 
     @NonNull
     public static String getRaw(@NonNull String url, @Nullable String cookie) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        //con.setDoOutput(true);
-        if (!TextUtils.isEmpty(cookie)) {
-            con.setRequestProperty("Cookie", cookie);
+        BufferedReader reader = null;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            //con.setDoOutput(true);
+            if (!TextUtils.isEmpty(cookie)) {
+                con.setRequestProperty("Cookie", cookie);
+            }
+            con.setConnectTimeout(15000);
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            return out.toString();
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
         }
-        con.setConnectTimeout(15000);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        StringBuilder out = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            out.append(line);
-        }
-        reader.close();
-        return out.toString();
     }
 
     public static JSONObject getJsonObject(@NonNull String url) throws IOException, JSONException {
@@ -82,16 +102,16 @@ public class NetworkUtils {
 
     @Nullable
     public static CookieParser authorize(String url, String... data) {
+        DataOutputStream out = null;
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             con.setDoOutput(true);
             con.setInstanceFollowRedirects(true);
-            DataOutputStream out = new DataOutputStream(con.getOutputStream());
+            out = new DataOutputStream(con.getOutputStream());
             out.writeBytes(makeQuery(data));
             out.flush();
-            out.close();
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 return new CookieParser(con.getHeaderFields().get("Set-Cookie"));
@@ -101,6 +121,14 @@ public class NetworkUtils {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -30,14 +30,21 @@ public class ZipBuilder {
 
     @NonNull
     public static ZipEntry[] enumerateEntries(String zipFile) throws Exception {
-        ArrayList<ZipEntry> entryList = new ArrayList<>();
-        ZipFile file = new ZipFile(zipFile);
-        Enumeration<? extends ZipEntry> entries = file.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry o = entries.nextElement();
-            entryList.add(o);
+        ZipFile file = null;
+        try {
+            ArrayList<ZipEntry> entryList = new ArrayList<>();
+            file = new ZipFile(zipFile);
+            Enumeration<? extends ZipEntry> entries = file.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry o = entries.nextElement();
+                entryList.add(o);
+            }
+            return entryList.toArray(new ZipEntry[entryList.size()]);
+        } finally {
+            if (file != null) {
+                file.close();
+            }
         }
-        return entryList.toArray(new ZipEntry[entryList.size()]);
     }
 
     @Nullable
@@ -46,11 +53,13 @@ public class ZipBuilder {
         if (!outputDir.exists() && !outputDir.mkdirs()) {
             return null;
         }
+
+        ZipInputStream zipInputStream = null;
+        FileOutputStream outputStream = null;
         try {
-            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
+            zipInputStream = new ZipInputStream(new FileInputStream(file));
             ArrayList<File> files = new ArrayList<>();
             File outFile;
-            FileOutputStream outputStream;
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 outFile = new File(outputDir, zipEntry.getName());
@@ -64,25 +73,42 @@ public class ZipBuilder {
                     files.add(outFile);
                 }
             }
-            zipInputStream.close();
             return files.toArray(new File[files.size()]);
         } catch (Exception e) {
             FileLogger.getInstance().report("ZIP", e);
             return null;
+        } finally {
+            try {
+                if (zipInputStream != null) {
+                    zipInputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                FileLogger.getInstance().report("ZIP", e);
+                return null;
+            }
         }
     }
 
     public ZipBuilder addFile(File file) throws IOException {
-        ZipEntry zipEntry = new ZipEntry(file.getName());
-        mZipOutputStream.putNextEntry(zipEntry);
-        FileInputStream in = new FileInputStream(file);
-        int len;
-        while ((len = in.read(mBuffer)) > 0) {
-            mZipOutputStream.write(mBuffer, 0, len);
+        FileInputStream in = null;
+        try {
+            ZipEntry zipEntry = new ZipEntry(file.getName());
+            mZipOutputStream.putNextEntry(zipEntry);
+            in = new FileInputStream(file);
+            int len;
+            while ((len = in.read(mBuffer)) > 0) {
+                mZipOutputStream.write(mBuffer, 0, len);
+            }
+            mZipOutputStream.closeEntry();
+            return this;
+        } finally {
+            if (in != null) {
+                in.close();
+            }
         }
-        in.close();
-        mZipOutputStream.closeEntry();
-        return this;
     }
 
     public ZipBuilder addFiles(File[] files) throws IOException {
