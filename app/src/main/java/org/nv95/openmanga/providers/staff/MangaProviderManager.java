@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.nv95.openmanga.providers.EHentaiProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -14,6 +15,8 @@ import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.FileLogger;
 
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -181,5 +184,14 @@ public class MangaProviderManager {
                 .edit()
                 .putInt("count", count)
                 .apply();
+    }
+
+    public static void prepareConnection(HttpURLConnection connection) {
+        URL url = connection.getURL();
+        switch (url.getHost().toLowerCase()) {
+            case "exhentai.org":
+                connection.addRequestProperty("Cookie", EHentaiProvider.getCookie());
+                break;
+        }
     }
 }

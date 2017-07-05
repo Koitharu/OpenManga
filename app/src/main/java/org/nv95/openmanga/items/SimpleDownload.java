@@ -1,5 +1,7 @@
 package org.nv95.openmanga.items;
 
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class SimpleDownload implements Runnable {
         try {
             URL url = new URL(mSourceUrl);
             connection = (HttpURLConnection) url.openConnection();
+            MangaProviderManager.prepareConnection(connection);
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return;

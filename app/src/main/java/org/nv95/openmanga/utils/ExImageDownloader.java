@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
-import org.nv95.openmanga.providers.EHentaiProvider;
+import org.nv95.openmanga.providers.staff.MangaProviderManager;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,9 +25,7 @@ class ExImageDownloader extends BaseImageDownloader {
                 url.startsWith("https:") ? "http" + url.substring(5) : url,
                 extra
         );
-        if (url.contains("//exhentai")) {
-            conn.addRequestProperty("Cookie", EHentaiProvider.getCookie());
-        }
+        MangaProviderManager.prepareConnection(conn);
         return conn;
     }
 }
