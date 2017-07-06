@@ -196,7 +196,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    boolean checkPermission(String permission) {
+    public boolean checkPermission(String permission) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }

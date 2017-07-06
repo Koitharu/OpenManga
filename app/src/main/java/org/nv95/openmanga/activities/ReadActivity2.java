@@ -1,6 +1,6 @@
 package org.nv95.openmanga.activities;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -35,6 +35,7 @@ import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ThumbnailsDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
+import org.nv95.openmanga.helpers.PermissionsHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -170,6 +171,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 mAdapter.getLoader().setEnabled(true);
                 mAdapter.notifyDataSetChanged();
                 break;
+            case PermissionsHelper.REQUEST_CODE:
+                if (resultCode == Activity.RESULT_OK) {
+                    new ImageSaveTask().startLoading(mAdapter.getItem(mReader.getCurrentPosition()));
+                } else {
+                    Snackbar.make(mReader, R.string.dir_no_access, Snackbar.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -285,7 +293,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 new LoadSourceTask().startLoading(mManga);
                 break;
             case R.id.action_save_image:
-                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (PermissionsHelper.accessCommonDir(this, Environment.DIRECTORY_PICTURES)) {
                     new ImageSaveTask().startLoading(mAdapter.getItem(pos));
                 }
                 break;
@@ -563,22 +571,24 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
         @Override
         protected File doInBackground(PageWrapper... pageWrappers) {
-            if (pageWrappers[0].isLoaded()) {
-                //noinspection ConstantConditions
-                return new File(pageWrappers[0].getFilename());
-            }
+            File dest;
             try {
                 MangaProvider provider;
                 provider = MangaProviderManager.instanceProvider(ReadActivity2.this, pageWrappers[0].page.provider);
                 String url = provider.getPageImage(pageWrappers[0].page);
-                File dest;
-                dest = new File(getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
-                final SimpleDownload dload = new SimpleDownload(url, dest);
-                dload.run();
-                if (!dload.isSuccess()) {
-                    return null;
+                if (pageWrappers[0].isLoaded()) {
+                    //noinspection ConstantConditions
+                    dest = new File(pageWrappers[0].getFilename());
+                } else {
+                    dest = new File(getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
+
+                    final SimpleDownload dload = new SimpleDownload(url, dest);
+                    dload.run();
+                    if (!dload.isSuccess()) {
+                        return null;
+                    }
                 }
-                File dest2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), String.valueOf(url.hashCode()));
+                File dest2 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), String.valueOf(url.hashCode()) + ".png");
                 Bitmap b = BitmapFactory.decodeFile(dest.getPath());
                 if (!StorageUtils.saveBitmap(b, dest2.getPath())) {
                     dest2 = null;
