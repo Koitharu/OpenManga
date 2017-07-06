@@ -2,10 +2,15 @@ package org.nv95.openmanga.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.io.File;
 
@@ -39,5 +44,28 @@ public class ContentShareHelper {
         mIntent.setType("file/*");
         mIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.export_file)));
+    }
+
+    public void createShortcut(MangaInfo manga) {
+        Intent shortcutIntent = new Intent(mContext, PreviewActivity2.class);
+        shortcutIntent.setAction("org.nv95.openmanga.action.PREVIEW");
+        shortcutIntent.putExtras(manga.toBundle());
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Intent addIntent = new Intent();
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, manga.name);
+
+        Bitmap cover = ImageUtils.getCachedImage(manga.preview);
+        if (cover == null) {
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(mContext, R.mipmap.ic_launcher));
+        } else {
+            final int size = LayoutUtils.DpToPx(mContext.getResources(), 48);
+            cover = ThumbnailUtils.extractThumbnail(cover, size, size, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, cover);
+        }
+        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        mContext.getApplicationContext().sendBroadcast(addIntent);
     }
 }

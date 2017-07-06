@@ -1,6 +1,8 @@
 package org.nv95.openmanga.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -20,6 +22,8 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.TransitionDisplayer;
 import org.nv95.openmanga.items.ThumbSize;
+
+import java.io.File;
 
 /**
  * Created by admin on 02.09.16.
@@ -70,6 +74,23 @@ public class ImageUtils {
             mOptionsUpdate = getImageLoaderOptionsBuilder()
                     .displayer(new TransitionDisplayer())
                     .build();
+        }
+    }
+
+    @Nullable
+    public static Bitmap getCachedImage(String url) {
+        try {
+            Bitmap b = ImageLoader.getInstance().getMemoryCache().get(url);
+            if (b == null) {
+                File f = ImageLoader.getInstance().getDiskCache().get(url);
+                if (f != null) {
+                    b = BitmapFactory.decodeFile(f.getPath());
+                }
+            }
+            return b;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

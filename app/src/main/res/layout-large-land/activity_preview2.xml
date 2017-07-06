@@ -70,6 +70,7 @@
             android:id="@+id/toolbarMenu"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:layout_height="?actionBarSize"/>
             
         </LinearLayout>

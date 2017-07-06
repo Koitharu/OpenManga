@@ -233,6 +233,9 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             case R.id.action_share:
                 new ContentShareHelper(this).share(mManga);
                 return true;
+            case R.id.action_shortcut:
+                new ContentShareHelper(this).createShortcut(mManga);
+                return true;
             case R.id.action_remove:
                 deleteDialog();
                 return true;
