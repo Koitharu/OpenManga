@@ -151,7 +151,14 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_clear:
+                SearchHistoryAdapter.clearHistory(this);
+                mHistoryAdapter.requeryAsync(null);
+                return true;
+            default:
+                return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

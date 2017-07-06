@@ -29,4 +29,9 @@
         </menu>
 
     </item>
+
+    <item android:id="@+id/action_clear"
+        android:orderInCategory="101"
+        android:title="@string/action_histclear"
+        app:showAsAction="never" />
 </menu>
