@@ -61,7 +61,7 @@ public class ContentShareHelper {
         if (cover == null) {
             addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(mContext, R.mipmap.ic_launcher));
         } else {
-            final int size = LayoutUtils.DpToPx(mContext.getResources(), 48);
+            final int size = LayoutUtils.getLauncherIconSize(mContext);
             cover = ThumbnailUtils.extractThumbnail(cover, size, size, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
             addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, cover);
         }

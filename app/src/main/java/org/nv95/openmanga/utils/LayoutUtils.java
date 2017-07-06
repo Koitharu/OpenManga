@@ -2,6 +2,7 @@ package org.nv95.openmanga.utils;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -240,5 +241,15 @@ public class LayoutUtils {
 
     public static boolean isAppThemeDark(Context context) {
         return getAppTheme(context) > 5;
+    }
+
+    /**
+     * https://stackoverflow.com/questions/18635135/android-shortcut-bitmap-launcher-icon-size/19003905#19003905
+     */
+    public static int getLauncherIconSize(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        int size2 = activityManager.getLauncherLargeIconSize();
+        int size1 = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
+        return size2 > size1 ? size2 : size1;
     }
 }
