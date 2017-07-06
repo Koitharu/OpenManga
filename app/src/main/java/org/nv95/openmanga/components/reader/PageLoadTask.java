@@ -16,7 +16,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.URL;
+
+import info.guardianproject.netcipher.NetCipher;
 
 /**
  * Created by nv95 on 16.11.16.
@@ -65,7 +66,7 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
             if (file != null) {
                 return file.getAbsolutePath();
             }
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection connection = NetCipher.getHttpURLConnection(url);
             connection.connect();
             final int contentLength = connection.getContentLength();
             InputStream is = connection.getInputStream();

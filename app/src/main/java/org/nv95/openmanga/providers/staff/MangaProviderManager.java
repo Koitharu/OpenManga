@@ -190,7 +190,9 @@ public class MangaProviderManager {
         URL url = connection.getURL();
         switch (url.getHost().toLowerCase()) {
             case "exhentai.org":
-                connection.addRequestProperty("Cookie", EHentaiProvider.getCookie());
+                if (EHentaiProvider.isAuthorized()) {
+                    connection.addRequestProperty("Cookie", EHentaiProvider.getCookie());
+                }
                 break;
         }
     }

@@ -10,6 +10,7 @@ import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.Locale;
 
@@ -43,6 +44,7 @@ public class OpenMangaApplication extends Application {
 
         ImageUtils.init(this);
         AnimUtils.init(this);
+        NetworkUtils.setUseTor(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("use_tor", false));
         ScheduledServiceReceiver.enable(this);
         setLanguage(getResources(), PreferenceManager.getDefaultSharedPreferences(this).getString("lang", ""));
     }

@@ -19,8 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
+
+import info.guardianproject.netcipher.NetCipher;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 /**
  * Created by nv95 on 29.11.16.
@@ -28,10 +30,28 @@ import java.net.URLEncoder;
 
 public class NetworkUtils {
 
+    public static boolean setUseTor(Context context, boolean enabled) {
+        boolean isTor = NetCipher.getProxy() == NetCipher.ORBOT_HTTP_PROXY;
+        if (isTor == enabled) {
+            return isTor;
+        }
+        if (enabled) {
+            if (OrbotHelper.get(context).init()) {
+                NetCipher.useTor();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            NetCipher.clearProxy();
+            return false;
+        }
+    }
+
     public static Document httpGet(@NonNull String url, @Nullable String cookie) throws IOException {
         InputStream is = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             //con.setDoOutput(true);
             if (!TextUtils.isEmpty(cookie)) {
                 con.setRequestProperty("Cookie", cookie);
@@ -49,7 +69,7 @@ public class NetworkUtils {
     public static Document httpPost(@NonNull String url, @Nullable String cookie, @Nullable String[] data) throws IOException {
         InputStream is = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             if (!TextUtils.isEmpty(cookie)) {
@@ -76,7 +96,7 @@ public class NetworkUtils {
     public static String getRaw(@NonNull String url, @Nullable String cookie) throws IOException {
         BufferedReader reader = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             //con.setDoOutput(true);
             if (!TextUtils.isEmpty(cookie)) {
                 con.setRequestProperty("Cookie", cookie);
@@ -104,7 +124,7 @@ public class NetworkUtils {
     public static CookieParser authorize(String url, String... data) {
         DataOutputStream out = null;
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             con.setDoOutput(true);

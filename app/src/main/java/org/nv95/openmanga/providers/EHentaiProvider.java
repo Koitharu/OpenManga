@@ -238,10 +238,14 @@ public class EHentaiProvider extends MangaProvider {
 
     @Override
     protected String getAuthCookie() {
-        if ("".equals(sAuthCookie)) {
+        if (!isAuthorized()) {
             auth();
         }
         return sAuthCookie;
+    }
+
+    public static boolean isAuthorized() {
+        return "".equals(sAuthCookie);
     }
 
     @NonNull

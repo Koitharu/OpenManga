@@ -71,6 +71,12 @@
         <Preference
             android:key="restore"
             android:title="@string/restore" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="use_tor"
+            android:title="@string/use_tor_proxy"
+            android:summary="@string/use_tor_summary"
+            android:widgetLayout="@layout/pref_switchcompat" />
     </PreferenceCategory>
     <PreferenceCategory android:key="cat_help" android:title="@string/help">
         <Preference

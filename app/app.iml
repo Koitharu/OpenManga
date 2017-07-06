@@ -104,6 +104,7 @@
     <orderEntry type="library" exported="" name="support-core-utils-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="transition-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-26.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="netcipher-2.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.5" level="project" />

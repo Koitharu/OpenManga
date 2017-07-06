@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
+
+import info.guardianproject.netcipher.NetCipher;
 
 /**
  * Created by nv95 on 12.02.16.
@@ -29,8 +30,7 @@ public class SimpleDownload implements Runnable {
         OutputStream output = null;
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(mSourceUrl);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = NetCipher.getHttpURLConnection(mSourceUrl);
             MangaProviderManager.prepareConnection(connection);
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {

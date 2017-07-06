@@ -34,16 +34,19 @@ import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.PreferencesUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;
 
+import info.guardianproject.netcipher.proxy.OrbotHelper;
+
 /**
  * Created by nv95 on 03.10.15.
  * Activity with settings fragments
  */
-public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
+public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
     public static final int REQUEST_SOURCES = 114;
 
@@ -158,6 +161,36 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
     }
 
     @Override
+    public boolean onPreferenceChange(Preference preference, Object o) {
+        switch (preference.getKey()) {
+            case "use_tor":
+                if (Boolean.TRUE.equals(o)) {
+                    if (NetworkUtils.setUseTor(this, true)) {
+                        return true;
+                    } else {
+                        new AlertDialog.Builder(this)
+                                .setTitle(R.string.use_tor_proxy)
+                                .setMessage(R.string.orbot_required)
+                                .setNegativeButton(android.R.string.cancel, null)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        OrbotHelper.get(SettingsActivity.this).installOrbot(SettingsActivity.this);
+                                    }
+                                }).create().show();
+                        return false;
+                    }
+                } else if (Boolean.FALSE.equals(o)) {
+                    NetworkUtils.setUseTor(this, false);
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case BackupRestoreUtil.BACKUP_IMPORT_CODE:
@@ -224,6 +257,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             findPreference("restore").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("movemanga").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
             findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+            findPreference("use_tor").setOnPreferenceChangeListener((Preference.OnPreferenceChangeListener) activity);
 
             Preference p = findPreference("update");
             if (BuildConfig.SELFUPDATE_ENABLED) {
