@@ -50,6 +50,12 @@ public class SyncHelper {
         return ts == 0 ? null : new Date(ts);
     }
 
+    public void setSynced() {
+        mPreferences.edit()
+                .putLong("sync.last_sync", System.currentTimeMillis())
+                .apply();
+    }
+
     private void setToken(String token) {
         mToken = token;
         SharedPreferences.Editor editor = mPreferences.edit();
@@ -117,7 +123,7 @@ public class SyncHelper {
             Date lastSync = getLastSync();
             JSONArray data = storageHelper.extractTableData("history", lastSync == null ? null : "timestamp > " + lastSync.getTime());
 
-            return new RESTResponse(NetworkUtils.restQuery("/history", NetworkUtils.HTTP_POST, "data", data.toString()));
+            return new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_POST, "data", data.toString()));
         } catch (Exception e) {
             e.printStackTrace();
             return RESTResponse.fromThrowable(e);

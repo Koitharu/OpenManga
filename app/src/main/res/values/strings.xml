@@ -327,4 +327,7 @@
     <string name="sync_banner">You can synchronize your history and favourites cross devices. If you has not an account yet, also fill fields abowe and press Register</string>
     <string name="start_sync">Start synchronization now</string>
     <string name="last_sync">last sync: %s</string>
+    <string name="sync_started">Synchronization started</string>
+    <string name="sync_finished">Synchronization finished</string>
+    <string name="sync_failed">Synchronization failed</string>
 </resources>

@@ -53,7 +53,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "sync.start":
-                SyncService.start(this);
+                SyncService.start(this, true);
                 return true;
             default:
                 return false;
