@@ -170,7 +170,7 @@ public class BackupRestoreUtil {
             if (params[0]) {
                 publishProgress(R.string.action_history);
                 file = new File(dir, "history.json");
-                jsonArray = storageHelper.extractTableData("history");
+                jsonArray = storageHelper.extractTableData("history", null);
                 if (jsonArray == null || !writeToFile(file, jsonArray.toString())) {
                     errors++;
                 }
@@ -179,7 +179,7 @@ public class BackupRestoreUtil {
             if (params[1]) {
                 publishProgress(R.string.action_favourites);
                 file = new File(dir, "favourites.json");
-                jsonArray = storageHelper.extractTableData("favourites");
+                jsonArray = storageHelper.extractTableData("favourites", null);
                 if (jsonArray == null || !writeToFile(file, jsonArray.toString())) {
                     errors++;
                 }

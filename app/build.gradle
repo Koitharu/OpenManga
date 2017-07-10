@@ -11,6 +11,7 @@ android {
         versionCode 1103
         versionName "3.3 alpha"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
+        buildConfigField "String", "SYNC_URL", "\"http://192.168.0.104:5000/api\""
     }
 
     signingConfigs {

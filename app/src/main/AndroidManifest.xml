@@ -78,6 +78,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.SyncSettingsActivity"
+            android:label="@string/sync">
+            <intent-filter>
+                <action android:name="org.nv95.openmanga.SYNC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.FileSelectActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/select_file" />
@@ -87,6 +95,7 @@
         <service android:name=".services.ScheduledService" />
         <service android:name=".services.UpdateService" />
         <service android:name=".services.ImportService" />
+        <service android:name=".services.SyncService" />
 
         <receiver android:name=".ScheduledServiceReceiver"
             android:enabled="true" android:exported="true" >

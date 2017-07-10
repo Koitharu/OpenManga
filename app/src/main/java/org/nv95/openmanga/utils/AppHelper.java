@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -148,5 +149,16 @@ public class AppHelper {
             }
         }
         return builder.toString();
+    }
+
+    public static String getDeviceSummary() {
+        StringBuilder summary = new StringBuilder();
+        summary.append(Build.MANUFACTURER);
+        summary.append(' ');
+        summary.append(Build.MODEL);
+        summary.append(" (Android ");
+        summary.append(Build.VERSION.RELEASE);
+        summary.append(")");
+        return summary.toString();
     }
 }

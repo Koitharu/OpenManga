@@ -71,6 +71,11 @@
         <Preference
             android:key="restore"
             android:title="@string/restore" />
+        <Preference
+            android:key="sync"
+            android:title="@string/sync">
+            <intent android:action="org.nv95.openmanga.SYNC" />
+        </Preference>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="use_tor"

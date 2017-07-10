@@ -134,13 +134,13 @@ public class StorageHelper extends SQLiteOpenHelper {
     }
 
     @Nullable
-    public JSONArray extractTableData(String tableName) {
+    public JSONArray extractTableData(String tableName, @Nullable String where) {
         JSONArray jsonArray = null;
         Cursor cursor = null;
         try {
             jsonArray = new JSONArray();
             JSONObject jsonObject;
-            cursor = getReadableDatabase().query(tableName, null, null, null, null, null, null, null);
+            cursor = getReadableDatabase().query(tableName, null, where, null, null, null, null, null);
             String[] columns = cursor.getColumnNames();
             if (cursor.moveToFirst()) {
                 do {

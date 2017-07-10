@@ -32,6 +32,10 @@ import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 public class NetworkUtils {
 
+    public static final String HTTP_GET = "GET";
+    public static final String HTTP_POST = "POST";
+    public static final String HTTP_PUT = "PUT";
+
     public static boolean setUseTor(Context context, boolean enabled) {
         boolean isTor = NetCipher.getProxy() == NetCipher.ORBOT_HTTP_PROXY;
         if (isTor == enabled) {
@@ -161,6 +165,56 @@ public class NetworkUtils {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public static JSONObject restQuery(String url, @Nullable String token, String method, String... data) {
+        BufferedReader reader = null;
+        try {
+            HttpURLConnection con = NetCipher.getHttpURLConnection(
+                    HTTP_GET.equals(method) ? url + "?" + makeQuery(data) : url
+            );
+            if (con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
+            if (!TextUtils.isEmpty(token)) {
+                con.setRequestProperty("X-AuthToken", token);
+            }
+            con.setConnectTimeout(15000);
+            con.setRequestMethod(method);
+            if (HTTP_POST.equals(method) || HTTP_PUT.equals(method) ) {
+                con.setDoOutput(true);
+                DataOutputStream out = new DataOutputStream(con.getOutputStream());
+                out.writeBytes(NetworkUtils.makeQuery(data));
+                out.flush();
+                out.close();
+            }
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            return new JSONObject(out.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                JSONObject eobj = new JSONObject();
+                eobj.put("state", "fail");
+                eobj.put("message", e.getMessage());
+                return eobj;
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
