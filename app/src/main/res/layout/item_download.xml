@@ -1,83 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:activatedBackgroundIndicator"
-    android:orientation="horizontal"
-    android:padding="12dp">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="122dp"
-        android:layout_height="164dp"
-        android:scaleType="centerCrop"
-        android:layout_marginRight="8dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
 
-    <TextView
-        android:id="@+id/textView_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_toRightOf="@+id/imageView"
-        android:maxLines="1" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar_primary"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_below="@+id/textView_title"
-        android:indeterminate="false" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/textView_subtitle"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_below="@+id/progressBar_primary" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar_secondary"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_below="@+id/textView_subtitle"
-        android:indeterminate="false" />
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp">
 
-    <TextView
-        android:id="@+id/textView_percent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/progressBar_secondary"
-        android:layout_toEndOf="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_alignBaseline="@+id/textView_state" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:activatedBackgroundIndicator"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/queue"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/progressBar_secondary"
-        android:layout_alignRight="@+id/progressBar_secondary"
-        android:layout_alignEnd="@+id/progressBar_secondary" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="122dp"
+                android:layout_height="164dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="8dp"
+                android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/imageButtonRemove"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignBottom="@id/imageView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
+            <TextView
+                android:id="@+id/textView_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imageView"
+                android:layout_marginTop="4dp"
+                android:maxLines="1"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</RelativeLayout>
+            <ProgressBar
+                android:id="@+id/progressBar_primary"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_title"
+                android:layout_toRightOf="@+id/imageView"
+                android:layout_toEndOf="@id/imageView"
+                android:indeterminate="false" />
+
+            <TextView
+                android:id="@+id/textView_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progressBar_primary"
+                android:layout_toRightOf="@+id/imageView"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <ProgressBar
+                android:id="@+id/progressBar_secondary"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_below="@+id/textView_subtitle"
+                android:layout_toRightOf="@+id/imageView"
+                android:indeterminate="false" />
+
+            <TextView
+                android:id="@+id/textView_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textView_state"
+                android:layout_below="@+id/progressBar_secondary"
+                android:layout_toEndOf="@+id/imageView"
+                android:layout_toRightOf="@+id/imageView"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/textView_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/progressBar_secondary"
+                android:layout_alignRight="@+id/progressBar_secondary"
+                android:layout_below="@+id/progressBar_secondary"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:text="@string/queue"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <Button
+                android:id="@+id/buttonRemove"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_remove"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+

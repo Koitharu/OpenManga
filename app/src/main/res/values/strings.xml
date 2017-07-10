@@ -320,4 +320,5 @@
     <string name="use_tor_summary">Redirect all network data via Tor network using Orbot</string>
     <string name="orbot_required">You must have an Orbot application to use Tor network. Install it now?</string>
     <string name="action_shortcut">Create shortcut</string>
+    <string name="read">Read</string>
 </resources>

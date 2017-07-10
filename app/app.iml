@@ -113,6 +113,7 @@
     <orderEntry type="library" exported="" name="jsoup-1.10.3" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="android-crop-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="design-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="support-compat-26.0.0-alpha1" level="project" />

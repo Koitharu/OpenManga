@@ -27,6 +27,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,7 +37,6 @@ import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -83,7 +83,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     public DownloadHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         DownloadHolder holder = new DownloadHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_download, parent, false));
-        holder.imageButtonRemove.setImageDrawable(LayoutUtils.getThemedIcons(parent.getContext(), R.drawable.ic_clear_dark)[0]);
         holder.imageButtonRemove.setOnClickListener(this);
         holder.imageButtonRemove.setTag(holder);
         return holder;
@@ -166,18 +165,18 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         private final TextView mTextViewPercent;
         private final ProgressBar mProgressBarPrimary;
         private final ProgressBar mProgressBarSecondary;
-        final ImageView imageButtonRemove;
+        final Button imageButtonRemove;
 
         DownloadHolder(View itemView) {
             super(itemView);
-            mImageView = (ImageView) itemView.findViewById(R.id.imageView);
-            mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
-            mTextViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
-            mTextViewState = (TextView) itemView.findViewById(R.id.textView_state);
-            mProgressBarPrimary = (ProgressBar) itemView.findViewById(R.id.progressBar_primary);
-            mProgressBarSecondary = (ProgressBar) itemView.findViewById(R.id.progressBar_secondary);
-            mTextViewPercent = (TextView) itemView.findViewById(R.id.textView_percent);
-            imageButtonRemove = (ImageView) itemView.findViewById(R.id.imageButtonRemove);
+            mImageView = itemView.findViewById(R.id.imageView);
+            mTextViewTitle = itemView.findViewById(R.id.textView_title);
+            mTextViewSubtitle = itemView.findViewById(R.id.textView_subtitle);
+            mTextViewState = itemView.findViewById(R.id.textView_state);
+            mProgressBarPrimary = itemView.findViewById(R.id.progressBar_primary);
+            mProgressBarSecondary = itemView.findViewById(R.id.progressBar_secondary);
+            mTextViewPercent = itemView.findViewById(R.id.textView_percent);
+            imageButtonRemove = itemView.findViewById(R.id.buttonRemove);
         }
 
         @SuppressLint("SetTextI18n")
