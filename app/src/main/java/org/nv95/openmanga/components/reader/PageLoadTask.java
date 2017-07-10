@@ -11,11 +11,14 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.utils.NoSSLv3SocketFactory;
 
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import info.guardianproject.netcipher.NetCipher;
 
@@ -67,6 +70,9 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
                 return file.getAbsolutePath();
             }
             HttpURLConnection connection = NetCipher.getHttpURLConnection(url);
+            if (connection instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             connection.connect();
             final int contentLength = connection.getContentLength();
             InputStream is = connection.getInputStream();

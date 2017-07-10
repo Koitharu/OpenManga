@@ -21,6 +21,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import info.guardianproject.netcipher.NetCipher;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 
@@ -52,6 +54,9 @@ public class NetworkUtils {
         InputStream is = null;
         try {
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
+            if (con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             //con.setDoOutput(true);
             if (!TextUtils.isEmpty(cookie)) {
                 con.setRequestProperty("Cookie", cookie);
@@ -70,6 +75,9 @@ public class NetworkUtils {
         InputStream is = null;
         try {
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
+            if (con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             if (!TextUtils.isEmpty(cookie)) {
@@ -97,7 +105,9 @@ public class NetworkUtils {
         BufferedReader reader = null;
         try {
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
-            //con.setDoOutput(true);
+            if (con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             if (!TextUtils.isEmpty(cookie)) {
                 con.setRequestProperty("Cookie", cookie);
             }
@@ -125,6 +135,9 @@ public class NetworkUtils {
         DataOutputStream out = null;
         try {
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
+            if (con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             con.setConnectTimeout(15000);
             con.setRequestMethod("POST");
             con.setDoOutput(true);

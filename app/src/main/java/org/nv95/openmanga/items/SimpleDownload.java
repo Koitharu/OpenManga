@@ -1,6 +1,7 @@
 package org.nv95.openmanga.items;
 
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
+import org.nv95.openmanga.utils.NoSSLv3SocketFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import info.guardianproject.netcipher.NetCipher;
 
@@ -31,6 +34,9 @@ public class SimpleDownload implements Runnable {
         HttpURLConnection connection = null;
         try {
             connection = NetCipher.getHttpURLConnection(mSourceUrl);
+            if (connection instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            }
             MangaProviderManager.prepareConnection(connection);
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
