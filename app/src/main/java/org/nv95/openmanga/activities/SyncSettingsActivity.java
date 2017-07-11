@@ -34,8 +34,6 @@ import java.lang.ref.WeakReference;
 
 public class SyncSettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
-    private SyncHelper syncHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +41,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
 
-        syncHelper = SyncHelper.get(this);
+        SyncHelper syncHelper = SyncHelper.get(this);
 
         getFragmentManager().beginTransaction()
                 .add(R.id.content, syncHelper.isAuthorized() ? new SyncSettingsFragment() : new LoginFragment())

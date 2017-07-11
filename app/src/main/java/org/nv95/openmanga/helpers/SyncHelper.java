@@ -138,14 +138,16 @@ public class SyncHelper {
         try {
             storageHelper = new StorageHelper(mContext);
             long lastSync = getLastHistorySync();
-
-            RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_GET, "timestamp", String.valueOf(lastSync)));
+            JSONArray data = storageHelper.extractTableData("history", lastSync == 0 ? null : "timestamp > " + lastSync);
+            if (data == null) {
+                return RESTResponse.fromThrowable(new NullPointerException());
+            }
+            RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_POST, "timestamp", String.valueOf(lastSync), "updated", data.toString()));
             if (!resp.isSuccess()) {
                 return resp;
             }
-            JSONArray data = storageHelper.extractTableData("history", lastSync == 0 ? null : "timestamp > " + lastSync);
-            storageHelper.insertTableData("history", resp.getData().getJSONArray("data"));
-            return new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_POST, "data", data.toString()));
+            storageHelper.insertTableData("history", resp.getData().getJSONArray("updated"));
+            return resp;
         } catch (Exception e) {
             e.printStackTrace();
             return RESTResponse.fromThrowable(e);
