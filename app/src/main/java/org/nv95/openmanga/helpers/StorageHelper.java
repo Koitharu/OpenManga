@@ -79,6 +79,13 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "thumbnail TEXT,"
                 + "timestamp INTEGER"
                 + ");");
+
+        db.execSQL("CREATE TABLE sync_delete ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "subject TEXT,"
+                + "manga_id INTEGER,"
+                + "timestamp INTEGER"
+                + ");");
     }
 
     @Override
@@ -107,6 +114,15 @@ public class StorageHelper extends SQLiteOpenHelper {
                     + "chapter INTEGER,"
                     + "name TEXT,"
                     + "thumbnail TEXT,"
+                    + "timestamp INTEGER"
+                    + ");");
+        }
+
+        if (!tables.contains("sync_delete")) {
+            db.execSQL("CREATE TABLE sync_delete ("
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "subject TEXT,"
+                    + "manga_id INTEGER,"
                     + "timestamp INTEGER"
                     + ");");
         }
@@ -166,6 +182,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
         } catch (Exception e) {
             jsonArray = null;
+            e.printStackTrace();
             FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
@@ -207,15 +224,16 @@ public class StorageHelper extends SQLiteOpenHelper {
                     } catch (JSONException e) {
                         continue;
                     }
-                    if (id != null && (database.update(tableName, cv, "id=?", new String[]{id}) == 0)) {
-                        database.insert(tableName, null, cv);
-                    }
+                }
+                if (id != null && (database.update(tableName, cv, "id=?", new String[]{id}) == 0)) {
+                    database.insert(tableName, null, cv);
                 }
             }
             database.setTransactionSuccessful();
         } catch (Exception e) {
             success = false;
-            FileLogger.getInstance().report(e);
+            e.printStackTrace();
+            FileLogger.getInstance().report("STORAGE", e);
         } finally {
             if (database != null) {
                 database.endTransaction();
@@ -255,7 +273,7 @@ public class StorageHelper extends SQLiteOpenHelper {
             }
             c.close();
         } catch (SQLiteException e) {
-            FileLogger.getInstance().report(e);
+            FileLogger.getInstance().report("STORAGE", e);
         }
         return result;
     }

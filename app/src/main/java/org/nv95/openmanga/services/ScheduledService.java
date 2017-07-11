@@ -126,6 +126,7 @@ public class ScheduledService extends Service {
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 new OneShotNotifier(ScheduledService.this).notify(678, notification);
             }
+            SyncService.syncDelayed(ScheduledService.this.getApplicationContext());
             stopSelf();
         }
 

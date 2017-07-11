@@ -20,12 +20,13 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.SyncHelper;
+import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.PreferencesUtils;
 
 import java.lang.ref.WeakReference;
-import java.util.Date;
 
 /**
  * Created by admin on 10.07.17.
@@ -75,11 +76,17 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             Context context = getActivity();
             SyncHelper syncHelper = SyncHelper.get(context);
             Preference p = findPreference("sync.start");
-            Date lastSync = syncHelper.getLastSync();
-            if (lastSync != null) {
-                p.setSummary(context.getString(R.string.last_sync, AppHelper.getReadableDateTimeRelative(lastSync.getTime())));
-            }
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) context);
+
+            p = findPreference("sync.history");
+            long lastSync = syncHelper.getLastHistorySync();
+            p.setSummary(context.getString(R.string.last_sync, lastSync == 0 ? context.getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastSync)));
+
+            p = findPreference("sync.favourites");
+            lastSync = syncHelper.getLastFavouritesSync();
+            p.setSummary(context.getString(R.string.last_sync, lastSync == 0 ? context.getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastSync)));
+
+            PreferencesUtils.bindPreferenceSummary(findPreference("sync.interval"));
         }
     }
 
@@ -119,7 +126,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         }
 
 
-        private static class AuthTask extends AsyncTask<String, Void, SyncHelper.RESTResponse> implements DialogInterface.OnCancelListener {
+        private static class AuthTask extends AsyncTask<String, Void, RESTResponse> implements DialogInterface.OnCancelListener {
 
             private final WeakReference<SyncSettingsActivity> mActivityRef;
             private final ProgressDialog mProgressDialog;
@@ -135,7 +142,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
 
 
             @Override
-            protected SyncHelper.RESTResponse doInBackground(String... strings) {
+            protected RESTResponse doInBackground(String... strings) {
                 try {
                     SyncHelper syncHelper = SyncHelper.get(mActivityRef.get());
                     if (mRegister) {
@@ -145,7 +152,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return SyncHelper.RESTResponse.fromThrowable(e);
+                    return RESTResponse.fromThrowable(e);
                 }
             }
 
@@ -161,7 +168,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             }
 
             @Override
-            protected void onPostExecute(SyncHelper.RESTResponse restResponse) {
+            protected void onPostExecute(RESTResponse restResponse) {
                 super.onPostExecute(restResponse);
                 mProgressDialog.dismiss();
                 SyncSettingsActivity activity = mActivityRef.get();

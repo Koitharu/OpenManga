@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
@@ -15,6 +16,7 @@ import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.staff.Languages;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
+import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 
 import java.io.IOException;
@@ -160,6 +162,7 @@ public class HistoryProvider extends MangaProvider {
         if (updCount == 0) {
             database.insert(TABLE_NAME, null, cv);
         }
+        SyncService.syncDelayed(mContext);
         return true;
     }
 
@@ -215,18 +218,25 @@ public class HistoryProvider extends MangaProvider {
     public boolean remove(long[] ids) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         database.beginTransaction();
+        SyncHelper syncHelper = SyncHelper.get(mContext);
+        boolean syncEnabled = syncHelper.isHistorySyncEnabled();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(o)});
             database.delete("bookmarks", "manga_id=?", new String[]{String.valueOf(o)});
+            if (syncEnabled) {
+                syncHelper.remove(database, "history", o);
+            }
         }
         database.setTransactionSuccessful();
         database.endTransaction();
+        SyncService.syncDelayed(mContext);
         return true;
     }
 
     public void clear() {
         mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
         mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+        //TODO: sync
     }
 
     public boolean has(MangaInfo mangaInfo) {

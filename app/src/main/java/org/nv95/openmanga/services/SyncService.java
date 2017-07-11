@@ -1,15 +1,19 @@
 package org.nv95.openmanga.services;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.SyncHelper;
+import org.nv95.openmanga.items.RESTResponse;
 
 
 /**
@@ -38,16 +42,14 @@ public class SyncService extends IntentService implements Handler.Callback {
         if (!syncHelper.isAuthorized()) {
             handler.sendEmptyMessage(MSG_FAILED);
         }
-        SyncHelper.RESTResponse resp = syncHelper.postHistory();
-        if (resp.isSuccess()) {
-            if (explicit) {
-                handler.sendEmptyMessage(MSG_FINISHED);
+        if (syncHelper.isHistorySyncEnabled()) {
+            RESTResponse resp = syncHelper.syncHistory();
+            if (resp.isSuccess()) {
+                syncHelper.setHistorySynced();
             }
-            syncHelper.setSynced();
-        } else {
-            if (explicit) {
-                handler.sendEmptyMessage(MSG_FAILED);
-            }
+        }
+        if (explicit) {
+            handler.sendEmptyMessage(MSG_FINISHED);
         }
     }
 
@@ -71,5 +73,40 @@ public class SyncService extends IntentService implements Handler.Callback {
     public static void start(Context context, boolean explicit) {
         context.startService(new Intent(context, SyncService.class)
                 .putExtra("explicit", explicit));
+    }
+
+    public static void syncDelayed(final Context context) {
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        sync(context);
+                    }
+                },
+                300);
+    }
+
+    private static void sync(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SyncHelper syncHelper = SyncHelper.get(context);
+        if (!syncHelper.isAuthorized() || !(syncHelper.isHistorySyncEnabled() || syncHelper.isFavouritesSyncEnabled())) {
+            return;
+        }
+        if (!ScheduledService.internetConnectionIsValid(context, prefs.getBoolean("sync.wifionly", false))) {
+            return;
+        }
+        int interval = 12;
+        try {
+            interval = Integer.parseInt(prefs.getString("sync.interval", "12"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        if (interval != -1) {
+            long intervalMs = AlarmManager.INTERVAL_HOUR * interval;
+            long lastSync = Math.min(syncHelper.getLastHistorySync(), syncHelper.getLastFavouritesSync());
+            if (lastSync + intervalMs <= System.currentTimeMillis()) {
+                start(context, false);
+            }
+        }
+
     }
 }
