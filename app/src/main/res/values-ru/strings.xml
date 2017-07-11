@@ -290,4 +290,24 @@
     <string name="chapters">Главы</string>
     <string name="search_query_empty">Пустой поисковый запрос</string>
     <string name="scroll_by_click">Листание нажатиями по краям</string>
+
+    <string name="use_tor_proxy">Использовать Tor</string>
+    <string name="use_tor_summary">Перенаправлять весь траффик через сеть Tor используя Orbot</string>
+    <string name="orbot_required">Для использования данной функции необходимо приложение Orbot. Установить его сейчас?</string>
+    <string name="action_shortcut">Создать ярлык</string>
+    <string name="read">Читать</string>
+    <string name="sync">Синхронизация</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="sign_in">Войти</string>
+    <string name="sync_banner">Данная функция позволяет синхронизировать Вашу историю и избранное между разными устройствами. Если у Вас ещё нет аккаунта - заполните поля ниже и нажмите Зарегистрироваться</string>
+    <string name="start_sync">Запустить сейчас</string>
+    <string name="last_sync">Последняя синхронизация: %s</string>
+    <string name="sync_started">Синхронизация запущена</string>
+    <string name="sync_finished">Синхронизация завершена</string>
+    <string name="sync_failed">Ошибка синхронизации</string>
+    <string name="synchronize_history">Синхронизировать историю</string>
+    <string name="synchronize_favourites">Синхронизировать избранное</string>
+    <string name="sync_frequency">Частота синхронизации</string>
+    <string name="realtime">В реальном времени</string>
+    <string name="manually">Вручную</string>
 </resources>
