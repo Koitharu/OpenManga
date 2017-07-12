@@ -3,8 +3,11 @@ package org.nv95.openmanga.activities;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -52,7 +55,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case "sync.start":
-                SyncService.start(this, true);
+                SyncService.start(this);
                 return true;
             default:
                 return false;
@@ -60,6 +63,40 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
     }
 
     public static class SyncSettingsFragment extends PreferenceFragment {
+
+        private final BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int what = intent.getIntExtra("what", -1);
+                Preference p;
+                switch (what) {
+                    case SyncService.MSG_UNAUTHORIZED:
+                        Activity activity = getActivity();
+                        if (activity != null) {
+                            activity.getFragmentManager().beginTransaction()
+                                    .replace(R.id.content, new LoginFragment())
+                                    .commit();
+                        }
+                        break;
+                    case SyncService.MSG_HIST_STARTED:
+                        p = findPreference("sync.history");
+                        p.setSummary(R.string.sync_started);
+                        p.setEnabled(false);
+                        break;
+                    case SyncService.MSG_HIST_FAILED:
+                        p = findPreference("sync.history");
+                        p.setSummary(R.string.sync_failed);
+                        p.setEnabled(true);
+                        break;
+                    case SyncService.MSG_HIST_FINISHED:
+                        p = findPreference("sync.history");
+                        p.setSummary(R.string.sync_finished);
+                        p.setEnabled(true);
+                        break;
+                }
+            }
+        };
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -85,6 +122,20 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             p.setSummary(context.getString(R.string.last_sync, lastSync == 0 ? context.getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastSync)));
 
             PreferencesUtils.bindPreferenceSummary(findPreference("sync.interval"));
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            Activity activity = getActivity();
+            activity.registerReceiver(mEventReceiver, new IntentFilter(SyncService.SYNC_EVENT));
+        }
+
+        @Override
+        public void onStop() {
+            Activity activity = getActivity();
+            activity.unregisterReceiver(mEventReceiver);
+            super.onStop();
         }
     }
 
