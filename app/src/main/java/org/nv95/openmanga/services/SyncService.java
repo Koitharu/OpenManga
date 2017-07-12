@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
 
@@ -22,14 +23,22 @@ import org.nv95.openmanga.items.RESTResponse;
 
 public class SyncService extends IntentService implements Handler.Callback {
 
+    private static final int NOTIFY_ID = 18;
     private static final int MSG_STARTED = 0;
     private static final int MSG_FINISHED = 1;
     private static final int MSG_FAILED = 2;
 
     private final Handler handler = new Handler(this);
+    private NotificationHelper notificationHelper;
 
     public SyncService() {
         super(SyncService.class.getName());
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        notificationHelper = new NotificationHelper(this);
     }
 
     @Override
@@ -58,12 +67,26 @@ public class SyncService extends IntentService implements Handler.Callback {
         switch (message.what) {
             case MSG_STARTED:
                 Toast.makeText(this, R.string.sync_started, Toast.LENGTH_SHORT).show();
+                notificationHelper
+                        .title(R.string.app_name)
+                        .text(R.string.sync_started)
+                        .icon(android.R.drawable.stat_notify_sync)
+                        .lowPriority()
+                        .foreground(NOTIFY_ID);
                 return true;
             case MSG_FINISHED:
-                Toast.makeText(this, R.string.sync_finished, Toast.LENGTH_SHORT).show();
+                notificationHelper
+                        .stopForeground()
+                        .dismiss(NOTIFY_ID);
                 return true;
             case MSG_FAILED:
-                Toast.makeText(this, R.string.sync_failed, Toast.LENGTH_SHORT).show();
+                notificationHelper
+                        .title(R.string.app_name)
+                        .text(R.string.sync_failed)
+                        .icon(R.drawable.ic_stat_error)
+                        .defaultPriority()
+                        .stopForeground()
+                        .update(NOTIFY_ID);
                 return true;
             default:
                 return false;
@@ -108,5 +131,11 @@ public class SyncService extends IntentService implements Handler.Callback {
             }
         }
 
+    }
+
+    public interface SyncStateCallback {
+        void onSyncStarted();
+        void onSyncFinished();
+        void onSyncFailed(@Nullable String message);
     }
 }

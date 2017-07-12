@@ -2,6 +2,7 @@ package org.nv95.openmanga.helpers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -52,6 +53,16 @@ public class NotificationHelper {
 
     public NotificationHelper hightPriority() {
         mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        return this;
+    }
+
+    public NotificationHelper lowPriority() {
+        mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
+        return this;
+    }
+
+    public NotificationHelper defaultPriority() {
+        mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return this;
     }
 
@@ -154,6 +165,30 @@ public class NotificationHelper {
 
     public NotificationHelper autoCancel() {
         mNotificationBuilder.setAutoCancel(true);
+        return this;
+    }
+
+    public NotificationHelper foreground(int id) {
+        if (mContext instanceof Service) {
+            foreground(id, (Service) mContext);
+        }
+        return this;
+    }
+
+    public NotificationHelper foreground(int id, Service service) {
+        service.startForeground(id, notification());
+        return this;
+    }
+
+    public NotificationHelper stopForeground() {
+        if (mContext instanceof Service) {
+            stopForeground((Service) mContext);
+        }
+        return this;
+    }
+
+    public NotificationHelper stopForeground(Service service) {
+        service.stopForeground(false);
         return this;
     }
 
