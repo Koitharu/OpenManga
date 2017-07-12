@@ -226,7 +226,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                     }
                 }
                 if (id != null && (database.update(tableName, cv, "id=?", new String[]{id}) == 0)) {
-                    database.insert(tableName, null, cv);
+                    database.insertOrThrow(tableName, null, cv);
                 }
             }
             database.setTransactionSuccessful();

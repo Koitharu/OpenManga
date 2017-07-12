@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
 
@@ -134,11 +135,10 @@ public class SyncHelper {
 
     @WorkerThread
     public RESTResponse syncHistory() {
-        StorageHelper storageHelper = null;
         try {
-            storageHelper = new StorageHelper(mContext);
+            HistoryProvider provider = HistoryProvider.getInstance(mContext);
             long lastSync = getLastHistorySync();
-            JSONArray data = storageHelper.extractTableData("history", lastSync == 0 ? null : "timestamp > " + lastSync);
+            JSONArray data = provider.dumps(lastSync);
             if (data == null) {
                 return RESTResponse.fromThrowable(new NullPointerException());
             }
@@ -146,15 +146,11 @@ public class SyncHelper {
             if (!resp.isSuccess()) {
                 return resp;
             }
-            storageHelper.insertTableData("history", resp.getData().getJSONArray("updated"));
+            provider.inject(resp.getData().getJSONArray("updated"));
             return resp;
         } catch (Exception e) {
             e.printStackTrace();
             return RESTResponse.fromThrowable(e);
-        } finally {
-            if (storageHelper != null) {
-                storageHelper.close();
-            }
         }
     }
 
@@ -172,5 +168,4 @@ public class SyncHelper {
             db.close();
         }
     }
-
 }
