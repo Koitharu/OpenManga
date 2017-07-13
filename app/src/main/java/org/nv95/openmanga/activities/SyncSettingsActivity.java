@@ -11,9 +11,13 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +31,11 @@ import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.PreferencesUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by admin on 10.07.17.
@@ -122,6 +128,10 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             p.setSummary(context.getString(R.string.last_sync, lastSync == 0 ? context.getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastSync)));
 
             PreferencesUtils.bindPreferenceSummary(findPreference("sync.interval"));
+
+            if (NetworkUtils.checkConnection(context)) {
+                new LoadDevicesTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
 
         @Override
@@ -136,6 +146,55 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             Activity activity = getActivity();
             activity.unregisterReceiver(mEventReceiver);
             super.onStop();
+        }
+
+        private static class LoadDevicesTask extends AsyncTask<Void,Void,ArrayList<Pair<String,Long>>> {
+
+            private final WeakReference<SyncSettingsFragment> mFragmentRef;
+
+            public LoadDevicesTask(SyncSettingsFragment fragment) {
+                mFragmentRef = new WeakReference<SyncSettingsFragment>(fragment);
+            }
+
+            @Override
+            protected ArrayList<Pair<String,Long>> doInBackground(Void... voids) {
+                try {
+                    return SyncHelper.get(mFragmentRef.get().getActivity())
+                            .getUserDevices();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<Pair<String, Long>> pairs) {
+                super.onPostExecute(pairs);
+                SyncSettingsFragment f = mFragmentRef.get();
+                if (f == null) {
+                    return;
+                }
+                if (pairs == null) {
+                    View v = f.getView();
+                    if (v != null) {
+                        Snackbar.make(v, R.string.server_inaccessible, Snackbar.LENGTH_INDEFINITE).show();
+                    } else {
+                        Toast.makeText(f.getActivity(), R.string.server_inaccessible, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Context c = f.getActivity();
+                    PreferenceScreen ps = f.getPreferenceScreen();
+                    PreferenceCategory cat = new PreferenceCategory(c);
+                    cat.setTitle(c.getString(R.string.sync_devices, pairs.size()));
+                    ps.addPreference(cat);
+                    for (Pair<String, Long> o : pairs) {
+                        Preference p = new Preference(c);
+                        p.setTitle(o.first);
+                        p.setSummary(AppHelper.getReadableDateTime(c, o.second));
+                        cat.addPreference(p);
+                    }
+                }
+            }
         }
     }
 

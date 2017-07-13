@@ -34,4 +34,5 @@
             android:widgetLayout="@layout/pref_switchcompat" />
 
     </PreferenceCategory>
+
 </PreferenceScreen>

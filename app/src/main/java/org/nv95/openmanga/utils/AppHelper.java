@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by nv95 on 18.12.15.
@@ -53,10 +54,24 @@ public class AppHelper {
     }
 
     public static String getReadableDateTime(long milliseconds) {
-        DateFormat formatter = SimpleDateFormat.getDateTimeInstance(); //new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliseconds);
         return formatter.format(calendar.getTime());
+    }
+
+    public static String getReadableDateTime(Context context, long milliseconds) {
+        try {
+            String pattern = ((SimpleDateFormat) android.text.format.DateFormat.getLongDateFormat(context)).toLocalizedPattern();
+            pattern += " " + ((SimpleDateFormat) android.text.format.DateFormat.getTimeFormat(context)).toLocalizedPattern();
+            DateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(milliseconds);
+            return formatter.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getReadableDateTime(milliseconds);
+        }
     }
 
     public static String getReadableDateTimeRelative(long milliseconds) {
