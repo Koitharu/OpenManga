@@ -35,6 +35,7 @@ public class NetworkUtils {
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_PUT = "PUT";
+    public static final String HTTP_DELETE = "DELETE";
 
     public static boolean setUseTor(Context context, boolean enabled) {
         boolean isTor = NetCipher.getProxy() == NetCipher.ORBOT_HTTP_PROXY;
@@ -183,7 +184,7 @@ public class NetworkUtils {
             }
             con.setConnectTimeout(15000);
             con.setRequestMethod(method);
-            if (HTTP_POST.equals(method) || HTTP_PUT.equals(method) ) {
+            if (!HTTP_GET.equals(method)) {
                 con.setDoOutput(true);
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
                 out.writeBytes(NetworkUtils.makeQuery(data));

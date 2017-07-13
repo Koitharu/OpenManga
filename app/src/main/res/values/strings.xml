@@ -337,4 +337,6 @@
     <string name="manually">Manually</string>
     <string name="sync_devices">Attached devices (%d)</string>
     <string name="server_inaccessible">Server is not accessible now</string>
+    <string name="device_detach_confirm">Do you want to detach device %s from your account?</string>
+    <string name="device_detached">Device was detached from account</string>
 </resources>

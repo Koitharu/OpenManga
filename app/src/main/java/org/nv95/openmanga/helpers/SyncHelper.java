@@ -8,13 +8,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.items.SyncDevice;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
@@ -172,8 +172,8 @@ public class SyncHelper {
         }
     }
 
-    public ArrayList<Pair<String, Long>> getUserDevices() throws Exception {
-        ArrayList<Pair<String, Long>> list = new ArrayList<>();
+    public ArrayList<SyncDevice> getUserDevices() throws Exception {
+        ArrayList<SyncDevice> list = new ArrayList<>();
         RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 mToken,
@@ -186,11 +186,22 @@ public class SyncHelper {
         int len = devices.length();
         for (int i = 0; i < len; i++) {
             JSONObject o = devices.getJSONObject(i);
-            list.add(new Pair<String, Long>(
+            list.add(new SyncDevice(
+                    o.getInt("id"),
                     o.getString("device"),
                     o.getLong("created_at")
             ));
         }
         return list;
+    }
+
+    public RESTResponse detachDevice(int id) {
+        return new RESTResponse(NetworkUtils.restQuery(
+                BuildConfig.SYNC_URL + "/user",
+                mToken,
+                NetworkUtils.HTTP_DELETE,
+                "id",
+                String.valueOf(id)
+        ));
     }
 }

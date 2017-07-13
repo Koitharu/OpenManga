@@ -11,10 +11,27 @@ import org.json.JSONObject;
 
 public class RESTResponse {
 
+    public static final int RC_OK = 200;
+    public static final int RC_SERVER_ERROR = 500;
+    public static final int RC_CLIENT_ERROR = 0;
+    public static final int RC_INVALID_TOKEN = 403;
+
+    private String state;
+    @Nullable
+    private
+    String message;
+    private JSONObject data;
+    private int responseCode;
+
     private RESTResponse() {
     }
 
     public RESTResponse(JSONObject data) {
+        this(data, 200);
+    }
+
+    public RESTResponse(JSONObject data, int responseCode) {
+        this.responseCode = responseCode;
         this.data = data;
         try {
             this.state = data.getString("state");
@@ -25,12 +42,6 @@ public class RESTResponse {
             this.message = e.getMessage();
         }
     }
-
-    private String state;
-    @Nullable
-    private
-    String message;
-    private JSONObject data;
 
     public boolean isSuccess() {
         return "success".equals(state);
@@ -49,6 +60,7 @@ public class RESTResponse {
         resp.state = "fail";
         resp.message = e.getMessage();
         resp.data = new JSONObject();
+        resp.responseCode = 0;
         return resp;
     }
 }

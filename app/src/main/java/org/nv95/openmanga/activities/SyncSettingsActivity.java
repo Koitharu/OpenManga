@@ -17,7 +17,6 @@ import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.items.SyncDevice;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
@@ -59,13 +59,37 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        switch (preference.getKey()) {
+        String key = preference.getKey();
+        switch (key) {
             case "sync.start":
                 SyncService.start(this);
                 return true;
             default:
+                try {
+                    if (key.startsWith("sync.dev")) {
+                        int devId = Integer.parseInt(key.substring(9));
+                        detachDevice(devId, preference);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return false;
         }
+    }
+
+    private void detachDevice(final int devId, final Preference p) {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.device_detach_confirm, p.getTitle().toString()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        p.setSelectable(false);
+                        new DetachTask(p).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, devId);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .create().show();
+
     }
 
     public static class SyncSettingsFragment extends PreferenceFragment {
@@ -148,7 +172,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             super.onStop();
         }
 
-        private static class LoadDevicesTask extends AsyncTask<Void,Void,ArrayList<Pair<String,Long>>> {
+        private static class LoadDevicesTask extends AsyncTask<Void,Void,ArrayList<SyncDevice>> {
 
             private final WeakReference<SyncSettingsFragment> mFragmentRef;
 
@@ -157,7 +181,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             }
 
             @Override
-            protected ArrayList<Pair<String,Long>> doInBackground(Void... voids) {
+            protected ArrayList<SyncDevice> doInBackground(Void... voids) {
                 try {
                     return SyncHelper.get(mFragmentRef.get().getActivity())
                             .getUserDevices();
@@ -168,13 +192,13 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             }
 
             @Override
-            protected void onPostExecute(ArrayList<Pair<String, Long>> pairs) {
-                super.onPostExecute(pairs);
+            protected void onPostExecute(ArrayList<SyncDevice> devices) {
+                super.onPostExecute(devices);
                 SyncSettingsFragment f = mFragmentRef.get();
                 if (f == null) {
                     return;
                 }
-                if (pairs == null) {
+                if (devices == null) {
                     View v = f.getView();
                     if (v != null) {
                         Snackbar.make(v, R.string.server_inaccessible, Snackbar.LENGTH_INDEFINITE).show();
@@ -185,12 +209,18 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                     Context c = f.getActivity();
                     PreferenceScreen ps = f.getPreferenceScreen();
                     PreferenceCategory cat = new PreferenceCategory(c);
-                    cat.setTitle(c.getString(R.string.sync_devices, pairs.size()));
+                    cat.setTitle(c.getString(R.string.sync_devices, devices.size()));
                     ps.addPreference(cat);
-                    for (Pair<String, Long> o : pairs) {
+                    for (SyncDevice o : devices) {
                         Preference p = new Preference(c);
-                        p.setTitle(o.first);
-                        p.setSummary(AppHelper.getReadableDateTime(c, o.second));
+                        p.setTitle(o.name);
+                        p.setSummary(AppHelper.getReadableDateTime(c, o.created_at));
+                        p.setKey("sync.dev." + o.id);
+                        if (c instanceof Preference.OnPreferenceClickListener) {
+                            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) c);
+                        } else {
+                            p.setSelectable(false);
+                        }
                         cat.addPreference(p);
                     }
                 }
@@ -296,6 +326,37 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                             .create().show();
                 }
             }
+        }
+    }
+
+    private static class DetachTask extends AsyncTask<Integer,Void,RESTResponse> {
+
+        private final WeakReference<Preference> mPrefRef;
+
+        DetachTask(Preference preference) {
+            mPrefRef = new WeakReference<>(preference);
+        }
+
+        @Override
+        protected RESTResponse doInBackground(Integer... integers) {
+            try {
+                return SyncHelper.get(mPrefRef.get().getContext()).detachDevice(integers[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(RESTResponse restResponse) {
+            super.onPostExecute(restResponse);
+            Preference p = mPrefRef.get();
+            if (p == null) {
+                return;
+            }
+            p.setEnabled(false);
+            p.setSummary(R.string.device_detached);
+            Toast.makeText(p.getContext(), R.string.device_detached, Toast.LENGTH_SHORT).show();
         }
     }
 }
