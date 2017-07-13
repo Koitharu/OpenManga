@@ -374,9 +374,9 @@ public class HistoryProvider extends MangaProvider {
                     manga.put("provider", cursor.getString(4));
                     manga.put("preview", cursor.getString(5));
                     manga.put("path", cursor.getString(6));
-                    manga.put("timestamp", cursor.getLong(7));
                     manga.put("rating", cursor.getInt(12));
                     jobj.put("manga", manga);
+                    jobj.put("timestamp", cursor.getLong(7));
                     jobj.put("size", cursor.getInt(8));
                     jobj.put("chapter", cursor.getInt(9));
                     jobj.put("page", cursor.getInt(10));
