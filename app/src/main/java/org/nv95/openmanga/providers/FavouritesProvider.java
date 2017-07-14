@@ -155,7 +155,7 @@ public class FavouritesProvider extends MangaProvider {
         if (database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)}) > 0) {
             SyncHelper syncHelper = SyncHelper.get(mContext);
             if (syncHelper.isFavouritesSyncEnabled()) {
-                syncHelper.remove(database, TABLE_NAME, mangaInfo.id);
+                syncHelper.setDeleted(database, TABLE_NAME, mangaInfo.id);
                 SyncService.syncDelayed(mContext);
             }
             return true;
@@ -173,7 +173,7 @@ public class FavouritesProvider extends MangaProvider {
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
             if (syncEnabled) {
-                syncHelper.remove(database, TABLE_NAME, o);
+                syncHelper.setDeleted(database, TABLE_NAME, o);
             }
         }
         database.setTransactionSuccessful();
@@ -293,8 +293,8 @@ public class FavouritesProvider extends MangaProvider {
                     JSONObject manga = new JSONObject();
                     manga.put("id", cursor.getInt(0));
                     manga.put("name", cursor.getString(1));
-                    manga.put("subtitle", cursor.getString(2));
-                    manga.put("summary", cursor.getString(3));
+                    manga.put("subtitle", AppHelper.strNotNull(cursor.getString(2)));
+                    manga.put("summary", AppHelper.strNotNull(cursor.getString(3)));
                     manga.put("provider", cursor.getString(4));
                     manga.put("preview", cursor.getString(5));
                     manga.put("path", cursor.getString(6));

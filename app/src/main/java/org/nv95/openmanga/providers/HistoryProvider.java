@@ -226,7 +226,7 @@ public class HistoryProvider extends MangaProvider {
             database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(o)});
             database.delete("bookmarks", "manga_id=?", new String[]{String.valueOf(o)});
             if (syncEnabled) {
-                syncHelper.remove(database, TABLE_NAME, o);
+                syncHelper.setDeleted(database, TABLE_NAME, o);
             }
         }
         database.setTransactionSuccessful();
@@ -371,8 +371,8 @@ public class HistoryProvider extends MangaProvider {
                     JSONObject manga = new JSONObject();
                     manga.put("id", cursor.getInt(0));
                     manga.put("name", cursor.getString(1));
-                    manga.put("subtitle", cursor.getString(2));
-                    manga.put("summary", cursor.getString(3));
+                    manga.put("subtitle", AppHelper.strNotNull(cursor.getString(2)));
+                    manga.put("summary", AppHelper.strNotNull(cursor.getString(3)));
                     manga.put("provider", cursor.getString(4));
                     manga.put("preview", cursor.getString(5));
                     manga.put("path", cursor.getString(6));

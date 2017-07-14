@@ -3,6 +3,7 @@ package org.nv95.openmanga.helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
@@ -92,7 +93,7 @@ public class SyncHelper {
 
     @WorkerThread
     public RESTResponse register(String login, String password) {
-        RESTResponse response = new RESTResponse(NetworkUtils.restQuery(
+        RESTResponse response = NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 null,
                 NetworkUtils.HTTP_PUT,
@@ -100,7 +101,7 @@ public class SyncHelper {
                 "password", password,
                 "device",
                 AppHelper.getDeviceSummary()
-        ));
+        );
         if (response.isSuccess()) {
             try {
                 setToken(response.getData().getString("token"));
@@ -114,7 +115,7 @@ public class SyncHelper {
 
     @WorkerThread
     public RESTResponse authorize(String login, String password) {
-        RESTResponse response = new RESTResponse(NetworkUtils.restQuery(
+        RESTResponse response = NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 null,
                 NetworkUtils.HTTP_POST,
@@ -122,7 +123,7 @@ public class SyncHelper {
                 "password", password,
                 "device",
                 AppHelper.getDeviceSummary()
-        ));
+        );
         if (response.isSuccess()) {
             try {
                 setToken(response.getData().getString("token"));
@@ -143,11 +144,25 @@ public class SyncHelper {
         try {
             HistoryProvider provider = HistoryProvider.getInstance(mContext);
             long lastSync = getLastHistorySync();
-            JSONArray data = provider.dumps(lastSync);
-            if (data == null) {
+            JSONArray updated = provider.dumps(lastSync);
+            if (updated == null) {
                 return RESTResponse.fromThrowable(new NullPointerException());
             }
-            RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_POST, "timestamp", String.valueOf(lastSync), "updated", data.toString()));
+            JSONArray deleted = dumpsDeleted("history");
+            if (deleted == null) {
+                return RESTResponse.fromThrowable(new NullPointerException("deleted is null"));
+            }
+            RESTResponse resp = NetworkUtils.restQuery(
+                    BuildConfig.SYNC_URL + "/history",
+                    mToken,
+                    NetworkUtils.HTTP_POST,
+                    "timestamp",
+                    String.valueOf(lastSync),
+                    "updated",
+                    updated.toString(),
+                    "deleted",
+                    deleted.toString()
+            );
             if (!resp.isSuccess()) {
                 if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
                     setToken(null);
@@ -157,6 +172,7 @@ public class SyncHelper {
             if (!provider.inject(resp.getData().getJSONArray("updated"))) {
                 return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
             }
+            clearDeleted("history");
             return resp;
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,11 +185,25 @@ public class SyncHelper {
         try {
             FavouritesProvider provider = FavouritesProvider.getInstance(mContext);
             long lastSync = getLastFavouritesSync();
-            JSONArray data = provider.dumps(lastSync);
-            if (data == null) {
-                return RESTResponse.fromThrowable(new NullPointerException());
+            JSONArray updated = provider.dumps(lastSync);
+            if (updated == null) {
+                return RESTResponse.fromThrowable(new NullPointerException("updated is null"));
             }
-            RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/favourites", mToken, NetworkUtils.HTTP_POST, "timestamp", String.valueOf(lastSync), "updated", data.toString()));
+            JSONArray deleted = dumpsDeleted("favourites");
+            if (deleted == null) {
+                return RESTResponse.fromThrowable(new NullPointerException("deleted is null"));
+            }
+            RESTResponse resp = NetworkUtils.restQuery(
+                    BuildConfig.SYNC_URL + "/favourites",
+                    mToken,
+                    NetworkUtils.HTTP_POST,
+                    "timestamp",
+                    String.valueOf(lastSync),
+                    "updated",
+                    updated.toString(),
+                    "deleted",
+                    deleted.toString()
+            );
             if (!resp.isSuccess()) {
                 if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
                     setToken(null);
@@ -183,6 +213,7 @@ public class SyncHelper {
             if (!provider.inject(resp.getData().getJSONArray("updated"))) {
                 return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
             }
+            clearDeleted("favourites");
             return resp;
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,7 +221,74 @@ public class SyncHelper {
         }
     }
 
-    public void remove(@Nullable SQLiteDatabase writableDatabase, String subject, long id) {
+    @Nullable
+    private JSONArray dumpsDeleted(String subject) {
+        StorageHelper storageHelper = null;
+        SQLiteDatabase database = null;
+        Cursor c = null;
+        try {
+            JSONArray array = new JSONArray();
+            storageHelper = new StorageHelper(mContext);
+            database = storageHelper.getReadableDatabase();
+            c = database.query(
+                    "sync_delete", new String[]{"manga_id", "timestamp"},
+                    "subject = ?", new String[]{subject}, null, null, null
+            );
+            if (c.moveToFirst()) {
+                do {
+                    JSONObject jobj = new JSONObject();
+                    jobj.put("manga_id", c.getInt(0));
+                    jobj.put("timestamp", c.getLong(1));
+                    array.put(jobj);
+                } while (c.moveToNext());
+            }
+            return array;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (storageHelper != null) {
+                if (database != null) {
+                    database.close();
+                    if (c != null) {
+                        c.close();
+                    }
+                }
+                storageHelper.close();
+            }
+        }
+    }
+
+    private void clearDeleted(String subject) {
+        StorageHelper storageHelper = null;
+        SQLiteDatabase database = null;
+        try {
+            storageHelper = new StorageHelper(mContext);
+            database = storageHelper.getWritableDatabase();
+            database.delete("sync_delete", "subject = ?", new String[]{subject});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (storageHelper != null) {
+                if (database != null) {
+                    database.close();
+                }
+                storageHelper.close();
+            }
+        }
+    }
+
+    public void setDeleted(@Nullable SQLiteDatabase writableDatabase, String subject, long id) {
+        switch (subject) {
+            case "history":
+                if (!isHistorySyncEnabled()) return;
+                break;
+            case "favourites":
+                if (!isFavouritesSyncEnabled()) return;
+                break;
+            default:
+                return;
+        }
         SQLiteDatabase db = writableDatabase;
         if (db == null) {
             db = new StorageHelper(mContext).getWritableDatabase();
@@ -207,13 +305,13 @@ public class SyncHelper {
 
     public ArrayList<SyncDevice> getUserDevices(boolean includeSelf) throws Exception {
         ArrayList<SyncDevice> list = new ArrayList<>();
-        RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(
+        RESTResponse resp = NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 mToken,
                 NetworkUtils.HTTP_GET,
                 "self",
                 includeSelf ? "1" : "0"
-        ));
+        );
         if (!resp.isSuccess()) {
             if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
                 setToken(null);
@@ -234,12 +332,12 @@ public class SyncHelper {
     }
 
     public RESTResponse detachDevice(int id) {
-        return new RESTResponse(NetworkUtils.restQuery(
+        return NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 mToken,
                 NetworkUtils.HTTP_DELETE,
                 "id",
                 String.valueOf(id)
-        ));
+        );
     }
 }

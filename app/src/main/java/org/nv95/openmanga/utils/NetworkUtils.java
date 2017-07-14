@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.nv95.openmanga.items.RESTResponse;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -170,7 +171,7 @@ public class NetworkUtils {
         }
     }
 
-    public static JSONObject restQuery(String url, @Nullable String token, String method, String... data) {
+    public static RESTResponse restQuery(String url, @Nullable String token, String method, String... data) {
         BufferedReader reader = null;
         try {
             HttpURLConnection con = NetCipher.getHttpURLConnection(
@@ -191,24 +192,17 @@ public class NetworkUtils {
                 out.flush();
                 out.close();
             }
-            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            int respCode = con.getResponseCode();
+            reader = new BufferedReader(new InputStreamReader(isOk(respCode) ? con.getInputStream() : con.getErrorStream()));
             StringBuilder out = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 out.append(line);
             }
-            return new JSONObject(out.toString());
+            return new RESTResponse(new JSONObject(out.toString()), respCode);
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                JSONObject eobj = new JSONObject();
-                eobj.put("state", "fail");
-                eobj.put("message", e.getMessage());
-                return eobj;
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-                return null;
-            }
+            return RESTResponse.fromThrowable(e);
         } finally {
             if (reader != null) {
                 try {
@@ -236,5 +230,9 @@ public class NetworkUtils {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         return ni != null && ni.isAvailable() && ni.isConnected();
+    }
+
+    private static boolean isOk(int responseCode) {
+        return responseCode >= 200 && responseCode < 300;
     }
 }

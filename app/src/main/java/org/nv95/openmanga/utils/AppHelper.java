@@ -176,4 +176,8 @@ public class AppHelper {
         summary.append(")");
         return summary.toString();
     }
+
+    public static String strNotNull(String str) {
+        return str == null ? "" : str;
+    }
 }

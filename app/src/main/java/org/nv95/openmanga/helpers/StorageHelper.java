@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class StorageHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 18;
+    private static final int DB_VERSION = 19;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
