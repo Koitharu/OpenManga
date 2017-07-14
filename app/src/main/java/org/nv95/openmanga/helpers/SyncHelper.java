@@ -147,6 +147,9 @@ public class SyncHelper {
             }
             RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/history", mToken, NetworkUtils.HTTP_POST, "timestamp", String.valueOf(lastSync), "updated", data.toString()));
             if (!resp.isSuccess()) {
+                if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+                    setToken(null);
+                }
                 return resp;
             }
             provider.inject(resp.getData().getJSONArray("updated"));
@@ -180,6 +183,9 @@ public class SyncHelper {
                 NetworkUtils.HTTP_GET
         ));
         if (!resp.isSuccess()) {
+            if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+                setToken(null);
+            }
             return null;
         }
         JSONArray devices = resp.getData().getJSONArray("devices");

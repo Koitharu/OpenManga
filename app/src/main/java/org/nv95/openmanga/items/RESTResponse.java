@@ -43,6 +43,10 @@ public class RESTResponse {
         }
     }
 
+    public int getResponseCode() {
+        return responseCode;
+    }
+
     public boolean isSuccess() {
         return "success".equals(state);
     }
