@@ -13,10 +13,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
+import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
 
@@ -141,23 +143,44 @@ public class FavouritesProvider extends MangaProvider {
         cv.put("category", category);
         cv.put("rating", mangaInfo.rating);
         SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        return (database.insert(TABLE_NAME, null, cv) != -1);
+        boolean res = (database.insert(TABLE_NAME, null, cv) != -1);
+        if (res) {
+            SyncService.syncDelayed(mContext);
+        }
+        return res;
     }
 
     public boolean remove(MangaInfo mangaInfo) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
-        return database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)}) > 0;
+        if (database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)}) > 0) {
+            SyncHelper syncHelper = SyncHelper.get(mContext);
+            if (syncHelper.isFavouritesSyncEnabled()) {
+                syncHelper.remove(database, TABLE_NAME, mangaInfo.id);
+                SyncService.syncDelayed(mContext);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean remove(long[] ids) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+        SyncHelper syncHelper = SyncHelper.get(mContext);
+        boolean syncEnabled = syncHelper.isFavouritesSyncEnabled();
         database.beginTransaction();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=" + o, null);
+            if (syncEnabled) {
+                syncHelper.remove(database, TABLE_NAME, o);
+            }
         }
         database.setTransactionSuccessful();
         database.endTransaction();
+        if (syncEnabled) {
+            SyncService.syncDelayed(mContext);
+        }
         return true;
     }
 

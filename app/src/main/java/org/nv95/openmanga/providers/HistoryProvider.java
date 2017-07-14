@@ -226,12 +226,14 @@ public class HistoryProvider extends MangaProvider {
             database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(o)});
             database.delete("bookmarks", "manga_id=?", new String[]{String.valueOf(o)});
             if (syncEnabled) {
-                syncHelper.remove(database, "history", o);
+                syncHelper.remove(database, TABLE_NAME, o);
             }
         }
         database.setTransactionSuccessful();
         database.endTransaction();
-        SyncService.syncDelayed(mContext);
+        if (syncEnabled) {
+            SyncService.syncDelayed(mContext);
+        }
         return true;
     }
 
