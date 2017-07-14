@@ -198,7 +198,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             protected ArrayList<SyncDevice> doInBackground(Void... voids) {
                 try {
                     return SyncHelper.get(mFragmentRef.get().getActivity())
-                            .getUserDevices();
+                            .getUserDevices(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;

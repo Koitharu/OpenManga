@@ -205,12 +205,14 @@ public class SyncHelper {
         }
     }
 
-    public ArrayList<SyncDevice> getUserDevices() throws Exception {
+    public ArrayList<SyncDevice> getUserDevices(boolean includeSelf) throws Exception {
         ArrayList<SyncDevice> list = new ArrayList<>();
         RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(
                 BuildConfig.SYNC_URL + "/user",
                 mToken,
-                NetworkUtils.HTTP_GET
+                NetworkUtils.HTTP_GET,
+                "self",
+                includeSelf ? "1" : "0"
         ));
         if (!resp.isSuccess()) {
             if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
