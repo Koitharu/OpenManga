@@ -105,6 +105,13 @@ public class MangaListLoader implements EndlessAdapter.OnLoadMoreListener {
         }
     }
 
+    public void notifyRemoved(int position) {
+        mAdapter.notifyItemRemoved(position);
+        if (mList.size() == 0 && mContentLoadListener != null) {
+            mContentLoadListener.onContentLoaded(true);
+        }
+    }
+
     public void moveItem(int from, int to) {
         MangaInfo item = mList.get(from);
         mList.remove(from);

@@ -64,6 +64,7 @@ import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
+import org.nv95.openmanga.utils.DeltaUpdater;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.InternalLinkMovement;
@@ -107,12 +108,12 @@ public class MainActivity extends BaseAppActivity implements
             switch (intent.getIntExtra("what", -1)) {
                 case SyncService.MSG_FAV_FINISHED:
                     if (mSelectedItem == R.id.nav_action_favourites) {
-                        updateContent();
+                        new DeltaUpdater(mListLoader).update(FavouritesProvider.getInstance(MainActivity.this));
                     }
                     break;
                 case SyncService.MSG_HIST_FINISHED:
                     if (mSelectedItem == R.id.nav_action_history) {
-                        updateContent();
+                        new DeltaUpdater(mListLoader).update(HistoryProvider.getInstance(MainActivity.this));
                     }
                     break;
             }
