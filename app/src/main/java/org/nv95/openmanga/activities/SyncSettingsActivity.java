@@ -103,6 +103,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                     case SyncService.MSG_UNAUTHORIZED:
                         Activity activity = getActivity();
                         if (activity != null) {
+                            Toast.makeText(activity, R.string.auth_failed, Toast.LENGTH_SHORT).show();
                             activity.getFragmentManager().beginTransaction()
                                     .replace(R.id.content, new LoginFragment())
                                     .commit();
@@ -123,6 +124,21 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                         p.setSummary(R.string.sync_finished);
                         p.setEnabled(true);
                         break;
+                    case SyncService.MSG_FAV_STARTED:
+                        p = findPreference("sync.favourites");
+                        p.setSummary(R.string.sync_started);
+                        p.setEnabled(false);
+                        break;
+                    case SyncService.MSG_FAV_FAILED:
+                        p = findPreference("sync.favourites");
+                        p.setSummary(R.string.sync_failed);
+                        p.setEnabled(true);
+                        break;
+                    case SyncService.MSG_FAV_FINISHED:
+                        p = findPreference("sync.favourites");
+                        p.setSummary(R.string.sync_finished);
+                        p.setEnabled(true);
+                        break;
                 }
             }
         };
@@ -130,9 +146,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Activity activity = getActivity();
             addPreferencesFromResource(R.xml.pref_sync);
-
         }
 
         @Override

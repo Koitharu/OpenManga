@@ -27,7 +27,6 @@
             android:widgetLayout="@layout/pref_switchcompat" />
 
         <CheckBoxPreference
-            android:enabled="false"
             android:defaultValue="true"
             android:key="sync.favourites"
             android:title="@string/synchronize_favourites"

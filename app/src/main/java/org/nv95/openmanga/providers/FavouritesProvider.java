@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.MangaInfo;
@@ -252,5 +254,74 @@ public class FavouritesProvider extends MangaProvider {
                         }
                     }
                 }).create().show();
+    }
+
+    @Nullable
+    public JSONArray dumps(long laterThen) {
+        Cursor cursor = null;
+        try {
+            JSONArray dump = new JSONArray();
+            cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, new String[]{
+                    "id", "name", "subtitle", "summary", "provider", "preview", "path", "timestamp", "rating"
+            }, "timestamp > ?", new String[]{String.valueOf(laterThen)}, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    JSONObject jobj = new JSONObject();
+                    JSONObject manga = new JSONObject();
+                    manga.put("id", cursor.getInt(0));
+                    manga.put("name", cursor.getString(1));
+                    manga.put("subtitle", cursor.getString(2));
+                    manga.put("summary", cursor.getString(3));
+                    manga.put("provider", cursor.getString(4));
+                    manga.put("preview", cursor.getString(5));
+                    manga.put("path", cursor.getString(6));
+                    manga.put("rating", cursor.getInt(8));
+                    jobj.put("manga", manga);
+                    jobj.put("timestamp", cursor.getLong(7));
+                    dump.put(jobj);
+                } while (cursor.moveToNext());
+            }
+            return dump;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public boolean inject(JSONArray jsonArray) {
+        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+        try {
+            int len = jsonArray.length();
+            database.beginTransaction();
+            for (int i=0;i<len;i++) {
+                JSONObject jobj = jsonArray.getJSONObject(i);
+                JSONObject manga = jobj.getJSONObject("manga");
+                ContentValues cv = new ContentValues();
+                int id = manga.getInt("id");
+                cv.put("id", id);
+                cv.put("name", manga.getString("name"));
+                cv.put("subtitle", manga.getString("subtitle"));
+                cv.put("summary", manga.getString("summary"));
+                cv.put("provider", manga.getString("provider"));
+                cv.put("preview", manga.getString("preview"));
+                cv.put("path", manga.getString("path"));
+                cv.put("timestamp", jobj.getLong("timestamp"));
+                cv.put("rating", manga.getLong("rating"));
+                if (database.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)})<= 0) {
+                    database.insertOrThrow(TABLE_NAME, null, cv);
+                }
+            }
+            database.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            database.endTransaction();
+        }
     }
 }

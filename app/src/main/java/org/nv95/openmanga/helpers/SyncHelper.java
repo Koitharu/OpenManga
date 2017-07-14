@@ -3,6 +3,7 @@ package org.nv95.openmanga.helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.items.SyncDevice;
+import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
@@ -152,7 +154,35 @@ public class SyncHelper {
                 }
                 return resp;
             }
-            provider.inject(resp.getData().getJSONArray("updated"));
+            if (!provider.inject(resp.getData().getJSONArray("updated"))) {
+                return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
+            }
+            return resp;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RESTResponse.fromThrowable(e);
+        }
+    }
+
+    @WorkerThread
+    public RESTResponse syncFavourites() {
+        try {
+            FavouritesProvider provider = FavouritesProvider.getInstance(mContext);
+            long lastSync = getLastHistorySync();
+            JSONArray data = provider.dumps(lastSync);
+            if (data == null) {
+                return RESTResponse.fromThrowable(new NullPointerException());
+            }
+            RESTResponse resp = new RESTResponse(NetworkUtils.restQuery(BuildConfig.SYNC_URL + "/favourites", mToken, NetworkUtils.HTTP_POST, "timestamp", String.valueOf(lastSync), "updated", data.toString()));
+            if (!resp.isSuccess()) {
+                if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+                    setToken(null);
+                }
+                return resp;
+            }
+            if (!provider.inject(resp.getData().getJSONArray("updated"))) {
+                return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
+            }
             return resp;
         } catch (Exception e) {
             e.printStackTrace();

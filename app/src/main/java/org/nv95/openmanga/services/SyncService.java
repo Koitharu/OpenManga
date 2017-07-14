@@ -24,6 +24,9 @@ public class SyncService extends IntentService {
     public static final int MSG_HIST_STARTED = 1;
     public static final int MSG_HIST_FINISHED = 2;
     public static final int MSG_HIST_FAILED = 3;
+    public static final int MSG_FAV_STARTED = 4;
+    public static final int MSG_FAV_FINISHED = 5;
+    public static final int MSG_FAV_FAILED = 6;
 
     public SyncService() {
         super(SyncService.class.getName());
@@ -49,7 +52,25 @@ public class SyncService extends IntentService {
                 syncHelper.setHistorySynced();
                 sendMessage(MSG_HIST_FINISHED, null);
             } else {
+                if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+                    sendMessage(MSG_UNAUTHORIZED, null);
+                    return;
+                }
                 sendMessage(MSG_HIST_FAILED, resp.getMessage());
+            }
+        }
+        if (syncHelper.isFavouritesSyncEnabled()) {
+            sendMessage(MSG_FAV_STARTED, null);
+            RESTResponse resp = syncHelper.syncFavourites();
+            if (resp.isSuccess()) {
+                syncHelper.setFavouritesSynced();
+                sendMessage(MSG_FAV_FINISHED, null);
+            } else {
+                if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+                    sendMessage(MSG_UNAUTHORIZED, null);
+                    return;
+                }
+                sendMessage(MSG_FAV_FAILED, resp.getMessage());
             }
         }
     }
