@@ -310,4 +310,9 @@
     <string name="sync_frequency">Частота синхронизации</string>
     <string name="realtime">В реальном времени</string>
     <string name="manually">Вручную</string>
+    <string name="sync_devices">Привязанные устройства (%d)</string>
+    <string name="server_inaccessible">В данный момент сервер недоступен</string>
+    <string name="device_detach_confirm">Вы действительно хотите отвязать устройство %s от Вашего аккаунта?</string>
+    <string name="device_detached">Устройство отвязано от аккаунта</string>
+    <string name="action_sync">Синхронизировать</string>
 </resources>
