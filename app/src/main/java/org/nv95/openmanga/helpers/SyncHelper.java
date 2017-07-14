@@ -2,6 +2,7 @@ package org.nv95.openmanga.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -19,6 +20,7 @@ import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.items.SyncDevice;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
+import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
 
@@ -172,6 +174,11 @@ public class SyncHelper {
             if (!provider.inject(resp.getData().getJSONArray("updated"))) {
                 return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
             }
+            deleted = resp.getData().getJSONArray("deleted");
+            for (int i=0;i<deleted.length(); i++) {
+                JSONObject o = deleted.getJSONObject(i);
+                provider.remove(new long[]{o.getLong("manga_id")});
+            }
             clearDeleted("history");
             return resp;
         } catch (Exception e) {
@@ -212,6 +219,11 @@ public class SyncHelper {
             }
             if (!provider.inject(resp.getData().getJSONArray("updated"))) {
                 return RESTResponse.fromThrowable(new SQLException("Cannot write data"));
+            }
+            deleted = resp.getData().getJSONArray("deleted");
+            for (int i=0;i<deleted.length(); i++) {
+                JSONObject o = deleted.getJSONObject(i);
+                provider.remove(new long[]{o.getLong("manga_id")});
             }
             clearDeleted("favourites");
             return resp;
@@ -315,6 +327,7 @@ public class SyncHelper {
         if (!resp.isSuccess()) {
             if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
                 setToken(null);
+                noauthBroadcast();
             }
             return null;
         }
@@ -339,5 +352,12 @@ public class SyncHelper {
                 "id",
                 String.valueOf(id)
         );
+    }
+
+    private void noauthBroadcast() {
+        Intent intent = new Intent();
+        intent.setAction(SyncService.SYNC_EVENT);
+        intent.putExtra("what", SyncService.MSG_UNAUTHORIZED);
+        mContext.sendBroadcast(intent);
     }
 }
