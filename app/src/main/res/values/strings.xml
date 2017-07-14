@@ -339,4 +339,5 @@
     <string name="server_inaccessible">Server is not accessible now</string>
     <string name="device_detach_confirm">Do you want to detach device %s from your account?</string>
     <string name="device_detached">Device was detached from account</string>
+    <string name="action_sync">Synchronize</string>
 </resources>

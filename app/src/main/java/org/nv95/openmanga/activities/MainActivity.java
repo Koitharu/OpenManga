@@ -2,8 +2,11 @@ package org.nv95.openmanga.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -44,6 +47,7 @@ import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
+import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.ThumbSize;
@@ -57,6 +61,7 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
+import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.DrawerHeaderImageTool;
@@ -95,6 +100,24 @@ public class MainActivity extends BaseAppActivity implements
     private NavigationView mNavigationView;
     private int mSelectedItem;
     private DrawerHeaderImageTool mDrawerHeaderTool;
+
+    private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getIntExtra("what", -1)) {
+                case SyncService.MSG_FAV_FINISHED:
+                    if (mSelectedItem == R.id.nav_action_favourites) {
+                        updateContent();
+                    }
+                    break;
+                case SyncService.MSG_HIST_FINISHED:
+                    if (mSelectedItem == R.id.nav_action_history) {
+                        updateContent();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +209,7 @@ public class MainActivity extends BaseAppActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
+        registerReceiver(mSyncReceiver, new IntentFilter(SyncService.SYNC_EVENT));
     }
 
     /**
@@ -225,12 +249,20 @@ public class MainActivity extends BaseAppActivity implements
         menu.setGroupVisible(R.id.group_favourites, mSelectedItem == R.id.nav_action_favourites);
         menu.findItem(R.id.action_goto).setVisible(mProvider.isMultiPage());
         menu.findItem(R.id.action_recommend_opts).setVisible(mSelectedItem == R.id.nav_action_recommendations);
+        SyncHelper syncHelper = SyncHelper.get(this);
+        menu.findItem(R.id.action_sync).setVisible(
+                syncHelper.isAuthorized() && (
+                        (mSelectedItem == R.id.nav_action_history && syncHelper.isHistorySyncEnabled()) ||
+                                (mSelectedItem == R.id.nav_action_favourites && syncHelper.isFavouritesSyncEnabled())
+                )
+        );
         mListModeHelper.onPrepareOptionsMenu(menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(mSyncReceiver);
         mListLoader.cancelLoading();
         ChangesObserver.getInstance().removeListener(this);
         mListModeHelper.disable();
@@ -296,6 +328,10 @@ public class MainActivity extends BaseAppActivity implements
                 return true;
             case R.id.action_recommend_opts:
                 new RecommendationsPrefDialog(this, this).show();
+                return true;
+            case R.id.action_sync:
+                SyncService.start(this);
+                Snackbar.make(mRecyclerView, R.string.sync_started, Snackbar.LENGTH_SHORT).show();
                 return true;
             case R.id.action_filter:
                 mDrawerLayout.openDrawer(GravityCompat.END);
