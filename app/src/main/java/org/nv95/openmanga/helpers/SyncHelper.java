@@ -168,7 +168,7 @@ public class SyncHelper {
     public RESTResponse syncFavourites() {
         try {
             FavouritesProvider provider = FavouritesProvider.getInstance(mContext);
-            long lastSync = getLastHistorySync();
+            long lastSync = getLastFavouritesSync();
             JSONArray data = provider.dumps(lastSync);
             if (data == null) {
                 return RESTResponse.fromThrowable(new NullPointerException());
