@@ -86,9 +86,9 @@ public class SyncHelper {
         mToken = token;
         SharedPreferences.Editor editor = mPreferences.edit();
         if (token != null) {
-            editor.putString("sync.token", token);
+            editor.putString("sync.token", token).remove("sync.last_favourites").remove("sync.last_history");
         } else {
-            editor.remove("sync.token");
+            editor.remove("sync.token").remove("sync.last_favourites").remove("sync.last_history");
         }
         editor.apply();
     }
