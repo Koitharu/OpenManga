@@ -318,6 +318,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                     activity.getFragmentManager().beginTransaction()
                             .replace(R.id.content, new SyncSettingsFragment())
                             .commit();
+                    SyncService.start(activity);
                 } else {
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.auth_failed)

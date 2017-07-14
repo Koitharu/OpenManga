@@ -122,10 +122,17 @@
 
                 <Button
                     android:id="@+id/buttonRestore"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/restore" />
+
+                <Button
+                    android:id="@+id/buttonSync"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sync" />
             </LinearLayout>
         </ScrollView>
 

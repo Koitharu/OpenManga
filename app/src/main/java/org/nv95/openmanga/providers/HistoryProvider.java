@@ -412,7 +412,7 @@ public class HistoryProvider extends MangaProvider {
                 cv.put("provider", manga.getString("provider"));
                 cv.put("preview", manga.getString("preview"));
                 cv.put("path", manga.getString("path"));
-                cv.put("timestamp", manga.getLong("timestamp"));
+                cv.put("timestamp", jobj.getLong("timestamp"));
                 cv.put("rating", manga.getLong("rating"));
                 cv.put("size", jobj.getInt("size"));
                 cv.put("chapter", jobj.getInt("chapter"));

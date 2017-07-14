@@ -144,6 +144,13 @@ public class WelcomeActivity extends BaseAppActivity {
                         }
                     }
                 });
+                Button buttonSync = (Button) findViewById(R.id.buttonSync);
+                buttonSync.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(WelcomeActivity.this, SyncSettingsActivity.class));
+                    }
+                });
                 int active = Math.min(
                         getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
                         Providers.getCount()
