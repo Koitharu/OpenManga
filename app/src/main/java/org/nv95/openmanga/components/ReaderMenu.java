@@ -209,21 +209,23 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menuitem_unfavourite:
-                if (FavouritesProvider.getInstance(getContext()).remove(mManga)) {
-                    hide();
-                    Snackbar.make(this, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
-                    ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
-                }
-                break;
             case R.id.menuitem_favourite:
+                final FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(getContext());
                 FavouritesProvider.dialog(getContext(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         hide();
-                        NewChaptersProvider.getInstance(getContext())
-                                .storeChaptersCount(mManga.id, mManga.getChapters().size());
-                        Snackbar.make(ReaderMenu.this, R.string.favourited, Snackbar.LENGTH_SHORT).show();
-                        ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, which);
+                        if (which == DialogInterface.BUTTON_NEUTRAL) {
+                            if (favouritesProvider.remove(mManga)) {
+                                ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
+                                Snackbar.make(ReaderMenu.this, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            NewChaptersProvider.getInstance(getContext())
+                                    .storeChaptersCount(mManga.id, mManga.getChapters().size());
+                            ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, which);
+                            Snackbar.make(ReaderMenu.this, R.string.favourited, Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 }, mManga);
                 break;

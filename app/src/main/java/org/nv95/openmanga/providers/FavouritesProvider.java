@@ -258,8 +258,8 @@ public class FavouritesProvider extends MangaProvider {
                 PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
                         .getString("fav.categories", context.getString(R.string.favourites_categories_default)))
                 .replaceAll(", ", ",").split(",");
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.action_favourite)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(R.string.action_favourites)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setCancelable(true)
                 .setSingleChoiceItems(categories, 0, new DialogInterface.OnClickListener() {
@@ -276,7 +276,11 @@ public class FavouritesProvider extends MangaProvider {
                             listener.onClick(dialog, selected[0]);
                         }
                     }
-                }).create().show();
+                });
+        if (getInstance(context).has(mangaInfo)) {
+            builder.setNeutralButton(R.string.action_remove, doneListener);
+        }
+        builder.create().show();
     }
 
     @Nullable

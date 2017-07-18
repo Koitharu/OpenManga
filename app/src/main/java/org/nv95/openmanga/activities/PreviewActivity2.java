@@ -209,21 +209,23 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_favourite:
-                FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(this);
-                if (favouritesProvider.has(mManga)) {
-                    if (favouritesProvider.remove(mManga)) {
-                        ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
-                    }
-                } else {
-                    FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                final FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(this);
+                FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_NEUTRAL) {
+                            if (favouritesProvider.remove(mManga)) {
+                                ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
+                                Snackbar.make(mViewPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
                             NewChaptersProvider.getInstance(PreviewActivity2.this)
                                     .storeChaptersCount(mManga.id, mManga.getChapters().size());
                             ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, which);
+                            Snackbar.make(mViewPager, R.string.favourited, Snackbar.LENGTH_SHORT).show();
                         }
-                    }, mManga);
-                }
+                    }
+                }, mManga);
                 return true;
             case R.id.action_save:
                 if (mManga.chapters.size() != 0) {
