@@ -11,7 +11,7 @@ android {
         versionCode 1105
         versionName "4.0 testing"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
-        buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api\""
+        buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api/v1\""
     }
 
     signingConfigs {
