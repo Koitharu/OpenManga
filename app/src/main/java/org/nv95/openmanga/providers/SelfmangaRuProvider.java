@@ -45,7 +45,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
             try {
-                manga.preview = o.select("img").first().attr("src");
+                manga.preview = o.select("img").first().attr("data-original");
             } catch (Exception e) {
                 manga.preview = "";
             }
@@ -150,7 +150,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
             manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://selfmanga.ru" + o.select("a").first().attr("href");
-            manga.preview = o.select("img").first().attr("src");
+            manga.preview = o.select("img").first().attr("data-original");
             r = o.select("div.rating").first();
             manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));
             manga.provider = SelfmangaRuProvider.class;
