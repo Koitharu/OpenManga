@@ -71,6 +71,7 @@ import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
@@ -128,9 +129,8 @@ public class MainActivity extends BaseAppActivity implements
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));
         setupToolbarScrolling(toolbar);
-        if (WelcomeActivity.show(this)) {
-            //MangaProviderManager.configure(this, MangaProviderManager.Languages.fromLocale(Locale.getDefault()));
-        }
+        WelcomeActivity.show(this);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mFab = (FloatingActionButton) findViewById(R.id.fab_read);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -434,7 +434,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask().startLoading(true);
+                new OpenLastTask(this).attach(this).start(true);
                 break;
         }
     }
@@ -443,7 +443,7 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask().startLoading(false);
+                new OpenLastTask(this).attach(this).start(false);
                 return true;
             default:
                 return false;
@@ -492,8 +492,6 @@ public class MainActivity extends BaseAppActivity implements
         if (!hasItems) {
             AnimUtils.noanim(mTextViewHolder, mProgressBar);
             mListLoader.getAdapter().getChoiceController().clearSelection();
-        } else {
-            // TODO: 04.12.16
         }
     }
 
@@ -694,53 +692,54 @@ public class MainActivity extends BaseAppActivity implements
         mListLoader.loadFromPage(page - 1);
     }
 
-    private class OpenLastTask extends LoaderTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
+    private static class OpenLastTask extends WeakAsyncTask<MainActivity, Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
         private ProgressDialog pd;
 
-        OpenLastTask() {
-            pd = new ProgressDialog(MainActivity.this);
+        OpenLastTask(MainActivity mainActivity) {
+            super(mainActivity);
+            pd = new ProgressDialog(mainActivity);
             pd.setIndeterminate(true);
             pd.setCancelable(true);
             pd.setOnCancelListener(this);
-            pd.setMessage(getString(R.string.loading));
+            pd.setMessage(mainActivity.getString(R.string.loading));
         }
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             pd.show();
         }
 
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected Pair<Integer, Intent> doInBackground(Boolean... params) {
             try {
                 Intent intent;
-                HistoryProvider historyProvider = HistoryProvider.getInstance(MainActivity.this);
+                HistoryProvider historyProvider = HistoryProvider.getInstance(getObject());
                 MangaInfo info = historyProvider.getLast();
                 if (info == null) {
                     return new Pair<>(2, null);
                 }
                 if (params.length != 0 && !params[0]) {
-                    intent = new Intent(MainActivity.this, PreviewActivity2.class);
+                    intent = new Intent(getObject(), PreviewActivity2.class);
                     intent.putExtras(info.toBundle());
                     return new Pair<>(0, intent);
                 }
                 MangaProvider provider;
                 if (info.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstance(MainActivity.this);
+                    provider = LocalMangaProvider.getInstance(getObject());
                 } else {
-                    if (!NetworkUtils.checkConnection(MainActivity.this)) {
-                        provider = LocalMangaProvider.getInstance(MainActivity.this);
+                    if (!NetworkUtils.checkConnection(getObject())) {
+                        provider = LocalMangaProvider.getInstance(getObject());
                         info = ((LocalMangaProvider)provider).getLocalManga(info);
                         if (info.provider != LocalMangaProvider.class) {
                             return new Pair<>(1, null);
                         }
                     } else {
-                        provider = MangaProviderManager.instanceProvider(MainActivity.this, info.provider);
+                        provider = MangaProviderManager.instanceProvider(getObject(), info.provider);
                     }
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
-                intent = new Intent(MainActivity.this, ReadActivity2.class);
+                intent = new Intent(getObject(), ReadActivity2.class);
                 intent.putExtras(summary.toBundle());
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
                 if (hs != null) {
@@ -758,13 +757,12 @@ public class MainActivity extends BaseAppActivity implements
         }
 
         @Override
-        protected void onPostExecute(Pair<Integer,Intent> result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(@NonNull MainActivity mainActivity, Pair<Integer, Intent> result) {
             pd.dismiss();
             int msg;
             switch (result.first) {
                 case 0:
-                    startActivity(result.second);
+                    mainActivity.startActivity(result.second);
                     return;
                 case 1:
                     msg = R.string.no_network_connection;
@@ -776,10 +774,10 @@ public class MainActivity extends BaseAppActivity implements
                     msg = R.string.error;
                     break;
             }
-            new AlertDialog.Builder(MainActivity.this)
+            new AlertDialog.Builder(mainActivity)
                     .setCancelable(true)
                     .setPositiveButton(android.R.string.ok, null)
-                    .setMessage(getString(msg))
+                    .setMessage(mainActivity.getString(msg))
                     .create().show();
         }
 

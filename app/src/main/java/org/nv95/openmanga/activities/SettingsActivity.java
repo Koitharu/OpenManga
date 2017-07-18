@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -37,6 +37,7 @@ import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.PreferencesUtils;
 import org.nv95.openmanga.utils.StorageUtils;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.io.File;
 
@@ -122,7 +123,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 }
                 return true;
             case "ccache":
-                new CacheClearTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new CacheClearTask(preference).attach(this).start();
                 return true;
             case "movemanga":
                 if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -153,7 +154,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                         .show();
                 return true;
             case "update":
-                new CheckUpdatesTask(preference).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new CheckUpdatesTask(preference).attach(this).start();
                 return true;
             default:
                 return false;
@@ -285,6 +286,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     try {
                         int size = Integer.valueOf((String) newValue);
                         if (size >= ImageUtils.CACHE_MIN_MB && size <= ImageUtils.CACHE_MAX_MB) {
+                            //noinspection ConstantConditions
                             int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());
                             if (aval != 0 && size >= aval - 50) {
                                 Toast.makeText(preference.getContext(), R.string.too_small_free_space, Toast.LENGTH_SHORT).show();
@@ -326,33 +328,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 p.setSummary(getString(R.string.providers_pref_summary, active, Providers.getCount()));
             }
 
-            new AsyncTask<Void, Void, Float>() {
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    findPreference("ccache").setSummary(R.string.size_calculating);
-                }
-
-                @Override
-                protected Float doInBackground(Void... params) {
-                    try {
-                        return StorageUtils.dirSize(getActivity().getExternalCacheDir()) / 1048576f;
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
-
-                @Override
-                protected void onPostExecute(Float aFloat) {
-                    super.onPostExecute(aFloat);
-                    Preference preference = findPreference("ccache");
-                    if (preference != null) {
-                        preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size),
-                                aFloat == null ? 0 : aFloat));
-                    }
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new CacheSizeTask(findPreference("ccache")).attach((BaseAppActivity) activity).start();
         }
     }
 
@@ -375,46 +351,73 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
     }
 
-    private static class CacheClearTask extends AsyncTask<Void, Void, Void> {
-        private Preference preference;
+    private static class CacheSizeTask extends WeakAsyncTask<Preference, Void, Void, Float> {
 
-        public CacheClearTask(Preference preference) {
-            this.preference = preference;
+        CacheSizeTask(Preference object) {
+            super(object);
         }
 
         @Override
-        protected void onPreExecute() {
-            preference.setSummary(R.string.cache_clearing);
-            super.onPreExecute();
+        protected void onPreExecute(@NonNull Preference preference) {
+            preference.setSummary(R.string.size_calculating);
         }
 
+        @SuppressWarnings("ConstantConditions")
+        @Override
+        protected Float doInBackground(Void... voids) {
+            try {
+                return StorageUtils.dirSize(getObject().getContext().getExternalCacheDir()) / 1048576f;
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(@NonNull Preference preference, Float aFloat) {
+            preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size),
+                    aFloat == null ? 0 : aFloat));
+        }
+    }
+
+    private static class CacheClearTask extends WeakAsyncTask<Preference, Void, Void, Void> {
+
+        CacheClearTask(Preference object) {
+            super(object);
+        }
+
+        @Override
+        protected void onPreExecute(@NonNull Preference preference) {
+            preference.setSummary(R.string.cache_clearing);
+        }
+
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected Void doInBackground(Void... params) {
-            File dir = preference.getContext().getExternalCacheDir();
-            new DirRemoveHelper(dir).run();
+            try {
+                File dir = getObject().getContext().getExternalCacheDir();
+                new DirRemoveHelper(dir).run();
+            } catch (Exception ignored) {
+            }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(@NonNull Preference preference, Void aVoid) {
             preference.setSummary(String.format(preference.getContext().getString(R.string.cache_size), 0f));
-            super.onPostExecute(aVoid);
         }
     }
 
-    private class CheckUpdatesTask extends AsyncTask<Void, Void, AppUpdatesProvider> {
-        private final Preference mPreference;
+    private static class CheckUpdatesTask extends WeakAsyncTask<Preference, Void, Void, AppUpdatesProvider> {
+
         private int mSelected = 0;
 
-        public CheckUpdatesTask(Preference preference) {
-            super();
-            mPreference = preference;
+        CheckUpdatesTask(Preference preference) {
+            super(preference);
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mPreference.setSummary(R.string.wait);
+        protected void onPreExecute(@NonNull Preference preference) {
+            preference.setSummary(R.string.wait);
         }
 
         @Override
@@ -423,23 +426,23 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
 
         @Override
-        protected void onPostExecute(AppUpdatesProvider appUpdatesProvider) {
-            super.onPostExecute(appUpdatesProvider);
+        protected void onPostExecute(@NonNull Preference preference, AppUpdatesProvider appUpdatesProvider) {
             if (appUpdatesProvider.isSuccess()) {
+                final Context c = preference.getContext();
                 long lastCheck = System.currentTimeMillis();
-                new ScheduleHelper(SettingsActivity.this).actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
-                mPreference.setSummary(getString(R.string.last_update_check,
-                        lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
+                new ScheduleHelper(c).actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
+                preference.setSummary(c.getString(R.string.last_update_check,
+                        lastCheck == -1 ? c.getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
                 final AppUpdatesProvider.AppUpdateInfo[] updates = appUpdatesProvider.getLatestUpdates();
                 if (updates.length == 0) {
-                    Toast.makeText(SettingsActivity.this, R.string.no_app_updates, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c, R.string.no_app_updates, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 final String[] titles = new String[updates.length];
                 for (int i = 0; i < titles.length; i++) {
                     titles[i] = updates[i].getVersionName();
                 }
-                new AlertDialog.Builder(SettingsActivity.this)
+                new AlertDialog.Builder(c)
                         .setTitle(R.string.update)
                         .setSingleChoiceItems(titles, 0, new DialogInterface.OnClickListener() {
                             @Override
@@ -451,13 +454,13 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                         .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                UpdateService.start(getApplicationContext(), updates[mSelected].getUrl());
+                                UpdateService.start(c.getApplicationContext(), updates[mSelected].getUrl());
                             }
                         })
                         .setCancelable(true)
                         .create().show();
             } else {
-                mPreference.setSummary(R.string.error);
+                preference.setSummary(R.string.error);
             }
         }
     }

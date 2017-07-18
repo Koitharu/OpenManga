@@ -14,6 +14,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +34,7 @@ import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.PreferencesUtils;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -96,7 +98,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         p.setSelectable(false);
-                        new DetachTask(p).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, devId);
+                        new DetachTask(p).attach(SyncSettingsActivity.this).start(devId);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)
@@ -370,18 +372,17 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         }
     }
 
-    private static class DetachTask extends AsyncTask<Integer, Void, RESTResponse> {
-
-        private final WeakReference<Preference> mPrefRef;
+    private static class DetachTask extends WeakAsyncTask<Preference,Integer, Void, RESTResponse> {
 
         DetachTask(Preference preference) {
-            mPrefRef = new WeakReference<>(preference);
+            super(preference);
         }
 
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected RESTResponse doInBackground(Integer... integers) {
             try {
-                return SyncHelper.get(mPrefRef.get().getContext()).detachDevice(integers[0]);
+                return SyncHelper.get(getObject().getContext()).detachDevice(integers[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 return RESTResponse.fromThrowable(e);
@@ -389,12 +390,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         }
 
         @Override
-        protected void onPostExecute(RESTResponse restResponse) {
-            super.onPostExecute(restResponse);
-            Preference p = mPrefRef.get();
-            if (p == null) {
-                return;
-            }
+        protected void onPostExecute(@NonNull Preference p, RESTResponse restResponse) {
             if (restResponse.isSuccess()) {
                 p.setEnabled(false);
                 p.setSummary(R.string.device_detached);

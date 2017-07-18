@@ -1,6 +1,5 @@
 package org.nv95.openmanga.activities;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -8,10 +7,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.CallSuper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -20,7 +17,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -36,6 +32,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -64,7 +61,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     private boolean mHomeAsUpEnabled = false;
     private int mTheme = 0;
     @Nullable
-    private ArrayList<AsyncTask> mLoaders;
+    private ArrayList<WeakReference<AsyncTask>> mLoaders;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -237,22 +234,8 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         showToast(getString(text), gravity, delay);
     }
 
-    @Deprecated
-    public boolean checkConnection() {
-        return NetworkUtils.checkConnection(this);
-    }
-
-    public boolean checkConnectionWithToast() {
-        if (checkConnection()) {
-            return true;
-        } else {
-            Toast.makeText(this, R.string.no_network_connection, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
     public boolean checkConnectionWithSnackbar(View view) {
-        if (checkConnection()) {
+        if (NetworkUtils.checkConnection(this)) {
             return true;
         } else {
             Snackbar.make(view, R.string.no_network_connection, Snackbar.LENGTH_SHORT).show();
@@ -260,46 +243,25 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         }
     }
 
-    protected AsyncTask registerLoaderTask(AsyncTask task) {
+    public void registerLoaderTask(AsyncTask task) {
         if (mLoaders == null) {
             mLoaders = new ArrayList<>();
         }
-        mLoaders.add(task);
-        return task;
-    }
-
-    protected void unregisterLoaderTask(AsyncTask task) {
-        if (mLoaders != null) {
-            mLoaders.remove(task);
-        }
+        mLoaders.add(new WeakReference<>(task));
     }
 
     @Override
     protected void onDestroy() {
         if (mLoaders != null) {
-            for (AsyncTask o : mLoaders) {
-                if (o != null && o.getStatus() != AsyncTask.Status.FINISHED) {
-                    o.cancel(true);
+            for (WeakReference<AsyncTask> o : mLoaders) {
+                AsyncTask task = o.get();
+                if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+                    task.cancel(true);
                 }
             }
         }
         mLoaders = null;
         super.onDestroy();
-    }
-
-    public boolean checkConnectionWithDialog(DialogInterface.OnDismissListener onDismissListener) {
-        if (checkConnection()) {
-            return true;
-        } else {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.no_network_connection)
-                    .setTitle(R.string.error)
-                    .setNegativeButton(R.string.close, null)
-                    .setOnDismissListener(onDismissListener)
-                    .setCancelable(true)
-                    .create().show();
-            return false;
-        }
     }
 
     boolean showcase(final View view, @StringRes int title, @StringRes int body) {
@@ -352,42 +314,5 @@ public abstract class BaseAppActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
-
-    protected abstract class LoaderTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
-
-        @CallSuper
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            registerLoaderTask(this);
-        }
-
-        @CallSuper
-        @Override
-        protected void onPostExecute(Result result) {
-            super.onPostExecute(result);
-            unregisterLoaderTask(this);
-        }
-
-        @CallSuper
-        @Override
-        protected void onCancelled(Result result) {
-            super.onCancelled(result);
-            unregisterLoaderTask(this);
-        }
-
-        @CallSuper
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            unregisterLoaderTask(this);
-        }
-
-        @SafeVarargs
-        @MainThread
-        public final AsyncTask<Params, Progress, Result> startLoading(Params... params) {
-            return executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
-        }
     }
 }

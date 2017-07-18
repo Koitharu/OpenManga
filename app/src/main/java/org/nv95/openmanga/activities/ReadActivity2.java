@@ -1,5 +1,6 @@
 package org.nv95.openmanga.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,9 +8,11 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +55,9 @@ import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.StorageUtils;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.io.File;
 import java.util.List;
@@ -121,7 +126,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             }
         }
         updateConfig();
-        new ChapterLoadTask(page).startLoading(mManga.getChapters().get(mChapter));
+        new ChapterLoadTask(this, page).attach(this).start(mManga.getChapters().get(mChapter));
     }
 
     @Override
@@ -173,7 +178,8 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 break;
             case PermissionsHelper.REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK) {
-                    new ImageSaveTask().startLoading(mAdapter.getItem(mReader.getCurrentPosition()));
+                    new ImageSaveTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            mAdapter.getItem(mReader.getCurrentPosition()));
                 } else {
                     Snackbar.make(mReader, R.string.dir_no_access, Snackbar.LENGTH_SHORT).show();
                 }
@@ -216,7 +222,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
 						t.setGravity(Gravity.TOP, 0, 0);
 						t.show();
-						new ChapterLoadTask(0).startLoading(mManga.getChapters().get(mChapter));
+						new ChapterLoadTask(ReadActivity2.this,0)
+                                .attach(ReadActivity2.this)
+                                .start(mManga.getChapters().get(mChapter));
 						return true;
 					}
 				} else {
@@ -229,7 +237,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
 						t.setGravity(Gravity.TOP, 0, 0);
 						t.show();
-						new ChapterLoadTask(-1).startLoading(mManga.getChapters().get(mChapter));
+						new ChapterLoadTask(ReadActivity2.this, -1)
+                                .attach(ReadActivity2.this)
+                                .start(mManga.getChapters().get(mChapter));
 						return true;
 					}
 				} else {
@@ -290,11 +300,11 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 DownloadService.start(this, mManga);
                 break;
             case R.id.action_save_more:
-                new LoadSourceTask().startLoading(mManga);
+                new LoadSourceTask(this).attach(this).start(mManga);
                 break;
             case R.id.action_save_image:
                 if (PermissionsHelper.accessCommonDir(this, Environment.DIRECTORY_PICTURES)) {
-                    new ImageSaveTask().startLoading(mAdapter.getItem(pos));
+                    new ImageSaveTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mAdapter.getItem(pos));
                 }
                 break;
             case R.id.menuitem_thumblist:
@@ -392,7 +402,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             public void onClick(DialogInterface dialog, int which) {
                 mMenuPanel.hide();
                 mChapter = which;
-                new ChapterLoadTask(0).startLoading(mManga.getChapters().get(mChapter));
+                new ChapterLoadTask(ReadActivity2.this,0)
+                        .attach(ReadActivity2.this)
+                        .start(mManga.getChapters().get(mChapter));
                 dialog.dismiss();
             }
         });
@@ -416,6 +428,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mOverScrollFrame.setVisibility(View.GONE);
     }
 
+    @SuppressLint("RtlHardcoded")
     @Override
     public void onOverScrollStarted(int direction) {
         if (getRealDirection(direction) == -1) {
@@ -462,7 +475,9 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mOverScrollFrame.setVisibility(View.GONE);
         int rd = getRealDirection(direction);
         mChapter += rd;
-        new ChapterLoadTask(rd == -1 ? -1 : 0).startLoading(mManga.getChapters().get(mChapter));
+        new ChapterLoadTask(this, rd == -1 ? -1 : 0)
+                .attach(this)
+                .start(mManga.getChapters().get(mChapter));
     }
 
     private int getRealDirection(int direction) {
@@ -487,41 +502,44 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
     }
 
-    private class ChapterLoadTask extends LoaderTask<MangaChapter,Void,List<MangaPage>> implements DialogInterface.OnCancelListener {
+    private static class ChapterLoadTask extends WeakAsyncTask<ReadActivity2, MangaChapter,Void,List<MangaPage>> implements DialogInterface.OnCancelListener {
 
         private final int mPageIndex;
 
-        private ChapterLoadTask(int page) {
+        ChapterLoadTask(ReadActivity2 object, int page) {
+            super(object);
             mPageIndex = page;
         }
 
         @Override
-        protected void onPreExecute() {
-            mProgressFrame.setVisibility(View.VISIBLE);
-            mAdapter.getLoader().cancelAll();
-            mAdapter.getLoader().setEnabled(false);
-            super.onPreExecute();
+        protected void onPreExecute(@NonNull ReadActivity2 a) {
+            a.mProgressFrame.setVisibility(View.VISIBLE);
+            a.mAdapter.getLoader().cancelAll();
+            a.mAdapter.getLoader().setEnabled(false);
         }
 
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected List<MangaPage> doInBackground(MangaChapter... mangaChapters) {
             try {
-                MangaProvider provider = MangaProviderManager.instanceProvider(ReadActivity2.this, mangaChapters[0].provider);
+                MangaProvider provider = MangaProviderManager.instanceProvider(getObject(), mangaChapters[0].provider);
                 return provider.getPages(mangaChapters[0].readLink);
             } catch (Exception ignored) {
                 return null;
             }
         }
 
-        private void onFailed() {
-            new AlertDialog.Builder(ReadActivity2.this)
-                    .setMessage(checkConnection() ? R.string.loading_error : R.string.no_network_connection)
+        private void onFailed(@NonNull final ReadActivity2 a) {
+            new AlertDialog.Builder(a)
+                    .setMessage(NetworkUtils.checkConnection(a) ? R.string.loading_error : R.string.no_network_connection)
                     .setTitle(R.string.app_name)
                     .setOnCancelListener(this)
                     .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new ChapterLoadTask(mPageIndex).startLoading(mManga.getChapters().get(mChapter));
+                            new ChapterLoadTask(a, mPageIndex)
+                                    .attach(a)
+                                    .start(a.mManga.getChapters().get(a.mChapter));
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -535,52 +553,58 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
 
         @Override
-        protected void onPostExecute(List<MangaPage> mangaPages) {
-            super.onPostExecute(mangaPages);
+        protected void onPostExecute(@NonNull ReadActivity2 a, List<MangaPage> mangaPages) {
             if (mangaPages == null) {
-                onFailed();
+                onFailed(a);
                 return;
             }
-            mAdapter.setPages(mangaPages);
-            mAdapter.notifyDataSetChanged();
-            int pos = mPageIndex == -1 ? mAdapter.getItemCount() - 1 : mPageIndex;
-            mReader.scrollToPosition(pos);
-            mAdapter.getLoader().setEnabled(true);
-            mAdapter.notifyDataSetChanged();
-            mMenuPanel.onChapterChanged(mManga.chapters.get(mChapter) ,mangaPages.size());
-            mProgressFrame.setVisibility(View.GONE);
-            showcase(mMenuButton, R.string.menu, R.string.tip_reader_menu);
+            a.mAdapter.setPages(mangaPages);
+            a.mAdapter.notifyDataSetChanged();
+            int pos = mPageIndex == -1 ? a.mAdapter.getItemCount() - 1 : mPageIndex;
+            a.mReader.scrollToPosition(pos);
+            a.mAdapter.getLoader().setEnabled(true);
+            a.mAdapter.notifyDataSetChanged();
+            a.mMenuPanel.onChapterChanged(a.mManga.chapters.get(a.mChapter) ,mangaPages.size());
+            a.mProgressFrame.setVisibility(View.GONE);
+            a.showcase(a.mMenuButton, R.string.menu, R.string.tip_reader_menu);
         }
 
         @Override
         public void onCancel(DialogInterface dialogInterface) {
-            if (mReader.getItemCount() == 0) {
-                ReadActivity2.this.finish();
+            ReadActivity2 a = getObject();
+            if (a != null && a.mReader.getItemCount() == 0) {
+                a.finish();
             }
         }
     }
 
-    private class ImageSaveTask extends LoaderTask<PageWrapper,Void,File> {
+    private static class ImageSaveTask extends WeakAsyncTask<ReadActivity2, PageWrapper,Void,File> {
 
-        @Override
-        protected void onPreExecute() {
-            mProgressFrame.setVisibility(View.VISIBLE);
-            mMenuPanel.hide();
-            super.onPreExecute();
+        ImageSaveTask(ReadActivity2 object) {
+            super(object);
         }
 
+        @Override
+        protected void onPreExecute(@Nullable ReadActivity2 a) {
+            if (a != null) {
+                a.mProgressFrame.setVisibility(View.VISIBLE);
+                a.mMenuPanel.hide();
+            }
+        }
+
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected File doInBackground(PageWrapper... pageWrappers) {
             File dest;
             try {
                 MangaProvider provider;
-                provider = MangaProviderManager.instanceProvider(ReadActivity2.this, pageWrappers[0].page.provider);
+                provider = MangaProviderManager.instanceProvider(getObject(), pageWrappers[0].page.provider);
                 String url = provider.getPageImage(pageWrappers[0].page);
                 if (pageWrappers[0].isLoaded()) {
                     //noinspection ConstantConditions
                     dest = new File(pageWrappers[0].getFilename());
                 } else {
-                    dest = new File(getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
+                    dest = new File(getObject().getExternalFilesDir("temp"), String.valueOf(url.hashCode()));
 
                     final SimpleDownload dload = new SimpleDownload(url, dest);
                     dload.run();
@@ -601,58 +625,65 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
 
         @Override
-        protected void onPostExecute(final File file) {
-            super.onPostExecute(file);
-            mProgressFrame.setVisibility(View.GONE);
+        protected void onPostExecute(@Nullable final ReadActivity2 a, final File file) {
+            if (a == null) {
+                return;
+            }
+            a.mProgressFrame.setVisibility(View.GONE);
             if (file != null && file.exists()) {
-                StorageUtils.addToGallery(ReadActivity2.this, file);
-                Snackbar.make(mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
+                StorageUtils.addToGallery(a, file);
+                Snackbar.make(a.mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
                         .setAction(R.string.action_share, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                new ContentShareHelper(ReadActivity2.this).shareImage(file);
+                                new ContentShareHelper(a).shareImage(file);
                             }
                         })
                         .show();
             } else {
-                Snackbar.make(mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(a.mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
             }
 
         }
     }
 
-    private class LoadSourceTask extends LoaderTask<MangaInfo,Void,MangaSummary> {
+    private static class LoadSourceTask extends WeakAsyncTask<ReadActivity2, MangaInfo,Void,MangaSummary> {
+
+        LoadSourceTask(ReadActivity2 object) {
+            super(object);
+        }
 
         @Override
-        protected void onPreExecute() {
-            mProgressFrame.setVisibility(View.VISIBLE);
-            super.onPreExecute();
+        protected void onPreExecute(@NonNull ReadActivity2 a) {
+            a.mProgressFrame.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected MangaSummary doInBackground(MangaInfo... params) {
-            return LocalMangaProvider.getInstance(ReadActivity2.this)
-                    .getSource(params[0]);
+            try {
+                return LocalMangaProvider.getInstance(getObject())
+                        .getSource(params[0]);
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         @Override
-        protected void onPostExecute(MangaSummary sourceManga) {
-            super.onPostExecute(sourceManga);
-            mProgressFrame.setVisibility(View.GONE);
+        protected void onPostExecute(@NonNull ReadActivity2 a, MangaSummary sourceManga) {
+            a.mProgressFrame.setVisibility(View.GONE);
             if (sourceManga == null) {
-                Snackbar.make(mContainer, R.string.loading_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(a.mContainer, R.string.loading_error, Snackbar.LENGTH_SHORT)
                         .show();
                 return;
             }
-            ChaptersList newChapters = sourceManga.chapters.complementByName(mManga.chapters);
-            if (sourceManga.chapters.size() <= mManga.chapters.size()) {
-                Snackbar.make(mContainer, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
+            ChaptersList newChapters = sourceManga.chapters.complementByName(a.mManga.chapters);
+            if (sourceManga.chapters.size() <= a.mManga.chapters.size()) {
+                Snackbar.make(a.mContainer, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
                         .show();
             } else {
                 sourceManga.chapters = newChapters;
-                DownloadService.start(ReadActivity2.this, sourceManga, R.string.action_save_add);
+                DownloadService.start(a, sourceManga, R.string.action_save_add);
             }
         }
-
     }
 }

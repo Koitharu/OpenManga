@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,7 @@ import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.providers.staff.Providers;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.util.ArrayDeque;
 
@@ -82,7 +84,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mSearchInput = (SearchInput) findViewById(R.id.searchInput);
         mFrameSearch = (FrameLayout) findViewById(R.id.search_frame);
-        RecyclerView recyclerViewSearch = (RecyclerView) mFrameSearch.findViewById(R.id.recyclerViewSearch);
+        RecyclerView recyclerViewSearch = mFrameSearch.findViewById(R.id.recyclerViewSearch);
 
         mFrameSearch.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
@@ -220,7 +222,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
 
     @Override
     public boolean onLoadMore() {
-        new SearchTask().startLoading();
+        new SearchTask(this).attach(this).start();
         return true;
     }
 
@@ -243,7 +245,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
                 mProviders.add(HistoryProvider.getProviderSummary(this));
                 mProviders.add(prov);
             }
-            new SearchTask().startLoading();
+            new SearchTask(this).start();
         } else {
             mProviders.addAll(mProviderManager.getEnabledOrderedProviders());
             if (prov != null) {
@@ -263,7 +265,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
                 } else {
                     mResultsAdapter.hideFooter();
                 }
-                new SearchTask().startLoading();
+                new SearchTask(this).attach(this).start();
             }
             mStage = 1;
         }
@@ -321,25 +323,30 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mHistoryAdapter.requeryAsync(text.toString());
     }
 
-    private class SearchTask extends LoaderTask<Void,Void,MangaList> {
+    private static class SearchTask extends WeakAsyncTask<SearchActivity, Void,Void,MangaList> {
 
         @Nullable
         private final ProviderSummary mSummary;
 
-        SearchTask() {
-            if (mCurrentProvider == null) {
-                mSummary = mProviders.pop();
-                mCurrentProvider = mProviderManager.instanceProvider(mSummary.aClass);
-                mPage = 0;
+
+        SearchTask(SearchActivity a) {
+            super(a);
+            if (a.mCurrentProvider == null) {
+                mSummary = a.mProviders.pop();
+                a.mCurrentProvider = a.mProviderManager.instanceProvider(mSummary.aClass);
+                a.mPage = 0;
             } else {
                 mSummary = null;
             }
         }
 
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected MangaList doInBackground(Void... params) {
             try {
-                return mCurrentProvider.search(mQuery, mPage);
+                return getObject().mCurrentProvider.search(
+                        getObject().mQuery,
+                        getObject().mPage);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -347,42 +354,41 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         }
 
         @Override
-        protected void onPostExecute(MangaList mangaInfos) {
-            super.onPostExecute(mangaInfos);
-            mResultsAdapter.loadingComplete();
+        protected void onPostExecute(@NonNull SearchActivity a, MangaList mangaInfos) {
+            a.mResultsAdapter.loadingComplete();
             if (mangaInfos != null && !mangaInfos.isEmpty()) {
-                mPage++;
-                mResultsAdapter.append(mSummary, mangaInfos);
-                if (mProgressBar.getVisibility() == View.VISIBLE) {
-                    AnimUtils.crossfade(mProgressBar, null);
-                    mResultsAdapter.setFooterProgress();
+                a.mPage++;
+                a.mResultsAdapter.append(mSummary, mangaInfos);
+                if (a.mProgressBar.getVisibility() == View.VISIBLE) {
+                    AnimUtils.crossfade(a.mProgressBar, null);
+                    a.mResultsAdapter.setFooterProgress();
                 }
-                mResultsAdapter.onScrolled(mRecyclerView);
+                a.mResultsAdapter.onScrolled(a.mRecyclerView);
             } else {
                 //nothing found
-                if (mProviders.isEmpty()) {
+                if (a.mProviders.isEmpty()) {
                     //no more providers
-                    if (mStage == 0) {
-                        if (mResultsAdapter.hasItems()) {
-                            mResultsAdapter.setFooterButton(getString(R.string.search_on_another_sources));
+                    if (a.mStage == 0) {
+                        if (a.mResultsAdapter.hasItems()) {
+                            a.mResultsAdapter.setFooterButton(a.getString(R.string.search_on_another_sources));
                         } else {
-                            onMoreButtonClick();
+                            a.onMoreButtonClick();
                         }
                     } else {
-                        if (mResultsAdapter.hasItems()) {
-                            mResultsAdapter.hideFooter();
+                        if (a.mResultsAdapter.hasItems()) {
+                            a.mResultsAdapter.hideFooter();
                         } else {
-                            AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+                            AnimUtils.crossfade(a.mProgressBar, a.mTextViewHolder);
                         }
                     }
                 } else {
                     //next provider
-                    mCurrentProvider = null;
-                    if (mResultsAdapter.hasItems()) {
-                        mResultsAdapter.setFooterProgress();
-                        mResultsAdapter.onScrolled(mRecyclerView);
+                    a.mCurrentProvider = null;
+                    if (a.mResultsAdapter.hasItems()) {
+                        a.mResultsAdapter.setFooterProgress();
+                        a.mResultsAdapter.onScrolled(a.mRecyclerView);
                     } else {
-                        onLoadMore();
+                        a.onLoadMore();
                     }
                 }
             }

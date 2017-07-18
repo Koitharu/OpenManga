@@ -1,8 +1,8 @@
 package org.nv95.openmanga.activities;
 
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +23,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.io.IOException;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class NewChaptersActivity extends BaseAppActivity {
             }
         }).attachToRecyclerView(mRecyclerView);
 
-        new LoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadTask(this).attach(this).start();
     }
 
     @Override
@@ -104,19 +105,23 @@ public class NewChaptersActivity extends BaseAppActivity {
         }
     }
 
-    private class LoadTask extends LoaderTask<Void,Void,MangaList> {
+    private static class LoadTask extends WeakAsyncTask<NewChaptersActivity, Void,Void,MangaList> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
+        LoadTask(NewChaptersActivity object) {
+            super(object);
         }
 
         @Override
+        protected void onPreExecute(@NonNull NewChaptersActivity object) {
+            object.mProgressBar.setVisibility(View.VISIBLE);
+        }
+
+
+        @Override
         protected MangaList doInBackground(Void... params) {
-            final FavouritesProvider favs = FavouritesProvider.getInstance(NewChaptersActivity.this);
-            final NewChaptersProvider news = NewChaptersProvider.getInstance(NewChaptersActivity.this);
             try {
+                final FavouritesProvider favs = FavouritesProvider.getInstance(getObject());
+                final NewChaptersProvider news = NewChaptersProvider.getInstance(getObject());
                 news.checkForNewChapters();
                 MangaList mangas = favs.getList(0, 0, 0);
                 Map<Integer, Integer> updates =  news.getLastUpdates();
@@ -131,25 +136,24 @@ public class NewChaptersActivity extends BaseAppActivity {
                 }
                 return res;
             } catch (IOException e) {
-                FileLogger.getInstance().report(e);
+                FileLogger.getInstance().report("CHUPD", e);
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(MangaList mangaInfos) {
-            super.onPostExecute(mangaInfos);
+        protected void onPostExecute(@NonNull NewChaptersActivity activity, MangaList mangaInfos) {
             if (mangaInfos == null) {
-                AnimUtils.crossfade(mProgressBar, mTextViewHolder);
-                Toast.makeText(NewChaptersActivity.this, R.string.error, Toast.LENGTH_SHORT).show();
+                AnimUtils.crossfade(activity.mProgressBar, activity.mTextViewHolder);
+                Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show();
             } else {
                 if (mangaInfos.isEmpty()) {
-                    AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+                    AnimUtils.crossfade(activity.mProgressBar, activity.mTextViewHolder);
                 } else {
-                    mList.clear();
-                    mList.addAll(mangaInfos);
-                    mAdapter.notifyDataSetChanged();
-                    AnimUtils.crossfade(mProgressBar, mRecyclerView);
+                    activity.mList.clear();
+                    activity.mList.addAll(mangaInfos);
+                    activity.mAdapter.notifyDataSetChanged();
+                    AnimUtils.crossfade(activity.mProgressBar, activity.mRecyclerView);
                 }
             }
         }
