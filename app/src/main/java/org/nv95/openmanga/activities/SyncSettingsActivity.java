@@ -284,12 +284,22 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
 
         @Override
         public void onClick(View view) {
+            final String login = mEditLogin.getText().toString().trim();
+            final String password = mEditPassword.getText().toString().trim();
+            if (login.isEmpty()) {
+                LayoutUtils.showSoftKeyboard(mEditLogin);
+                return;
+            }
+            if (password.isEmpty()) {
+                LayoutUtils.showSoftKeyboard(mEditPassword);
+                return;
+            }
             LayoutUtils.hideSoftKeyboard(mEditPassword);
             new AuthTask((SyncSettingsActivity) getActivity(), view.getId() == R.id.buttonRegister)
                     .executeOnExecutor(
                             AsyncTask.THREAD_POOL_EXECUTOR,
-                            mEditLogin.getText().toString().trim(),
-                            mEditPassword.getText().toString().trim()
+                            login,
+                            password
                     );
         }
 
