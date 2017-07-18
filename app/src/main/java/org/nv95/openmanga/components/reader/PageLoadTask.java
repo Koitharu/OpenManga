@@ -125,17 +125,19 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        mPageWrapper.mState = PageWrapper.STATE_LOADED;
         if (o == null) {
+            mPageWrapper.mState = PageWrapper.STATE_QUEUED;
             if (mListener != null) {
                 mListener.onLoadingFail(mPageWrapper, mIsShadow);
             }
         } else if (o instanceof String) {
+            mPageWrapper.mState = PageWrapper.STATE_LOADED;
             mPageWrapper.mFilename = (String) o;
             if (mListener != null) {
                 mListener.onLoadingComplete(mPageWrapper, mIsShadow);
             }
         } else if (o instanceof Exception) {
+            mPageWrapper.mState = PageWrapper.STATE_QUEUED;
             mPageWrapper.mError = (Exception) o;
             if (mListener != null) {
                 mListener.onLoadingFail(mPageWrapper, mIsShadow);
