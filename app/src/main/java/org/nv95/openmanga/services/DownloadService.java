@@ -169,7 +169,7 @@ public class DownloadService extends Service {
         }
 
         @MainThread
-        public void setPaused(boolean paused) {
+        void setPaused(boolean paused) {
             mPaused.set(paused);
             mNotificationHelper
                     .actionSecondary(PendingIntent.getService(
@@ -213,63 +213,76 @@ public class DownloadService extends Service {
             MangaPage o1;
             //all chapters
             for (int i=0; i<mDownload.max; i++) {
-                o = mDownload.chapters.get(i);
-                pages = provider.getPages(o.readLink);
-                if (pages == null) { //всё не совсем плохо
-                    //try again
+                try {
+                    o = mDownload.chapters.get(i);
                     pages = provider.getPages(o.readLink);
-                    if (pages == null) {
-                        //wait for resume or cancelled
-                        onError();
-                        //go to previous
-                        i--;
-                        if (!isCancelled()) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-                //add chapter to db
-                o.id = store.pushChapter(o, mangaId);
-                if (o.id == 0) { //всё очень плохо
-                    return null;
-                }
-                publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
-                //time for saving pages
-                for (int j=0; j<pages.size(); j++) {
-                    o1 = pages.get(j);
-                    o1.path = provider.getPageImage(o1);
-                    o1.id = store.pushPage(o1, mangaId, o.id);
-                    if (o1.id == 0) {
-                        //error(
+                    if (pages == null) { //всё не совсем плохо
                         //try again
-                        o1.id = store.pushPage(o1, mangaId, o.id);
-                        if (o1.id == 0) {
+                        pages = provider.getPages(o.readLink);
+                        if (pages == null) {
+                            //wait for resume or cancelled
                             onError();
-                            j--;
+                            //go to previous
+                            i--;
                             if (!isCancelled()) {
                                 continue;
                             } else {
-                                store.dropChapter(mangaId, o.id);
                                 break;
                             }
                         }
                     }
-                    publishProgress(PROGRESS_SECONDARY, j, pages.size());
-                    while(mPaused.get() && !isCancelled()) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
+                    //add chapter to db
+                    o.id = store.pushChapter(o, mangaId);
+                    if (o.id == 0) { //всё очень плохо
+                        return null;
+                    }
+                    publishProgress(PROGRESS_PRIMARY, i, mDownload.max);
+                    //time for saving pages
+                    for (int j=0; j<pages.size(); j++) {
+                        o1 = pages.get(j);
+                        o1.path = provider.getPageImage(o1);
+                        o1.id = store.pushPage(o1, mangaId, o.id);
+                        if (o1.id == 0) {
+                            //error(
+                            //try again
+                            o1.id = store.pushPage(o1, mangaId, o.id);
+                            if (o1.id == 0) {
+                                onError();
+                                j--;
+                                if (!isCancelled()) {
+                                    continue;
+                                } else {
+                                    store.dropChapter(mangaId, o.id);
+                                    break;
+                                }
+                            }
+                        }
+                        publishProgress(PROGRESS_SECONDARY, j, pages.size());
+                        while(mPaused.get() && !isCancelled()) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                break;
+                            }
+                        }
+                        if (isCancelled()) {
+                            store.dropChapter(mangaId, o.id);
                             break;
                         }
                     }
-                    if (isCancelled()) {
-                        store.dropChapter(mangaId, o.id);
-                        break;
+                    publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    i--;
+                    onError();
+                    while(mPaused.get() && !isCancelled()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ignored) {
+                            break;
+                        }
                     }
                 }
-                publishProgress(PROGRESS_SECONDARY, pages.size(), pages.size());
             }
             publishProgress(PROGRESS_PRIMARY, mDownload.max, mDownload.max);
             mDownload.id = mangaId;
