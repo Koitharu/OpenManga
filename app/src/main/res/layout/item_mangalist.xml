@@ -5,12 +5,12 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="8dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -27,10 +27,10 @@
 
             <TextView
                 android:id="@+id/textView_title"
-                android:layout_marginTop="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@id/imageView"
                 android:layout_toRightOf="@id/imageView"
                 android:ellipsize="end"
@@ -98,9 +98,19 @@
                 android:layout_below="@id/textView_summary"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
-                android:paddingTop="2dp"
                 android:layout_toEndOf="@id/ratingView"
-                android:layout_toRightOf="@id/ratingView" />
+                android:layout_toRightOf="@id/ratingView"
+                android:paddingTop="2dp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/buttonRead"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/read" />
 
 
         </RelativeLayout>

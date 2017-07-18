@@ -2,12 +2,14 @@ package org.nv95.openmanga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.QuickReadTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
 
@@ -64,6 +67,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         MangaViewHolder holder = new MangaViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), mOnItemLongClickListener);
         holder.setListener(mChoiceController);
+
         return holder;
     }
 
@@ -80,29 +84,41 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         @Nullable
         private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
-        private TextView textViewTitle;
-        private TextView textViewSubtitle;
-        private TextView textViewSummary;
-        private TextView textViewBadge;
-        private RatingView ratingView;
-        private ImageView imageView;
+        private final TextView textViewTitle;
+        private final TextView textViewSubtitle;
+        private final TextView textViewSummary;
+        private final TextView textViewBadge;
+        private final RatingView ratingView;
+        private final ImageView imageView;
         private final ImageView imageViewStatus;
+        @Nullable
+        private final Button buttonRead;
         private MangaInfo mData;
         @Nullable
         private OnHolderClickListener mListener;
 
-        public MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
+        MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);
-            textViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
-            textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
-            textViewSummary = (TextView) itemView.findViewById(R.id.textView_summary);
-            textViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
-            ratingView = (RatingView) itemView.findViewById(R.id.ratingView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            imageViewStatus = (ImageView) itemView.findViewById(R.id.imageView_status);
+            textViewTitle = itemView.findViewById(R.id.textView_title);
+            textViewSubtitle = itemView.findViewById(R.id.textView_subtitle);
+            textViewSummary = itemView.findViewById(R.id.textView_summary);
+            textViewBadge = itemView.findViewById(R.id.textView_badge);
+            ratingView = itemView.findViewById(R.id.ratingView);
+            imageView = itemView.findViewById(R.id.imageView);
+            buttonRead = itemView.findViewById(R.id.buttonRead);
+            imageViewStatus = itemView.findViewById(R.id.imageView_status);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
             itemView.setOnLongClickListener(this);
+            if (buttonRead != null) {
+                buttonRead.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new QuickReadTask(view.getContext())
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mData);
+                    }
+                });
+            }
         }
 
 
