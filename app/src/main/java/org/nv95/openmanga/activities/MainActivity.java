@@ -729,10 +729,15 @@ public class MainActivity extends BaseAppActivity implements
                 if (info.provider.equals(LocalMangaProvider.class)) {
                     provider = LocalMangaProvider.getInstance(MainActivity.this);
                 } else {
-                    if (!checkConnection()) {
-                        return new Pair<>(1, null);
+                    if (!NetworkUtils.checkConnection(MainActivity.this)) {
+                        provider = LocalMangaProvider.getInstance(MainActivity.this);
+                        info = ((LocalMangaProvider)provider).getLocalManga(info);
+                        if (info.provider != LocalMangaProvider.class) {
+                            return new Pair<>(1, null);
+                        }
+                    } else {
+                        provider = MangaProviderManager.instanceProvider(MainActivity.this, info.provider);
                     }
-                    provider = MangaProviderManager.instanceProvider(MainActivity.this, info.provider);
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
                 intent = new Intent(MainActivity.this, ReadActivity2.class);

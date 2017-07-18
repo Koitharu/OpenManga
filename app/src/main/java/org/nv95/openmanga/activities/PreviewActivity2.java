@@ -45,6 +45,7 @@ import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.List;
 
@@ -132,7 +133,13 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             }
         });
     
-        mManga = new MangaSummary(new MangaInfo(getIntent().getExtras()));
+        MangaInfo mangaInfo = new MangaInfo(getIntent().getExtras());
+        if (mangaInfo.provider != LocalMangaProvider.class && !NetworkUtils.checkConnection(this)) {
+            mManga = LocalMangaProvider.getInstance(this).getLocalManga(mangaInfo);
+            Snackbar.make(mViewPager, R.string.no_network_connection, Snackbar.LENGTH_SHORT).show();
+        } else {
+            mManga = new MangaSummary(mangaInfo);
+        }
         ImageUtils.setImage(mImageView, mManga.preview);
         mTextViewTitle.setText(mManga.name);
         mTextViewSummary.setText(mManga.genres);

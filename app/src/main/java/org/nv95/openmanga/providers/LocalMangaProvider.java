@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.LocalMangaInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -319,5 +320,25 @@ public class LocalMangaProvider extends MangaProvider {
                 Languages.MULTI,
                 0
         );
+    }
+
+    public boolean has(MangaInfo mangaInfo) {
+        return StorageHelper.getRowCount(
+                mStore.getDatabase(false),
+                MangaStore.TABLE_MANGAS,
+                "id=" + mangaInfo.id
+        ) != 0;
+    }
+
+    public MangaSummary getLocalManga(MangaInfo manga) {
+        MangaSummary res = new MangaSummary(manga);
+        if (!has(manga)) {
+            return res;
+        }
+        res.provider = LocalMangaProvider.class;
+        File root = MangaStore.getMangaDir(mContext, mStore.getDatabase(false), manga.id);
+        res.path = root.getPath();
+        res.preview = new File(root, "cover").getPath();
+        return res;
     }
 }
