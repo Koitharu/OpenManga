@@ -64,6 +64,18 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             case "sync.start":
                 SyncService.start(this);
                 return true;
+            case "sync.username":
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.logout_confirm)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new LogoutTask(SyncSettingsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .create().show();
+                return true;
             default:
                 try {
                     if (key.startsWith("sync.dev")) {
@@ -167,6 +179,10 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
 
             PreferencesUtils.bindPreferenceSummary(findPreference("sync.interval"));
 
+            p = findPreference("sync.username");
+            PreferencesUtils.bindPreferenceSummary(p);
+            p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) context);
+
             if (NetworkUtils.checkConnection(context)) {
                 new LoadDevicesTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -186,12 +202,12 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             super.onStop();
         }
 
-        private static class LoadDevicesTask extends AsyncTask<Void,Void,ArrayList<SyncDevice>> {
+        private static class LoadDevicesTask extends AsyncTask<Void, Void, ArrayList<SyncDevice>> {
 
             private final WeakReference<SyncSettingsFragment> mFragmentRef;
 
-            public LoadDevicesTask(SyncSettingsFragment fragment) {
-                mFragmentRef = new WeakReference<SyncSettingsFragment>(fragment);
+            LoadDevicesTask(SyncSettingsFragment fragment) {
+                mFragmentRef = new WeakReference<>(fragment);
             }
 
             @Override
@@ -344,7 +360,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
         }
     }
 
-    private static class DetachTask extends AsyncTask<Integer,Void,RESTResponse> {
+    private static class DetachTask extends AsyncTask<Integer, Void, RESTResponse> {
 
         private final WeakReference<Preference> mPrefRef;
 
@@ -358,7 +374,7 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                 return SyncHelper.get(mPrefRef.get().getContext()).detachDevice(integers[0]);
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
+                return RESTResponse.fromThrowable(e);
             }
         }
 
@@ -369,9 +385,61 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
             if (p == null) {
                 return;
             }
-            p.setEnabled(false);
-            p.setSummary(R.string.device_detached);
-            Toast.makeText(p.getContext(), R.string.device_detached, Toast.LENGTH_SHORT).show();
+            if (restResponse.isSuccess()) {
+                p.setEnabled(false);
+                p.setSummary(R.string.device_detached);
+                Toast.makeText(p.getContext(), R.string.device_detached, Toast.LENGTH_SHORT).show();
+            } else {
+                p.setSelectable(true);
+                Toast.makeText(p.getContext(), restResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private static class LogoutTask extends AsyncTask<Integer, Void, RESTResponse> {
+
+        private final ProgressDialog mProgressDialog;
+        private final WeakReference<SyncSettingsActivity> mActivityRef;
+
+        LogoutTask(SyncSettingsActivity activity) {
+            mActivityRef = new WeakReference<>(activity);
+            mProgressDialog = new ProgressDialog(activity);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage(activity.getString(R.string.loading));
+            mProgressDialog.setCancelable(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected RESTResponse doInBackground(Integer... integers) {
+            try {
+                return SyncHelper.get(mActivityRef.get()).logout();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return RESTResponse.fromThrowable(e);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(RESTResponse restResponse) {
+            super.onPostExecute(restResponse);
+            mProgressDialog.dismiss();
+            SyncSettingsActivity a = mActivityRef.get();
+            if (a == null) {
+                return;
+            }
+            if (restResponse.isSuccess()) {
+                a.getFragmentManager().beginTransaction()
+                        .replace(R.id.content, new LoginFragment())
+                        .commit();
+            } else {
+                Toast.makeText(a, restResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

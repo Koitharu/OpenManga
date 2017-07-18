@@ -315,4 +315,5 @@
     <string name="device_detach_confirm">Вы действительно хотите отвязать устройство %s от Вашего аккаунта?</string>
     <string name="device_detached">Устройство отвязано от аккаунта</string>
     <string name="action_sync">Синхронизировать</string>
+    <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
 </resources>

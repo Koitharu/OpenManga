@@ -51,6 +51,9 @@ public class PreferencesUtils {
                                 ((ListPreference) preference).findIndexOfValue(((ListPreference) preference).getValue())
                                 ].toString()
                 ));
+            } else {
+                preference.setSummary(formatSummary(preference.getSharedPreferences()
+                        .getString(preference.getKey(), null)));
             }
             preference.setOnPreferenceChangeListener(this);
         }
@@ -60,12 +63,12 @@ public class PreferencesUtils {
             if (mChangeListener != null && !mChangeListener.onPreferenceChange(preference, newValue)) {
                 return false;
             }
-            if (preference instanceof EditTextPreference) {
-                preference.setSummary(formatSummary((String) newValue));
-            } else if (preference instanceof ListPreference) {
+            if (preference instanceof ListPreference) {
                 int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
                 String summ = ((ListPreference) preference).getEntries()[index].toString();
                 preference.setSummary(formatSummary(summ));
+            } else {
+                preference.setSummary(formatSummary((String) newValue));
             }
             return true;
         }

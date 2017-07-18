@@ -18,6 +18,10 @@
         android:key="sync.start"
         android:title="@string/start_sync" />
 
+    <Preference
+        android:key="sync.username"
+        android:title="@string/logout" />
+
     <PreferenceCategory android:title="@string/data">
 
         <CheckBoxPreference

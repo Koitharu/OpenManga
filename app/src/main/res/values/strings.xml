@@ -340,4 +340,6 @@
     <string name="device_detach_confirm">Do you want to detach device %s from your account?</string>
     <string name="device_detached">Device was detached from account</string>
     <string name="action_sync">Synchronize</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
 </resources>

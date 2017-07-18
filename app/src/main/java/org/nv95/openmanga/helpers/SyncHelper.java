@@ -83,12 +83,19 @@ public class SyncHelper {
     }
 
     private void setToken(String token) {
+        setToken(token, null);
+    }
+
+    private void setToken(String token, String username) {
         mToken = token;
         SharedPreferences.Editor editor = mPreferences.edit();
         if (token != null) {
             editor.putString("sync.token", token).remove("sync.last_favourites").remove("sync.last_history");
+            if (username != null) {
+                editor.putString("sync.username", username);
+            }
         } else {
-            editor.remove("sync.token").remove("sync.last_favourites").remove("sync.last_history");
+            editor.remove("sync.token").remove("sync.username").remove("sync.last_favourites").remove("sync.last_history");
         }
         editor.apply();
     }
@@ -106,7 +113,7 @@ public class SyncHelper {
         );
         if (response.isSuccess()) {
             try {
-                setToken(response.getData().getString("token"));
+                setToken(response.getData().getString("token"), login);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return RESTResponse.fromThrowable(e);
@@ -128,7 +135,7 @@ public class SyncHelper {
         );
         if (response.isSuccess()) {
             try {
-                setToken(response.getData().getString("token"));
+                setToken(response.getData().getString("token"), login);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return RESTResponse.fromThrowable(e);
@@ -352,6 +359,20 @@ public class SyncHelper {
                 "id",
                 String.valueOf(id)
         );
+    }
+
+    public RESTResponse logout() {
+        RESTResponse resp = NetworkUtils.restQuery(
+                BuildConfig.SYNC_URL + "/user",
+                mToken,
+                NetworkUtils.HTTP_DELETE,
+                "self",
+                "1"
+        );
+        if (resp.isSuccess()) {
+            setToken(null);
+        }
+        return resp;
     }
 
     private void noauthBroadcast() {
