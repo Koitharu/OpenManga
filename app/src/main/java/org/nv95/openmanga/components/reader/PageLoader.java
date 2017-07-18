@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.nv95.openmanga.items.MangaPage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -191,5 +192,26 @@ public class PageLoader implements PageLoadListener {
                 task.cancel(false);
             }
         }
+    }
+
+    public void drop(int position) {
+        if (position < 0 || position >= mWrappers.size()) {
+            return;
+        }
+        PageWrapper wrapper = mWrappers.get(position);
+        PageLoadTask task = wrapper.getLoadTask();
+        if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+            task.cancel(false);
+        } else {
+            String filename = wrapper.getFilename();
+            if (filename != null) {
+                try {
+                    new File(filename).delete();
+                } catch (Exception ignored) {
+
+                }
+            }
+        }
+
     }
 }

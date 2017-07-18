@@ -48,7 +48,9 @@ public class SimpleDownload implements Runnable {
             int count;
             while ((count = input.read(data)) != -1) {
                 output.write(data, 0, count);
-                //if (Thread.interrupted())
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new InterruptedException();
+                }
             }
         } catch (Exception e) {
             if (mDestination.exists()) {

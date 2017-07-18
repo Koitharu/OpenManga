@@ -480,7 +480,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case "app":
                 switch (url) {
                     case "retry":
-                        mAdapter.notifyItemChanged(mReader.getCurrentPosition());
+                        mAdapter.reload(mReader.getCurrentPosition());
                         break;
                 }
                 break;
