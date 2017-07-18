@@ -65,7 +65,7 @@ public class MintMangaProvider extends MangaProvider {
             manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = "http://mintmanga.com" + o.select("a").first().attr("href");
-            manga.preview = o.select("img").first().attr("src");
+            manga.preview = o.select("img").first().attr("data-original");
             manga.provider = MintMangaProvider.class;
             if (!o.select("span.mangaCompleted").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
@@ -115,7 +115,7 @@ public class MintMangaProvider extends MangaProvider {
         try {
             Document document = getPage(readLink);
             MangaPage page;
-            int start = 0;
+            int start;
             String s;
             Elements es = document.body().select("script");
             for (Element o : es) {
@@ -204,10 +204,10 @@ public class MintMangaProvider extends MangaProvider {
             manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
             manga.path = concatUrl("http://mintmanga.com/", o.select("a").first().attr("href"));
-            manga.preview = o.select("img").first().attr("src");
+            manga.preview = o.select("img").first().attr("data-original");
             r = o.select("div.rating").first();
             manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));
-            manga.provider = MintMangaProvider.class;
+            manga.provider = manga.path.contains("//readmanga.me/") ? ReadmangaRuProvider.class : MintMangaProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
         }
