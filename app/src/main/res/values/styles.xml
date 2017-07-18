@@ -73,7 +73,7 @@
     <style name="AppThemeBlack.Grey">
         <item name="colorPrimary">#263238</item>
         <item name="colorPrimaryDark">#263238</item>
-        <item name="colorAccent">#37474f</item>
+        <item name="colorAccent">#9e9e9e</item>
     </style>
 
     <style name="AppThemeBlack.Red">
