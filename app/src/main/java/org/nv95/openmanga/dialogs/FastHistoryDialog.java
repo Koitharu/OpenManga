@@ -36,6 +36,7 @@ public class FastHistoryDialog implements OnHolderClickListener {
         mRecyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mDialog = new Dialog(context, R.style.FullScreenDialog);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

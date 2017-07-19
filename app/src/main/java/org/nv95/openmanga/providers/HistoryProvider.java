@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
+import org.nv95.openmanga.items.HistoryMangaInfo;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
@@ -55,14 +56,14 @@ public class HistoryProvider extends MangaProvider {
         return instance;
     }
 
-    public MangaInfo getLast() {
+    public HistoryMangaInfo getLast() {
         Cursor cursor = null;
-        MangaInfo last = null;
+        HistoryMangaInfo last = null;
         try {
             cursor = mStorageHelper.getReadableDatabase()
-                    .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"}, null, null, null, null, sortUrls[0]);
+                    .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating", "timestamp", "page", "chapter"}, null, null, null, null, sortUrls[0]);
             if (cursor.moveToFirst()) {
-                last = new MangaInfo();
+                last = new HistoryMangaInfo();
                 last.id = cursor.getInt(0);
                 last.name = cursor.getString(1);
                 last.subtitle = cursor.getString(2);
@@ -77,6 +78,9 @@ public class HistoryProvider extends MangaProvider {
                 last.rating = (byte) cursor.getInt(7);
                 last.status = STATUS_UNKNOWN;
                 last.extra = null;
+                last.timestamp = cursor.getLong(8);
+                last.page = cursor.getInt(9);
+                last.chapter = cursor.getInt(10);
             }
         } finally {
             if (cursor != null) {
@@ -88,15 +92,15 @@ public class HistoryProvider extends MangaProvider {
 
     public MangaList getLast(int maxItems) {
         MangaList list;
-        MangaInfo manga;
+        HistoryMangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
         list = new MangaList();
         Cursor cursor = mStorageHelper.getReadableDatabase()
-                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating", "timestamp", "page", "chapter"},
                         null, null, null, null, sortUrls[0], String.valueOf(maxItems));
         if (cursor.moveToFirst()) {
             do {
-                manga = new MangaInfo();
+                manga = new HistoryMangaInfo();
                 manga.id = cursor.getInt(0);
                 manga.name = cursor.getString(1);
                 manga.subtitle = cursor.getString(2);
@@ -111,6 +115,9 @@ public class HistoryProvider extends MangaProvider {
                 manga.rating = (byte) cursor.getInt(7);
                 manga.status = STATUS_UNKNOWN;
                 manga.extra = null;
+                manga.timestamp = cursor.getLong(8);
+                manga.page = cursor.getInt(9);
+                manga.chapter = cursor.getInt(10);
                 list.add(manga);
             } while (cursor.moveToNext());
         }
@@ -129,15 +136,15 @@ public class HistoryProvider extends MangaProvider {
         if (page > 0)
             return null;
         MangaList list;
-        MangaInfo manga;
+        HistoryMangaInfo manga;
         //noinspection TryFinallyCanBeTryWithResources
         list = new MangaList();
         Cursor cursor = mStorageHelper.getReadableDatabase()
-                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating", "timestamp", "page", "chapter"},
                         null, null, null, null, sortUrls[sort]);
         if (cursor.moveToFirst()) {
             do {
-                manga = new MangaInfo();
+                manga = new HistoryMangaInfo();
                 manga.id = cursor.getInt(0);
                 manga.name = cursor.getString(1);
                 manga.subtitle = cursor.getString(2);
@@ -152,6 +159,9 @@ public class HistoryProvider extends MangaProvider {
                 manga.rating = (byte) cursor.getInt(7);
                 manga.status = STATUS_UNKNOWN;
                 manga.extra = null;
+                manga.timestamp = cursor.getLong(8);
+                manga.page = cursor.getInt(9);
+                manga.chapter = cursor.getInt(10);
                 list.add(manga);
             } while (cursor.moveToNext());
         }

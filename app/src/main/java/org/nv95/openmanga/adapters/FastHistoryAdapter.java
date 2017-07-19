@@ -9,8 +9,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.items.HistoryMangaInfo;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
 
@@ -30,7 +32,8 @@ public class FastHistoryAdapter extends RecyclerView.Adapter<FastHistoryAdapter.
 
     @Override
     public FastHistoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        FastHistoryHolder holder = new FastHistoryHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false));
+        FastHistoryHolder holder = new FastHistoryHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_history, parent, false));
         holder.contentLayout.setOnClickListener(this);
         holder.contentLayout.setTag(holder);
         return holder;
@@ -40,7 +43,11 @@ public class FastHistoryAdapter extends RecyclerView.Adapter<FastHistoryAdapter.
     public void onBindViewHolder(FastHistoryHolder holder, int position) {
         MangaInfo manga = mDataset.get(position);
         holder.textViewTitle.setText(manga.name);
-        holder.textViewSubtitle.setText(manga.subtitle);
+        if (manga instanceof HistoryMangaInfo) {
+            holder.textViewSubtitle.setText(AppHelper.getReadableDateTimeRelative(((HistoryMangaInfo) manga).timestamp));
+        } else {
+            holder.textViewSubtitle.setText(manga.subtitle);
+        }
         ImageUtils.setThumbnail(holder.imageView, manga.preview);
 
     }
