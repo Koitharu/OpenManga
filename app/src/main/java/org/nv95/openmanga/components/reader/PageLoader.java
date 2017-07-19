@@ -212,6 +212,6 @@ public class PageLoader implements PageLoadListener {
                 }
             }
         }
-
+        wrapper.mState = PageWrapper.STATE_QUEUED;
     }
 }
