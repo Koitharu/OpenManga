@@ -13,6 +13,7 @@ import org.nv95.openmanga.providers.MangachanProvider;
 import org.nv95.openmanga.providers.MintMangaProvider;
 import org.nv95.openmanga.providers.PuzzmosProvider;
 import org.nv95.openmanga.providers.ReadmangaRuProvider;
+import org.nv95.openmanga.providers.ScanFRProvider;
 import org.nv95.openmanga.providers.SelfmangaRuProvider;
 import org.nv95.openmanga.providers.TruyenTranhProvider;
 import org.nv95.openmanga.providers.YaoiChanProvider;
@@ -36,7 +37,8 @@ public class Providers {
             new ProviderSummary(9, "PuzzManga", PuzzmosProvider.class, Languages.TR, 0),
             new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, R.xml.pref_anychan),
             new ProviderSummary(11, "TruyenTranh", TruyenTranhProvider.class, Languages.VIE, 0),
-            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, R.xml.pref_anychan)
+            new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, R.xml.pref_anychan),
+            new ProviderSummary(13, "ScanFR", ScanFRProvider.class, Languages.FR, 0)
     };
 
     public static ProviderSummary[] getAll() {

@@ -342,4 +342,5 @@
     <string name="action_sync">Synchronize</string>
     <string name="logout">Logout</string>
     <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
+    <string name="genre_comics">Comics</string>
 </resources>

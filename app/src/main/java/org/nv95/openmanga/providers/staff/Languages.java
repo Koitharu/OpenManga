@@ -13,6 +13,7 @@ public class Languages {
     public static final int TR = 3;
     public static final int MULTI = 4;
     public static final int VIE = 5;
+    public static final int FR = 6;
 
     public static int fromLocale(Locale locale) {
         switch (locale.getLanguage()) {
@@ -25,6 +26,8 @@ public class Languages {
                 return RU;
             case "tr":
                 return TR;
+            case "fr":
+                return FR;
             default:
                 return EN;
         }

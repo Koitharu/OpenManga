@@ -317,4 +317,5 @@
     <string name="action_sync">Синхронизировать</string>
     <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
     <string name="error_loadimage_html" formatted="false"><![CDATA[%s<br/><br/><h3><a href=\"app:retry\">Try again</a></h3>]]></string>
+    <string name="genre_comics">Comics</string>
 </resources>
