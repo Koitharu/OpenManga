@@ -82,6 +82,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
     public void finish() {
         mLoader.clearListeners();
         mLoader.cancelAll();
+        mLoader.setEnabled(false);
     }
 
     @Override
