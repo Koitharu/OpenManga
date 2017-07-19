@@ -190,7 +190,7 @@ public class MintMangaProvider extends MangaProvider {
         String data[] = new String[]{
                 "q", query.replace(' ','_')
         };
-        Document document = postPage("http://mintmanga.com/search", data);
+        Document document = postPage("http://mintmanga.com/search/advanced", data);
         MangaInfo manga;
         Element r;
         Element h3, h4;
@@ -207,7 +207,7 @@ public class MintMangaProvider extends MangaProvider {
             manga.preview = o.select("img").first().attr("data-original");
             r = o.select("div.rating").first();
             manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));
-            manga.provider = manga.path.contains("//readmanga.me/") ? ReadmangaRuProvider.class : MintMangaProvider.class;
+            manga.provider = MintMangaProvider.class;
             manga.id = manga.path.hashCode();
             list.add(manga);
         }

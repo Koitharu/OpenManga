@@ -137,7 +137,7 @@ public class SelfmangaRuProvider extends ReadmangaRuProvider {
         String data[] = new String[]{
                 "q", query.replace(' ','_')
         };
-        Document document = postPage("http://selfmanga.ru/search", data);
+        Document document = postPage("http://selfmanga.ru/search/advanced", data);
         MangaInfo manga;
         Element r, h3, h4;
         Elements elements = document.body().select("div.col-sm-6");
