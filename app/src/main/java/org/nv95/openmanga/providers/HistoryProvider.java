@@ -86,6 +86,38 @@ public class HistoryProvider extends MangaProvider {
         return last;
     }
 
+    public MangaList getLast(int maxItems) {
+        MangaList list;
+        MangaInfo manga;
+        //noinspection TryFinallyCanBeTryWithResources
+        list = new MangaList();
+        Cursor cursor = mStorageHelper.getReadableDatabase()
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                        null, null, null, null, sortUrls[0], String.valueOf(maxItems));
+        if (cursor.moveToFirst()) {
+            do {
+                manga = new MangaInfo();
+                manga.id = cursor.getInt(0);
+                manga.name = cursor.getString(1);
+                manga.subtitle = cursor.getString(2);
+                manga.genres = cursor.getString(3);
+                manga.preview = cursor.getString(4);
+                manga.path = cursor.getString(5);
+                try {
+                    manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
+                } catch (ClassNotFoundException e) {
+                    manga.provider = LocalMangaProvider.class;
+                }
+                manga.rating = (byte) cursor.getInt(7);
+                manga.status = STATUS_UNKNOWN;
+                manga.extra = null;
+                list.add(manga);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
     @Override
     protected void finalize() throws Throwable {
         mStorageHelper.close();
@@ -101,7 +133,8 @@ public class HistoryProvider extends MangaProvider {
         //noinspection TryFinallyCanBeTryWithResources
         list = new MangaList();
         Cursor cursor = mStorageHelper.getReadableDatabase()
-                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"}, null, null, null, null, sortUrls[sort]);
+                .query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                        null, null, null, null, sortUrls[sort]);
         if (cursor.moveToFirst()) {
             do {
                 manga = new MangaInfo();

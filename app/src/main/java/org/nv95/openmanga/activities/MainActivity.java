@@ -42,6 +42,7 @@ import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
+import org.nv95.openmanga.dialogs.FastHistoryDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
@@ -443,7 +444,8 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask(this).attach(this).start(false);
+                //new OpenLastTask(this).attach(this).start(false);
+                new FastHistoryDialog(this).show(3);
                 return true;
             default:
                 return false;

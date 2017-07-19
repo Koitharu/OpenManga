@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:id="@+id/content"
+    android:background="?attr/selectableItemBackground"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="68dp"
+            android:layout_height="84dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:layout_toStartOf="@id/imageView"
+            android:layout_toLeftOf="@id/imageView"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:gravity="end"
+            android:text="Medium Text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView_title"
+            android:layout_toStartOf="@id/imageView"
+            android:layout_toLeftOf="@id/imageView"
+            android:gravity="end"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Small Text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="?android:textColorSecondaryInverse" />
+
+</RelativeLayout>
