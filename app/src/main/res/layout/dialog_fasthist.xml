@@ -21,4 +21,14 @@
         android:src="@drawable/ic_cancel_light"
         app:elevation="0px"
         app:fabSize="normal" />
+
+    <TextView
+        android:id="@+id/textView_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:text="@string/history_empty"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
+        android:visibility="gone" />
 </FrameLayout>

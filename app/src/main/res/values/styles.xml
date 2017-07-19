@@ -99,10 +99,8 @@
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:windowEnterAnimation">@anim/alpha_show</item>
-        <item name="android:windowExitAnimation">@anim/alpha_hide</item>
+        <item name="android:windowAnimationStyle">@style/AlphaTransition</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -128,4 +126,8 @@
         <item name="behavior_peekHeight">@dimen/bottomsheet_peek_height</item>
     </style>
 
+    <style name="AlphaTransition">
+        <item name="android:windowEnterAnimation">@anim/alpha_show</item>
+        <item name="android:windowExitAnimation">@anim/alpha_hide</item>
+    </style>
 </resources>

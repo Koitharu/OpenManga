@@ -3,5 +3,5 @@
     android:shareInterpolator="@android:anim/decelerate_interpolator">
     <translate
         android:fromYDelta="70%" android:toYDelta="0%"
-        android:duration="400" />
+        android:duration="250" />
 </set>

@@ -1,5 +1,6 @@
 package org.nv95.openmanga.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -13,10 +14,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.FastHistoryAdapter;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.QuickReadTask;
 import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
@@ -30,6 +33,7 @@ public class FastHistoryDialog implements OnHolderClickListener {
     private final Dialog mDialog;
     private final RecyclerView mRecyclerView;
     private final HistoryProvider mProvider;
+    private final TextView mTextViewHolder;
 
     public FastHistoryDialog(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_fasthist, null, false);
@@ -38,7 +42,11 @@ public class FastHistoryDialog implements OnHolderClickListener {
         layoutManager.setStackFromEnd(true);
         layoutManager.setReverseLayout(true);
         mRecyclerView.setLayoutManager(layoutManager);
+        mTextViewHolder = view.findViewById(R.id.textView_holder);
         mDialog = new Dialog(context, R.style.FullScreenDialog);
+        if (context instanceof Activity) {
+            mDialog.setOwnerActivity((Activity) context);
+        }
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(view);
         final int color = ContextCompat.getColor(context, R.color.transparent_dark);
@@ -61,8 +69,13 @@ public class FastHistoryDialog implements OnHolderClickListener {
     }
 
     public void show(int maxItems) {
-        mRecyclerView.setAdapter(new FastHistoryAdapter(mProvider.getLast(maxItems), this));
-        mRecyclerView.startAnimation(AnimationUtils.loadAnimation(mDialog.getContext(), R.anim.up_from_bottom));
+        MangaList list = mProvider.getLast(maxItems);
+        if (list.isEmpty()) {
+            mTextViewHolder.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setAdapter(new FastHistoryAdapter(list, this));
+            mRecyclerView.startAnimation(AnimationUtils.loadAnimation(mDialog.getContext(), R.anim.up_from_bottom));
+        }
         mDialog.show();
     }
 

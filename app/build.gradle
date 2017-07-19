@@ -8,8 +8,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1105
-        versionName "4.0 testing"
+        versionCode 1108
+        versionName "4.0 alpha"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
         buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api/v1\""
     }
