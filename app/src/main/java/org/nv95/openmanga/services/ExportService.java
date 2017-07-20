@@ -32,14 +32,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class ExportService extends Service {
 
-    private PowerManager.WakeLock mWakeLock;
     private final ThreadPoolExecutor mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Export manga");
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -54,16 +47,19 @@ public class ExportService extends Service {
         private final MangaInfo mManga;
         private final int mNotificationId;
         private final NotificationHelper mNotificationHelper;
+        private final PowerManager.WakeLock mWakeLock;
 
         ExportTask(MangaInfo manga) {
             mManga = manga;
             mNotificationId = manga.id;
             mNotificationHelper = new NotificationHelper(ExportService.this);
+            mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Export manga");
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mWakeLock.acquire(30*60*1000L /*30 minutes*/);
             mNotificationHelper
                     .title(R.string.exporting)
                     .text(mManga.name)
@@ -119,12 +115,18 @@ public class ExportService extends Service {
                     values[0],
                     values[1]
             ).update(mNotificationId);
+        }
 
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mWakeLock.release();
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            mWakeLock.release();
             mNotificationHelper.stopForeground();
             mNotificationHelper
                     .noProgress();
