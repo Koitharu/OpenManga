@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +21,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.QuickReadTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 import org.nv95.openmanga.utils.choicecontrol.OnHolderClickListener;
@@ -40,6 +40,10 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
         mChoiceController = new ModalChoiceController(this);
+        if (MangaViewHolder.PADDING_8 == 0) {
+            MangaViewHolder.PADDING_8 = LayoutUtils.DpToPx(recyclerView.getResources(), 8);
+            MangaViewHolder.PADDING_16 = LayoutUtils.DpToPx(recyclerView.getResources(), 16);
+        }
     }
 
     public boolean setGrid(boolean grid) {
@@ -83,20 +87,28 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     }
 
     static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+
+        private static int PADDING_16 = 0;
+        private static int PADDING_8 = 0;
+
         @Nullable
         private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
         private final TextView textViewTitle;
+        @Nullable
         private final TextView textViewSubtitle;
         private final TextView textViewSummary;
         private final TextView textViewBadge;
+        @Nullable
         private final RatingView ratingView;
         private final ImageView imageView;
-        private final ImageView imageViewStatus;
         @Nullable
-        private final Button buttonRead;
+        private final ImageView imageViewStatus;
+        private final View buttonRead;
         private MangaInfo mData;
         @Nullable
         private OnHolderClickListener mListener;
+        @Nullable
+        private final View cellFooter;
 
         MangaViewHolder(View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);
@@ -107,19 +119,18 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             ratingView = itemView.findViewById(R.id.ratingView);
             imageView = itemView.findViewById(R.id.imageView);
             buttonRead = itemView.findViewById(R.id.buttonRead);
+            cellFooter = itemView.findViewById(R.id.cell_footer);
             imageViewStatus = itemView.findViewById(R.id.imageView_status);
             itemView.setOnClickListener(this);
             mLongClickListener = longClickListener;
             itemView.setOnLongClickListener(this);
-            if (buttonRead != null) {
-                buttonRead.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new QuickReadTask(view.getContext())
-                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mData);
-                    }
-                });
-            }
+            buttonRead.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new QuickReadTask(view.getContext())
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mData);
+                }
+            });
         }
 
 
@@ -133,28 +144,52 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 ((Checkable) itemView).setChecked(checked);
             }
             textViewTitle.setText(mData.name);
-            if (TextUtils.isEmpty(mData.subtitle)) {
-                textViewSubtitle.setVisibility(View.GONE);
-            } else {
-                textViewSubtitle.setText(mData.subtitle);
-                textViewSubtitle.setVisibility(View.VISIBLE);
+            if (textViewSubtitle != null) {
+                if (TextUtils.isEmpty(mData.subtitle)) {
+                    textViewSubtitle.setVisibility(View.GONE);
+                } else {
+                    textViewSubtitle.setText(mData.subtitle);
+                    textViewSubtitle.setVisibility(View.VISIBLE);
+                }
             }
             textViewSummary.setText(mData.genres);
-            ratingView.setRating(mData.rating);
+            if (ratingView != null) {
+                ratingView.setRating(mData.rating);
+            }
             ImageUtils.setThumbnail(imageView, data.preview, thumbSize);
-            // TODO: 17.02.16
-            //textViewTitle.setTypeface(mData.isCompleted() ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT);
-            if (mData.status == MangaInfo.STATUS_UNKNOWN) {
-                imageViewStatus.setVisibility(View.INVISIBLE);
-            } else {
-                imageViewStatus.setImageResource(mData.isCompleted() ? R.drawable.ic_completed : R.drawable.ic_ongoing);
-                imageViewStatus.setVisibility(View.VISIBLE);
+            if (imageViewStatus != null) {
+                if (mData.status == MangaInfo.STATUS_UNKNOWN) {
+                    imageViewStatus.setVisibility(View.INVISIBLE);
+                } else {
+                    imageViewStatus.setImageResource(mData.isCompleted() ? R.drawable.ic_completed : R.drawable.ic_ongoing);
+                    imageViewStatus.setVisibility(View.VISIBLE);
+                }
             }
             if (mData.extra == null) {
                 textViewBadge.setVisibility(View.GONE);
             } else {
                 textViewBadge.setText(mData.extra);
                 textViewBadge.setVisibility(View.VISIBLE);
+            }
+            if (cellFooter == null) { //list
+                buttonRead.setVisibility(View.VISIBLE);
+                textViewSummary.setVisibility(View.VISIBLE);
+                textViewTitle.setMaxLines(2);
+            } else if (thumbSize.getWidth() <= ThumbSize.THUMB_SIZE_SMALL.getWidth()) {
+                buttonRead.setVisibility(View.GONE);
+                textViewSummary.setVisibility(View.GONE);
+                textViewTitle.setMaxLines(2);
+                cellFooter.setPadding(PADDING_8, PADDING_8, PADDING_8, PADDING_8);
+            } else if (thumbSize.getWidth() <= ThumbSize.THUMB_SIZE_MEDIUM.getWidth()) {
+                buttonRead.setVisibility(View.GONE);
+                textViewSummary.setVisibility(View.VISIBLE);
+                textViewTitle.setMaxLines(1);
+                cellFooter.setPadding(PADDING_8, PADDING_8, PADDING_8, PADDING_8);
+            } else {
+                buttonRead.setVisibility(View.VISIBLE);
+                textViewSummary.setVisibility(View.VISIBLE);
+                textViewTitle.setMaxLines(1);
+                cellFooter.setPadding(PADDING_16, PADDING_16, PADDING_16, PADDING_16);
             }
         }
 

@@ -63,6 +63,7 @@ public class FastHistoryDialog implements OnHolderClickListener {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mRecyclerView.startAnimation(AnimationUtils.loadAnimation(mDialog.getContext(), R.anim.up_to_bottom));
                 mDialog.dismiss();
             }
         });
