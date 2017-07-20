@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -134,5 +135,17 @@ public class ImageUtils {
                 imageView,
                 mOptionsUpdate
         );
+    }
+
+    @Nullable
+    public static Bitmap getThumbnail(String path, int size) {
+        Bitmap bitmap = getCachedImage(path);
+        if (bitmap == null && path.startsWith("/")) {
+            bitmap = BitmapFactory.decodeFile(path);
+        }
+        if (bitmap != null) {
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        }
+        return bitmap;
     }
 }

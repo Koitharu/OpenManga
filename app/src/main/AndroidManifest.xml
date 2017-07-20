@@ -96,6 +96,7 @@
         <service android:name=".services.UpdateService" />
         <service android:name=".services.ImportService" />
         <service android:name=".services.SyncService" />
+        <service android:name=".services.ExportService" />
 
         <receiver android:name=".ScheduledServiceReceiver"
             android:enabled="true" android:exported="true" >

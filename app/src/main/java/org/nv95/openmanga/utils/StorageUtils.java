@@ -272,4 +272,35 @@ public class StorageUtils {
         file.mkdirs();
         return file;
     }
+
+    public static String escapeFilename(String name) {
+        final char[] badPattern = "~!@#$%^&{},.=`'?;:/\\+".toCharArray();
+        char escape = '_';
+        int len = name.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char ch = name.charAt(i);
+            if (Arrays.binarySearch(badPattern, ch) >= 0) {
+                sb.append(escape);
+                if (ch < 0x10) {
+                    sb.append('0');
+                }
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static File uniqueFile(File dir, String name) {
+        File file = new File(dir, name);
+        int i = 0;
+        while (file.exists()) {
+            int p = name.lastIndexOf(".");
+            String newName = name.substring(0, p) + " (" + i + ")." + name.substring(p + 1);
+            file = new File(dir, newName);
+            i++;
+        }
+        return file;
+    }
 }

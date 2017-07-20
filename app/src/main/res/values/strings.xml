@@ -344,4 +344,6 @@
     <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
     <string name="genre_comics">Comics</string>
     <string name="recent">Recent</string>
+    <string name="action_export">Export</string>
+    <string name="exporting">Exporting manga...</string>
 </resources>

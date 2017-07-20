@@ -43,6 +43,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.services.ExportService;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
@@ -183,6 +184,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         boolean isLocal = LocalMangaProvider.class.equals(mManga.provider);
         menu.findItem(R.id.action_save).setVisible(!isLocal);
         menu.findItem(R.id.action_remove).setVisible(isLocal);
+        menu.findItem(R.id.action_export).setVisible(isLocal);
         menu.findItem(R.id.action_save_more).setVisible(isLocal && mManga.status == MangaInfo.STATUS_ONGOING);
         if (isLocal) {
             menu.findItem(R.id.action_favourite).setVisible(false);
@@ -202,6 +204,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             boolean isLocal = LocalMangaProvider.class.equals(mManga.provider);
             menu.findItem(R.id.action_save).setVisible(!isLocal);
             menu.findItem(R.id.action_remove).setVisible(isLocal);
+            menu.findItem(R.id.action_export).setVisible(isLocal);
             menu.findItem(R.id.action_save_more).setVisible(isLocal && mManga.status == MangaInfo.STATUS_ONGOING);
             if (isLocal) {
                 menu.findItem(R.id.action_favourite).setVisible(false);
@@ -248,6 +251,9 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_shortcut:
                 new ContentShareHelper(this).createShortcut(mManga);
+                return true;
+            case R.id.action_export:
+                ExportService.start(this, mManga);
                 return true;
             case R.id.action_remove:
                 deleteDialog();

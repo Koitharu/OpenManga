@@ -187,11 +187,17 @@ public class BackupRestoreUtil {
             storageHelper.close();
             publishProgress(R.string.wait);
             String name = System.currentTimeMillis() + ".backup";
+            ZipBuilder zipBuilder = null;
             try {
                 file = new File(getExternalBackupDir(), name);
-                new ZipBuilder(file).addFiles(dir.listFiles()).build();
+                zipBuilder = new ZipBuilder(file);
+                zipBuilder.addFiles(dir.listFiles()).build();
             } catch (IOException e) {
                 file = null;
+            } finally {
+                if (zipBuilder != null) {
+                    zipBuilder.close();
+                }
             }
             new DirRemoveHelper(dir).run();
             return file;

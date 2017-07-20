@@ -3,6 +3,7 @@ package org.nv95.openmanga.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -18,14 +19,15 @@ import java.util.zip.ZipOutputStream;
  * Created by nv95 on 14.01.16.
  * Helps to pack files in zip archive easily
  */
-public class ZipBuilder {
+public class ZipBuilder implements Closeable {
 
     private final ZipOutputStream mZipOutputStream;
+    private final File mOutputFile;
     private final byte[] mBuffer = new byte[1024];
 
     public ZipBuilder(File outputFile) throws IOException {
         mZipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile));
-
+        mOutputFile = outputFile;
     }
 
     @NonNull
@@ -93,9 +95,13 @@ public class ZipBuilder {
     }
 
     public ZipBuilder addFile(File file) throws IOException {
+        return addFile(file, file.getName());
+    }
+
+    public ZipBuilder addFile(File file, String name) throws IOException {
         FileInputStream in = null;
         try {
-            ZipEntry zipEntry = new ZipEntry(file.getName());
+            ZipEntry zipEntry = new ZipEntry(name);
             mZipOutputStream.putNextEntry(zipEntry);
             in = new FileInputStream(file);
             int len;
@@ -122,6 +128,18 @@ public class ZipBuilder {
 
     public void build() throws IOException {
         mZipOutputStream.finish();
-        mZipOutputStream.close();
+    }
+
+    public File getOutputFile() {
+        return mOutputFile;
+    }
+
+    @Override
+    public void close() {
+        try {
+            mZipOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

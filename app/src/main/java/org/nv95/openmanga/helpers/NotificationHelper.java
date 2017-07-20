@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -175,6 +176,16 @@ public class NotificationHelper {
         return this;
     }
 
+    public NotificationHelper expandable() {
+        mNotificationBuilder.setStyle(new NotificationCompat.BigTextStyle());
+        return this;
+    }
+
+    public NotificationHelper image(@Nullable Bitmap bitmap) {
+        mNotificationBuilder.setLargeIcon(bitmap);
+        return this;
+    }
+
     public NotificationHelper foreground(int id, Service service) {
         service.startForeground(id, notification());
         return this;
@@ -188,7 +199,7 @@ public class NotificationHelper {
     }
 
     public NotificationHelper stopForeground(Service service) {
-        service.stopForeground(false);
+        service.stopForeground(true);
         return this;
     }
 

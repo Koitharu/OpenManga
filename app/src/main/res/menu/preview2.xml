@@ -36,6 +36,12 @@
             android:orderInCategory="100"
             android:title="@string/action_shortcut"
             app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_export"
+            android:orderInCategory="100"
+            android:title="@string/action_export"
+            app:showAsAction="never" />
         
     </group>
 </menu>
