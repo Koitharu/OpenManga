@@ -39,7 +39,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
 
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
-        mChoiceController = new ModalChoiceController();
+        mChoiceController = new ModalChoiceController(this);
     }
 
     public boolean setGrid(boolean grid) {

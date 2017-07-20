@@ -3,22 +3,22 @@ package org.nv95.openmanga.components;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.AnimUtils;
 
 /**
  * Created by nv95 on 30.06.16.
  */
 
-public class FrameCheckLayout extends FrameLayout implements Checkable {
+public class FrameCheckLayout extends FrameLayout implements ExtraCheckable {
 
     private boolean mChecked;
     private static int mPadding;
@@ -60,10 +60,22 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
         mChecked = checked;
         if (mChecked) {
             getCheckMark().setVisibility(VISIBLE);
-            LayoutUtils.animatePress(this);
         } else {
             getCheckMark().setVisibility(View.GONE);
-            LayoutUtils.animatePress(this);
+        }
+    }
+
+
+    @Override
+    public void setCheckedAnimated(boolean checked) {
+        if (mChecked == checked) {
+            return;
+        }
+        mChecked = checked;
+        if (mChecked) {
+            AnimUtils.crossfade(null, getCheckMark());
+        } else {
+            AnimUtils.crossfade(getCheckMark(), null);
         }
     }
 
@@ -71,10 +83,10 @@ public class FrameCheckLayout extends FrameLayout implements Checkable {
         if (mCheckMark == null) {
             mCheckMark = new ImageView(getContext());
             mCheckMark.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            mCheckMark.setBackgroundResource(R.drawable.selector_frame);
             mCheckMark.setPadding(mPadding, mPadding, mPadding, mPadding);
             mCheckMark.setScaleType(ImageView.ScaleType.MATRIX);
-            mCheckMark.setImageResource(R.drawable.ic_checkmark);
+            //mCheckMark.setImageResource(R.drawable.ic_checkmark);
+            mCheckMark.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.black_owerlay_40));
             mCheckMark.setVisibility(GONE);
             ViewCompat.setElevation(mCheckMark, 10000);
             addView(mCheckMark);

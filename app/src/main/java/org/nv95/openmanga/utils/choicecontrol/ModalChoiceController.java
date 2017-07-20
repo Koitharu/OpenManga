@@ -4,9 +4,10 @@ import android.annotation.SuppressLint;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
-import android.widget.Checkable;
 
-import java.util.HashMap;
+import org.nv95.openmanga.components.ExtraCheckable;
+
+import java.util.TreeSet;
 
 /**
  * Created by nv95 on 30.06.16.
@@ -15,17 +16,19 @@ import java.util.HashMap;
 public class ModalChoiceController implements OnHolderClickListener {
 
     private boolean mEnabled;
-    private final HashMap<Integer,RecyclerView.ViewHolder> mSelected;
+    private final TreeSet<Integer> mSelected;
     @Nullable
     private ModalChoiceCallback mCallback;
     @Nullable
     private ActionMode mActionMode;
+    private final RecyclerView.Adapter mAdapter;
 
     @SuppressLint("UseSparseArrays")
-    public ModalChoiceController() {
-        mSelected = new HashMap<>();
+    public ModalChoiceController(RecyclerView.Adapter adapter) {
+        mSelected = new TreeSet<>();
         mActionMode = null;
         mEnabled = false;
+        mAdapter = adapter;
     }
 
     public int getSelectedItemsCount() {
@@ -41,8 +44,8 @@ public class ModalChoiceController implements OnHolderClickListener {
     }
 
     public int[] getSelectedItemsPositions() {
-        int[] res = new int[mSelected.size()];
-        Integer[] t = mSelected.keySet().toArray(new Integer[mSelected.size()]);
+        Integer[] t = mSelected.toArray(new Integer[mSelected.size()]);
+        int[] res = new int[t.length];
         for (int i=0;i<t.length;i++) {
             res[i] = t[i];
         }
@@ -50,16 +53,15 @@ public class ModalChoiceController implements OnHolderClickListener {
     }
 
     public boolean isSelected(int position) {
-        return mSelected.containsKey(position);
+        return mSelected.contains(position);
     }
 
     public void clearSelection() {
-        for (RecyclerView.ViewHolder o : mSelected.values()) {
-            if (o.itemView instanceof Checkable) {
-                ((Checkable) o.itemView).setChecked(false);
-            }
-        }
+        int[] keys = getSelectedItemsPositions();
         mSelected.clear();
+        for (int i : keys) {
+            mAdapter.notifyItemChanged(i);
+        }
         if (mActionMode != null) {
             mActionMode.finish();
             mActionMode = null;
@@ -70,9 +72,9 @@ public class ModalChoiceController implements OnHolderClickListener {
         if (mSelected.size() == 0 && mCallback != null) {
             mActionMode = holder.itemView.startActionMode(mCallback);
         }
-        mSelected.put(holder.getAdapterPosition(), holder);
-        if (holder.itemView instanceof Checkable) {
-            ((Checkable) holder.itemView).setChecked(true);
+        mSelected.add(holder.getAdapterPosition());
+        if (holder.itemView instanceof ExtraCheckable) {
+            ((ExtraCheckable) holder.itemView).setCheckedAnimated(true);
         }
         if (mCallback != null && mActionMode != null) {
             mCallback.onChoiceChanged(mActionMode, this, mSelected.size());
@@ -81,8 +83,8 @@ public class ModalChoiceController implements OnHolderClickListener {
 
     private void deselect(RecyclerView.ViewHolder holder) {
         mSelected.remove(holder.getAdapterPosition());
-        if (holder.itemView instanceof Checkable) {
-            ((Checkable) holder.itemView).setChecked(false);
+        if (holder.itemView instanceof ExtraCheckable) {
+            ((ExtraCheckable) holder.itemView).setCheckedAnimated(false);
         }
         if (mCallback != null && mActionMode != null) {
             if (mSelected.size() == 0) {
@@ -95,7 +97,7 @@ public class ModalChoiceController implements OnHolderClickListener {
     }
 
     private boolean isSelected(RecyclerView.ViewHolder holder) {
-        return mSelected.containsKey(holder.getAdapterPosition());
+        return isSelected(holder.getAdapterPosition());
     }
 
     @Override
