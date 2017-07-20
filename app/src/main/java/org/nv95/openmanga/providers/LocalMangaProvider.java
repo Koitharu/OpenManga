@@ -230,6 +230,25 @@ public class LocalMangaProvider extends MangaProvider {
         return null;
     }
 
+    @Nullable
+    public String getSourceUrl(int mangaId) {
+        Cursor cursor = null;
+        try {
+            cursor = mStore.getDatabase(false)
+                    .query(MangaStore.TABLE_MANGAS, new String[]{"source"}, "id=?", new String[]{String.valueOf(mangaId)}, null, null, null);
+            if (cursor.moveToFirst()) {
+                return cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     public long[] getAllIds() {
         ArrayList<Long> ids = new ArrayList<>();
         Cursor cursor = null;

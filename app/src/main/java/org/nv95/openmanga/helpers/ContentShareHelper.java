@@ -9,6 +9,7 @@ import android.net.Uri;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -29,7 +30,14 @@ public class ContentShareHelper {
 
     public void share(MangaInfo manga) {
         mIntent.setType("text/plain");
-        mIntent.putExtra(Intent.EXTRA_TEXT, manga.path);
+        String path = null;
+        if (manga.provider == LocalMangaProvider.class) {
+            path = LocalMangaProvider.getInstance(mContext).getSourceUrl(manga.id);
+        }
+        if (path == null) {
+            path = manga.path;
+        }
+        mIntent.putExtra(Intent.EXTRA_TEXT, path);
         mIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, manga.name);
         mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.action_share)));
     }
