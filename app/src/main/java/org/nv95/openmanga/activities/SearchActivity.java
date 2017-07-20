@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +45,7 @@ import java.util.ArrayDeque;
 
 public class SearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
 SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventListener, TextView.OnEditorActionListener,
-        View.OnFocusChangeListener, View.OnClickListener, SearchInput.OnTextChangedListener {
+        View.OnFocusChangeListener, SearchInput.OnTextChangedListener {
 
     @Nullable
     private String mQuery;
@@ -54,8 +53,8 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
     private RecyclerView mRecyclerView;
     private TextView mTextViewHolder;
     private ProgressBar mProgressBar;
-    private FrameLayout mFrameSearch;
     private Toolbar mToolbar;
+    private RecyclerView mRecyclerViewSearch;
     private ListModeHelper mListModeHelper;
     private SearchHistoryAdapter mHistoryAdapter;
     private SearchResultsAdapter mResultsAdapter;
@@ -83,10 +82,8 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
         mSearchInput = (SearchInput) findViewById(R.id.searchInput);
-        mFrameSearch = (FrameLayout) findViewById(R.id.search_frame);
-        RecyclerView recyclerViewSearch = mFrameSearch.findViewById(R.id.recyclerViewSearch);
+        mRecyclerViewSearch = (RecyclerView) findViewById(R.id.recyclerViewSearch);
 
-        mFrameSearch.setOnClickListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mSearchInput.getEditText().setOnEditorActionListener(this);
         mHistoryAdapter = new SearchHistoryAdapter(this, this);
@@ -107,7 +104,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
                 SearchHistoryAdapter.removeFromHistory(SearchActivity.this, id);
                 mHistoryAdapter.requery(mSearchInput.getEditText().getText().toString());
             }
-        }).attachToRecyclerView(recyclerViewSearch);
+        }).attachToRecyclerView(mRecyclerViewSearch);
 
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
@@ -117,7 +114,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mProviders = new ArrayDeque<>(mProviderManager.getProvidersCount());
 
         mRecyclerView.setAdapter(mResultsAdapter);
-        recyclerViewSearch.setAdapter(mHistoryAdapter);
+        mRecyclerViewSearch.setAdapter(mHistoryAdapter);
         mSearchInput.getEditText().setText(mQuery);
     }
 
@@ -299,22 +296,26 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
             mHistoryAdapter.requeryAsync(mQuery);
-            AnimUtils.crossfade(null, mFrameSearch);
+            AnimUtils.crossfade(null, mRecyclerViewSearch);
             setToolbarScrollingLock(mToolbar, true);
         } else {
-            AnimUtils.crossfade(mFrameSearch, null);
+            AnimUtils.crossfade(mRecyclerViewSearch, null);
             mSearchInput.getEditText().setText(mQuery);
             setToolbarScrollingLock(mToolbar, false);
         }
     }
 
     @Override
-    public void onClick(View v) {
-        if (TextUtils.isEmpty(mQuery)) {
-            finish();
+    public void onBackPressed() {
+        if (mRecyclerViewSearch.getVisibility() == View.VISIBLE) {
+            if (TextUtils.isEmpty(mQuery)) {
+                super.onBackPressed();
+            } else {
+                LayoutUtils.hideSoftKeyboard(mRecyclerViewSearch);
+                mRecyclerView.requestFocus();
+            }
         } else {
-            LayoutUtils.hideSoftKeyboard(v);
-            mRecyclerView.requestFocus();
+            super.onBackPressed();
         }
     }
 

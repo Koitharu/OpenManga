@@ -58,22 +58,15 @@
         android:visibility="gone"
         app:layout_anchorGravity="center" />
 
-
-    <FrameLayout
-        android:id="@+id/search_frame"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_dark"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        android:scrollbars="vertical"
+        android:overScrollMode="never"
+        android:background="?android:windowBackground"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:overScrollMode="never"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
-
-    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
