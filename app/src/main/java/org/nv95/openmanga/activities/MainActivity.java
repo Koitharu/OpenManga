@@ -348,8 +348,11 @@ public class MainActivity extends BaseAppActivity implements
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ((HistoryProvider) mProvider).clear();
-                                    mListLoader.clearItems();
+                                    if (((HistoryProvider) mProvider).clear()) {
+                                        mListLoader.clearItems();
+                                    } else {
+                                        Snackbar.make(mRecyclerView, R.string.error, Snackbar.LENGTH_SHORT).show();
+                                    }
                                 }
                             })
                             .setNegativeButton(android.R.string.cancel, null)

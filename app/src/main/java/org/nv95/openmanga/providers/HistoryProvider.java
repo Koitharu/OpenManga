@@ -21,6 +21,7 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.FileLogger;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -280,10 +281,24 @@ public class HistoryProvider extends MangaProvider {
         return true;
     }
 
-    public void clear() {
-        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
-        mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
-        //TODO: sync
+    public boolean clear() {
+        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+        try {
+            database.beginTransaction();
+            if (SyncHelper.get(mContext).isHistorySyncEnabled()) {
+                database.execSQL("INSERT INTO sync_delete (subject, manga_id, timestamp) SELECT 'history' AS subject, id AS manga_id, ? AS timestamp FROM history",
+                        new String[]{String.valueOf(System.currentTimeMillis())});
+            }
+            mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+            mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+            database.setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            FileLogger.getInstance().report("HISTORY", e);
+            return false;
+        } finally {
+            database.endTransaction();
+        }
     }
 
     public boolean has(MangaInfo mangaInfo) {
