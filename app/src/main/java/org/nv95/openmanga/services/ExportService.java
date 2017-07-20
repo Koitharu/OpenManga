@@ -17,8 +17,6 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.ZipBuilder;
 
@@ -69,8 +67,9 @@ public class ExportService extends Service {
             mNotificationHelper
                     .title(R.string.exporting)
                     .text(mManga.name)
+                    .indeterminate()
                     .icon(android.R.drawable.stat_sys_upload)
-                    .image(ImageUtils.getThumbnail(mManga.preview, LayoutUtils.DpToPx(getResources(), 32)))
+                    .image(mManga.preview)
                     .foreground(mNotificationId);
         }
 
@@ -101,6 +100,9 @@ public class ExportService extends Service {
                 zipBuilder.build();
                 return zipBuilder.getOutputFile().getPath();
             } catch (IOException e) {
+                if (zipBuilder != null) {
+                    zipBuilder.getOutputFile().delete();
+                }
                 e.printStackTrace();
             } finally {
                 if (zipBuilder != null) {
@@ -125,12 +127,20 @@ public class ExportService extends Service {
             super.onPostExecute(s);
             mNotificationHelper.stopForeground();
             mNotificationHelper
-                    .noProgress()
-                    .text(s)
-                    .expandable()
-                    .icon(android.R.drawable.stat_sys_upload_done)
-                    .title(R.string.completed)
-                    .update(mNotificationId);
+                    .noProgress();
+            if (s != null) {
+                mNotificationHelper
+                        .text(s)
+                        .expandable(s)
+                        .icon(android.R.drawable.stat_sys_upload_done)
+                        .title(R.string.completed);
+            } else {
+                mNotificationHelper
+                        .icon(R.drawable.ic_stat_error)
+                        .title(R.string.error)
+                        .text("");
+            }
+            mNotificationHelper.update(mNotificationId);
             if (mExecutor.getTaskCount() == mExecutor.getCompletedTaskCount()) {
                 stopSelf();
             }

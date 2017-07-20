@@ -1,11 +1,13 @@
 package org.nv95.openmanga.services;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -153,6 +155,7 @@ public class DownloadService extends Service {
                 .putExtra("action", ACTION_CANCEL));
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<Void,Integer,Integer> {
         //прогресс по главам
         static final int PROGRESS_PRIMARY = 0;
@@ -189,6 +192,7 @@ public class DownloadService extends Service {
             mNotificationHelper
                     .indeterminate()
                     .icon(android.R.drawable.stat_sys_download)
+                    .image(mDownload.preview)
                     .title(R.string.saving_manga)
                     .text(mDownload.name)
                     .update(NOTIFY_ID, getString(R.string.saving_manga) + ": " + mDownload.name);
@@ -324,10 +328,17 @@ public class DownloadService extends Service {
             ChangesObserver.getInstance().emitOnLocalChanged(mDownload.id, mDownload);
             if (pos == mDownloads.size() - 1) {
                 stopSelf();
+                ArrayList<String> mangas = new ArrayList<>(mDownloads.size());
+                for (DownloadInfo o : mDownloads) {
+                    mangas.add(o.name);
+                }
                 mNotificationHelper
                         .noActions()
                         .noProgress()
                         .autoCancel()
+                        .image((Bitmap) null)
+                        .intentNone()
+                        .list(R.string.saved_manga, mangas)
                         .icon(android.R.drawable.stat_sys_download_done)
                         .text(R.string.done)
                         .update(NOTIFY_ID);

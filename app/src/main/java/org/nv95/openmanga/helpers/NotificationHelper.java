@@ -13,7 +13,10 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.OneShotNotifier;
+
+import java.util.List;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -49,6 +52,11 @@ public class NotificationHelper {
                 intent,
                 0
         ));
+        return this;
+    }
+
+    public NotificationHelper intentNone() {
+        mNotificationBuilder.setContentIntent(null);
         return this;
     }
 
@@ -125,6 +133,7 @@ public class NotificationHelper {
 
     public NotificationHelper progress(int value, int max) {
         mNotificationBuilder.setProgress(max, value, false);
+        mNotificationBuilder.setCategory(NotificationCompat.CATEGORY_PROGRESS);
         return this;
     }
 
@@ -135,6 +144,35 @@ public class NotificationHelper {
 
     public NotificationHelper noProgress() {
         mNotificationBuilder.setProgress(0, 0, false);
+        return this;
+    }
+
+    public NotificationHelper list(@StringRes int title, List<String> items) {
+        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+        style.setBigContentTitle(mContext.getString(title));
+        for (String o : items) {
+            style.addLine(o);
+        }
+        mNotificationBuilder.setStyle(style);
+        return this;
+    }
+
+    public NotificationHelper expandable(CharSequence bigText) {
+        mNotificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+        return this;
+    }
+
+    public NotificationHelper image(@Nullable Bitmap bitmap) {
+        mNotificationBuilder.setLargeIcon(bitmap);
+        return this;
+    }
+
+    public NotificationHelper image(String path) {
+        mNotificationBuilder.setLargeIcon(ImageUtils.getThumbnail(
+                path,
+                mContext.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width),
+                mContext.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height)
+        ));
         return this;
     }
 
@@ -173,16 +211,6 @@ public class NotificationHelper {
         if (mContext instanceof Service) {
             foreground(id, (Service) mContext);
         }
-        return this;
-    }
-
-    public NotificationHelper expandable() {
-        mNotificationBuilder.setStyle(new NotificationCompat.BigTextStyle());
-        return this;
-    }
-
-    public NotificationHelper image(@Nullable Bitmap bitmap) {
-        mNotificationBuilder.setLargeIcon(bitmap);
         return this;
     }
 

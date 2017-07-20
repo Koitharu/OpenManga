@@ -138,13 +138,13 @@ public class ImageUtils {
     }
 
     @Nullable
-    public static Bitmap getThumbnail(String path, int size) {
+    public static Bitmap getThumbnail(String path, int width, int height) {
         Bitmap bitmap = getCachedImage(path);
         if (bitmap == null && path.startsWith("/")) {
             bitmap = BitmapFactory.decodeFile(path);
         }
         if (bitmap != null) {
-            bitmap = ThumbnailUtils.extractThumbnail(bitmap, size, size, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
         }
         return bitmap;
     }
