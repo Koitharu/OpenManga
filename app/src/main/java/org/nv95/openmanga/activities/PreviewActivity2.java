@@ -30,6 +30,7 @@ import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.adapters.SimpleViewPagerAdapter;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -42,7 +43,6 @@ import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ExportService;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
@@ -243,7 +243,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_save:
                 if (mManga.chapters.size() != 0) {
-                    DownloadService.start(this, mManga);
+                    new MangaSaveHelper(this).confirmSave(mManga);
                 }
                 return true;
             case R.id.action_share:
@@ -468,7 +468,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                         .show();
             } else {
                 sourceManga.chapters = newChapters;
-                DownloadService.start(a, sourceManga, R.string.action_save_add);
+                new MangaSaveHelper(a).confirmSave(sourceManga, R.string.action_save_add);
             }
         }
 

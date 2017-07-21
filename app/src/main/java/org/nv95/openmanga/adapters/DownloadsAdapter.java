@@ -20,6 +20,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -27,7 +28,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,24 +35,33 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.services.SaveService;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.PausableAsyncTask.ExStatus;
+
+import java.util.ArrayList;
 
 /**
  * Created by nv95 on 03.01.16.
  */
 public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.DownloadHolder>
-        implements ServiceConnection, DownloadService.OnProgressUpdateListener, View.OnClickListener {
+        implements ServiceConnection, SaveService.OnSaveProgressListener, View.OnClickListener {
 
     private final Intent mIntent;
     @Nullable
-    private DownloadService.DownloadBinder mBinder;
+    private SaveService.SaveServiceBinder mBinder;
     private final RecyclerView mRecyclerView;
+    private final ArrayList<Integer> mItemsIds;
+    private final Drawable[] mIcons;
 
     public DownloadsAdapter(RecyclerView recyclerView) {
-        mIntent = new Intent(recyclerView.getContext(), DownloadService.class);
+        mItemsIds = new ArrayList<>();
+        mIntent = new Intent(recyclerView.getContext(), SaveService.class);
         mBinder = null;
         mRecyclerView = recyclerView;
+        mIcons = LayoutUtils.getThemedIcons(recyclerView.getContext(), R.drawable.ic_resume_darker, R.drawable.ic_pause_darker, R.drawable.ic_cancel_darker);
+        setHasStableIds(true);
     }
 
     public void enable() {
@@ -68,7 +77,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        mBinder = (DownloadService.DownloadBinder) service;
+        mBinder = (SaveService.SaveServiceBinder) service;
+        mItemsIds.clear();
+        mItemsIds.addAll(mBinder.getAllIds());
         mBinder.addListener(this);
         notifyDataSetChanged();
     }
@@ -83,28 +94,46 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     public DownloadHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         DownloadHolder holder = new DownloadHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_download, parent, false));
-        holder.imageButtonRemove.setOnClickListener(this);
-        holder.imageButtonRemove.setTag(holder);
+        holder.imageRemove.setOnClickListener(this);
+        holder.imageRemove.setImageDrawable(mIcons[2]);
+        holder.imageRemove.setTag(holder);
+        holder.imagePause.setOnClickListener(this);
+        holder.imagePause.setImageDrawable(mIcons[1]);
+        holder.imagePause.setTag(holder);
+        holder.imageResume.setOnClickListener(this);
+        holder.imageResume.setImageDrawable(mIcons[0]);
+        holder.imageResume.setTag(holder);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(DownloadHolder holder, int position) {
         if (mBinder != null) {
-            holder.fill(mBinder.getItem(position));
+            int id = (int) getItemId(position);
+            holder.fill(mBinder.getItemById(id), mBinder.getTaskStatus(id));
         }
     }
 
     @Override
     public int getItemCount() {
-        return mBinder != null ? mBinder.getCount() : 0;
+        return mBinder != null ? mBinder.getTaskCount() : 0;
     }
 
     @Override
-    public void onProgressUpdated(int position) {
+    public long getItemId(int position) {
+        if (mItemsIds.size() < position + 1) {
+            mItemsIds.clear();
+            mItemsIds.addAll(mBinder.getAllIds());
+        }
+        return mItemsIds.get(position);
+    }
+
+    @Override
+    public void onProgressUpdated(int id) {
+        int position = mItemsIds.indexOf(id);
         RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(position);
         if (mBinder != null && holder != null && holder instanceof DownloadHolder) {
-            DownloadInfo item = mBinder.getItem(position);
+            DownloadInfo item = mBinder.getItemById(id);
             if (item.pos < item.max) {
                 ((DownloadHolder) holder).updateProgress(
                         item.pos * 100 + item.getChapterProgressPercent(),
@@ -120,39 +149,65 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     }
 
     @Override
-    public void onDataUpdated() {
-        notifyDataSetChanged();
+    public void onDataUpdated(int id) {
+        /*int pos = mItemsIds.indexOf(id);
+        if (pos >= 0) {
+            notifyItemChanged(pos);
+        } else {
+            onDataUpdated();
+        }*/
+        onDataUpdated();
     }
 
-    public boolean isPaused() {
-        return mBinder != null && mBinder.isPaused();
+    @Override
+    public void onDataUpdated() {
+        mItemsIds.clear();
+        mItemsIds.addAll(mBinder.getAllIds());
+        notifyDataSetChanged();
     }
 
     public void setTaskPaused(boolean paused) {
         if (mBinder != null) {
-            mBinder.setPaused(paused);
+            if (paused) {
+                mBinder.pauseAll();
+            } else {
+                mBinder.resumeAll();
+            }
         }
     }
 
     @Override
     public void onClick(View view) {
+        if (mBinder == null) return;
         Object tag = view.getTag();
         if (tag != null && tag instanceof DownloadHolder) {
-            final DownloadHolder holder = (DownloadHolder) tag;
-            new AlertDialog.Builder(view.getContext())
-                    .setMessage(view.getContext().getString(R.string.download_unqueue_confirm, holder.mTextViewTitle.getText()))
-                    .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            int pos = holder.getAdapterPosition();
-                            if (mBinder != null && mBinder.removeFromQueue(pos)) {
-                                notifyItemRemoved(pos);
-                            }
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .create()
-                    .show();
+            DownloadHolder holder = (DownloadHolder) tag;
+            final int pos = holder.getAdapterPosition();
+            switch (view.getId()) {
+                case R.id.buttonRemove:
+                    new AlertDialog.Builder(view.getContext())
+                            .setMessage(view.getContext().getString(R.string.download_unqueue_confirm, holder.mTextViewTitle.getText()))
+                            .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if (mBinder != null) {
+                                        mBinder.cancelAndRemove((int) getItemId(pos));
+                                    }
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .create()
+                            .show();
+                    break;
+                case R.id.buttonPause:
+                    mBinder.setPaused((int) getItemId(pos), true);
+                    notifyItemChanged(pos);
+                    break;
+                case R.id.buttonResume:
+                    mBinder.setPaused((int) getItemId(pos), false);
+                    notifyItemChanged(pos);
+                    break;
+            }
         }
     }
 
@@ -165,7 +220,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         private final TextView mTextViewPercent;
         private final ProgressBar mProgressBarPrimary;
         private final ProgressBar mProgressBarSecondary;
-        final Button imageButtonRemove;
+        final ImageView imageRemove;
+        final ImageView imagePause;
+        final ImageView imageResume;
 
         DownloadHolder(View itemView) {
             super(itemView);
@@ -176,25 +233,39 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             mProgressBarPrimary = itemView.findViewById(R.id.progressBar_primary);
             mProgressBarSecondary = itemView.findViewById(R.id.progressBar_secondary);
             mTextViewPercent = itemView.findViewById(R.id.textView_percent);
-            imageButtonRemove = itemView.findViewById(R.id.buttonRemove);
+            imageRemove = itemView.findViewById(R.id.buttonRemove);
+            imagePause = itemView.findViewById(R.id.buttonPause);
+            imageResume = itemView.findViewById(R.id.buttonResume);
         }
 
         @SuppressLint("SetTextI18n")
-        public void fill(DownloadInfo data) {
+        public void fill(DownloadInfo data, ExStatus status) {
             mTextViewTitle.setText(data.name);
             ImageUtils.setThumbnail(mImageView, data.preview, ThumbSize.THUMB_SIZE_LIST);
-            switch (data.state) {
-                case DownloadInfo.STATE_IDLE:
+            switch (status) {
+                case PENDING:
                     mTextViewState.setText(R.string.queue);
-                    imageButtonRemove.setVisibility(View.VISIBLE);
+                    imagePause.setVisibility(View.GONE);
+                    imageResume.setVisibility(View.GONE);
+                    imageRemove.setVisibility(View.VISIBLE);
                     break;
-                case DownloadInfo.STATE_FINISHED:
+                case FINISHED:
                     mTextViewState.setText(R.string.completed);
-                    imageButtonRemove.setVisibility(View.GONE);
+                    imagePause.setVisibility(View.GONE);
+                    imageResume.setVisibility(View.GONE);
+                    imageRemove.setVisibility(View.GONE);
                     break;
-                case DownloadInfo.STATE_RUNNING:
+                case RUNNING:
                     mTextViewState.setText(R.string.saving_manga);
-                    imageButtonRemove.setVisibility(View.GONE);
+                    imagePause.setVisibility(View.VISIBLE);
+                    imageResume.setVisibility(View.GONE);
+                    imageRemove.setVisibility(View.VISIBLE);
+                    break;
+                case PAUSED:
+                    mTextViewState.setText(R.string.paused);
+                    imagePause.setVisibility(View.GONE);
+                    imageResume.setVisibility(View.VISIBLE);
+                    imageRemove.setVisibility(View.VISIBLE);
                     break;
             }
             if (data.pos < data.max) {
@@ -217,7 +288,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
          * @param subtitle chapter name
          */
         @SuppressLint("SetTextI18n")
-        public void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
+        void updateProgress(int tPos, int tMax, int cPos, int cMax, String subtitle) {
             mProgressBarPrimary.setMax(tMax);
             mProgressBarPrimary.setProgress(tPos);
             mProgressBarSecondary.setMax(cMax);

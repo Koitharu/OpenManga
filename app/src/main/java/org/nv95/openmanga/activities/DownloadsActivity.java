@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.DownloadsAdapter;
-import org.nv95.openmanga.services.DownloadService;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -70,14 +70,6 @@ public class DownloadsActivity extends BaseAppActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean paused = mAdapter.isPaused();
-        menu.findItem(R.id.action_pause).setVisible(!paused);
-        menu.findItem(R.id.action_resume).setVisible(paused);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_cancel:
@@ -86,7 +78,7 @@ public class DownloadsActivity extends BaseAppActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                DownloadService.cancel(DownloadsActivity.this);
+                                new MangaSaveHelper(DownloadsActivity.this).cancelAll();
                             }
                         })
                         .setMessage(R.string.downloads_cancel_confirm)

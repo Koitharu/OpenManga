@@ -347,4 +347,8 @@
     <string name="action_export">Export</string>
     <string name="exporting">Exporting manga...</string>
     <string name="saved_manga">Saved manga</string>
+    <string name="paused">Paused</string>
+    <string name="pause_all">Pause all</string>
+    <string name="resume_all">Resume all</string>
+    <string name="cancel_all">Cancel all</string>
 </resources>

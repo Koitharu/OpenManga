@@ -121,6 +121,10 @@ public class ExportService extends Service {
         protected void onCancelled() {
             super.onCancelled();
             mWakeLock.release();
+            mNotificationHelper.dismiss(mNotificationId);
+            if (mExecutor.getTaskCount() == mExecutor.getCompletedTaskCount()) {
+                stopSelf();
+            }
         }
 
         @Override

@@ -142,7 +142,7 @@ public class ScheduledService extends Service {
                     .icon(R.drawable.ic_stat_update)
                     .autoCancel()
                     .image(R.mipmap.ic_launcher)
-                    .intentService(new Intent(ScheduledService.this, UpdateService.class).putExtra("url", values[0].getUrl()))
+                    .intentService(new Intent(ScheduledService.this, UpdateService.class).putExtra("url", values[0].getUrl()), 555)
                     .notifyOnce(555, R.string.app_update_avaliable, values[0].getVersionCode());
         }
 

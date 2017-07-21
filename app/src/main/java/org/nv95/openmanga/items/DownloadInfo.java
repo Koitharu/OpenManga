@@ -9,10 +9,6 @@ import java.util.Arrays;
  */
 public class DownloadInfo extends MangaInfo {
 
-    public static final int STATE_IDLE = 0;
-    public static final int STATE_RUNNING = 1;
-    public static final int STATE_FINISHED = 2;
-
     public String description;
     public final int max;
     public int pos;
@@ -37,7 +33,6 @@ public class DownloadInfo extends MangaInfo {
         Arrays.fill(chaptersProgresses, 0); //надо ли?
         chaptersSizes = new int[max];
         Arrays.fill(chaptersSizes, 0);
-        this.state = STATE_IDLE;
     }
 
     public int getChapterProgressPercent() {

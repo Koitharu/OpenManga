@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.OneShotNotifier;
 
 import java.util.List;
@@ -33,24 +34,25 @@ public class NotificationHelper {
         mContext = context;
         mNotifier = new OneShotNotifier(mContext);
         mNotificationBuilder = new NotificationCompat.Builder(context);
+        mNotificationBuilder.setColor(LayoutUtils.getAttrColor(context, R.attr.colorAccent));
     }
 
-    public NotificationHelper intentActivity(Intent intent) {
+    public NotificationHelper intentActivity(Intent intent, int requestCode) {
         mNotificationBuilder.setContentIntent(PendingIntent.getActivity(
                 mContext,
-                0,
+                requestCode,
                 intent,
-                0
+                PendingIntent.FLAG_CANCEL_CURRENT
         ));
         return this;
     }
 
-    public NotificationHelper intentService(Intent intent) {
+    public NotificationHelper intentService(Intent intent, int requestCode) {
         mNotificationBuilder.setContentIntent(PendingIntent.getService(
                 mContext,
-                0,
+                requestCode,
                 intent,
-                0
+                PendingIntent.FLAG_CANCEL_CURRENT
         ));
         return this;
     }
@@ -60,7 +62,7 @@ public class NotificationHelper {
         return this;
     }
 
-    public NotificationHelper hightPriority() {
+    public NotificationHelper highPriority() {
         mNotificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         return this;
     }
@@ -132,6 +134,7 @@ public class NotificationHelper {
     }
 
     public NotificationHelper progress(int value, int max) {
+
         mNotificationBuilder.setProgress(max, value, false);
         mNotificationBuilder.setCategory(NotificationCompat.CATEGORY_PROGRESS);
         return this;
@@ -233,5 +236,15 @@ public class NotificationHelper {
 
     public void dismiss(int id) {
         mNotifier.cancel(id);
+    }
+
+    public NotificationHelper ongoing() {
+        mNotificationBuilder.setOngoing(true);
+        return this;
+    }
+
+    public NotificationHelper cancelable() {
+        mNotificationBuilder.setOngoing(false);
+        return this;
     }
 }

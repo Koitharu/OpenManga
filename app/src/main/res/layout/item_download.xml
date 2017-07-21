@@ -94,15 +94,38 @@
                 android:text="@string/queue"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <Button
+            <ImageView
                 android:id="@+id/buttonRemove"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/action_remove"
+                android:background="?selectableItemBackground"
+                android:contentDescription="@string/action_remove"
+                android:padding="4dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true" />
+
+            <ImageView
+                android:id="@+id/buttonPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:contentDescription="@string/pause"
+                android:layout_toStartOf="@id/buttonRemove"
+                android:layout_alignParentBottom="true"
+                android:padding="4dp"
+                android:layout_toLeftOf="@id/buttonRemove" />
+
+            <ImageView
+                android:id="@+id/buttonResume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:contentDescription="@string/resume"
+                android:layout_toStartOf="@id/buttonPause"
+                android:layout_alignParentBottom="true"
+                android:padding="4dp"
+                android:layout_toLeftOf="@id/buttonPause" />
 
         </RelativeLayout>
 

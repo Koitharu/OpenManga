@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_pause"
-        android:title="@string/pause"
+        android:title="@string/pause_all"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_resume"
-        android:title="@string/resume"
-        android:visible="false"
+        android:title="@string/resume_all"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_cancel"
-        android:title="@android:string/cancel"
+        android:title="@string/cancel_all"
         app:showAsAction="never" />
 
 </menu>

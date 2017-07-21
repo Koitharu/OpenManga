@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.MangaSummary;
-import org.nv95.openmanga.services.DownloadService;
 
 /**
  * Created by nv95 on 27.09.16.
@@ -112,7 +112,7 @@ public class ChaptersSelectDialog implements Toolbar.OnMenuItemClickListener, Vi
                 }
             }
             dialog.dismiss();
-            DownloadService.startNoConfirm(mContentView.getContext(), copy);
+            new MangaSaveHelper(mContentView.getContext()).save(copy);
         }
     }
 

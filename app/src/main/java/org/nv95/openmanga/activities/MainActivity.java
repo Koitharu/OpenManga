@@ -48,6 +48,7 @@ import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
@@ -60,7 +61,6 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
-import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AnimUtils;
@@ -592,7 +592,7 @@ public class MainActivity extends BaseAppActivity implements
                         .create().show();
                 return true;
             case R.id.action_save:
-                DownloadService.start(this, mListLoader.getItems(items));
+                new MangaSaveHelper(this).confirmSave(mListLoader.getItems(items));
                 break;
             case R.id.action_move:
                 favouritesMoveDialog(ids);

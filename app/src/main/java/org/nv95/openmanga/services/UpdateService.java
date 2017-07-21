@@ -39,7 +39,7 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mNotificationHelper = new NotificationHelper(this).hightPriority();
+        mNotificationHelper = new NotificationHelper(this).highPriority();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class UpdateService extends Service {
                         .noProgress()
                         .icon(R.drawable.ic_stat_update)
                         .text(R.string.click_to_install)
-                        .intentActivity(intent)
+                        .intentActivity(intent, 666)
                         .autoCancel()
                         .update(NOTIFY_ID, R.string.done);
             } else {

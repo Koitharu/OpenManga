@@ -38,6 +38,7 @@ import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ThumbnailsDialog;
 import org.nv95.openmanga.helpers.BrightnessHelper;
 import org.nv95.openmanga.helpers.ContentShareHelper;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.PermissionsHelper;
 import org.nv95.openmanga.helpers.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
@@ -51,7 +52,6 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.services.DownloadService;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
@@ -297,7 +297,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 showChaptersList();
                 break;
             case R.id.action_save:
-                DownloadService.start(this, mManga);
+                new MangaSaveHelper(this).confirmSave(mManga);
                 break;
             case R.id.action_save_more:
                 new LoadSourceTask(this).attach(this).start(mManga);
@@ -682,7 +682,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                         .show();
             } else {
                 sourceManga.chapters = newChapters;
-                DownloadService.start(a, sourceManga, R.string.action_save_add);
+                new MangaSaveHelper(a).confirmSave(sourceManga, R.string.action_save_add);
             }
         }
     }
