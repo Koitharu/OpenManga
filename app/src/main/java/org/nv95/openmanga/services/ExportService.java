@@ -131,6 +131,7 @@ public class ExportService extends Service {
             mNotificationHelper
                     .noProgress();
             if (s != null) {
+                StorageUtils.scanMediaFile(getApplicationContext(), new File(s));
                 mNotificationHelper
                         .text(s)
                         .expandable(s)

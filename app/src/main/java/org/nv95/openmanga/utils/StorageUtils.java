@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.nv95.openmanga.items.ThumbSize;
@@ -169,8 +168,8 @@ public class StorageUtils {
         }
     }
 
-    @Nullable
-    public static void addToGallery(Context context, File file) {
+    public static void scanMediaFile(Context context, File file) {
+        if (!file.exists()) return;
         MediaScannerConnection.scanFile(context,
                 new String[]{file.getPath()}, null,
                 new MediaScannerConnection.OnScanCompletedListener() {

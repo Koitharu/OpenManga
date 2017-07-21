@@ -631,7 +631,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             }
             a.mProgressFrame.setVisibility(View.GONE);
             if (file != null && file.exists()) {
-                StorageUtils.addToGallery(a, file);
+                StorageUtils.scanMediaFile(a, file);
                 Snackbar.make(a.mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
                         .setAction(R.string.action_share, new View.OnClickListener() {
                             @Override
