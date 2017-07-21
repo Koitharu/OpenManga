@@ -28,8 +28,8 @@ import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.PausableAsyncTask;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -46,7 +46,7 @@ public class SaveService extends Service {
     public static final int ACTION_CANCEL_ALL = 54;
 
     private final ThreadPoolExecutor mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
-    private final TreeMap<Integer, SaveTask> mTasks = new TreeMap<>();
+    private final LinkedHashMap<Integer, SaveTask> mTasks = new LinkedHashMap<>();
     private final ArrayList<OnSaveProgressListener> mProgressListeners = new ArrayList<>();
     private int mForegroundId = 0;
 
@@ -119,11 +119,13 @@ public class SaveService extends Service {
         private final DownloadInfo mDownload;
         private final NotificationHelper mNotificationHelper;
         private final PowerManager.WakeLock mWakeLock;
+        boolean isStarted = false;
 
         SaveTask(DownloadInfo downloadInfo) {
             mDownload = downloadInfo;
             mNotificationHelper = new NotificationHelper(SaveService.this);
             mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Save manga");
+            mNotificationHelper.group(SaveTask.class.getName());
         }
 
         @Override
@@ -137,6 +139,7 @@ public class SaveService extends Service {
             if (!mWakeLock.isHeld()) {
                 mWakeLock.acquire(30 * 60 * 1000L /*30 minutes*/);
             }
+            isStarted = true;
             mNotificationHelper
                     .title(R.string.saving_manga)
                     .text(mDownload.name)
@@ -395,7 +398,7 @@ public class SaveService extends Service {
                         .intentActivity(new Intent(SaveService.this, PreviewActivity2.class)
                             .putExtras(manga.toBundle()), mDownload.id + 11)
                         .autoCancel()
-                        .title(R.string.completed);
+                        .title(R.string.done);
             } else {
                 mNotificationHelper
                         .icon(R.drawable.ic_stat_error)
@@ -490,7 +493,12 @@ public class SaveService extends Service {
         }
 
         public PausableAsyncTask.ExStatus getTaskStatus(int id) {
-            return mService.mTasks.get(id).getExStatus();
+            SaveTask task = mService.mTasks.get(id);
+            PausableAsyncTask.ExStatus status = task.getExStatus();
+            if (status == PausableAsyncTask.ExStatus.RUNNING && !task.isStarted) {
+                status = PausableAsyncTask.ExStatus.PENDING;
+            }
+            return status;
         }
     }
 

@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * Created by nv95 on 13.02.16.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class NotificationHelper {
 
     private final Context mContext;
@@ -245,6 +246,11 @@ public class NotificationHelper {
 
     public NotificationHelper cancelable() {
         mNotificationBuilder.setOngoing(false);
+        return this;
+    }
+
+    public NotificationHelper group(String key) {
+        mNotificationBuilder.setGroup(key);
         return this;
     }
 }

@@ -73,13 +73,10 @@ public abstract class PausableAsyncTask<Param, Progress, Result> extends AsyncTa
         return getStatus() == Status.RUNNING && !isPaused();
     }
 
-    public static enum ExStatus {
+    public enum ExStatus {
         FINISHED,
         PENDING,
         RUNNING,
-        PAUSED;
-
-        private ExStatus() {
-        }
+        PAUSED
     }
 }

@@ -54,6 +54,7 @@ public class ExportService extends Service {
             mNotificationId = manga.id;
             mNotificationHelper = new NotificationHelper(ExportService.this);
             mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Export manga");
+            mNotificationHelper.group(ExportTask.class.getName());
         }
 
         @Override
