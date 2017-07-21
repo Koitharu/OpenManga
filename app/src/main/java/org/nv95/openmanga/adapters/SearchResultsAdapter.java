@@ -15,6 +15,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private int mFooter;
     private CharSequence mFooterText;
     private OnMoreEventListener mOnLoadMoreListener;
+    private final ModalChoiceController mChoiceController;
 
     public SearchResultsAdapter(RecyclerView recyclerView) {
         mDataset = new ArrayList<>();
@@ -49,7 +51,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mLoading = false;
         mFooterText = null;
         mFooter = FOOTER_NONE;
-
+        mChoiceController = new ModalChoiceController(this);
     }
 
     public void hideFooter() {
@@ -79,9 +81,14 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void clearData() {
+        mChoiceController.clearSelection();
         mDataset.clear();
         mFooter = FOOTER_NONE;
         notifyDataSetChanged();
+    }
+
+    public ModalChoiceController getChoiceController() {
+        return mChoiceController;
     }
 
     public void setThumbnailsSize(@NonNull ThumbSize size) {
@@ -142,6 +149,12 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    @Nullable
+    public MangaInfo getItem(int pos) {
+        Object obj = mDataset.get(pos);
+        return obj instanceof MangaInfo ? (MangaInfo) obj : null;
+    }
+
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -154,15 +167,17 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.textView.setOnClickListener(this);
                 return holder;
             default:
-                return new MangaListAdapter.MangaViewHolder(inflater
+                MangaListAdapter.MangaViewHolder mangaHolder = new MangaListAdapter.MangaViewHolder(inflater
                         .inflate(mGrid ? R.layout.item_mangagrid : R.layout.item_mangalist, parent, false), null);
+                mangaHolder.setListener(mChoiceController);
+                return mangaHolder;
         }
     }
 
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MangaListAdapter.MangaViewHolder) {
-            ((MangaListAdapter.MangaViewHolder) holder).fill((MangaInfo) mDataset.get(position), mThumbSize, false);
+            ((MangaListAdapter.MangaViewHolder) holder).fill((MangaInfo) mDataset.get(position), mThumbSize, mChoiceController.isSelected(position));
         } else if (holder instanceof FooterViewHolder) {
             ((FooterViewHolder) holder).textView.setText(mFooterText);
             ((FooterViewHolder) holder).textView.setVisibility(mFooter == FOOTER_BUTTON ? View.VISIBLE : View.GONE);

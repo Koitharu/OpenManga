@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -24,7 +25,10 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.adapters.SearchResultsAdapter;
 import org.nv95.openmanga.components.SearchInput;
+import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
+import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.HistoryProvider;
@@ -36,6 +40,8 @@ import org.nv95.openmanga.providers.staff.Providers;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
+import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
 import java.util.ArrayDeque;
 
@@ -45,7 +51,7 @@ import java.util.ArrayDeque;
 
 public class SearchActivity extends BaseAppActivity implements ListModeHelper.OnListModeListener,
 SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventListener, TextView.OnEditorActionListener,
-        View.OnFocusChangeListener, SearchInput.OnTextChangedListener {
+        View.OnFocusChangeListener, SearchInput.OnTextChangedListener, ModalChoiceCallback {
 
     @Nullable
     private String mQuery;
@@ -109,6 +115,9 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         mListModeHelper = new ListModeHelper(this, this);
         mListModeHelper.applyCurrent();
         mListModeHelper.enable();
+
+        mResultsAdapter.getChoiceController().setCallback(this);
+        mResultsAdapter.getChoiceController().setEnabled(true);
 
         mProviderManager = new MangaProviderManager(this);
         mProviders = new ArrayDeque<>(mProviderManager.getProvidersCount());
@@ -322,6 +331,52 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
     @Override
     public void onTextChanged(CharSequence text) {
         mHistoryAdapter.requeryAsync(text.toString());
+    }
+
+    @Override
+    public void onChoiceChanged(ActionMode actionMode, ModalChoiceController controller, int count) {
+        actionMode.setTitle(String.valueOf(count));
+        actionMode.getMenu().findItem(R.id.action_share).setVisible(count == 1);
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        getMenuInflater().inflate(R.menu.actionmode_mangas, menu);
+        menu.findItem(R.id.action_save).setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        final int[] indeces = mResultsAdapter.getChoiceController().getSelectedItemsPositions();
+        final MangaInfo[] items = new MangaInfo[indeces.length];
+        for (int i=0;i<indeces.length;i++) {
+            items[i] = mResultsAdapter.getItem(indeces[i]);
+        }
+        switch (menuItem.getItemId()) {
+            case R.id.action_save:
+                new MangaSaveHelper(this).confirmSave(items);
+                break;
+            case R.id.action_share:
+                if (items[0] != null) {
+                    new ContentShareHelper(SearchActivity.this).share(items[0]);
+                }
+                break;
+            default:
+                return false;
+        }
+        actionMode.finish();
+        return true;
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        mResultsAdapter.getChoiceController().clearSelection();
     }
 
     private static class SearchTask extends WeakAsyncTask<SearchActivity, Void,Void,MangaList> {

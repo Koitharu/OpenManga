@@ -60,7 +60,7 @@ public class MangaSaveHelper {
 
         private final ProgressDialog mProgressDialog;
 
-        public GetDetailsTask() {
+        GetDetailsTask() {
             super();
             mProgressDialog = new ProgressDialog(mContext);
             mProgressDialog.setMessage(mContext.getString(R.string.loading));
@@ -83,7 +83,9 @@ public class MangaSaveHelper {
             MangaProvider provider;
             publishProgress(0, params.length);
             for (int i=0;i<params.length && !isCancelled();i++) {
-                try {
+                if (params[i] == null || params[i].provider == LocalMangaProvider.class) {
+                    summaries[i] = null;
+                } else try {
                     provider = MangaProviderManager.instanceProvider(mContext, params[i].provider);
                     if (provider instanceof LocalMangaProvider) {
                         summaries[i] = null;
