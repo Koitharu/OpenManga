@@ -68,6 +68,18 @@ public class ModalChoiceController implements OnHolderClickListener {
         }
     }
 
+    public void selectAll() {
+        mSelected.clear();
+        int count = mAdapter.getItemCount();
+        for (int i=0;i<count;i++) {
+            mSelected.add(i);
+        }
+        mAdapter.notifyDataSetChanged();
+        if (mCallback != null && mActionMode != null) {
+            mCallback.onChoiceChanged(mActionMode, this, count);
+        }
+    }
+
     private void select(RecyclerView.ViewHolder holder) {
         if (mSelected.size() == 0 && mCallback != null) {
             mActionMode = holder.itemView.startActionMode(mCallback);

@@ -561,6 +561,11 @@ public class MainActivity extends BaseAppActivity implements
         menu.findItem(R.id.action_save).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_share).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_move).setVisible(mSelectedItem == R.id.nav_action_favourites);
+        menu.findItem(R.id.action_select_all).setVisible(
+                mSelectedItem == R.id.nav_action_favourites
+                || mSelectedItem == R.id.nav_action_history
+                || mSelectedItem == R.id.nav_local_storage
+        );
         return false;
     }
 
@@ -594,6 +599,9 @@ public class MainActivity extends BaseAppActivity implements
             case R.id.action_save:
                 new MangaSaveHelper(this).confirmSave(mListLoader.getItems(items));
                 break;
+            case R.id.action_select_all:
+                mListLoader.getAdapter().getChoiceController().selectAll();
+                return true;
             case R.id.action_move:
                 favouritesMoveDialog(ids);
                 break;
