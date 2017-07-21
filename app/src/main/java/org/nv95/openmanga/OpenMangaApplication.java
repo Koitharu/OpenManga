@@ -24,7 +24,7 @@ public class OpenMangaApplication extends Application {
         super.onCreate();
         FileLogger.init(this);
         Resources resources = getResources();
-        final float aspectRatio = 6f / 4f;
+        final float aspectRatio = 18f / 13f;
         ThumbSize.THUMB_SIZE_LIST = new ThumbSize(
                 resources.getDimensionPixelSize(R.dimen.thumb_width_list),
                 resources.getDimensionPixelSize(R.dimen.thumb_height_list)

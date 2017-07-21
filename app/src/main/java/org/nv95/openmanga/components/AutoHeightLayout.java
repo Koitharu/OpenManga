@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  */
 public class AutoHeightLayout extends FrameCheckLayout {
 
-    private double mAspectRatio = 1.6f;
+    private double mAspectRatio = 18f / 13f;
 
     public AutoHeightLayout(Context context) {
         super(context);

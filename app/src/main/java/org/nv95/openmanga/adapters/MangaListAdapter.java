@@ -40,9 +40,11 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     public MangaListAdapter(PagedList<MangaInfo> dataset, RecyclerView recyclerView) {
         super(dataset, recyclerView);
         mChoiceController = new ModalChoiceController(this);
-        if (MangaViewHolder.PADDING_8 == 0) {
-            MangaViewHolder.PADDING_8 = LayoutUtils.DpToPx(recyclerView.getResources(), 8);
+        if (MangaViewHolder.PADDING_4 == 0) {
+            MangaViewHolder.PADDING_4 = LayoutUtils.DpToPx(recyclerView.getResources(), 4);
             MangaViewHolder.PADDING_16 = LayoutUtils.DpToPx(recyclerView.getResources(), 16);
+            MangaViewHolder.HEIGHT_68 = LayoutUtils.DpToPx(recyclerView.getResources(), 68);
+            MangaViewHolder.HEIGHT_42 = LayoutUtils.DpToPx(recyclerView.getResources(), 42);
         }
     }
 
@@ -89,7 +91,9 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
     static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private static int PADDING_16 = 0;
-        private static int PADDING_8 = 0;
+        private static int PADDING_4 = 0;
+        private static int HEIGHT_68 = 0;
+        private static int HEIGHT_42 = 0;
 
         @Nullable
         private final OnItemLongClickListener<MangaViewHolder> mLongClickListener;
@@ -179,16 +183,19 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                 buttonRead.setVisibility(View.GONE);
                 textViewSummary.setVisibility(View.GONE);
                 textViewTitle.setMaxLines(2);
-                cellFooter.setPadding(PADDING_8, PADDING_8, PADDING_8, PADDING_8);
+                cellFooter.getLayoutParams().height = HEIGHT_42;
+                cellFooter.setPadding(PADDING_4, PADDING_4, PADDING_4, PADDING_4);
             } else if (thumbSize.getWidth() <= ThumbSize.THUMB_SIZE_MEDIUM.getWidth()) {
                 buttonRead.setVisibility(View.GONE);
                 textViewSummary.setVisibility(View.VISIBLE);
                 textViewTitle.setMaxLines(1);
-                cellFooter.setPadding(PADDING_8, PADDING_8, PADDING_8, PADDING_8);
+                cellFooter.getLayoutParams().height = HEIGHT_68;
+                cellFooter.setPadding(PADDING_4, PADDING_4, PADDING_4, PADDING_4);
             } else {
                 buttonRead.setVisibility(View.VISIBLE);
                 textViewSummary.setVisibility(View.VISIBLE);
                 textViewTitle.setMaxLines(1);
+                cellFooter.getLayoutParams().height = HEIGHT_68;
                 cellFooter.setPadding(PADDING_16, PADDING_16, PADDING_16, PADDING_16);
             }
         }

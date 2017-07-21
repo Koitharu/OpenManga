@@ -1,11 +1,8 @@
 package org.nv95.openmanga.components;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Matrix;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * ImageView to display top-crop scale of an image view.
@@ -13,7 +10,7 @@ import android.widget.ImageView;
  *
  * @author Chris Arriola
  */
-public class TopCropImageView extends ImageView {
+public class TopCropImageView extends android.support.v7.widget.AppCompatImageView {
 
     public TopCropImageView(Context context) {
         this(context, null);
@@ -28,12 +25,6 @@ public class TopCropImageView extends ImageView {
         init();
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TopCropImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     protected void init(){
         setScaleType(ScaleType.MATRIX);
     }
@@ -41,7 +32,6 @@ public class TopCropImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        resetPadding();
         recomputeImgMatrix();
     }
 
@@ -49,20 +39,6 @@ public class TopCropImageView extends ImageView {
     protected boolean setFrame(int l, int t, int r, int b) {
         recomputeImgMatrix();
         return super.setFrame(l, t, r, b);
-    }
-
-    /**
-     * fix top padding below transparent status bar
-     */
-    private void resetPadding() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setPadding(
-                    getPaddingLeft(),
-                    0,
-                    getPaddingRight(),
-                    getPaddingBottom()
-            );
-        }
     }
 
     private void recomputeImgMatrix() {
@@ -77,11 +53,12 @@ public class TopCropImageView extends ImageView {
         final int drawableWidth = getDrawable().getIntrinsicWidth();
         final int drawableHeight = getDrawable().getIntrinsicHeight();
 
-        if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
+        scale = (float) viewWidth / (float) drawableWidth;
+        /*if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
             scale = (float) viewHeight / (float) drawableHeight;
         } else {
             scale = (float) viewWidth / (float) drawableWidth;
-        }
+        }*/
 
         matrix.setScale(scale, scale);
         setImageMatrix(matrix);
