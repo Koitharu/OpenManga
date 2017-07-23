@@ -231,7 +231,7 @@ public class HentaichanProvider extends MangaProvider {
         return sAuthCookie;
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public static boolean auth(String login, String password) {
         CookieParser cp = NetworkUtils.authorize(
                 "http://henchan.me/",
