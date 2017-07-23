@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -26,6 +28,8 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.NetworkStateListener;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.PausableAsyncTask;
 
 import java.util.ArrayList;
@@ -38,7 +42,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Created by admin on 21.07.17.
  */
 
-public class SaveService extends Service {
+public class SaveService extends Service implements NetworkStateListener.OnNetworkStateListener {
 
     public static final int ACTION_ADD = 50;
     public static final int ACTION_CANCEL = 51;
@@ -50,6 +54,7 @@ public class SaveService extends Service {
     private final LinkedHashMap<Integer, SaveTask> mTasks = new LinkedHashMap<>();
     private final ArrayList<OnSaveProgressListener> mProgressListeners = new ArrayList<>();
     private int mForegroundId = 0;
+    private final NetworkStateListener mNetworkListener = new NetworkStateListener(this);
 
     @Override
     public void onCreate() {
@@ -57,6 +62,13 @@ public class SaveService extends Service {
         mExecutor  = (ThreadPoolExecutor) Executors.newFixedThreadPool(
                 PreferenceManager.getDefaultSharedPreferences(this).getInt("save_threads", 2)
         );
+        registerReceiver(mNetworkListener, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(mNetworkListener);
+        super.onDestroy();
     }
 
     @Override
@@ -68,6 +80,7 @@ public class SaveService extends Service {
                 MangaSummary mangaSummary = new MangaSummary(intent.getExtras());
                 final DownloadInfo download = new DownloadInfo(mangaSummary);
                 SaveTask saveTask = new SaveTask(download);
+                saveTask.setPaused(canDownloadNow());
                 mTasks.put(download.id, saveTask);
                 saveTask.executeOnExecutor(mExecutor);
                 break;
@@ -112,6 +125,25 @@ public class SaveService extends Service {
                 break;
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onNetworkStatusChanged(boolean isConnected) {
+        if (!isConnected) {
+            for (SaveTask o : mTasks.values()) {
+                o.pause();
+            }
+        } else if (canDownloadNow()) {
+            for (SaveTask o : mTasks.values()) {
+                o.resume();
+            }
+        }
+    }
+
+    private boolean canDownloadNow() {
+        boolean isWifiOnly = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("save.wifionly", false);
+        return NetworkUtils.checkConnection(this, isWifiOnly);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -382,7 +414,9 @@ public class SaveService extends Service {
         @WorkerThread
         boolean onError() {
             pause();
-            publishProgress(PROGRESS_ERROR);
+            if (!canDownloadNow()) {
+                publishProgress(PROGRESS_ERROR);
+            }
             return waitForResume();
         }
 

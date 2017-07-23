@@ -361,4 +361,5 @@
     <string name="network_settings">Network</string>
     <string name="items_" formatted="false">Items: %d</string>
     <string name="other_settings">Other settings</string>
+    <string name="download_wifi_only">Download manga only over WiFi</string>
 </resources>

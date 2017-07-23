@@ -3,12 +3,9 @@ package org.nv95.openmanga.services;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -23,6 +20,7 @@ import org.nv95.openmanga.helpers.ScheduleHelper;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.OneShotNotifier;
 
 /**
@@ -38,13 +36,6 @@ public class ScheduledService extends Service {
     private boolean mChapterCheckWifiOnly;
     private boolean mAutoUpdate;
 
-    public static boolean internetConnectionIsValid(Context context, boolean wifi_only) {
-        ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isConnected() && (!wifi_only || ni.getType() == ConnectivityManager.TYPE_WIFI);
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -59,7 +50,7 @@ public class ScheduledService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (internetConnectionIsValid(this, mChapterCheckWifiOnly)) {
+        if (NetworkUtils.checkConnection(this, mChapterCheckWifiOnly)) {
             new BackgroundTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             stopSelf();

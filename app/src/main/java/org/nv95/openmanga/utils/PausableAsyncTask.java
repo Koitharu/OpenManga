@@ -1,6 +1,9 @@
 package org.nv95.openmanga.utils;
 
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.UiThread;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -11,14 +14,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class PausableAsyncTask<Param, Progress, Result> extends AsyncTask<Param, Progress, Result> {
 
     private final AtomicBoolean mPaused = new AtomicBoolean(false);
+    private final Handler mStateHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            switch (message.what) {
+                case 1:
+                    onResumed();
+                    break;
+                case -1:
+                    onPaused();
+                    break;
+            }
+            return false;
+        }
+    });
 
     public void setPaused(boolean value) {
         boolean oldValue = mPaused.getAndSet(value);
         if (value != oldValue) {
             if (value) {
-                onPaused();
+                mStateHandler.sendEmptyMessage(-1);
             } else {
-                onResumed();
+                mStateHandler.sendEmptyMessage(1);
             }
         }
     }
@@ -35,8 +52,10 @@ public abstract class PausableAsyncTask<Param, Progress, Result> extends AsyncTa
         return mPaused.get();
     }
 
+    @UiThread
     public void onPaused() {}
 
+    @UiThread
     public void onResumed() {}
 
     protected boolean waitForResume() {

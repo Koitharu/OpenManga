@@ -50,6 +50,12 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="save.wifionly"
+            android:title="@string/download_wifi_only"
+            android:widgetLayout="@layout/pref_switchcompat" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="use_tor"
             android:summary="@string/use_tor_summary"
             android:title="@string/use_tor_proxy"

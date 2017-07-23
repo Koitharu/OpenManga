@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.utils.NetworkUtils;
 
 
 /**
@@ -105,7 +106,7 @@ public class SyncService extends IntentService {
         if (!syncHelper.isAuthorized() || !(syncHelper.isHistorySyncEnabled() || syncHelper.isFavouritesSyncEnabled())) {
             return;
         }
-        if (!ScheduledService.internetConnectionIsValid(context, prefs.getBoolean("sync.wifionly", false))) {
+        if (!NetworkUtils.checkConnection(context, prefs.getBoolean("sync.wifionly", false))) {
             return;
         }
         int interval = 12;

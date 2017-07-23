@@ -235,4 +235,11 @@ public class NetworkUtils {
     private static boolean isOk(int responseCode) {
         return responseCode >= 200 && responseCode < 300;
     }
+
+    public static boolean checkConnection(Context context, boolean onlyWiFi) {
+        ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        return ni != null && ni.isConnected() && (!onlyWiFi || ni.getType() == ConnectivityManager.TYPE_WIFI);
+    }
 }
