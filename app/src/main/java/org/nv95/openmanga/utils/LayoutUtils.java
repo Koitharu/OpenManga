@@ -114,6 +114,21 @@ public class LayoutUtils {
         return ds;
     }
 
+    public static Drawable[] getAccentedIcons(Context context, int... ids) {
+        PorterDuffColorFilter cf = new PorterDuffColorFilter(
+                getAttrColor(context, R.attr.colorAccent),
+                PorterDuff.Mode.SRC_ATOP
+        );
+        Drawable[] ds = new Drawable[ids.length];
+        for (int i=0;i<ids.length;i++) {
+            ds[i] = ContextCompat.getDrawable(context, ids[i]);
+            if (ds[i] != null) {
+                ds[i].setColorFilter(cf);
+            }
+        }
+        return ds;
+    }
+
     @Deprecated
     public static int getAccentColor(Context context) {
         return getAttrColor(context, R.attr.colorAccent);
@@ -125,6 +140,14 @@ public class LayoutUtils {
         int color = a.getColor(0, 0);
         a.recycle();
         return color;
+    }
+
+    public static Drawable getAttrDrawable(Context context, @AttrRes int what) {
+        TypedValue typedValue = new TypedValue();
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { what });
+        Drawable drawable = a.getDrawable(0);
+        a.recycle();
+        return drawable;
     }
 
     public static void animatePress(final View view) {

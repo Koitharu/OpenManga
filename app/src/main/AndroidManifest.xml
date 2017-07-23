@@ -43,7 +43,7 @@
             android:name=".activities.ReadActivity2" />
         <activity
             android:label="@string/action_settings"
-            android:name=".activities.ProviderPreferencesActivity" />
+            android:name=".activities.settings.ProviderPreferencesActivity" />
         <activity
             android:name=".activities.DownloadsActivity"
             android:configChanges="orientation|screenSize"
@@ -54,11 +54,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/manga_updates" />
         <activity
-            android:name=".activities.ProviderSelectActivity"
+            android:name=".activities.settings.ProviderSelectActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/select_sources" />
+            android:label="@string/manga_catalogues" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.settings.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/action_settings" />
         <activity
@@ -70,7 +70,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/about" />
         <activity
-            android:name=".activities.UpdatesSettingsActivity"
+            android:name=".activities.settings.UpdatesSettingsActivity"
             android:label="@string/checking_new_chapters">
             <intent-filter>
                 <action android:name="org.nv95.openmanga.chupd" />
@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SyncSettingsActivity"
+            android:name=".activities.settings.SyncSettingsActivity"
             android:label="@string/sync">
             <intent-filter>
                 <action android:name="org.nv95.openmanga.SYNC" />

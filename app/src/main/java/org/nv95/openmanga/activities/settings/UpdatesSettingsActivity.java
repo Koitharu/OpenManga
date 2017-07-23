@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.activities.settings;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,7 @@ import android.view.View;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ScheduledServiceReceiver;
+import org.nv95.openmanga.activities.BaseAppActivity;
 
 /**
  * Created by nv95 on 19.12.15.

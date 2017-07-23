@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.activities.settings;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.adapters.ProvidersAdapter;
 import org.nv95.openmanga.components.DividerItemDecoration;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;

@@ -3,22 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingBottom="4dp"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
     android:background="?android:windowBackground"
-    android:paddingTop="4dp">
+    android:gravity="center_vertical"
+    android:minHeight="?listPreferredItemHeightSmall"
+    android:orientation="horizontal"
+    android:paddingEnd="?android:listPreferredItemPaddingEnd"
+    android:paddingLeft="?android:listPreferredItemPaddingLeft"
+    android:paddingRight="?android:listPreferredItemPaddingRight"
+    android:paddingStart="?android:listPreferredItemPaddingStart">
 
     <ImageView
         android:id="@+id/imageView_draghandle"
-        android:src="@drawable/ic_draghandle"
         android:layout_width="wrap_content"
-        android:paddingRight="12dp"
-        android:paddingEnd="12dp"
-        android:background="?selectableItemBackground"
         android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
+        android:paddingEnd="12dp"
+        android:paddingRight="12dp"
+        android:src="@drawable/ic_draghandle"
         tools:ignore="RtlSymmetry" />
 
     <LinearLayout
@@ -31,8 +32,8 @@
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceListItem"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceListItem" />
 
         <TextView
             android:id="@android:id/text2"

@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.settings.ProviderSelectActivity;
+import org.nv95.openmanga.activities.settings.SettingsActivity;
+import org.nv95.openmanga.activities.settings.SyncSettingsActivity;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.StorageSelectDialog;
 import org.nv95.openmanga.providers.staff.Providers;

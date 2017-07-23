@@ -1,12 +1,14 @@
 package org.nv95.openmanga.components;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
  * source:
@@ -15,28 +17,24 @@ import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
-
     private Drawable mDivider;
 
     /**
      * Default divider will be used
      */
     public DividerItemDecoration(Context context) {
-        final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
-        mDivider = styledAttributes.getDrawable(0);
-        styledAttributes.recycle();
+        mDivider = LayoutUtils.getAttrDrawable(context, android.R.attr.listDivider);
     }
 
     /**
      * Custom divider will be used
      */
-    public DividerItemDecoration(Context context, int resId) {
+    public DividerItemDecoration(Context context, @DrawableRes int resId) {
         mDivider = ContextCompat.getDrawable(context, resId);
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 

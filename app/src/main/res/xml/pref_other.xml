@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--suppress AndroidDomInspection -->
+    <ListPreference
+        android:defaultValue=""
+        android:entries="@array/app_languages"
+        android:entryValues="@array/app_languages_values"
+        android:key="lang"
+        android:title="@string/app_language" />
+
+    <Preference
+        android:key="recommendations"
+        android:title="@string/recommendations_options" />
+
+    <EditTextPreference
+        android:defaultValue="@string/favourites_categories_default"
+        android:dialogMessage="@string/favourites_categories_description"
+        android:key="fav.categories"
+        android:title="@string/favourites_categories" />
+
+    <PreferenceCategory android:title="@string/storage_settings">
+
+        <Preference
+            android:key="mangadir"
+            android:title="@string/manga_local_dir" />
+
+        <Preference
+            android:key="movemanga"
+            android:title="@string/move_saved" />
+
+        <Preference
+            android:key="backup"
+            android:title="@string/backup" />
+
+        <Preference
+            android:key="restore"
+            android:title="@string/restore" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/network_settings">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="use_tor"
+            android:summary="@string/use_tor_summary"
+            android:title="@string/use_tor_proxy"
+            android:widgetLayout="@layout/pref_switchcompat" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/system">
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:inputType="numberDecimal"
+            android:key="maxcache"
+            android:title="@string/max_cache_size" />
+
+        <Preference
+            android:key="ccache"
+            android:title="@string/action_clear_cache" />
+
+        <Preference
+            android:key="csearchhist"
+            android:title="@string/action_clear_search_hist" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/help">
+
+        <Preference
+            android:key="update"
+            android:title="@string/check_updates" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autoupdate"
+            android:title="@string/check_updates_auto" />
+
+        <Preference
+            android:key="bugreport"
+            android:summary="@string/bug_report_summ"
+            android:title="@string/bug_report" />
+
+        <Preference
+            android:key="about"
+            android:title="@string/about" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

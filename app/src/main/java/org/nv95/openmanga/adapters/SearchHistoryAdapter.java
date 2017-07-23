@@ -211,6 +211,30 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         }
     }
 
+
+    public static int getHistorySize(Context context) {
+        StorageHelper storageHelper = null;
+        boolean reused = true;
+        if (sStorageHelperRef != null) {
+            storageHelper = sStorageHelperRef.get();
+        }
+        if (storageHelper == null) {
+            storageHelper = new StorageHelper(context);
+            reused = false;
+        }
+        int res = StorageHelper.getRowCount(
+                storageHelper.getReadableDatabase(),
+                TABLE_NAME,
+                null
+        );
+        if (!reused) {
+            storageHelper.close();
+        }
+        return res;
+    }
+
+
+    //TODO static
     private class QueryTask extends AsyncTask<String,Void,Cursor> {
 
         @Override

@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.settings.SettingsActivity;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.FastHistoryDialog;

@@ -264,11 +264,11 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    boolean showcase(final View view, @StringRes int title, @StringRes int body) {
+    protected boolean showcase(final View view, @StringRes int title, @StringRes int body) {
         return showcase(view, title, body, false);
     }
 
-    boolean showcase(final View view, @StringRes int title, @StringRes int body, boolean tint) {
+    protected boolean showcase(final View view, @StringRes int title, @StringRes int body, boolean tint) {
         boolean dark = isDarkTheme();
         if (view != null && view.getVisibility() == View.VISIBLE
                 && !getSharedPreferences("tips", MODE_PRIVATE).getBoolean(getClass().getSimpleName() + "_" + view.getId(), false)) {
@@ -299,7 +299,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
      * @param body
      * @return true if showcase shown
      */
-    boolean showcase(@IdRes final int menuItemId, @StringRes int title, @StringRes int body) {
+    protected boolean showcase(@IdRes final int menuItemId, @StringRes int title, @StringRes int body) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         return toolbar != null && showcase(toolbar.findViewById(menuItemId), title, body, false);
     }
@@ -307,7 +307,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     /**
      * @return true only once for activity
      */
-    boolean isFirstStart() {
+    protected boolean isFirstStart() {
         SharedPreferences prefs = getSharedPreferences("tips", MODE_PRIVATE);
         if (prefs.getBoolean(getClass().getName(), true)) {
             prefs.edit().putBoolean(getClass().getName(), false).apply();

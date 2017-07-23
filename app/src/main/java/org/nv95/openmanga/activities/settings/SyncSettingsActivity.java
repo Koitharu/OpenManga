@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.activities.settings;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.items.SyncDevice;

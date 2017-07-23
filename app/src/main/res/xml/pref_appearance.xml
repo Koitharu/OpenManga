@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/themes_names"
+        android:entryValues="@array/themes"
+        android:key="theme"
+        android:title="@string/theme" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="hide_toolbars"
+        android:title="@string/hide_toolbar"
+        android:widgetLayout="@layout/pref_switchcompat" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="fab"
+        android:title="@string/show_resume_fab"
+        android:widgetLayout="@layout/pref_switchcompat" />
+</PreferenceScreen>

@@ -351,4 +351,14 @@
     <string name="pause_all">Pause all</string>
     <string name="resume_all">Resume all</string>
     <string name="cancel_all">Cancel all</string>
+    <string name="appearance">Appearance</string>
+    <string name="behavior">Behavior</string>
+    <string name="system">System</string>
+    <string name="storage_settings">Local storage</string>
+    <string name="more_">More…</string>
+    <string name="manga_catalogues">Mangas catalogues</string>
+    <string name="checking_updates">Checking for updates…</string>
+    <string name="network_settings">Network</string>
+    <string name="items_" formatted="false">Items: %d</string>
+    <string name="other_settings">Other settings</string>
 </resources>
