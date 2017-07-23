@@ -62,6 +62,10 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
         return this;
     }
 
+    public boolean canCancel() {
+        return getStatus() != Status.FINISHED;
+    }
+
     protected void onProgressUpdate(@NonNull Obj obj, Progress[] values) {}
 
     protected void onPreExecute(@NonNull Obj obj) {}

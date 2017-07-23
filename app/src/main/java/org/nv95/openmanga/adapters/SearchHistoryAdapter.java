@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.lang.ref.WeakReference;
 
@@ -104,15 +105,15 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 
     public void requeryAsync(@Nullable String prefix) {
         cancelTask();
-        QueryTask task = new QueryTask();
-        mQueryTaskRef = new WeakReference<QueryTask>(task);
+        QueryTask task = new QueryTask(this);
+        mQueryTaskRef = new WeakReference<>(task);
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, prefix);
     }
 
     private void cancelTask() {
         if (mQueryTaskRef != null) {
             QueryTask task = mQueryTaskRef.get();
-            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+            if (task != null && task.canCancel()) {
                 task.cancel(false);
             }
         }
@@ -234,20 +235,31 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     }
 
 
-    //TODO static
-    private class QueryTask extends AsyncTask<String,Void,Cursor> {
+    private static class QueryTask extends WeakAsyncTask<SearchHistoryAdapter, String,Void,Cursor> {
 
+        QueryTask(SearchHistoryAdapter searchHistoryAdapter) {
+            super(searchHistoryAdapter);
+        }
+
+        @SuppressWarnings("ConstantConditions")
         @Override
         protected Cursor doInBackground(String... strings) {
-            String prefix = strings.length > 0 ? strings[0] : null;
-            return mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
-                    TextUtils.isEmpty(prefix) ? null : "query LIKE ?",
-                    TextUtils.isEmpty(prefix) ? null : new String[] {prefix + "%"}, null, null, null);
+            try {
+                String prefix = strings.length > 0 ? strings[0] : null;
+                return getObject().mStorageHelper.getReadableDatabase().query(TABLE_NAME, null,
+                        TextUtils.isEmpty(prefix) ? null : "query LIKE ?",
+                        TextUtils.isEmpty(prefix) ? null : new String[] {prefix + "%"}, null, null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
-        protected void onPostExecute(Cursor cursor) {
-            swapCursor(cursor);
+        protected void onPostExecute(@NonNull SearchHistoryAdapter searchHistoryAdapter, Cursor cursor) {
+            if (cursor != null) {
+                searchHistoryAdapter.swapCursor(cursor);
+            }
         }
     }
 }
