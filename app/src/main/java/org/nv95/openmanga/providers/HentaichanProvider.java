@@ -83,23 +83,27 @@ public class HentaichanProvider extends MangaProvider {
             if (!(et.contains("части") || et.contains("главы"))) {
                 return addDefaultChapter(summary);
             }
-            MangaChapter chapter;
-            e = getPage(mangaInfo.path.replace("/manga/", "/related/")).body().getElementById("right");
-            Elements related = e.select("div.related");
-            for (Element o : related) {
-                e = o.select("h2").first();
-                if (e == null) {
-                    continue;
+            for (int i=0;;i+=10) {
+                e = getPage(mangaInfo.path.replace("/manga/", "/related/") + "?offset=" + i).body().getElementById("right");
+                Elements related = e.select("div.related");
+                if (related.isEmpty()) {
+                    break;
                 }
-                e = e.child(0);
-                if (e == null) {
-                    continue;
+                for (Element o : related) {
+                    e = o.select("h2").first();
+                    if (e == null) {
+                        continue;
+                    }
+                    e = e.child(0);
+                    if (e == null) {
+                        continue;
+                    }
+                    MangaChapter chapter = new MangaChapter();
+                    chapter.name = e.text();
+                    chapter.readLink = concatUrl("http://henchan.me/", e.attr("href").replace("/manga/", "/online/"));
+                    chapter.provider = summary.provider;
+                    summary.chapters.add(chapter);
                 }
-                chapter = new MangaChapter();
-                chapter.name = e.text();
-                chapter.readLink = concatUrl("http://henchan.me/", e.attr("href").replace("/manga/", "/online/"));
-                chapter.provider = summary.provider;
-                summary.chapters.add(chapter);
             }
             if (summary.chapters.size() == 0) {
                 addDefaultChapter(summary);
