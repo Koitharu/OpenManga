@@ -22,6 +22,12 @@
         <item name="colorTranslucent">#d2000000</item>
     </style>
 
+    <style name="AppTheme.Default">
+        <item name="colorPrimary">#01579b</item>
+        <item name="colorPrimaryDark">#002f6c</item>
+        <item name="colorAccent">#e53935</item>
+    </style>
+
     <style name="AppTheme.Grey">
         <item name="colorPrimary">#607D8B</item>
         <item name="colorPrimaryDark">#455A64</item>

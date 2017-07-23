@@ -73,8 +73,10 @@
         <item>9</item>
         <item>10</item>
         <item>11</item>
+        <item>12</item>
     </string-array>
     <string-array name="themes_names">
+        <item>Default</item>
         <item>Classic</item>
         <item>Light grey</item>
         <item>Light teal</item>

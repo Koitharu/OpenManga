@@ -41,6 +41,7 @@ import java.util.ArrayList;
 public abstract class BaseAppActivity extends AppCompatActivity {
 
     private static final int[] THEMES = new int[]{
+            R.style.AppTheme_Default,
             R.style.AppTheme_Classic,
             R.style.AppTheme_Grey,
             R.style.AppTheme_Teal,
