@@ -54,10 +54,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/manga_updates" />
         <activity
-            android:name=".activities.settings.ProviderSelectActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/manga_catalogues" />
-        <activity
             android:name=".activities.settings.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/action_settings" />

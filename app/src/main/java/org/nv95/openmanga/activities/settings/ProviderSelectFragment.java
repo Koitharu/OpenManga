@@ -1,12 +1,17 @@
 package org.nv95.openmanga.activities.settings;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.adapters.ProvidersAdapter;
 import org.nv95.openmanga.components.DividerItemDecoration;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
@@ -16,36 +21,39 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Selecting used manga providers
- * Created by nv95 on 14.10.15.
+ * Created by admin on 23.07.17.
  */
-public class ProviderSelectActivity extends BaseAppActivity implements ProvidersAdapter.OnStartDragListener {
 
+public class ProviderSelectFragment extends Fragment implements ProvidersAdapter.OnStartDragListener {
+
+    private RecyclerView mRecyclerView;
     private List<ProviderSummary> mProviders;
     private MangaProviderManager mProviderManager;
     private ProvidersAdapter mAdapter;
     private ItemTouchHelper mItemTouchHelper;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_provselect);
-        setSupportActionBar(R.id.toolbar);
-        enableHomeAsUp();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View contentView = inflater.inflate(R.layout.fragment_provselect, container, false);
+        mRecyclerView = contentView.findViewById(R.id.recyclerView);
+        return contentView;
+    }
 
-        mProviderManager = new MangaProviderManager(this);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Activity activity = getActivity();
+        mProviderManager = new MangaProviderManager(activity);
         mProviders = mProviderManager.getOrderedProviders();
 
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        assert recyclerView != null;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new ProvidersAdapter(this, mProviders, this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        mRecyclerView.setAdapter(mAdapter = new ProvidersAdapter(activity, mProviders, this));
         mAdapter.setActiveCount(mProviderManager.getProvidersCount());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(activity));
 
         mItemTouchHelper = new ItemTouchHelper(new OrderManager());
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     @Override
@@ -118,6 +126,15 @@ public class ProviderSelectActivity extends BaseAppActivity implements Providers
         @Override
         public boolean isLongPressDragEnabled() {
             return false;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.setTitle(R.string.manga_catalogues);
         }
     }
 }

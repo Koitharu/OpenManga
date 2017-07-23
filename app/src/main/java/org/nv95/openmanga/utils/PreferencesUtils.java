@@ -6,6 +6,8 @@ import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.components.IntSelectPreference;
+
 /**
  * Created by admin on 08.09.16.
  */
@@ -51,6 +53,10 @@ public class PreferencesUtils {
                                 ((ListPreference) preference).findIndexOfValue(((ListPreference) preference).getValue())
                                 ].toString()
                 ));
+            } else if (preference instanceof IntSelectPreference) {
+                preference.setSummary(formatSummary(
+                        String.valueOf(((IntSelectPreference)preference).getValue())
+                ));
             } else {
                 preference.setSummary(formatSummary(preference.getSharedPreferences()
                         .getString(preference.getKey(), null)));
@@ -67,6 +73,10 @@ public class PreferencesUtils {
                 int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
                 String summ = ((ListPreference) preference).getEntries()[index].toString();
                 preference.setSummary(formatSummary(summ));
+            } else if (preference instanceof IntSelectPreference) {
+                preference.setSummary(formatSummary(
+                        String.valueOf(newValue)
+                ));
             } else {
                 preference.setSummary(formatSummary((String) newValue));
             }

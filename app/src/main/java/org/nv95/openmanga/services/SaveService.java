@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
@@ -45,10 +46,18 @@ public class SaveService extends Service {
     public static final int ACTION_RESUME = 53;
     public static final int ACTION_CANCEL_ALL = 54;
 
-    private final ThreadPoolExecutor mExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+    private ThreadPoolExecutor mExecutor;
     private final LinkedHashMap<Integer, SaveTask> mTasks = new LinkedHashMap<>();
     private final ArrayList<OnSaveProgressListener> mProgressListeners = new ArrayList<>();
     private int mForegroundId = 0;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mExecutor  = (ThreadPoolExecutor) Executors.newFixedThreadPool(
+                PreferenceManager.getDefaultSharedPreferences(this).getInt("save_threads", 2)
+        );
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

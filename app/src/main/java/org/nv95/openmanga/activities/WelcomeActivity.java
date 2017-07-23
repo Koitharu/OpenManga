@@ -1,6 +1,7 @@
 package org.nv95.openmanga.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.settings.ProviderSelectActivity;
 import org.nv95.openmanga.activities.settings.SettingsActivity;
 import org.nv95.openmanga.activities.settings.SyncSettingsActivity;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
@@ -73,6 +73,7 @@ public class WelcomeActivity extends BaseAppActivity {
         return lastVersion == -1;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,7 +163,8 @@ public class WelcomeActivity extends BaseAppActivity {
                 mTextViewSources.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivityForResult(new Intent(WelcomeActivity.this, ProviderSelectActivity.class),
+                        startActivityForResult(new Intent(WelcomeActivity.this, SettingsActivity.class)
+                                .putExtra("section", SettingsActivity.SECTION_PROVIDERS),
                                 SettingsActivity.REQUEST_SOURCES);
                     }
                 });

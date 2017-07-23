@@ -1,12 +1,12 @@
 package org.nv95.openmanga.activities.settings;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
@@ -46,8 +46,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
     public static final int REQUEST_CHUPD = 116;
 
     public static final int SECTION_READER = 2;
+    public static final int SECTION_PROVIDERS = 3;
 
-    private PreferenceFragment mFragment;
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         switch (section) {
             case SECTION_READER:
                 mFragment = new ReadSettingsFragment();
+                break;
+            case SECTION_PROVIDERS:
+                mFragment = new ProviderSelectFragment();
                 break;
             default:
                 mFragment = new SettingsHeadersFragment();
@@ -82,7 +86,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
     }
 
-    private void openFragment(PreferenceFragment fragment) {
+    private void openFragment(Fragment fragment) {
         mFragment = fragment;
         getFragmentManager().beginTransaction()
                 .replace(R.id.content, mFragment)
@@ -97,7 +101,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                 startActivityForResult(new Intent(this, SyncSettingsActivity.class), REQUEST_SYNC);
                 return true;
             case "header.sources":
-                startActivityForResult(new Intent(this, ProviderSelectActivity.class), REQUEST_SOURCES);
+                openFragment(new ProviderSelectFragment());
                 return true;
             case "header.appearance":
                 openFragment(new AppearanceSettingsFragment());
@@ -295,7 +299,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
             mDialog.dismiss();
             if (appUpdatesProvider.isSuccess()) {
                 if (activity.mFragment instanceof OtherSettingsFragment) {
-                    Preference p = activity.mFragment.findPreference("update");
+                    Preference p = ((OtherSettingsFragment)activity.mFragment).findPreference("update");
                     if (p != null) {
                         p.setSummary(activity.getString(R.string.last_update_check,
                                 AppHelper.getReadableDateTimeRelative(System.currentTimeMillis())));

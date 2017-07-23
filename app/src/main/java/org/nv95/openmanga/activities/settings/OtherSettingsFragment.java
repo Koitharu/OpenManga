@@ -74,6 +74,7 @@ public class OtherSettingsFragment extends PreferenceFragment {
         findPreference("recommendations").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
         PreferencesUtils.bindPreferenceSummary(findPreference("fav.categories"));
+        PreferencesUtils.bindPreferenceSummary(findPreference("save_threads"));
 
         findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 

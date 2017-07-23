@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--suppress AndroidDomInspection -->
     <ListPreference
         android:defaultValue=""
@@ -39,6 +40,13 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/network_settings">
+
+        <org.nv95.openmanga.components.IntSelectPreference
+            android:key="save_threads"
+            app:maxValue = "4"
+            app:minValue = "1"
+            android:defaultValue="2"
+            android:title="Max parallel downloads" />
 
         <CheckBoxPreference
             android:defaultValue="false"

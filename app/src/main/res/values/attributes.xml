@@ -4,5 +4,9 @@
         <attr name="iconDrawable" format="reference" />
         <attr name="max" format="integer" />
     </declare-styleable>
+    <declare-styleable name="IntSelectPreferenceAttrs">
+        <attr name="minValue" format="integer" />
+        <attr name="maxValue" format="integer" />
+    </declare-styleable>
     <attr name="colorTranslucent" format="color" />
 </resources>
