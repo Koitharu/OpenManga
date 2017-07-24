@@ -1,48 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/padding8"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/padding8">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
         android:text="@string/sources"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="?colorAccent" />
 
     <CheckedTextView
-        android:text="@string/action_favourites"
+        android:id="@+id/checkedTextView_fav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:checkMark="?android:listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:minHeight="?listPreferredItemHeightSmall"
-        android:id="@+id/checkedTextView_fav" />
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:text="@string/action_favourites"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <CheckedTextView
-        android:text="@string/action_history"
+        android:id="@+id/checkedTextView_hist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:checkMark="?android:listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:minHeight="?listPreferredItemHeightSmall"
-        android:id="@+id/checkedTextView_hist" />
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:text="@string/action_history"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
-        android:text="@string/action_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:text="@string/action_options"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="?colorAccent" />
 
     <CheckedTextView
-        android:text="@string/full_match"
+        android:id="@+id/checkedTextView_match"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:checkMark="?android:listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:minHeight="?listPreferredItemHeightSmall"
-        android:id="@+id/checkedTextView_match" />
+        android:paddingEnd="?android:listPreferredItemPaddingEnd"
+        android:paddingLeft="?listPreferredItemPaddingLeft"
+        android:paddingRight="?listPreferredItemPaddingRight"
+        android:paddingStart="?android:listPreferredItemPaddingStart"
+        android:text="@string/full_match"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 </LinearLayout>

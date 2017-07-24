@@ -87,4 +87,30 @@ public class ChaptersList extends ArrayList<MangaChapter> {
             get(i).number = i;
         }
     }
+
+    public MangaChapter first() {
+        if (isEmpty()) return null;
+        MangaChapter res = get(0);
+        int minNumber = get(0).number;
+        for (MangaChapter o : this) {
+            if (o != null && o.number < minNumber) {
+                minNumber = o.number;
+                res = o;
+            }
+        }
+        return res;
+    }
+
+    public MangaChapter last() {
+        if (isEmpty()) return null;
+        MangaChapter res = get(0);
+        int maxNumber = get(0).number;
+        for (MangaChapter o : this) {
+            if (o != null && o.number > maxNumber) {
+                maxNumber = o.number;
+                res = o;
+            }
+        }
+        return res;
+    }
 }

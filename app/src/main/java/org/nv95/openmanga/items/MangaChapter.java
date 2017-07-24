@@ -42,4 +42,18 @@ public class MangaChapter {
         return bundle;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MangaChapter chapter = (MangaChapter) o;
+
+        return readLink != null ? readLink.equals(chapter.readLink) : chapter.readLink == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return readLink != null ? readLink.hashCode() : 0;
+    }
 }

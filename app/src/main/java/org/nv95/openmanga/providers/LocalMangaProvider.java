@@ -113,7 +113,7 @@ public class LocalMangaProvider extends MangaProvider {
             summary.status = cursor.getString(1) == null ? MangaInfo.STATUS_UNKNOWN : MangaInfo.STATUS_ONGOING;
         }
         cursor.close();
-        cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id, name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
+        cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"id", "name", "number"}, "mangaid=" + mangaInfo.id, null, null, null, "number");
         if (cursor.moveToFirst()) {
             do {
                 chapter = new MangaChapter();
@@ -359,5 +359,18 @@ public class LocalMangaProvider extends MangaProvider {
         res.path = root.getPath();
         res.preview = new File(root, "cover").getPath();
         return res;
+    }
+
+    public ArrayList<Integer> getLocalChaptersNumbers(int mangaId) {
+        SQLiteDatabase database = mStore.getDatabase(false);
+        ArrayList<Integer> numbers = new ArrayList<>();
+        Cursor cursor = database.query(MangaStore.TABLE_CHAPTERS, new String[]{"number"}, "mangaid=" + mangaId, null, null, null, "number");
+        if (cursor.moveToFirst()) {
+            do {
+                numbers.add(cursor.getInt(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return numbers;
     }
 }

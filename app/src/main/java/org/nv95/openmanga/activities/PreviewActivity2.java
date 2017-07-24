@@ -29,6 +29,7 @@ import org.nv95.openmanga.adapters.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.adapters.SimpleViewPagerAdapter;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
+import org.nv95.openmanga.dialogs.MenuDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.Bookmark;
@@ -318,6 +319,18 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
     }
 
     @Override
+    public boolean onChapterLongClick(int pos, MangaChapter chapter) {
+        if (pos == -1 || mManga.provider == LocalMangaProvider.class) {
+            return false;
+        } else {
+            new MenuDialog(this, R.menu.chapter, chapter.name)
+                    .setOnItemClickListener(new ChapterMenuListener(chapter))
+                    .show();
+            return true;
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (mChaptersAdapter.getItemCount() != 0) {
@@ -475,6 +488,35 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         @Override
         public void onCancel(DialogInterface dialog) {
             this.cancel(true);
+        }
+    }
+
+    private class ChapterMenuListener implements MenuItem.OnMenuItemClickListener {
+
+        private final MangaChapter mChapter;
+
+        ChapterMenuListener(MangaChapter chapter) {
+            mChapter = chapter;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_save:
+                    new MangaSaveHelper(PreviewActivity2.this)
+                            .save(mManga, mChapter);
+                    return true;
+                case R.id.action_save_prev:
+                    new MangaSaveHelper(PreviewActivity2.this)
+                            .save(mManga, mManga.chapters.first(), mChapter);
+                    return true;
+                case R.id.action_save_next:
+                    new MangaSaveHelper(PreviewActivity2.this)
+                            .save(mManga, mChapter, mManga.chapters.last());
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

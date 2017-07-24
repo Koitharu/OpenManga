@@ -17,6 +17,7 @@
         android:defaultValue="@string/favourites_categories_default"
         android:dialogMessage="@string/favourites_categories_description"
         android:key="fav.categories"
+        android:inputType="textMultiLine|textCapSentences|textLongMessage"
         android:title="@string/favourites_categories" />
 
     <PreferenceCategory android:title="@string/storage_settings">

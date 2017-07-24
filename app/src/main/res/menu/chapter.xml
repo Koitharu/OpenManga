@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_save"
+        android:title="@string/save_this_chapter" />
+    <item
+        android:id="@+id/action_save_prev"
+        android:title="@string/save_prev_chapters" />
+    <item
+        android:id="@+id/action_save_next"
+        android:title="@string/save_next_chapters" />
+</menu>

@@ -15,6 +15,9 @@ import android.widget.ListView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.MangaSummary;
+import org.nv95.openmanga.providers.LocalMangaProvider;
+
+import java.util.ArrayList;
 
 /**
  * Created by nv95 on 27.09.16.
@@ -52,7 +55,7 @@ public class ChaptersSelectDialog implements Toolbar.OnMenuItemClickListener, Vi
                 R.layout.item_multiple_choice,
                 mangaSummary.getChapters().getNames()
         ));
-        checkAll();
+        checkUnsaved(mangaSummary);
         mDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContentView.getContext().getString(R.string.action_save), new SaveClickListener(mangaSummary));
         mDialog.show();
     }
@@ -73,6 +76,14 @@ public class ChaptersSelectDialog implements Toolbar.OnMenuItemClickListener, Vi
     private void checkAll() {
         for (int i=mListView.getCount() - 1;i>=0;i--) {
             mListView.setItemChecked(i, true);
+        }
+    }
+
+    private void checkUnsaved(MangaSummary mangaSummary) {
+        ArrayList<Integer> ids = LocalMangaProvider.getInstance(mDialog.getContext())
+                .getLocalChaptersNumbers(mangaSummary.id);
+        for (int i=mListView.getCount() - 1;i>=0;i--) {
+            mListView.setItemChecked(i, !ids.contains(mangaSummary.chapters.get(i).number));
         }
     }
 

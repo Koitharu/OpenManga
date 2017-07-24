@@ -13,6 +13,7 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
@@ -80,7 +81,12 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                 MangaSummary mangaSummary = new MangaSummary(intent.getExtras());
                 final DownloadInfo download = new DownloadInfo(mangaSummary);
                 SaveTask saveTask = new SaveTask(download);
-                saveTask.setPaused(canDownloadNow());
+                if (canDownloadNow()) {
+                    Toast.makeText(this, R.string.download_started, Toast.LENGTH_SHORT).show();
+                } else {
+                    saveTask.setPaused(true);
+                    Toast.makeText(this, R.string.download_starts_on_network, Toast.LENGTH_SHORT).show();
+                }
                 mTasks.put(download.id, saveTask);
                 saveTask.executeOnExecutor(mExecutor);
                 break;

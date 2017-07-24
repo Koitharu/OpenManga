@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
+import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
@@ -49,13 +50,26 @@ public class MangaSaveHelper {
                 .putExtras(manga.toBundle()));
     }
 
+    public void save(MangaSummary manga, MangaChapter chapter) {
+        save(manga, chapter, chapter);
+    }
+
+    public void save(MangaSummary manga, MangaChapter first, MangaChapter last) {
+        MangaSummary copy = new MangaSummary(manga);
+        copy.chapters.clear();
+        int firstPos = manga.chapters.indexOf(first);
+        int lastPos = manga.chapters.lastIndexOf(last);
+        copy.chapters.addAll(manga.chapters.subList(firstPos, lastPos + 1));
+        save(copy);
+    }
+
     public void cancelAll() {
         mContext.startService(new Intent(mContext, SaveService.class)
                 .putExtra("action", SaveService.ACTION_CANCEL_ALL));
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetDetailsTask extends AsyncTask<MangaInfo,Integer,MangaSummary[]>
+    private class GetDetailsTask extends AsyncTask<MangaInfo, Integer, MangaSummary[]>
             implements DialogInterface.OnClickListener {
 
         private final ProgressDialog mProgressDialog;
@@ -82,7 +96,7 @@ public class MangaSaveHelper {
             MangaSummary[] summaries = new MangaSummary[params.length];
             MangaProvider provider;
             publishProgress(0, params.length);
-            for (int i=0;i<params.length && !isCancelled();i++) {
+            for (int i = 0; i < params.length && !isCancelled(); i++) {
                 if (params[i] == null || params[i].provider == LocalMangaProvider.class) {
                     summaries[i] = null;
                 } else try {
