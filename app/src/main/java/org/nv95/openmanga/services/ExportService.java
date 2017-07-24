@@ -23,6 +23,7 @@ import org.nv95.openmanga.utils.ZipBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -81,8 +82,8 @@ public class ExportService extends Service {
                     pages.addAll(provider.getPages(chapter.readLink));
                 }
                 final File destDir = new File(Environment.getExternalStorageDirectory(), "Manga");
-                if (!destDir.exists()) {
-                    destDir.mkdir();
+                if (!destDir.exists() && !destDir.mkdir()) {
+                    return null;
                 }
                 zipBuilder = new ZipBuilder(
                         StorageUtils.uniqueFile(destDir, StorageUtils.escapeFilename(mManga.name) + ".cbz")
@@ -92,7 +93,7 @@ public class ExportService extends Service {
                     MangaPage page = pages.get(i);
                     publishProgress(i, total);
                     File src = new File(page.path);
-                    zipBuilder.addFile(src, String.format("%06d", i) + ".png");
+                    zipBuilder.addFile(src, String.format(Locale.UK, "%06d", i) + ".png");
                 }
                 zipBuilder.build();
                 return zipBuilder.getOutputFile().getPath();

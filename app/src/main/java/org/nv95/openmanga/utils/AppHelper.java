@@ -167,14 +167,12 @@ public class AppHelper {
     }
 
     public static String getDeviceSummary() {
-        StringBuilder summary = new StringBuilder();
-        summary.append(Build.MANUFACTURER);
-        summary.append(' ');
-        summary.append(Build.MODEL);
-        summary.append(" (Android ");
-        summary.append(Build.VERSION.RELEASE);
-        summary.append(")");
-        return summary.toString();
+        return Build.MANUFACTURER +
+                ' ' +
+                Build.MODEL +
+                " (Android " +
+                Build.VERSION.RELEASE +
+                ")";
     }
 
     public static String strNotNull(String str) {

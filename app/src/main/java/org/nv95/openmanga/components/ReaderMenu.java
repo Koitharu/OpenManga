@@ -96,22 +96,22 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
         mBookmarks = new TreeSet<>();
         LayoutInflater.from(context).inflate(R.layout.readermenu, this, true);
         mLimitYStatusBar = getContext().getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mTitle = (TextView) findViewById(android.R.id.title);
+        mProgressBar = findViewById(R.id.progressBar);
+        mTitle = findViewById(android.R.id.title);
         mMenus = new View[] {
                 findViewById(R.id.menu_top),
                 findViewById(R.id.menu_bottom)
         };
         mButtons = new ImageView[] {
-                (ImageView) findViewById(android.R.id.home),
-                (ImageView) findViewById(R.id.menuitem_favourite),
-                (ImageView) findViewById(R.id.menuitem_unfavourite),
-                (ImageView) findViewById(R.id.menuitem_save),
-                (ImageView) findViewById(R.id.menuitem_bookmark),
-                (ImageView) findViewById(R.id.menuitem_rotation),
-                (ImageView) findViewById(R.id.menuitem_settings),
-                (ImageView) findViewById(R.id.menuitem_thumblist),
-                (ImageView) findViewById(R.id.menuitem_unbookmark),
+                findViewById(android.R.id.home),
+                findViewById(R.id.menuitem_favourite),
+                findViewById(R.id.menuitem_unfavourite),
+                findViewById(R.id.menuitem_save),
+                findViewById(R.id.menuitem_bookmark),
+                findViewById(R.id.menuitem_rotation),
+                findViewById(R.id.menuitem_settings),
+                findViewById(R.id.menuitem_thumblist),
+                findViewById(R.id.menuitem_unbookmark),
         };
         for (ImageView o : mButtons) {
             o.setOnClickListener(this);

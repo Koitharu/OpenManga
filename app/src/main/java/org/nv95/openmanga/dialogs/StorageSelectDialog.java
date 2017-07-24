@@ -10,7 +10,6 @@ import android.widget.SimpleAdapter;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.StorageUtils;
 
 import java.io.File;

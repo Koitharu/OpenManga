@@ -77,8 +77,8 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
 
         ThumbHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            textView = (TextView) itemView.findViewById(R.id.textView);
+            imageView = itemView.findViewById(R.id.imageView);
+            textView = itemView.findViewById(R.id.textView);
             selector = itemView.findViewById(R.id.selector);
             ((AutoHeightLayout)(itemView)).setAspectRatio(1.3f);
             imageView.setOnTouchListener(this);

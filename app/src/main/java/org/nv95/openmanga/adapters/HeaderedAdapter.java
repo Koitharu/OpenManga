@@ -40,9 +40,8 @@ public abstract class HeaderedAdapter<VH extends RecyclerView.ViewHolder> extend
 
     @Override
     public final void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HeaderHolder) {
-            //do nothing
-        } else {
+        if (!(holder instanceof HeaderedAdapter.HeaderHolder)) {
+            //noinspection unchecked
             onBindDataViewHolder((VH) holder, position - mHeaders);
         }
     }

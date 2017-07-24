@@ -30,7 +30,6 @@
     <string name="saving_manga">Сохранение манги</string>
     <string name="unable_to_save_image">Не удалось сохранить изображение</string>
     <string name="disclaimer">Вся манга, символы и логотипы принадлежат их владельцам. Разработчики данного приложения никак не связаны с источниками содержимого.</string>
-    <string name="select_sources">Источники манги</string>
     <string name="log_not_found">Лог не найден!</string>
     <string name="navigate">Перейти</string>
     <string name="send">Отправить</string>
@@ -187,7 +186,6 @@
     <string name="menu">Меню</string>
     <string name="tip_chapter_checking">Включите автоматическую проверку, чтобы получать уведомления о новых главах в манге, добавленной в избранное</string>
     <string name="select_image">Выберите картинку</string>
-    <string name="genre">Жанр</string>
     <string name="description">Описание</string>
     <string name="app_update_avaliable">Доступно обновление приложения</string>
     <string name="check_updates_auto">Автоматическая проверка обновлений</string>
@@ -221,7 +219,6 @@
     <string name="moving_files">Перемещение файлов…</string>
     <string name="status_completed">Выпуск завершён</string>
     <string name="status_ongoing">Онгоинг</string>
-    <string name="local_size" formatted="false">Размер: %s</string>
     <string name="scale_mode">Масштабирование</string>
     <string name="scale_source">Исходный размер</string>
     <string name="automatic">Автоматически</string>

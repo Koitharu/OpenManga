@@ -1,7 +1,6 @@
 package org.nv95.openmanga.activities;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,8 +71,8 @@ import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.StorageUpgradeTask;
-import org.nv95.openmanga.utils.WeakAsyncTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
@@ -439,7 +438,7 @@ public class MainActivity extends BaseAppActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_read:
-                new OpenLastTask(this).attach(this).start(true);
+                new OpenLastTask(this).start(true);
                 break;
         }
     }
@@ -706,21 +705,11 @@ public class MainActivity extends BaseAppActivity implements
         mListLoader.loadFromPage(page - 1);
     }
 
-    private static class OpenLastTask extends WeakAsyncTask<MainActivity, Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
-        private ProgressDialog pd;
+    private static class OpenLastTask extends ProgressAsyncTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
 
         OpenLastTask(MainActivity mainActivity) {
             super(mainActivity);
-            pd = new ProgressDialog(mainActivity);
-            pd.setIndeterminate(true);
-            pd.setCancelable(true);
-            pd.setOnCancelListener(this);
-            pd.setMessage(mainActivity.getString(R.string.loading));
-        }
-
-        @Override
-        protected void onPreExecute() {
-            pd.show();
+            setCancelable(true);
         }
 
         @SuppressWarnings("ConstantConditions")
@@ -728,32 +717,32 @@ public class MainActivity extends BaseAppActivity implements
         protected Pair<Integer, Intent> doInBackground(Boolean... params) {
             try {
                 Intent intent;
-                HistoryProvider historyProvider = HistoryProvider.getInstance(getObject());
+                HistoryProvider historyProvider = HistoryProvider.getInstance(getActivity());
                 MangaInfo info = historyProvider.getLast();
                 if (info == null) {
                     return new Pair<>(2, null);
                 }
                 if (params.length != 0 && !params[0]) {
-                    intent = new Intent(getObject(), PreviewActivity2.class);
+                    intent = new Intent(getActivity(), PreviewActivity2.class);
                     intent.putExtras(info.toBundle());
                     return new Pair<>(0, intent);
                 }
                 MangaProvider provider;
                 if (info.provider.equals(LocalMangaProvider.class)) {
-                    provider = LocalMangaProvider.getInstance(getObject());
+                    provider = LocalMangaProvider.getInstance(getActivity());
                 } else {
-                    if (!NetworkUtils.checkConnection(getObject())) {
-                        provider = LocalMangaProvider.getInstance(getObject());
+                    if (!NetworkUtils.checkConnection(getActivity())) {
+                        provider = LocalMangaProvider.getInstance(getActivity());
                         info = ((LocalMangaProvider)provider).getLocalManga(info);
                         if (info.provider != LocalMangaProvider.class) {
                             return new Pair<>(1, null);
                         }
                     } else {
-                        provider = MangaProviderManager.instanceProvider(getObject(), info.provider);
+                        provider = MangaProviderManager.instanceProvider(getActivity(), info.provider);
                     }
                 }
                 MangaSummary summary = provider.getDetailedInfo(info);
-                intent = new Intent(getObject(), ReadActivity2.class);
+                intent = new Intent(getActivity(), ReadActivity2.class);
                 intent.putExtras(summary.toBundle());
                 HistoryProvider.HistorySummary hs = historyProvider.get(info);
                 if (hs != null) {
@@ -771,8 +760,7 @@ public class MainActivity extends BaseAppActivity implements
         }
 
         @Override
-        protected void onPostExecute(@NonNull MainActivity mainActivity, Pair<Integer, Intent> result) {
-            pd.dismiss();
+        protected void onPostExecute(@NonNull BaseAppActivity mainActivity, Pair<Integer, Intent> result) {
             int msg;
             switch (result.first) {
                 case 0:
@@ -793,11 +781,6 @@ public class MainActivity extends BaseAppActivity implements
                     .setPositiveButton(android.R.string.ok, null)
                     .setMessage(mainActivity.getString(msg))
                     .create().show();
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            this.cancel(false);
         }
     }
 }

@@ -125,9 +125,9 @@ public class ProvidersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         ProviderHolder(View itemView, OnStartDragListener sdl) {
             super(itemView);
-            text1 = (TextView) itemView.findViewById(android.R.id.text1);
-            text2 = (TextView) itemView.findViewById(android.R.id.text2);
-            imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
+            text1 = itemView.findViewById(android.R.id.text1);
+            text2 = itemView.findViewById(android.R.id.text2);
+            imageButton = itemView.findViewById(R.id.imageButton);
             mStartDragListener = sdl;
             itemView.findViewById(R.id.imageView_draghandle).setOnTouchListener(this);
             if (LayoutUtils.isAppThemeDark(itemView.getContext())) {

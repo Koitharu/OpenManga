@@ -72,7 +72,6 @@
     <string name="file_not_found">Dosya bulunamadı</string>
     <string name="filter">Filtre</string>
     <string name="full_match">Tam eşleştir</string>
-    <string name="genre">Tür</string>
     <string name="genre_action">Aksiyon</string>
     <string name="genre_adult">Yetişkin</string>
     <string name="genre_adventure">Macera</string>
@@ -161,7 +160,6 @@
     <string formatted="false" name="last_update_check">Son kontrol: %s</string>
     <string name="loading">Yükleniyor…</string>
     <string name="loading_error">Yükleme başarısız</string>
-    <string formatted="false" name="local_size">Boyut: %s</string>
     <string name="local_storage">İndirilen Mangalar</string>
     <string name="log_not_found">Hata raporu bulunamadı!</string>
     <string name="maho_shoujo">Maho-Shoujo</string>
@@ -213,7 +211,6 @@
     <string name="select_backup">Yedek seç</string>
     <string name="select_file">Dosya seç</string>
     <string name="select_image">Resim seç</string>
-    <string name="select_sources">Manga kaynağı seç</string>
     <string name="send">Gönder</string>
     <string name="send_mail">Email gönder</string>
     <string name="show_at_startup">Başlangıçta göster</string>

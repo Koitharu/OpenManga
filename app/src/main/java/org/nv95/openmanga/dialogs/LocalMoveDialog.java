@@ -1,10 +1,12 @@
 package org.nv95.openmanga.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.format.Formatter;
@@ -211,14 +213,16 @@ public class LocalMoveDialog {
 
         final boolean[] mChecked;
 
-        public SelectAdapter(Context context, List<LocalMangaInfo> objects) {
+        SelectAdapter(Context context, List<LocalMangaInfo> objects) {
             super(context, R.layout.item_adapter_checkable, objects);
             mChecked = new boolean[objects.size()];
             Arrays.fill(mChecked, true);
         }
 
+        @NonNull
+        @SuppressLint("SetTextI18n")
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View v = convertView != null ? convertView : LayoutInflater.from(getContext())
                     .inflate(R.layout.item_adapter_checkable, parent, false);
             LocalMangaInfo item = getItem(position);

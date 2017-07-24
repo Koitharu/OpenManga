@@ -5,11 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 
@@ -17,7 +14,7 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 05.11.16.
  */
 
-public class RatingView extends TextView {
+public class RatingView extends android.support.v7.widget.AppCompatTextView {
 
     private static final int[] mColors = new int[] {
             Color.parseColor("#808080"),
@@ -40,12 +37,6 @@ public class RatingView extends TextView {
 
     public RatingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public RatingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
 

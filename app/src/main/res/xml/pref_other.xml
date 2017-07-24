@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--suppress AndroidDomInspection -->
     <ListPreference
-        android:defaultValue=""
+        android:defaultValue="@string/__empty__"
         android:entries="@array/app_languages"
         android:entryValues="@array/app_languages_values"
         android:key="lang"

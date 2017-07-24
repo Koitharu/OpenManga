@@ -34,8 +34,8 @@ public class ChaptersSelectDialog implements Toolbar.OnMenuItemClickListener, Vi
     public ChaptersSelectDialog(Context context) {
         mContentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_chapters, null, false);
-        mListView = (ListView) mContentView.findViewById(R.id.listView);
-        mToolbar = (Toolbar) mContentView.findViewById(R.id.toolbar);
+        mListView = mContentView.findViewById(R.id.listView);
+        mToolbar = mContentView.findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_cancel_light);
         mToolbar.inflateMenu(R.menu.chapters);
         mToolbar.setNavigationOnClickListener(this);

@@ -31,10 +31,8 @@ public class PermissionsHelper {
             Intent intent = volume.createAccessIntent(dirname);
             activity.startActivityForResult(intent, REQUEST_CODE);
             return false;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return activity.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        } else {
-            return false;
-        }
+        } else
+            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && activity.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 }

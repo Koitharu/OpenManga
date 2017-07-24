@@ -54,16 +54,16 @@ public class SeekBarPreference extends Preference implements AppCompatSeekBar.On
                 getContext())
                 .inflate(R.layout.pref_seekbar, parent, false);
         ((TextView) layout.findViewById(R.id.title)).setText(getTitle());
-        mSeekBar = (AppCompatSeekBar) layout.findViewById(R.id.seekBar);
+        mSeekBar = layout.findViewById(R.id.seekBar);
         mSeekBar.setMax(mMax);
         mSeekBar.setProgress(mValue);
         mSeekBar.setOnSeekBarChangeListener(this);
-        ImageView imageView = (ImageView) layout.findViewById(R.id.icon);
+        ImageView imageView = layout.findViewById(R.id.icon);
         if (mIcon != null) {
             imageView.setVisibility(View.VISIBLE);
             imageView.setImageDrawable(mIcon);
         }
-        mTextView = (TextView) layout.findViewById(R.id.value);
+        mTextView = layout.findViewById(R.id.value);
         mTextView.setText(String.valueOf(mValue));
         updateIcon();
         return layout;

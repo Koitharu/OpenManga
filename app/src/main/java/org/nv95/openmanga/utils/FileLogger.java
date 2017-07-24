@@ -121,7 +121,7 @@ public class FileLogger implements Thread.UncaughtExceptionHandler {
                     ostream.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();;
+                e.printStackTrace();
             }
         }
     }

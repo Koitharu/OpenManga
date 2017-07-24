@@ -12,7 +12,7 @@ import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.AppHelper;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class DesuMeProvider extends MangaProvider {
             }
             return pages;
         } catch (Exception e) {
-            FileLogger.getInstance().report(e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -174,13 +174,13 @@ public class DesuMeProvider extends MangaProvider {
     @Nullable
     @Override
     public String[] getSortTitles(Context context) {
-        return getTitles(context, sorts);
+        return AppHelper.getStringArray(context, sorts);
     }
 
     @Nullable
     @Override
     public String[] getGenresTitles(Context context) {
-        return getTitles(context, genres);
+        return AppHelper.getStringArray(context, genres);
     }
 
     @Override

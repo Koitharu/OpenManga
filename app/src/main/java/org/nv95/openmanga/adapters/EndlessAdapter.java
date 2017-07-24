@@ -125,7 +125,7 @@ public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> exte
 
         ProgressViewHolder(View v) {
             super(v);
-            mProgressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+            mProgressBar = v.findViewById(R.id.progressBar);
         }
 
         public void setVisible(boolean visible) {

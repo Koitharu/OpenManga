@@ -53,9 +53,9 @@ public class BookmarksDialog implements BookmarksAdapter.OnBookmarkClickListener
         mActivity = context;
         mContentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_bookmarks, null, false);
-        mRecyclerView = (RecyclerView) mContentView.findViewById(R.id.recyclerView);
-        mToolbar = (Toolbar) mContentView.findViewById(R.id.toolbar);
-        mHolder = (TextView) mContentView.findViewById(R.id.textView_holder);
+        mRecyclerView = mContentView.findViewById(R.id.recyclerView);
+        mToolbar = mContentView.findViewById(R.id.toolbar);
+        mHolder = mContentView.findViewById(R.id.textView_holder);
         mToolbar.setNavigationIcon(R.drawable.ic_cancel_light);
         mToolbar.setNavigationOnClickListener(this);
         mToolbar.setTitle(R.string.bookmarks);

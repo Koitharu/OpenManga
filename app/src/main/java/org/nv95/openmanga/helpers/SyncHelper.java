@@ -39,7 +39,7 @@ public class SyncHelper {
         SyncHelper instance = instanceRef.get();
         if (instance == null) {
             instance = new SyncHelper(context);
-            instanceRef = new WeakReference<SyncHelper>(instance);
+            instanceRef = new WeakReference<>(instance);
         }
         return instance;
     }

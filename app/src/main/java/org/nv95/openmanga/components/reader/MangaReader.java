@@ -212,9 +212,6 @@ public class MangaReader extends RecyclerViewPager implements IOverScrollUpdateL
                             mOverScrollListener.onOverScrolled(mOverScrollDirection);
                         }
                     }
-                    // Dragging stopped -- view is starting to bounce back from the *left-end* onto natural position.
-                } else { // i.e. (oldState == STATE_DRAG_END_SIDE)
-                    // View is starting to bounce back from the *right-end*.
                 }
                 break;
         }

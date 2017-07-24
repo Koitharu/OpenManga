@@ -51,10 +51,10 @@ public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.
 
         public UpdatesHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            mTextViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
-            mTextViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
-            mTextViewBadge = (TextView) itemView.findViewById(R.id.textView_badge);
+            imageView = itemView.findViewById(R.id.imageView);
+            mTextViewTitle = itemView.findViewById(R.id.textView_title);
+            mTextViewSubtitle = itemView.findViewById(R.id.textView_subtitle);
+            mTextViewBadge = itemView.findViewById(R.id.textView_badge);
             itemView.setOnClickListener(this);
         }
 

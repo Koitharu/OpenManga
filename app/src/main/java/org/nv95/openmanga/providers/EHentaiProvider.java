@@ -59,7 +59,7 @@ public class EHentaiProvider extends MangaProvider {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
             manga.subtitle = getFromBrackets(manga.name);
-            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
+            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+]","").trim();
             manga.genres = "";
             manga.rating = parseRating(o.select("div.id43").first().attr("style"));
             manga.path = concatUrl(mDomain, o.select("a").first().attr("href"));
@@ -184,7 +184,7 @@ public class EHentaiProvider extends MangaProvider {
             manga = new MangaInfo();
             manga.name = o.select("a").first().text();
             manga.subtitle = getFromBrackets(manga.name);
-            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+\\]","").trim();
+            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+]","").trim();
             manga.genres = "";
             manga.rating = parseRating(o.select("div.id43").first().attr("style"));
             manga.path = concatUrl(mDomain, o.select("a").first().attr("href"));
@@ -213,7 +213,7 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     private String getFromBrackets(String src) {
-        Matcher m = Pattern.compile("\\[[^\\[,\\]]+\\]").matcher(src);
+        Matcher m = Pattern.compile("\\[[^\\[,\\]]+]").matcher(src);
         StringBuilder sb = new StringBuilder();
         String t;
         boolean firstTime = true;

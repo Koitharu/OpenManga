@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 /**
@@ -42,7 +43,7 @@ public class AppCompatProgressBar extends ProgressBar {
     }
 
     private void init(Context context) {
-        mColorFilter = new PorterDuffColorFilter(LayoutUtils.getAccentColor(context), PorterDuff.Mode.SRC_IN);
+        mColorFilter = new PorterDuffColorFilter(LayoutUtils.getAttrColor(context, R.attr.colorAccent), PorterDuff.Mode.SRC_IN);
         applyColorFilter(getProgressDrawable());
         applyColorFilter(getIndeterminateDrawable());
     }

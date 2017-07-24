@@ -1,4 +1,5 @@
 <resources>
+    <string name="__empty__" translatable="false"/>
     <string name="app_name" translatable="false">OpenManga</string>
     <string name="action_settings">Settings</string>
     <string name="loading">Loading…</string>
@@ -33,7 +34,6 @@
     <string name="completed">Completed</string>
     <string name="cancelling">Cancelling…</string>
     <string name="disclaimer">All manga, characters and logos belong to their respective copyright owners. This app\'s developers not have any affiliation with the content providers.</string>
-    <string name="select_sources">Select manga\'s sources</string>
     <string name="navigate">Go to</string>
     <string name="goto_page" formatted="false">Go to: %d/%d</string>
     <string name="bug_report">Send a bug report</string>
@@ -212,7 +212,6 @@
     <string name="genre_hentai">Hentai</string>
     <string name="tip_chapter_checking">Enable automatic checking and receive notifications about new chapters for favourite mangas</string>
     <string name="select_image">Select image</string>
-    <string name="genre">Genre</string>
     <string name="description">Description</string>
     <string name="app_update_avaliable">App\'s update available</string>
     <string name="check_updates_auto">Automatic check for updates</string>
@@ -248,7 +247,6 @@
     <string name="moving_files">Moving files…</string>
     <string name="status_completed">Manga completed</string>
     <string name="status_ongoing">Ongoing</string>
-    <string name="local_size" formatted="false">Size: %s</string>
     <string name="scale_mode">Scale mode</string>
     <string name="scale_source">Source size</string>
     <string name="automatic">Auto</string>
@@ -343,16 +341,13 @@
     <string name="logout">Logout</string>
     <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
     <string name="genre_comics">Comics</string>
-    <string name="recent">Recent</string>
     <string name="action_export">Export</string>
     <string name="exporting">Exporting manga…</string>
-    <string name="saved_manga">Saved manga</string>
     <string name="paused">Paused</string>
     <string name="pause_all">Pause all</string>
     <string name="resume_all">Resume all</string>
     <string name="cancel_all">Cancel all</string>
     <string name="appearance">Appearance</string>
-    <string name="behavior">Behavior</string>
     <string name="system">System</string>
     <string name="storage_settings">Local storage</string>
     <string name="more_">More…</string>

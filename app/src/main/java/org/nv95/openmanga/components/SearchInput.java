@@ -58,8 +58,8 @@ public class SearchInput extends FrameLayout implements TextWatcher, View.OnFocu
     private void init(Context context) {
         LayoutInflater.from(context)
                 .inflate(R.layout.layout_search, this, true);
-        mEditText = (EditText) findViewById(R.id.editTextQuery);
-        mImageViewClear = (ImageView) findViewById(R.id.image_clear);
+        mEditText = findViewById(R.id.editTextQuery);
+        mImageViewClear = findViewById(R.id.image_clear);
         mFocusChangeListener = null;
         mClearVisible = false;
         mImageViewClear.setOnClickListener(new OnClickListener() {

@@ -1,5 +1,6 @@
 package org.nv95.openmanga.adapters;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
     @Nullable
     private final OnBookmarkClickListener mClickListener;
     
-    public BookmarksAdapter(List<Bookmark> list, OnBookmarkClickListener clickListener) {
+    public BookmarksAdapter(List<Bookmark> list, @Nullable OnBookmarkClickListener clickListener) {
         mBookmarks = list;
         mClickListener = clickListener;
     }
@@ -37,6 +38,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
         return holder;
     }
     
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(BookmarkHolder holder, int position) {
         Bookmark o = mBookmarks.get(position);
@@ -67,9 +69,9 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.Book
         
         BookmarkHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            textView1 = (TextView) itemView.findViewById(R.id.textView_title);
-            textView2 = (TextView) itemView.findViewById(R.id.textView_subtitle);
+            imageView = itemView.findViewById(R.id.imageView);
+            textView1 = itemView.findViewById(R.id.textView_title);
+            textView2 = itemView.findViewById(R.id.textView_subtitle);
         }
     }
     

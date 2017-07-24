@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient
-        android:startColor="@android:color/transparent"
-        android:endColor="@color/black_owerlay_40"
-        android:angle="90"/>
-</shape><!-- From: file:/C:/android_dev/workspace/mos_kit/mos_basekit/src/main/res/drawable/toolbarshadow.xml -->

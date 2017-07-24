@@ -220,8 +220,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         FooterViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            textView = (TextView) v.findViewById(R.id.textView);
+            progressBar = v.findViewById(R.id.progressBar);
+            textView = v.findViewById(R.id.textView);
             boolean light = !LayoutUtils.isAppThemeDark(v.getContext());
             textView.setBackgroundResource(light ? R.drawable.background_button : R.drawable.background_button_light);
         }
@@ -234,7 +234,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public GroupViewHolder(View itemView) {
             super(itemView);
-            mTextView = (TextView) itemView.findViewById(R.id.textView);
+            mTextView = itemView.findViewById(R.id.textView);
         }
 
         public void fill(ProviderSummary data) {

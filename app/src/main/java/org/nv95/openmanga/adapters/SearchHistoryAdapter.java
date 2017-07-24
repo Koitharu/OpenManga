@@ -135,8 +135,8 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         ItemHolder(View itemView, OnHistoryEventListener listener) {
             super(itemView);
             mClickListener = listener;
-            textView = (TextView) itemView.findViewById(android.R.id.text1);
-            imageButton = (ImageView) itemView.findViewById(R.id.imageButton);
+            textView = itemView.findViewById(android.R.id.text1);
+            imageButton = itemView.findViewById(R.id.imageButton);
             imageButton.setOnClickListener(this);
             textView.setOnClickListener(this);
         }

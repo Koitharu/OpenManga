@@ -29,9 +29,9 @@ public class RecommendationsPrefDialog implements View.OnClickListener {
         @SuppressLint("InflateParams")
         View contentView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_recommendprefs, null);
-        final CheckedTextView checkedTextViewFav = (CheckedTextView) contentView.findViewById(R.id.checkedTextView_fav);
-        final CheckedTextView checkedTextViewHist = (CheckedTextView) contentView.findViewById(R.id.checkedTextView_hist);
-        final CheckedTextView checkedTextViewMatch = (CheckedTextView) contentView.findViewById(R.id.checkedTextView_match);
+        final CheckedTextView checkedTextViewFav = contentView.findViewById(R.id.checkedTextView_fav);
+        final CheckedTextView checkedTextViewHist = contentView.findViewById(R.id.checkedTextView_hist);
+        final CheckedTextView checkedTextViewMatch = contentView.findViewById(R.id.checkedTextView_match);
 
         checkedTextViewFav.setOnClickListener(this);
         checkedTextViewHist.setOnClickListener(this);

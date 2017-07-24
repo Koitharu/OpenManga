@@ -3,13 +3,13 @@
     <EditTextPreference
         android:title="@string/login"
         android:key="login"
-        android:defaultValue="" />
+        android:defaultValue="@string/__empty__" />
     <EditTextPreference
         android:title="@string/password"
         android:key="password"
         android:inputType="textPassword"
         android:dependency="login"
-        android:defaultValue="" />
+        android:defaultValue="@string/__empty__" />
     <Preference
         android:title="@string/check_credentials"
         android:key="auth_test"

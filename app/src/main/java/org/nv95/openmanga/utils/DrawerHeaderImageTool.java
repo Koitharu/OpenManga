@@ -43,8 +43,8 @@ public class DrawerHeaderImageTool implements View.OnClickListener {
     public DrawerHeaderImageTool(AppCompatActivity activity, NavigationView navigationView) {
         mActivity = activity;
         View v = navigationView.getHeaderView(0);
-        mImageView = (ImageView) v.findViewById(imageView);
-        mTextView = (TextView) v.findViewById(textView);
+        mImageView = v.findViewById(imageView);
+        mTextView = v.findViewById(textView);
         mImageFile = new File(activity.getExternalFilesDir("temp"), "header");
         mImageView.setOnClickListener(this);
     }

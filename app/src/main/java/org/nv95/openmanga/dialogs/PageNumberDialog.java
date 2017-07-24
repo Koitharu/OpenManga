@@ -28,8 +28,8 @@ public class PageNumberDialog implements DialogInterface.OnClickListener, SeekBa
     public PageNumberDialog(Context context) {
         this.mContext = context;
         View view = View.inflate(context, R.layout.dialog_pagenumber, null);
-        mEditText = (EditText) view.findViewById(R.id.editText);
-        mTextView = (TextView) view.findViewById(R.id.textView);
+        mEditText = view.findViewById(R.id.editText);
+        mTextView = view.findViewById(R.id.textView);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
         builder.setTitle(R.string.navigate);

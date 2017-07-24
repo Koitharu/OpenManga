@@ -135,8 +135,8 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             itemView.findViewById(R.id.button_positive).setOnClickListener(this);
             mListener = listener;
-            textViewTitle = (TextView) itemView.findViewById(R.id.textView_title);
-            textViewSubtitle = (TextView) itemView.findViewById(R.id.textView_subtitle);
+            textViewTitle = itemView.findViewById(R.id.textView_title);
+            textViewSubtitle = itemView.findViewById(R.id.textView_subtitle);
         }
         
         @Override

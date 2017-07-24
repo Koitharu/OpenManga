@@ -1,7 +1,6 @@
 package org.nv95.openmanga.activities;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -50,6 +49,7 @@ import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
 import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.util.List;
@@ -261,7 +261,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_save_more:
                 if (checkConnectionWithSnackbar(mTextViewDescription)) {
-                    new LoadSourceTask(this).attach(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mManga);
+                    new LoadSourceTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mManga);
                 }
                 return true;
             default:
@@ -439,37 +439,21 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         }
     }
 
-    private static class LoadSourceTask extends WeakAsyncTask<PreviewActivity2, MangaInfo, Void, MangaSummary> implements DialogInterface.OnCancelListener {
-
-        private final ProgressDialog mProgressDialog;
+    private static class LoadSourceTask extends ProgressAsyncTask<MangaInfo, Void, MangaSummary> implements DialogInterface.OnCancelListener {
 
         LoadSourceTask(PreviewActivity2 object) {
             super(object);
-            mProgressDialog = new ProgressDialog(object);
-            mProgressDialog.setMessage(object.getString(R.string.loading));
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setOnCancelListener(this);
-        }
-
-        @Override
-        protected void onPreExecute(@NonNull PreviewActivity2 activity2) {
-            mProgressDialog.show();
         }
 
         @Override
         protected MangaSummary doInBackground(MangaInfo... params) {
-            return LocalMangaProvider.getInstance(getObject())
+            return LocalMangaProvider.getInstance(getActivity())
                     .getSource(params[0]);
         }
 
         @Override
-        protected void onPostExecute(MangaSummary mangaSummary) {
-            mProgressDialog.dismiss();
-            super.onPostExecute(mangaSummary);
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull PreviewActivity2 a, MangaSummary sourceManga) {
+        protected void onPostExecute(@NonNull BaseAppActivity activity, MangaSummary sourceManga) {
+            PreviewActivity2 a = (PreviewActivity2) activity;
             if (sourceManga == null) {
                 Snackbar.make(a.mViewPager, R.string.loading_error, Snackbar.LENGTH_SHORT)
                         .show();
@@ -483,11 +467,6 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 sourceManga.chapters = newChapters;
                 new MangaSaveHelper(a).confirmSave(sourceManga, R.string.action_save_add);
             }
-        }
-
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            this.cancel(true);
         }
     }
 

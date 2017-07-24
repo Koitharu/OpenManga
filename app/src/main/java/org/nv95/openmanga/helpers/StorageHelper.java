@@ -221,8 +221,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                         if ("id".equals(key)) {
                             id = String.valueOf(value);
                         }
-                    } catch (JSONException e) {
-                        continue;
+                    } catch (JSONException ignored) {
                     }
                 }
                 if (id != null && (database.update(tableName, cv, "id=?", new String[]{id}) == 0)) {
