@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,7 +56,7 @@ public class BookmarksDialog implements BookmarksAdapter.OnBookmarkClickListener
         mRecyclerView = (RecyclerView) mContentView.findViewById(R.id.recyclerView);
         mToolbar = (Toolbar) mContentView.findViewById(R.id.toolbar);
         mHolder = (TextView) mContentView.findViewById(R.id.textView_holder);
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_cancel_light);
         mToolbar.setNavigationOnClickListener(this);
         mToolbar.setTitle(R.string.bookmarks);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -62,7 +66,18 @@ public class BookmarksDialog implements BookmarksAdapter.OnBookmarkClickListener
                 .create();
         mDialog.setOwnerActivity(mActivity);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            private Drawable background;
+            private Drawable xMark;
+            boolean initialized = false;
+
+            private void init() {
+                background = new ColorDrawable(ContextCompat.getColor(mActivity, R.color.red_overlay));
+                xMark = ContextCompat.getDrawable(mActivity, R.drawable.ic_delete_light);
+                initialized = true;
+            }
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -77,6 +92,41 @@ public class BookmarksDialog implements BookmarksAdapter.OnBookmarkClickListener
                     showHideHolder();
                     Snackbar.make(mContentView, R.string.bookmark_removed, Snackbar.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                if (viewHolder.getAdapterPosition() == -1) {
+                    return;
+                }
+
+                View itemView = viewHolder.itemView;
+
+                if (!initialized) {
+                    init();
+                }
+
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.draw(c);
+
+                int itemHeight = itemView.getBottom() - itemView.getTop();
+                int intrinsicWidth = xMark.getIntrinsicWidth();
+                int intrinsicHeight = xMark.getIntrinsicWidth();
+
+                int xMarkPos = (int) ((dX + intrinsicHeight) / 2);
+                xMark.setAlpha(Math.min(255, (int)(-dX)));
+
+                int xMarkLeft = itemView.getRight() + xMarkPos - intrinsicWidth;
+                int xMarkRight = itemView.getRight() + xMarkPos;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+
+                xMark.draw(c);
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         });
         itemTouchHelper.attachToRecyclerView(mRecyclerView);

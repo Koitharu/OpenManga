@@ -12,4 +12,5 @@
     <color name="selector_frame">#26a69a</color>
     <color name="pressed_light">#14838383</color>
     <color name="dark_disabled">#454545</color>
+    <color name="red_overlay">#92ff0000</color>
 </resources>
