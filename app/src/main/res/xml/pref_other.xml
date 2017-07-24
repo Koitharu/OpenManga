@@ -42,11 +42,11 @@
     <PreferenceCategory android:title="@string/network_settings">
 
         <org.nv95.openmanga.components.IntSelectPreference
-            android:key="save_threads"
-            app:maxValue = "4"
-            app:minValue = "1"
             android:defaultValue="2"
-            android:title="Max parallel downloads" />
+            android:key="save_threads"
+            android:title="Max parallel downloads"
+            app:maxValue="4"
+            app:minValue="1" />
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -65,11 +65,12 @@
 
     <PreferenceCategory android:title="@string/system">
 
-        <EditTextPreference
+        <org.nv95.openmanga.components.PickerPreference
             android:defaultValue="100"
-            android:inputType="numberDecimal"
-            android:key="maxcache"
-            android:title="@string/max_cache_size" />
+            android:key="cache_max"
+            android:title="@string/max_cache_size"
+            app:maxValue="1024"
+            app:minValue="20" />
 
         <Preference
             android:key="ccache"

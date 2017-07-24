@@ -50,11 +50,11 @@ public class OtherSettingsFragment extends PreferenceFragment {
         }
         p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
-        PreferencesUtils.bindPreferenceSummary(findPreference("maxcache"), new Preference.OnPreferenceChangeListener() {
+        PreferencesUtils.bindPreferenceSummary(findPreference("cache_max"), new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 try {
-                    int size = Integer.valueOf((String) newValue);
+                    int size = (int) newValue;
                     if (size >= ImageUtils.CACHE_MIN_MB && size <= ImageUtils.CACHE_MAX_MB) {
                         //noinspection ConstantConditions
                         int aval = StorageUtils.getFreeSpaceMb(preference.getContext().getExternalCacheDir().getPath());

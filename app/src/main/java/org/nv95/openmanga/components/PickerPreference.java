@@ -5,58 +5,41 @@ import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.widget.NumberPicker;
 
 import org.nv95.openmanga.R;
 
-import java.util.ArrayList;
-
 /**
- * Created by admin on 23.07.17.
+ * Created by admin on 24.07.17.
  */
 
-public class IntSelectPreference extends DialogPreference implements AdapterView.OnItemClickListener,
-        IntegerPreference {
+public class PickerPreference extends DialogPreference implements IntegerPreference {
 
     private final int mMaxValue;
     private final int mMinValue;
     private int mValue;
-    private int mNewValue;
     private boolean mValueSet;
-    private final ArrayList<Integer> mValues;
+    private NumberPicker mPicker;
 
-
-    public IntSelectPreference(Context context, AttributeSet attrs) {
+    public PickerPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setDialogLayoutResource(R.layout.pref_intselect);
+        setDialogLayoutResource(R.layout.pref_picker);
         TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.IntSelectPreferenceAttrs);
-        mMaxValue = a.getInt(R.styleable.IntSelectPreferenceAttrs_maxValue, 4);
+        mMaxValue = a.getInt(R.styleable.IntSelectPreferenceAttrs_maxValue, 100);
         mMinValue = a.getInt(R.styleable.IntSelectPreferenceAttrs_minValue, 0);
-        mValue = 1;
+        mValue = 100;
         a.recycle();
         mValueSet = false;
-        mValues = new ArrayList<>();
-        for (int i = mMinValue; i <= mMaxValue; i++) {
-            mValues.add(i);
-        }
     }
 
     @Override
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
-        GridView gridView = view.findViewById(R.id.gridView);
-        gridView.setNumColumns(Math.min(mValues.size(), 5));
-        gridView.setAdapter(new ArrayAdapter<>(
-                view.getContext(),
-                R.layout.item_cell_selectable,
-                android.R.id.text1,
-                mValues
-        ));
-        gridView.setItemChecked(mValues.indexOf(mValue), true);
-        gridView.setOnItemClickListener(this);
+        mPicker = view.findViewById(R.id.numberPicker);
+        mPicker.setMinValue(mMinValue);
+        mPicker.setMaxValue(mMaxValue);
+        mPicker.setValue(mValue);
     }
 
     public void setValue(int value) {
@@ -77,28 +60,24 @@ public class IntSelectPreference extends DialogPreference implements AdapterView
         super.onDialogClosed(positiveResult);
         if (positiveResult) {
             OnPreferenceChangeListener changeListener = getOnPreferenceChangeListener();
-            if (changeListener == null || changeListener.onPreferenceChange(this, mNewValue)) {
-                setValue(mNewValue);
+            if (changeListener == null || changeListener.onPreferenceChange(this, mPicker.getValue())) {
+                setValue(mPicker.getValue());
             }
         }
     }
 
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        int newValue = 0;
         if (defaultValue instanceof Integer) {
-            mNewValue = (int) defaultValue;
+            newValue = (int) defaultValue;
         } else if (defaultValue instanceof String) {
-            mNewValue = Integer.parseInt((String) defaultValue);
+            newValue = Integer.parseInt((String) defaultValue);
         }
         if (restoreValue) {
-            mNewValue = getPersistedInt(mValue);
+            newValue = getPersistedInt(mValue);
         }
-        setValue(mNewValue);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        mNewValue = mValues.get(i);
+        setValue(newValue);
     }
 
     @Override

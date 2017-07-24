@@ -42,8 +42,8 @@ public class ImageUtils {
         if (!ImageLoader.getInstance().isInited()) {
             int cacheMb = 100;
             try {
-                cacheMb = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
-                        .getString("maxcache", "100"));
+                cacheMb = PreferenceManager.getDefaultSharedPreferences(context)
+                        .getInt("cache_max", 100);
                 if (cacheMb < CACHE_MIN_MB) {
                     cacheMb = CACHE_MIN_MB;
                 } else if (cacheMb > CACHE_MAX_MB) {
