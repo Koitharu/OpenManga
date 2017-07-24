@@ -362,4 +362,5 @@
     <string name="save_next_chapters">Save this and next chapters</string>
     <string name="download_starts_on_network">Download will starts later</string>
     <string name="download_started">Download started</string>
+    <string name="general">General</string>
 </resources>

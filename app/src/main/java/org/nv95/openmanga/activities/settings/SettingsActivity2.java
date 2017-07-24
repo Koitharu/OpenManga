@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities.settings;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -9,8 +10,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
@@ -29,6 +39,7 @@ import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.services.UpdateService;
+import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
@@ -37,14 +48,16 @@ import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 /**
- * Created by nv95 on 03.10.15.
- * Activity with settings fragments
+ * Created by admin on 24.07.17.
  */
-public class SettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+
+public class SettingsActivity2 extends BaseAppActivity implements AdapterView.OnItemClickListener,
+        Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, FragmentManager.OnBackStackChangedListener {
 
     public static final int REQUEST_SOURCES = 114;
     public static final int REQUEST_SYNC = 115;
@@ -54,45 +67,88 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
     public static final int SECTION_PROVIDERS = 3;
 
     private Fragment mFragment;
-    private boolean isTwoPaneMode;
+    private RecyclerView mRecyclerView;
+    private ArrayList<PreferenceHeader> mHeaders;
+    private AppBarLayout mAppBarLayout;
+    private CardView mCardView;
+    private FrameLayout mContent;
+    private TextView mTitleTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_settings2);
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
+        disableTitle();
 
-        isTwoPaneMode = findViewById(R.id.sub_content) != null;
+        mContent = (FrameLayout) findViewById(R.id.content);
+        mCardView = (CardView) findViewById(R.id.cardView);
+        mTitleTextView = (TextView) findViewById(R.id.textView_title);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mHeaders = new ArrayList<>();
 
-        int section = getIntent().getIntExtra("section", 0);
-        switch (section) {
-            case SECTION_READER:
-                mFragment = new ReadSettingsFragment();
+        mHeaders.add(new PreferenceHeader(this, R.string.general, R.drawable.ic_pref_home));
+        mHeaders.add(new PreferenceHeader(this, R.string.appearance, R.drawable.ic_pref_appearance));
+        mHeaders.add(new PreferenceHeader(this, R.string.manga_catalogues, R.drawable.ic_pref_sources));
+        mHeaders.add(new PreferenceHeader(this, R.string.action_reading_options, R.drawable.ic_pref_reader));
+        mHeaders.add(new PreferenceHeader(this, R.string.checking_new_chapters, R.drawable.ic_pref_cheknew));
+        mHeaders.add(new PreferenceHeader(this, R.string.sync, R.drawable.ic_pref_sync));
+        mHeaders.add(new PreferenceHeader(this, R.string.more_, R.drawable.ic_pref_more));
+
+        mRecyclerView.setAdapter(new SettingsHeadersAdapter(mHeaders, this));
+        getFragmentManager().addOnBackStackChangedListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (i) {
+            case 0:
+                openFragment(new GeneralSettingsFragment());
                 break;
-            case SECTION_PROVIDERS:
-                mFragment = new ProviderSelectFragment();
+            case 1:
+                openFragment(new AppearanceSettingsFragment());
                 break;
-            default:
-                mFragment = null;
+            case 2:
+                openFragment(new ProviderSelectFragment());
+                break;
+            case 3:
+                openFragment(new ReadSettingsFragment());
+                break;
+            case 4:
+                startActivityForResult(new Intent(this, UpdatesSettingsActivity.class), REQUEST_CHUPD);
+                break;
+            case 5:
+                if (SyncHelper.get(this).isAuthorized()) {
+                    openFragment(new SyncSettingsFragment());
+                } else {
+                    openFragment(new SyncLoginFragment());
+                }
+                break;
+            case 6:
+                openFragment(new OtherSettingsFragment());
+                break;
         }
+    }
 
+    public void openFragment(Fragment fragment) {
+        mFragment = fragment;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (isTwoPaneMode) {
-            if (mFragment == null) {
-                mFragment = new OtherSettingsFragment();
-            }
-            transaction
-                    .add(R.id.content, new SettingsHeadersFragment())
-                    .add(R.id.sub_content, mFragment);
-        } else {
-            if (mFragment == null) {
-                mFragment = new SettingsHeadersFragment();
-            }
-            transaction.add(R.id.content, mFragment);
-        }
+        transaction.replace(R.id.content, mFragment)
+                .addToBackStack(null);
         transaction.commit();
+    }
 
+    @Override
+    public void setTitle(int titleId) {
+        mTitleTextView.setText(titleId);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitleTextView.setText(title);
     }
 
     @Override
@@ -107,43 +163,9 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
     }
 
-    public void openFragment(Fragment fragment) {
-        mFragment = fragment;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (isTwoPaneMode) {
-            transaction.replace(R.id.sub_content, mFragment);
-        } else {
-            transaction.replace(R.id.content, mFragment)
-                    .addToBackStack(null);
-        }
-        transaction.commit();
-    }
-
     @Override
     public boolean onPreferenceClick(final Preference preference) {
         switch (preference.getKey()) {
-            case "header.sync":
-                if (SyncHelper.get(this).isAuthorized()) {
-                    openFragment(new SyncSettingsFragment());
-                } else {
-                    openFragment(new SyncLoginFragment());
-                }
-                return true;
-            case "header.sources":
-                openFragment(new ProviderSelectFragment());
-                return true;
-            case "header.appearance":
-                openFragment(new AppearanceSettingsFragment());
-                return true;
-            case "header.chupd":
-                startActivityForResult(new Intent(this, UpdatesSettingsActivity.class), REQUEST_CHUPD);
-                return true;
-            case "header.reader":
-                openFragment(new ReadSettingsFragment());
-                return true;
-            case "header.other":
-                openFragment(new OtherSettingsFragment());
-                return true;
             case "bugreport":
                 FileLogger.sendLog(this);
                 return true;
@@ -187,7 +209,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                             @Override
                             public void onDirSelected(final File dir) {
                                 if (!dir.canWrite()) {
-                                    Toast.makeText(SettingsActivity.this, R.string.dir_no_access,
+                                    Toast.makeText(SettingsActivity2.this, R.string.dir_no_access,
                                             Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -211,7 +233,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                new SyncLogoutTask(SettingsActivity.this).start();
+                                new SyncLogoutTask(SettingsActivity2.this).start();
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -246,7 +268,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
 
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        OrbotHelper.get(SettingsActivity.this).installOrbot(SettingsActivity.this);
+                                        OrbotHelper.get(SettingsActivity2.this).installOrbot(SettingsActivity2.this);
                                     }
                                 }).create().show();
                         return false;
@@ -288,6 +310,18 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
     }
 
+    @Override
+    public void onBackStackChanged() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            AnimUtils.crossfade(mContent, mCardView);
+            setTitle(R.string.action_settings);
+            mAppBarLayout.setExpanded(true, true);
+        } else {
+            AnimUtils.slide(mCardView, mContent);
+            mAppBarLayout.setExpanded(false, true);
+        }
+    }
+
     private static class CacheClearTask extends WeakAsyncTask<Preference, Void, Void, Void> {
 
         CacheClearTask(Preference object) {
@@ -316,12 +350,12 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
     }
 
-    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity, Void, Void, AppUpdatesProvider> implements DialogInterface.OnCancelListener {
+    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity2, Void, Void, AppUpdatesProvider> implements DialogInterface.OnCancelListener {
 
         private int mSelected = 0;
         private final ProgressDialog mDialog;
 
-        CheckUpdatesTask(SettingsActivity activity) {
+        CheckUpdatesTask(SettingsActivity2 activity) {
             super(activity);
             mDialog = new ProgressDialog(activity);
             mDialog.setMessage(activity.getString(R.string.checking_updates));
@@ -331,7 +365,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
 
         @Override
-        protected void onPreExecute(@NonNull SettingsActivity activity) {
+        protected void onPreExecute(@NonNull SettingsActivity2 activity) {
             mDialog.show();
         }
 
@@ -347,7 +381,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
         }
 
         @Override
-        protected void onPostExecute(@NonNull final SettingsActivity activity, AppUpdatesProvider appUpdatesProvider) {
+        protected void onPostExecute(@NonNull final SettingsActivity2 activity, AppUpdatesProvider appUpdatesProvider) {
             mDialog.dismiss();
             if (appUpdatesProvider.isSuccess()) {
                 if (activity.mFragment instanceof OtherSettingsFragment) {
@@ -405,7 +439,7 @@ public class SettingsActivity extends BaseAppActivity implements Preference.OnPr
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         p.setSelectable(false);
-                        new DeviceDetachTask(p).attach(SettingsActivity.this).start(devId);
+                        new DeviceDetachTask(p).attach(SettingsActivity2.this).start(devId);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)

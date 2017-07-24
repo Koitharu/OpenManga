@@ -2,7 +2,6 @@ package org.nv95.openmanga.activities.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -10,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
@@ -71,9 +69,7 @@ public class OtherSettingsFragment extends PreferenceFragment {
             }
         }, activity.getString(R.string.size_mb));
 
-        findPreference("recommendations").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
-        PreferencesUtils.bindPreferenceSummary(findPreference("fav.categories"));
         PreferencesUtils.bindPreferenceSummary(findPreference("save_threads"));
 
         findPreference("ccache").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
@@ -96,18 +92,6 @@ public class OtherSettingsFragment extends PreferenceFragment {
             screen.removePreference(p);
             screen.removePreference(findPreference("autoupdate"));
         }
-
-        PreferencesUtils.bindPreferenceSummary(findPreference("lang"), new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                OpenMangaApplication.setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
-                int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
-                String summ = ((ListPreference) preference).getEntries()[index].toString();
-                preference.setSummary(summ);
-                Toast.makeText(preference.getContext(), R.string.need_restart, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
 
         p = findPreference("about");
         p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);

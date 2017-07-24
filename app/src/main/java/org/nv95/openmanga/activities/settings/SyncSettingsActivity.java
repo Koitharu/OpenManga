@@ -44,6 +44,7 @@ import java.util.ArrayList;
  * Created by admin on 10.07.17.
  */
 
+@Deprecated
 public class SyncSettingsActivity extends BaseAppActivity implements Preference.OnPreferenceClickListener {
 
     @Override
@@ -104,7 +105,6 @@ public class SyncSettingsActivity extends BaseAppActivity implements Preference.
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .create().show();
-
     }
 
     public static class SyncSettingsFragment extends PreferenceFragment {

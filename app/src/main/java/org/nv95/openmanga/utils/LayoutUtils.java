@@ -44,8 +44,12 @@ public class LayoutUtils {
         return context.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
 
+    public static boolean isLandscape(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
     public static boolean isTabletLandscape(Context context) {
-        return isTablet(context) && context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        return isTablet(context) && isLandscape(context);
     }
 
     public static int getScreenSize(Context context) {

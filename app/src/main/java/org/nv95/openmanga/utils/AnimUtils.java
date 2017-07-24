@@ -120,6 +120,37 @@ public class AnimUtils {
 
     }
 
+    public static void slide(@Nullable final View whatHide, @Nullable View whatShow) {
+        if (whatShow != null && whatShow.getVisibility() != View.VISIBLE) {
+            cancelAnimation(whatShow);
+            whatShow.setAlpha(0f);
+            whatShow.setTranslationY(100);
+            whatShow.setVisibility(View.VISIBLE);
+            whatShow.animate()
+                    .alpha(1f)
+                    .translationY(0)
+                    .setDuration(DURATION_SHORT)
+                    .setListener(null);
+        }
+
+        if (whatHide != null && whatHide.getVisibility() == View.VISIBLE) {
+            cancelAnimation(whatHide);
+            whatHide.animate()
+                    .alpha(0f)
+                    .translationY(0)
+                    .setDuration(DURATION_SHORT)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            whatHide.setVisibility(View.GONE);
+                            whatHide.setAlpha(1);
+                            whatHide.setTranslationY(0);
+                        }
+                    });
+        }
+
+    }
+
     private static void cancelAnimation(@NonNull View view) {
         view.animate().cancel();
     }

@@ -40,6 +40,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.settings.SettingsActivity;
+import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.FastHistoryDialog;
@@ -364,7 +365,7 @@ public class MainActivity extends BaseAppActivity implements
                 startActivity(new Intent(this, NewChaptersActivity.class));
                 return true;
             case R.id.action_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
+                startActivityForResult(new Intent(this, SettingsActivity2.class), REQUEST_SETTINGS);
                 return true;
             default:
                 return mListModeHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);

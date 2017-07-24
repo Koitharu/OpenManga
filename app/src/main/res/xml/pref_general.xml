@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="@string/__empty__"
+        android:entries="@array/app_languages"
+        android:entryValues="@array/app_languages_values"
+        android:key="lang"
+        android:title="@string/app_language" />
+
+    <Preference
+        android:key="recommendations"
+        android:title="@string/recommendations_options" />
+
+    <EditTextPreference
+        android:defaultValue="@string/favourites_categories_default"
+        android:dialogMessage="@string/favourites_categories_description"
+        android:key="fav.categories"
+        android:inputType="textMultiLine|textCapSentences|textLongMessage"
+        android:title="@string/favourites_categories" />
+
+</PreferenceScreen>

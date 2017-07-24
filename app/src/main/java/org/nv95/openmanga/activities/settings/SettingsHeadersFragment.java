@@ -21,6 +21,7 @@ import java.util.Arrays;
  * Created by admin on 21.07.17.
  */
 
+@Deprecated
 public class SettingsHeadersFragment extends PreferenceFragment {
 
     @Override
@@ -33,6 +34,7 @@ public class SettingsHeadersFragment extends PreferenceFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
+        boolean isTwoPaneMode = LayoutUtils.isLandscape(activity);
         Drawable[] icons = LayoutUtils.getAccentedIcons(activity,
                 R.drawable.ic_pref_home,
                 R.drawable.ic_pref_appearance,
@@ -47,8 +49,15 @@ public class SettingsHeadersFragment extends PreferenceFragment {
         int count = screen.getPreferenceCount();
         for (int i = 0; i < count; i++) {
             Preference p = screen.getPreference(i);
-            p.setIcon(icons[i]);
+            if (!isTwoPaneMode) {
+                p.setIcon(icons[i]);
+            }
             p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+        }
+
+        if (isTwoPaneMode) {
+            //no summaries needed
+            return;
         }
 
         Preference p = findPreference("defsection");

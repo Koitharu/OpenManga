@@ -55,7 +55,9 @@
             android:label="@string/manga_updates" />
         <activity
             android:name=".activities.settings.SettingsActivity"
-            android:configChanges="orientation|screenSize"
+            android:label="@string/action_settings" />
+        <activity
+            android:name=".activities.settings.SettingsActivity2"
             android:label="@string/action_settings" />
         <activity
             android:name=".activities.WelcomeActivity"
