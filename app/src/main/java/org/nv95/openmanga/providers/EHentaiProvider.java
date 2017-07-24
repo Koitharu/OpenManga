@@ -170,7 +170,7 @@ public class EHentaiProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return mDomain.length() == 20 ? "ExHentai" : "E-Hentai";
+        return mDomain.charAt(8) == 'x' ? "ExHentai" : "E-Hentai";
     }
 
     @Override
@@ -245,7 +245,7 @@ public class EHentaiProvider extends MangaProvider {
     }
 
     public static boolean isAuthorized() {
-        return "".equals(sAuthCookie);
+        return !"".equals(sAuthCookie);
     }
 
     @NonNull
@@ -253,6 +253,7 @@ public class EHentaiProvider extends MangaProvider {
         return AppHelper.concatStr(sAuthCookie, DEF_COOKIE);
     }
 
+    @SuppressWarnings("WeakerAccess")
     @WorkerThread
     public static boolean auth(String login, String password) {
         CookieParser cp = NetworkUtils.authorize(
