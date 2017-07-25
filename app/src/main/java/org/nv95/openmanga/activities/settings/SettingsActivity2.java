@@ -104,6 +104,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         recyclerView.setAdapter(mAdapter = new SettingsHeadersAdapter(mHeaders, this));
         getFragmentManager().addOnBackStackChangedListener(this);
 
+        mFragment = null;
         int section = getIntent().getIntExtra("section", 0);
         switch (section) {
             case SECTION_READER:
@@ -136,6 +137,10 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         if (mFragment != null) {
+            if (!mIsTwoPanesMode) {
+                mAppBarLayout.setExpanded(false, false);
+                AnimUtils.noanim(mCardView, mContent);
+            }
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.content, mFragment);
             transaction.commit();
@@ -301,6 +306,22 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
     }
 
+    public void onSaveInstanceState(Bundle outState){
+        if (mFragment != null) {
+            outState.putString("fragment", mFragment.getClass().getName());
+        }
+    }
+    public void onRestoreInstanceState(Bundle inState){
+        String fragment = inState.getString("fragment");
+        if (fragment != null) {
+            try {
+                Fragment f = (Fragment) Class.forName(fragment).newInstance();
+                openFragment(f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
         switch (preference.getKey()) {
@@ -327,6 +348,14 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                     return true;
                 }
                 break;
+            case "theme":
+                mCardView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        recreate();
+                    }
+                }, 100);
+                return true;
         }
         return false;
     }
@@ -358,6 +387,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
     @Override
     public void onBackStackChanged() {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
+            mFragment = null;
             AnimUtils.crossfade(mContent, mCardView);
             setTitle(R.string.action_settings);
             mAppBarLayout.setExpanded(true, true);

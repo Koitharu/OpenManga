@@ -2,6 +2,7 @@ package org.nv95.openmanga.activities.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import org.nv95.openmanga.R;
@@ -22,7 +23,7 @@ public class AppearanceSettingsFragment extends PreferenceFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        PreferencesUtils.bindPreferenceSummary(findPreference("theme"));
+        PreferencesUtils.bindPreferenceSummary(findPreference("theme"), (Preference.OnPreferenceChangeListener) getActivity());
     }
 
     @Override
