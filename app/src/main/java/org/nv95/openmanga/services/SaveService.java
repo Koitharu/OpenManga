@@ -130,7 +130,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                 }
                 break;
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
     }
 
     @Override
@@ -300,6 +300,18 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                         for (int j=0; j<pages.size(); j++) {
                             o1 = pages.get(j);
                             o1.path = provider.getPageImage(o1);
+                            if (o1.path == null) {
+                                o1.path = provider.getPageImage(o1);
+                                if (o1.path == null) {
+                                    if (onError()) {
+                                        //go to previous
+                                        j--;
+                                        continue;
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                            }
                             o1.id = store.pushPage(o1, mangaId, o.id);
                             if (o1.id == 0) {
                                 //error(

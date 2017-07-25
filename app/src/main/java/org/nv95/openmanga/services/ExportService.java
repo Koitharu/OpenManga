@@ -39,7 +39,7 @@ public class ExportService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         MangaInfo mangaInfo = new MangaInfo(intent.getExtras());
         new ExportTask(mangaInfo).executeOnExecutor(mExecutor);
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -66,6 +66,7 @@ public class ExportService extends Service {
                     .title(R.string.exporting)
                     .text(mManga.name)
                     .indeterminate()
+                    .ongoing()
                     .icon(android.R.drawable.stat_sys_upload)
                     .image(mManga.preview)
                     .foreground(mNotificationId);
@@ -99,6 +100,7 @@ public class ExportService extends Service {
                 return zipBuilder.getOutputFile().getPath();
             } catch (IOException e) {
                 if (zipBuilder != null) {
+                    //noinspection ResultOfMethodCallIgnored
                     zipBuilder.getOutputFile().delete();
                 }
                 e.printStackTrace();
@@ -135,6 +137,7 @@ public class ExportService extends Service {
             mWakeLock.release();
             mNotificationHelper.stopForeground();
             mNotificationHelper
+                    .cancelable()
                     .noProgress();
             if (s != null) {
                 StorageUtils.scanMediaFile(getApplicationContext(), new File(s));

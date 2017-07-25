@@ -40,22 +40,6 @@ import java.util.ArrayList;
  */
 public abstract class BaseAppActivity extends AppCompatActivity {
 
-    private static final int[] THEMES = new int[]{
-            R.style.AppTheme_Default,
-            R.style.AppTheme_Classic,
-            R.style.AppTheme_Grey,
-            R.style.AppTheme_Teal,
-            R.style.AppTheme_Blue,
-            R.style.AppTheme_Purple,
-            R.style.AppTheme_Ambiance,
-            R.style.AppThemeDark_Classic,
-            R.style.AppThemeDark_Blue,
-            R.style.AppThemeDark_Teal,
-            R.style.AppThemeDark_Miku,
-            R.style.AppThemeBlack_Grey,
-            R.style.AppThemeBlack_Red
-    };
-
     private static final int REQUEST_PERMISSION = 112;
 
     private boolean mActionBarVisible = false;
@@ -68,7 +52,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTheme = LayoutUtils.getAppTheme(this);
-        setTheme(THEMES[mTheme]);
+        setTheme(LayoutUtils.getAppThemeRes(mTheme));
     }
 
     public boolean isDarkTheme() {

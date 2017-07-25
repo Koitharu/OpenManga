@@ -35,7 +35,7 @@ public class NotificationHelper {
         mContext = context;
         mNotifier = new OneShotNotifier(mContext);
         mNotificationBuilder = new NotificationCompat.Builder(context);
-        mNotificationBuilder.setColor(LayoutUtils.getAttrColor(context, R.attr.colorAccent));
+        mNotificationBuilder.setColor(LayoutUtils.getThemeAttrColor(context, R.attr.colorAccent));
     }
 
     public NotificationHelper intentActivity(Intent intent, int requestCode) {

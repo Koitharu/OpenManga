@@ -227,21 +227,34 @@ public class StorageUtils {
         return file;
     }
 
+    @NonNull
     public static String escapeFilename(String name) {
-        final char[] badPattern = "~!@#$%^&{},.=`'?;:/\\+".toCharArray();
         char escape = '_';
         int len = name.length();
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
             char ch = name.charAt(i);
-            if (Arrays.binarySearch(badPattern, ch) >= 0) {
+            if ((ch >= '0' && ch <= '9')
+                            || (ch >= 'A' && ch <= 'Z')
+                            || (ch >= 'a' && ch <= 'z')
+                            || (ch >= 'А' && ch <= 'ї')
+                            || (ch == '_')
+                            || (ch == '-')
+                            || (ch == ' ')
+                    ) {
+                sb.append(ch);
+            } else {
                 sb.append(escape);
                 if (ch < 0x10) {
                     sb.append('0');
                 }
-            } else {
-                sb.append(ch);
             }
+        }
+        if (sb.length() == 0) {
+            return String.valueOf(name.hashCode());
+        }
+        if (sb.length() > 40) {
+            sb.delete(40, sb.length() - 1);
         }
         return sb.toString();
     }

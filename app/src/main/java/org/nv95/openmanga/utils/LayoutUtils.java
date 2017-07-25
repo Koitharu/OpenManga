@@ -40,6 +40,22 @@ import org.nv95.openmanga.items.ThumbSize;
  */
 public class LayoutUtils {
 
+    private static final int[] THEMES = new int[]{
+            R.style.AppTheme_Default,
+            R.style.AppTheme_Classic,
+            R.style.AppTheme_Grey,
+            R.style.AppTheme_Teal,
+            R.style.AppTheme_Blue,
+            R.style.AppTheme_Purple,
+            R.style.AppTheme_Ambiance,
+            R.style.AppThemeDark_Classic,
+            R.style.AppThemeDark_Blue,
+            R.style.AppThemeDark_Teal,
+            R.style.AppThemeDark_Miku,
+            R.style.AppThemeBlack_Grey,
+            R.style.AppThemeBlack_Red
+    };
+
     public static boolean isTablet(Context context) {
         return context.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
@@ -118,29 +134,16 @@ public class LayoutUtils {
         return ds;
     }
 
-    public static Drawable[] getAccentedIcons(Context context, int... ids) {
-        PorterDuffColorFilter cf = new PorterDuffColorFilter(
-                getAttrColor(context, R.attr.colorAccent),
-                PorterDuff.Mode.SRC_ATOP
-        );
-        Drawable[] ds = new Drawable[ids.length];
-        for (int i=0;i<ids.length;i++) {
-            ds[i] = ContextCompat.getDrawable(context, ids[i]);
-            if (ds[i] != null) {
-                ds[i].setColorFilter(cf);
-            }
-        }
-        return ds;
-    }
-
-    @Deprecated
-    public static int getAccentColor(Context context) {
-        return getAttrColor(context, R.attr.colorAccent);
-    }
-    
     public static int getAttrColor(Context context, @AttrRes int what) {
         TypedValue typedValue = new TypedValue();
         TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { what });
+        int color = a.getColor(0, 0);
+        a.recycle();
+        return color;
+    }
+
+    public static int getThemeAttrColor(Context context, @AttrRes int what) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(getAppThemeRes(context), new int[] { what });
         int color = a.getColor(0, 0);
         a.recycle();
         return color;
@@ -278,5 +281,13 @@ public class LayoutUtils {
         int size2 = activityManager.getLauncherLargeIconSize();
         int size1 = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
         return size2 > size1 ? size2 : size1;
+    }
+
+    public static int getAppThemeRes(Context context) {
+        return THEMES[getAppTheme(context)];
+    }
+
+    public static int getAppThemeRes(int index) {
+        return THEMES[index];
     }
 }
