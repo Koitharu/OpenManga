@@ -1,5 +1,8 @@
 package org.nv95.openmanga.items;
 
+import android.support.annotation.Nullable;
+
+import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.NoSSLv3SocketFactory;
 
@@ -21,10 +24,17 @@ public class SimpleDownload implements Runnable {
 
     private final String mSourceUrl;
     private final File mDestination;
+    @Nullable
+    private SpeedMeasureHelper mSpeedMeasureHelper;
 
     public SimpleDownload(String sourceUrl, File destination) {
         this.mSourceUrl = sourceUrl;
         this.mDestination = destination;
+    }
+
+    public SimpleDownload setSpeedMeasureHelper(SpeedMeasureHelper helper) {
+        mSpeedMeasureHelper = helper;
+        return this;
     }
 
     @Override
@@ -46,11 +56,19 @@ public class SimpleDownload implements Runnable {
             output = new FileOutputStream(mDestination);
             byte data[] = new byte[4096];
             int count;
+            long total = 0;
+            if (mSpeedMeasureHelper != null) {
+                mSpeedMeasureHelper.reset();
+            }
             while ((count = input.read(data)) != -1) {
+                total += count;
                 output.write(data, 0, count);
                 if (Thread.currentThread().isInterrupted()) {
                     throw new InterruptedException();
                 }
+            }
+            if (mSpeedMeasureHelper != null && total > 0) {
+                mSpeedMeasureHelper.measure(total);
             }
         } catch (Exception e) {
             if (mDestination.exists()) {

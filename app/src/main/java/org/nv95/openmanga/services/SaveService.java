@@ -19,6 +19,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.DownloadsActivity;
 import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.helpers.NotificationHelper;
+import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
@@ -192,6 +193,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                     .text(mDownload.name)
                     .indeterminate()
                     .ongoing()
+                    .info(null)
                     .intentActivity(new Intent(SaveService.this, DownloadsActivity.class), mDownload.id + 11)
                     .icon(android.R.drawable.stat_sys_download)
                     .image(mDownload.preview)
@@ -232,6 +234,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                             R.string.resume)
                     .icon(R.drawable.ic_stat_paused)
                     .text(mDownload.name)
+                    .info(null)
                     .update(mDownload.id);
             for (OnSaveProgressListener o:mProgressListeners) {
                 o.onDataUpdated(mDownload.id);
@@ -254,6 +257,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                             R.string.pause)
                     .icon(android.R.drawable.stat_sys_download)
                     .text(mDownload.name)
+                    .info(null)
                     .update(mDownload.id);
             for (OnSaveProgressListener o:mProgressListeners) {
                 o.onDataUpdated(mDownload.id);
@@ -263,6 +267,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
         @Override
         protected MangaInfo doInBackground(Void... voids) {
             publishProgress(PROGRESS_STARTED);
+            final SpeedMeasureHelper speedMeasureHelper = new SpeedMeasureHelper();
             try {
                 MangaProvider provider = MangaProviderManager.instanceProvider(SaveService.this, mDownload.provider);
                 final MangaStore store = new MangaStore(SaveService.this);
@@ -273,6 +278,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                 MangaPage o1;
                 //all chapters
                 for (int i=0; i<mDownload.max; i++) {
+                    speedMeasureHelper.init();
                     try {
                         o = mDownload.chapters.get(i);
                         pages = provider.getPages(o.readLink);
@@ -312,11 +318,11 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                                     }
                                 }
                             }
-                            o1.id = store.pushPage(o1, mangaId, o.id);
+                            o1.id = store.pushPage(o1, mangaId, o.id, speedMeasureHelper);
                             if (o1.id == 0) {
                                 //error(
                                 //try again
-                                o1.id = store.pushPage(o1, mangaId, o.id);
+                                o1.id = store.pushPage(o1, mangaId, o.id, speedMeasureHelper);
                                 if (o1.id == 0) {
                                     if (onError()) {
                                         j--;
@@ -327,7 +333,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                                     }
                                 }
                             }
-                            publishProgress(PROGRESS_SECONDARY, j, pages.size());
+                            publishProgress(PROGRESS_SECONDARY, j, pages.size(), (int)speedMeasureHelper.getAverageSpeed());
                             if (!waitForResume()) {
                                 store.dropChapter(mangaId, o.id);
                                 return null;
@@ -355,6 +361,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
          * [0] - #PROGRESS_PRIMARY or #PROGRESS_SECONDARY or #PROGRESS_ERROR
          * [1] - progress
          * [2] - max
+         * [3] - speed (optional)
          */
         @Override
         protected void onProgressUpdate(Integer... values) {
@@ -374,6 +381,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                                     R.drawable.sym_resume,
                                     R.string.resume)
                             .text(R.string.loading_error)
+                            .info(null)
                             .icon(android.R.drawable.stat_notify_error)
                             .update(mDownload.id, R.string.loading_error);
                     for (OnSaveProgressListener o:mProgressListeners) {
@@ -388,6 +396,12 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                     mDownload.chaptersProgresses[mDownload.pos] = values[1];
                     break;
 
+            }
+            if (values.length >= 4) {
+                double kbps = values[3] / 1024D;
+                mNotificationHelper.info(SpeedMeasureHelper.formatSpeed(kbps));
+            } else {
+                //mNotificationHelper.info(null);
             }
             mNotificationHelper
                     .progress(mDownload.pos * 100 + mDownload.getChapterProgressPercent(), mDownload.max * 100)
@@ -406,6 +420,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
         void onCancel() {
             mNotificationHelper
                     .noActions()
+                    .info(null)
                     .indeterminate()
                     .text(R.string.cancelling)
                     .update(mDownload.id);

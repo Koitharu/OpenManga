@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.support.annotation.MainThread;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.items.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
@@ -108,7 +110,7 @@ public class MangaStore {
      * @return page id;
      */
     @WorkerThread
-    public int pushPage(MangaPage page, int mangaId, int chapterId) {
+    public int pushPage(MangaPage page, int mangaId, int chapterId, @Nullable SpeedMeasureHelper speedMeasureHelper) {
         int id = page.path.hashCode();
         try {
             ContentValues cv = new ContentValues();
@@ -116,7 +118,8 @@ public class MangaStore {
             cv.put("chapterid", chapterId);
             cv.put("mangaid", mangaId);
             File dest = new File(getMangaDir(mContext, mangaId), chapterId + "_" + id);
-            SimpleDownload sd =new SimpleDownload(page.path, dest);
+            SimpleDownload sd = new SimpleDownload(page.path, dest);
+            sd.setSpeedMeasureHelper(speedMeasureHelper);
             sd.run();
             if (!sd.isSuccess()) {
                 return 0;

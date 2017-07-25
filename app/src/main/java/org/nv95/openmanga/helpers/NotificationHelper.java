@@ -134,6 +134,11 @@ public class NotificationHelper {
         return text(mContext.getString(text));
     }
 
+    public NotificationHelper info(CharSequence info) {
+        mNotificationBuilder.setContentInfo(info);
+        return this;
+    }
+
     public NotificationHelper progress(int value, int max) {
 
         mNotificationBuilder.setProgress(max, value, false);
