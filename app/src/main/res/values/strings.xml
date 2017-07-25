@@ -363,4 +363,10 @@
     <string name="download_starts_on_network">Download will starts later</string>
     <string name="download_started">Download started</string>
     <string name="general">General</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="sync_tip">Synchronize history and favourites across your devices using our data synchronization service</string>
+    <string name="enable">Enable</string>
+    <string name="configure">Configure</string>
+    <string name="skip">Skip</string>
+    <string name="recommendations_tip">Configure your recommendations options for having more relevant mangas list</string>
 </resources>

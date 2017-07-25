@@ -65,6 +65,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
     private static final int SECTION_READER = 2;
     private static final int SECTION_PROVIDERS = 3;
     private static final int SECTION_SYNC = 4;
+    private static final int SECTION_CHUPD = 5;
 
     private Fragment mFragment;
     private SettingsHeadersAdapter mAdapter;
@@ -123,6 +124,12 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 mFragment = SyncHelper.get(this).isAuthorized() ? new SyncSettingsFragment() : new SyncLoginFragment();
                 if (mIsTwoPanesMode) {
                     mAdapter.setActivatedPosition(5);
+                }
+                break;
+            case SECTION_CHUPD:
+                mFragment = new UpdatesCheckSettingsFragment();
+                if (mIsTwoPanesMode) {
+                    mAdapter.setActivatedPosition(4);
                 }
                 break;
             default:
@@ -600,5 +607,10 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
 
     public static void openSyncSettings(Context context, int requestCode) {
         openSettings(context, requestCode, SECTION_SYNC);
+    }
+
+
+    public static void openChaptersCheckSettings(Context context, int requestCode) {
+        openSettings(context, requestCode, SECTION_CHUPD);
     }
 }

@@ -42,6 +42,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.adapters.EndlessAdapter;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
+import org.nv95.openmanga.components.OnboardSnackbar;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.FastHistoryDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
@@ -487,9 +488,7 @@ public class MainActivity extends BaseAppActivity implements
                 }
             }
         } else {
-            if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
-                showcase(R.id.action_search, R.string.action_search, R.string.tip_search_main);
-            }
+            mRecyclerView.postDelayed(new ListTipHelper(), 500);
         }
     }
 
@@ -782,6 +781,38 @@ public class MainActivity extends BaseAppActivity implements
                     .setPositiveButton(android.R.string.ok, null)
                     .setMessage(mainActivity.getString(msg))
                     .create().show();
+        }
+    }
+
+    private class ListTipHelper implements Runnable {
+
+        @SuppressWarnings("StatementWithEmptyBody")
+        @Override
+        public void run() {
+            if (mProvider instanceof FavouritesProvider && OnboardSnackbar.askOnce(mRecyclerView, R.string.tip_chapter_checking, R.string.no_thanks, R.string.configure, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SettingsActivity2.openChaptersCheckSettings(MainActivity.this, 0);
+                }
+            })) {
+                //done
+            } else if (mProvider instanceof HistoryProvider || mProvider instanceof FavouritesProvider) {
+                OnboardSnackbar.askOnce(mRecyclerView, R.string.sync_tip, R.string.no_thanks, R.string.configure, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SettingsActivity2.openSyncSettings(MainActivity.this, 0);
+                    }
+                });
+            } else if (mProvider instanceof RecommendationsProvider) {
+                OnboardSnackbar.askOnce(mRecyclerView, R.string.recommendations_tip, R.string.skip, R.string.configure, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new RecommendationsPrefDialog(MainActivity.this, MainActivity.this).show();
+                    }
+                });
+            } else if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
+                showcase(R.id.action_search, R.string.action_search, R.string.tip_search_main);
+            }
         }
     }
 }

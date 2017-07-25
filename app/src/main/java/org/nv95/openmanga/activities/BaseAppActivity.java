@@ -261,8 +261,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
                     TapTarget.forView(view, getString(title), getString(body))
                             .transparentTarget(!tint)
                             .textColorInt(Color.WHITE)
-                            .outerCircleColorInt(Color.BLACK)
-                            .dimColorInt(dark ? Color.BLACK : Color.WHITE)
+                            .dimColorInt(LayoutUtils.getAttrColor(this, R.attr.colorPrimaryDark))
                             .tintTarget(tint),
                     new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                         @Override
