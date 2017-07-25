@@ -16,7 +16,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
  */
 public abstract class EndlessAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int VIEW_ITEM = 1;
+    public static final int VIEW_ITEM = 1;
     private static final int VIEW_PROGRESS = 0;
 
     private final PagedList<T> mDataset;

@@ -40,6 +40,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
+import org.nv95.openmanga.adapters.EndlessAdapter;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
 import org.nv95.openmanga.dialogs.FastHistoryDialog;
@@ -600,7 +601,7 @@ public class MainActivity extends BaseAppActivity implements
                 new MangaSaveHelper(this).confirmSave(mListLoader.getItems(items));
                 break;
             case R.id.action_select_all:
-                mListLoader.getAdapter().getChoiceController().selectAll();
+                mListLoader.getAdapter().getChoiceController().selectAll(EndlessAdapter.VIEW_ITEM);
                 return true;
             case R.id.action_move:
                 favouritesMoveDialog(ids);
