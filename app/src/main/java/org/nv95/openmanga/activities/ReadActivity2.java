@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.settings.SettingsActivity;
+import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
@@ -318,8 +318,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                 HintDialog.showOnce(this, R.string.tip_webtoon);
                 break;
             case R.id.nav_action_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class)
-                        .putExtra("section", SettingsActivity.SECTION_READER), REQUEST_SETTINGS);
+                SettingsActivity2.openReaderSettings(this, REQUEST_SETTINGS);
                 break;
             case R.id.menuitem_bookmark:
                 mMenuPanel.onBookmarkAdded(

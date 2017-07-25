@@ -1,10 +1,12 @@
 package org.nv95.openmanga.activities.settings;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
@@ -59,20 +62,18 @@ import info.guardianproject.netcipher.proxy.OrbotHelper;
 public class SettingsActivity2 extends BaseAppActivity implements AdapterView.OnItemClickListener,
         Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, FragmentManager.OnBackStackChangedListener {
 
-    public static final int REQUEST_SOURCES = 114;
-    public static final int REQUEST_SYNC = 115;
-    public static final int REQUEST_CHUPD = 116;
-
-    public static final int SECTION_READER = 2;
-    public static final int SECTION_PROVIDERS = 3;
+    private static final int SECTION_READER = 2;
+    private static final int SECTION_PROVIDERS = 3;
+    private static final int SECTION_SYNC = 4;
 
     private Fragment mFragment;
-    private RecyclerView mRecyclerView;
+    private SettingsHeadersAdapter mAdapter;
     private ArrayList<PreferenceHeader> mHeaders;
     private AppBarLayout mAppBarLayout;
     private CardView mCardView;
     private FrameLayout mContent;
     private TextView mTitleTextView;
+    private boolean mIsTwoPanesMode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,12 +83,14 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         enableHomeAsUp();
         disableTitle();
 
+        mIsTwoPanesMode = LayoutUtils.isTabletLandscape(this);
+
         mContent = (FrameLayout) findViewById(R.id.content);
         mCardView = (CardView) findViewById(R.id.cardView);
         mTitleTextView = (TextView) findViewById(R.id.textView_title);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_container);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mHeaders = new ArrayList<>();
 
         mHeaders.add(new PreferenceHeader(this, R.string.general, R.drawable.ic_pref_home));
@@ -98,8 +101,45 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         mHeaders.add(new PreferenceHeader(this, R.string.sync, R.drawable.ic_pref_sync));
         mHeaders.add(new PreferenceHeader(this, R.string.more_, R.drawable.ic_pref_more));
 
-        mRecyclerView.setAdapter(new SettingsHeadersAdapter(mHeaders, this));
+        recyclerView.setAdapter(mAdapter = new SettingsHeadersAdapter(mHeaders, this));
         getFragmentManager().addOnBackStackChangedListener(this);
+
+        int section = getIntent().getIntExtra("section", 0);
+        switch (section) {
+            case SECTION_READER:
+                mFragment = new ReadSettingsFragment();
+                if (mIsTwoPanesMode) {
+                    mAdapter.setActivatedPosition(3);
+                }
+                break;
+            case SECTION_PROVIDERS:
+                mFragment = new ProviderSelectFragment();
+                if (mIsTwoPanesMode) {
+                    mAdapter.setActivatedPosition(2);
+                }
+                break;
+            case SECTION_SYNC:
+                mFragment = SyncHelper.get(this).isAuthorized() ? new SyncSettingsFragment() : new SyncLoginFragment();
+                if (mIsTwoPanesMode) {
+                    mAdapter.setActivatedPosition(5);
+                }
+                break;
+            default:
+                if (mIsTwoPanesMode) {
+                    mFragment = new GeneralSettingsFragment();
+                    if (mIsTwoPanesMode) {
+                        mAdapter.setActivatedPosition(0);
+                    }
+                } else {
+                    mFragment = null;
+                }
+        }
+
+        if (mFragment != null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content, mFragment);
+            transaction.commit();
+        }
     }
 
     @Override
@@ -118,7 +158,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 openFragment(new ReadSettingsFragment());
                 break;
             case 4:
-                startActivityForResult(new Intent(this, UpdatesSettingsActivity.class), REQUEST_CHUPD);
+                openFragment(new UpdatesCheckSettingsFragment());
                 break;
             case 5:
                 if (SyncHelper.get(this).isAuthorized()) {
@@ -131,24 +171,33 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 openFragment(new OtherSettingsFragment());
                 break;
         }
+        if (mIsTwoPanesMode) {
+            mAdapter.setActivatedPosition(i);
+        }
     }
 
     public void openFragment(Fragment fragment) {
         mFragment = fragment;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, mFragment)
-                .addToBackStack(null);
+        transaction.replace(R.id.content, mFragment);
+        if (!mIsTwoPanesMode) {
+            transaction.addToBackStack(null);
+        }
         transaction.commit();
     }
 
     @Override
     public void setTitle(int titleId) {
-        mTitleTextView.setText(titleId);
+        if (!mIsTwoPanesMode) {
+            mTitleTextView.setText(titleId);
+        }
     }
 
     @Override
     public void setTitle(CharSequence title) {
-        mTitleTextView.setText(title);
+        if (!mIsTwoPanesMode) {
+            mTitleTextView.setText(title);
+        }
     }
 
     @Override
@@ -295,10 +344,6 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                     }
                 }
                 break;
-            default:
-                if (mFragment instanceof SettingsHeadersFragment) {
-                    mFragment.onActivityCreated(null);
-                }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -317,7 +362,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
             setTitle(R.string.action_settings);
             mAppBarLayout.setExpanded(true, true);
         } else {
-            AnimUtils.slide(mCardView, mContent);
+            AnimUtils.crossfade(mCardView, mContent);
             mAppBarLayout.setExpanded(false, true);
         }
     }
@@ -496,10 +541,34 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         @Override
         protected void onPostExecute(@NonNull BaseAppActivity activity, RESTResponse restResponse) {
             if (restResponse.isSuccess()) {
-                ((SettingsActivity)activity).openFragment(new SyncLoginFragment());
+                ((SettingsActivity2)activity).openFragment(new SyncLoginFragment());
             } else {
                 Toast.makeText(activity, restResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private static void openSettings(Context context, int requestCode, int section) {
+        Intent intent = new Intent(context, SettingsActivity2.class);
+        intent.putExtra("section", section);
+        if (requestCode != 0) {
+            if (context instanceof Activity) {
+                ((Activity) context).startActivityForResult(intent, requestCode);
+                return;
+            }
+        }
+        context.startActivity(intent);
+    }
+
+    public static void openReaderSettings(Context context, int requestCode) {
+        openSettings(context, requestCode, SECTION_READER);
+    }
+
+    public static void openProvidersSettings(Context context, int requestCode) {
+        openSettings(context, requestCode, SECTION_PROVIDERS);
+    }
+
+    public static void openSyncSettings(Context context, int requestCode) {
+        openSettings(context, requestCode, SECTION_SYNC);
     }
 }

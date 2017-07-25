@@ -21,8 +21,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.settings.SettingsActivity;
-import org.nv95.openmanga.activities.settings.SyncSettingsActivity;
+import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.StorageSelectDialog;
 import org.nv95.openmanga.providers.staff.Providers;
@@ -38,6 +37,7 @@ import java.io.File;
 public class WelcomeActivity extends BaseAppActivity {
 
     public static final int REQUEST_ONBOARDING = 131;
+    public static final int REQUEST_SOURCES = 132;
 
     private static final int WELCOME_CHANGELOG = 1;
     private static final int WELCOME_ONBOARDING = 2;
@@ -152,7 +152,7 @@ public class WelcomeActivity extends BaseAppActivity {
                 buttonSync.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(WelcomeActivity.this, SyncSettingsActivity.class));
+                        SettingsActivity2.openSyncSettings(WelcomeActivity.this, 0);
                     }
                 });
                 int active = Math.min(
@@ -163,9 +163,7 @@ public class WelcomeActivity extends BaseAppActivity {
                 mTextViewSources.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivityForResult(new Intent(WelcomeActivity.this, SettingsActivity.class)
-                                .putExtra("section", SettingsActivity.SECTION_PROVIDERS),
-                                SettingsActivity.REQUEST_SOURCES);
+                        SettingsActivity2.openProvidersSettings(WelcomeActivity.this, REQUEST_SOURCES);
                     }
                 });
                 mTextViewStorage.setText(MangaStore.getMangasDir(this).getPath());
@@ -204,7 +202,7 @@ public class WelcomeActivity extends BaseAppActivity {
                     }
                 }
                 break;
-            case SettingsActivity.REQUEST_SOURCES:
+            case REQUEST_SOURCES:
                 int active = Math.min(
                         getSharedPreferences("providers", Context.MODE_PRIVATE).getInt("count", Providers.getCount()),
                         Providers.getCount()

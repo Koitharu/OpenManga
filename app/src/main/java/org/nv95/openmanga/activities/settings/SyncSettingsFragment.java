@@ -42,9 +42,9 @@ public class SyncSettingsFragment extends PreferenceFragment {
             switch (what) {
                 case SyncService.MSG_UNAUTHORIZED:
                     Activity activity = getActivity();
-                    if (activity != null && activity instanceof SettingsActivity) {
+                    if (activity != null && activity instanceof SettingsActivity2) {
                         Toast.makeText(activity, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                        ((SettingsActivity) activity).openFragment(new SyncLoginFragment());
+                        ((SettingsActivity2) activity).openFragment(new SyncLoginFragment());
                     }
                     break;
                 case SyncService.MSG_HIST_STARTED:

@@ -1,5 +1,7 @@
 package org.nv95.openmanga.activities.settings;
 
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
 
@@ -20,6 +23,7 @@ public class SettingsHeadersAdapter extends RecyclerView.Adapter<SettingsHeaders
 
     private final ArrayList<PreferenceHeader> mDataset;
     private final AdapterView.OnItemClickListener mClickListener;
+    private int mCurrentPosition = -1;
 
     public SettingsHeadersAdapter(ArrayList<PreferenceHeader> headers, AdapterView.OnItemClickListener clickListener) {
         mDataset = headers;
@@ -33,11 +37,23 @@ public class SettingsHeadersAdapter extends RecyclerView.Adapter<SettingsHeaders
         .inflate(R.layout.item_pref_header, parent,false), mClickListener);
     }
 
+    public void setActivatedPosition(int pos) {
+        int lastPos = mCurrentPosition;
+        mCurrentPosition = pos;
+        if (lastPos != -1) {
+            notifyItemChanged(lastPos);
+        }
+        if (mCurrentPosition != -1) {
+            notifyItemChanged(mCurrentPosition);
+        }
+    }
+
     @Override
     public void onBindViewHolder(PreferenceHolder holder, int position) {
         PreferenceHeader item = mDataset.get(position);
         holder.text.setText(item.title);
         holder.icon.setImageDrawable(item.icon);
+        holder.setActivated(position == mCurrentPosition);
     }
 
     @Override
@@ -67,6 +83,14 @@ public class SettingsHeadersAdapter extends RecyclerView.Adapter<SettingsHeaders
         @Override
         public void onClick(View view) {
             clickListener.onItemClick(null, itemView, getAdapterPosition(), getItemId());
+        }
+
+        void setActivated(boolean activated) {
+            if (activated) {
+                itemView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.light_gray));
+            } else {
+                ViewCompat.setBackground(itemView, LayoutUtils.getSelectableBackground(itemView.getContext()));
+            }
         }
     }
 }

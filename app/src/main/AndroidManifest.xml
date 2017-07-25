@@ -54,9 +54,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/manga_updates" />
         <activity
-            android:name=".activities.settings.SettingsActivity"
-            android:label="@string/action_settings" />
-        <activity
             android:name=".activities.settings.SettingsActivity2"
             android:label="@string/action_settings" />
         <activity
@@ -67,22 +64,6 @@
             android:name=".activities.AboutActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/about" />
-        <activity
-            android:name=".activities.settings.UpdatesSettingsActivity"
-            android:label="@string/checking_new_chapters">
-            <intent-filter>
-                <action android:name="org.nv95.openmanga.chupd" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.settings.SyncSettingsActivity"
-            android:label="@string/sync">
-            <intent-filter>
-                <action android:name="org.nv95.openmanga.SYNC" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".activities.FileSelectActivity"
             android:configChanges="orientation|screenSize"

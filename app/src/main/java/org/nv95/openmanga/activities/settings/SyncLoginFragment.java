@@ -63,7 +63,7 @@ public class SyncLoginFragment extends Fragment implements View.OnClickListener 
             return;
         }
         LayoutUtils.hideSoftKeyboard(mEditPassword);
-        new AuthTask((SettingsActivity) getActivity(), view.getId() == R.id.buttonRegister)
+        new AuthTask((SettingsActivity2) getActivity(), view.getId() == R.id.buttonRegister)
                 .executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         login,
@@ -77,7 +77,7 @@ public class SyncLoginFragment extends Fragment implements View.OnClickListener 
 
         private final boolean mRegister;
 
-        AuthTask(SettingsActivity activity, boolean isRegister) {
+        AuthTask(SettingsActivity2 activity, boolean isRegister) {
             super(activity);
             mRegister = isRegister;
         }
@@ -102,7 +102,7 @@ public class SyncLoginFragment extends Fragment implements View.OnClickListener 
         protected void onPostExecute(@NonNull BaseAppActivity activity, RESTResponse restResponse) {
             if (restResponse.isSuccess()) {
                 Toast.makeText(activity, R.string.successfully, Toast.LENGTH_SHORT).show();
-                ((SettingsActivity)activity).openFragment(new SyncSettingsFragment());
+                ((SettingsActivity2)activity).openFragment(new SyncSettingsFragment());
                 SyncService.start(activity);
             } else {
                 new AlertDialog.Builder(activity)

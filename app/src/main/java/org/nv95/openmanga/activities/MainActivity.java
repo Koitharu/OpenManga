@@ -39,7 +39,6 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.settings.SettingsActivity;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.adapters.GenresSortAdapter;
 import org.nv95.openmanga.dialogs.BookmarksDialog;
@@ -384,7 +383,7 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_action_settings:
-                startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
+                startActivityForResult(new Intent(this, SettingsActivity2.class), REQUEST_SETTINGS);
                 return true;
             case R.id.nav_local_storage:
                 mProvider = LocalMangaProvider.getInstance(this);

@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 /**
  * Created by nv95 on 21.11.16.
  */
+
 public class ProviderPreferencesActivity extends BaseAppActivity {
 
     @Override
