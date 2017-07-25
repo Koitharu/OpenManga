@@ -13,6 +13,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.AutoHeightLayout;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.dialogs.NavigationListener;
+import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.ImageUtils;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
     private final List<PageWrapper> mPages;
     @Nullable
     private NavigationListener mListener;
+    private int mCurrentPosition;
 
     public ThumbnailsAdapter(List<PageWrapper> pages) {
         mPages = pages;
@@ -34,6 +36,17 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
 
     public void setNavigationListener(@Nullable NavigationListener listener) {
         mListener = listener;
+    }
+
+    public void setCurrentPosition(int pos) {
+        int lastPos = mCurrentPosition;
+        mCurrentPosition = pos;
+        if (lastPos != -1) {
+            notifyItemChanged(lastPos);
+        }
+        if (mCurrentPosition != -1) {
+            notifyItemChanged(mCurrentPosition);
+        }
     }
 
     @Override
@@ -47,12 +60,13 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
     public void onBindViewHolder(ThumbHolder holder, int position) {
         PageWrapper pw = mPages.get(position);
         if (pw.isLoaded()) {
-            ImageUtils.setThumbnail(holder.imageView, "file://" + pw.getFilename());
+            ImageUtils.setThumbnail(holder.imageView, "file://" + pw.getFilename(), ThumbSize.THUMB_SIZE_MEDIUM);
             holder.textView.setText(null);
         } else {
             holder.imageView.setImageResource(R.drawable.placeholder);
             holder.textView.setText(String.valueOf(position + 1));
         }
+        holder.setSelected(position == mCurrentPosition);
         holder.imageView.setTag(position);
     }
 
@@ -74,6 +88,7 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
         final ImageView imageView;
         final TextView textView;
         final View selector;
+        private boolean mSelected;
 
         ThumbHolder(View itemView) {
             super(itemView);
@@ -91,11 +106,19 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
                     selector.setVisibility(View.VISIBLE);
                     break;
                 case MotionEvent.ACTION_UP:
+                    imageView.performClick();
                 case MotionEvent.ACTION_CANCEL:
-                    selector.setVisibility(View.GONE);
+                    if (!mSelected) {
+                        selector.setVisibility(View.GONE);
+                    }
                     break;
             }
             return false;
+        }
+
+        private void setSelected(boolean selected) {
+            mSelected = selected;
+            selector.setVisibility(mSelected ? View.VISIBLE : View.INVISIBLE);
         }
     }
 }

@@ -65,6 +65,7 @@ public class ThumbnailsDialog implements DialogInterface.OnDismissListener, Page
     public void show(int currentpos) {
         mAdapter = new ThumbnailsAdapter(mLoader.getWrappersList());
         mAdapter.setNavigationListener(this);
+        mAdapter.setCurrentPosition(currentpos);
         mRecyclerView.setAdapter(mAdapter);
         mLoader.addListener(this);
         mRecyclerView.scrollToPosition(currentpos);
