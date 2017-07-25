@@ -35,6 +35,7 @@ public class OnboardSnackbar implements View.OnClickListener {
         layout.setBackgroundColor(LayoutUtils.isAppThemeDark(snackbar.getContext()) ? Color.BLACK : Color.WHITE);
         mView.findViewById(android.R.id.button1).setOnClickListener(this);
         mView.findViewById(android.R.id.button2).setOnClickListener(this);
+        ((TextView)mView.findViewById(android.R.id.text1)).setTextColor(LayoutUtils.isAppThemeDark(layout.getContext()) ? Color.WHITE : Color.BLACK);
     }
 
     public OnboardSnackbar setText(@StringRes int resId) {

@@ -29,27 +29,27 @@
     </style>
 
     <style name="AppTheme.Grey">
-        <item name="colorPrimary">#607D8B</item>
-        <item name="colorPrimaryDark">#455A64</item>
-        <item name="colorAccent">#ef5350</item>
+        <item name="colorPrimary">#546e7a</item>
+        <item name="colorPrimaryDark">#29434e</item>
+        <item name="colorAccent">#e64a19</item>
     </style>
 
     <style name="AppTheme.Blue">
-        <item name="colorPrimary">#2196F3</item>
-        <item name="colorPrimaryDark">#1976D2</item>
-        <item name="colorAccent">#9E9E9E</item>
+        <item name="colorPrimary">#03a9f4</item>
+        <item name="colorPrimaryDark">#007ac1</item>
+        <item name="colorAccent">#424242</item>
     </style>
 
     <style name="AppTheme.Teal">
         <item name="colorPrimary">#009688</item>
-        <item name="colorPrimaryDark">#00796B</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorPrimaryDark">#00675b</item>
+        <item name="colorAccent">#ec407a</item>
     </style>
 
     <style name="AppTheme.Purple">
         <item name="colorPrimary">#7b1fa2</item>
-        <item name="colorPrimaryDark">#4a148c</item>
-        <item name="colorAccent">#FF5722</item>
+        <item name="colorPrimaryDark">#4a0072</item>
+        <item name="colorAccent">#43a047</item>
     </style>
 
     <style name="AppTheme.Classic">
@@ -66,20 +66,26 @@
 
     <style name="AppThemeDark.Teal">
         <item name="colorPrimary">#009688</item>
-        <item name="colorPrimaryDark">#00796B</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorPrimaryDark">#00675b</item>
+        <item name="colorAccent">#ec407a</item>
     </style>
 
     <style name="AppThemeDark.Blue">
-        <item name="colorPrimary">#2196F3</item>
-        <item name="colorPrimaryDark">#1976D2</item>
-        <item name="colorAccent">#9E9E9E</item>
+        <item name="colorPrimary">#03a9f4</item>
+        <item name="colorPrimaryDark">#007ac1</item>
+        <item name="colorAccent">#424242</item>
     </style>
 
     <style name="AppThemeBlack.Grey">
+        <item name="colorPrimary">#546e7a</item>
+        <item name="colorPrimaryDark">#29434e</item>
+        <item name="colorAccent">#d32f2f</item>
+    </style>
+
+    <style name="AppThemeBlack.Black">
         <item name="colorPrimary">#263238</item>
-        <item name="colorPrimaryDark">#263238</item>
-        <item name="colorAccent">#9e9e9e</item>
+        <item name="colorPrimaryDark">#000a12</item>
+        <item name="colorAccent">#00838f</item>
     </style>
 
     <style name="AppThemeBlack.Red">
@@ -99,6 +105,12 @@
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">#00acc1</item>
         <item name="android:windowBackground">@color/blue_grey_900</item>
+    </style>
+
+    <style name="AppTheme.Indigo">
+        <item name="colorPrimary">#5c6bc0</item>
+        <item name="colorPrimaryDark">#26418f</item>
+        <item name="colorAccent">#f57f17</item>
     </style>
 
     <style name="FullScreenDialog">

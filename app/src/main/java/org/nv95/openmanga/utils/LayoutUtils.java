@@ -48,12 +48,14 @@ public class LayoutUtils {
             R.style.AppTheme_Blue,
             R.style.AppTheme_Purple,
             R.style.AppTheme_Ambiance,
+            R.style.AppTheme_Indigo,
             R.style.AppThemeDark_Classic,
             R.style.AppThemeDark_Blue,
             R.style.AppThemeDark_Teal,
             R.style.AppThemeDark_Miku,
             R.style.AppThemeBlack_Grey,
-            R.style.AppThemeBlack_Red
+            R.style.AppThemeBlack_Red,
+            R.style.AppThemeBlack_Black
     };
 
     public static boolean isTablet(Context context) {
@@ -270,7 +272,7 @@ public class LayoutUtils {
     }
 
     public static boolean isAppThemeDark(Context context) {
-        return getAppTheme(context) > 5;
+        return getAppTheme(context) > 7;
     }
 
     /**

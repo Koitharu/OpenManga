@@ -74,21 +74,25 @@
         <item>10</item>
         <item>11</item>
         <item>12</item>
+        <item>13</item>
+        <item>14</item>
     </string-array>
     <string-array name="themes_names">
         <item>Default</item>
         <item>Classic</item>
-        <item>Light grey</item>
-        <item>Light teal</item>
-        <item>Light blue</item>
-        <item>Light purple</item>
+        <item>Light Grey</item>
+        <item>Light Teal</item>
+        <item>Light Blue</item>
+        <item>Light Purple</item>
         <item>Ambiance</item>
-        <item>Dark classic</item>
-        <item>Dark blue</item>
-        <item>Dark teal</item>
+        <item>Indigo</item>
+        <item>Dark Classic</item>
+        <item>Dark Blue</item>
+        <item>Dark Teal</item>
         <item>Dark Miku</item>
-        <item>AMOLED grey</item>
-        <item>AMOLED red</item>
+        <item>AMOLED Grey</item>
+        <item>AMOLED Red</item>
+        <item>AMOLED Black</item>
     </string-array>
 
     <string-array name="scale_values">

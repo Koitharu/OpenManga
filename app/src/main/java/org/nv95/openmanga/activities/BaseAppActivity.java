@@ -56,7 +56,7 @@ public abstract class BaseAppActivity extends AppCompatActivity {
     }
 
     public boolean isDarkTheme() {
-        return mTheme > 5;
+        return mTheme > 7;
     }
 
     public void enableHomeAsUp() {
