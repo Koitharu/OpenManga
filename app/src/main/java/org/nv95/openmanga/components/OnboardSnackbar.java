@@ -1,6 +1,7 @@
 package org.nv95.openmanga.components;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -82,8 +83,8 @@ public class OnboardSnackbar implements View.OnClickListener {
                     .setDiscardText(discardText)
                     .show();
 
-            //SharedPreferences prefs = view.getContext().getSharedPreferences("tips", Context.MODE_PRIVATE);
-            //prefs.edit().putBoolean(SyncHelper.class.getSimpleName() + "_" + view.getId(), true).apply();
+            SharedPreferences prefs = view.getContext().getSharedPreferences("tips", Context.MODE_PRIVATE);
+            prefs.edit().putBoolean("s__" + text, true).apply();
             return true;
         } else {
             return false;

@@ -27,7 +27,7 @@
         <org.nv95.openmanga.components.IntSelectPreference
             android:defaultValue="2"
             android:key="save_threads"
-            android:title="Max parallel downloads"
+            android:title="@string/download_max_threads"
             app:maxValue="4"
             app:minValue="1" />
 

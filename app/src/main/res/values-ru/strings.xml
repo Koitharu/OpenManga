@@ -205,7 +205,7 @@
     <string name="sources">Источники</string>
     <string name="full_match">Полное соответствие</string>
     <string name="wait_for_complete">Дождитесь завешения операции</string>
-    <string name="theme">Тема</string>
+    <string name="theme">Тема оформления</string>
     <string name="import_file_confirm" formatted="false">Импортировать файл %s ?</string>
     <string name="delete_mangas_confirm">Удалить выделенную мангу?</string>
     <string name="multiple_save_confirm" formatted="false">%d manga will be saved (всего %d глав)</string>
@@ -284,7 +284,6 @@
     <string name="chapters">Главы</string>
     <string name="search_query_empty">Пустой поисковый запрос</string>
     <string name="scroll_by_click">Листание нажатиями по краям</string>
-
     <string name="use_tor_proxy">Использовать Tor</string>
     <string name="use_tor_summary">Перенаправлять весь траффик через сеть Tor используя Orbot</string>
     <string name="orbot_required">Для использования данной функции необходимо приложение Orbot. Установить его сейчас?</string>
@@ -309,8 +308,36 @@
     <string name="device_detach_confirm">Вы действительно хотите отвязать устройство %s от Вашего аккаунта?</string>
     <string name="device_detached">Устройство отвязано от аккаунта</string>
     <string name="action_sync">Синхронизировать</string>
-    <string name="logout_confirm">Do you really want to logout from your account? No local data will be changed</string>
-    <string name="error_loadimage_html" formatted="false"><![CDATA[%s<br/><br/><h3><a href=\"app:retry\">Try again</a></h3>]]></string>
-    <string name="genre_comics">Comics</string>
-    <string name="action_export">Export</string>
+    <string name="logout">Выйти из аккаунта</string>
+    <string name="logout_confirm">Вы действительно хотите выйти из аккаунта? Данные на устройстве не будут затронуты</string>
+    <string name="error_loadimage_html" formatted="false"><![CDATA[%s<br/><br/><h3><a href=\"app:retry\">Повторить</a></h3>]]></string>
+    <string name="genre_comics">Комиксы</string>
+    <string name="action_export">Экспорт</string>
+    <string name="exporting">Экспорт манги…</string>
+    <string name="paused">Приостановлено</string>
+    <string name="pause_all">Приостановить все</string>
+    <string name="resume_all">Возобновить все</string>
+    <string name="cancel_all">Отменить все</string>
+    <string name="appearance">Внешний вид</string>
+    <string name="system">Системное</string>
+    <string name="storage_settings">Локальное хранилище</string>
+    <string name="more_">Ещё…</string>
+    <string name="manga_catalogues">Каталоги манги</string>
+    <string name="checking_updates">Проверка обновлений…</string>
+    <string name="network_settings">Сеть</string>
+    <string name="items_" formatted="false">Элементов: %d</string>
+    <string name="other_settings">Другие настройки</string>
+    <string name="download_wifi_only">Скачивать мангу только по WiFi</string>
+    <string name="save_this_chapter">Сохранить эту главу</string>
+    <string name="save_prev_chapters">Сохранить эту главу и предыдущие</string>
+    <string name="save_next_chapters">Сохранить эту главу и следующие</string>
+    <string name="download_starts_on_network">Загрузка начнётся позже</string>
+    <string name="download_started">Загрузка началась</string>
+    <string name="general">Основное</string>
+    <string name="no_thanks">Нет, спасибо</string>
+    <string name="sync_tip">Синхронизируйте историю и избранное между Вашими устройствами при помощи службы синхронизации данных</string>
+    <string name="configure">Настроить</string>
+    <string name="skip">Пропустить</string>
+    <string name="recommendations_tip">Настройте рекомендации, чтобы получать более подходящую Вам мангу в этом списке</string>
+    <string name="download_max_threads">Макс. потоков загрузки</string>
 </resources>
