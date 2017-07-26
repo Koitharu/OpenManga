@@ -291,13 +291,13 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
             case "sync.username":
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.logout_confirm)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 new SyncLogoutTask(SettingsActivity2.this).start();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, null)
+                        .setNegativeButton(android.R.string.cancel, null)
                         .create().show();
                 return true;
             default:
@@ -341,7 +341,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                                 .setTitle(R.string.use_tor_proxy)
                                 .setMessage(R.string.orbot_required)
                                 .setNegativeButton(android.R.string.cancel, null)
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                .setPositiveButton(R.string.install, new DialogInterface.OnClickListener() {
 
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -517,14 +517,14 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
     private void detachDevice(final int devId, final Preference p) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.device_detach_confirm, p.getTitle().toString()))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.detach, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         p.setSelectable(false);
                         new DeviceDetachTask(p).attach(SettingsActivity2.this).start(devId);
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create().show();
     }
 

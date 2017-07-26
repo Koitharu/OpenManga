@@ -39,7 +39,7 @@ public class PageNumberDialog implements DialogInterface.OnClickListener, SeekBa
                 dialog.cancel();
             }
         });
-        builder.setPositiveButton(android.R.string.ok, this);
+        builder.setPositiveButton(R.string.navigate, this);
         mDialog = builder.create();
         mDialog.setOnShowListener(this);
     }

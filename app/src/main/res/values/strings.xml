@@ -366,4 +366,7 @@
     <string name="skip">Skip</string>
     <string name="recommendations_tip">Configure your recommendations options for having more relevant mangas list</string>
     <string name="download_max_threads">Max parallel downloads</string>
+    <string name="install">Install</string>
+    <string name="detach">Detach</string>
+    <string name="clear">Clear</string>
 </resources>

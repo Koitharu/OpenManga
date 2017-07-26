@@ -409,12 +409,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             }
         });
         builder.setTitle(R.string.chapters_list);
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
         builder.create().show();
     }
 

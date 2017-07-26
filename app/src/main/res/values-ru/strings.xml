@@ -340,4 +340,7 @@
     <string name="skip">Пропустить</string>
     <string name="recommendations_tip">Настройте рекомендации, чтобы получать более подходящую Вам мангу в этом списке</string>
     <string name="download_max_threads">Макс. потоков загрузки</string>
+    <string name="install">Установить</string>
+    <string name="detach">Отключить</string>
+    <string name="clear">Очистить</string>
 </resources>

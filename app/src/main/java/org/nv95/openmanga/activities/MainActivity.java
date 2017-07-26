@@ -286,7 +286,7 @@ public class MainActivity extends BaseAppActivity implements
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.import_file_confirm, f))
                     .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.import_file, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startService(new Intent(MainActivity.this, ImportService.class)
@@ -348,7 +348,7 @@ public class MainActivity extends BaseAppActivity implements
                 if (mProvider instanceof HistoryProvider) {
                     new AlertDialog.Builder(MainActivity.this)
                             .setCancelable(true)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (((HistoryProvider) mProvider).clear()) {
@@ -583,7 +583,7 @@ public class MainActivity extends BaseAppActivity implements
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.delete_mangas_confirm)
                         .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.action_remove, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mProvider.remove(ids);
@@ -786,7 +786,7 @@ public class MainActivity extends BaseAppActivity implements
             }
             new AlertDialog.Builder(mainActivity)
                     .setCancelable(true)
-                    .setPositiveButton(android.R.string.ok, null)
+                    .setPositiveButton(R.string.close, null)
                     .setMessage(mainActivity.getString(msg))
                     .create().show();
         }
