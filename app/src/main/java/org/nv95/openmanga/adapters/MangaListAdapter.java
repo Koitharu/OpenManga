@@ -182,19 +182,27 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
             } else if (thumbSize.getWidth() <= ThumbSize.THUMB_SIZE_SMALL.getWidth()) {
                 buttonRead.setVisibility(View.GONE);
                 textViewSummary.setVisibility(View.GONE);
+                textViewTitle.setSingleLine(false);
                 textViewTitle.setMaxLines(2);
+                textViewTitle.setEllipsize(TextUtils.TruncateAt.END);
                 cellFooter.getLayoutParams().height = HEIGHT_42;
                 cellFooter.setPadding(PADDING_4, PADDING_4, PADDING_4, PADDING_4);
             } else if (thumbSize.getWidth() <= ThumbSize.THUMB_SIZE_MEDIUM.getWidth()) {
                 buttonRead.setVisibility(View.GONE);
-                textViewSummary.setVisibility(View.VISIBLE);
                 textViewTitle.setMaxLines(1);
+                textViewTitle.setSingleLine(true);
+                textViewTitle.setHorizontalFadingEdgeEnabled(true);
+                textViewTitle.setEllipsize(null);
+                textViewSummary.setVisibility(View.VISIBLE);
                 cellFooter.getLayoutParams().height = HEIGHT_68;
                 cellFooter.setPadding(PADDING_4, PADDING_4, PADDING_4, PADDING_4);
             } else {
                 buttonRead.setVisibility(View.VISIBLE);
                 textViewSummary.setVisibility(View.VISIBLE);
                 textViewTitle.setMaxLines(1);
+                textViewTitle.setSingleLine(true);
+                textViewTitle.setHorizontalFadingEdgeEnabled(true);
+                textViewTitle.setEllipsize(null);
                 cellFooter.getLayoutParams().height = HEIGHT_68;
                 cellFooter.setPadding(PADDING_16, PADDING_16, PADDING_16, PADDING_16);
             }
