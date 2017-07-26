@@ -63,6 +63,7 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
+import org.nv95.openmanga.services.ExportService;
 import org.nv95.openmanga.services.ImportService;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AnimUtils;
@@ -561,6 +562,7 @@ public class MainActivity extends BaseAppActivity implements
         menu.findItem(R.id.action_save).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_share).setVisible(mSelectedItem != R.id.nav_local_storage);
         menu.findItem(R.id.action_move).setVisible(mSelectedItem == R.id.nav_action_favourites);
+        menu.findItem(R.id.action_export).setVisible(mSelectedItem == R.id.nav_local_storage);
         menu.findItem(R.id.action_select_all).setVisible(
                 mSelectedItem == R.id.nav_action_favourites
                 || mSelectedItem == R.id.nav_action_history
@@ -598,6 +600,12 @@ public class MainActivity extends BaseAppActivity implements
                 return true;
             case R.id.action_save:
                 new MangaSaveHelper(this).confirmSave(mListLoader.getItems(items));
+                break;
+            case R.id.action_export:
+                MangaInfo[] mangas = mListLoader.getItems(items);
+                for (MangaInfo o : mangas) {
+                    ExportService.start(this, o);
+                }
                 break;
             case R.id.action_select_all:
                 mListLoader.getAdapter().getChoiceController().selectAll(EndlessAdapter.VIEW_ITEM);

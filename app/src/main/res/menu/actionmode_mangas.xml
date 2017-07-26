@@ -21,6 +21,11 @@
         android:icon="@drawable/ic_folder_move_light"
         app:showAsAction="ifRoom"
         android:visible="false" />
+    <item android:id="@+id/action_export"
+        android:title="@string/action_export"
+        android:icon="@drawable/ic_folder_move_light"
+        app:showAsAction="ifRoom"
+        android:visible="false" />
     <item android:id="@+id/action_select_all"
         android:title="@android:string/selectAll"
         android:icon="?android:actionModeSelectAllDrawable"
