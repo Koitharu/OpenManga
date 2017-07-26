@@ -6,7 +6,7 @@ OpenManga - Powerful manga reader for Android with online catalogues.
 [![Get it on F-Droid](https://cloud.githubusercontent.com/assets/8948226/22860847/7476f5c4-f112-11e6-9031-5ac233d26678.png)](https://f-droid.org/repository/browse/?fdid=org.nv95.openmanga) [![Donate](https://cloud.githubusercontent.com/assets/8948226/26622455/20e44520-45f3-11e7-9257-7c3900697b75.png)](https://money.yandex.ru/to/410012543938752)
 
 ## Features
- - 13 online manga's catalogues with search
+ - 14 online manga's catalogues with search
  - Downloading manga to local storage
  - Material design UI
  - Customizable reader
@@ -14,10 +14,8 @@ OpenManga - Powerful manga reader for Android with online catalogues.
  - Selecting sort order
  - Filter by genre
  - Notifications about new chapters
- - Importing from CBZ files
-
-## ToDo
- - Data synchronization
+ - Importing/exporting to CBZ files
+ - Data synchronization (source code available [here](https://github.com/nv95/OpenManga-sync) )
  
 You can help translate this app and add online catalogues.
 
