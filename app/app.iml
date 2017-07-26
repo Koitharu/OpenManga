@@ -87,7 +87,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard-rules" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res_stripped" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
@@ -100,25 +102,25 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-core-ui-26.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-compat-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.6.0" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="transition-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-26.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="netcipher-2.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-26.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.5" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.10.3" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-26.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-core-utils-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="android-crop-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="design-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-26.0.0-alpha1" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-26.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="transition-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-fragment-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-core-ui-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="support-media-compat-26.0.0-beta2" level="project" />
+    <orderEntry type="library" exported="" name="design-26.0.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="taptargetview-1.9.1" level="project" />
   </component>
 </module>
