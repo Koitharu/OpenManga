@@ -43,6 +43,7 @@ public class GeneralSettingsFragment extends PreferenceFragment {
         findPreference("recommendations").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
         PreferencesUtils.bindPreferenceSummary(findPreference("fav.categories"));
+        PreferencesUtils.bindPreferenceSummary(findPreference("defsection"));
     }
 
     @Override

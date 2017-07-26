@@ -110,7 +110,6 @@
     <string name="check_new_chapters">Check for new chapters</string>
     <string name="new_chapters">New chapters are available</string>
     <string name="checking_new_chapters">Checking for new chapters</string>
-    <string name="check_chapters_summary">If you added manga to favourites, you will receive a notifications about new chapters.</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="checking_frequency">Frequency of checking</string>
@@ -307,9 +306,7 @@
     <string name="tip_ui_theme">Select UI theme that you prefer</string>
     <string name="tip_restore">Restore your history and favourites from local backup or use our data synchronization service</string>
     <string name="tip_webtoon">Webtoon mode override some settings only for current manga and make it more comfortable for reading webtoons</string>
-    <string name="off">Off</string>
-    <string name="on">On</string>
-	<string name="scroll_by_click">Scroll by click on sides</string>
+    <string name="scroll_by_click">Scroll by click on sides</string>
     <string name="hide_menu_button">Hide menu button</string>
     <string name="hide_menu_summary">Make it invisible, but still clickable</string>
     <string name="chapters">Chapters</string>
@@ -365,7 +362,6 @@
     <string name="general">General</string>
     <string name="no_thanks">No thanks</string>
     <string name="sync_tip">Synchronize history and favourites across your devices using our data synchronization service</string>
-    <string name="enable">Enable</string>
     <string name="configure">Configure</string>
     <string name="skip">Skip</string>
     <string name="recommendations_tip">Configure your recommendations options for having more relevant mangas list</string>

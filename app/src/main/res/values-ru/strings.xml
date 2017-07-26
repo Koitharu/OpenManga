@@ -98,7 +98,6 @@
     <string name="no_new_chapters">Нет новых глав</string>
     <string name="enabled">Включено</string>
     <string name="disabled">Отключено</string>
-    <string name="check_chapters_summary">Вы будете получать уведомления о новых главах для манги, которую добавили в избранное</string>
     <string name="check_new_chapters">Проверить новые главы</string>
     <string name="checking_frequency">Частота проверки</string>
     <string name="checking_new_chapters">Проверка новых глав</string>
@@ -281,8 +280,6 @@
     <string name="tip_ui_theme">Выберите тему оформления приложения</string>
     <string name="tip_restore">Восстановите свою историю и закладки из локальной резервной копии или используйте синхронизацию данных</string>
     <string name="tip_webtoon">Режим манхвы меняет некоторые настройки для конкретной манги, делая чтение манхвы более комфортным</string>
-    <string name="off">Выкл</string>
-    <string name="on">Вкл</string>
     <string name="hide_menu_button">Скрыть кнопку Меню</string>
     <string name="chapters">Главы</string>
     <string name="search_query_empty">Пустой поисковый запрос</string>

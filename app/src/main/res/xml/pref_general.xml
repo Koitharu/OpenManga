@@ -2,6 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
+        android:defaultValue="-4"
+        android:entries="@array/section_names"
+        android:entryValues="@array/sections"
+        android:key="defsection"
+        android:title="@string/open_on_start" />
+
+    <ListPreference
         android:defaultValue="@string/__empty__"
         android:entries="@array/app_languages"
         android:entryValues="@array/app_languages_values"

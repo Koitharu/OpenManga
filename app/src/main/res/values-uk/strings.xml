@@ -98,7 +98,6 @@
     <string name="no_new_chapters">Немає нових глав</string>
     <string name="enabled">Увімкнено</string>
     <string name="disabled">Вимкнено</string>
-    <string name="check_chapters_summary">Ви будете отримувати повідомлення про нові глави для манги, яку додали в улюблене</string>
     <string name="check_new_chapters">Перевірити нові глави</string>
     <string name="checking_frequency">Частота перевірки</string>
     <string name="checking_new_chapters">Перевірка нових глав</string>
@@ -276,6 +275,4 @@
     <string name="check_credentials">Перевірити облікові дані</string>
     <string name="genre_webtoon">Webtoon</string>
     <string name="tip_reader_menu">Натисніть сюди, щоб відкрити меню</string>
-    <string name="off">Викл</string>
-    <string name="on">Вкл</string>
 </resources>

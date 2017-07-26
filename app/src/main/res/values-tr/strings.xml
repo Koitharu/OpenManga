@@ -38,7 +38,6 @@
     <string name="chapters_to_save">İndirilecek Bölümler</string>
     <string formatted="false" name="chapters_total">Toplam bölüm: %d</string>
     <string name="check_all">Hepsini seç</string>
-    <string name="check_chapters_summary">Bu kısmı açtığınız taktirde favori mangalarınıza yeni bölüm eklendiğinde bildirim alacaksınız.</string>
     <string name="check_new_chapters">Yeni bölüm kontrol et</string>
     <string name="check_updates">Güncelleme kontrol et</string>
     <string name="check_updates_auto">Güncellemeleri otomatik kontrol et</string>
