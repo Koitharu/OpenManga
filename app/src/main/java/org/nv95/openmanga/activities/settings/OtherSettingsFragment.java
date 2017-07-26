@@ -3,8 +3,8 @@ package org.nv95.openmanga.activities.settings;
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -88,9 +88,9 @@ public class OtherSettingsFragment extends PreferenceFragment {
             p.setSummary(getString(R.string.last_update_check,
                     lastCheck == -1 ? getString(R.string.unknown) : AppHelper.getReadableDateTimeRelative(lastCheck)));
         } else if (p != null) {
-            PreferenceScreen screen = getPreferenceScreen();
-            screen.removePreference(p);
-            screen.removePreference(findPreference("autoupdate"));
+            PreferenceCategory cat = (PreferenceCategory) findPreference("cat_help");
+            cat.removePreference(p);
+            cat.removePreference(findPreference("autoupdate"));
         }
 
         p = findPreference("about");
