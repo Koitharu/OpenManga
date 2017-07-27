@@ -71,7 +71,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     private static final int REQUEST_SETTINGS = 1299;
 
-    private FrameLayout mContainer;
     private FrameLayout mProgressFrame;
     private MangaReader mReader;
     private ReaderAdapter mAdapter;
@@ -90,14 +89,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader2);
-        mContainer = (FrameLayout) findViewById(R.id.container);
-        mProgressFrame = (FrameLayout) findViewById(R.id.loader);
-        mMenuPanel = (ReaderMenu) findViewById(R.id.menuPanel);
-        mReader = (MangaReader) findViewById(R.id.reader);
-        mMenuButton = (ImageView) findViewById(R.id.imageView_menu);
-        mOverScrollFrame = (FrameLayout) findViewById(R.id.overscrollFrame);
-        mOverScrollArrow = (ImageView) findViewById(R.id.imageView_arrow);
-        mOverScrollText = (TextView) findViewById(R.id.textView_title);
+        mProgressFrame = findViewById(R.id.loader);
+        mMenuPanel = findViewById(R.id.menuPanel);
+        mReader = findViewById(R.id.reader);
+        mMenuButton = findViewById(R.id.imageView_menu);
+        mOverScrollFrame = findViewById(R.id.overscrollFrame);
+        mOverScrollArrow = findViewById(R.id.imageView_arrow);
+        mOverScrollText = findViewById(R.id.textView_title);
 
         if (isDarkTheme()) {
             mMenuButton.setColorFilter(ContextCompat.getColor(this, R.color.white_overlay_85));
@@ -619,14 +617,11 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
 
         @Override
-        protected void onPostExecute(@Nullable final ReadActivity2 a, final File file) {
-            if (a == null) {
-                return;
-            }
+        protected void onPostExecute(@NonNull final ReadActivity2 a, final File file) {
             a.mProgressFrame.setVisibility(View.GONE);
             if (file != null && file.exists()) {
                 StorageUtils.scanMediaFile(a, file);
-                Snackbar.make(a.mContainer, R.string.image_saved, Snackbar.LENGTH_LONG)
+                Snackbar.make(a.mReader, R.string.image_saved, Snackbar.LENGTH_LONG)
                         .setAction(R.string.action_share, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -635,7 +630,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
                         })
                         .show();
             } else {
-                Snackbar.make(a.mContainer, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(a.mReader, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
             }
 
         }
@@ -666,13 +661,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         protected void onPostExecute(@NonNull ReadActivity2 a, MangaSummary sourceManga) {
             a.mProgressFrame.setVisibility(View.GONE);
             if (sourceManga == null) {
-                Snackbar.make(a.mContainer, R.string.loading_error, Snackbar.LENGTH_SHORT)
+                Snackbar.make(a.mReader, R.string.loading_error, Snackbar.LENGTH_SHORT)
                         .show();
                 return;
             }
             ChaptersList newChapters = sourceManga.chapters.complementByName(a.mManga.chapters);
             if (sourceManga.chapters.size() <= a.mManga.chapters.size()) {
-                Snackbar.make(a.mContainer, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
+                Snackbar.make(a.mReader, R.string.no_new_chapters, Snackbar.LENGTH_SHORT)
                         .show();
             } else {
                 sourceManga.chapters = newChapters;
