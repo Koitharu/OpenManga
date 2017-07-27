@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -44,7 +45,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * Created by admin on 21.07.17.
  */
 
-public class SaveService extends Service implements NetworkStateListener.OnNetworkStateListener {
+public class SaveService extends Service implements NetworkStateListener.OnNetworkStateListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final int ACTION_ADD = 50;
     public static final int ACTION_CANCEL = 51;
@@ -65,10 +66,14 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                 PreferenceManager.getDefaultSharedPreferences(this).getInt("save_threads", 2)
         );
         registerReceiver(mNetworkListener, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
         unregisterReceiver(mNetworkListener);
         super.onDestroy();
     }
@@ -151,6 +156,18 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
         boolean isWifiOnly = PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("save.wifionly", false);
         return NetworkUtils.checkConnection(this, isWifiOnly);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case "save.wifionly":
+                boolean paused = !canDownloadNow();
+                for (SaveTask o : mTasks.values()) {
+                    o.setPaused(paused);
+                }
+                break;
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -281,6 +298,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                     speedMeasureHelper.init();
                     try {
                         o = mDownload.chapters.get(i);
+                        //noinspection ConstantConditions
                         pages = provider.getPages(o.readLink);
                         if (pages == null) { //всё не совсем плохо
                             //try again
@@ -400,8 +418,6 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
             if (values.length >= 4) {
                 double kbps = values[3] / 1024D;
                 mNotificationHelper.info(SpeedMeasureHelper.formatSpeed(kbps));
-            } else {
-                //mNotificationHelper.info(null);
             }
             mNotificationHelper
                     .progress(mDownload.pos * 100 + mDownload.getChapterProgressPercent(), mDownload.max * 100)
@@ -447,7 +463,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
         @WorkerThread
         boolean onError() {
             pause();
-            if (!canDownloadNow()) {
+            if (canDownloadNow()) {
                 publishProgress(PROGRESS_ERROR);
             }
             return waitForResume();
