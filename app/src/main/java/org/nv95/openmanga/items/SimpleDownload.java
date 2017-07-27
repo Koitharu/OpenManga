@@ -48,6 +48,8 @@ public class SimpleDownload implements Runnable {
                 ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
             }
             MangaProviderManager.prepareConnection(connection);
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
             connection.connect();
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return;
