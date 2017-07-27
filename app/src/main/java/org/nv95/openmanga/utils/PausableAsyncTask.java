@@ -30,6 +30,7 @@ public abstract class PausableAsyncTask<Param, Progress, Result> extends AsyncTa
     });
 
     public void setPaused(boolean value) {
+        if (getStatus() == Status.FINISHED) return;
         boolean oldValue = mPaused.getAndSet(value);
         if (value != oldValue) {
             if (value) {
