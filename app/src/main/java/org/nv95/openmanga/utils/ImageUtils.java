@@ -16,7 +16,6 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
@@ -112,7 +111,7 @@ public class ImageUtils {
                 fixUrl(url),
                 new ImageViewAware(imageView),
                 mOptionsThumb,
-                size != null && imageView.getMeasuredWidth() == 0 ? new ImageSize(size.getWidth(), size.getHeight()) : null,
+                size != null && imageView.getMeasuredWidth() == 0 ? size.toImageSize() : null,
                 null,
                 null
         );

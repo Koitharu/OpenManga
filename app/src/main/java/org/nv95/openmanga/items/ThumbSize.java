@@ -2,6 +2,8 @@ package org.nv95.openmanga.items;
 
 import android.view.View;
 
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+
 /**
  * Created by nv95 on 09.02.16.
  */
@@ -48,5 +50,9 @@ public class ThumbSize {
         return o instanceof ThumbSize &&
                 ((ThumbSize)o).mHeight == mHeight &&
                 ((ThumbSize)o).mWidth == mWidth;
+    }
+
+    public ImageSize toImageSize() {
+        return new ImageSize(mWidth, mHeight);
     }
 }
