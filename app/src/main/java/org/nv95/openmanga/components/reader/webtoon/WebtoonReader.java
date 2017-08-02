@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -36,9 +35,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     private final ScaleGestureDetector mScaleDetector;
     private DrawThread mDrawThread;
     private int mCurrentPage;
-    private int mScrollOffset;
-    private int mHorizontalOffset;
-    private float mScale;
+    private final ScrollController mScrollCtrl;
 
     public WebtoonReader(Context context) {
         this(context, null, 0);
@@ -53,9 +50,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
         mGestureDetector = new GestureDetector(context, new GestureListener());
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         getHolder().addCallback(this);
-        mHorizontalOffset = 0;
-        mScale = 1;
-        mScrollOffset = 0;
+        mScrollCtrl = new ScrollController();
     }
 
     @Override
@@ -80,8 +75,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void scrollToPosition(int position) {
-        mCurrentPage = position;
-        mScrollOffset = 0;
+
     }
 
     @Override
@@ -122,7 +116,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void notifyDataSetChanged() {
-        mDrawThread.mOffsetY = -1;
+
     }
 
     @Override
@@ -160,6 +154,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        mScrollCtrl.setViewportWidth(surfaceHolder.getSurfaceFrame().width());
         mDrawThread = new DrawThread(getHolder());
         mDrawThread.setRunning(true);
         mDrawThread.start();
@@ -167,6 +162,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
+        mScrollCtrl.setViewportWidth(width);
         notifyDataSetChanged();
     }
 
@@ -211,13 +207,13 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            mInitialScale = mScale;
+            mInitialScale = mScrollCtrl.getScale();
             return super.onScaleBegin(detector);
         }
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            mScale = Math.max(1, mInitialScale * detector.getScaleFactor());
+            mScrollCtrl.setScale(Math.max(1, mInitialScale * detector.getScaleFactor()));
             notifyDataSetChanged();
             return super.onScale(detector);
         }
@@ -227,23 +223,18 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            mScrollOffset -= distanceY;
-            mHorizontalOffset -= distanceX;
-            if (mHorizontalOffset < 0) {
-                mHorizontalOffset = 0;
-            }
-            Log.d("WTR", "Scroll offset: " + mScrollOffset);
-            return super.onScroll(e1, e2, distanceX, distanceY);
+            if (e2.getPointerCount() > 1) return false;
+            mScrollCtrl.scrollBy(-distanceX, -distanceY);
+            return true;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            if (mScale > 1) {
-                mScale = 1;
+            if (mScrollCtrl.getScale() > 1) {
+                mScrollCtrl.resetZoom(true);
             } else {
-                mScale = 1.8f;
+                mScrollCtrl.zoomTo(1.8f, e.getX(), e.getY());
             }
-            notifyDataSetChanged();
             return super.onDoubleTap(e);
         }
     }
@@ -253,8 +244,6 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
         private final SurfaceHolder mHolder;
         private final Paint mPaint;
         volatile private boolean mIsRunning;
-        private int mOffsetY = -1;
-        private int mOffsetX = -1;
 
         DrawThread(SurfaceHolder surfaceHolder) {
             mIsRunning = false;
@@ -271,16 +260,14 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
             while (mIsRunning) {
                 Canvas canvas = null;
                 try {
-                    while (mOffsetY == mScrollOffset && mHorizontalOffset == mOffsetX) {
+                    /*while (mOffsetY == mScrollOffset && mHorizontalOffset == mOffsetX) {
                         try {
                             if (!mIsRunning) return;
                             sleep(100);
                         } catch (InterruptedException e) {
                             break;
                         }
-                    }
-                    mOffsetY = mScrollOffset;
-                    mOffsetX = mHorizontalOffset;
+                    }*/
                     // получаем объект Canvas и выполняем отрисовку
                     canvas = mHolder.lockCanvas(null);
                     if (canvas == null) {
@@ -289,15 +276,15 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                     synchronized (mHolder) {
                         canvas.drawColor(Color.LTGRAY);
                         if (mPool != null) {
-                            int offset = mScrollOffset;
+                            int offset = (int) mScrollCtrl.offsetY();
                             int page = mCurrentPage;
                             while (offset < canvas.getHeight() && mIsRunning) {
                                 PageImage image = mPool.get(page);
                                 if (image == null) break;
                                 float scale = canvas.getWidth() / (float)image.getWidth();
-                                scale += mScale - 1;
+                                scale += mScrollCtrl.getScale() - 1;
                                 image.scale(scale);
-                                Rect rect = image.draw(canvas, mPaint, mOffsetX, offset);
+                                Rect rect = image.draw(canvas, mPaint, (int) mScrollCtrl.offsetX(), offset);
                                 /*if (rect.top > 0) {
                                     image = mPool.get(page);
                                     if (image != null) {
@@ -311,7 +298,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                                 }*/
                                 if (rect.bottom < 0) {
                                     mCurrentPage++;
-                                    mScrollOffset = rect.bottom;
+                                    mScrollCtrl.setOffsetY(rect.bottom);
                                 }
                                 page++;
                                 offset = rect.bottom;
