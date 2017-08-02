@@ -278,6 +278,18 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                         if (mPool != null) {
                             int offset = (int) mScrollCtrl.offsetY();
                             int page = mCurrentPage;
+                            //draw previous pages
+                            while (offset > 0) {
+                                PageImage image = mPool.get(page - 1);
+                                if (image == null) break;
+                                image.scale(canvas.getWidth() / (float) image.getWidth());
+                                offset -= image.getHeight();
+                                Rect rect = image.draw(canvas, mPaint, (int) mScrollCtrl.offsetX(), offset);
+                                page--;
+                                mCurrentPage--;
+                                mScrollCtrl.setOffsetY(rect.top);
+                            }
+                            //draw current page and next
                             while (offset < canvas.getHeight() && mIsRunning) {
                                 PageImage image = mPool.get(page);
                                 if (image == null) break;
@@ -285,14 +297,14 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                                 scale += mScrollCtrl.getScale() - 1;
                                 image.scale(scale);
                                 Rect rect = image.draw(canvas, mPaint, (int) mScrollCtrl.offsetX(), offset);
-                                /*if (rect.top > 0) {
+                                /*if (page == mCurrentPage && rect.top > 0) {
                                     image = mPool.get(page);
                                     if (image != null) {
                                         image.scale(canvas.getWidth() / (float) image.getWidth());
                                         offset -= image.getHeight();
                                         rect = image.draw(canvas, mPaint, 0, offset);
                                         mCurrentPage--;
-                                        mScrollOffset = rect.top;
+                                        mScrollCtrl.setOffsetY(rect.top);
                                         continue;
                                     }
                                 }*/
@@ -303,6 +315,8 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                                 page++;
                                 offset = rect.bottom;
                             }
+                            //prefetch next
+                            mPool.get(page);
                         }
                     }
                 } finally {
