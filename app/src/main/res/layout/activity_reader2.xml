@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.nv95.openmanga.components.reader.webtoon.WebtoonReader
+    <org.nv95.openmanga.components.reader.StandardMangaReader
         android:id="@+id/reader"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -33,6 +34,8 @@ import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageWrapper;
+import org.nv95.openmanga.components.reader.StandardMangaReader;
+import org.nv95.openmanga.components.reader.webtoon.WebtoonReader;
 import org.nv95.openmanga.dialogs.HintDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ThumbnailsDialog;
@@ -254,6 +257,36 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     }
 
     private void updateConfig() {
+        boolean isWeb = HistoryProvider.getInstance(this).isWebMode(mManga);
+        if (isWeb) {
+            if (mReader instanceof StandardMangaReader) {
+                StandardMangaReader oldReader = (StandardMangaReader) mReader;
+                ViewGroup parent = (ViewGroup) ((View) mReader).getParent();
+                parent.removeView((View) mReader);
+                mReader = new WebtoonReader(this);
+                mReader.initAdapter(this, this);
+                mReader.setPages(oldReader.getPages());
+                mReader.scrollToPosition(oldReader.getCurrentPosition());
+                mReader.addOnPageChangedListener(mMenuPanel);
+                mReader.setOnOverScrollListener(this);
+                ((View) mReader).setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                parent.addView((View) mReader, 0);
+            }
+        } else {
+            if (mReader instanceof WebtoonReader) {
+                WebtoonReader oldReader = (WebtoonReader) mReader;
+                ViewGroup parent = (ViewGroup) ((View) mReader).getParent();
+                parent.removeView((View) mReader);
+                mReader = new StandardMangaReader(this);
+                mReader.initAdapter(this, this);
+                mReader.setPages(oldReader.getPages());
+                mReader.scrollToPosition(oldReader.getCurrentPosition());
+                mReader.addOnPageChangedListener(mMenuPanel);
+                mReader.setOnOverScrollListener(this);
+                ((View) mReader).setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                parent.addView((View) mReader, 0);
+            }
+        }
         mConfig = ReaderConfig.load(this, mManga);
         mReader.applyConfig(
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_VERTICAL,

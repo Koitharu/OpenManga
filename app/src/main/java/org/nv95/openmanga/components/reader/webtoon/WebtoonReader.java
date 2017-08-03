@@ -26,6 +26,7 @@ import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -184,6 +185,16 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     @Override
     public void finish() {
         getLoader().cancelAll();
+    }
+
+    @Override
+    public List<MangaPage> getPages() {
+        List<PageWrapper> wrappers = mPool.getLoader().getWrappersList();
+        ArrayList<MangaPage> pages = new ArrayList<>(wrappers.size());
+        for (PageWrapper o : wrappers) {
+            pages.add(o.page);
+        }
+        return pages;
     }
 
     @SuppressLint("ClickableViewAccessibility")

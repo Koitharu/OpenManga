@@ -18,6 +18,7 @@ import org.nv95.openmanga.components.reader.recyclerpager.overscroll.VerticalOve
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -176,6 +177,16 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
     @Override
     public void setPages(List<MangaPage> mangaPages) {
         mAdapter.setPages(mangaPages);
+    }
+
+    @Override
+    public List<MangaPage> getPages() {
+        List<PageWrapper> wrappers = mAdapter.getLoader().getWrappersList();
+        ArrayList<MangaPage> pages = new ArrayList<>(wrappers.size());
+        for (PageWrapper o : wrappers) {
+            pages.add(o.page);
+        }
+        return pages;
     }
 
     @Override

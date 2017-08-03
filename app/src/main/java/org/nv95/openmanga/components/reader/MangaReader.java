@@ -44,4 +44,6 @@ public interface MangaReader {
     void setPages(List<MangaPage> mangaPages);
 
     void finish();
+
+    List<MangaPage> getPages();
 }

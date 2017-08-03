@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.nv95.openmanga.items.MangaInfo;
-import org.nv95.openmanga.providers.HistoryProvider;
 
 /**
  * Created by nv95 on 18.11.16.
@@ -39,17 +38,17 @@ public class ReaderConfig {
     public final boolean tapNavs;
     public final boolean hideMenuButton;
 
-    private ReaderConfig(SharedPreferences prefs, boolean isWeb) {
+    private ReaderConfig(SharedPreferences prefs) {
         keepScreenOn = prefs.getBoolean("keep_screen", true);
         scrollByVolumeKeys = prefs.getBoolean("volkeyscroll", false);
         adjustBrightness = prefs.getBoolean("brightness", false);
         hideMenuButton = prefs.getBoolean("hide_menu", false);
         brightnessValue = prefs.getInt("brightness_value", 20);
         tapNavs = prefs.getBoolean("tap_navs", false);
-        scrollDirection = isWeb ? DIRECTION_VERTICAL : Integer.parseInt(prefs.getString("direction", "0"));
+        scrollDirection = Integer.parseInt(prefs.getString("direction", "0"));
         mode = Integer.parseInt(prefs.getString("r2_mode", "0"));
         preload = Integer.parseInt(prefs.getString("preload", "1"));
-        int scalemode = isWeb ? SCALE_FIT_W : Integer.parseInt(prefs.getString("scalemode", "0"));
+        int scalemode = Integer.parseInt(prefs.getString("scalemode", "0"));
         if (scalemode == SCALE_FIT_H && scrollDirection == DIRECTION_REVERSED) {
             scalemode = SCALE_FIT_H_REV;
         }
@@ -58,15 +57,13 @@ public class ReaderConfig {
 
     public static ReaderConfig load(Context context) {
         return new ReaderConfig(
-                PreferenceManager.getDefaultSharedPreferences(context),
-                false
+                PreferenceManager.getDefaultSharedPreferences(context)
         );
     }
 
     public static ReaderConfig load(Context context, MangaInfo manga) {
         return new ReaderConfig(
-                PreferenceManager.getDefaultSharedPreferences(context),
-                HistoryProvider.getInstance(context).isWebMode(manga)
+                PreferenceManager.getDefaultSharedPreferences(context)
         );
     }
 }
