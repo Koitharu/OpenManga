@@ -37,6 +37,7 @@ public class ReaderConfig {
     public final int scaleMode;
     public final boolean tapNavs;
     public final boolean hideMenuButton;
+    public final boolean showNumbers;
 
     private ReaderConfig(SharedPreferences prefs) {
         keepScreenOn = prefs.getBoolean("keep_screen", true);
@@ -48,6 +49,7 @@ public class ReaderConfig {
         scrollDirection = Integer.parseInt(prefs.getString("direction", "0"));
         mode = Integer.parseInt(prefs.getString("r2_mode", "0"));
         preload = Integer.parseInt(prefs.getString("preload", "1"));
+        showNumbers = prefs.getBoolean("show_numbers", true);
         int scalemode = Integer.parseInt(prefs.getString("scalemode", "0"));
         if (scalemode == SCALE_FIT_H && scrollDirection == DIRECTION_REVERSED) {
             scalemode = SCALE_FIT_H_REV;

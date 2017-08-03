@@ -369,4 +369,7 @@
     <string name="install">Install</string>
     <string name="detach">Detach</string>
     <string name="clear">Clear</string>
+    <string name="show_page_number">Show page number</string>
+    <string name="standard_mode">Standard mode</string>
+    <string name="pref_common">Common settings</string>
 </resources>

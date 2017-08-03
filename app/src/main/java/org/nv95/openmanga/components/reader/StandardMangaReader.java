@@ -113,7 +113,7 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
     }
 
     @Override
-    public void applyConfig(boolean vertical, boolean reverse, boolean sticky) {
+    public void applyConfig(boolean vertical, boolean reverse, boolean sticky, boolean showNumbers) {
         int oldPos = getCurrentPosition();
         setLayoutManager(mLayoutManager = new PreCachingLayoutManager(
                 getContext(),

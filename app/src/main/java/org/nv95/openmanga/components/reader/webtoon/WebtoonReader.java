@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ScaleGestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,7 +18,9 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageLoadListener;
@@ -24,6 +28,7 @@ import org.nv95.openmanga.components.reader.PageLoader;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.items.MangaPage;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -49,8 +54,11 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     private DrawThread mDrawThread;
     private int mCurrentPage;
     private boolean mTapNavs;
+    private volatile boolean mShowNumbers;
     private final ScrollController mScrollCtrl;
     private final Vector<RecyclerViewPager.OnPageChangedListener> mPageChangeListeners;
+    @Nullable
+    private OnOverScrollListener mOverscrollListener;
     private final Handler handler = new Handler(this);
 
     public WebtoonReader(Context context) {
@@ -72,8 +80,9 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     }
 
     @Override
-    public void applyConfig(boolean vertical, boolean reverse, boolean sticky) {
-
+    public void applyConfig(boolean vertical, boolean reverse, boolean sticky, boolean showNumbers) {
+        mShowNumbers = showNumbers;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -111,8 +120,12 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void scrollToPosition(int position) {
+        int oldPage = mCurrentPage;
         mCurrentPage = position;
         mScrollCtrl.setOffsetY(0);
+        for (RecyclerViewPager.OnPageChangedListener o : mPageChangeListeners) {
+            o.OnPageChanged(oldPage, mCurrentPage);
+        }
         notifyDataSetChanged();
     }
 
@@ -128,7 +141,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void setOnOverScrollListener(OnOverScrollListener listener) {
-
+        mOverscrollListener = listener;
     }
 
     @Override
@@ -171,6 +184,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void reload(int position) {
+        mPool.getLoader().requestPage(position);
         notifyDataSetChanged();
     }
 
@@ -182,6 +196,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     @Override
     public void finish() {
         getLoader().cancelAll();
+        mPool.recycle();
     }
 
     @Override
@@ -246,7 +261,17 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void onLoadingFail(PageWrapper page, boolean shadow) {
-        mDrawThread.setProgress(page.position, -1);
+        final int pos = page.position;
+        mDrawThread.setProgress(pos, -1);
+        if (!shadow) {
+            Snackbar.make(this, FileLogger.getInstance().getFailMessage(getContext(), page.getError()), Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry, new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            reload(pos);
+                        }
+                    }).show();
+        }
     }
 
     @Override
@@ -263,6 +288,12 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                 mScrollCtrl.setOffsetY(message.arg2);
                 for (RecyclerViewPager.OnPageChangedListener o : mPageChangeListeners) {
                     o.OnPageChanged(oldPage, mCurrentPage);
+                }
+                return true;
+            case MSG_OVERSCROLL_END:
+                float factor = message.arg1;
+                if (mOverscrollListener != null) {
+                    mOverscrollListener.onOverScrollFlying(OnOverScrollListener.BOTTOM, factor);
                 }
                 return true;
             default:
@@ -424,7 +455,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                                 if (rect.bottom < 0) {
                                     //if last page
                                     if (page == getItemCount() - 1)  {
-
+                                        notifyOverscrollEnd(canvas.getWidth() - rect.bottom);
                                         break;
                                     }
                                     if (!mScrollCtrl.isFlying()) {
@@ -439,11 +470,20 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                             mPool.get(page);
 
                             int progress = getProgress(mCurrentPage);
-                            String text = String.valueOf(mCurrentPage + 1);
-                            if (progress == -1) {
-                                text += " - ERROR";
-                            } else if (progress != 0 && progress != 100) {
-                                text += " - " + progress + "%";
+                            String text = "";
+                            if (mShowNumbers) {
+                                text += String.valueOf(mCurrentPage + 1);
+                                if (progress == -1) {
+                                    text += " - ERROR";
+                                } else if (progress != 0 && progress != 100) {
+                                    text += " - " + progress + "%";
+                                }
+                            } else {
+                                if (progress == -1) {
+                                    text += "ERROR";
+                                } else if (progress != 0 && progress != 100) {
+                                    text += progress + "%";
+                                }
                             }
                             canvas.drawText(text, 5, canvas.getHeight() - 10, mPaint);
                         }
@@ -465,5 +505,11 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
             handler.sendMessage(msg);
         }
 
+        private void notifyOverscrollEnd(int size) {
+            Message msg = new Message();
+            msg.what = MSG_OVERSCROLL_END;
+            msg.arg1 = size;
+            handler.sendMessage(msg);
+        }
     }
 }

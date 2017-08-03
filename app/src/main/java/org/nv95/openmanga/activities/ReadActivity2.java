@@ -291,7 +291,8 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         mReader.applyConfig(
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_VERTICAL,
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_REVERSED,
-                mConfig.mode == ReaderConfig.MODE_PAGES
+                mConfig.mode == ReaderConfig.MODE_PAGES,
+                mConfig.showNumbers
         );
         if (mConfig.keepScreenOn) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

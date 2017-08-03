@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface MangaReader {
 
-    void applyConfig(boolean vertical, boolean reverse, boolean sticky);
+    void applyConfig(boolean vertical, boolean reverse, boolean sticky, boolean showNumbers);
     boolean scrollToNext(boolean animate);
     boolean scrollToPrevious(boolean animate);
     int getCurrentPosition();
