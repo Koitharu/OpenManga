@@ -23,13 +23,15 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     @Nullable
     private PointF mZoomCenter;
     private float mScaledWidth;
+    private final ChangesListener mListener;
 
-    public ScrollController() {
+    public ScrollController(ChangesListener listener) {
         mCurrentState = new AtomicReference<>(new ZoomState(1, 0, 0));
         mZoomCenter = null;
         mViewportWidth = -1;
         mViewportHeight = -1;
         mScaledWidth = 0;
+        mListener = listener;
     }
 
     public float getScale() {
@@ -164,6 +166,7 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     @Override
     public void onAnimationEnd(Animator animator) {
         mAnimator = null;
+        mListener.notifyDataSetChanged();
     }
 
     @Override

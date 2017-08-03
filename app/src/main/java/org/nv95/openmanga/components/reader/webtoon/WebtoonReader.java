@@ -25,10 +25,12 @@ import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.InternalLinkMovement;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by admin on 01.08.17.
@@ -66,7 +68,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         ScaleGestureDetectorCompat.setQuickScaleEnabled(mScaleDetector, false);
         getHolder().addCallback(this);
-        mScrollCtrl = new ScrollController();
+        mScrollCtrl = new ScrollController(this);
     }
 
     @Override
@@ -152,11 +154,6 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void notifyDataSetChanged() {
-        /*try {
-            mDrawThread.notify();
-        } catch (Exception ignored) {
-
-        }*/
         if (mDrawThread != null) {
             mDrawThread.mChanged = true;
         }
@@ -238,17 +235,18 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
 
     @Override
     public void onProgressUpdated(PageWrapper page, boolean shadow, int percent) {
-
+        mDrawThread.setProgress(page.position, percent);
     }
 
     @Override
     public void onLoadingComplete(PageWrapper page, boolean shadow) {
+        mDrawThread.setProgress(page.position, 100);
         notifyDataSetChanged();
     }
 
     @Override
     public void onLoadingFail(PageWrapper page, boolean shadow) {
-
+        mDrawThread.setProgress(page.position, -1);
     }
 
     @Override
@@ -335,6 +333,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
         volatile private boolean mIsRunning;
         volatile private boolean mChanged;
         private ScrollController.ZoomState mState;
+        private final ConcurrentHashMap<Integer,Integer> mProgressMap;
 
         DrawThread(SurfaceHolder surfaceHolder) {
             mState = null;
@@ -342,10 +341,26 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mHolder = surfaceHolder;
             mChanged = true;
+            mPaint.setColor(Color.DKGRAY);
+            mPaint.setSubpixelText(true);
+            mProgressMap = new ConcurrentHashMap<>(getItemCount());
+            mPaint.setTextSize(LayoutUtils.DpToPx(getResources(), 16));
         }
 
         void setRunning(boolean run) {
             mIsRunning = run;
+        }
+
+        void setProgress(int page, int percent) {
+            mProgressMap.put(page, percent);
+            if (page == mCurrentPage) {
+                mChanged = true;
+            }
+        }
+
+        private int getProgress(int page) {
+            Integer p = mProgressMap.get(page);
+            return p == null ? 0 : p;
         }
 
         @Override
@@ -421,6 +436,15 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                             }
                             //prefetch next
                             mPool.get(page);
+
+                            int progress = getProgress(mCurrentPage);
+                            String text = String.valueOf(mCurrentPage + 1);
+                            if (progress == -1) {
+                                text += " - ERROR";
+                            } else if (progress != 0 && progress != 100) {
+                                text += " - " + progress + "%";
+                            }
+                            canvas.drawText(text, 5, canvas.getHeight() - 10, mPaint);
                         }
                     }
                 } finally {
@@ -439,5 +463,6 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
             msg.arg2 = offsetY;
             handler.sendMessage(msg);
         }
+
     }
 }
