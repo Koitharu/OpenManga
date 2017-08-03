@@ -275,28 +275,22 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         private float mInitialScale;
-        private boolean mCenterDefined;
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             mInitialScale = mScrollCtrl.getScale();
-            mCenterDefined = false;
+            mScrollCtrl.cancelAnimation();
             return super.onScaleBegin(detector);
         }
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            float dX = 0, dY = 0;
             float scale = Math.max(1, mInitialScale * detector.getScaleFactor());
-            if (!mCenterDefined) {
-                mCenterDefined = true;
-                dX = detector.getFocusX();
-                dY = detector.getFocusY();
-            }
-            mScrollCtrl.setZoom(
+            float scaleDelta = scale - mScrollCtrl.getScale() * 0.5f;
+            mScrollCtrl.setScaleAndOffset(
                     scale,
-                    -dX,
-                    -dY
+                    -detector.getFocusX() * scaleDelta,
+                    -detector.getFocusY() * scaleDelta
             );
             notifyDataSetChanged();
             return super.onScale(detector);
@@ -402,7 +396,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
                                 PageImage image = mPool.get(page);
                                 if (image == null) break;
                                 float scale = canvas.getWidth() / (float)image.getWidth();
-                                scale += s - 1;
+                                scale *= s;
                                 image.scale(scale);
                                 Rect rect = image.draw(canvas, mPaint, (int) oX, offset);
                                 Log.d("WTR", "Draw page: " + page);

@@ -39,9 +39,14 @@ public class PageImage {
         mRect.right += offsetX;
         mRect.top += offsetY;
         mRect.bottom += offsetY;
-
-        canvas.drawBitmap(mBitmap, bitmapRect(mBitmap), mRect, paint);
+        if (!isRecycled()) {
+            canvas.drawBitmap(mBitmap, bitmapRect(mBitmap), mRect, paint);
+        }
         return mRect;
+    }
+
+    public boolean isRecycled() {
+        return mBitmap.isRecycled();
     }
 
     @NonNull

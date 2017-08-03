@@ -22,12 +22,14 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     private int mViewportHeight;
     @Nullable
     private PointF mZoomCenter;
+    private float mScaledWidth;
 
     public ScrollController() {
         mScale = 1;
         mZoomCenter = null;
         mViewportWidth = -1;
         mViewportHeight = -1;
+        mScaledWidth = 0;
     }
 
     public float getScale() {
@@ -36,27 +38,30 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
 
     public void setScale(float scale) {
         mScale = scale;
+        mScaledWidth = mViewportWidth * mScale;
     }
 
     public void setViewportWidth(int w) {
         mViewportWidth = w;
+        mScaledWidth = mViewportWidth * mScale;
     }
 
     public void setViewportHeight(int h) {
         mViewportHeight = h;
     }
 
-
-    public void setZoom(float scale, float dX, float dY) {
-        mScale = scale;
-        scrollBy(dX, dY);
-    }
-
     public void zoomTo(float scale, float centerX, float centerY) {
-        float oX = mOffsetX - centerX / 2f;// + mViewportHeight / 2f;
-        float oY = mOffsetY - centerY / 2f;
+        float oX = mOffsetX - centerX * 0.5f;
+        float oY = mOffsetY - centerY * 0.5f;
         mZoomCenter = new PointF(centerX, centerY);
         animateZoom(scale, oX, oY);
+    }
+
+    public void cancelAnimation() {
+        if (mAnimator != null) {
+            mAnimator.cancel();
+            mAnimator = null;
+        }
     }
 
     public void animateZoom(float scale, float offsetX, float offsetY) {
@@ -70,7 +75,7 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         );
         assert mAnimator != null;
         mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        mAnimator.setDuration(800);
+        mAnimator.setDuration(500);
         mAnimator.addUpdateListener(this);
         mAnimator.addListener(this);
         mAnimator.start();
@@ -79,15 +84,14 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     @Override
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
         ZoomState curState = (ZoomState) valueAnimator.getAnimatedValue();
-        mScale = curState.scale;
-        scrollTo(curState.offsetX, curState.offsetY);
+        setScaleAndOffset(curState.scale, curState.offsetX, curState.offsetY);
     }
 
     private void scrollTo(float offsetX, float offsetY) {
         if (offsetX > 0) {
             offsetX = 0;
-        } else if (offsetX + mViewportWidth < mViewportWidth / mScale) {
-            offsetX = mViewportWidth / mScale - mViewportWidth;
+        } else if (offsetX + mScaledWidth < mViewportWidth) {
+            offsetX = mViewportWidth - mScaledWidth;
         }
         mOffsetY = offsetY;
         mOffsetX = offsetX;
@@ -96,13 +100,14 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     public void resetZoom(boolean animated) {
         if (animated) {
             if (mZoomCenter != null) {
-                animateZoom(1, mOffsetX + mZoomCenter.x / 2f, mOffsetY + mZoomCenter.y / 2f);
+                animateZoom(1, mOffsetX + mZoomCenter.x * 0.5f, mOffsetY + mZoomCenter.y * 0.5f);
 
             } else {
-                animateZoom(1, mOffsetX + mViewportWidth / 2f, mOffsetY + mViewportHeight / 2f);
+                animateZoom(1, mOffsetX + mViewportWidth * 0.5f, mOffsetY + mViewportHeight * 0.5f);
             }
         } else {
             mScale = 1;
+            mScaledWidth = mViewportWidth;
         }
     }
 
@@ -175,6 +180,12 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     @Override
     public void onAnimationRepeat(Animator animator) {
 
+    }
+
+    public void setScaleAndOffset(float scale, float offsetX, float offsetY) {
+        mScale = scale;
+        mScaledWidth = mViewportWidth * mScale;
+        scrollTo(offsetX, offsetY);
     }
 
     private static class ZoomState {
