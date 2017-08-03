@@ -336,6 +336,7 @@ public class WebtoonReader extends SurfaceView implements MangaReader, SurfaceHo
         private final ConcurrentHashMap<Integer,Integer> mProgressMap;
 
         DrawThread(SurfaceHolder surfaceHolder) {
+            super("SurfaceDrawer");
             mState = null;
             mIsRunning = false;
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
