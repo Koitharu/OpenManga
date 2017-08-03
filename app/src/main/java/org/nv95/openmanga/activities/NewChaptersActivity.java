@@ -23,6 +23,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.io.IOException;
@@ -73,7 +74,12 @@ public class NewChaptersActivity extends BaseAppActivity {
             }
         }).attachToRecyclerView(mRecyclerView);
 
-        new LoadTask(this).attach(this).start();
+        if (NetworkUtils.checkConnection(this)) {
+            new LoadTask(this).attach(this).start();
+        } else {
+            mTextViewHolder.setText(R.string.no_network_connection);
+            AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+        }
     }
 
     @Override

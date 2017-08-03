@@ -1,5 +1,7 @@
 package org.nv95.openmanga.lists;
 
+import android.support.annotation.Nullable;
+
 import org.nv95.openmanga.items.MangaInfo;
 
 /**
@@ -30,5 +32,15 @@ public class MangaList extends PagedList<MangaInfo> {
 
     public boolean inRange(int pos) {
         return pos >= 0 && pos < size();
+    }
+
+    @Nullable
+    public MangaInfo getById(int id) {
+        for (MangaInfo o : this) {
+            if (o.id == id) {
+                return o;
+            }
+        }
+        return null;
     }
 }
