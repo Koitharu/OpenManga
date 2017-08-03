@@ -7,15 +7,15 @@ import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * Created by admin on 02.08.17.
  */
 
 public class ScrollController implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
 
-    private float mScale;
-    private float mOffsetX;
-    private float mOffsetY;
+    private final AtomicReference<ZoomState> mCurrentState;
     @Nullable
     private ValueAnimator mAnimator;
     private int mViewportWidth;
@@ -25,7 +25,7 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     private float mScaledWidth;
 
     public ScrollController() {
-        mScale = 1;
+        mCurrentState = new AtomicReference<>(new ZoomState(1, 0, 0));
         mZoomCenter = null;
         mViewportWidth = -1;
         mViewportHeight = -1;
@@ -33,17 +33,21 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     }
 
     public float getScale() {
-        return mScale;
+        return mCurrentState.get().scale;
     }
 
     public void setScale(float scale) {
-        mScale = scale;
-        mScaledWidth = mViewportWidth * mScale;
+        mCurrentState.set(mCurrentState.get().scale(scale));
+        mScaledWidth = mViewportWidth * scale;
     }
 
     public void setViewportWidth(int w) {
         mViewportWidth = w;
-        mScaledWidth = mViewportWidth * mScale;
+        mScaledWidth = mViewportWidth * getScale();
+    }
+
+    public ZoomState getCurrentState() {
+        return mCurrentState.get();
     }
 
     public void setViewportHeight(int h) {
@@ -51,8 +55,10 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     }
 
     public void zoomTo(float scale, float centerX, float centerY) {
-        float oX = mOffsetX - centerX * 0.5f;
-        float oY = mOffsetY - centerY * 0.5f;
+        cancelAnimation();
+        ZoomState state = getCurrentState();
+        float oX = state.offsetX - centerX * 0.5f * scale;
+        float oY = state.offsetY - centerY * 0.5f * scale;
         mZoomCenter = new PointF(centerX, centerY);
         animateZoom(scale, oX, oY);
     }
@@ -70,7 +76,7 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         }
         mAnimator = ValueAnimator.ofObject(
                 new ZoomEvaluator(),
-                currentState(),
+                mCurrentState.get(),
                 new ZoomState(scale, offsetX, offsetY)
         );
         assert mAnimator != null;
@@ -93,34 +99,27 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         } else if (offsetX + mScaledWidth < mViewportWidth) {
             offsetX = mViewportWidth - mScaledWidth;
         }
-        mOffsetY = offsetY;
-        mOffsetX = offsetX;
+        mCurrentState.set(mCurrentState.get().offset(offsetX, offsetY));
     }
 
     public void resetZoom(boolean animated) {
+        ZoomState state = mCurrentState.get();
         if (animated) {
             if (mZoomCenter != null) {
-                animateZoom(1, mOffsetX + mZoomCenter.x * 0.5f, mOffsetY + mZoomCenter.y * 0.5f);
+                animateZoom(1, state.offsetX + mZoomCenter.x * 0.5f, state.offsetY + mZoomCenter.y * 0.5f);
 
             } else {
-                animateZoom(1, mOffsetX + mViewportWidth * 0.5f, mOffsetY + mViewportHeight * 0.5f);
+                animateZoom(1, state.offsetX + mViewportWidth * 0.5f, state.offsetY + mViewportHeight * 0.5f);
             }
         } else {
-            mScale = 1;
+            mCurrentState.set(mCurrentState.get().scale(1));
             mScaledWidth = mViewportWidth;
         }
     }
 
-    public float offsetX() {
-        return mOffsetX;
-    }
-
-    public float offsetY() {
-        return mOffsetY;
-    }
-
     public void scrollBy(float dX, float dY) {
-        scrollTo(mOffsetX + dX, mOffsetY + dY);
+        ZoomState state = mCurrentState.get();
+        scrollTo(state.offsetX + dX, state.offsetY + dY);
     }
 
 
@@ -130,8 +129,8 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         }
         mAnimator = ValueAnimator.ofObject(
                 new ZoomEvaluator(),
-                currentState(),
-                new ZoomState(mScale, mOffsetX + dX, mOffsetY + dY)
+                mCurrentState.get(),
+                mCurrentState.get().offsetRel(dX, dY)
         );
         assert mAnimator != null;
         mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -141,13 +140,8 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         mAnimator.start();
     }
 
-    private ZoomState currentState() {
-        return new ZoomState(mScale, mOffsetX, mOffsetY);
-    }
-
-
     public void setOffsetY(int offsetY) {
-        mOffsetY = offsetY;
+        mCurrentState.set(mCurrentState.get().offsetY(offsetY));
     }
 
     public int viewportWidth() {
@@ -183,20 +177,45 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     }
 
     public void setScaleAndOffset(float scale, float offsetX, float offsetY) {
-        mScale = scale;
-        mScaledWidth = mViewportWidth * mScale;
-        scrollTo(offsetX, offsetY);
+        if (offsetX > 0) {
+            offsetX = 0;
+        } else if (offsetX + mScaledWidth < mViewportWidth) {
+            offsetX = mViewportWidth - mScaledWidth;
+        }
+        mScaledWidth = mViewportWidth * scale;
+        mCurrentState.set(new ZoomState(scale, offsetX, offsetY));
     }
 
-    private static class ZoomState {
-        float scale;
-        float offsetX;
-        float offsetY;
+    public static class ZoomState {
+
+        final float scale;
+        final float offsetX;
+        final float offsetY;
 
         ZoomState(float scale, float offsetX, float offsetY) {
             this.scale = scale;
             this.offsetX = offsetX;
             this.offsetY = offsetY;
+        }
+
+        public ZoomState scale(float newScale) {
+            return new ZoomState(newScale, offsetX, offsetY);
+        }
+
+        public ZoomState offsetX(float newOffsetX) {
+            return new ZoomState(scale, newOffsetX, offsetY);
+        }
+
+        public ZoomState offsetY(float newOffsetY) {
+            return new ZoomState(scale, offsetX, newOffsetY);
+        }
+
+        public ZoomState offset(float newOffsetX, float newOffsetY) {
+            return new ZoomState(scale, newOffsetX, newOffsetY);
+        }
+
+        public ZoomState offsetRel(float dX, float dY) {
+            return new ZoomState(scale, offsetX + dX, offsetY + dY);
         }
     }
 
