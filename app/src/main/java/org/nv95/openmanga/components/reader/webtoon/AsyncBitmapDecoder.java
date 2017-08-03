@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
+import java.util.concurrent.Executor;
+
 /**
  * Created by admin on 02.08.17.
  */
 
-public class AsyncBitmapDecoder extends Thread {
+public class AsyncBitmapDecoder implements Runnable {
 
     private final String mFilename;
     private final DecodeCallback mCallback;
@@ -32,5 +34,9 @@ public class AsyncBitmapDecoder extends Thread {
 
     public interface DecodeCallback {
         void onBitmapDecoded(@NonNull Bitmap bitmap);
+    }
+
+    public static void decode(String filename, DecodeCallback callback, Executor executor) {
+        executor.execute(new AsyncBitmapDecoder(filename, callback));
     }
 }

@@ -176,6 +176,7 @@ public class ReaderMenu extends FrameLayout implements View.OnClickListener, Vie
             return;
         }
         mVisible = true;
+        requestLayout();
         if (mCallback != null) {
             mCallback.onVisibilityChanged(true);
         }

@@ -13,7 +13,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class ScrollController implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
 
-    private final Callback mCallback;
     private float mScale;
     private float mOffsetX;
     private float mOffsetY;
@@ -24,8 +23,7 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     @Nullable
     private PointF mZoomCenter;
 
-    public ScrollController(Callback callback) {
-        mCallback = callback;
+    public ScrollController() {
         mScale = 1;
         mZoomCenter = null;
         mViewportWidth = -1;
@@ -38,7 +36,6 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
 
     public void setScale(float scale) {
         mScale = scale;
-        mCallback.notifyDataSetChanged();
     }
 
     public void setViewportWidth(int w) {
@@ -50,11 +47,9 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
     }
 
 
-    public void setZoom(float scale, float centerX, float centerY) {
+    public void setZoom(float scale, float dX, float dY) {
         mScale = scale;
-        //TODO
-        /*mOffsetX = mOffsetX - centerX / 2f;
-        mOffsetY = mOffsetY - centerY / 2f;*/
+        scrollBy(dX, dY);
     }
 
     public void zoomTo(float scale, float centerX, float centerY) {
@@ -86,7 +81,6 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         ZoomState curState = (ZoomState) valueAnimator.getAnimatedValue();
         mScale = curState.scale;
         scrollTo(curState.offsetX, curState.offsetY);
-        mCallback.notifyDataSetChanged();
     }
 
     private void scrollTo(float offsetX, float offsetY) {
@@ -97,7 +91,6 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
         }
         mOffsetY = offsetY;
         mOffsetX = offsetX;
-        mCallback.notifyDataSetChanged();
     }
 
     public void resetZoom(boolean animated) {
@@ -110,7 +103,6 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
             }
         } else {
             mScale = 1;
-            mCallback.notifyDataSetChanged();
         }
     }
 
@@ -207,9 +199,5 @@ public class ScrollController implements ValueAnimator.AnimatorUpdateListener, A
                     startValue.offsetY + fraction * (endValue.offsetY - startValue.offsetY)
             );
         }
-    }
-
-    public interface Callback {
-        void notifyDataSetChanged();
     }
 }
