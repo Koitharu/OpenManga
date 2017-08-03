@@ -20,6 +20,12 @@
             android:visible="false"
             app:showAsAction="never" />
         <item
+            android:id="@+id/action_sort"
+            android:orderInCategory="100"
+            android:title="@string/reverse_order"
+            android:visible="true"
+            app:showAsAction="never" />
+        <item
             android:id="@+id/action_remove"
             android:orderInCategory="100"
             android:title="@string/action_remove"

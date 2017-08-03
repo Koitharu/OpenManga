@@ -343,4 +343,5 @@
     <string name="install">Установить</string>
     <string name="detach">Отключить</string>
     <string name="clear">Очистить</string>
+    <string name="reverse_order">Обр. порядок глав</string>
 </resources>

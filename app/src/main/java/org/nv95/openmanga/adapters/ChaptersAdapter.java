@@ -16,6 +16,7 @@ import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.LayoutUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 LayoutUtils.getAttrColor(context, android.R.attr.textColorPrimary),
                 LayoutUtils.getAttrColor(context, android.R.attr.textColorSecondary)
         };
+        setHasStableIds(true);
     }
 
     public void setOnItemClickListener(@Nullable OnChapterClickListener listener) {
@@ -56,6 +58,11 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setData(List<MangaChapter> chapters) {
         mDataset.clear();
         mDataset.addAll(chapters);
+    }
+
+    public void reverse() {
+        Collections.reverse(mDataset);
+        notifyDataSetChanged();
     }
     
     @Override
@@ -88,7 +95,16 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         return (position == 0 && mLastNumber >= 0) ? ITEM_HEADER : ITEM_DEFAULT;
     }
-    
+
+    @Override
+    public long getItemId(int position) {
+        if (mLastNumber >= 0) {
+            return position == 0 ? 0 : mDataset.get(position - 1).id();
+        } else {
+            return mDataset.get(position).id();
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mDataset.size() + (mLastNumber >= 0 ? 1 : 0);

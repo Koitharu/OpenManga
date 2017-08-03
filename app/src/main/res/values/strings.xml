@@ -369,4 +369,5 @@
     <string name="install">Install</string>
     <string name="detach">Detach</string>
     <string name="clear">Clear</string>
+    <string name="reverse_order">Reverse chapters</string>
 </resources>

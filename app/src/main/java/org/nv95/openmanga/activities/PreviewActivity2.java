@@ -93,19 +93,18 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         enableHomeAsUp();
         disableTitle();
 
-        mImageView = (ImageView) findViewById(R.id.imageView);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mTextViewSummary = (TextView) findViewById(R.id.textView_summary);
-        mTextViewTitle = (TextView) findViewById(R.id.textView_title);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mTextViewState = (TextView) findViewById(R.id.textView_state);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mToolbarMenu = (Toolbar) findViewById(R.id.toolbarMenu);
-        AppBarLayout appBar = ((AppBarLayout) findViewById(R.id.appbar_container));
+        mImageView = findViewById(R.id.imageView);
+        mTabLayout = findViewById(R.id.tabs);
+        mTextViewSummary = findViewById(R.id.textView_summary);
+        mTextViewTitle = findViewById(R.id.textView_title);
+        mProgressBar = findViewById(R.id.progressBar);
+        mTextViewState = findViewById(R.id.textView_state);
+        mViewPager = findViewById(R.id.pager);
+        mToolbarMenu = findViewById(R.id.toolbarMenu);
+        AppBarLayout appBar = findViewById(R.id.appbar_container);
         if (appBar != null) {
             appBar.addOnOffsetChangedListener(this);
         }
-
         mPagerAdapter = new SimpleViewPagerAdapter();
         //
         View page = LayoutInflater.from(this).inflate(R.layout.page_text, mViewPager, false);
@@ -249,6 +248,9 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_share:
                 new ContentShareHelper(this).share(mManga);
+                return true;
+            case R.id.action_sort:
+                mChaptersAdapter.reverse();
                 return true;
             case R.id.action_shortcut:
                 new ContentShareHelper(this).createShortcut(mManga);
