@@ -15,11 +15,17 @@ import android.support.annotation.Nullable;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.NewChaptersActivity;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;
+import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.MangaUpdateInfo;
+import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
+import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
+import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.OneShotNotifier;
 
@@ -34,6 +40,7 @@ public class ScheduledService extends Service {
     private boolean mChaptersCheckEnabled;
     private int mChaptersCheckInterval;
     private boolean mChapterCheckWifiOnly;
+    private boolean mChapterCheckSave;
     private boolean mAutoUpdate;
 
     @Override
@@ -44,6 +51,7 @@ public class ScheduledService extends Service {
         mChaptersCheckEnabled = prefs.getBoolean("chupd", false);
         mChaptersCheckInterval = Integer.parseInt(prefs.getString("chupd.interval", "12"));
         mChapterCheckWifiOnly = prefs.getBoolean("chupd.wifionly", false);
+        mChapterCheckSave = prefs.getBoolean("chupd.save", false);
         //noinspection ConstantConditions
         mAutoUpdate = BuildConfig.SELFUPDATE_ENABLED && prefs.getBoolean("autoupdate", true);
     }
@@ -75,6 +83,24 @@ public class ScheduledService extends Service {
                 int delay = mScheduleHelper.getActionIntervalHours(ScheduleHelper.ACTION_CHECK_NEW_CHAPTERS);
                 if (mChaptersCheckEnabled && (delay < 0 || delay >= mChaptersCheckInterval)) {
                     MangaUpdateInfo[] res = NewChaptersProvider.getInstance(ScheduledService.this).checkForNewChapters();
+                    if (mChapterCheckSave) {
+                        final FavouritesProvider favs = FavouritesProvider.getInstance(ScheduledService.this);
+                        final MangaSaveHelper saveHelper = new MangaSaveHelper(ScheduledService.this);
+                        MangaList mangas = favs.getList(0, 0, 0);
+                        for (MangaUpdateInfo o : res) {
+                            try {
+                                MangaInfo manga = mangas.getById(o.mangaId);
+                                if (manga != null) {
+                                    MangaSummary summary = favs.getDetailedInfo(manga);
+                                    if (summary != null) {
+                                        saveHelper.saveLast(summary, o.getNewChapters());
+                                    }
+                                }
+                            } catch (Exception e) {
+                                FileLogger.getInstance().report("AUTOSAVE", e);
+                            }
+                        }
+                    }
                     mScheduleHelper.actionDone(ScheduleHelper.ACTION_CHECK_NEW_CHAPTERS);
                     return res;
                 } else {

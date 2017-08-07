@@ -34,7 +34,7 @@ public class MangaChapter {
 
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
+        bundle.putInt("id", id());
         bundle.putString("name", name);
         bundle.putString("readLink", readLink);
         bundle.putInt("number", number);
@@ -50,6 +50,13 @@ public class MangaChapter {
         MangaChapter chapter = (MangaChapter) o;
 
         return readLink != null ? readLink.equals(chapter.readLink) : chapter.readLink == null;
+    }
+
+    public int id() {
+        if (id == 0) {
+            id = hashCode();
+        }
+        return id;
     }
 
     @Override

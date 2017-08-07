@@ -22,4 +22,11 @@
         android:title="@string/over_wifi_only"
         android:widgetLayout="@layout/pref_switchcompat" />
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:dependency="chupd"
+        android:key="chupd.save"
+        android:title="@string/auto_save_new"
+        android:widgetLayout="@layout/pref_switchcompat" />
+
 </PreferenceScreen>

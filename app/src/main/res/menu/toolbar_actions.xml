@@ -14,25 +14,32 @@
         android:title="@string/action_favourite"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_swap_vert_white"
+        android:title="@string/reverse_order"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_save"
         android:icon="@drawable/ic_save_light"
         android:orderInCategory="100"
         android:title="@string/action_save"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_save_more"
         android:icon="@drawable/ic_save_more"
         android:orderInCategory="100"
         android:title="@string/action_save_add"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_remove"
         android:icon="@drawable/ic_delete_light"
         android:orderInCategory="100"
         android:title="@string/action_remove"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_shortcut"
