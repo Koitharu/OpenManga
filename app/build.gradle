@@ -8,9 +8,10 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1110
-        versionName "4.0 beta"
+        versionCode 1111
+        versionName "4.0"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
+        buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api/v1\""
     }
 
@@ -52,9 +53,9 @@ android {
 
 dependencies {
 
-    compile 'com.android.support:design:26.0.0-beta2'
-    compile 'com.android.support:recyclerview-v7:26.0.0-beta2'
-    compile 'com.android.support:cardview-v7:26.0.0-beta2'
+    compile 'com.android.support:design:26.0.0'
+    compile 'com.android.support:recyclerview-v7:26.0.0'
+    compile 'com.android.support:cardview-v7:26.0.0'
     compile 'org.jsoup:jsoup:1.10.3'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'

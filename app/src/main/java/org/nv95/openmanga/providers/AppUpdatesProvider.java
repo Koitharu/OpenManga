@@ -15,8 +15,6 @@ import java.util.ArrayList;
  */
 public class AppUpdatesProvider {
 
-    private static final String CHECKER_URL = "http://anibreak.ru/v.0.3/get/openmanga/version";
-
     @Nullable
     private final JSONObject mResponse;
 
@@ -24,7 +22,7 @@ public class AppUpdatesProvider {
     public AppUpdatesProvider() {
         JSONObject response;
         try {
-            response = NetworkUtils.getJsonObject(CHECKER_URL);
+            response = NetworkUtils.getJsonObject(BuildConfig.SELFUPDATE_URL);
         } catch (Exception e) {
             response = null;
         }
