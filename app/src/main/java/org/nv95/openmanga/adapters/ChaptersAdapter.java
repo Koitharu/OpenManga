@@ -34,6 +34,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Nullable
     private OnChapterClickListener mClickListener;
     private final int[] mColors;
+    private boolean mReversed = false;
     
     public ChaptersAdapter(Context context) {
         mClickListener = null;
@@ -63,6 +64,11 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void reverse() {
         Collections.reverse(mDataset);
         notifyDataSetChanged();
+        mReversed = !mReversed;
+    }
+
+    public boolean isReversed() {
+        return mReversed;
     }
     
     @Override

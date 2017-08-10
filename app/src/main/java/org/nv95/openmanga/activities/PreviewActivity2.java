@@ -251,6 +251,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_sort:
                 mChaptersAdapter.reverse();
+                item.setIcon(mChaptersAdapter.isReversed() ? R.drawable.ic_sort_ascending_white : R.drawable.ic_sort_descending_white);
                 return true;
             case R.id.action_relative:
                 startActivity(new Intent(this, SearchActivity.class)
