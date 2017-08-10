@@ -25,6 +25,8 @@ public class TopCropImageView extends android.support.v7.widget.AppCompatImageVi
         init();
     }
 
+    private float mScale = -1f;
+
     protected void init(){
         setScaleType(ScaleType.MATRIX);
     }
@@ -32,6 +34,12 @@ public class TopCropImageView extends android.support.v7.widget.AppCompatImageVi
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        recomputeImgMatrix();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         recomputeImgMatrix();
     }
 
@@ -49,18 +57,14 @@ public class TopCropImageView extends android.support.v7.widget.AppCompatImageVi
 
         float scale;
         final int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-        final int viewHeight = getHeight() - getPaddingTop() - getPaddingBottom();
         final int drawableWidth = getDrawable().getIntrinsicWidth();
-        final int drawableHeight = getDrawable().getIntrinsicHeight();
 
         scale = (float) viewWidth / (float) drawableWidth;
-        /*if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
-            scale = (float) viewHeight / (float) drawableHeight;
-        } else {
-            scale = (float) viewWidth / (float) drawableWidth;
-        }*/
 
-        matrix.setScale(scale, scale);
-        setImageMatrix(matrix);
+        if (scale != mScale) {
+            mScale = scale;
+            matrix.setScale(scale, scale);
+            setImageMatrix(matrix);
+        }
     }
 }

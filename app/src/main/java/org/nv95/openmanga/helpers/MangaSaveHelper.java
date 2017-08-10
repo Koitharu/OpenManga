@@ -68,6 +68,14 @@ public class MangaSaveHelper {
                 .putExtra("action", SaveService.ACTION_CANCEL_ALL));
     }
 
+    public void saveLast(MangaSummary manga, int count) {
+        MangaSummary copy = new MangaSummary(manga);
+        copy.chapters.clear();
+        int lastPos = manga.chapters.size() - 1;
+        copy.chapters.addAll(manga.chapters.subList(lastPos - count, lastPos));
+        save(copy);
+    }
+
     @SuppressLint("StaticFieldLeak")
     private class GetDetailsTask extends AsyncTask<MangaInfo, Integer, MangaSummary[]>
             implements DialogInterface.OnClickListener {

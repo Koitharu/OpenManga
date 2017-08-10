@@ -133,8 +133,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
         if (TextUtils.isEmpty(mQuery)) {
             LayoutUtils.showSoftKeyboard(mSearchInput.getEditText());
         } else {
-            LayoutUtils.hideSoftKeyboard(mSearchInput.getEditText());
-            mRecyclerView.requestFocus();
+            closeHistory();
             search(0);
         }
     }
@@ -292,8 +291,7 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
                 return true;
             }
             SearchHistoryAdapter.addToHistory(this, mQuery);
-            LayoutUtils.hideSoftKeyboard(v);
-            mRecyclerView.requestFocus();
+            closeHistory();
             search(0);
             return true;
         } else {
@@ -320,12 +318,19 @@ SearchHistoryAdapter.OnHistoryEventListener, SearchResultsAdapter.OnMoreEventLis
             if (TextUtils.isEmpty(mQuery)) {
                 super.onBackPressed();
             } else {
-                LayoutUtils.hideSoftKeyboard(mRecyclerViewSearch);
-                mRecyclerView.requestFocus();
+                closeHistory();
             }
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void closeHistory() {
+        LayoutUtils.hideSoftKeyboard(mRecyclerView);
+        if (!mRecyclerViewSearch.isFocused()) {
+            onFocusChange(mRecyclerViewSearch, false);
+        }
+        mRecyclerView.requestFocus();
     }
 
     @Override

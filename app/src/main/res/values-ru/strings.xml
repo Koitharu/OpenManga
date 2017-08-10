@@ -346,4 +346,7 @@
     <string name="show_page_number">Показывать номер страницы</string>
     <string name="standard_mode">Обычный режим</string>
     <string name="pref_common">Общие параметры</string>
+    <string name="reverse_order">Обр. порядок глав</string>
+    <string name="auto_save_new">Сохранять новые главы</string>
+    <string name="action_relative">Похожие</string>
 </resources>
