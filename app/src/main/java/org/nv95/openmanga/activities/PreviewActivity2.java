@@ -252,6 +252,10 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             case R.id.action_sort:
                 mChaptersAdapter.reverse();
                 return true;
+            case R.id.action_relative:
+                startActivity(new Intent(this, SearchActivity.class)
+                        .putExtra("query", mManga.name));
+                return true;
             case R.id.action_shortcut:
                 new ContentShareHelper(this).createShortcut(mManga);
                 return true;
