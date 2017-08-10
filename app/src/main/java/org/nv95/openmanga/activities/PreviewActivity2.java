@@ -185,6 +185,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         menu.findItem(R.id.action_save).setVisible(!isLocal);
         menu.findItem(R.id.action_remove).setVisible(isLocal);
         menu.findItem(R.id.action_export).setVisible(isLocal);
+        menu.findItem(R.id.action_sort).setIcon(mChaptersAdapter.isReversed() ? R.drawable.ic_sort_ascending_white : R.drawable.ic_sort_descending_white);
         menu.findItem(R.id.action_save_more).setVisible(isLocal && mManga.status == MangaInfo.STATUS_ONGOING);
         if (isLocal) {
             menu.findItem(R.id.action_favourite).setVisible(false);
