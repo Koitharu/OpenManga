@@ -1,7 +1,14 @@
 package org.nv95.openmanga.components.reader.webtoon;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.support.annotation.Nullable;
+
+import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
+import com.davemorrissey.labs.subscaleview.decoder.SkiaImageRegionDecoder;
 
 /**
  * Created by admin on 01.08.17.
@@ -9,14 +16,33 @@ import android.support.annotation.Nullable;
 
 public class PhantomBitmap {
 
-    private int mHeight;
-    private int mWidth;
+    private final int mHeight;
+    private final int mWidth;
     @Nullable
-    private Bitmap mBitmap;
+    private final ImageRegionDecoder mDecoder;
 
-    @Nullable
-    public Bitmap get() {
-        return mBitmap;
+    public PhantomBitmap(Context context, String filename) {
+        ImageRegionDecoder decoder = null;
+        Point dimensions;
+        try {
+            decoder = new SkiaImageRegionDecoder();
+            dimensions = decoder.init(context, Uri.parse("file://" + filename));
+        } catch (Exception e) {
+            dimensions = new Point(0,0);
+            e.printStackTrace();
+        }
+        mWidth = dimensions.x;
+        mHeight = dimensions.y;
+        mDecoder = decoder;
+    }
+
+    public boolean isReady() {
+        return mDecoder != null && mDecoder.isReady();
+    }
+
+    public Bitmap decode(Rect rect) {
+        assert mDecoder != null;
+        return mDecoder.decodeRegion(rect, 0);
     }
 
     public int getHeight() {
@@ -28,16 +54,8 @@ public class PhantomBitmap {
     }
 
     public void recycle() {
-        if (mBitmap != null) {
-            mBitmap.recycle();
-            mBitmap = null;
+        if (mDecoder != null) {
+            mDecoder.recycle();
         }
-    }
-
-    public void set(Bitmap bitmap) {
-        recycle();
-        mBitmap = bitmap;
-        mHeight = bitmap.getHeight();
-        mWidth = bitmap.getWidth();
     }
 }
