@@ -52,6 +52,7 @@ import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.nv95.openmanga.R.string.bookmarks;
@@ -252,6 +253,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_sort:
                 mChaptersAdapter.reverse();
+                Collections.reverse(mManga.chapters);
                 item.setIcon(mChaptersAdapter.isReversed() ? R.drawable.ic_sort_ascending_white : R.drawable.ic_sort_descending_white);
                 return true;
             case R.id.action_relative:
