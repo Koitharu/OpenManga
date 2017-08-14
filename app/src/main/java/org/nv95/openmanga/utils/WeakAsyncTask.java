@@ -71,4 +71,12 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
     protected void onPreExecute(@NonNull Obj obj) {}
 
     protected void onPostExecute(@NonNull Obj obj, Result result) {}
+
+    public static void cancel(@Nullable WeakReference<? extends AsyncTask> weakReference, boolean mayInterruptIfRunning) {
+        if (weakReference == null) return;
+        AsyncTask task = weakReference.get();
+        if (task != null && task.getStatus() != Status.FINISHED) {
+            task.cancel(mayInterruptIfRunning);
+        }
+    }
 }

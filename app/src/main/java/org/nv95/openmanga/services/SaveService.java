@@ -206,8 +206,8 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
             }
             isStarted = true;
             mNotificationHelper
-                    .title(R.string.saving_manga)
-                    .text(mDownload.name)
+                    .title(mDownload.name)
+                    .text(R.string.saving_manga)
                     .indeterminate()
                     .ongoing()
                     .info(null)
@@ -250,7 +250,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                             R.drawable.sym_resume,
                             R.string.resume)
                     .icon(R.drawable.ic_stat_paused)
-                    .text(mDownload.name)
+                    .title(mDownload.name)
                     .info(null)
                     .update(mDownload.id);
             for (OnSaveProgressListener o:mProgressListeners) {
@@ -273,7 +273,7 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                             R.drawable.sym_pause,
                             R.string.pause)
                     .icon(android.R.drawable.stat_sys_download)
-                    .text(mDownload.name)
+                    .title(mDownload.name)
                     .info(null)
                     .update(mDownload.id);
             for (OnSaveProgressListener o:mProgressListeners) {
@@ -484,17 +484,17 @@ public class SaveService extends Service implements NetworkStateListener.OnNetwo
                     .noProgress();
             if (manga != null) {
                 mNotificationHelper
-                        .text(manga.name)
+                        .title(manga.name)
                         .expandable(manga.name)
                         .icon(android.R.drawable.stat_sys_download_done)
                         .intentActivity(new Intent(SaveService.this, PreviewActivity2.class)
                             .putExtras(manga.toBundle()), mDownload.id + 11)
                         .autoCancel()
-                        .title(R.string.done);
+                        .text(R.string.done);
             } else {
                 mNotificationHelper
                         .icon(R.drawable.ic_stat_error)
-                        .title(R.string.error);
+                        .text(R.string.error);
             }
             mNotificationHelper.update(mDownload.id);
             for (OnSaveProgressListener o:mProgressListeners) {
