@@ -13,22 +13,22 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Scroller;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by admin on 14.08.17.
  */
 
-public abstract class DrawableView extends SurfaceView implements SurfaceHolder.Callback, ScaleGestureDetector.OnScaleGestureListener {
+public abstract class DrawableView extends SurfaceView implements SurfaceHolder.Callback, ScaleGestureDetector.OnScaleGestureListener, AsyncScroller.OnFlyListener, ScaleAnimator.ZoomCallback {
 
     @Nullable
     private DrawThread mThread;
     private final GestureDetector mGestureDetector;
     private final ScaleGestureDetector mScaleDetector;
-    private final Scroller mScroller;
+    private final AsyncScroller mScroller;
     private final Rect mViewport;
-    private volatile float mScaleFactor = 1;
-    private volatile int mScrollX = 0, mScrollY = 0;
+    private final AtomicReference<ScrollState> mScrollState;
 
     public DrawableView(Context context) {
         this(context, null, 0);
@@ -42,9 +42,10 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
         super(context, attrs, defStyleAttr);
         mGestureDetector = new GestureDetector(context, new GestureListener());
         mScaleDetector = new ScaleGestureDetector(context, this);
-        mScroller = new Scroller(context);
+        mScroller = new AsyncScroller(context, this);
         mViewport = new Rect(0, 0, 0, 0);
         mThread = null;
+        mScrollState = new AtomicReference<>(new ScrollState(1f, 0, 0));
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
     }
@@ -58,6 +59,7 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
         mViewport.set(0, 0, width, height);
+        onViewportChanged();
         forceRedraw();
     }
 
@@ -70,59 +72,29 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // check for tap and cancel fling
-        if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
-            if (!mScroller.isFinished()) mScroller.abortAnimation();
-        }
-
-        // handle pinch zoom gesture
-        // don't check return value since it is always true
+        mGestureDetector.onTouchEvent(event);
         mScaleDetector.onTouchEvent(event);
-
-        // check for scroll gesture
-        if (mGestureDetector.onTouchEvent(event)) return true;
-
-        // check for pointer release
-        if ((event.getPointerCount() == 1) && ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP)) {
-            int hRange = computeHorizontalScrollRange();
-            int vRange = computeVerticalScrollRange();
-            int newScrollX = getScrollX();
-            if (hRange < getWidth())
-                newScrollX = -(getWidth() - hRange) / 2;
-            else if (getScrollX() < 0) newScrollX = 0;
-            else if (getScrollX() > hRange - getWidth())
-                newScrollX = hRange - getWidth();
-
-            int newScrollY = getScrollY();
-            if (vRange < getHeight())
-                newScrollY = -(getHeight() - vRange) / 2;
-            else if (getScrollY() < 0) newScrollY = 0;
-            else if (getScrollY() > vRange - getHeight())
-                newScrollY = vRange - getHeight();
-
-            if ((newScrollX != getScrollX()) || (newScrollY != getScrollY())) {
-                mScroller.startScroll(getScrollX(), getScrollY(), newScrollX - getScrollX(), newScrollY - getScrollY());
-                awakenScrollBars(mScroller.getDuration());
-            } else {
-                onIdle();
-            }
-        }
-
         return true;
     }
 
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        mScaleFactor *= detector.getScaleFactor();
-        if (mScaleFactor < 1f) {
-            mScaleFactor = 1f;
-            return false;
+        ScrollState state = mScrollState.get();
+        int deltaY = (int) (detector.getFocusY() * (detector.getScaleFactor() - 1f));
+        int newScrollX = (int) ((state.scrollX + detector.getFocusX()) * detector.getScaleFactor() - detector.getFocusX());
+        int newScrollY = state.scrollY + deltaY;
+
+        float scaleFactor = state.scale;
+        scaleFactor *= detector.getScaleFactor();
+        if (scaleFactor < 1f) {
+            if (state.scale == 1f) {
+                return false;
+            } else {
+                scaleFactor = 1f;
+            }
         }
-
-        int newScrollX = (int) ((getScrollX() + detector.getFocusX()) * detector.getScaleFactor() - detector.getFocusX());
-        int newScrollY = (int) ((getScrollY() + detector.getFocusY()) * detector.getScaleFactor() - detector.getFocusY());
-        scrollTo(newScrollX, newScrollY);
-
+        mScrollState.set(new ScrollState(scaleFactor, newScrollX, newScrollY));
+        onZoomChanged();
         return true;
     }
 
@@ -136,82 +108,100 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
     }
 
+    @Override
+    public void onZoomAnimated(float scale, int scrollX, int scrollY) {
+        Rect bounds = computeScrollRange(scale);
+
+        if (scrollX < bounds.left) scrollX = bounds.left;
+        else if (scrollX > bounds.right) scrollX = bounds.right;
+
+        if (scrollY < bounds.top) scrollY = bounds.top;
+        else if (scrollY > bounds.bottom) scrollY = bounds.bottom;
+
+        mScrollState.set(new ScrollState(scale, scrollX, scrollY));
+    }
+
+    @Override
+    public void onZoomAnimationFinished() {
+        onZoomChanged();
+    }
+
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            int hRange = computeHorizontalScrollRange();
-            int vRange = computeVerticalScrollRange();
-            int fixedScrollX = 0, fixedScrollY = 0;
-            int maxScrollX = hRange, maxScrollY = vRange;
-
-            if (maxScrollX < getViewportWidth()) {
-                fixedScrollX = -(getViewportWidth() - maxScrollX) / 2;
-                maxScrollX = +fixedScrollX;
-            }
-
-            if (maxScrollY < getViewportHeight()) {
-                fixedScrollY = -(getViewportHeight() - maxScrollY) / 2;
-                maxScrollY += fixedScrollY;
-            }
-
-            boolean scrollBeyondImage = (fixedScrollX < 0) || (fixedScrollX > maxScrollX) || (fixedScrollY < 0) || (fixedScrollY > maxScrollY);
-            if (scrollBeyondImage) return false;
+            Rect bounds = getScrollBounds();
+            ScrollState state = mScrollState.get();
             mScroller.fling(
-                    getScrollX(),
-                    getScrollY(),
+                    state.scrollX,
+                    state.scrollY,
                     -(int) velocityX,
                     -(int) velocityY,
-                    0,
-                    hRange - mViewport.width(),
-                    0,
-                    vRange - mViewport.width());
+                    bounds.left,
+                    bounds.right,
+                    bounds.top,
+                    bounds.bottom);
             awakenScrollBars(mScroller.getDuration());
             return true;
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            int hRange = computeHorizontalScrollRange();
-            int vRange = computeVerticalScrollRange();
-            int scrollY = (int) (getScrollY() + distanceY);
-            if (scrollY < 0) {
-                scrollY = 0;
-            }
-            else if (scrollY > vRange - getViewportHeight()) {
-                scrollY = vRange - getViewportHeight();
-            }
-            int scrollX = (int) (getScrollX() + distanceX);
-            if (scrollX < 0) {
-                scrollX = 0;
-            }
-            else if (scrollX > hRange - getViewportWidth()) {
-                scrollX = hRange - getViewportWidth();
-            }
-            scrollTo(scrollX, scrollY);
+            Rect bounds = getScrollBounds();
+            ScrollState state = mScrollState.get();
+            int scrollY = (int) (state.scrollY + distanceY);
+            int scrollX = (int) (state.scrollX + distanceX);
+
+            if (scrollX < bounds.left) scrollX = bounds.left;
+            else if (scrollX > bounds.right) scrollX = bounds.right;
+
+            if (scrollY < bounds.top) scrollY = bounds.top;
+            else if (scrollY > bounds.bottom) scrollY = bounds.bottom;
+
+            mScrollState.set(state.offset(scrollX, scrollY));
+
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
-    }
 
-    @Override
-    public void computeScroll() {
-        if (mScroller.computeScrollOffset()) {
-            int oldX = getScrollX();
-            int oldY = getScrollY();
-            int x = mScroller.getCurrX();
-            int y = mScroller.getCurrY();
-            scrollTo(x, y);
-            if (oldX != getScrollX() || oldY != getScrollY()) {
-                onScrollChanged(getScrollX(), getScrollY(), oldX, oldY);
+        @Override
+        public boolean onDown(MotionEvent e) {
+            if (e.getPointerCount() == 1) {
+                mScroller.abortAnimation();
             }
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            ScaleAnimator animator = new ScaleAnimator(DrawableView.this);
+            ScrollState state = mScrollState.get();
+            if (state.scale == 1f) {
+                animator.animate(
+                        state.scale,
+                        state.scrollX,
+                        state.scrollY,
+                        1.6f,
+                        (int) (state.scrollX + e.getX() * 1.6f),
+                        (int) (state.scrollY + e.getY() * 1.6f)
+                );
+            } else {
+                animator.animate(
+                        state.scale,
+                        state.scrollX,
+                        state.scrollY,
+                        1f,
+                        (int) (state.scrollX - e.getX() * 1.6f),
+                        (int) (state.scrollY - e.getY() * 1.6f)
+                );
+            }
+            return super.onDoubleTap(e);
         }
     }
 
+
     @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        mScrollX = l;
-        mScrollY = t;
-        super.onScrollChanged(l, t, oldl, oldt);
+    public void onScrolled(int currentX, int currentY) {
+        mScrollState.set(mScrollState.get().offset(currentX, currentY));
     }
 
     public void forceRedraw() {
@@ -228,8 +218,8 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
         private float lastZoom = 0;
         boolean force;
 
-        DrawThread(SurfaceHolder surfaceHolder) {
-            mSurface = surfaceHolder;
+        DrawThread(SurfaceHolder surface) {
+            mSurface = surface;
         }
 
         @Override
@@ -239,24 +229,23 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
                 canvas = null;
                 try {
                     // получаем объект Canvas и выполняем отрисовку
-
-                    computeScroll();
-                    int offsetX = -mScrollX;
-                    int offsetY = -mScrollY;
-                    if (!force && lastOffsetX == offsetX && lastOffsetY == offsetY && lastZoom == mScaleFactor) {
+                    ScrollState state = mScrollState.get();
+                    int offsetX = -state.scrollX;
+                    int offsetY = -state.scrollY;
+                    if (!force && lastOffsetX == offsetX && lastOffsetY == offsetY && lastZoom == state.scale) {
                         continue;
                     }
                     force = false;
                     canvas = mSurface.lockCanvas(null);
                     synchronized (mSurface) {
                         long time = System.currentTimeMillis();
-                        onSurfaceDraw(canvas, lastOffsetX - offsetX, lastOffsetY - offsetY, mScaleFactor);
+                        onSurfaceDraw(canvas, lastOffsetX - offsetX, lastOffsetY - offsetY, state.scale);
                         time = System.currentTimeMillis() - time;
                         Log.d("FPS", 1f / time * 1000f + " fps");
 
                         lastOffsetX = offsetX;
                         lastOffsetY = offsetY;
-                        lastZoom = mScaleFactor;
+                        lastZoom = state.scale;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -271,7 +260,7 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
     }
 
     public float getScaleFactor() {
-        return mScaleFactor;
+        return mScrollState.get().scale;
     }
 
     public int getViewportWidth() {
@@ -285,13 +274,14 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
     @WorkerThread
     protected abstract void onSurfaceDraw(Canvas canvas, int dX, int dY, float zoom);
 
-    @MainThread
-    @Override
-    protected abstract int computeVerticalScrollRange();
-
-    @MainThread
-    @Override
-    protected abstract int computeHorizontalScrollRange();
-
     protected void onIdle(){}
+
+    protected void onViewportChanged(){};
+
+    protected void onZoomChanged(){};
+
+    @MainThread
+    protected abstract Rect getScrollBounds();
+
+    protected abstract Rect computeScrollRange(float scale);
 }
