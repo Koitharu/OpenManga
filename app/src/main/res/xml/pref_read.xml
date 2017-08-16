@@ -1,82 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/r2_modes"
-        android:entryValues="@array/r2_modes_values"
-        android:key="r2_mode"
-        android:title="@string/mode" />
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/directions"
-        android:entryValues="@array/directions_values"
-        android:key="direction"
-        android:title="@string/scrolling_direction" />
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/preloadings"
-        android:entryValues="@array/preloadings_values"
-        android:key="preload"
-        android:title="@string/preloading" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="volkeyscroll"
-        android:title="@string/scroll_by_volkeys"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="tap_navs"
-        android:title="@string/scroll_by_click"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="hide_menu"
-        android:title="@string/hide_menu_button"
-        android:summary="@string/hide_menu_summary"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/scale_modes"
-        android:entryValues="@array/scale_values"
-        android:key="scalemode"
-        android:title="@string/scale_mode" />
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="brightness"
-        android:title="@string/adjust_brightness"
-        android:widgetLayout="@layout/pref_switchcompat" />
-    <org.nv95.openmanga.components.SeekBarPreference
-        android:defaultValue="20"
-        android:dependency="brightness"
-        android:key="brightness_value"
-        android:title="@string/brightness_value"
-        app:iconDrawable="@drawable/ic_brightness_darker"
-        app:max="100" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="keep_screen"
-        android:title="@string/keep_screen"
-        android:widgetLayout="@layout/pref_switchcompat" />
 
+    <PreferenceCategory android:title="@string/standard_mode">
 
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/r2_modes"
+            android:entryValues="@array/r2_modes_values"
+            android:key="r2_mode"
+            android:title="@string/mode" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/directions"
+            android:entryValues="@array/directions_values"
+            android:key="direction"
+            android:title="@string/scrolling_direction" />
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/scale_modes"
+            android:entryValues="@array/scale_values"
+            android:key="scalemode"
+            android:title="@string/scale_mode" />
+    </PreferenceCategory>
 
-    <!--<ListPreference
-        android:defaultValue="0"
-        android:entries="@array/animations"
-        android:entryValues="@array/animation_values"
-        android:key="animation"
-        android:title="@string/scrolling_animation" />-->
-    <!--<ListPreference
-        android:defaultValue="0"
-        android:entries="@array/clickareas"
-        android:entryValues="@array/clickareas_values"
-        android:key="clickareas"
-        android:title="@string/scroll_by_click" />
-    CheckBoxPreference
-        android:defaultValue="true"
-        android:key="shifts"
-        android:summary="@string/image_shifting_summary"
-        android:title="@string/wrap_long_pages"
-        android:widgetLayout="@layout/pref_switchcompat" /-->
+    <PreferenceCategory android:title="@string/webmode">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="show_numbers"
+            android:title="@string/show_page_number"
+            android:widgetLayout="@layout/pref_switchcompat" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_common">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/preloadings"
+            android:entryValues="@array/preloadings_values"
+            android:key="preload"
+            android:title="@string/preloading" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="volkeyscroll"
+            android:title="@string/scroll_by_volkeys"
+            android:widgetLayout="@layout/pref_switchcompat" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="tap_navs"
+            android:title="@string/scroll_by_click"
+            android:widgetLayout="@layout/pref_switchcompat" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="hide_menu"
+            android:summary="@string/hide_menu_summary"
+            android:title="@string/hide_menu_button"
+            android:widgetLayout="@layout/pref_switchcompat" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="brightness"
+            android:title="@string/adjust_brightness"
+            android:widgetLayout="@layout/pref_switchcompat" />
+        <org.nv95.openmanga.components.SeekBarPreference
+            android:defaultValue="20"
+            android:dependency="brightness"
+            android:key="brightness_value"
+            android:title="@string/brightness_value"
+            app:iconDrawable="@drawable/ic_brightness_darker"
+            app:max="100" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="keep_screen"
+            android:title="@string/keep_screen"
+            android:widgetLayout="@layout/pref_switchcompat" />
+    </PreferenceCategory>
 </PreferenceScreen>

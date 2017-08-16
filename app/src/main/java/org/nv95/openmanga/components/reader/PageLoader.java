@@ -189,7 +189,7 @@ public class PageLoader implements PageLoadListener {
         for (PageWrapper o : mWrappers) {
             task = o.getLoadTask();
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
-                task.cancel(false);
+                task.cancel(true);
             }
         }
     }

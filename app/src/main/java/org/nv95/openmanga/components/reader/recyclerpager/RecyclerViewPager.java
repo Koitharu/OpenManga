@@ -446,7 +446,7 @@ public class RecyclerViewPager extends RecyclerView {
                 mHasCalledOnPageChanged = true;
                 mPositionBeforeScroll = mSmoothScrollTargetPosition;
             }
-            // reset
+            // resetZoom
             mMaxLeftWhenDragging = Integer.MIN_VALUE;
             mMinLeftWhenDragging = Integer.MAX_VALUE;
             mMaxTopWhenDragging = Integer.MIN_VALUE;
