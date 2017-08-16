@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 
+import org.nv95.openmanga.utils.DecartUtils;
+
 /**
  * Created by admin on 01.08.17.
  */
@@ -14,43 +16,66 @@ public class PageImage {
 
     @NonNull
     private final Bitmap mBitmap;
-    private final Rect mRect;
+    private int mPreScaledHeight;
+    private float mPreScale;
 
     public PageImage(@NonNull Bitmap bitmap) {
         mBitmap = bitmap;
-        mRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        mPreScaledHeight = 0;
+        mPreScale = 0;
     }
 
-    public int getHeight() {
-        return mRect.height();
+    public void preScale(float scale) {
+        mPreScale = scale;
+        mPreScaledHeight = (int) Math.ceil(getOriginalHeight() * scale);
     }
 
-    public int getWidth() {
-        return mRect.width();
+    public boolean isPreScaled() {
+        return mPreScale != 0;
     }
 
-    public void scale(float factor) {
-        mRect.right = (int) (mRect.left + (mBitmap.getWidth() * factor));
-        mRect.bottom = (int) (mRect.top + (mBitmap.getHeight() * factor));
+    public int getOriginalHeight() {
+        return mBitmap.getHeight();
     }
 
-    public Rect draw(Canvas canvas, Paint paint, int offsetX, int offsetY) {
-        mRect.left += offsetX;
-        mRect.right += offsetX;
-        mRect.top += offsetY;
-        mRect.bottom += offsetY;
-        if (!isRecycled()) {
-            canvas.drawBitmap(mBitmap, bitmapRect(mBitmap), mRect, paint);
+    public int getOriginalWidth() {
+        return mBitmap.getWidth();
+    }
+
+    public Rect draw(Canvas canvas, Paint paint, int offsetX, int offsetY, Rect viewport, float scale) {
+        if (mPreScale != 0) {
+            scale *= mPreScale;
         }
-        return mRect;
+        Rect outRect = new Rect(
+                offsetX,
+                offsetY,
+                ((int) (offsetX + (getOriginalWidth() * scale))),
+                (int) (offsetY + (getOriginalHeight() * scale))
+        );
+        DecartUtils.trimRect(outRect, viewport);
+        if (!isRecycled()) {
+            Rect inRect = new Rect(outRect);
+            DecartUtils.translateRect(inRect, -offsetX, -offsetY);
+            DecartUtils.scaleRect(inRect, 1f / scale);
+            canvas.drawBitmap(mBitmap, inRect, outRect, paint);
+        }
+        return outRect;
     }
 
     public boolean isRecycled() {
         return mBitmap.isRecycled();
     }
 
-    @NonNull
-    private static Rect bitmapRect(Bitmap b) {
-        return new Rect(0,0,b.getWidth(), b.getHeight());
+    public void recycle() {
+        mBitmap.recycle();
+    }
+
+    public int getPreScaledHeight() {
+        return mPreScaledHeight;
+    }
+
+    public void resetPreScale() {
+        mPreScale = 0;
+        mPreScaledHeight = 0;
     }
 }

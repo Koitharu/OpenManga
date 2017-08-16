@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 public class ImagesPool {
 
-    private final BitmapLruCache<Integer> mCache;
+    private final PagesLruCache mCache;
     private final PageLoader mLoader;
     private final ChangesListener mListener;
     private final ExecutorService mExecutor;
@@ -26,21 +26,21 @@ public class ImagesPool {
         mExecutor = Executors.newSingleThreadExecutor();
         mLoader = new PageLoader(context);
         mListener = listener;
-        mCache = new BitmapLruCache<>(4);
+        mCache = new PagesLruCache(4);
     }
 
     @Nullable
     public PageImage get(final int pos) {
-        Bitmap bitmap = mCache.get(pos);
-        if (bitmap != null) {
-            return new PageImage(bitmap);
+        PageImage page = mCache.get(pos);
+        if (page != null) {
+            return page;
         }
         PageWrapper pw = mLoader.requestPage(pos);
         if (pw != null && pw.isLoaded()) {
             AsyncBitmapDecoder.decode(pw.getFilename(), new AsyncBitmapDecoder.DecodeCallback() {
                 @Override
                 public void onBitmapDecoded(@NonNull Bitmap bitmap) {
-                    mCache.put(pos, bitmap);
+                    mCache.put(pos, new PageImage(bitmap));
                     mListener.notifyDataSetChanged();
                 }
             }, mExecutor);
@@ -54,5 +54,11 @@ public class ImagesPool {
 
     public void recycle() {
         mCache.evictAll();
+    }
+
+    public void resetPreScale() {
+        for (PageImage o : mCache.snapshot().values()) {
+            o.resetPreScale();
+        }
     }
 }

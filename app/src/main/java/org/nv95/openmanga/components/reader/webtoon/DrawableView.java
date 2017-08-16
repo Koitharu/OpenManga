@@ -58,8 +58,10 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
+        int oldHeight = mViewport.height();
+        int oldWidth = mViewport.width();
         mViewport.set(0, 0, width, height);
-        onViewportChanged();
+        onViewportChanged(oldHeight, oldWidth, height, width);
         forceRedraw();
     }
 
@@ -214,7 +216,7 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
         private final SurfaceHolder mSurface;
 
-        private int lastOffsetX = -1, lastOffsetY = -1;
+        private int lastOffsetX = 0, lastOffsetY = 0;
         private float lastZoom = 0;
         boolean force;
 
@@ -276,7 +278,7 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
     protected void onIdle(){}
 
-    protected void onViewportChanged(){};
+    protected void onViewportChanged(int oldHeight, int oldWidth, int newHeight, int newWidth){};
 
     protected void onZoomChanged(){};
 
