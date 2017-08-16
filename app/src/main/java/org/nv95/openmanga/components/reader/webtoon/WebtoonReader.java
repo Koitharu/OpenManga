@@ -104,7 +104,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
                 offsetY = rect.bottom;
             }
             //prefetch next
-            mPool.get(page);
+            mPool.prefetch(page);
 
             /*int progress = getProgress(mCurrentPage);
             String text = "";

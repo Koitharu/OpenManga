@@ -2,7 +2,8 @@ package org.nv95.openmanga.components.reader.webtoon;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import java.util.concurrent.Executor;
 
@@ -24,16 +25,15 @@ public class AsyncBitmapDecoder implements Runnable {
     public void run() {
         try {
             Bitmap bitmap = BitmapFactory.decodeFile(mFilename);
-            if (bitmap != null) {
-                mCallback.onBitmapDecoded(bitmap);
-            }
+            mCallback.onBitmapDecoded(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public interface DecodeCallback {
-        void onBitmapDecoded(@NonNull Bitmap bitmap);
+        @WorkerThread
+        void onBitmapDecoded(@Nullable Bitmap bitmap);
     }
 
     public static void decode(String filename, DecodeCallback callback, Executor executor) {

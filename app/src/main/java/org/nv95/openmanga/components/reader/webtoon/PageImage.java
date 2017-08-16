@@ -78,4 +78,8 @@ public class PageImage {
         mPreScale = 0;
         mPreScaledHeight = 0;
     }
+
+    public int bytesSize() {
+        return mBitmap.getByteCount();
+    }
 }
