@@ -17,6 +17,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.components.RatingView;
+import org.nv95.openmanga.dialogs.PreviewDialog;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
@@ -137,6 +138,17 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
                     }
                     new QuickReadTask(view.getContext())
                             .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mData);
+                }
+            });
+            buttonRead.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (itemView instanceof Checkable && ((Checkable) itemView).isChecked()) {
+                        return false;
+                    }
+                    new PreviewDialog(view.getContext())
+                            .show(mData);
+                    return true;
                 }
             });
         }
