@@ -1,10 +1,15 @@
 package org.nv95.openmanga.helpers;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.view.MenuItem;
+import android.view.SubMenu;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.PreviewActivity2;
@@ -14,6 +19,7 @@ import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by nv95 on 28.01.16.
@@ -75,5 +81,30 @@ public class ContentShareHelper {
         }
         addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         mContext.getApplicationContext().sendBroadcast(addIntent);
+    }
+
+    public void buildOpenWithSubmenu(MangaInfo manga, MenuItem menuItem) {
+        SubMenu menu = menuItem.getSubMenu();
+        Uri uri = Uri.parse(manga.path);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        PackageManager pm = mContext.getPackageManager();
+        List<ResolveInfo> allActivities = pm.queryIntentActivities(intent, 0);
+        if (allActivities.isEmpty()) {
+            menuItem.setVisible(false);
+        } else {
+            menuItem.setVisible(true);
+            menu.clear();
+            for (ResolveInfo o : allActivities) {
+                MenuItem item = menu.add(o.loadLabel(pm));
+                item.setIcon(o.loadIcon(pm));
+                ComponentName name = new ComponentName(o.activityInfo.applicationInfo.packageName,
+                        o.activityInfo.name);
+                Intent i = new Intent(intent);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                i.setComponent(name);
+                item.setIntent(i);
+            }
+        }
     }
 }

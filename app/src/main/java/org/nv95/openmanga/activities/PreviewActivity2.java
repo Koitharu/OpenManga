@@ -163,6 +163,9 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         invalidateMenuBar();
         ChangesObserver.getInstance().addListener(this);
         new LoadTask(this).attach(this).start();
+
+        new ContentShareHelper(this).buildOpenWithSubmenu(mManga,
+                mToolbarMenu.getMenu().findItem(R.id.action_open_ext));
     }
 
     @Override
@@ -174,6 +177,8 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.preview2, menu);
+        new ContentShareHelper(this).buildOpenWithSubmenu(mManga,
+                menu.findItem(R.id.action_open_ext));
         return super.onCreateOptionsMenu(menu);
     }
 
