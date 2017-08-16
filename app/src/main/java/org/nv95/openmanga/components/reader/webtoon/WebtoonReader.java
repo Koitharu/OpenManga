@@ -17,6 +17,7 @@ import org.nv95.openmanga.components.reader.PageLoader;
 import org.nv95.openmanga.components.reader.PageWrapper;
 import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.items.MangaPage;
+import org.nv95.openmanga.utils.DecartUtils;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     private final Vector<RecyclerViewPager.OnPageChangedListener> mPageChangeListeners;
     private volatile int mOffsetX = 0, mOffsetY = 0;
     private final Rect mScrollBounds;
+    private int mTopPage, mTopPageOffset;
 
     public WebtoonReader(Context context) {
         this(context, null, 0);
@@ -61,6 +63,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
         mHandler = new Handler(this);
         mPageChangeListeners = new Vector<>();
         mCurrentPage = 0;
+        mTopPage = mTopPageOffset = 0;
         mScrollBounds = new Rect();
     }
 
@@ -75,17 +78,20 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
             int offsetY = mOffsetY;
             int page = mCurrentPage;
             //draw previous pages
-            while (offsetY > 0) {
-                PageImage image = mPool.get(page - 1);
-                if (image == null) break;
-                if (!image.isPreScaled()) {
-                    image.preScale(viewport.width() / (float) image.getOriginalWidth());
-                    notifyPageHeight(page, image.getPreScaledHeight());
+            if (offsetY > 0) {
+                while (offsetY > 0) {
+                    PageImage image = mPool.get(page - 1);
+                    if (image == null) break;
+                    if (!image.isPreScaled()) {
+                        image.preScale(viewport.width() / (float) image.getOriginalWidth());
+                        notifyPageHeight(page, image.getPreScaledHeight());
+                    }
+                    offsetY -= image.getPreScaledHeight() * zoom;
+                    mOffsetY = offsetY;
+                    page--;
+                    notifyPageChanged(mCurrentPage - 1);
                 }
-                offsetY -= image.getPreScaledHeight() * zoom;
-                mOffsetY = offsetY;
-                page--;
-                notifyPageChanged(mCurrentPage - 1);
+                mPool.prefetch(page-1);
             }
             //draw current page and next
             while (offsetY < canvas.getHeight()) {
@@ -130,19 +136,23 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
         int count = mHeights.size();
         if (count == 0) {
             mFullHeight = 0;
+            mTopPageOffset = 0;
             return;
         }
+        final int total = getItemCount();
         int sum = 0;
+
         for (int o : mHeights.values()) {
             sum += o;
         }
-        if (count < getItemCount()) {
-            sum += sum / count;
+        int avgHeight = sum / count;
+        sum += avgHeight * (total - count);
+
+        mTopPageOffset = 0;
+        for (int i = 0; i < mTopPage; i++) {
+            Integer o = mHeights.get(i);
+            mTopPageOffset += o == null ? avgHeight : o;
         }
-        /*int avgHeight = sum / count;
-        for (int i = getItemCount();i>=count;i--) {
-            sum += avgHeight;
-        }*/
         mFullHeight = sum;
         recomputeScrollRange();
     }
@@ -168,8 +178,14 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     }
 
     private void recomputeScrollRange() {
-        mScrollBounds.bottom = mScrollBounds.top + (int)(mFullHeight * getScaleFactor()) - getViewportHeight();
-        mScrollBounds.right = mScrollBounds.left + (int)(getViewportWidth() * getScaleFactor()) - getViewportWidth();
+        mScrollBounds.top = 0;
+        mScrollBounds.left = 0;
+        mScrollBounds.bottom = mFullHeight;
+        mScrollBounds.right = getViewportWidth();
+        DecartUtils.scaleRect(mScrollBounds, getScaleFactor());
+        DecartUtils.translateRect(mScrollBounds, 0, -mTopPageOffset);
+        mScrollBounds.bottom -= getViewportHeight();
+        mScrollBounds.right -= getViewportWidth();
     }
 
     @Override
@@ -189,12 +205,12 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
 
     @Override
     public boolean scrollToNext(boolean animate) {
-        return false;
+        return smoothScrollBy(0, (int) (getViewportHeight() * 0.9f));
     }
 
     @Override
     public boolean scrollToPrevious(boolean animate) {
-        return false;
+        return smoothScrollBy(0, (int) -(getViewportHeight() * 0.9f));
     }
 
     @Override
@@ -204,9 +220,16 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
 
     @Override
     public void scrollToPosition(int position) {
+        int oldPage = mCurrentPage;
         mCurrentPage = position;
         mOffsetY = 0;
+        mScrollState.set(mScrollState.get().offsetY(0));
+        mTopPage = position;
+        recomputeWidth();
         forceRedraw();
+        for (RecyclerViewPager.OnPageChangedListener o : mPageChangeListeners) {
+            o.OnPageChanged(oldPage, mCurrentPage);
+        }
     }
 
     @Override

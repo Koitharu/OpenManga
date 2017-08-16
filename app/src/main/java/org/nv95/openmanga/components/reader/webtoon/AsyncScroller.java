@@ -35,6 +35,26 @@ public class AsyncScroller extends Scroller implements Handler.Callback {
     }
 
     @Override
+    public void startScroll(int startX, int startY, int dx, int dy) {
+        if (mThread != null) {
+            mThread.interrupt();
+        }
+        mThread = new WatcherThread(startX, startY);
+        super.startScroll(startX, startY, dx, dy);
+        mThread.start();
+    }
+
+    @Override
+    public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+        if (mThread != null) {
+            mThread.interrupt();
+        }
+        mThread = new WatcherThread(startX, startY);
+        super.startScroll(startX, startY, dx, dy, duration);
+        mThread.start();
+    }
+
+    @Override
     public boolean handleMessage(Message message) {
         mListener.onScrolled(message.arg1, message.arg2);
         return false;

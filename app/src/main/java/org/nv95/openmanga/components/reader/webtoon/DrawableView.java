@@ -28,7 +28,7 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
     private final ScaleGestureDetector mScaleDetector;
     private final AsyncScroller mScroller;
     private final Rect mViewport;
-    private final AtomicReference<ScrollState> mScrollState;
+    protected final AtomicReference<ScrollState> mScrollState;
 
     public DrawableView(Context context) {
         this(context, null, 0);
@@ -259,6 +259,33 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
                 }
             }
         }
+    }
+
+    public boolean smoothScrollBy(int dX, int dY) {
+        mScroller.forceFinished(true);
+        Rect bounds = getScrollBounds();
+        ScrollState state = mScrollState.get();
+        if (dY < 0) {
+            dY = Math.max(dY, bounds.top - state.scrollY);
+        } else if (dY > 0) {
+            dY = Math.min(dY, bounds.bottom - state.scrollY);
+        }
+        if (dX < 0) {
+            dX = Math.max(dX, bounds.left - state.scrollY);
+        } else if (dX > 0) {
+            dX = Math.min(dX, bounds.right - state.scrollY);
+        }
+        if (dX == 0 && dY == 0) {
+            return false;
+        }
+        mScroller.startScroll(
+                state.scrollX,
+                state.scrollY,
+                dX,
+                dY,
+                800
+        );
+        return true;
     }
 
     public float getScaleFactor() {
