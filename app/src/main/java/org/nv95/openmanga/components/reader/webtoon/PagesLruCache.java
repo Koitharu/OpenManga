@@ -17,14 +17,8 @@ public class PagesLruCache extends LruCache<Integer, PageImage> {
         oldValue.recycle();
     }
 
-    @Override
-    protected int sizeOf(Integer key, PageImage pageImage) {
-        // The cache size will be measured in kilobytes rather than
-        // number of items.
-        return pageImage.bytesSize() / 1024;
-    }
-
     public boolean contains(Integer key) {
-        return get(key) != null;
+        PageImage value = get(key);
+        return value != null && !value.isRecycled();
     }
 }

@@ -94,7 +94,14 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
             } else {
                 scaleFactor = 1f;
             }
+        } else if (scaleFactor > 2f) {
+            if (state.scale == 2f) {
+                return false;
+            } else {
+                scaleFactor = 2f;
+            }
         }
+
         mScrollState.set(new ScrollState(scaleFactor, newScrollX, newScrollY));
         onZoomChanged();
         return true;

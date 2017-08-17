@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import org.nv95.openmanga.components.reader.PageLoader;
 import org.nv95.openmanga.components.reader.PageWrapper;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
@@ -25,15 +25,14 @@ public class ImagesPool {
     private final ChangesListener mListener;
     private final ExecutorService mExecutor;
     private final Set<Integer> mDecodeQueue;
-
-    private final int MAX_MEMORY = (int) (Runtime.getRuntime().maxMemory() / 1024);
+    private int mBaseWidth = 0;
 
     public ImagesPool(Context context, ChangesListener listener) {
         mExecutor = Executors.newSingleThreadExecutor();
         mLoader = new PageLoader(context);
         mListener = listener;
-        mDecodeQueue = new TreeSet<>();
-        mCache = new PagesLruCache(MAX_MEMORY / 8);
+        mDecodeQueue = Collections.synchronizedSet(new TreeSet<Integer>());
+        mCache = new PagesLruCache(4);
     }
 
     @Nullable
@@ -60,9 +59,16 @@ public class ImagesPool {
                 @WorkerThread
                 @Override
                 public void onBitmapDecoded(@Nullable Bitmap bitmap) {
-                    Log.d("DECODE", pos+"");
                     if (bitmap != null) {
-                        mCache.put(pos, new PageImage(bitmap));
+                        int w = bitmap.getWidth();
+                        int h = (int)(mBaseWidth / (float)w * bitmap.getHeight());
+                        mCache.put(pos, new PageImage(Bitmap.createScaledBitmap(
+                                bitmap,
+                                mBaseWidth,
+                                h,
+                                true
+                        )));
+                        bitmap.recycle();
                         mListener.notifyDataSetChanged();
                     }
                     mDecodeQueue.remove(pos);
@@ -79,9 +85,10 @@ public class ImagesPool {
         mCache.evictAll();
     }
 
-    public void resetPreScale() {
-        for (PageImage o : mCache.snapshot().values()) {
-            o.resetPreScale();
+    public void setBaseWidth(int width) {
+        if (mBaseWidth != width) {
+            mCache.evictAll();
+            mBaseWidth = width;
         }
     }
 }
