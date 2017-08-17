@@ -40,7 +40,9 @@ public class PageImage {
         if (!isRecycled()) {
             Rect inRect = new Rect(outRect);
             DecartUtils.translateRect(inRect, -offsetX, -offsetY);
-            DecartUtils.scaleRect(inRect, 1f / scale);
+            if (scale != 1f) {
+                DecartUtils.scaleRect(inRect, 1f / scale);
+            }
             canvas.drawBitmap(mBitmap, inRect, outRect, paint);
         }
         return outRect;

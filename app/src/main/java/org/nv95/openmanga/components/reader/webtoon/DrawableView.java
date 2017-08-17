@@ -82,9 +82,6 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
         ScrollState state = mScrollState.get();
-        int deltaY = (int) (detector.getFocusY() * (detector.getScaleFactor() - 1f));
-        int newScrollX = (int) ((state.scrollX + detector.getFocusX()) * detector.getScaleFactor() - detector.getFocusX());
-        int newScrollY = state.scrollY + deltaY;
 
         float scaleFactor = state.scale;
         scaleFactor *= detector.getScaleFactor();
@@ -101,6 +98,11 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
                 scaleFactor = 2f;
             }
         }
+
+
+        float scrollFactor = scaleFactor - state.scale;
+        int newScrollX = (int) (state.scrollX +  detector.getFocusX() * scrollFactor);
+        int newScrollY = (int) (state.scrollY + detector.getFocusY() * scrollFactor);
 
         mScrollState.set(new ScrollState(scaleFactor, newScrollX, newScrollY));
         onZoomChanged();
@@ -156,6 +158,8 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if (e2.getPointerCount() != 1) return false;
+
             Rect bounds = getScrollBounds();
             ScrollState state = mScrollState.get();
             int scrollY = (int) (state.scrollY + distanceY);
