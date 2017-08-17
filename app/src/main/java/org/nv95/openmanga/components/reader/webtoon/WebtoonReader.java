@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.SparseIntArray;
 
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
@@ -20,6 +20,7 @@ import org.nv95.openmanga.components.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.utils.DecartUtils;
 import org.nv95.openmanga.utils.InternalLinkMovement;
+import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     private volatile int mOffsetX = 0, mOffsetY = 0;
     private final Rect mScrollBounds;
     private int mTopPage, mTopPageOffset;
+    private volatile boolean mShowNumbers;
+    private final SparseIntArray mProgressMap;
 
     public WebtoonReader(Context context) {
         this(context, null, 0);
@@ -60,7 +63,11 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
         setHorizontalScrollBarEnabled(false);
         setVerticalScrollBarEnabled(true);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(Color.DKGRAY);
+        mPaint.setSubpixelText(true);
+        mPaint.setTextSize(LayoutUtils.DpToPx(getResources(), 18));
         mHeights = new TreeMap<>();
+        mProgressMap = new SparseIntArray();
         mHandler = new Handler(this);
         mPageChangeListeners = new Vector<>();
         mCurrentPage = 0;
@@ -71,7 +78,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     @WorkerThread
     @Override
     protected void onSurfaceDraw(Canvas canvas, int dX, int dY, float zoom) {
-        canvas.drawColor(Color.DKGRAY);
+        canvas.drawColor(Color.LTGRAY);
         final Rect viewport = canvas.getClipBounds();
         if (mPool != null) {
             mOffsetY -= dY;
@@ -108,7 +115,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
             //prefetch next
             //mPool.prefetch(page);
 
-            /*int progress = getProgress(mCurrentPage);
+            int progress = mProgressMap.get(mCurrentPage, 0);
             String text = "";
             if (mShowNumbers) {
                 text += String.valueOf(mCurrentPage + 1);
@@ -124,7 +131,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
                     text += progress + "%";
                 }
             }
-            canvas.drawText(text, 5, canvas.getHeight() - 10, mPaint);*/
+            canvas.drawText(text, 5, canvas.getHeight() - 10, mPaint);
         }
     }
 
@@ -196,7 +203,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
 
     @Override
     public void applyConfig(boolean vertical, boolean reverse, boolean sticky, boolean showNumbers) {
-
+        mShowNumbers = showNumbers;
     }
 
     @Override
@@ -290,6 +297,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     public void setPages(List<MangaPage> mangaPages) {
         mPool.recycle();
         mHeights.clear();
+        mProgressMap.clear();
         getLoader().setPages(mangaPages);
         scrollToPosition(0);
     }
@@ -324,22 +332,26 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
 
     @Override
     public void onProgressUpdated(PageWrapper page, boolean shadow, int percent) {
-
+        mProgressMap.put(page.position, percent);
+        notifyDataSetChanged();
     }
 
     @Override
     public void onLoadingComplete(PageWrapper page, boolean shadow) {
+        mProgressMap.put(page.position, 100);
         notifyDataSetChanged();
     }
 
     @Override
     public void onLoadingFail(PageWrapper page, boolean shadow) {
-
+        mProgressMap.put(page.position, -1);
+        notifyDataSetChanged();
     }
 
     @Override
     public void onLoadingCancelled(PageWrapper page, boolean shadow) {
-
+        mProgressMap.put(page.position, 0);
+        notifyDataSetChanged();
     }
 
     @WorkerThread
