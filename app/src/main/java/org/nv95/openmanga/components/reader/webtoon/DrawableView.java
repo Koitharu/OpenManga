@@ -7,7 +7,6 @@ import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -251,10 +250,10 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
                     force = false;
                     canvas = mSurface.lockCanvas(null);
                     synchronized (mSurface) {
-                        long time = System.currentTimeMillis();
+                        //long time = System.currentTimeMillis();
                         onSurfaceDraw(canvas, lastOffsetX - offsetX, lastOffsetY - offsetY, state.scale);
-                        time = System.currentTimeMillis() - time;
-                        Log.d("FPS", 1f / time * 1000f + " fps");
+                        /*time = System.currentTimeMillis() - time;
+                        Log.d("FPS", 1f / time * 1000f + " fps");*/
 
                         lastOffsetX = offsetX;
                         lastOffsetY = offsetY;
