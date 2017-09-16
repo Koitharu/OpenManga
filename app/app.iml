@@ -94,31 +94,32 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="cardview-v7-26.0.0" level="project" />
-    <orderEntry type="library" name="support-fragment-26.0.0" level="project" />
-    <orderEntry type="library" name="animated-vector-drawable-26.0.0" level="project" />
-    <orderEntry type="library" name="support-core-ui-26.0.0" level="project" />
+    <orderEntry type="library" name="cardview-v7-26.1.0" level="project" />
+    <orderEntry type="library" name="support-core-ui-26.1.0" level="project" />
+    <orderEntry type="library" name="support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" name="subsampling-scale-image-view-3.6.0" level="project" />
-    <orderEntry type="library" name="support-media-compat-26.0.0" level="project" />
-    <orderEntry type="library" name="support-compat-26.0.0" level="project" />
+    <orderEntry type="library" name="support-compat-26.1.0" level="project" />
     <orderEntry type="library" name="netcipher-2.0.0-alpha1" level="project" />
-    <orderEntry type="library" name="support-vector-drawable-26.0.0" level="project" />
+    <orderEntry type="library" name="recyclerview-v7-26.1.0" level="project" />
+    <orderEntry type="library" name="support-annotations-26.1.0" level="project" />
     <orderEntry type="library" name="universal-image-loader-1.9.5" level="project" />
-    <orderEntry type="library" name="support-core-utils-26.0.0" level="project" />
-    <orderEntry type="library" name="recyclerview-v7-26.0.0" level="project" />
+    <orderEntry type="library" name="support-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="support-v4-26.1.0" level="project" />
+    <orderEntry type="library" name="support-core-utils-26.1.0" level="project" />
+    <orderEntry type="library" name="animated-vector-drawable-26.1.0" level="project" />
+    <orderEntry type="library" name="support-fragment-26.1.0" level="project" />
+    <orderEntry type="library" name="runtime-1.0.0" level="project" />
     <orderEntry type="library" name="jsoup-1.10.3" level="project" />
-    <orderEntry type="library" name="support-v4-26.0.0" level="project" />
-    <orderEntry type="library" name="support-annotations-26.0.0" level="project" />
-    <orderEntry type="library" name="design-26.0.0" level="project" />
-    <orderEntry type="library" name="multidex-1.0.1" level="project" />
+    <orderEntry type="library" name="common-1.0.0" level="project" />
+    <orderEntry type="library" name="1_common-1.0.0" level="project" />
+    <orderEntry type="library" name="appcompat-v7-26.1.0" level="project" />
     <orderEntry type="library" name="android-crop-1.0.1" level="project" />
-    <orderEntry type="library" name="appcompat-v7-26.0.0" level="project" />
-    <orderEntry type="library" name="transition-26.0.0" level="project" />
+    <orderEntry type="library" name="design-26.1.0" level="project" />
+    <orderEntry type="library" name="transition-26.1.0" level="project" />
     <orderEntry type="library" name="taptargetview-1.9.1" level="project" />
   </component>
 </module>
