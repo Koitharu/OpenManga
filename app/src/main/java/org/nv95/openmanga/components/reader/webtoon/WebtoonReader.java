@@ -1,5 +1,6 @@
 package org.nv95.openmanga.components.reader.webtoon;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,12 +8,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
+import android.view.MotionEvent;
 
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
+import org.nv95.openmanga.components.reader.OverscrollDetector;
 import org.nv95.openmanga.components.reader.PageLoadListener;
 import org.nv95.openmanga.components.reader.PageLoader;
 import org.nv95.openmanga.components.reader.PageWrapper;
@@ -49,6 +53,8 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     private int mTopPage, mTopPageOffset;
     private volatile boolean mShowNumbers;
     private final SparseIntArray mProgressMap;
+    @Nullable
+    private OverscrollDetector mOverscrollDetector;
 
     public WebtoonReader(Context context) {
         this(context, null, 0);
@@ -73,6 +79,7 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
         mCurrentPage = 0;
         mTopPage = mTopPageOffset = 0;
         mScrollBounds = new Rect();
+        mOverscrollDetector = null;
     }
 
     @WorkerThread
@@ -247,7 +254,8 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
 
     @Override
     public void setOnOverScrollListener(OnOverScrollListener listener) {
-
+        mOverscrollDetector = new OverscrollDetector(listener);
+        mOverscrollDetector.setDirections(true, false);
     }
 
     @Override
@@ -306,6 +314,15 @@ public class WebtoonReader extends DrawableView implements MangaReader, PageLoad
     public void finish() {
         getLoader().cancelAll();
         mPool.recycle();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mOverscrollDetector != null) {
+            mOverscrollDetector.onTouch(this, event);
+        }
+        return super.onTouchEvent(event);
     }
 
     protected Rect computeScrollRange(float scale) {

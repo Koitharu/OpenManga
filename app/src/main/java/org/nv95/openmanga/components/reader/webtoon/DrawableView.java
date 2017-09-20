@@ -222,6 +222,28 @@ public abstract class DrawableView extends SurfaceView implements SurfaceHolder.
         }
     }
 
+    @Override
+    public boolean canScrollHorizontally(int direction) {
+        Rect bounds = getScrollBounds();
+        ScrollState state = mScrollState.get();
+        if (direction < 0) {
+            return state.scrollX > bounds.right;
+        } else if (direction > 0) {
+            return state.scrollX < bounds.left;
+        } else return super.canScrollHorizontally(direction);
+    }
+
+    @Override
+    public boolean canScrollVertically(int direction) {
+        Rect bounds = getScrollBounds();
+        ScrollState state = mScrollState.get();
+        if (direction < 0) {
+            return state.scrollY > bounds.top;
+        } else if (direction > 0) {
+            return state.scrollY < bounds.bottom;
+        } else return super.canScrollVertically(direction);
+    }
+
     private class DrawThread extends Thread {
 
         private final SurfaceHolder mSurface;
