@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -69,7 +71,8 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener, NavigationListener, InternalLinkMovement.OnLinkClickListener {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback,
+        OnOverScrollListener, NavigationListener, InternalLinkMovement.OnLinkClickListener {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -85,6 +88,8 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     private int mChapter;
     private ReaderConfig mConfig;
     private BrightnessHelper mBrightnessHelper;
+    @NonNull
+    private final Point mViewport = new Point(1, 1);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +131,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
         updateConfig();
         new ChapterLoadTask(this, page).attach(this).start(mManga.getChapters().get(mChapter));
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        mViewport.set(dm.widthPixels, dm.heightPixels);
     }
 
     @Override
@@ -442,13 +454,20 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     }
 
     @Override
-    public void onOverScrollFlying(int direction, float factor) {
-        mOverScrollFrame.setAlpha(Math.abs(factor / 50f));
+    public void onOverScrollFlying(int direction, int distance) {
+        float d = distance / (float)(direction <= 1 ? mViewport.x : mViewport.y);
+        mOverScrollFrame.setAlpha(Math.min(1f, d * 3.f));
     }
 
     @Override
-    public void onOverScrollCancelled(int direction) {
-        mOverScrollFrame.setVisibility(View.GONE);
+    public boolean onOverScrollFinished(int direction, int distance) {
+        float d = distance / (float)(direction <= 1 ? mViewport.x : mViewport.y);
+        if (d >= 0.3f) {
+            return true;
+        } else {
+            mOverScrollFrame.setVisibility(View.GONE);
+            return false;
+        }
     }
 
     @SuppressLint("RtlHardcoded")

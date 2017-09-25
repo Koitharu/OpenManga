@@ -47,27 +47,33 @@ public class OverscrollDetector implements View.OnTouchListener {
                 mStartPoint = new PointF(motionEvent.getX(), motionEvent.getY());
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (mCanScrollTop)
-                    mListener.onOverScrollFlying(OnOverScrollListener.TOP, Math.max(0, mStartPoint.y - motionEvent.getY()));
-                else if (mCanScrollBottom)
-                    mListener.onOverScrollFlying(OnOverScrollListener.BOTTOM,  Math.max(0, motionEvent.getY() - mStartPoint.y));
-                else if (mCanScrollLeft)
-                    mListener.onOverScrollFlying(OnOverScrollListener.LEFT,  Math.max(0, mStartPoint.x - motionEvent.getX()));
-                else if (mCanScrollRight)
-                    mListener.onOverScrollFlying(OnOverScrollListener.RIGHT,  Math.max(0, motionEvent.getX() - mStartPoint.x));
+                int dY = (int) (mStartPoint.y - motionEvent.getY());
+                int dX = (int) (mStartPoint.x - motionEvent.getX());
+                if (mCanScrollTop && dY < 0)
+                    mListener.onOverScrollFlying(OnOverScrollListener.TOP, -dY);
+                else if (mCanScrollBottom && dY > 0)
+                    mListener.onOverScrollFlying(OnOverScrollListener.BOTTOM,  dY);
+                else if (mCanScrollLeft && dX < 0)
+                    mListener.onOverScrollFlying(OnOverScrollListener.LEFT,  -dX);
+                else if (mCanScrollRight && dX > 0)
+                    mListener.onOverScrollFlying(OnOverScrollListener.RIGHT,  dX);
                 else return false;
                 return true;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                if (mCanScrollTop) mListener.onOverScrollCancelled(OnOverScrollListener.TOP);
-                else if (mCanScrollBottom)
-                    mListener.onOverScrollCancelled(OnOverScrollListener.BOTTOM);
-                else if (mCanScrollLeft) mListener.onOverScrollCancelled(OnOverScrollListener.LEFT);
-                else if (mCanScrollRight)
-                    mListener.onOverScrollCancelled(OnOverScrollListener.RIGHT);
+                dY = (int) (mStartPoint.y - motionEvent.getY());
+                dX = (int) (mStartPoint.x - motionEvent.getX());
+
+                if (mCanScrollTop && dY < 0 && mListener.onOverScrollFinished(OnOverScrollListener.TOP, -dY))
+                    mListener.onOverScrolled(OnOverScrollListener.TOP);
+                else if (mCanScrollBottom && dY > 0 && mListener.onOverScrollFinished(OnOverScrollListener.BOTTOM,  dY))
+                    mListener.onOverScrolled(OnOverScrollListener.BOTTOM);
+                else if (mCanScrollLeft && dX < 0 && mListener.onOverScrollFinished(OnOverScrollListener.LEFT,  -dX))
+                    mListener.onOverScrolled(OnOverScrollListener.LEFT);
+                else if (mCanScrollRight && dX > 0 && mListener.onOverScrollFinished(OnOverScrollListener.RIGHT,  dX))
+                    mListener.onOverScrolled(OnOverScrollListener.RIGHT);
                 else return false;
                 return true;
-
         }
         return false;
     }

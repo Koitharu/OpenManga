@@ -11,8 +11,8 @@ public interface OnOverScrollListener {
     int TOP = 2;
     int BOTTOM = 3;
 
-    void onOverScrollFlying(int direction, float factor);
-    void onOverScrollCancelled(int direction);
+    void onOverScrollFlying(int direction, int distance);
+    boolean onOverScrollFinished(int direction, int distance);
     void onOverScrollStarted(int direction);
     void onOverScrolled(int direction);
 }

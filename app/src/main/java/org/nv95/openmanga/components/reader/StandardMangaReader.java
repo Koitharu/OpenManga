@@ -237,7 +237,7 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
     public void onOverScrollUpdate(IOverScrollDecor decor, int state, float offset) {
         mOverScrollFactor = offset;
         if (mOverScrollListener != null) {
-            mOverScrollListener.onOverScrollFlying(mOverScrollDirection, offset);
+            mOverScrollListener.onOverScrollFlying(mOverScrollDirection, Math.abs((int)offset));
         }
     }
 
@@ -246,7 +246,7 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
         switch (newState) {
             case IOverScrollState.STATE_IDLE:
                 if (mOverScrollListener != null) {
-                    mOverScrollListener.onOverScrollCancelled(mOverScrollDirection);
+                    mOverScrollListener.onOverScrollFinished(mOverScrollDirection, 0);
                 }
                 // No over-scroll is in effect.
                 break;
@@ -270,7 +270,7 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
                 if (oldState == IOverScrollState.STATE_DRAG_START_SIDE || oldState == IOverScrollState.STATE_DRAG_END_SIDE) {
                     if (mOverScrollListener != null) {
                         if (Math.abs(mOverScrollFactor) < OVERSCROLL_THRESHOLD) {
-                            mOverScrollListener.onOverScrollCancelled(mOverScrollDirection);
+                            mOverScrollListener.onOverScrollFinished(mOverScrollDirection, 0);
                         } else {
                             mOverScrollListener.onOverScrolled(mOverScrollDirection);
                         }
