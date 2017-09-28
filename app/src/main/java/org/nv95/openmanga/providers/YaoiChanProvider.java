@@ -164,14 +164,14 @@ public class YaoiChanProvider extends MangachanProvider {
             String login = getStringPreference("login", "");
             String password = getStringPreference("password", "");
             if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-                auth(login, password);
+                auth(login, password, null);
             }
         }
         return sAuthCookie;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static boolean auth(String login, String password) {
+    @SuppressWarnings({"WeakerAccess", "unused"})
+    public static boolean auth(String login, String password, String arg3) {
         CookieParser cp = NetworkUtils.authorize(
                 "http://yaoichan.me/",
                 "login",

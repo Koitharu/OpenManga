@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:title="@string/login"
-        android:key="login"
-        android:defaultValue="@string/__empty__" />
-    <EditTextPreference
-        android:title="@string/password"
-        android:key="password"
-        android:inputType="textPassword"
-        android:dependency="login"
-        android:defaultValue="@string/__empty__" />
-    <Preference
-        android:title="@string/check_credentials"
-        android:key="auth_test"
-        android:dependency="password" />
+    <PreferenceCategory android:title="@string/authorization">
+        <EditTextPreference
+            android:defaultValue="@string/__empty__"
+            android:key="login"
+            android:title="@string/login" />
+        <EditTextPreference
+            android:defaultValue="@string/__empty__"
+            android:dependency="login"
+            android:inputType="textPassword"
+            android:key="password"
+            android:title="@string/password" />
+        <Preference
+            android:dependency="password"
+            android:key="auth_test"
+            android:title="@string/check_credentials" />
+    </PreferenceCategory>
     <CheckBoxPreference
-        android:title="Use ExHentai domain"
+        android:defaultValue="false"
         android:dependency="password"
         android:key="exhentai"
-        android:defaultValue="false" />
+        android:title="Use ExHentai domain" />
 </PreferenceScreen>

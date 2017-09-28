@@ -70,7 +70,8 @@ public class ProviderPreferencesActivity extends BaseAppActivity {
                         new TestAuthTask(getActivity()).executeOnExecutor(
                                 AsyncTask.THREAD_POOL_EXECUTOR,
                                 prefs.getString("login",""),
-                                prefs.getString("password","")
+                                prefs.getString("password",""),
+                                prefs.getString("domain","")
                         );
                         return true;
                     }
@@ -103,8 +104,8 @@ public class ProviderPreferencesActivity extends BaseAppActivity {
             @Override
             protected Boolean doInBackground(String... strings) {
                 try {
-                    Method m = mProvider.aClass.getMethod("auth", String.class, String.class);
-                    return (Boolean) m.invoke(null, strings[0], strings[1]);
+                    Method m = mProvider.aClass.getMethod("auth", String.class, String.class, String.class);
+                    return (Boolean) m.invoke(null, strings[0], strings[1], strings[2]);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;

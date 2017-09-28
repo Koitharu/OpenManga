@@ -42,8 +42,9 @@ public class HentaichanProvider extends MangaProvider {
 
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
+        final String urlRoot = "http://" + getStringPreference("domain", "hentai-chan.me") + "/";
         MangaList list = new MangaList();
-        Document document = getPage("http://hentai-chan.me/" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage(urlRoot + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -53,9 +54,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://hentai-chan.me/", t.attr("href"));
+            manga.path = concatUrl(urlRoot, t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://hentai-chan.me/", t.attr("src"));
+            manga.preview = concatUrl(urlRoot, t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -69,12 +70,14 @@ public class HentaichanProvider extends MangaProvider {
 
     @Override
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
+        final String urlRoot = "http://" + getStringPreference("domain", "hentai-chan.me") + "/";
+
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("info_wrap").select("div.row").text();
-            summary.preview = concatUrl("http://hentai-chan.me/", e.getElementById("cover").attr("src"));
+            summary.preview = concatUrl(urlRoot, e.getElementById("cover").attr("src"));
             Element dd = e.getElementById("description");
             if (dd != null) {
                 summary.description += "\n\n" + dd.text();
@@ -100,7 +103,7 @@ public class HentaichanProvider extends MangaProvider {
                     }
                     MangaChapter chapter = new MangaChapter();
                     chapter.name = e.text();
-                    chapter.readLink = concatUrl("http://hentai-chan.me/", e.attr("href").replace("/manga/", "/online/"));
+                    chapter.readLink = concatUrl(urlRoot, e.attr("href").replace("/manga/", "/online/"));
                     chapter.provider = summary.provider;
                     summary.chapters.add(chapter);
                 }
@@ -175,12 +178,13 @@ public class HentaichanProvider extends MangaProvider {
     @Nullable
     @Override
     public MangaList search(String query, int page) throws Exception {
+        final String urlRoot = "http://" + getStringPreference("domain", "hentai-chan.me") + "/";
         boolean byTag = query.startsWith(":");
         if (!byTag && page > 0) {
             return null;
         }
         MangaList list = new MangaList();
-        String url = "http://hentai-chan.me/"
+        String url = urlRoot
                 + (byTag ?
                 "tags/" + URLEncoder.encode(query.substring(1), "UTF-8") + "&sort=manga?offset=" + (page * 20)
                 : "?do=search&subaction=search&story=" + URLEncoder.encode(query, "UTF-8"));
@@ -194,9 +198,9 @@ public class HentaichanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://hentai-chan.me/", t.attr("href"));
+            manga.path = concatUrl(urlRoot, t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://hentai-chan.me/", t.attr("src"));
+            manga.preview = concatUrl(urlRoot, t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -225,16 +229,17 @@ public class HentaichanProvider extends MangaProvider {
             String login = getStringPreference("login", "");
             String password = getStringPreference("password", "");
             if (!TextUtils.isEmpty(login) && !TextUtils.isEmpty(password)) {
-                auth(login, password);
+                auth(login, password, getStringPreference("domain", "hentai-chan.me"));
             }
         }
         return sAuthCookie;
     }
 
     @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
-    public static boolean auth(String login, String password) {
+    public static boolean auth(String login, String password, String domain) {
+        final String urlRoot = "http://" + domain + "/";
         CookieParser cp = NetworkUtils.authorize(
-                "http://hentai-chan.me/",
+                urlRoot,
                 "login",
                 "submit",
                 "login_name",

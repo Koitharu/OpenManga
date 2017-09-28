@@ -376,4 +376,6 @@
     <string name="auto_save_new">Save new chapters</string>
     <string name="action_relative">Relative</string>
     <string name="open_in_">Open in...</string>
+    <string name="domain">Domain</string>
+    <string name="authorization">Authorization</string>
 </resources>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:defaultValue="hentai-chan.me"
+        android:key="domain"
+        android:title="@string/domain" />
     <PreferenceCategory android:title="@string/authorization">
         <EditTextPreference
             android:defaultValue="@string/__empty__"

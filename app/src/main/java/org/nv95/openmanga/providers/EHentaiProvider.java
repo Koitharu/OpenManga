@@ -233,7 +233,7 @@ public class EHentaiProvider extends MangaProvider {
     private boolean auth() {
         String login = getStringPreference("login", "");
         String password = getStringPreference("password", "");
-        return !TextUtils.isEmpty(login) && !TextUtils.isEmpty(password) && auth(login, password);
+        return !TextUtils.isEmpty(login) && !TextUtils.isEmpty(password) && auth(login, password, null);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class EHentaiProvider extends MangaProvider {
 
     @SuppressWarnings("WeakerAccess")
     @WorkerThread
-    public static boolean auth(String login, String password) {
+    public static boolean auth(String login, String password, String arg3) {
         CookieParser cp = NetworkUtils.authorize(
                 "https://forums.e-hentai.org/index.php?act=Login&CODE=01",
                 "referer",
