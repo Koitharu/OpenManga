@@ -62,7 +62,7 @@ public class MangaFoxProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.genres = "";
             }
-            manga.path = o.select("a").first().attr("href");
+            manga.path = "http:" + o.select("a").first().attr("href");
             try {
                 manga.preview = o.select("img").first().attr("src");
             } catch (Exception e) {
@@ -92,7 +92,7 @@ public class MangaFoxProvider extends MangaProvider {
             for (Element o : e.select("a.tips")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = o.attr("href");
+                chapter.readLink = "http:" + o.attr("href");
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
