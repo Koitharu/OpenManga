@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +17,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -36,8 +33,6 @@ import org.nv95.openmanga.components.ReaderMenu;
 import org.nv95.openmanga.components.reader.MangaReader;
 import org.nv95.openmanga.components.reader.OnOverScrollListener;
 import org.nv95.openmanga.components.reader.PageWrapper;
-import org.nv95.openmanga.components.reader.StandardMangaReader;
-import org.nv95.openmanga.components.reader.webtoon.WebtoonReader;
 import org.nv95.openmanga.dialogs.HintDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.ThumbnailsDialog;
@@ -71,8 +66,7 @@ import java.util.List;
  * Created by nv95 on 16.11.16.
  */
 
-public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback,
-        OnOverScrollListener, NavigationListener, InternalLinkMovement.OnLinkClickListener {
+public class ReadActivity2 extends BaseAppActivity implements View.OnClickListener, ReaderMenu.Callback, OnOverScrollListener, NavigationListener, InternalLinkMovement.OnLinkClickListener {
 
     private static final int REQUEST_SETTINGS = 1299;
 
@@ -88,8 +82,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     private int mChapter;
     private ReaderConfig mConfig;
     private BrightnessHelper mBrightnessHelper;
-    @NonNull
-    private final Point mViewport = new Point(1, 1);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,13 +123,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
         updateConfig();
         new ChapterLoadTask(this, page).attach(this).start(mManga.getChapters().get(mChapter));
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        mViewport.set(dm.widthPixels, dm.heightPixels);
     }
 
     @Override
@@ -227,35 +212,35 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
         }
         if (mConfig.scrollByVolumeKeys) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-				if (!mReader.scrollToNext(true)) {
-					if (mChapter < mManga.getChapters().size() - 1) {
-						mChapter++;
-						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
-						t.setGravity(Gravity.TOP, 0, 0);
-						t.show();
-						new ChapterLoadTask(ReadActivity2.this,0)
+                if (!mReader.scrollToNext(true)) {
+                    if (mChapter < mManga.getChapters().size() - 1) {
+                        mChapter++;
+                        Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.TOP, 0, 0);
+                        t.show();
+                        new ChapterLoadTask(ReadActivity2.this,0)
                                 .attach(ReadActivity2.this)
                                 .start(mManga.getChapters().get(mChapter));
-						return true;
-					}
-				} else {
-					return true;
-				}
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
             } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-				if (!mReader.scrollToPrevious(true)) {
-					if (mChapter > 0) {
-						mChapter--;
-						Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
-						t.setGravity(Gravity.TOP, 0, 0);
-						t.show();
-						new ChapterLoadTask(ReadActivity2.this, -1)
+                if (!mReader.scrollToPrevious(true)) {
+                    if (mChapter > 0) {
+                        mChapter--;
+                        Toast t = Toast.makeText(this, mManga.getChapters().get(mChapter).name, Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.TOP, 0, 0);
+                        t.show();
+                        new ChapterLoadTask(ReadActivity2.this, -1)
                                 .attach(ReadActivity2.this)
                                 .start(mManga.getChapters().get(mChapter));
-						return true;
-					}
-				} else {
-					return true;
-				}
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -269,36 +254,6 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
     }
 
     private void updateConfig() {
-        boolean isWeb = HistoryProvider.getInstance(this).isWebMode(mManga);
-        if (isWeb) {
-            if (mReader instanceof StandardMangaReader) {
-                StandardMangaReader oldReader = (StandardMangaReader) mReader;
-                ViewGroup parent = (ViewGroup) ((View) mReader).getParent();
-                parent.removeView((View) mReader);
-                mReader = new WebtoonReader(this);
-                mReader.initAdapter(this, this);
-                mReader.setPages(oldReader.getPages());
-                mReader.scrollToPosition(oldReader.getCurrentPosition());
-                mReader.addOnPageChangedListener(mMenuPanel);
-                mReader.setOnOverScrollListener(this);
-                ((View) mReader).setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                parent.addView((View) mReader, 0);
-            }
-        } else {
-            if (mReader instanceof WebtoonReader) {
-                WebtoonReader oldReader = (WebtoonReader) mReader;
-                ViewGroup parent = (ViewGroup) ((View) mReader).getParent();
-                parent.removeView((View) mReader);
-                mReader = new StandardMangaReader(this);
-                mReader.initAdapter(this, this);
-                mReader.setPages(oldReader.getPages());
-                mReader.scrollToPosition(oldReader.getCurrentPosition());
-                mReader.addOnPageChangedListener(mMenuPanel);
-                mReader.setOnOverScrollListener(this);
-                ((View) mReader).setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                parent.addView((View) mReader, 0);
-            }
-        }
         mConfig = ReaderConfig.load(this, mManga);
         mReader.applyConfig(
                 mConfig.scrollDirection == ReaderConfig.DIRECTION_VERTICAL,
@@ -364,7 +319,7 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
             case R.id.menuitem_bookmark:
                 mMenuPanel.onBookmarkAdded(
                         BookmarksProvider.getInstance(this)
-                        .add(mManga, mManga.chapters.get(mChapter).number, pos, mReader.getItem(pos).getFilename())
+                                .add(mManga, mManga.chapters.get(mChapter).number, pos, mReader.getItem(pos).getFilename())
                 );
                 LayoutUtils.centeredToast(this, R.string.bookmark_added);
                 break;
@@ -455,19 +410,13 @@ public class ReadActivity2 extends BaseAppActivity implements View.OnClickListen
 
     @Override
     public void onOverScrollFlying(int direction, int distance) {
-        float d = distance / (float)(direction <= 1 ? mViewport.x : mViewport.y);
-        mOverScrollFrame.setAlpha(Math.min(1f, d * 3.f));
+        mOverScrollFrame.setAlpha(Math.abs(distance / 50f));
     }
 
     @Override
     public boolean onOverScrollFinished(int direction, int distance) {
-        float d = distance / (float)(direction <= 1 ? mViewport.x : mViewport.y);
-        if (d >= 0.3f) {
-            return true;
-        } else {
-            mOverScrollFrame.setVisibility(View.GONE);
-            return false;
-        }
+        mOverScrollFrame.setVisibility(View.GONE);
+        return true;
     }
 
     @SuppressLint("RtlHardcoded")
