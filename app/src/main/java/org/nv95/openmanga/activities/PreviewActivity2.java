@@ -258,7 +258,6 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
                 return true;
             case R.id.action_sort:
                 mChaptersAdapter.reverse();
-                Collections.reverse(mManga.chapters);
                 item.setIcon(mChaptersAdapter.isReversed() ? R.drawable.ic_sort_ascending_white : R.drawable.ic_sort_descending_white);
                 return true;
             case R.id.action_relative:
@@ -328,6 +327,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
             }
             startActivity(intent);
         } else {
+            if (mChaptersAdapter.isReversed()) pos = mManga.chapters.size() - pos - 1;
             HistoryProvider.getInstance(this).add(mManga, chapter.number, 0);
             startActivity(new Intent(this, ReadActivity2.class).putExtra("chapter", pos).putExtras(mManga.toBundle()));
         }
