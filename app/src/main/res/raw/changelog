@@ -1,15 +1,6 @@
 <h1>Changelog</h1>
 <p>
-    + Synchronization: you can synchronize favourites and history across devices<br>
-    + Tor proxy support<br>
-    + Creating home screen shortcuts for manga<br>
-    + Opening reader directly from lists<br>
-    + New manga catalogue: ScanFR<br>
-    + Exporting saved manga to CBZ files<br>
-    + Saving multiple manga parallel and showing downloading speed<br>
-    + Multiple selection in search results<br>
-    + Saving chapters directly from chapters list<br>
-    + Showing recent manga by long tap on &laquo;Quick read&raquo; button<br>
-    * Updated UI<br>
-    * Lot of fixes and optimization<br>
+    + Option to open manga in another app<br>
+    + UI improvements<br>
+    * Fixes
 </p>
