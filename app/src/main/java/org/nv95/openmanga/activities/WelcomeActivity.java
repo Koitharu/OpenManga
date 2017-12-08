@@ -62,7 +62,7 @@ public class WelcomeActivity extends BaseAppActivity {
                     REQUEST_ONBOARDING
             );
         } else if (lastVersion < version) {
-            if (version % 2 == 0 && prefs.getBoolean("showChangelog", true)) {
+            if (BuildConfig.HAS_CHANGELOG && prefs.getBoolean("showChangelog", true)) {
                 context.startActivity(
                         new Intent(context, WelcomeActivity.class)
                                 .putExtra("mode", WELCOME_CHANGELOG)
