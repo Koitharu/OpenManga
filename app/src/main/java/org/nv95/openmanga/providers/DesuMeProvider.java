@@ -99,7 +99,7 @@ public class DesuMeProvider extends MangaProvider {
                 chapter.name = jo.isNull("title") ? "Chapter " + (i + 1) : jo.getString("title");
                 chapter.readLink = summary.path + "/chapter/" + jo.getInt("id");
                 chapter.provider = summary.provider;
-                summary.chapters.add(chapter);
+                summary.chapters.add(0, chapter);
             }
             return summary;
         } catch (Exception e) {
