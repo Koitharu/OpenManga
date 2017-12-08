@@ -17,6 +17,7 @@ android {
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api/v1\""
 		buildConfigField "String", "MAJOR_VERSION", "\"$majorVersion\""
+		buildConfigField "boolean", "HAS_CHANGELOG", "false"
     }
 
     signingConfigs {
