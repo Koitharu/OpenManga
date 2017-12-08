@@ -6,6 +6,7 @@ def majorVersion = "4.3"
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.2"
+	flavorDimensions "default"
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
@@ -13,6 +14,7 @@ android {
         targetSdkVersion 27
         versionCode gitCommits
         versionName "$majorVersion-$gitCommits"
+		resConfigs "en", "ru", "tr", "uk"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://46.36.36.38:5000/api/v1\""
@@ -38,20 +40,18 @@ android {
         }
 
 		fdroid {
-			minifyEnabled false
-			shrinkResources false
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			initWith release
 			buildConfigField "boolean", "SELFUPDATE_ENABLED", "false"
 			versionNameSuffix="-fdroid"
 		}
 
-        debug {
+
+		debug {
             applicationIdSuffix ".debug"
 			versionNameSuffix="-debug"
 			minifyEnabled false
 			shrinkResources false
 			signingConfig signingConfigs.debug
-			setProperty("archivesBaseName", "OpenManga-v${defaultConfig.versionName}-debug")
         }
     }
     lintOptions {
