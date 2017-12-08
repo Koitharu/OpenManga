@@ -1,95 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.nv95.openmanga">
+	xmlns:tools="http://schemas.android.com/tools"
+	package="org.nv95.openmanga">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
-    <application
-        android:fullBackupContent="false"
-        android:supportsRtl="true"
-        android:name=".OpenMangaApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:allowClearUserData="true"
-        android:label="@string/app_name"
-        android:largeHeap="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".activities.MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.PreviewActivity2" >
-            <intent-filter>
-                <action android:name="org.nv95.openmanga.action.PREVIEW" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.SearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/search_results" />
-        <activity
-            android:name=".activities.ReadActivity2" />
-        <activity
-            android:label="@string/action_settings"
-            android:name=".activities.settings.ProviderPreferencesActivity" />
-        <activity
-            android:name=".activities.DownloadsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/downloads_queue"
-            android:launchMode="singleInstance" />
-        <activity
-            android:name=".activities.NewChaptersActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/manga_updates" />
-        <activity
-            android:name=".activities.settings.SettingsActivity2"
-            android:label="@string/action_settings" />
-        <activity
-            android:name=".activities.WelcomeActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/welcome" />
-        <activity
-            android:name=".activities.AboutActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/about" />
-        <activity
-            android:name=".activities.FileSelectActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/select_file" />
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+	<application
+		android:name=".OpenMangaApplication"
+		android:allowBackup="true"
+		android:allowClearUserData="true"
+		android:fullBackupContent="false"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:largeHeap="true"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme"
+		tools:ignore="GoogleAppIndexingWarning">
+		<activity
+			android:name=".activities.MainActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/app_name"
+			android:windowSoftInputMode="adjustPan">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".activities.PreviewActivity2">
+			<intent-filter>
+				<action android:name="org.nv95.openmanga.action.PREVIEW" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activities.SearchActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/search_results" />
+		<activity android:name=".activities.ReadActivity2" />
+		<activity
+			android:name=".activities.settings.ProviderPreferencesActivity"
+			android:label="@string/action_settings" />
+		<activity
+			android:name=".activities.DownloadsActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/downloads_queue"
+			android:launchMode="singleInstance" />
+		<activity
+			android:name=".activities.NewChaptersActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/manga_updates" />
+		<activity
+			android:name=".activities.settings.SettingsActivity2"
+			android:label="@string/action_settings" />
+		<activity
+			android:name=".activities.WelcomeActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/welcome" />
+		<activity
+			android:name=".activities.AboutActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/about" />
+		<activity
+			android:name=".activities.FileSelectActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/select_file" />
+		<activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
-        <service android:name=".services.ScheduledService" />
-        <service android:name=".services.UpdateService" />
-        <service android:name=".services.ImportService" />
-        <service android:name=".services.SyncService" />
-        <service android:name=".services.ExportService" />
-        <service android:name=".services.SaveService" />
+		<service android:name=".services.ScheduledService" />
+		<service android:name=".services.UpdateService" />
+		<service android:name=".services.ImportService" />
+		<service android:name=".services.SyncService" />
+		<service android:name=".services.ExportService" />
+		<service android:name=".services.SaveService" />
 
-        <receiver android:name=".ScheduledServiceReceiver"
-            android:enabled="true" android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
+		<receiver
+			android:name=".ScheduledServiceReceiver"
+			android:enabled="true"
+			android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.QUICKBOOT_POWERON" />
 
-    </application>
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</receiver>
+
+	</application>
 
 </manifest>
