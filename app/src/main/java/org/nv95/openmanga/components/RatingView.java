@@ -49,6 +49,11 @@ public class RatingView extends android.support.v7.widget.AppCompatTextView {
 
     @SuppressLint("DefaultLocale")
     public void setRating(byte value) {
+        if (value == 0) {
+            setVisibility(GONE);
+        } else {
+            setVisibility(VISIBLE);
+        }
         int a = value / 10;
         int b = value % 10;
         setText(String.format("%d.%d", a, b));
