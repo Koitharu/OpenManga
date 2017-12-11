@@ -47,6 +47,7 @@ public class OverscrollDetector implements View.OnTouchListener {
                 mStartPoint = new PointF(motionEvent.getX(), motionEvent.getY());
                 return true;
             case MotionEvent.ACTION_MOVE:
+                if (mStartPoint == null) return false;
                 int dY = (int) (mStartPoint.y - motionEvent.getY());
                 int dX = (int) (mStartPoint.x - motionEvent.getX());
                 if (mCanScrollTop && dY < 0)
@@ -61,6 +62,7 @@ public class OverscrollDetector implements View.OnTouchListener {
                 return true;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+				if (mStartPoint == null) return false;
                 dY = (int) (mStartPoint.y - motionEvent.getY());
                 dX = (int) (mStartPoint.x - motionEvent.getX());
 
