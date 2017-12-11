@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 def gitCommits = 'git rev-list --all --count'.execute([], rootDir).text.trim().toInteger()
-def majorVersion = "4.3"
+def majorVersion = "4.3.1"
 
 android {
     compileSdkVersion 27
@@ -19,7 +19,7 @@ android {
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://openmanga.pythonanywhere.com/api/v1\""
 		buildConfigField "String", "MAJOR_VERSION", "\"$majorVersion\""
-		buildConfigField "boolean", "HAS_CHANGELOG", "false"
+		buildConfigField "boolean", "HAS_CHANGELOG", "true"
     }
 
     signingConfigs {
