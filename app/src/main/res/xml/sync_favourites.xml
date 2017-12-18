@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sync-adapter
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:contentAuthority="org.nv95.openmanga.sync.favourites"
+	android:contentAuthority="org.nv95.openmanga.favourites"
 	android:accountType="org.nv95.openmanga.SYNC"
 	android:userVisible="true"
 	android:supportsUploading="false"
