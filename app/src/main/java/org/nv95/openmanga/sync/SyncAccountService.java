@@ -5,16 +5,26 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import java.net.Authenticator;
+
 /**
  * Created by koitharu on 18.12.17.
  */
 
 public class SyncAccountService extends Service {
 
+	private SyncAuthenticator mAuthenticator;
+	
+	@Override
+	public void onCreate() {
+		// Create a new authenticator object
+		mAuthenticator = new SyncAuthenticator(this);
+	}
+
+
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
-		SyncAuthenticator authenticator = new SyncAuthenticator(this);
-		return authenticator.getIBinder();
+		return mAuthenticator.getIBinder();
 	}
 }

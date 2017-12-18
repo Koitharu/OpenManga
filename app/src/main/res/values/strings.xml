@@ -381,4 +381,7 @@
 	<string name="password_too_short">Password must be at least 4 characters</string>
     <string name="login_required">Login is required</string>
 	<string name="back">Back</string>
+	<string name="_favourites">favourites</string>
+    <string name="_history">history</string>
+    <string name="attached_devices">Attached devices</string>
 </resources>

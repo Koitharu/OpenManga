@@ -14,6 +14,9 @@
 	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
 	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+	<uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+	<uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
 
 	<application
 		android:name=".OpenMangaApplication"
@@ -76,10 +79,21 @@
 			android:label="@string/select_file" />
 		<activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
-		<activity android:name=".sync.SyncAuthActivity"
+		<activity
+			android:name=".sync.SyncAuthActivity"
 			android:configChanges="orientation|screenSize"
-			android:windowSoftInputMode="adjustResize"
-			android:label="@string/sync" />
+			android:label="@string/sync"
+			android:windowSoftInputMode="adjustResize" />
+
+		<activity android:name=".sync.DevicesListActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/attached_devices">
+
+			<intent-filter>
+				<action android:name="org.nv95.openmanga.sync.DEVICES"/>
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 
 		<service android:name=".services.ScheduledService" />
 		<service android:name=".services.UpdateService" />
@@ -92,10 +106,48 @@
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator" />
 			</intent-filter>
-			<meta-data android:name="android.accounts.AccountAuthenticator"
+			<meta-data
+				android:name="android.accounts.AccountAuthenticator"
 				android:resource="@xml/authenticator" />
 		</service>
 
+		<provider
+			android:name=".sync.FavouritesSyncProvider"
+			android:authorities="org.nv95.openmanga.sync.favourites"
+			android:label="@string/_favourites"
+			android:exported="false"
+			android:syncable="true" />
+
+		<provider
+			android:name=".sync.HistorySyncProvider"
+			android:authorities="org.nv95.openmanga.sync.history"
+			android:label="@string/_history"
+			android:exported="false"
+			android:syncable="true" />
+
+		<service
+			android:name=".sync.FavouritesSyncService"
+			android:exported="true"
+			android:process=":sync">
+			<intent-filter>
+				<action android:name="android.content.SyncAdapter" />
+			</intent-filter>
+			<meta-data
+				android:name="android.content.SyncAdapter"
+				android:resource="@xml/sync_favourites" />
+		</service>
+
+		<service
+			android:name=".sync.HistorySyncService"
+			android:exported="true"
+			android:process=":sync">
+			<intent-filter>
+				<action android:name="android.content.SyncAdapter" />
+			</intent-filter>
+			<meta-data
+				android:name="android.content.SyncAdapter"
+				android:resource="@xml/sync_history" />
+		</service>
 
 		<receiver
 			android:name=".ScheduledServiceReceiver"
