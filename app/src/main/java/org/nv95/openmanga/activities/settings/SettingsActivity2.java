@@ -457,8 +457,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
+        protected void onTaskCancelled(@NonNull SettingsActivity2 settingsActivity2) {
             mDialog.dismiss();
         }
 

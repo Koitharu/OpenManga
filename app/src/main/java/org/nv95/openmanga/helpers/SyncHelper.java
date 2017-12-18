@@ -31,6 +31,7 @@ import java.util.ArrayList;
  * Created by admin on 10.07.17.
  */
 
+@Deprecated
 public class SyncHelper {
 
     private static WeakReference<SyncHelper> instanceRef = new WeakReference<>(null);
@@ -380,5 +381,9 @@ public class SyncHelper {
         intent.setAction(SyncService.SYNC_EVENT);
         intent.putExtra("what", SyncService.MSG_UNAUTHORIZED);
         mContext.sendBroadcast(intent);
+    }
+
+    public String getToken() {
+        return mToken;
     }
 }

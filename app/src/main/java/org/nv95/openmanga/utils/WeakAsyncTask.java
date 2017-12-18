@@ -26,7 +26,7 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected final void onPostExecute(Result result) {
         super.onPostExecute(result);
         Obj obj = getObject();
         if (obj != null) {
@@ -35,7 +35,7 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
     }
 
     @Override
-    protected void onPreExecute() {
+    protected final void onPreExecute() {
         super.onPreExecute();
         Obj obj = getObject();
         if (obj != null) {
@@ -44,11 +44,20 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
     }
 
     @Override
-    protected void onProgressUpdate(Progress[] values) {
+    protected final void onProgressUpdate(Progress[] values) {
         super.onProgressUpdate(values);
         Obj obj = getObject();
         if (obj != null) {
             onProgressUpdate(obj, values);
+        }
+    }
+
+    @Override
+    protected final void onCancelled() {
+        super.onCancelled();
+        Obj obj = getObject();
+        if (obj != null) {
+            onTaskCancelled(obj);
         }
     }
 
@@ -71,6 +80,8 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
     protected void onPreExecute(@NonNull Obj obj) {}
 
     protected void onPostExecute(@NonNull Obj obj, Result result) {}
+
+    protected void onTaskCancelled(@NonNull Obj obj) {}
 
     public static void cancel(@Nullable WeakReference<? extends AsyncTask> weakReference, boolean mayInterruptIfRunning) {
         if (weakReference == null) return;

@@ -378,4 +378,7 @@
     <string name="open_in_">Open in...</string>
     <string name="domain">Domain</string>
     <string name="authorization">Authorization</string>
+	<string name="password_too_short">Password must be at least 4 characters</string>
+    <string name="login_required">Login is required</string>
+	<string name="back">Back</string>
 </resources>

@@ -11,6 +11,9 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
 	<application
 		android:name=".OpenMangaApplication"
@@ -73,12 +76,26 @@
 			android:label="@string/select_file" />
 		<activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
+		<activity android:name=".sync.SyncAuthActivity"
+			android:configChanges="orientation|screenSize"
+			android:windowSoftInputMode="adjustResize"
+			android:label="@string/sync" />
+
 		<service android:name=".services.ScheduledService" />
 		<service android:name=".services.UpdateService" />
 		<service android:name=".services.ImportService" />
 		<service android:name=".services.SyncService" />
 		<service android:name=".services.ExportService" />
 		<service android:name=".services.SaveService" />
+
+		<service android:name=".sync.SyncAccountService">
+			<intent-filter>
+				<action android:name="android.accounts.AccountAuthenticator" />
+			</intent-filter>
+			<meta-data android:name="android.accounts.AccountAuthenticator"
+				android:resource="@xml/authenticator" />
+		</service>
+
 
 		<receiver
 			android:name=".ScheduledServiceReceiver"
