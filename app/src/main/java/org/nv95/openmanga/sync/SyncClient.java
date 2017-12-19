@@ -1,11 +1,14 @@
 package org.nv95.openmanga.sync;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.items.SyncDevice;
+import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -58,6 +61,28 @@ public class SyncClient {
 			));
 		}
 		return list;
+	}
+
+	@Nullable
+	public static String authenticate(String login, String password) {
+		RESTResponse response = NetworkUtils.restQuery(
+				BuildConfig.SYNC_URL + "/user",
+				null,
+				NetworkUtils.HTTP_POST,
+				"login", login,
+				"password", password,
+				"device",
+				AppHelper.getDeviceSummary()
+		);
+		if (response.isSuccess()) {
+			try {
+				return response.getData().getString("token");
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return null;
 	}
 
 	public class InvalidTokenException extends IllegalArgumentException {

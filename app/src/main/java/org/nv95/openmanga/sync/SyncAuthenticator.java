@@ -8,8 +8,11 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.sync.ui.SyncAuthActivity;
 
@@ -23,10 +26,12 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 	public static final String TOKEN_DEFAULT = "default";
 
 	private final Context mContext;
+	private final Handler mHandler;
 
-	public SyncAuthenticator(Context context) {
+	SyncAuthenticator(Context context) {
 		super(context);
 		mContext = context;
+		mHandler = new Handler();
 	}
 
 	@Override
@@ -36,6 +41,19 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 
 	@Override
 	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+		if (isAccountExists()) {
+			final Bundle result = new Bundle();
+			result.putInt(AccountManager.KEY_ERROR_CODE, AccountManager.ERROR_CODE_UNSUPPORTED_OPERATION);
+			result.putString(AccountManager.KEY_ERROR_MESSAGE, mContext.getString(R.string.allowed_only_one_account));
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(mContext, R.string.allowed_only_one_account, Toast.LENGTH_SHORT).show();
+				}
+			});
+			return result;
+		}
+
 		final Intent intent = new Intent(mContext, SyncAuthActivity.class);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
 		final Bundle bundle = new Bundle();
@@ -61,8 +79,7 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 		if (TextUtils.isEmpty(authToken)) {
 			final String password = am.getPassword(account);
 			if (password != null) {
-				SyncHelper.get(mContext).authorize(account.name, password);
-				authToken = SyncHelper.get(mContext).getToken();
+				authToken = SyncClient.authenticate(account.name, password);
 			}
 		}
 
@@ -92,5 +109,9 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 	@Override
 	public Bundle hasFeatures(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String[] strings) throws NetworkErrorException {
 		return null;
+	}
+
+	private boolean isAccountExists() {
+		return AccountManager.get(mContext).getAccountsByType(ACCOUNT_TYPE).length != 0;
 	}
 }
