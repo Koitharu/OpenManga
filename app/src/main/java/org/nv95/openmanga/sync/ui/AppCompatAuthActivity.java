@@ -1,4 +1,4 @@
-package org.nv95.openmanga.sync;
+package org.nv95.openmanga.sync.ui;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.content.res.Configuration;

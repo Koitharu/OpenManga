@@ -13,6 +13,8 @@ import android.support.annotation.Nullable;
 
 public class FavouritesSyncProvider extends ContentProvider {
 
+	public static final String AUTHORITY = "org.nv95.openmanga.favourites";
+
 	/*
 	 * Always return true, indicating that the
      * provider loaded correctly.

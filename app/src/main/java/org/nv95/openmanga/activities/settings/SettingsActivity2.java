@@ -1,6 +1,8 @@
 package org.nv95.openmanga.activities.settings;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -41,6 +44,10 @@ import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.services.UpdateService;
+import org.nv95.openmanga.sync.FavouritesSyncProvider;
+import org.nv95.openmanga.sync.FavouritesSyncService;
+import org.nv95.openmanga.sync.HistorySyncProvider;
+import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
@@ -121,10 +128,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 }
                 break;
             case SECTION_SYNC:
-                mFragment = SyncHelper.get(this).isAuthorized() ? new SyncSettingsFragment() : new SyncLoginFragment();
-                if (mIsTwoPanesMode) {
-                    mAdapter.setActivatedPosition(5);
-                }
+				//NOT SUPPORTED
                 break;
             case SECTION_CHUPD:
                 mFragment = new UpdatesCheckSettingsFragment();
@@ -173,11 +177,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 openFragment(new UpdatesCheckSettingsFragment());
                 break;
             case 5:
-                if (SyncHelper.get(this).isAuthorized()) {
-                    openFragment(new SyncSettingsFragment());
-                } else {
-                    openFragment(new SyncLoginFragment());
-                }
+				openSyncSettings(this);
                 break;
             case 6:
                 openFragment(new OtherSettingsFragment());
@@ -285,35 +285,13 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
             case "update":
                 new CheckUpdatesTask(this).attach(this).start();
                 return true;
-            case "sync.start":
-                SyncService.start(this);
-                return true;
-            case "sync.username":
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.logout_confirm)
-                        .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                new SyncLogoutTask(SettingsActivity2.this).start();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show();
-                return true;
-            default:
-                try {
-                    if (preference.getKey().startsWith("sync.dev")) {
-                        int devId = Integer.parseInt(preference.getKey().substring(9));
-                        detachDevice(devId, preference);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return false;
+			default:
+				return false;
         }
     }
 
     public void onSaveInstanceState(Bundle outState){
+    	super.onSaveInstanceState(outState);
         if (mFragment != null) {
             outState.putString("fragment", mFragment.getClass().getName());
         }
@@ -513,77 +491,6 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
     }
 
-    private void detachDevice(final int devId, final Preference p) {
-        new AlertDialog.Builder(this)
-                .setMessage(getString(R.string.device_detach_confirm, p.getTitle().toString()))
-                .setPositiveButton(R.string.detach, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        p.setSelectable(false);
-                        new DeviceDetachTask(p).attach(SettingsActivity2.this).start(devId);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .create().show();
-    }
-
-    private static class DeviceDetachTask extends WeakAsyncTask<Preference,Integer, Void, RESTResponse> {
-
-        DeviceDetachTask(Preference preference) {
-            super(preference);
-        }
-
-        @SuppressWarnings("ConstantConditions")
-        @Override
-        protected RESTResponse doInBackground(Integer... integers) {
-            try {
-                return SyncHelper.get(getObject().getContext()).detachDevice(integers[0]);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return RESTResponse.fromThrowable(e);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull Preference p, RESTResponse restResponse) {
-            if (restResponse.isSuccess()) {
-                p.setEnabled(false);
-                p.setSummary(R.string.device_detached);
-                Toast.makeText(p.getContext(), R.string.device_detached, Toast.LENGTH_SHORT).show();
-            } else {
-                p.setSelectable(true);
-                Toast.makeText(p.getContext(), restResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private static class SyncLogoutTask extends ProgressAsyncTask<Void, Void, RESTResponse> {
-
-        SyncLogoutTask(BaseAppActivity activity) {
-            super(activity);
-            setCancelable(false);
-        }
-
-        @Override
-        protected RESTResponse doInBackground(Void... voids) {
-            try {
-                return SyncHelper.get(getActivity()).logout();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return RESTResponse.fromThrowable(e);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(@NonNull BaseAppActivity activity, RESTResponse restResponse) {
-            if (restResponse.isSuccess()) {
-                ((SettingsActivity2)activity).openFragment(new SyncLoginFragment());
-            } else {
-                Toast.makeText(activity, restResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private static void openSettings(Context context, int requestCode, int section) {
         Intent intent = new Intent(context, SettingsActivity2.class);
         intent.putExtra("section", section);
@@ -604,8 +511,23 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         openSettings(context, requestCode, SECTION_PROVIDERS);
     }
 
-    public static void openSyncSettings(Context context, int requestCode) {
-        openSettings(context, requestCode, SECTION_SYNC);
+    public static void openSyncSettings(Context context) {
+		Account[] accounts = AccountManager.get(context).getAccountsByType(SyncAuthenticator.ACCOUNT_TYPE);
+		if (accounts.length == 0) {
+			AccountManager.get(context).addAccount(
+					SyncAuthenticator.ACCOUNT_TYPE,
+					SyncAuthenticator.TOKEN_DEFAULT,
+					null,
+					new Bundle(),
+					(Activity) context,
+					null,
+					null
+			);
+		} else {
+			Intent intent = new Intent(Settings.ACTION_SYNC_SETTINGS);
+			intent.putExtra(Settings.EXTRA_AUTHORITIES, new String[] {HistorySyncProvider.AUTHORITY, FavouritesSyncProvider.AUTHORITY});
+			context.startActivity(intent);
+		}
     }
 
 

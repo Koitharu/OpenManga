@@ -808,7 +808,7 @@ public class MainActivity extends BaseAppActivity implements
                 OnboardSnackbar.askOnce(mRecyclerView, R.string.sync_tip, R.string.no_thanks, R.string.configure, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SettingsActivity2.openSyncSettings(MainActivity.this, 0);
+                        SettingsActivity2.openSyncSettings(MainActivity.this);
                     }
                 });
             } else if (mProvider instanceof RecommendationsProvider) {

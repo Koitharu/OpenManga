@@ -152,7 +152,7 @@ public class WelcomeActivity extends BaseAppActivity {
                 buttonSync.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SettingsActivity2.openSyncSettings(WelcomeActivity.this, 0);
+                        SettingsActivity2.openSyncSettings(WelcomeActivity.this);
                     }
                 });
                 int active = Math.min(
