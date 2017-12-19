@@ -6,7 +6,7 @@
 	android:layout_height="match_parent"
 	android:gravity="center_horizontal"
 	android:orientation="vertical"
-	tools:context=".sync.SyncAuthActivity">
+	tools:context=".sync.ui.SyncAuthActivity">
 
 	<include layout="@layout/toolbar" />
 

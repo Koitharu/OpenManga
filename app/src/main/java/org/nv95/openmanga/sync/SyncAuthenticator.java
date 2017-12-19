@@ -10,9 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.helpers.SyncHelper;
+import org.nv95.openmanga.sync.ui.SyncAuthActivity;
 
 /**
  * Created by koitharu on 18.12.17.
@@ -20,8 +19,8 @@ import org.nv95.openmanga.helpers.SyncHelper;
 
 public class SyncAuthenticator extends AbstractAccountAuthenticator {
 
-	static final String ACCOUNT_TYPE = "org.nv95.openmanga.SYNC";
-	static final String TOKEN_DEFAULT = "default";
+	public static final String ACCOUNT_TYPE = "org.nv95.openmanga.SYNC";
+	public static final String TOKEN_DEFAULT = "default";
 
 	private final Context mContext;
 

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.sync;
+package org.nv95.openmanga.sync.ui;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -22,6 +22,8 @@ import org.json.JSONException;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.sync.AppCompatAuthActivity;
+import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;

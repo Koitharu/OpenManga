@@ -384,4 +384,5 @@
 	<string name="_favourites">favourites</string>
     <string name="_history">history</string>
     <string name="attached_devices">Attached devices</string>
+	<string name="no_devices_attached">No devices attached</string>
 </resources>

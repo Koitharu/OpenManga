@@ -11,7 +11,7 @@ import java.net.Authenticator;
  * Created by koitharu on 18.12.17.
  */
 
-public class SyncAccountService extends Service {
+public class AccountService extends Service {
 
 	private SyncAuthenticator mAuthenticator;
 	

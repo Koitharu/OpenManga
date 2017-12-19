@@ -16,6 +16,7 @@
 	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 	<uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
 	<uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
 
 	<application
@@ -80,12 +81,12 @@
 		<activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
 		<activity
-			android:name=".sync.SyncAuthActivity"
+			android:name=".sync.ui.SyncAuthActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/sync"
 			android:windowSoftInputMode="adjustResize" />
 
-		<activity android:name=".sync.DevicesListActivity"
+		<activity android:name=".sync.ui.DevicesListActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/attached_devices">
 
@@ -102,7 +103,7 @@
 		<service android:name=".services.ExportService" />
 		<service android:name=".services.SaveService" />
 
-		<service android:name=".sync.SyncAccountService">
+		<service android:name=".sync.AccountService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator" />
 			</intent-filter>

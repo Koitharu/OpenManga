@@ -15,6 +15,7 @@ import org.nv95.openmanga.utils.LayoutUtils;
  * https://stackoverflow.com/questions/24618829/how-to-add-dividers-and-spaces-between-items-in-recyclerview
  */
 
+@Deprecated
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private Drawable mDivider;
