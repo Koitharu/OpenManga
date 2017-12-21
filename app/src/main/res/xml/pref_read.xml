@@ -62,7 +62,7 @@
             android:key="brightness"
             android:title="@string/adjust_brightness"
             android:widgetLayout="@layout/pref_switchcompat" />
-        <org.nv95.openmanga.components.SeekBarPreference
+        <org.nv95.openmanga.legacy.components.SeekBarPreference
             android:defaultValue="20"
             android:dependency="brightness"
             android:key="brightness_value"

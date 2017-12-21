@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.items.RESTResponse;
-import org.nv95.openmanga.items.SyncDevice;
-import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.legacy.items.RESTResponse;
+import org.nv95.openmanga.legacy.items.SyncDevice;
+import org.nv95.openmanga.legacy.utils.AppHelper;
+import org.nv95.openmanga.legacy.utils.NetworkUtils;
 
 import java.util.ArrayList;
 

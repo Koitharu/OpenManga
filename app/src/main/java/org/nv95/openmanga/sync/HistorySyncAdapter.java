@@ -14,8 +14,8 @@ import android.os.Bundle;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.nv95.openmanga.items.RESTResponse;
-import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.legacy.items.RESTResponse;
+import org.nv95.openmanga.legacy.utils.AppHelper;
 
 import java.io.IOException;
 

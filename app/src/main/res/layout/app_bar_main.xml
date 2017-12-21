@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".legacy.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         app:layout_behavior="org.nv95.openmanga.components.CenterAlignBehavior"
         app:layout_anchorGravity="center" />
 
-    <org.nv95.openmanga.components.AppCompatProgressBar
+    <org.nv95.openmanga.legacy.components.AppCompatProgressBar
         android:id="@+id/progressBar"
         style="?android:progressBarStyleLarge"
         android:layout_width="wrap_content"

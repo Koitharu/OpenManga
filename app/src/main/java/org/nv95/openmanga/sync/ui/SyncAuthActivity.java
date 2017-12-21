@@ -21,11 +21,11 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.legacy.items.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
-import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.NetworkUtils;
-import org.nv95.openmanga.utils.WeakAsyncTask;
+import org.nv95.openmanga.legacy.utils.AppHelper;
+import org.nv95.openmanga.legacy.utils.NetworkUtils;
+import org.nv95.openmanga.legacy.utils.WeakAsyncTask;
 
 /**
  * Created by koitharu on 18.12.17.

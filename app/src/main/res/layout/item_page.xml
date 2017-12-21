@@ -23,7 +23,7 @@
             android:textColorLink="?colorAccent"
             android:visibility="gone" />
 
-        <org.nv95.openmanga.components.AppCompatProgressBar
+        <org.nv95.openmanga.legacy.components.AppCompatProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="180dp"

@@ -6,11 +6,12 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
-import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.utils.AnimUtils;
-import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.legacy.ScheduledServiceReceiver;
+import org.nv95.openmanga.legacy.items.ThumbSize;
+import org.nv95.openmanga.legacy.utils.AnimUtils;
+import org.nv95.openmanga.legacy.utils.FileLogger;
+import org.nv95.openmanga.legacy.utils.ImageUtils;
+import org.nv95.openmanga.legacy.utils.NetworkUtils;
 
 import java.util.Locale;
 

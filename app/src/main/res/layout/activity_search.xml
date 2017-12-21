@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchActivity">
+    tools:context=".legacy.activities.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
 
-            <org.nv95.openmanga.components.SearchInput
+            <org.nv95.openmanga.legacy.components.SearchInput
                 android:id="@+id/searchInput"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

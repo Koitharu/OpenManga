@@ -4,12 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.items.SyncDevice;
-import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.legacy.items.SyncDevice;
+import org.nv95.openmanga.legacy.utils.AppHelper;
 
 import java.util.ArrayList;
 

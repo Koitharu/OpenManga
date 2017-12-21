@@ -2,7 +2,6 @@ package org.nv95.openmanga.sync.ui;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -20,25 +18,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.activities.settings.SettingsActivity2;
-import org.nv95.openmanga.helpers.SyncHelper;
-import org.nv95.openmanga.items.RESTResponse;
-import org.nv95.openmanga.items.SyncDevice;
+import org.nv95.openmanga.legacy.activities.BaseAppActivity;
+import org.nv95.openmanga.legacy.items.RESTResponse;
+import org.nv95.openmanga.legacy.items.SyncDevice;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.sync.SyncClient;
-import org.nv95.openmanga.utils.AnimUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
-import org.nv95.openmanga.utils.WeakAsyncTask;
+import org.nv95.openmanga.legacy.utils.AnimUtils;
+import org.nv95.openmanga.legacy.utils.WeakAsyncTask;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by koitharu on 18.12.17.

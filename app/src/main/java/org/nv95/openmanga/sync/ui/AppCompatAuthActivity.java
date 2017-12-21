@@ -14,8 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.legacy.utils.LayoutUtils;
 
 /**
  * Created by koitharu on 18.12.17.

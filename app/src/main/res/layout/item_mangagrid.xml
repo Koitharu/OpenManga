@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.nv95.openmanga.components.AutoHeightLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.nv95.openmanga.legacy.components.AutoHeightLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"
     android:padding="1dp">
 
-    <org.nv95.openmanga.components.TopCropImageView
+    <org.nv95.openmanga.legacy.components.TopCropImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -71,4 +71,4 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@android:color/white"
         android:visibility="gone" />
-</org.nv95.openmanga.components.AutoHeightLayout>
+</org.nv95.openmanga.legacy.components.AutoHeightLayout>

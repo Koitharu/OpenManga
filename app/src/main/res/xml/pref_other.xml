@@ -24,7 +24,7 @@
 
     <PreferenceCategory android:title="@string/network_settings">
 
-        <org.nv95.openmanga.components.IntSelectPreference
+        <org.nv95.openmanga.legacy.components.IntSelectPreference
             android:defaultValue="2"
             android:key="save_threads"
             android:title="@string/download_max_threads"
@@ -48,7 +48,7 @@
 
     <PreferenceCategory android:title="@string/system">
 
-        <org.nv95.openmanga.components.PickerPreference
+        <org.nv95.openmanga.legacy.components.PickerPreference
             android:defaultValue="100"
             android:key="cache_max"
             android:title="@string/max_cache_size"

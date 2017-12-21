@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.sync.ui.SyncAuthActivity;
 
 /**

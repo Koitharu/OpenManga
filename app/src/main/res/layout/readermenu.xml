@@ -39,7 +39,7 @@
             android:scaleType="center"
             android:src="@drawable/ic_view_grid_white" />
 
-        <org.nv95.openmanga.components.AppCompatProgressBar
+        <org.nv95.openmanga.legacy.components.AppCompatProgressBar
             android:id="@+id/progressBar"
             style="?android:progressBarStyleHorizontal"
             android:layout_width="wrap_content"
