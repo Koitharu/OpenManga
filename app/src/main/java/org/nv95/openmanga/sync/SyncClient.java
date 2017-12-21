@@ -63,6 +63,26 @@ public class SyncClient {
 		return list;
 	}
 
+	public RESTResponse pushHistory(JSONArray updated, JSONArray deleted, long lastSync) throws InvalidTokenException {
+		RESTResponse resp = NetworkUtils.restQuery(
+				BuildConfig.SYNC_URL + "/history",
+				mToken,
+				NetworkUtils.HTTP_POST,
+				"timestamp",
+				String.valueOf(lastSync),
+				"updated",
+				updated.toString(),
+				"deleted",
+				deleted.toString()
+		);
+		if (!resp.isSuccess()) {
+			if (resp.getResponseCode() == RESTResponse.RC_INVALID_TOKEN) {
+				throw new InvalidTokenException();
+			}
+		}
+		return resp;
+	}
+
 	@Nullable
 	public static String authenticate(String login, String password) {
 		RESTResponse response = NetworkUtils.restQuery(

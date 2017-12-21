@@ -19,43 +19,42 @@ public class HistorySyncProvider extends ContentProvider {
 
 	private static final int MATCH_ALL = 1;
 	private static final int MATCH_ROW = 2;
-	private static final String TABLE_NAME = "history";
+	private static final int MATCH_DELETED_ALL = 3;
+	private static final String TABLE_HISTORY = "history";
+	private static final String TABLE_DELETED = "sync_delete";
 	public static final String AUTHORITY = "org.nv95.openmanga.history";
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 	static {
 		sUriMatcher.addURI(AUTHORITY, "history", MATCH_ALL);
 		sUriMatcher.addURI(AUTHORITY, "history/#", MATCH_ROW);
+		sUriMatcher.addURI(AUTHORITY, "deleted", MATCH_DELETED_ALL);
 	}
 
 
 	private StorageHelper mStorageHelper;
 
-	/*
-	 * Always return true, indicating that the
-	 * provider loaded correctly.
-	 */
 	@Override
 	public boolean onCreate() {
 		mStorageHelper = new StorageHelper(getContext());
 		return true;
 	}
 
-	/*
-	 * Return no type for MIME type
-	 */
 	@Override
 	public String getType(@NonNull Uri uri) {
 		return "vnd.android.cursor.dir/vnd.openmanga.history";
 	}
 
-	/*
-	 * query() always returns no results
-	 *
-	 */
 	@Override
 	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		switch (sUriMatcher.match(uri)) {
+			case MATCH_DELETED_ALL:
+				if (TextUtils.isEmpty(selection)) {
+					selection = "subject = history";
+				} else {
+					selection = selection + " AND subject = history";
+				}
+				return mStorageHelper.getReadableDatabase().query(TABLE_DELETED, projection, selection, selectionArgs, null, null, sortOrder);
 			case MATCH_ALL:
 				break;
 			case MATCH_ROW:
@@ -66,7 +65,7 @@ public class HistorySyncProvider extends ContentProvider {
 				}
 				break;
 		}
-		return mStorageHelper.getReadableDatabase().query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+		return mStorageHelper.getReadableDatabase().query(TABLE_HISTORY, projection, selection, selectionArgs, null, null, sortOrder);
 	}
 
 	/*
@@ -75,7 +74,7 @@ public class HistorySyncProvider extends ContentProvider {
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
 		if (sUriMatcher.match(uri) != MATCH_ALL) throw new IllegalArgumentException();
-		long id = mStorageHelper.getWritableDatabase().insert(TABLE_NAME, null, values);
+		long id = mStorageHelper.getWritableDatabase().insert(TABLE_HISTORY, null, values);
 		return id == -1 ? null : ContentUris.withAppendedId(uri, id);
 	}
 
@@ -85,8 +84,8 @@ public class HistorySyncProvider extends ContentProvider {
 	@Override
 	public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 		switch (sUriMatcher.match(uri)) {
-			case MATCH_ALL:
-				break;
+			case MATCH_DELETED_ALL:
+				return mStorageHelper.getWritableDatabase().delete(TABLE_DELETED, selection, selectionArgs);
 			case MATCH_ROW:
 				if (TextUtils.isEmpty(selection)) {
 					selection = "id = " + uri.getLastPathSegment();
@@ -95,7 +94,7 @@ public class HistorySyncProvider extends ContentProvider {
 				}
 				break;
 		}
-		return mStorageHelper.getWritableDatabase().delete(TABLE_NAME, selection, selectionArgs);
+		return mStorageHelper.getWritableDatabase().delete(TABLE_HISTORY, selection, selectionArgs);
 	}
 
 	/*
@@ -103,8 +102,6 @@ public class HistorySyncProvider extends ContentProvider {
 	 */
 	public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		switch (sUriMatcher.match(uri)) {
-			case MATCH_ALL:
-				break;
 			case MATCH_ROW:
 				if (TextUtils.isEmpty(selection)) {
 					selection = "id = " + uri.getLastPathSegment();
@@ -113,7 +110,7 @@ public class HistorySyncProvider extends ContentProvider {
 				}
 				break;
 		}
-		return mStorageHelper.getWritableDatabase().update(TABLE_NAME, values, selection, selectionArgs);
+		return mStorageHelper.getWritableDatabase().update(TABLE_HISTORY, values, selection, selectionArgs);
 	}
 
 	@Override
