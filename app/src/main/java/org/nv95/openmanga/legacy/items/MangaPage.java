@@ -5,6 +5,7 @@ import org.nv95.openmanga.legacy.providers.MangaProvider;
 /**
  * Created by nv95 on 30.09.15.
  */
+@Deprecated
 public class MangaPage {
 
     public int id;

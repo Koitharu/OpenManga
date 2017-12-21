@@ -7,7 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
-import org.nv95.openmanga.OpenMangaApplication;
+import org.nv95.openmanga.legacy.OpenMangaApplication;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.legacy.utils.PreferencesUtils;
 

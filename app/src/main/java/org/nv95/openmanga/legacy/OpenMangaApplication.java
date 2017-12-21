@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.legacy;
 
 import android.app.Application;
 import android.content.res.Resources;
@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.legacy.ScheduledServiceReceiver;
 import org.nv95.openmanga.legacy.items.ThumbSize;
 import org.nv95.openmanga.legacy.utils.AnimUtils;

@@ -20,7 +20,7 @@
 
 
 	<application
-		android:name=".OpenMangaApplication"
+		android:name=".legacy.OpenMangaApplication"
 		android:allowBackup="true"
 		android:allowClearUserData="true"
 		android:fullBackupContent="false"

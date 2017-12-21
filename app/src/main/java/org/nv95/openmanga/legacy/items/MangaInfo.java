@@ -9,6 +9,7 @@ import org.nv95.openmanga.legacy.providers.MangaProvider;
 /**
  * Created by nv95 on 30.09.15.
  */
+@Deprecated
 public class MangaInfo {
 
     public static final int STATUS_UNKNOWN = 0;

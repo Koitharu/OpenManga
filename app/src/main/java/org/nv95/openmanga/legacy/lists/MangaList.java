@@ -7,6 +7,7 @@ import org.nv95.openmanga.legacy.items.MangaInfo;
 /**
  * Created by nv95 on 30.09.15.
  */
+@Deprecated
 public class MangaList extends PagedList<MangaInfo> {
 
     public static MangaList empty() {
