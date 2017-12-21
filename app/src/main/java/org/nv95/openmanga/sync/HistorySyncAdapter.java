@@ -31,8 +31,8 @@ public class HistorySyncAdapter extends AbstractThreadedSyncAdapter {
 	};
 	private static final String[] PROJECTION_DELETED = new String[]{"manga_id", "timestamp"};
 
-	private static final Uri URI = Uri.parse("content://" + HistorySyncProvider.AUTHORITY + "/history");
-	private static final Uri URI_DELETED = Uri.parse("content://" + HistorySyncProvider.AUTHORITY + "/deleted");
+	private static final Uri URI = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/history");
+	private static final Uri URI_DELETED = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/deleted");
 
 	public HistorySyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -135,7 +135,7 @@ public class HistorySyncAdapter extends AbstractThreadedSyncAdapter {
 			for (int i=0;i<deleted.length(); i++) {
 				JSONObject o = deleted.getJSONObject(i);
 				provider.delete(
-						Uri.parse("content://" + HistorySyncProvider.AUTHORITY + "/history/" + o.getLong("manga_id")),
+						Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/history/" + o.getLong("manga_id")),
 						null,
 						null
 				);

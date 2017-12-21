@@ -15,7 +15,7 @@ import org.nv95.openmanga.legacy.helpers.StorageHelper;
  * Created by koitharu on 18.12.17.
  */
 
-public class HistorySyncProvider extends ContentProvider {
+public class HistoryContentProvider extends ContentProvider {
 
 	private static final int MATCH_ALL = 1;
 	private static final int MATCH_ROW = 2;
@@ -111,11 +111,5 @@ public class HistorySyncProvider extends ContentProvider {
 				break;
 		}
 		return mStorageHelper.getWritableDatabase().update(TABLE_HISTORY, values, selection, selectionArgs);
-	}
-
-	@Override
-	public void shutdown() {
-		mStorageHelper.close(); //TODO ?
-		super.shutdown();
 	}
 }

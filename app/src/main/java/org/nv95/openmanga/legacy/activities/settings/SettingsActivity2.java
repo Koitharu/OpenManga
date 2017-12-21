@@ -41,8 +41,8 @@ import org.nv95.openmanga.legacy.helpers.ScheduleHelper;
 import org.nv95.openmanga.legacy.providers.AppUpdatesProvider;
 import org.nv95.openmanga.legacy.providers.LocalMangaProvider;
 import org.nv95.openmanga.legacy.services.UpdateService;
-import org.nv95.openmanga.sync.FavouritesSyncProvider;
-import org.nv95.openmanga.sync.HistorySyncProvider;
+import org.nv95.openmanga.sync.FavouritesContentProvider;
+import org.nv95.openmanga.sync.HistoryContentProvider;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.legacy.utils.AnimUtils;
 import org.nv95.openmanga.legacy.utils.AppHelper;
@@ -520,7 +520,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
 			);
 		} else {
 			Intent intent = new Intent(Settings.ACTION_SYNC_SETTINGS);
-			intent.putExtra(Settings.EXTRA_AUTHORITIES, new String[] {HistorySyncProvider.AUTHORITY, FavouritesSyncProvider.AUTHORITY});
+			intent.putExtra(Settings.EXTRA_AUTHORITIES, new String[] {HistoryContentProvider.AUTHORITY, FavouritesContentProvider.AUTHORITY});
 			context.startActivity(intent);
 		}
     }

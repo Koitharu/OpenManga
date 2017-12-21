@@ -113,14 +113,14 @@
 		</service>
 
 		<provider
-			android:name=".sync.FavouritesSyncProvider"
+			android:name=".sync.FavouritesContentProvider"
 			android:authorities="org.nv95.openmanga.favourites"
 			android:label="@string/_favourites"
 			android:exported="false"
 			android:syncable="true" />
 
 		<provider
-			android:name=".sync.HistorySyncProvider"
+			android:name=".sync.HistoryContentProvider"
 			android:authorities="org.nv95.openmanga.history"
 			android:label="@string/_history"
 			android:exported="false"
