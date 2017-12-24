@@ -14,9 +14,9 @@ import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
+import org.nv95.openmanga.content.MangaSortOrder;
 import org.nv95.openmanga.content.MangaStatus;
-import org.nv95.openmanga.legacy.providers.DesuMeProvider;
-import org.nv95.openmanga.legacy.utils.NetworkUtils;
+import org.nv95.openmanga.utils.network.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,47 +30,47 @@ public class DesumeProvider extends MangaProvider {
 	public static final String CNAME = "network/desu.me";
 	public static final String DNAME = "DesuMe";
 
-	private final MangaGenre[] mGenres = new MangaGenre[] {
-		new MangaGenre(R.string.genre_action, "action"),
-		new MangaGenre(R.string.genre_martialarts, "martial%20arts"),
-		new MangaGenre(R.string.genre_vampires, "vampire"),
-		new MangaGenre(R.string.web, "web"),
-		new MangaGenre(R.string.genre_military, "military"),
-		new MangaGenre(R.string.genre_harem, "harem"),
-		new MangaGenre(R.string.genre_youkai, "demons"),
-		new MangaGenre(R.string.genre_drama, "drama"),
-		new MangaGenre(R.string.genre_josei, "josei"),
-		new MangaGenre(R.string.genre_game, "game"),
-		new MangaGenre(R.string.genre_historical, "historical"),
-		new MangaGenre(R.string.genre_comedy, "comedy"),
-		new MangaGenre(R.string.genre_magic, "magic"),
-		new MangaGenre(R.string.genre_mecha, "mecha"),
-		new MangaGenre(R.string.genre_mystery, "mystery"),
-		new MangaGenre(R.string.genre_music, "music"),
-		new MangaGenre(R.string.genre_sci_fi, "sci-fi"),
-		new MangaGenre(R.string.genre_parodi, "parody"),
-		new MangaGenre(R.string.genre_slice_of_life, "slice%20of%20life"),
-		new MangaGenre(R.string.genre_police, "police"),
-		new MangaGenre(R.string.genre_adventure, "adventure"),
-		new MangaGenre(R.string.genre_psychological, "psychological"),
-		new MangaGenre(R.string.genre_romance, "romance"),
-		new MangaGenre(R.string.genre_samurai, "samurai"),
-		new MangaGenre(R.string.genre_supernatural, "supernatural"),
-		new MangaGenre(R.string.genre_genderbender, "gender%20bender"),
-		new MangaGenre(R.string.genre_sports, "sports"),
-		new MangaGenre(R.string.genre_superpower, "super%20power"),
-		new MangaGenre(R.string.genre_seinen, "seinen"),
-		new MangaGenre(R.string.genre_shoujo, "shoujo"),
-		new MangaGenre(R.string.genre_shounen, "shounen"),
-		new MangaGenre(R.string.genre_shounen_ai, "shounen%20ai"),
-		new MangaGenre(R.string.genre_thriller, "thriller"),
-		new MangaGenre(R.string.genre_horror, "horror"),
-		new MangaGenre(R.string.genre_fantasy, "fantasy"),
-		new MangaGenre(R.string.genre_hentai, "hentai"),
-		new MangaGenre(R.string.genre_school, "school"),
-		new MangaGenre(R.string.genre_ecchi, "ecchi"),
-		new MangaGenre(R.string.genre_yuri, "yuri"),
-		new MangaGenre(R.string.genre_yaoi, "yaoi")
+	private final MangaGenre[] mGenres = new MangaGenre[]{
+			new MangaGenre(R.string.genre_action, "action"),
+			new MangaGenre(R.string.genre_martialarts, "martial%20arts"),
+			new MangaGenre(R.string.genre_vampires, "vampire"),
+			new MangaGenre(R.string.web, "web"),
+			new MangaGenre(R.string.genre_military, "military"),
+			new MangaGenre(R.string.genre_harem, "harem"),
+			new MangaGenre(R.string.genre_youkai, "demons"),
+			new MangaGenre(R.string.genre_drama, "drama"),
+			new MangaGenre(R.string.genre_josei, "josei"),
+			new MangaGenre(R.string.genre_game, "game"),
+			new MangaGenre(R.string.genre_historical, "historical"),
+			new MangaGenre(R.string.genre_comedy, "comedy"),
+			new MangaGenre(R.string.genre_magic, "magic"),
+			new MangaGenre(R.string.genre_mecha, "mecha"),
+			new MangaGenre(R.string.genre_mystery, "mystery"),
+			new MangaGenre(R.string.genre_music, "music"),
+			new MangaGenre(R.string.genre_sci_fi, "sci-fi"),
+			new MangaGenre(R.string.genre_parodi, "parody"),
+			new MangaGenre(R.string.genre_slice_of_life, "slice%20of%20life"),
+			new MangaGenre(R.string.genre_police, "police"),
+			new MangaGenre(R.string.genre_adventure, "adventure"),
+			new MangaGenre(R.string.genre_psychological, "psychological"),
+			new MangaGenre(R.string.genre_romance, "romance"),
+			new MangaGenre(R.string.genre_samurai, "samurai"),
+			new MangaGenre(R.string.genre_supernatural, "supernatural"),
+			new MangaGenre(R.string.genre_genderbender, "gender%20bender"),
+			new MangaGenre(R.string.genre_sports, "sports"),
+			new MangaGenre(R.string.genre_superpower, "super%20power"),
+			new MangaGenre(R.string.genre_seinen, "seinen"),
+			new MangaGenre(R.string.genre_shoujo, "shoujo"),
+			new MangaGenre(R.string.genre_shounen, "shounen"),
+			new MangaGenre(R.string.genre_shounen_ai, "shounen%20ai"),
+			new MangaGenre(R.string.genre_thriller, "thriller"),
+			new MangaGenre(R.string.genre_horror, "horror"),
+			new MangaGenre(R.string.genre_fantasy, "fantasy"),
+			new MangaGenre(R.string.genre_hentai, "hentai"),
+			new MangaGenre(R.string.genre_school, "school"),
+			new MangaGenre(R.string.genre_ecchi, "ecchi"),
+			new MangaGenre(R.string.genre_yuri, "yuri"),
+			new MangaGenre(R.string.genre_yaoi, "yaoi")
 	};
 
 	public DesumeProvider(Context context) {
@@ -79,17 +79,17 @@ public class DesumeProvider extends MangaProvider {
 
 	@NonNull
 	@Override
-	public List<MangaHeader> getList(@Nullable String query, int page, int sortOrder, String[] genres) throws Exception {
+	public ArrayList<MangaHeader> query(@Nullable String search, int page, @MangaSortOrder int sortOrder, String[] genres) throws Exception {
 		String url = String.format(
-				"https://desu.me/manga/api/?limit=20&order_by=%s&page=%d&genres=%s&search=%s",
+				"http://desu.me/manga/api/?limit=20&order_by=%s&page=%d&genres=%s&search=%s",
 				"popular",
 				page + 1,
 				TextUtils.join(",", genres),
-				query == null ? "" : query
+				search == null ? "" : search
 		);
 		JSONArray ja = NetworkUtils.getJsonObject(url).getJSONArray("response");
 		ArrayList<MangaHeader> list = new ArrayList<>(ja.length());
-		for (int i=0; i<ja.length(); i++) {
+		for (int i = 0; i < ja.length(); i++) {
 			JSONObject jo = ja.getJSONObject(i);
 			int status = MangaStatus.STATUS_UNKNOWN;
 			switch (jo.getString("status")) {
@@ -125,11 +125,11 @@ public class DesumeProvider extends MangaProvider {
 		);
 		JSONArray ja = jo.getJSONObject("chapters").getJSONArray("list");
 		final int total = ja.length();
-		for (int i=total-1; i>=0; i--) {
+		for (int i = total - 1; i >= 0; i--) {
 			JSONObject chapter = ja.getJSONObject(i);
 			details.chapters.add(new MangaChapter(
 					chapter.isNull("title") ? "Chapter " + (i + 1) : chapter.getString("title"),
-					total-i,
+					total - i,
 					details.url + "/chapter/" + chapter.getInt("id"),
 					CNAME
 			));

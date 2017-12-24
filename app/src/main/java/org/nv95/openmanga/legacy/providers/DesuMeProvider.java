@@ -20,6 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 07.03.16.
  */
+@Deprecated
 public class DesuMeProvider extends MangaProvider {
 
     protected static final int sorts[] = {R.string.sort_popular, R.string.sort_alphabetical, R.string.sort_updated};

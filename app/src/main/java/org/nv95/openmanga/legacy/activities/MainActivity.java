@@ -128,7 +128,7 @@ public class MainActivity extends BaseAppActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.legacy_activity_main);
         enableTransparentStatusBar(android.R.color.transparent);
         Toolbar toolbar;
         setSupportActionBar(toolbar = (Toolbar) findViewById(R.id.toolbar));

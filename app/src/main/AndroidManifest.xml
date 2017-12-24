@@ -20,7 +20,7 @@
 
 
 	<application
-		android:name=".legacy.OpenMangaApplication"
+		android:name=".OpenMangaApp"
 		android:allowBackup="true"
 		android:allowClearUserData="true"
 		android:fullBackupContent="false"
@@ -32,7 +32,7 @@
 		android:theme="@style/AppTheme"
 		tools:ignore="GoogleAppIndexingWarning">
 		<activity
-			android:name=".legacy.activities.MainActivity"
+			android:name=".ui.MainActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/app_name"
 			android:windowSoftInputMode="adjustPan">

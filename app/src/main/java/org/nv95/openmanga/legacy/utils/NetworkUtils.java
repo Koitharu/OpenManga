@@ -30,7 +30,7 @@ import info.guardianproject.netcipher.proxy.OrbotHelper;
 /**
  * Created by nv95 on 29.11.16.
  */
-
+@Deprecated
 public class NetworkUtils {
 
     public static final String HTTP_GET = "GET";

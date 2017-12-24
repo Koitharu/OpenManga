@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.text.Html;
 import android.util.LruCache;
 
@@ -12,6 +13,7 @@ import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
+import org.nv95.openmanga.content.MangaSortOrder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public abstract class MangaProvider {
 	}
 
 	@NonNull
-	public abstract List<MangaHeader> getList(@Nullable String query, int page, int sortOrder, String[] genres) throws Exception;
+	public abstract ArrayList<MangaHeader> query(@Nullable String search, int page, @MangaSortOrder int sortOrder, String[] genres) throws Exception;
 
 	@NonNull
 	public abstract MangaDetails getDetails(MangaHeader header) throws Exception;
@@ -70,6 +72,10 @@ public abstract class MangaProvider {
 		return new MangaGenre[0];
 	}
 
+	public int[] getAvailableSortOrders() {
+		return new int[0];
+	}
+
 	@Nullable
 	public final String getName() {
 		try {
@@ -94,5 +100,16 @@ public abstract class MangaProvider {
 		}
 		sProviderCache.put(cname, provider);
 		return provider;
+	}
+
+	@Nullable
+	public static MangaGenre findGenre(MangaProvider provider, @StringRes int genreNameRes) {
+		MangaGenre[] genres = provider.getAvailableGenres();
+		for (MangaGenre o : genres) {
+			if (o.nameId == genreNameRes) {
+				return o;
+			}
+		}
+		return null;
 	}
 }

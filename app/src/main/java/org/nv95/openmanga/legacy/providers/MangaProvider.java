@@ -19,6 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by nv95 on 30.09.15.
  */
+@Deprecated
 public abstract class MangaProvider {
 
     protected boolean features[];

@@ -58,14 +58,17 @@ public class LayoutUtils {
             R.style.AppThemeBlack_Black
     };
 
+    @Deprecated
     public static boolean isTablet(Context context) {
         return context.getResources().getConfiguration().isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
 
+    @Deprecated
     public static boolean isLandscape(Context context) {
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
+    @Deprecated
     public static boolean isTabletLandscape(Context context) {
         return isTablet(context) && isLandscape(context);
     }
@@ -85,6 +88,7 @@ public class LayoutUtils {
         return new Float[]{dpHeight, dpWidth};
     }
 
+    @Deprecated
     public static int DpToPx(Resources res, float dp) {
         float density = res.getDisplayMetrics().density;
         return (int) (dp * density);
@@ -96,6 +100,7 @@ public class LayoutUtils {
         return count == 0 ? 1 : count;
     }
 
+    @Deprecated
     public static void setAllImagesColor(ViewGroup container, @ColorRes int colorId) {
         int color = ContextCompat.getColor(container.getContext(), colorId);
         View o;
@@ -248,7 +253,9 @@ public class LayoutUtils {
     public static void showSoftKeyboard(@NonNull View view) {
         view.requestFocus();
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(view, 0);
+        if (imm != null) {
+            imm.showSoftInput(view, 0);
+        }
     }
 
     public static void centeredToast(Context context, @StringRes int message) {
@@ -259,7 +266,9 @@ public class LayoutUtils {
 
     public static void hideSoftKeyboard(@NonNull View view) {
         InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public static int getAppTheme(Context context) {
@@ -280,6 +289,7 @@ public class LayoutUtils {
      */
     public static int getLauncherIconSize(Context context) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        assert activityManager != null;
         int size2 = activityManager.getLauncherLargeIconSize();
         int size1 = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
         return size2 > size1 ? size2 : size1;

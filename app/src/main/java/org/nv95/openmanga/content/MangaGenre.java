@@ -16,4 +16,9 @@ public class MangaGenre {
 		this.nameId = nameId;
 		this.value = value;
 	}
+
+	@Override
+	public String toString() {
+		return value;
+	}
 }

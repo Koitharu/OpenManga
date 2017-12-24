@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * Created by nv95 on 03.10.15.
  */
+@Deprecated
 public class StorageHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 19;

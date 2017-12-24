@@ -16,9 +16,9 @@ public class MangaHeader {
 	public final String thumbnail;
 	public final String provider;
 	public final int status;
-	public final byte rating; //0..100
+	public final short rating; //0..100
 
-	public MangaHeader(String name, String summary, String genres, String url, String thumbnail, String provider, int status, byte rating) {
+	public MangaHeader(String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating) {
 		this.name = name;
 		this.summary = summary;
 		this.genres = genres;
@@ -30,7 +30,7 @@ public class MangaHeader {
 		this.id = provider.hashCode() + url.hashCode();
 	}
 
-	public MangaHeader(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, byte rating) {
+	public MangaHeader(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating) {
 		this.id = id;
 		this.name = name;
 		this.summary = summary;
