@@ -4,9 +4,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.MangaBookmark;
+import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.content.MangaHistory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -15,28 +18,20 @@ import java.util.ArrayList;
 public class ShelfContent {
 
 	@Nullable
-	public MangaHeader recent;
+	public MangaHistory recent;
 
 	@NonNull
-	public final ArrayList<MangaHeader> saved;
+	public final ArrayList<MangaHistory> history;
 
 	@NonNull
-	public final ArrayList<MangaHeader> history;
+	public final HashMap<String,ArrayList<MangaFavourite>> favourites;
 
 	@NonNull
-	public final ArrayList<MangaHeader> favourites;
-
-	@NonNull
-	public final ArrayList<MangaBookmark> bookmarks;
-
-	@NonNull
-	public final ArrayList<MangaBookmark> recommended;
+	public final ArrayList<MangaHeader> recommended;
 
 	public ShelfContent() {
-		saved = new ArrayList<>();
 		history = new ArrayList<>();
-		favourites = new ArrayList<>();
-		bookmarks = new ArrayList<>();
+		favourites = new HashMap<>();
 		recommended = new ArrayList<>();
 		recent = null;
 	}

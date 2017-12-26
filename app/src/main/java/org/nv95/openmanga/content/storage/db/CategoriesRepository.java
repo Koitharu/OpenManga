@@ -59,7 +59,7 @@ public final class CategoriesRepository implements Repository<Category> {
 
 	@Nullable
 	@Override
-	public List<Category> query(@NonNull SqlSpecification specification) {
+	public ArrayList<Category> query(@NonNull SqlSpecification specification) {
 		Cursor cursor = null;
 		try {
 			cursor = mStorageHelper.getReadableDatabase().query(

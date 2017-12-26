@@ -71,7 +71,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 
 	@Nullable
 	@Override
-	public List<MangaFavourite> query(@NonNull SqlSpecification specification) {
+	public ArrayList<MangaFavourite> query(@NonNull SqlSpecification specification) {
 		Cursor cursor = null;
 		try {
 			cursor = mStorageHelper.getReadableDatabase().query(

@@ -17,8 +17,7 @@ public final class FavouritesSpecification implements SqlSpecification {
 	private String mLimit = null;
 	@Nullable
 	private Long mCategory = null;
-	public boolean mOnlyNew = false;
-
+	private boolean mOnlyNew = false;
 	private boolean mRemoved = false;
 
 	public FavouritesSpecification removed(boolean value) {

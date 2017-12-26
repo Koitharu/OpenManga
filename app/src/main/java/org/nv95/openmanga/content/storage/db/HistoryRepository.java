@@ -74,7 +74,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 
 	@Nullable
 	@Override
-	public List<MangaHistory> query(@NonNull SqlSpecification specification) {
+	public ArrayList<MangaHistory> query(@NonNull SqlSpecification specification) {
 		Cursor cursor = null;
 		try {
 			cursor = mStorageHelper.getReadableDatabase().query(
