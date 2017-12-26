@@ -45,6 +45,10 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 				return new HeaderHolder(inflater.inflate(R.layout.header_group, parent, false));
 			case ShelfItemType.TYPE_ITEM_DEFAULT:
 				return new MangaHolder(inflater.inflate(R.layout.item_manga, parent, false));
+			case ShelfItemType.TYPE_ITEM_SMALL:
+				throw new AssertionError("Unknown viewType");
+			case ShelfItemType.TYPE_TIP:
+				throw new AssertionError("Unknown viewType");
 			default:
 				throw new AssertionError("Unknown viewType");
 		}
