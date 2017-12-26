@@ -13,7 +13,7 @@
         android:visible="false" />
     <item android:id="@+id/action_save"
         android:title="@string/action_save"
-        android:icon="@drawable/ic_save_light"
+        android:icon="@drawable/ic_save_white"
         app:showAsAction="ifRoom"
         android:visible="false" />
     <item android:id="@+id/action_move"

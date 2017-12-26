@@ -28,7 +28,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		return super.onCreateView(inflater, container, R.layout.fragment_shelf);
+		return super.onCreateView(inflater, container, R.layout.recyclerview);
 	}
 
 	@Override

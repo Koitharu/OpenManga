@@ -39,7 +39,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, @ShelfItemType int viewType) {
-		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+		final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		switch (viewType) {
 			case ShelfItemType.TYPE_HEADER:
 				return new HeaderHolder(inflater.inflate(R.layout.header_group, parent, false));
@@ -95,7 +95,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 		private final TextView textView;
 
-		public HeaderHolder(View itemView) {
+		HeaderHolder(View itemView) {
 			super(itemView);
 			textView = itemView.findViewById(R.id.textView);
 		}
@@ -106,7 +106,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		private final AspectRatioImageView imageViewThumbnail;
 		private final TextView textViewTitle;
 
-		public MangaHolder(View itemView) {
+		MangaHolder(View itemView) {
 			super(itemView);
 			imageViewThumbnail = itemView.findViewById(R.id.imageViewThumbnail);
 			textViewTitle = itemView.findViewById(R.id.textViewTitle);

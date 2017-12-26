@@ -217,7 +217,7 @@
     <string name="chapters_total" formatted="false">Total chapters: %d</string>
     <string name="check_all">Check all</string>
     <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
-    <string name="action_recommendations">Recommendations</string>
+    <string name="recommendations">Recommendations</string>
     <string name="no_options_available">No options available</string>
     <string name="next_chapter" formatted="false">Next chapter\n\n%s</string>
     <string name="prev_chapter" formatted="false">Previous chapter\n\n%s</string>
@@ -375,7 +375,7 @@
     <string name="reverse_order">Reverse chapters</string>
     <string name="auto_save_new">Save new chapters</string>
     <string name="action_relative">Relative</string>
-    <string name="open_in_">Open in...</string>
+    <string name="open_in_">Open in…</string>
     <string name="domain">Domain</string>
     <string name="authorization">Authorization</string>
 	<string name="password_too_short">Password must be at least 4 characters</string>
@@ -386,4 +386,10 @@
     <string name="attached_devices">Attached devices</string>
 	<string name="no_devices_attached">No devices attached</string>
     <string name="allowed_only_one_account">You already have an OpenManga account</string>
+	<string name="browse_filesystem">Browse local files</string>
+    <string name="import_cbz_summary">Import manga from zip or cbz file</string>
+	<string name="bookmarks_summary">Favourited pages</string>
+    <string name="saved_manga">Saved manga</string>
+    <string name="saved_manga_summary">Downloaded chapters, available without network</string>
+    <string name="recommendations_summary">Random manga based on your preferences</string>
 </resources>

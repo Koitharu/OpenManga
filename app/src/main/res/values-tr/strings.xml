@@ -12,7 +12,7 @@
     <string name="action_move">Şuraya taşı</string>
     <string name="action_options">Ayarlar</string>
     <string name="action_reading_options">Okuma Ayarları</string>
-    <string name="action_recommendations">Tavsiyeler</string>
+    <string name="recommendations">Tavsiyeler</string>
     <string name="action_remove">Sil</string>
     <string name="action_save">Kaydet</string>
     <string name="action_save_add">Kayıp bölümlerı kurtar</string>

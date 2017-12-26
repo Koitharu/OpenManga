@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.ui.browser.BrowserIndexFragment;
 import org.nv95.openmanga.ui.shelf.ShelfFragment;
 
 /**
@@ -36,6 +37,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		switch (item.getItemId()) {
 			case R.id.section_shelf:
 				fragment = new ShelfFragment();
+				break;
+			case R.id.section_browse:
+				fragment = new BrowserIndexFragment();
 				break;
 			default:
 				return true;

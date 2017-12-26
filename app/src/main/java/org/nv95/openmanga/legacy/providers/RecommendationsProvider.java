@@ -167,7 +167,7 @@ public class RecommendationsProvider extends MangaProvider {
 
     @Override
     public String getName() {
-        return mContext.getString(R.string.action_recommendations);
+        return mContext.getString(R.string.recommendations);
     }
 
     public void updateConfig() {

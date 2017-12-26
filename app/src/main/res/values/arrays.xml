@@ -3,12 +3,12 @@
 
     <string-array name="languages">
         <item>English</item>
-        <item>Russian</item>
-        <item>Japanese</item>
-        <item>Turkish</item>
+        <item>Русский</item>
+        <item>日本語</item>
+        <item>Türkçe</item>
         <item>Multilanguage</item>
-        <item>Vietnamese</item>
-        <item>French</item>
+        <item>Tiếng Việt</item>
+        <item>Français</item>
     </string-array>
     <string-array name="intervals_hours">
         <item>4</item>
@@ -32,7 +32,7 @@
     </string-array>
     <string-array name="section_names">
         <item>@string/local_storage</item>
-        <item>@string/action_recommendations</item>
+        <item>@string/recommendations</item>
         <item>@string/action_favourites</item>
         <item>@string/action_history</item>
     </string-array>

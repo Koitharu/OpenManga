@@ -190,7 +190,7 @@
     <string name="check_updates_auto">Автоматична перевірка оновлень</string>
     <string name="chapters_total" formatted="false">Всього глав: %d</string>
     <string name="check_all">Вибрати все</string>
-    <string name="action_recommendations">Рекомендації</string>
+    <string name="recommendations">Рекомендації</string>
     <string name="no_options_available">Нема доступних опцій</string>
     <string name="downloads_cancel_confirm">Всі загрузки будут відмінені. Ви впевнені?</string>
     <string name="next_chapter" formatted="false">Наступна глава\n\n%s</string>

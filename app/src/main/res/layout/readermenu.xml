@@ -114,7 +114,7 @@
             android:background="?selectableItemBackground"
             android:contentDescription="@string/action_save"
             android:scaleType="center"
-            android:src="@drawable/ic_save_light" />
+            android:src="@drawable/ic_save_white" />
 
         <ImageView
             android:id="@+id/menuitem_bookmark"
@@ -135,7 +135,7 @@
             android:background="?selectableItemBackground"
             android:contentDescription="@string/action_bookmark_remove"
             android:scaleType="center"
-            android:src="@drawable/ic_bookmark_light" />
+            android:src="@drawable/ic_bookmark_white" />
 
         <ImageView
             android:id="@+id/menuitem_rotation"
