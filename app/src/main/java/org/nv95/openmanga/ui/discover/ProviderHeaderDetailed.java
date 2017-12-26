@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui.browser;
+package org.nv95.openmanga.ui.discover;
 
 import android.graphics.drawable.Drawable;
 

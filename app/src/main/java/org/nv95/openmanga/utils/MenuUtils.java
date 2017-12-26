@@ -20,22 +20,23 @@ import java.util.List;
 public final class MenuUtils {
 
 	public static void buildOpenWithSubmenu(Context context,  MangaHeader mangaHeader, MenuItem menuItem) {
-		Uri uri = Uri.parse(mangaHeader.url);
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		final Uri uri = Uri.parse(mangaHeader.url);
+		final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		buildIntentSubmenu(context, intent, menuItem);
 	}
 
 	public static void buildShareSubmenu(Context context,  MangaHeader mangaHeader, MenuItem menuItem) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_TEXT, mangaHeader.url);
 		intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mangaHeader.name);
 		buildIntentSubmenu(context, intent, menuItem);
 	}
 
 	private static void buildIntentSubmenu(Context context, Intent intent, MenuItem menuItem) {
-		SubMenu menu = menuItem.getSubMenu();
-		PackageManager pm = context.getPackageManager();
-		List<ResolveInfo> allActivities = pm.queryIntentActivities(intent, 0);
+		final SubMenu menu = menuItem.getSubMenu();
+		final PackageManager pm = context.getPackageManager();
+		final List<ResolveInfo> allActivities = pm.queryIntentActivities(intent, 0);
 		if (allActivities.isEmpty()) {
 			menuItem.setVisible(false);
 		} else {

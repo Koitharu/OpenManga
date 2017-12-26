@@ -16,28 +16,32 @@
 			android:layout_marginLeft="12dp"
 			android:layout_marginRight="12dp"
 			android:layout_marginTop="8dp"
-			android:background="@color/cardview_light_background"
 			android:paddingLeft="6dp"
 			android:paddingRight="6dp"
-			app:cardElevation="8dp"
 			app:layout_scrollFlags="scroll|enterAlways">
 
-			<android.support.v7.widget.AppCompatAutoCompleteTextView
+			<TextView
+				android:id="@+id/textViewSearch"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:background="@android:color/transparent"
 				android:drawableLeft="@drawable/ic_search_dkgray"
 				android:drawableStart="@drawable/ic_search_dkgray"
 				android:focusable="false"
+				android:gravity="center_vertical"
 				android:hint="@string/action_search"
-				android:padding="8dp"
-				android:drawablePadding="12dp" />
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:paddingRight="16dp"
+				android:paddingLeft="16dp"
+				android:drawablePadding="16dp"
+				android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 			<ImageView
+				android:id="@+id/imageViewMenu"
 				android:layout_width="42dp"
 				android:layout_height="match_parent"
 				android:layout_gravity="end"
-				android:background="?selectableItemBackground"
+				android:background="?selectableItemBackgroundBorderless"
 				android:scaleType="center"
 				android:src="@drawable/ic_action_navigation_more_vert" />
 		</android.support.v7.widget.CardView>

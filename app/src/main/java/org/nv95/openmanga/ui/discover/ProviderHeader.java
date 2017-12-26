@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui.browser;
+package org.nv95.openmanga.ui.discover;
 
 /**
  * Created by koitharu on 26.12.17.

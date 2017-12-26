@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui.browser;
+package org.nv95.openmanga.ui.discover;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by koitharu on 26.12.17.
  */
 
-public final class BrowserIndexFragment extends AppBaseFragment {
+public final class DiscoverFragment extends AppBaseFragment {
 
 	private RecyclerView mRecyclerView;
 
@@ -52,7 +52,7 @@ public final class BrowserIndexFragment extends AppBaseFragment {
 				getString(R.string.bookmarks_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_white)));
 		dataset.add(getString(R.string.storages_remote));
 		dataset.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
-		final BrowserIndexAdapter adapter = new BrowserIndexAdapter(dataset);
+		final DiscoverAdapter adapter = new DiscoverAdapter(dataset);
 		mRecyclerView.setAdapter(adapter);
 	}
 }

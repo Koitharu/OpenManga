@@ -6,9 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.ui.browser.BrowserIndexFragment;
+import org.nv95.openmanga.ui.discover.DiscoverFragment;
 import org.nv95.openmanga.ui.shelf.ShelfFragment;
 
 /**
@@ -16,9 +19,11 @@ import org.nv95.openmanga.ui.shelf.ShelfFragment;
  */
 
 public final class MainActivity extends AppBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-		BottomNavigationView.OnNavigationItemReselectedListener {
+		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener {
 
 	private BottomNavigationView mBottomNavigationView;
+	private TextView mTextViewSearch;
+	private ImageView mImageViewMenu;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,8 +32,17 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		setSupportActionBar(R.id.toolbar);
 
 		mBottomNavigationView = findViewById(R.id.bottomNavView);
+		mImageViewMenu = findViewById(R.id.imageViewMenu);
+		mTextViewSearch = findViewById(R.id.textViewSearch);
+
 		mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 		mBottomNavigationView.setOnNavigationItemReselectedListener(this);
+		mTextViewSearch.setOnClickListener(this);
+		mImageViewMenu.setOnClickListener(this);
+
+		getFragmentManager().beginTransaction()
+				.replace(R.id.content, new ShelfFragment())
+				.commit();
 	}
 
 	@Override
@@ -38,11 +52,11 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 			case R.id.section_shelf:
 				fragment = new ShelfFragment();
 				break;
-			case R.id.section_browse:
-				fragment = new BrowserIndexFragment();
+			case R.id.section_discover:
+				fragment = new DiscoverFragment();
 				break;
 			default:
-				return true;
+				return false;
 		}
 		getFragmentManager().beginTransaction()
 				.replace(R.id.content, fragment)
@@ -56,6 +70,18 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		Fragment fragment = getFragmentManager().findFragmentById(R.id.content);
 		if (fragment != null && fragment instanceof AppBaseFragment) {
 			((AppBaseFragment) fragment).scrollToTop();
+		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+			case R.id.imageViewMenu:
+				//TODO
+				break;
+			case R.id.textViewSearch:
+				//TODO
+				break;
 		}
 	}
 }

@@ -15,14 +15,14 @@ import org.nv95.openmanga.ui.PreviewActivity;
 
 public final class IntentUtils {
 
-	public void addHomeScreenShortcut(Context context, MangaHeader mangaHeader) {
-		Intent shortcutIntent = new Intent(context, PreviewActivity.class);
+	public static void addHomeScreenShortcut(Context context, MangaHeader mangaHeader) {
+		final Intent shortcutIntent = new Intent(context, PreviewActivity.class);
 		shortcutIntent.setAction("org.nv95.openmanga.action.PREVIEW");
 		shortcutIntent.putExtra("manga", mangaHeader);
 		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-		Intent addIntent = new Intent();
+		final Intent addIntent = new Intent();
 		addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 		addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mangaHeader.name);
 
@@ -36,5 +36,13 @@ public final class IntentUtils {
 		}
 		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 		context.getApplicationContext().sendBroadcast(addIntent);
+	}
+
+	public static void shareManga(Context context, MangaHeader mangaHeader) {
+		final Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_TEXT, mangaHeader.url);
+		intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mangaHeader.name);
+		context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)));
 	}
 }

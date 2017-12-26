@@ -24,6 +24,7 @@ import java.util.List;
 /**
  * Created by nv95 on 28.01.16.
  */
+@Deprecated
 public class ContentShareHelper {
 
     private final Context mContext;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui.browser;
+package org.nv95.openmanga.ui.discover;
 
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.ui.shelf.ShelfAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,11 +18,11 @@ import java.util.ArrayList;
  * Created by koitharu on 26.12.17.
  */
 
-public final class BrowserIndexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
+public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
 	private final ArrayList<Object> mDataset;
 
-	public BrowserIndexAdapter(ArrayList<Object> dataset) {
+	public DiscoverAdapter(ArrayList<Object> dataset) {
 		mDataset = dataset;
 	}
 
