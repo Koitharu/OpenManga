@@ -86,7 +86,7 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		mTextViewDescription = page.findViewById(R.id.textView);
 		adapter.addView(page, getString(R.string.description));
 		//Page 1 - chapters
-		page = LayoutInflater.from(this).inflate(R.layout.page_list, mViewPager, false);
+		page = LayoutInflater.from(this).inflate(R.layout.page_list_fastscroll, mViewPager, false);
 		mRecyclerViewChapters = page.findViewById(R.id.recyclerView);
 		mTextViewChaptersHolder = page.findViewById(R.id.textView_holder);
 		mRecyclerViewChapters.setLayoutManager(new LinearLayoutManager(this));
@@ -115,7 +115,6 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		updateContent();
 		//init toolbar menu
 		final Menu menu = mToolbarMenu.getMenu();
-		MenuUtils.buildShareSubmenu(this, mMangaHeader, menu.findItem(R.id.action_share));
 		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
 		invalidateMenuBar();
 
@@ -125,7 +124,6 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_preview, menu);
-		MenuUtils.buildShareSubmenu(this, mMangaHeader, menu.findItem(R.id.action_share));
 		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -168,7 +166,11 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	@NonNull
 	@Override
 	public Loader<MangaDetails> onCreateLoader(int i, Bundle bundle) {
-		return new MangaLoader(this, mMangaHeader);
+		MangaLoader loader = new MangaLoader(this, mMangaHeader);
+		if (mRecyclerViewChapters.getAdapter() == null) {
+			loader.forceLoad();
+		}
+		return loader;
 	}
 
 	@Override
@@ -256,12 +258,6 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 				e.printStackTrace();
 				return null;
 			}
-		}
-
-		@Override
-		protected void onStartLoading() {
-			super.onStartLoading();
-			forceLoad();
 		}
 	}
 }
