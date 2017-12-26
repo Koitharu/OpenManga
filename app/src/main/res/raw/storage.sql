@@ -59,26 +59,32 @@ CREATE TABLE bookmarks (
 CREATE TABLE saved (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
-	summary TEXT,
-	genres TEXT,
+	summary TEXT NOT NULL,
+	genres TEXT NOT NULL,
 	url TEXT NOT NULL,
-	thumbnail TEXT,
+	thumbnail TEXT NOT NULL,
 	provider TEXT NOT NULL,
 	status INTEGER,
 	rating INTEGER,
 	created_at INTEGER,
-	local_path TEXT
+	local_path TEXT NOT NULL
 );
 
 CREATE TABLE saved_chapters (
 	id INTEGER PRIMARY KEY,
-	name TEXT,
+	name TEXT NOT NULL,
 	number INTEGER NOT NULL,
 	url TEXT
 );
 
 CREATE TABLE saved_pages (
 	id INTEGER PRIMARY KEY,
-	url TEXT,
+	url TEXT NOT NULL,
 	number INTEGER
+);
+
+CREATE TABLE categories (
+	id INTEGER PRIMARY KEY,
+	name TEXT NOT NULL,
+	created_at INTEGER
 )

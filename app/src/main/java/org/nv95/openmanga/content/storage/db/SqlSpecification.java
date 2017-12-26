@@ -11,8 +11,12 @@ import java.util.ArrayList;
 
 interface SqlSpecification {
 
+	@Nullable
 	String getSelection();
+	@Nullable
 	String[] getSelectionArgs();
 	@Nullable
 	String getOrderBy();
+	@Nullable
+	String getLimit();
 }

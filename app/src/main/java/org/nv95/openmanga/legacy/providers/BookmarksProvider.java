@@ -26,7 +26,7 @@ public class BookmarksProvider {
 
     private static final String TABLE_NAME = "bookmarks";
     private static final String[] PROJECTION = new String[] {
-            "_id", "manga_id", "chapter", "page", "name", "thumbnail", "timestamp"
+            "_id", "mangaId", "chapter", "page", "name", "thumbnail", "timestamp"
     };
 
     private static WeakReference<BookmarksProvider> instanceReference = new WeakReference<>(null);
@@ -78,14 +78,14 @@ public class BookmarksProvider {
     public ArrayList<Bookmark> getAll(int mangaId, int chapter) {
         return listFromCursor(
                 mStorageHelper.getReadableDatabase()
-                        .query(TABLE_NAME, PROJECTION, "manga_id=? AND chapter=?", new String[]{String.valueOf(mangaId), String.valueOf(chapter)}, null, null, "timestamp DESC")
+                        .query(TABLE_NAME, PROJECTION, "mangaId=? AND chapter=?", new String[]{String.valueOf(mangaId), String.valueOf(chapter)}, null, null, "timestamp DESC")
         );
     }
 
     public ArrayList<Bookmark> getAll(int mangaId) {
         return listFromCursor(
                 mStorageHelper.getReadableDatabase()
-                        .query(TABLE_NAME, PROJECTION, "manga_id=?", new String[]{String.valueOf(mangaId)}, null, null, "timestamp DESC")
+                        .query(TABLE_NAME, PROJECTION, "mangaId=?", new String[]{String.valueOf(mangaId)}, null, null, "timestamp DESC")
         );
     }
 
@@ -110,11 +110,11 @@ public class BookmarksProvider {
     }
 
     public boolean remove(MangaSummary manga, int chapter, int page) {
-        return mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "manga_id=? AND chapter=? AND page=?", new String[]{String.valueOf(manga.id), String.valueOf(chapter), String.valueOf(page)}) > 0;
+        return mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "mangaId=? AND chapter=? AND page=?", new String[]{String.valueOf(manga.id), String.valueOf(chapter), String.valueOf(page)}) > 0;
     }
 
     public int removeAll(int mangaId) {
-        return mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "manga_id=?", new String[]{String.valueOf(mangaId)});
+        return mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "mangaId=?", new String[]{String.valueOf(mangaId)});
     }
 
     public void clear() {

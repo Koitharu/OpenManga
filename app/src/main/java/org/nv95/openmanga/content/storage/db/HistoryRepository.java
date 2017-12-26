@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.MangaHeader;
@@ -73,7 +74,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 
 	@Nullable
 	@Override
-	public List<MangaHistory> query(SqlSpecification specification) {
+	public List<MangaHistory> query(@NonNull SqlSpecification specification) {
 		Cursor cursor = null;
 		try {
 			cursor = mStorageHelper.getReadableDatabase().query(
@@ -84,7 +85,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 					null,
 					null,
 					specification.getOrderBy(),
-					null
+					specification.getLimit()
 			);
 			ArrayList<MangaHistory> list = new ArrayList<>();
 			if (cursor.moveToFirst()) {

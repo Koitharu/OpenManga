@@ -6,7 +6,7 @@ import android.text.Spanned;
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaDetails extends MangaHeader {
+public final class MangaDetails extends MangaHeader {
 
 	public final String description;
 	public final String cover;

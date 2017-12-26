@@ -28,7 +28,7 @@ import java.io.File;
  * Created by koitharu on 24.12.17.
  */
 
-public class ImageUtils {
+public final class ImageUtils {
 
 	private static DisplayImageOptions sOptionsThumbnail = null;
 	private static DisplayImageOptions sOptionsUpdate = null;

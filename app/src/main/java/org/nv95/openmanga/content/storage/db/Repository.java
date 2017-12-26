@@ -1,5 +1,6 @@
 package org.nv95.openmanga.content.storage.db;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.MangaHeader;
@@ -17,5 +18,5 @@ public interface Repository<T> {
 	boolean update(T t);
 
 	@Nullable
-	List<T> query(SqlSpecification specification);
+	List<T> query(@NonNull SqlSpecification specification);
 }

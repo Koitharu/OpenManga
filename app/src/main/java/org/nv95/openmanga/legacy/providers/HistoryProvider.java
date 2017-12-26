@@ -256,7 +256,7 @@ public class HistoryProvider extends MangaProvider {
 
     public boolean remove(MangaInfo mangaInfo) {
         mStorageHelper.getWritableDatabase().delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)});
-        mStorageHelper.getWritableDatabase().delete("bookmarks", "manga_id=?", new String[]{String.valueOf(mangaInfo.id)});
+        mStorageHelper.getWritableDatabase().delete("bookmarks", "mangaId=?", new String[]{String.valueOf(mangaInfo.id)});
         return true;
     }
 
@@ -268,7 +268,7 @@ public class HistoryProvider extends MangaProvider {
         boolean syncEnabled = syncHelper.isHistorySyncEnabled();
         for (long o : ids) {
             database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(o)});
-            database.delete("bookmarks", "manga_id=?", new String[]{String.valueOf(o)});
+            database.delete("bookmarks", "mangaId=?", new String[]{String.valueOf(o)});
             if (syncEnabled) {
                 syncHelper.setDeleted(database, TABLE_NAME, o);
             }

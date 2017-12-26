@@ -11,7 +11,7 @@ import org.nv95.openmanga.legacy.components.IntegerPreference;
  * Created by koitharu on 26.12.17.
  */
 
-public class PreferencesUtils {
+public final class PreferencesUtils {
 
 	public static void bindPreferenceSummary(Preference preference) {
 		bindPreferenceSummary(preference, null, null);

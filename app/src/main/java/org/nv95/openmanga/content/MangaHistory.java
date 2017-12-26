@@ -4,7 +4,7 @@ package org.nv95.openmanga.content;
  * Created by koitharu on 24.12.17.
  */
 
-public class MangaHistory extends MangaHeader {
+public final class MangaHistory extends MangaHeader {
 
 	public final long id;
 	public final long chapterId;

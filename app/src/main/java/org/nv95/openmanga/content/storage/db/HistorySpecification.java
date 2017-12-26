@@ -8,7 +8,10 @@ import android.support.annotation.Nullable;
 
 public class HistorySpecification implements SqlSpecification {
 
+	@Nullable
 	private String mOrderBy = null;
+	@Nullable
+	private String mLimit = null;
 
 	private boolean mRemoved = false;
 
@@ -17,7 +20,7 @@ public class HistorySpecification implements SqlSpecification {
 		return this;
 	}
 
-	public HistorySpecification orderByUpdated(boolean descending) {
+	public HistorySpecification orderByDate(boolean descending) {
 		mOrderBy = "updated_at";
 		if (descending) {
 			mOrderBy += " DESC";
@@ -30,6 +33,11 @@ public class HistorySpecification implements SqlSpecification {
 		if (descending) {
 			mOrderBy += " DESC";
 		}
+		return this;
+	}
+
+	public HistorySpecification limit(int limit) {
+		mLimit = String.valueOf(limit);
 		return this;
 	}
 
@@ -49,5 +57,11 @@ public class HistorySpecification implements SqlSpecification {
 	@Override
 	public String getOrderBy() {
 		return mOrderBy;
+	}
+
+	@Nullable
+	@Override
+	public String getLimit() {
+		return mLimit;
 	}
 }

@@ -6,7 +6,7 @@ import android.support.annotation.StringRes;
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaGenre {
+public final class MangaGenre {
 
 	@StringRes
 	public final int nameId;

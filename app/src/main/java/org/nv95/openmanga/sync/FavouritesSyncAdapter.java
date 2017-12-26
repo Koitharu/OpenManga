@@ -87,7 +87,7 @@ public class FavouritesSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (cursor != null && cursor.moveToFirst()) {
 				do {
 					JSONObject jobj = new JSONObject();
-					jobj.put("manga_id", cursor.getInt(0));
+					jobj.put("mangaId", cursor.getInt(0));
 					jobj.put("timestamp", cursor.getLong(1));
 					deleted.put(jobj);
 				} while (cursor.moveToNext());
