@@ -1,16 +1,13 @@
 package org.nv95.openmanga.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.*;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -23,8 +20,6 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import org.nv95.openmanga.AppSettings;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.legacy.components.TransitionDisplayer;
-import org.nv95.openmanga.legacy.items.ThumbSize;
-import org.nv95.openmanga.legacy.utils.FileLogger;
 import org.nv95.openmanga.ui.common.AppImageDownloader;
 
 import java.io.File;
@@ -36,7 +31,7 @@ import java.io.File;
 public class ImageUtils {
 
 	private static DisplayImageOptions sOptionsThumbnail = null;
-	private static DisplayImageOptions sOptionsImage = null;
+	private static DisplayImageOptions sOptionsUpdate = null;
 
 	public static void init(Context context) {
 		DisplayImageOptions.Builder optionsBuilder = new DisplayImageOptions.Builder()
@@ -65,8 +60,8 @@ public class ImageUtils {
 					.build();
 		}
 
-		if (sOptionsImage == null) {
-			sOptionsImage = optionsBuilder
+		if (sOptionsUpdate == null) {
+			sOptionsUpdate = optionsBuilder
 					.resetViewBeforeLoading(false)
 					.showImageOnLoading(null)
 					.displayer(new TransitionDisplayer())
@@ -102,8 +97,15 @@ public class ImageUtils {
 	public static void setImage(@NonNull ImageView imageView, String url) {
 		ImageLoader.getInstance().displayImage(
 				url,
+				imageView
+		);
+	}
+
+	public static void updateImage(@NonNull ImageView imageView, String url) {
+		ImageLoader.getInstance().displayImage(
+				url,
 				imageView,
-				sOptionsImage
+				sOptionsUpdate
 		);
 	}
 

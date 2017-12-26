@@ -47,7 +47,7 @@
 
         <Button
             android:id="@+id/button_positive"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/continue_reading" />

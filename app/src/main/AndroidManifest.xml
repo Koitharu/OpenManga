@@ -86,6 +86,9 @@
 			android:label="@string/sync"
 			android:windowSoftInputMode="adjustResize" />
 
+		<activity android:name=".ui.PreviewActivity"
+			android:configChanges="orientation|screenSize" />
+
 		<activity android:name=".sync.ui.DevicesListActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/attached_devices">

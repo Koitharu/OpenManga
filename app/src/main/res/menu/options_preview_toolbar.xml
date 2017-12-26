@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/action_reverse"
+		android:checkable="true"
+		android:icon="@drawable/ic_sort_descending_white"
+		android:orderInCategory="100"
+		android:title="@string/reverse_order"
+		android:visible="true"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/action_favourite"
+		android:icon="@drawable/ic_star_border_white"
+		android:orderInCategory="100"
+		android:title="@string/action_favourite"
+		app:showAsAction="ifRoom">
+		<menu />
+	</item>
+	<item
+		android:id="@+id/action_save"
+		android:orderInCategory="100"
+		android:title="@string/action_save"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/action_share"
+		android:orderInCategory="100"
+		android:title="@string/action_share"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/action_shortcut"
+		android:orderInCategory="100"
+		android:title="@string/add_to_homescreen"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/action_open_ext"
+		android:orderInCategory="100"
+		android:title="@string/open_in_"
+		app:showAsAction="never">
+		<menu />
+	</item>
+	<item
+		android:id="@+id/action_relative"
+		android:orderInCategory="100"
+		android:title="@string/find_similar"
+		app:showAsAction="never" />
+</menu>

@@ -392,4 +392,6 @@
     <string name="saved_manga">Saved manga</string>
     <string name="saved_manga_summary">Downloaded chapters, available without network</string>
     <string name="recommendations_summary">Random manga based on your preferences</string>
+	<string name="add_to_homescreen">Add to homescreen</string>
+    <string name="find_similar">Find similar</string>
 </resources>

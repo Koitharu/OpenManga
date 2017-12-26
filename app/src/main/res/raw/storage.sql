@@ -52,7 +52,6 @@ CREATE TABLE bookmarks (
     rating INTEGER,
 	chapter_id INTEGER,
 	page_id INTEGER,
-	thumbnail TEXT,
 	created_at INTEGER,
 	removed INTEGER DEFAULT 0
 );

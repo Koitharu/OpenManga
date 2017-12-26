@@ -117,7 +117,7 @@ public class DesumeProvider extends MangaProvider {
 	@NonNull
 	@Override
 	public MangaDetails getDetails(MangaHeader header) throws Exception {
-		JSONObject jo = NetworkUtils.getJsonObject(header.url);
+		JSONObject jo = NetworkUtils.getJsonObject(header.url).getJSONObject("response");
 		MangaDetails details = new MangaDetails(
 				header,
 				jo.getString("description"),

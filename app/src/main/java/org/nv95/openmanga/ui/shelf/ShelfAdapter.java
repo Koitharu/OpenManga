@@ -1,6 +1,9 @@
 package org.nv95.openmanga.ui.shelf;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IntDef;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.ui.PreviewActivity;
 import org.nv95.openmanga.ui.common.ListHeader;
 import org.nv95.openmanga.ui.views.AspectRatioImageView;
 import org.nv95.openmanga.utils.ImageUtils;
@@ -69,6 +73,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			MangaHeader item = (MangaHeader) mDataset.get(position);
 			ImageUtils.setThumbnail(((MangaHolder) holder).imageViewThumbnail, item.thumbnail);
 			((MangaHolder) holder).textViewTitle.setText(item.name);
+			holder.itemView.setTag(item);
 		}
 
 	}
@@ -115,7 +120,10 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 		@Override
 		public void onClick(View view) {
-
+			MangaHeader mangaHeader = (MangaHeader) view.getTag();
+			Context context = view.getContext();
+			context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
+					.putExtra("manga", mangaHeader));
 		}
 	}
 }
