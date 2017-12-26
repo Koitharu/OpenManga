@@ -91,13 +91,9 @@ public class ImageUtils {
 		}
 	}
 
-	private static String fixUrl(String url) {
-		return (!android.text.TextUtils.isEmpty(url) && url.charAt(0) == '/') ? "file://" + url : url;
-	}
-
 	public static void setThumbnail(@NonNull ImageView imageView, String url) {
 		ImageLoader.getInstance().displayImage(
-				fixUrl(url),
+				url,
 				new ImageViewAware(imageView),
 				sOptionsThumbnail
 		);
@@ -105,7 +101,7 @@ public class ImageUtils {
 
 	public static void setImage(@NonNull ImageView imageView, String url) {
 		ImageLoader.getInstance().displayImage(
-				fixUrl(url),
+				url,
 				imageView,
 				sOptionsImage
 		);
