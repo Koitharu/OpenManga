@@ -38,6 +38,7 @@ import org.nv95.openmanga.legacy.items.ThumbSize;
 /**
  * Created by nv95 on 26.01.16.
  */
+@Deprecated
 public class LayoutUtils {
 
     private static final int[] THEMES = new int[]{

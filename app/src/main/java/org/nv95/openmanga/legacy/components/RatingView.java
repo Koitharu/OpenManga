@@ -14,6 +14,7 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 05.11.16.
  */
 
+@Deprecated
 public class RatingView extends android.support.v7.widget.AppCompatTextView {
 
     private static final int[] mColors = new int[] {

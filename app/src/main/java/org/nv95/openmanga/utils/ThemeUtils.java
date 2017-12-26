@@ -13,6 +13,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
+import org.nv95.openmanga.AppSettings;
 import org.nv95.openmanga.R;
 
 /**
@@ -93,16 +94,18 @@ public final class ThemeUtils {
 	}
 
 	public static int getAppTheme(Context context) {
-		try {
-			return /*Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
-					.getString("theme", "0"));*/0;
-		} catch (Exception e) {
-			return 0;
-		}
+		return AppSettings.get(context).getAppTheme();
 	}
 
 	public static boolean isAppThemeDark(Context context) {
 		return getAppTheme(context) > 7;
 	}
 
+	public static Drawable getSelectableBackground(Context context) {
+		TypedValue typedValue = new TypedValue();
+		TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.selectableItemBackground });
+		Drawable d = a.getDrawable(0);
+		a.recycle();
+		return d;
+	}
 }

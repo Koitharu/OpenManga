@@ -11,6 +11,7 @@ import android.view.View;
  * Created by admin on 05.07.17.
  */
 
+@Deprecated
 public class CenterAlignBehavior extends CoordinatorLayout.Behavior<View> {
 
     private int scrollY = 0;

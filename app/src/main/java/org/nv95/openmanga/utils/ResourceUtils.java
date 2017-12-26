@@ -1,16 +1,21 @@
 package org.nv95.openmanga.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
+import android.text.*;
+import android.util.DisplayMetrics;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
+
 
 /**
  * Created by koitharu on 24.12.17.
@@ -78,5 +83,23 @@ public final class ResourceUtils {
 		Configuration configuration = resources.getConfiguration();
 		return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 				&& configuration.isLayoutSizeAtLeast(Configuration.SCREENLAYOUT_SIZE_LARGE);
+	}
+
+	public static void setLocale(Resources resources, String locale) {
+		DisplayMetrics dm = resources.getDisplayMetrics();
+		android.content.res.Configuration conf = resources.getConfiguration();
+		conf.locale = android.text.TextUtils.isEmpty(locale) ? Locale.getDefault() : new Locale(locale);
+		resources.updateConfiguration(conf, dm);
+	}
+
+	/**
+	 * https://stackoverflow.com/questions/18635135/android-shortcut-bitmap-launcher-icon-size/19003905#19003905
+	 */
+	public static int getLauncherIconSize(Context context) {
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		assert activityManager != null;
+		int size2 = activityManager.getLauncherLargeIconSize();
+		int size1 = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
+		return size2 > size1 ? size2 : size1;
 	}
 }

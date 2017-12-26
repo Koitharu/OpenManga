@@ -19,6 +19,7 @@ import java.util.Locale;
 /**
  * Created by nv95 on 10.12.15.
  */
+@Deprecated
 public class OpenMangaApplication extends Application {
 
     @Override

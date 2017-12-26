@@ -12,6 +12,7 @@ import org.nv95.openmanga.legacy.components.IntegerPreference;
  * Created by admin on 08.09.16.
  */
 
+@Deprecated
 public class PreferencesUtils {
 
     public static void bindPreferenceSummary(Preference preference) {

@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
+import org.nv95.openmanga.AppSettings;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.legacy.components.TransitionDisplayer;
 import org.nv95.openmanga.legacy.items.ThumbSize;
@@ -44,7 +45,7 @@ public class ImageUtils {
 				.resetViewBeforeLoading(true);
 
 		if (!ImageLoader.getInstance().isInited()) {
-			int cacheMb = 100;
+			final int cacheMb = AppSettings.get(context).getCacheMaxSizeMb();
 			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 					.defaultDisplayImageOptions(optionsBuilder.build())
 					.diskCacheSize(cacheMb * 1024 * 1024)

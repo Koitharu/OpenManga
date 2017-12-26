@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
  * Created by nv95 on 27.08.16.
  */
 
+@Deprecated
 public class TransitionDisplayer implements BitmapDisplayer {
 
     @Override
