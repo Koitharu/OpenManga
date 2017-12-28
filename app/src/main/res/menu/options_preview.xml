@@ -17,7 +17,14 @@
 			android:orderInCategory="100"
 			android:title="@string/action_favourite"
 			app:showAsAction="never">
-			<menu />
+			<menu>
+				<group android:id="@+id/group_categories"
+					android:checkableBehavior="single" />
+
+				<item android:id="@+id/action_favourites_remove"
+					android:orderInCategory="10"
+					android:title="@string/action_remove" />
+			</menu>
 		</item>
 		<item
 			android:id="@+id/action_save"

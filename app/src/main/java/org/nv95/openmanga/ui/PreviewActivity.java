@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -26,9 +27,12 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaChapter;
 import org.nv95.openmanga.content.MangaDetails;
+import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaStatus;
 import org.nv95.openmanga.content.providers.MangaProvider;
+import org.nv95.openmanga.content.storage.db.FavouritesRepository;
+import org.nv95.openmanga.content.storage.db.HistoryRepository;
 import org.nv95.openmanga.ui.common.SimpleViewPagerAdapter;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MenuUtils;
@@ -59,6 +63,9 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	private ViewPager mViewPager;
 	private Toolbar mToolbarMenu;
 
+	private FavouritesRepository mFavouritesRepository;
+	private HistoryRepository mHistoryRepository;
+
 	@SuppressLint("CutPasteId")
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +74,9 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		setSupportActionBar(R.id.toolbar);
 		enableHomeAsUp();
 		disableTitle();
+
+		mFavouritesRepository = new FavouritesRepository(this);
+		mHistoryRepository = new HistoryRepository(this);
 
 		mImageView = findViewById(R.id.imageView);
 		mTabLayout = findViewById(R.id.tabs);
@@ -116,6 +126,8 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		//init toolbar menu
 		final Menu menu = mToolbarMenu.getMenu();
 		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
+		MenuUtils.buildCategoriesSubmenu(this, menu.findItem(R.id.action_favourite));
+		//MenuUtils.setRadioCheckable(menu.findItem(R.id.action_favourite), R.id.group_categories);
 		invalidateMenuBar();
 
 		getLoaderManager().initLoader(0, null, this);
@@ -125,6 +137,8 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_preview, menu);
 		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
+		MenuUtils.buildCategoriesSubmenu(this, menu.findItem(R.id.action_favourite));
+		//MenuUtils.setRadioCheckable(menu.findItem(R.id.action_favourite), R.id.group_categories);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -147,7 +161,27 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_favourites_remove:
+				if (mFavouritesRepository.remove(mMangaHeader)) {
+					Snackbar.make(mViewPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+					invalidateOptionsMenu();
+					invalidateMenuBar();
+					return true;
+				}
+				return false;
 			default:
+				if (item.getGroupId() == R.id.group_categories) {
+					assert mMangaDetails != null;
+					MangaFavourite favourite = MangaFavourite.from(mMangaHeader, item.getItemId(), mMangaDetails.chapters.size());
+					if (mFavouritesRepository.add(favourite) || mFavouritesRepository.update(favourite)) {
+						Snackbar.make(mViewPager, R.string.favourited, Snackbar.LENGTH_SHORT).show();
+						invalidateOptionsMenu();
+						invalidateMenuBar();
+					} else {
+						return false;
+					}
+					return true;
+				}
 				return super.onOptionsItemSelected(item);
 		}
 	}
@@ -156,7 +190,7 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (mToolbarCollapsed) {
 			menu.setGroupVisible(R.id.group_all, true);
-			//TODO
+			onUpdateMenu(menu);
 		} else {
 			menu.setGroupVisible(R.id.group_all, false);
 		}
@@ -195,11 +229,23 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	}
 
 	private void invalidateMenuBar() {
-		if (mToolbarCollapsed) {
-			return;
+		if (!mToolbarCollapsed) {
+			onUpdateMenu(mToolbarMenu.getMenu());
 		}
-		Menu menu = mToolbarMenu.getMenu();
-		//TODO
+	}
+
+	private void onUpdateMenu(Menu menu) {
+		MangaFavourite favourite = mFavouritesRepository.get(mMangaHeader);
+		Menu submenu = menu.findItem(R.id.action_favourite).getSubMenu();
+		submenu.findItem(R.id.action_favourites_remove).setVisible(favourite != null);
+		menu.findItem(R.id.action_favourite).setIcon(favourite == null ? R.drawable.ic_star_border_white : R.drawable.ic_star_white);
+		final int len = submenu.size();
+		final int favId = favourite == null ? 0 : favourite.categoryId;
+		for (int i = 0;i < len; i++) {
+			MenuItem item = submenu.getItem(i);
+			item.setChecked(item.isCheckable() && item.getItemId() == favId);
+		}
+
 	}
 
 	private void updateContent() {
@@ -244,7 +290,7 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		private final MangaProvider mProvider;
 		private final MangaHeader mManga;
 
-		public MangaLoader(Context context, MangaHeader mangaHeader) {
+		MangaLoader(Context context, MangaHeader mangaHeader) {
 			super(context);
 			mManga = mangaHeader;
 			mProvider = MangaProvider.getProvider(context, mangaHeader.provider);

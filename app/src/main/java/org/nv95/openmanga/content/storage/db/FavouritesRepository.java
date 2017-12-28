@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.MangaFavourite;
+import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaHistory;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	public boolean add(MangaFavourite mangaFavourite) {
 		try {
 			return mStorageHelper.getWritableDatabase()
-					.insert(TABLE_NAME, null, toContentValues(mangaFavourite)) >= 0;
+					.insert(TABLE_NAME, null, toContentValues(mangaFavourite)) > 0;
 		} catch (Exception e) {
 			return false;
 		}
@@ -55,7 +56,12 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	@Override
 	public boolean remove(MangaFavourite mangaFavourite) {
 		return mStorageHelper.getWritableDatabase()
-				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaFavourite.id)}) >= 0;
+				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaFavourite.id)}) > 0;
+	}
+
+	public boolean remove(MangaHeader mangaHeader) {
+		return mStorageHelper.getWritableDatabase()
+				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaHeader.id)}) > 0;
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.update(TABLE_NAME, toContentValues(mangaFavourite),
-							"id=?", new String[]{String.valueOf(mangaFavourite.id)}) >= 0;
+							"id=?", new String[]{String.valueOf(mangaFavourite.id)}) > 0;
 		} catch (Exception e) {
 			return false;
 		}
@@ -98,13 +104,53 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 							cursor.getInt(7),
 							cursor.getShort(8),
 							cursor.getLong(9),
-							cursor.getLong(10),
+							cursor.getInt(10),
 							cursor.getInt(11),
 							cursor.getInt(12)
 					));
 				} while (cursor.moveToNext());
 			}
 			return list;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+	}
+
+	@Nullable
+	public MangaFavourite get(MangaHeader mangaHeader) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					TABLE_NAME,
+					PROJECTION,
+					"id = ?",
+					new String[]{String.valueOf(mangaHeader.id)},
+					null,
+					null,
+					null,
+					null
+			);
+			if (cursor.moveToFirst()) {
+				return new MangaFavourite(
+						cursor.getLong(0),
+						cursor.getString(1),
+						cursor.getString(2),
+						cursor.getString(3),
+						cursor.getString(4),
+						cursor.getString(5),
+						cursor.getString(6),
+						cursor.getInt(7),
+						cursor.getShort(8),
+						cursor.getLong(9),
+						cursor.getInt(10),
+						cursor.getInt(11),
+						cursor.getInt(12)
+				);
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
 			return null;
 		} finally {

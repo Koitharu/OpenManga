@@ -50,7 +50,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 		final ArrayList<Category> categories = categoriesRepository.query(new CategoriesSpecification().orderByDate(true));
 		if (categories != null) {
 			if (categories.isEmpty()) {
-				Category defaultCategory = new Category(0, getContext().getString(R.string.action_favourites), System.currentTimeMillis());
+				Category defaultCategory = Category.createDefault(getContext());
 				categories.add(defaultCategory);
 				categoriesRepository.add(defaultCategory);
 			} else {

@@ -16,7 +16,7 @@ public final class FavouritesSpecification implements SqlSpecification {
 	@Nullable
 	private String mLimit = null;
 	@Nullable
-	private Long mCategory = null;
+	private Integer mCategory = null;
 	private boolean mOnlyNew = false;
 	private boolean mRemoved = false;
 
@@ -25,7 +25,7 @@ public final class FavouritesSpecification implements SqlSpecification {
 		return this;
 	}
 
-	public FavouritesSpecification category(long category) {
+	public FavouritesSpecification category(int category) {
 		mCategory = category;
 		return this;
 	}

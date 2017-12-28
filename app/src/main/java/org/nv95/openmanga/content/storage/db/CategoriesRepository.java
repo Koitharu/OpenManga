@@ -76,7 +76,7 @@ public final class CategoriesRepository implements Repository<Category> {
 			if (cursor.moveToFirst()) {
 				do {
 					list.add(new Category(
-							cursor.getLong(0),
+							cursor.getInt(0),
 							cursor.getString(1),
 							cursor.getLong(2)
 					));

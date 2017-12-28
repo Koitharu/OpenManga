@@ -6,11 +6,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.support.annotation.IdRes;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.content.shelf.Category;
+import org.nv95.openmanga.content.storage.db.CategoriesRepository;
+import org.nv95.openmanga.content.storage.db.CategoriesSpecification;
+import org.nv95.openmanga.ui.PreviewActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +61,31 @@ public final class MenuUtils {
 				i.setComponent(name);
 				item.setIntent(i);
 			}
+		}
+	}
+
+	public static void buildCategoriesSubmenu(Context context, MenuItem menuItem) {
+		final SubMenu menu = menuItem.getSubMenu();
+		final CategoriesRepository categoriesRepository = new CategoriesRepository(context);
+		final ArrayList<Category> categories = categoriesRepository.query(new CategoriesSpecification().orderByName(false));
+		if (categories == null) {
+			return;
+		}
+		if (categories.isEmpty()) {
+			Category defaultCategory = Category.createDefault(context);
+			categories.add(defaultCategory);
+			categoriesRepository.add(defaultCategory);
+		}
+		for (Category category : categories) {
+			MenuItem item = menu.add(R.id.group_categories, category.id, Menu.NONE, category.name);
+			item.setCheckable(true);
+		}
+	}
+
+	public static void setRadioCheckable(MenuItem menuItem, @IdRes int group_id) {
+		final SubMenu menu = menuItem.getSubMenu();
+		if (menu != null) {
+			menu.setGroupCheckable(group_id, true, true);
 		}
 	}
 }

@@ -49,7 +49,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 	public boolean add(MangaHistory mangaHistory) {
 		try {
 			return mStorageHelper.getWritableDatabase()
-					.insert(TABLE_NAME, null, toContentValues(mangaHistory)) >= 0;
+					.insert(TABLE_NAME, null, toContentValues(mangaHistory)) > 0;
 		} catch (Exception e) {
 			return false;
 		}
@@ -58,7 +58,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 	@Override
 	public boolean remove(MangaHistory mangaHistory) {
 		return mStorageHelper.getWritableDatabase()
-				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaHistory.id)}) >= 0;
+				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaHistory.id)}) > 0;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.update(TABLE_NAME, toContentValues(mangaHistory),
-							"id=?", new String[]{String.valueOf(mangaHistory.id)}) >= 0;
+							"id=?", new String[]{String.valueOf(mangaHistory.id)}) > 0;
 		} catch (Exception e) {
 			return false;
 		}
