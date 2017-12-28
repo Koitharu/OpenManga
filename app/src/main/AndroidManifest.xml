@@ -89,6 +89,9 @@
 		<activity android:name=".ui.PreviewActivity"
 			android:configChanges="orientation|screenSize" />
 
+		<activity android:name=".ui.mangalist.MangaListActivity"
+			android:configChanges="screenSize|orientation" />
+
 		<activity android:name=".sync.ui.DevicesListActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/attached_devices">

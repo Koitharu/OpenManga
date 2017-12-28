@@ -5,8 +5,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.*;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -87,6 +89,15 @@ public final class LayoutUtils {
 		InputMethodManager imm = (InputMethodManager)view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null) {
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
+	}
+
+	public static void setTextOrHide(TextView textView, String text) {
+		if (android.text.TextUtils.isEmpty(text)) {
+			textView.setVisibility(View.GONE);
+		} else {
+			textView.setText(text);
+			textView.setVisibility(View.VISIBLE);
 		}
 	}
 }

@@ -88,7 +88,7 @@ public abstract class MangaProvider {
 
 	private static LruCache<String,MangaProvider> sProviderCache = new LruCache<>(4);
 
-	public static MangaProvider getProvider(Context context, String cname) {
+	public static MangaProvider getProvider(Context context, @NonNull String cname) {
 		MangaProvider provider = sProviderCache.get(cname);
 		if (provider != null) return provider;
 		switch (cname) {

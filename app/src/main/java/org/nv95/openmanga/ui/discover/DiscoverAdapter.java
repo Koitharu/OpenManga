@@ -1,5 +1,7 @@
 package org.nv95.openmanga.ui.discover;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.ui.mangalist.MangaListActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -86,6 +89,12 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public void onClick(View view) {
 		final String cname = String.valueOf(view.getTag());
+		final Context context = view.getContext();
+		switch (cname) {
+			default:
+				context.startActivity(new Intent(context.getApplicationContext(), MangaListActivity.class)
+						.putExtra("provider.cname", cname));
+		}
 	}
 
 	class ProviderHolder extends RecyclerView.ViewHolder {

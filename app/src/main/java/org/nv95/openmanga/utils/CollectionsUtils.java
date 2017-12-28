@@ -40,4 +40,12 @@ public final class CollectionsUtils {
 			return null;
 		}
 	}
+
+	public static <T> T getOrDefault(List<T> list, int position, @Nullable T defaultValue) {
+		try {
+			return list.get(position);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
 }

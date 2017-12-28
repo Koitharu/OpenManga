@@ -16,4 +16,5 @@
     <dimen name="toolbutton_size">52dp</dimen>
 
     <dimen name="bottomsheet_peek_height">220dp</dimen>
+	<dimen name="drawer_size">260dp</dimen>
 </resources>
