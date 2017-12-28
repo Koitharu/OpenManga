@@ -17,7 +17,7 @@ public final class OpenMangaApp extends Application {
 		super.onCreate();
 		final AppSettings settings = AppSettings.get(this);
 		ImageUtils.init(this);
-		NetworkUtils.setUseTor(this, settings.isUseTor());
+		NetworkUtils.init(this, settings.isUseTor());
 		ResourceUtils.setLocale(getResources(), settings.getAppLocale());
 	}
 }

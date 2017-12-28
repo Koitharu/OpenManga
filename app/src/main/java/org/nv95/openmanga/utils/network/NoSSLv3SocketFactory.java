@@ -22,6 +22,7 @@ import javax.net.ssl.SSLSocketFactory;
  * Created by koitharu on 24.12.17.
  */
 
+@Deprecated
 final class NoSSLv3SocketFactory extends SSLSocketFactory {
 
 	private static final NoSSLv3SocketFactory sInstance = new NoSSLv3SocketFactory();

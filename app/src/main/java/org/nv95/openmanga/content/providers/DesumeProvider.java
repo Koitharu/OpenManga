@@ -87,7 +87,7 @@ public class DesumeProvider extends MangaProvider {
 				TextUtils.join(",", genres),
 				search == null ? "" : search
 		);
-		JSONArray ja = NetworkUtils.getJsonObject(url).getJSONArray("response");
+		JSONArray ja = NetworkUtils.getJSONObject(url).getJSONArray("response");
 		ArrayList<MangaHeader> list = new ArrayList<>(ja.length());
 		for (int i = 0; i < ja.length(); i++) {
 			JSONObject jo = ja.getJSONObject(i);
@@ -117,7 +117,7 @@ public class DesumeProvider extends MangaProvider {
 	@NonNull
 	@Override
 	public MangaDetails getDetails(MangaHeader header) throws Exception {
-		JSONObject jo = NetworkUtils.getJsonObject(header.url).getJSONObject("response");
+		JSONObject jo = NetworkUtils.getJSONObject(header.url).getJSONObject("response");
 		MangaDetails details = new MangaDetails(
 				header,
 				jo.getString("description"),
@@ -140,7 +140,7 @@ public class DesumeProvider extends MangaProvider {
 	@NonNull
 	@Override
 	public ArrayList<MangaPage> getPages(String chapterUrl) throws Exception {
-		JSONObject jo = NetworkUtils.getJsonObject(chapterUrl).getJSONObject("response");
+		JSONObject jo = NetworkUtils.getJSONObject(chapterUrl).getJSONObject("response");
 		JSONArray ja = jo.getJSONObject("pages").getJSONArray("list");
 		ArrayList<MangaPage> pages = new ArrayList<>(ja.length());
 		for (int i = 0; i < ja.length(); i++) {

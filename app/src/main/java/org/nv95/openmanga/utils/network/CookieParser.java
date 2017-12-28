@@ -10,6 +10,7 @@ import java.util.Map;
  * Created by koitharu on 26.12.17.
  */
 
+@Deprecated
 public final class CookieParser {
 
 	private final HashMap<String,String> mCookies;

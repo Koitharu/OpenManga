@@ -126,7 +126,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             progressBar = itemView.findViewById(R.id.progressBar);
             ssiv = itemView.findViewById(R.id.ssiv);
             textView = itemView.findViewById(R.id.textView_holder);
-            ssiv.setParallelLoadingEnabled(true);
+            ssiv.setEagerLoadingEnabled(true); //?
             ssiv.setOnImageEventListener(this);
         }
 

@@ -1,8 +1,10 @@
 package org.nv95.openmanga.utils.network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.ProxyInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -23,11 +25,20 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import info.guardianproject.netcipher.NetCipher;
+import info.guardianproject.netcipher.client.*;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
+import info.guardianproject.netcipher.proxy.TorServiceUtils;
+import okhttp3.CacheControl;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nv95 on 29.11.16.
@@ -35,46 +46,75 @@ import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 public class NetworkUtils {
 
-	private static final String HTTP_GET = "GET";
-	private static final String HTTP_POST = "POST";
-	private static final String HTTP_PUT = "PUT";
-	private static final String HTTP_DELETE = "DELETE";
+	private static final CacheControl CACHE_CONTROL_DEFAULT = new CacheControl.Builder().maxAge(10, TimeUnit.MINUTES).build();
+	private static final Headers HEADERS_DEFAULT = new Headers.Builder().build();
 
-	public static boolean setUseTor(Context context, boolean enabled) {
-		boolean isTor = NetCipher.getProxy() == NetCipher.ORBOT_HTTP_PROXY;
-		if (isTor == enabled) {
-			return isTor;
-		}
-		if (enabled) {
-			if (OrbotHelper.get(context).init()) {
-				NetCipher.useTor();
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			NetCipher.clearProxy();
-			return false;
-		}
+	private static OkHttpClient sHttpClient = null;
+
+	@NonNull
+	private static OkHttpClient.Builder getClientBuilder() {
+		return new OkHttpClient.Builder()
+				.addInterceptor(new CloudflareInterceptor());
 	}
 
-	public static Document httpGet(@NonNull String url, @Nullable String cookie) throws IOException {
-		InputStream is = null;
+	public static void init(Context context, boolean useTor) {
+		OkHttpClient.Builder builder = getClientBuilder();
+		if (useTor && OrbotHelper.get(context).init()) {
+			try {
+				StrongOkHttpClientBuilder.forMaxSecurity(context)
+						.applyTo(builder, new Intent()
+								.putExtra(OrbotHelper.EXTRA_STATUS, "ON")); //TODO wtf
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		sHttpClient = builder.build();
+	}
+
+	@NonNull
+	public static String getString(@NonNull String url) throws IOException {
+		return getString(url, HEADERS_DEFAULT);
+	}
+
+	@NonNull
+	public static String getString(@NonNull String url, @NonNull Headers headers) throws IOException {
+		Request.Builder builder = new Request.Builder()
+				.url(url)
+				.headers(headers)
+				.cacheControl(CACHE_CONTROL_DEFAULT)
+				.get();
+		Response response = null;
 		try {
-			HttpURLConnection con = createConnection(url);
-			//con.setDoOutput(true);
-			if (!TextUtils.isEmpty(cookie)) {
-				con.setRequestProperty("Cookie", cookie);
+			response = sHttpClient.newCall(builder.build()).execute();
+			ResponseBody body = response.body();
+			if (body == null) {
+				throw new IOException("ResponseBody is null");
+			} else {
+				return body.string();
 			}
-			is = con.getInputStream();
-			return Jsoup.parse(is, con.getContentEncoding(), url);
 		} finally {
-			if (is != null) {
-				is.close();
+			if (response != null) {
+				response.close();
 			}
 		}
 	}
 
+	@NonNull
+	public static Document getDocument(@NonNull String url) throws IOException {
+		return getDocument(url, HEADERS_DEFAULT);
+	}
+
+	@NonNull
+	public static Document getDocument(@NonNull String url, @NonNull Headers headers) throws IOException {
+		return Jsoup.parse(getString(url, headers), url);
+	}
+
+	@NonNull
+	public static JSONObject getJSONObject(@NonNull String url) throws IOException, JSONException {
+		return new JSONObject(getString(url));
+	}
+
+	@Deprecated
 	public static Document httpPost(@NonNull String url, @Nullable String cookie, @Nullable String[] data) throws IOException {
 		InputStream is = null;
 		try {
@@ -100,6 +140,7 @@ public class NetworkUtils {
 		}
 	}
 
+	@Deprecated
 	@NonNull
 	public static String getRaw(@NonNull String url, @Nullable String cookie) throws IOException {
 		BufferedReader reader = null;
@@ -122,10 +163,7 @@ public class NetworkUtils {
 		}
 	}
 
-	public static JSONObject getJsonObject(@NonNull String url) throws IOException, JSONException {
-		return new JSONObject(getRaw(url, null));
-	}
-
+	@Deprecated
 	@Nullable
 	public static CookieParser authorize(String url, String... data) {
 		DataOutputStream out = null;
@@ -157,15 +195,16 @@ public class NetworkUtils {
 		}
 	}
 
+	@Deprecated
 	public static RESTResponse restQuery(String url, @Nullable String token, String method, String... data) {
 		BufferedReader reader = null;
 		try {
-			HttpURLConnection con = createConnection(HTTP_GET.equals(method) ? url + "?" + makeQuery(data) : url);
+			HttpURLConnection con = createConnection("GET".equals(method) ? url + "?" + makeQuery(data) : url);
 			if (!TextUtils.isEmpty(token)) {
 				con.setRequestProperty("X-AuthToken", token);
 			}
 			con.setRequestMethod(method);
-			if (!HTTP_GET.equals(method)) {
+			if (!"GET".equals(method)) {
 				con.setDoOutput(true);
 				DataOutputStream out = new DataOutputStream(con.getOutputStream());
 				out.writeBytes(NetworkUtils.makeQuery(data));
@@ -194,6 +233,7 @@ public class NetworkUtils {
 		}
 	}
 
+	@Deprecated
 	@NonNull
 	private static String makeQuery(@NonNull String[] data) throws UnsupportedEncodingException {
 		StringBuilder query = new StringBuilder();
@@ -206,10 +246,12 @@ public class NetworkUtils {
 		return query.toString();
 	}
 
+	@Deprecated
 	private static boolean isOk(int responseCode) {
 		return responseCode >= 200 && responseCode < 300;
 	}
 
+	@Deprecated
 	private static HttpURLConnection createConnection(String url) throws IOException {
 		HttpURLConnection con = NetCipher.getHttpURLConnection(url);
 		if (con instanceof HttpsURLConnection) {
