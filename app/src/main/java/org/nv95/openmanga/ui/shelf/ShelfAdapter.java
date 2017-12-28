@@ -96,6 +96,19 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		return mDataset.size();
 	}
 
+	@Override
+	public long getItemId(int position) {
+		Object item = mDataset.get(position);
+		if (item instanceof MangaHeader) {
+			return ((MangaHeader) item).id;
+		} else if (item instanceof ListHeader) {
+			final String text = ((ListHeader) item).text;
+			return text != null ? text.hashCode() : ((ListHeader) item).textResId;
+		} else {
+			throw new AssertionError("Unknown viewType");
+		}
+	}
+
 	class HeaderHolder extends RecyclerView.ViewHolder {
 
 		private final TextView textView;
