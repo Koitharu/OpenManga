@@ -14,7 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.nv95.openmanga.legacy.utils.LayoutUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.ThemeUtils;
 
 /**
  * Created by koitharu on 18.12.17.
@@ -30,8 +31,8 @@ public abstract class AppCompatAuthActivity extends AccountAuthenticatorActivity
 		getDelegate().installViewFactory();
 		getDelegate().onCreate(savedInstanceState);
 		super.onCreate(savedInstanceState);
-		mTheme = LayoutUtils.getAppTheme(this);
-		setTheme(LayoutUtils.getAppThemeRes(mTheme));
+		mTheme = ThemeUtils.getAppTheme(this);
+		setTheme(ThemeUtils.getAppThemeRes(mTheme));
 	}
 
 	@Override

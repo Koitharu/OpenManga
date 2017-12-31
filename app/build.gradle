@@ -5,7 +5,7 @@ def majorVersion = "4.3.1"
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
 	flavorDimensions "default"
 
     defaultConfig {
@@ -75,8 +75,6 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.11.2'
 	implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.9.0'
 	implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-	implementation 'com.soundcloud.android:android-crop:1.0.1@aar' //deprecated
-	implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1' //deprecated
 	implementation 'com.squareup.okhttp3:okhttp:3.9.1'
 	implementation 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1'
 	implementation 'info.guardianproject.netcipher:netcipher-okhttp3:2.0.0-alpha1'

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaChapter;
-import org.nv95.openmanga.legacy.utils.AppHelper;
 import org.nv95.openmanga.utils.CollectionsUtils;
+import org.nv95.openmanga.utils.ResourceUtils;
 import org.nv95.openmanga.utils.ThemeUtils;
 
 import java.lang.annotation.Retention;
@@ -88,7 +88,7 @@ public final class ChaptersListAdapter extends RecyclerView.Adapter {
 			MangaChapter ch = CollectionsUtils.getOrNull(mDataset, mLastChapterPosition);
 			if (ch != null) {
 				((HeaderHolder) holder).textViewTitle.setText(ch.name);
-				((HeaderHolder) holder).textViewSubtitle.setText(AppHelper.getReadableDateTimeRelative(mLastChapterTimestamp));
+				((HeaderHolder) holder).textViewSubtitle.setText(ResourceUtils.formatDateTimeRelative(holder.itemView.getContext(), mLastChapterTimestamp));
 			}
 		}
 	}

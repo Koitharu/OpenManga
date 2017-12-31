@@ -14,8 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.nv95.openmanga.legacy.items.RESTResponse;
-import org.nv95.openmanga.legacy.utils.CookieParser;
+import org.nv95.openmanga.content.RESTResponse;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

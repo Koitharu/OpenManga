@@ -25,16 +25,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
-
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.legacy.activities.BaseAppActivity;
-import org.nv95.openmanga.legacy.utils.LayoutUtils;
-import org.nv95.openmanga.legacy.utils.NetworkUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.ThemeUtils;
+import org.nv95.openmanga.utils.network.NetworkUtils;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -51,8 +46,8 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mTheme = LayoutUtils.getAppTheme(this);
-		setTheme(LayoutUtils.getAppThemeRes(mTheme));
+		mTheme = ThemeUtils.getAppTheme(this);
+		setTheme(ThemeUtils.getAppThemeRes(mTheme));
 	}
 
 	public boolean isDarkTheme() {
@@ -194,25 +189,6 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 
 	protected void onPermissionGranted(String permission) {
 
-	}
-
-	public void showToast(CharSequence text, int gravity, int delay) {
-		final Toast toast = Toast.makeText(this, text, delay);
-		toast.setGravity(gravity, 0, 0);
-		toast.show();
-	}
-
-	public void showToast(@StringRes int text, int gravity, int delay) {
-		showToast(getString(text), gravity, delay);
-	}
-
-	public boolean checkConnectionWithSnackbar(View view) {
-		if (NetworkUtils.checkConnection(this)) {
-			return true;
-		} else {
-			Snackbar.make(view, R.string.no_network_connection, Snackbar.LENGTH_SHORT).show();
-			return false;
-		}
 	}
 }
 

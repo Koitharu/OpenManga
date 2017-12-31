@@ -6,7 +6,6 @@ import android.content.Context;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHistory;
-import org.nv95.openmanga.content.MangaSortOrder;
 import org.nv95.openmanga.content.providers.DesumeProvider;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.content.shelf.Category;
@@ -35,7 +34,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 		final ShelfContent content = new ShelfContent();
 		MangaProvider provider = MangaProvider.getProvider(getContext(), DesumeProvider.CNAME);
 		try {
-			content.recommended.addAll(provider.query(null, 0, MangaSortOrder.POPULAR, new String[0]));
+			content.recommended.addAll(provider.query(null, 0, R.string.sort_popular, new String[0]));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

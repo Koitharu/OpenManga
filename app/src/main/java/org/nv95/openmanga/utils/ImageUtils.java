@@ -19,8 +19,8 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import org.nv95.openmanga.AppSettings;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.legacy.components.TransitionDisplayer;
 import org.nv95.openmanga.ui.common.AppImageDownloader;
+import org.nv95.openmanga.ui.common.TransitionDisplayer;
 
 import java.io.File;
 

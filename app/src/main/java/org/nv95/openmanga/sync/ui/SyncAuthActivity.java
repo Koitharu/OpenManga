@@ -21,11 +21,11 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.legacy.items.RESTResponse;
+import org.nv95.openmanga.WeakAsyncTask;
+import org.nv95.openmanga.content.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
-import org.nv95.openmanga.legacy.utils.AppHelper;
-import org.nv95.openmanga.legacy.utils.NetworkUtils;
-import org.nv95.openmanga.legacy.utils.WeakAsyncTask;
+import org.nv95.openmanga.sync.SyncClient;
+import org.nv95.openmanga.utils.network.NetworkUtils;
 
 /**
  * Created by koitharu on 18.12.17.
@@ -197,11 +197,11 @@ public class SyncAuthActivity extends AppCompatAuthActivity implements View.OnCl
 			return NetworkUtils.restQuery(
 					BuildConfig.SYNC_URL + "/user",
 					null,
-					mWantRegister ? NetworkUtils.HTTP_PUT : NetworkUtils.HTTP_POST,
+					mWantRegister ? "PUT" : "POST",
 					"login", mLogin,
 					"password", mPassword,
 					"device",
-					AppHelper.getDeviceSummary()
+					SyncClient.getDeviceSummary()
 			);
 		}
 

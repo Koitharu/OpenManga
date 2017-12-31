@@ -7,12 +7,15 @@ import android.content.res.Resources;
 import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
 import android.text.*;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -101,5 +104,15 @@ public final class ResourceUtils {
 		int size2 = activityManager.getLauncherLargeIconSize();
 		int size1 = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
 		return size2 > size1 ? size2 : size1;
+	}
+
+	public static String formatDateTime(Context context, long time) {
+		Date date = new Date(time);
+		DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context.getApplicationContext());
+		return dateFormat.format(date);
+	}
+
+	public static String formatDateTimeRelative(Context context, long time) {
+		return DateUtils.getRelativeTimeSpanString(context, time).toString();
 	}
 }

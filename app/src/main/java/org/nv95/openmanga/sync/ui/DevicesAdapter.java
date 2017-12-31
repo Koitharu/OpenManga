@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.legacy.items.SyncDevice;
-import org.nv95.openmanga.legacy.utils.AppHelper;
+import org.nv95.openmanga.sync.SyncDevice;
+import org.nv95.openmanga.utils.ResourceUtils;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DeviceHo
 	@Override
 	public void onBindViewHolder(DeviceHolder holder, int position) {
 		SyncDevice item = mDataset.get(position);
-		holder.textViewDate.setText(AppHelper.getReadableDateTimeRelative(item.created_at));
+		holder.textViewDate.setText(ResourceUtils.formatDateTimeRelative(holder.textViewName.getContext(), item.created_at));
 		holder.textViewName.setText(item.name);
 		holder.itemView.setTag(item);
 	}

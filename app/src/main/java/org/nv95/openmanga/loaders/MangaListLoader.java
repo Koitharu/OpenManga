@@ -3,8 +3,8 @@ package org.nv95.openmanga.loaders;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
-import org.nv95.openmanga.content.MangaSortOrder;
 import org.nv95.openmanga.content.providers.MangaProvider;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public final class MangaListLoader extends AsyncTaskLoader<ArrayList<MangaHeader
 	public ArrayList<MangaHeader> loadInBackground() {
 		try {
 
-			return mProvider.query(null, 0, MangaSortOrder.POPULAR, new String[0]);
+			return mProvider.query(null, 0, R.string.sort_updated, new String[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

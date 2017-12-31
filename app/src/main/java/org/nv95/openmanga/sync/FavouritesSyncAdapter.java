@@ -14,8 +14,8 @@ import android.os.Bundle;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.nv95.openmanga.legacy.items.RESTResponse;
-import org.nv95.openmanga.legacy.utils.AppHelper;
+import org.nv95.openmanga.content.RESTResponse;
+import org.nv95.openmanga.utils.TextUtils;
 
 import java.io.IOException;
 
@@ -69,8 +69,8 @@ public class FavouritesSyncAdapter extends AbstractThreadedSyncAdapter {
 					JSONObject manga = new JSONObject();
 					manga.put("id", cursor.getInt(0));
 					manga.put("name", cursor.getString(1));
-					manga.put("subtitle", AppHelper.strNotNull(cursor.getString(2)));
-					manga.put("summary", AppHelper.strNotNull(cursor.getString(3)));
+					manga.put("subtitle", TextUtils.notNull(cursor.getString(2)));
+					manga.put("summary", TextUtils.notNull(cursor.getString(3)));
 					manga.put("provider", cursor.getString(4));
 					manga.put("preview", cursor.getString(5));
 					manga.put("path", cursor.getString(6));

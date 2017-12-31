@@ -1,15 +1,14 @@
 package org.nv95.openmanga.sync;
 
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.legacy.items.RESTResponse;
-import org.nv95.openmanga.legacy.items.SyncDevice;
-import org.nv95.openmanga.legacy.utils.AppHelper;
-import org.nv95.openmanga.legacy.utils.NetworkUtils;
+import org.nv95.openmanga.content.RESTResponse;
+import org.nv95.openmanga.utils.network.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ public class SyncClient {
 		return NetworkUtils.restQuery(
 				BuildConfig.SYNC_URL + "/user",
 				mToken,
-				NetworkUtils.HTTP_DELETE,
+				"DELETE",
 				"id",
 				String.valueOf(id)
 		);
@@ -40,7 +39,7 @@ public class SyncClient {
 		RESTResponse resp = NetworkUtils.restQuery(
 				BuildConfig.SYNC_URL + "/user",
 				mToken,
-				NetworkUtils.HTTP_GET,
+				"GET",
 				"self",
 				"0"
 		);
@@ -67,7 +66,7 @@ public class SyncClient {
 		RESTResponse resp = NetworkUtils.restQuery(
 				BuildConfig.SYNC_URL + "/history",
 				mToken,
-				NetworkUtils.HTTP_POST,
+				"POST",
 				"timestamp",
 				String.valueOf(lastSync),
 				"updated",
@@ -87,7 +86,7 @@ public class SyncClient {
 		RESTResponse resp = NetworkUtils.restQuery(
 				BuildConfig.SYNC_URL + "/favourites",
 				mToken,
-				NetworkUtils.HTTP_POST,
+				"POST",
 				"timestamp",
 				String.valueOf(lastSync),
 				"updated",
@@ -108,11 +107,11 @@ public class SyncClient {
 		RESTResponse response = NetworkUtils.restQuery(
 				BuildConfig.SYNC_URL + "/user",
 				null,
-				NetworkUtils.HTTP_POST,
+				"POST",
 				"login", login,
 				"password", password,
 				"device",
-				AppHelper.getDeviceSummary()
+				getDeviceSummary()
 		);
 		if (response.isSuccess()) {
 			try {
@@ -126,5 +125,14 @@ public class SyncClient {
 	}
 
 	public class InvalidTokenException extends IllegalArgumentException {
+	}
+
+	public static String getDeviceSummary() {
+		return Build.MANUFACTURER +
+				' ' +
+				Build.MODEL +
+				" (Android " +
+				Build.VERSION.RELEASE +
+				")";
 	}
 }

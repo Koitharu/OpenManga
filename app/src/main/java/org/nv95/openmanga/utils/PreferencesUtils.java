@@ -5,7 +5,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.legacy.components.IntegerPreference;
+import org.nv95.openmanga.ui.preferences.IntegerPreference;
 
 /**
  * Created by koitharu on 26.12.17.

@@ -16,17 +16,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.legacy.activities.BaseAppActivity;
-import org.nv95.openmanga.legacy.items.RESTResponse;
-import org.nv95.openmanga.legacy.items.SyncDevice;
+import org.nv95.openmanga.WeakAsyncTask;
+import org.nv95.openmanga.content.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.sync.SyncClient;
-import org.nv95.openmanga.legacy.utils.AnimUtils;
-import org.nv95.openmanga.legacy.utils.WeakAsyncTask;
+import org.nv95.openmanga.sync.SyncDevice;
+import org.nv95.openmanga.ui.AppBaseActivity;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * Created by koitharu on 18.12.17.
  */
 
-public class DevicesListActivity extends BaseAppActivity implements LoaderManager.LoaderCallbacks<ArrayList<SyncDevice>>,DevicesAdapter.OnItemClickListener {
+public class DevicesListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<SyncDevice>>,DevicesAdapter.OnItemClickListener {
 
 	private AccountManager mAccountManager;
 	private Account mAccount;
@@ -77,10 +77,10 @@ public class DevicesListActivity extends BaseAppActivity implements LoaderManage
 
 	@Override
 	public void onLoadFinished(Loader<ArrayList<SyncDevice>> loader, ArrayList<SyncDevice> syncDevices) {
+		mProgressBar.setVisibility(View.GONE);
 		if (syncDevices.isEmpty()) {
-			AnimUtils.crossfade(mProgressBar, mTextViewHolder);
+			mTextViewHolder.setVisibility(View.VISIBLE);
 		} else {
-			AnimUtils.crossfade(mProgressBar, null);
 			DevicesAdapter adapter = new DevicesAdapter(syncDevices, this);
 			mRecyclerView.setAdapter(adapter);
 		}
@@ -98,9 +98,8 @@ public class DevicesListActivity extends BaseAppActivity implements LoaderManage
 				.setPositiveButton(R.string.detach, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
-						AnimUtils.crossfade(null, mProgressBar);
+						mProgressBar.setVisibility(View.VISIBLE);
 						new DeviceDetachTask(DevicesListActivity.this)
-								.attach(DevicesListActivity.this)
 								.start(item.id);
 					}
 				})
@@ -156,7 +155,7 @@ public class DevicesListActivity extends BaseAppActivity implements LoaderManage
 				activity.getLoaderManager().getLoader(0).onContentChanged();
 				Snackbar.make(activity.mRecyclerView, R.string.device_detached, Snackbar.LENGTH_SHORT).show();
 			} else {
-				AnimUtils.crossfade(activity.mProgressBar, null);
+				activity.mProgressBar.setVisibility(View.GONE);
 				Snackbar.make(activity.mRecyclerView, restResponse.getMessage(), Snackbar.LENGTH_SHORT).show();
 			}
 		}
