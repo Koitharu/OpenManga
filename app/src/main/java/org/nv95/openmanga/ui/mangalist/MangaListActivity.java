@@ -3,9 +3,11 @@ package org.nv95.openmanga.ui.mangalist;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,10 +29,11 @@ import java.util.ArrayList;
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>> {
+public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>, View.OnClickListener {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
+	private FloatingActionButton mFabFilter;
 
 	private MangaListAdapter mAdapter;
 	private ArrayList<MangaHeader> mDataset;
@@ -45,6 +48,9 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 		mProgressBar = findViewById(R.id.progressBar);
 		mRecyclerView = findViewById(R.id.recyclerView);
+		mFabFilter = findViewById(R.id.fabFilter);
+
+		mFabFilter.setOnClickListener(this);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -86,5 +92,14 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	@Override
 	public void onLoaderReset(Loader<ArrayList<MangaHeader>> loader) {
 
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+			case R.id.fabFilter:
+				new FilterDialogFragment().show(getSupportFragmentManager(), "");
+				return;
+		}
 	}
 }

@@ -21,7 +21,8 @@
 		android:layout_toLeftOf="@id/imageView"
 		android:paddingBottom="2dp"
 		android:maxLines="2"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+		android:textColor="?android:attr/textColorPrimary"
+		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 		tools:text="Two-line item" />
 
 	<TextView
@@ -54,7 +55,7 @@
 
 	<org.nv95.openmanga.ui.views.AspectRatioImageView
 		android:id="@+id/imageView"
-		android:layout_width="64dp"
+		android:layout_width="72dp"
 		android:layout_marginStart="12dp"
 		android:layout_marginLeft="12dp"
 		android:layout_height="wrap_content"

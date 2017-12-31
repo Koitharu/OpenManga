@@ -9,4 +9,5 @@
         <attr name="maxValue" format="integer" />
     </declare-styleable>
     <attr name="colorTranslucent" format="color" />
+    <attr name="colorGray" format="color" />
 </resources>
