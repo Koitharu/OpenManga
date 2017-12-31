@@ -14,7 +14,6 @@ import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
-import org.nv95.openmanga.content.MangaSortOrder;
 import org.nv95.openmanga.content.MangaStatus;
 import org.nv95.openmanga.utils.network.NetworkUtils;
 
@@ -30,6 +29,11 @@ public class DesumeProvider extends MangaProvider {
 	public static final String CNAME = "network/desu.me";
 	public static final String DNAME = "DesuMe";
 
+	private final int[] mSorts = new int[] {
+			R.string.sort_alphabetical,
+			R.string.sort_popular,
+			R.string.sort_updated
+	};
 	private final MangaGenre[] mGenres = new MangaGenre[]{
 			new MangaGenre(R.string.genre_action, "action"),
 			new MangaGenre(R.string.genre_martialarts, "martial%20arts"),
@@ -79,7 +83,7 @@ public class DesumeProvider extends MangaProvider {
 
 	@NonNull
 	@Override
-	public ArrayList<MangaHeader> query(@Nullable String search, int page, @MangaSortOrder int sortOrder, String[] genres) throws Exception {
+	public ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, String[] genres) throws Exception {
 		String url = String.format(
 				"http://desu.me/manga/api/?limit=20&order_by=%s&page=%d&genres=%s&search=%s",
 				"popular",
@@ -159,6 +163,11 @@ public class DesumeProvider extends MangaProvider {
 	}
 
 	@Override
+	public int[] getAvailableSortOrders() {
+		return mSorts;
+	}
+
+	@Override
 	public boolean isSearchSupported() {
 		return true;
 	}
@@ -167,6 +176,5 @@ public class DesumeProvider extends MangaProvider {
 	public boolean isMultipleGenresSupported() {
 		return true;
 	}
-
 
 }

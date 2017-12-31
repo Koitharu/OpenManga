@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui.discover;
+package org.nv95.openmanga.ui.common;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,7 +12,7 @@ import android.view.View;
  * Created by koitharu on 26.12.17.
  */
 
-final class SmartItemDecoration extends RecyclerView.ItemDecoration {
+public final class HeaderDividerItemDecoration extends RecyclerView.ItemDecoration {
 
 	private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
@@ -20,7 +20,7 @@ final class SmartItemDecoration extends RecyclerView.ItemDecoration {
 
 	private final Rect mBounds = new Rect();
 
-	SmartItemDecoration(Context context) {
+	public HeaderDividerItemDecoration(Context context) {
 		final TypedArray a = context.obtainStyledAttributes(ATTRS);
 		mDivider = a.getDrawable(0);
 		a.recycle();

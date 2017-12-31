@@ -36,7 +36,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-			setProperty("archivesBaseName", "OpenManga-v${defaultConfig.versionName}")
+			/*setProperty("archivesBaseName", "OpenManga-v${defaultConfig.versionName}")*/
         }
 
 		fdroid {

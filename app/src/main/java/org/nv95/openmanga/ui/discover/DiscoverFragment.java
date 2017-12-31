@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.providers.DesumeProvider;
 import org.nv95.openmanga.ui.AppBaseFragment;
+import org.nv95.openmanga.ui.common.HeaderDividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public final class DiscoverFragment extends AppBaseFragment {
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-		mRecyclerView.addItemDecoration(new SmartItemDecoration(view.getContext()));
+		mRecyclerView.addItemDecoration(new HeaderDividerItemDecoration(view.getContext()));
 	}
 
 	@Override

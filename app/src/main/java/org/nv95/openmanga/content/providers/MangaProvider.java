@@ -1,23 +1,18 @@
 package org.nv95.openmanga.content.providers;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.text.Html;
 import android.util.LruCache;
 
 import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
-import org.nv95.openmanga.content.MangaSortOrder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -36,7 +31,7 @@ public abstract class MangaProvider {
 	}
 
 	@NonNull
-	public abstract ArrayList<MangaHeader> query(@Nullable String search, int page, @MangaSortOrder int sortOrder, String[] genres) throws Exception;
+	public abstract ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, String[] genres) throws Exception;
 
 	@NonNull
 	public abstract MangaDetails getDetails(MangaHeader header) throws Exception;
@@ -74,6 +69,10 @@ public abstract class MangaProvider {
 
 	public int[] getAvailableSortOrders() {
 		return new int[0];
+	}
+
+	protected String getSortUrlPart(int sort) {
+		return "";
 	}
 
 	@Nullable

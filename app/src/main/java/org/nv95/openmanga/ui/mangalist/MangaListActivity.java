@@ -98,7 +98,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.fabFilter:
-				new FilterDialogFragment().show(getSupportFragmentManager(), "");
+				FilterDialogFragment dialogFragment = new FilterDialogFragment();
+				Bundle args = new Bundle();
+				args.putIntArray("sorts", mProvider.getAvailableSortOrders());
+				args.putParcelableArray("genres", mProvider.getAvailableGenres());
+				dialogFragment.setArguments(args);
+				dialogFragment.show(getSupportFragmentManager(), "");
 				return;
 		}
 	}

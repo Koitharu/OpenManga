@@ -394,4 +394,5 @@
     <string name="recommendations_summary">Random manga based on your preferences</string>
 	<string name="add_to_homescreen">Add to homescreen</string>
     <string name="find_similar">Find similar</string>
+	<string name="genres">Genres</string>
 </resources>
