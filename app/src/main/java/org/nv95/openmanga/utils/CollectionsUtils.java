@@ -1,9 +1,12 @@
 package org.nv95.openmanga.utils;
 
 import android.support.annotation.Nullable;
+import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.content.MangaChapter;
+import org.nv95.openmanga.content.MangaGenre;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +27,7 @@ public final class CollectionsUtils {
 	}
 
 	public static int findPositionById(List<MangaChapter> list, long id) {
-		for (int i=0;i<list.size();i++) {
+		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).id == id) {
 				return i;
 			}
@@ -47,5 +50,15 @@ public final class CollectionsUtils {
 		} catch (Exception e) {
 			return defaultValue;
 		}
+	}
+
+	public static <T> ArrayList<T> getIfTrue(T[] items, SparseBooleanArray booleanArray) {
+		final ArrayList<T> values = new ArrayList<>();
+		for (int i = 0; i < items.length; i++) {
+			if (booleanArray.get(i, false)) {
+				values.add(items[i]);
+			}
+		}
+		return values;
 	}
 }

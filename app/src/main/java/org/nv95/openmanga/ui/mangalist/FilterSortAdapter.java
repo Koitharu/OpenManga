@@ -6,17 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Checkable;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.ui.common.TypedString;
+import org.nv95.openmanga.utils.CollectionsUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -100,6 +99,14 @@ public final class FilterSortAdapter extends RecyclerView.Adapter {
 	@Override
 	public int getItemViewType(int position) {
 		return mDataset.get(position).getType();
+	}
+
+	int getSelectedSort() {
+		return mSelectedSort;
+	}
+
+	SparseBooleanArray getSelectedGenres() {
+		return mSelectedGenres;
 	}
 
 	class GenreHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

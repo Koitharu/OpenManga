@@ -48,7 +48,7 @@
 		app:layout_anchor="@id/recyclerView"
 		app:layout_anchorGravity="bottom|end"
 		app:fabSize="normal"
-		android:src="@drawable/ic_format_list_checks_white"
+		android:src="@drawable/ic_filter_list_white"
 		app:layout_behavior="org.nv95.openmanga.ui.ux.ScrollAwareFABBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

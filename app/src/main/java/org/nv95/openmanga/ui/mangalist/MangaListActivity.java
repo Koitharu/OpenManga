@@ -18,7 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.loaders.MangaListLoader;
 import org.nv95.openmanga.ui.AppBaseActivity;
@@ -29,7 +31,8 @@ import java.util.ArrayList;
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>, View.OnClickListener {
+public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
+		View.OnClickListener, FilterCallback {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
@@ -38,6 +41,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private MangaListAdapter mAdapter;
 	private ArrayList<MangaHeader> mDataset;
 	private MangaProvider mProvider;
+	private MangaQueryArguments mArguments;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,13 +68,13 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mAdapter = new MangaListAdapter(mDataset);
 		mRecyclerView.setAdapter(mAdapter);
 
-		getLoaderManager().initLoader(0, null, this);
-		getLoaderManager().getLoader(0).forceLoad();
+		mArguments = new MangaQueryArguments();
+		getLoaderManager().initLoader(0, mArguments.toBundle(), this).forceLoad();
 	}
 
 	@Override
 	public Loader<ArrayList<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
-		return new MangaListLoader(this, mProvider);
+		return new MangaListLoader(this, mProvider, MangaQueryArguments.from(bundle));
 	}
 
 	@Override
@@ -106,5 +110,16 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				dialogFragment.show(getSupportFragmentManager(), "");
 				return;
 		}
+	}
+
+	@Override
+	public void setFilter(int sort, MangaGenre[] genres) {
+		mArguments.sort = sort;
+		mArguments.genres = genres;
+		mArguments.page = 0;
+		mProgressBar.setVisibility(View.VISIBLE);
+		mDataset.clear();
+		mAdapter.notifyDataSetChanged();
+		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
 	}
 }
