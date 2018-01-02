@@ -395,4 +395,7 @@
 	<string name="add_to_homescreen">Add to homescreen</string>
     <string name="find_similar">Find similar</string>
 	<string name="genres">Genres</string>
+	<string name="apply">Apply</string>
+	<string name="reset">Reset</string>
+	<string name="filter_resetted">Filter was resetted</string>
 </resources>

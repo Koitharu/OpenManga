@@ -1,5 +1,6 @@
 package org.nv95.openmanga.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseBooleanArray;
 
@@ -60,5 +61,14 @@ public final class CollectionsUtils {
 			}
 		}
 		return values;
+	}
+
+	public static <T> boolean contains(@NonNull T[] array, T value) {
+		for (T o : array) {
+			if (o != null && o.equals(value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -24,8 +24,11 @@ import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.loaders.MangaListLoader;
 import org.nv95.openmanga.ui.AppBaseActivity;
+import org.nv95.openmanga.utils.CollectionsUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by koitharu on 28.12.17.
@@ -59,7 +62,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
-		String cname = getIntent().getStringExtra("provider.cname");
+		final String cname = getIntent().getStringExtra("provider.cname");
 		assert cname != null;
 		mProvider = MangaProvider.getProvider(this, cname);
 		setTitle(mProvider.getName());
@@ -102,10 +105,11 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.fabFilter:
-				FilterDialogFragment dialogFragment = new FilterDialogFragment();
-				Bundle args = new Bundle();
+				final FilterDialogFragment dialogFragment = new FilterDialogFragment();
+				final Bundle args = new Bundle();
 				args.putIntArray("sorts", mProvider.getAvailableSortOrders());
 				args.putParcelableArray("genres", mProvider.getAvailableGenres());
+				args.putBundle("query", mArguments.toBundle());
 				dialogFragment.setArguments(args);
 				dialogFragment.show(getSupportFragmentManager(), "");
 				return;
@@ -114,6 +118,8 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 	@Override
 	public void setFilter(int sort, MangaGenre[] genres) {
+		final boolean theSame = sort == mArguments.sort && Arrays.equals(mArguments.genres, genres);
+		if (theSame) return;
 		mArguments.sort = sort;
 		mArguments.genres = genres;
 		mArguments.page = 0;

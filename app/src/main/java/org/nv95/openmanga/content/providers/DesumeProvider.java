@@ -38,7 +38,7 @@ public class DesumeProvider extends MangaProvider {
 			new MangaGenre(R.string.genre_action, "action"),
 			new MangaGenre(R.string.genre_martialarts, "martial%20arts"),
 			new MangaGenre(R.string.genre_vampires, "vampire"),
-			new MangaGenre(R.string.web, "web"),
+			new MangaGenre(R.string.web, "manhwa"),
 			new MangaGenre(R.string.genre_military, "military"),
 			new MangaGenre(R.string.genre_harem, "harem"),
 			new MangaGenre(R.string.genre_youkai, "demons"),

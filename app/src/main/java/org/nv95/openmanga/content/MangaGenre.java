@@ -2,6 +2,7 @@ package org.nv95.openmanga.content;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 /**
@@ -12,9 +13,10 @@ public final class MangaGenre implements Parcelable {
 
 	@StringRes
 	public final int nameId;
+	@NonNull
 	public final String value;
 
-	public MangaGenre(int nameId, String value) {
+	public MangaGenre(int nameId, @NonNull String value) {
 		this.nameId = nameId;
 		this.value = value;
 	}
@@ -50,5 +52,20 @@ public final class MangaGenre implements Parcelable {
 	public void writeToParcel(Parcel parcel, int i) {
 		parcel.writeInt(nameId);
 		parcel.writeString(value);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MangaGenre that = (MangaGenre) o;
+
+		return nameId == that.nameId && value.equals(that.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * nameId + value.hashCode();
 	}
 }

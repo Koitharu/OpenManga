@@ -28,7 +28,6 @@ public final class MangaListLoader extends AsyncTaskLoader<ArrayList<MangaHeader
 	@Override
 	public ArrayList<MangaHeader> loadInBackground() {
 		try {
-
 			return mProvider.query(mArguments.query, mArguments.page, mArguments.sort, mArguments.genresValues());
 		} catch (Exception e) {
 			e.printStackTrace();

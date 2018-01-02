@@ -14,21 +14,44 @@
 		app:layoutManager="android.support.v7.widget.LinearLayoutManager"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-	<TextView
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="?attr/actionBarSize"
 		android:gravity="center_vertical"
 		android:paddingLeft="16dp"
 		android:paddingRight="16dp"
-		android:text="@string/filter"
-		android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-		android:textColor="?android:textColorTertiary" />
+		android:orientation="horizontal">
+
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_weight="1"
+			android:text="@string/filter"
+			android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+			android:textColor="?android:textColorTertiary" />
+
+		<Button
+			android:id="@+id/buttonReset"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/reset" />
+
+		<Button
+			android:id="@+id/buttonApply"
+			style="@style/Widget.AppCompat.Button.Colored"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/apply" />
+
+	</LinearLayout>
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/appbar"
-		android:visibility="gone"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		android:visibility="gone">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"

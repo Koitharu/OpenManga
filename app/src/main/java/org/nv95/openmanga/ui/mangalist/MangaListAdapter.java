@@ -70,7 +70,8 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 	@Override
 	public int getItemCount() {
-		return mDataset.size() + 1;
+		final int size = mDataset.size();
+		return size == 0 ? 0 : size + 1;
 	}
 
 	@ItemViewType

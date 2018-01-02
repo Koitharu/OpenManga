@@ -20,6 +20,7 @@ import org.nv95.openmanga.utils.CollectionsUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by koitharu on 31.12.17.
@@ -31,7 +32,7 @@ public final class FilterSortAdapter extends RecyclerView.Adapter {
 	private int mSelectedSort = 0;
 	private final SparseBooleanArray mSelectedGenres;
 
-	FilterSortAdapter(Context context, @NonNull @StringRes int[] sorts, @NonNull MangaGenre[] genres) {
+	FilterSortAdapter(Context context, @NonNull @StringRes int[] sorts, @NonNull MangaGenre[] genres, int selectedSort, String[] selectedGenres) {
 		mDataset = new ArrayList<>();
 		mSelectedGenres = new SparseBooleanArray();
 		setHasStableIds(true);
@@ -39,12 +40,18 @@ public final class FilterSortAdapter extends RecyclerView.Adapter {
 			mDataset.add(new TypedString(context, R.string.action_sort, ItemViewType.TYPE_ITEM_HEADER, -1));
 			for (int i = 0; i < sorts.length; i++) {
 				mDataset.add(new TypedString(context, sorts[i], ItemViewType.TYPE_ITEM_SORT, i));
+				if (sorts[i] == selectedSort) {
+					mSelectedSort = i;
+				}
 			}
 		}
 		if (genres.length != 0) {
 			mDataset.add(new TypedString(context, R.string.genres, ItemViewType.TYPE_ITEM_HEADER, -1));
 			for (int i = 0; i < genres.length; i++) {
 				mDataset.add(new TypedString(context, genres[i].nameId, ItemViewType.TYPE_ITEM_GENRE, i));
+				if (CollectionsUtils.contains(selectedGenres, genres[i].value)) {
+					mSelectedGenres.put(i, true);
+				}
 			}
 		}
 	}
@@ -107,6 +114,12 @@ public final class FilterSortAdapter extends RecyclerView.Adapter {
 
 	SparseBooleanArray getSelectedGenres() {
 		return mSelectedGenres;
+	}
+
+	void reset() {
+		mSelectedSort = 0;
+		mSelectedGenres.clear();
+		notifyDataSetChanged();
 	}
 
 	class GenreHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
