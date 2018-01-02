@@ -1,9 +1,12 @@
 package org.nv95.openmanga.content;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+
+import org.nv95.openmanga.ui.mangalist.MangaListActivity;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -67,5 +70,20 @@ public final class MangaGenre implements Parcelable {
 	@Override
 	public int hashCode() {
 		return 31 * nameId + value.hashCode();
+	}
+
+	@NonNull
+	public static String joinNames(@NonNull Context context, @NonNull MangaGenre[] genres, @NonNull String delimiter) {
+		final StringBuilder builder = new StringBuilder();
+		boolean nonFirst = false;
+		for (MangaGenre o: genres) {
+			if (nonFirst) {
+				builder.append(delimiter);
+			} else {
+				nonFirst = true;
+			}
+			builder.append(context.getString(o.nameId));
+		}
+		return builder.toString();
 	}
 }

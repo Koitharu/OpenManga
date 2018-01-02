@@ -10,6 +10,8 @@ import org.nv95.openmanga.content.MangaGenre;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -70,5 +72,19 @@ public final class CollectionsUtils {
 			}
 		}
 		return false;
+	}
+
+	public static String toString(@NonNull Object[] elements, @NonNull String delimiter) {
+		final StringBuilder builder = new StringBuilder();
+		boolean nonFirst = false;
+		for (Object o: elements) {
+			if (nonFirst) {
+				builder.append(delimiter);
+			} else {
+				nonFirst = true;
+			}
+			builder.append(o.toString());
+		}
+		return builder.toString();
 	}
 }

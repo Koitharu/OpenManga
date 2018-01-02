@@ -7,11 +7,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -35,11 +40,13 @@ import java.util.Collections;
  */
 
 public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
-		View.OnClickListener, FilterCallback {
+		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
 	private FloatingActionButton mFabFilter;
+	private SearchView mSearchView;
+	private MenuItem mMenuItemSearch;
 
 	private MangaListAdapter mAdapter;
 	private ArrayList<MangaHeader> mDataset;
@@ -76,8 +83,25 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.options_mangalist, menu);
+		mMenuItemSearch = menu.findItem(R.id.action_search);
+		mSearchView = (SearchView) mMenuItemSearch.getActionView();
+		mSearchView.setOnQueryTextListener(this);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public Loader<ArrayList<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
-		return new MangaListLoader(this, mProvider, MangaQueryArguments.from(bundle));
+		final MangaQueryArguments queryArgs = MangaQueryArguments.from(bundle);
+		if (!TextUtils.isEmpty(queryArgs.query)) {
+			setSubtitle(queryArgs.query);
+		} else if (queryArgs.genres.length != 0) {
+			setSubtitle(MangaGenre.joinNames(this, queryArgs.genres, ", "));
+		} else {
+			setSubtitle(null);
+		}
+		return new MangaListLoader(this, mProvider, queryArgs);
 	}
 
 	@Override
@@ -127,5 +151,25 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mDataset.clear();
 		mAdapter.notifyDataSetChanged();
 		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		mMenuItemSearch.collapseActionView();
+		if (TextUtils.equals(query, mArguments.query)) {
+			return true;
+		}
+		mArguments.query = query;
+		mArguments.page = 0;
+		mProgressBar.setVisibility(View.VISIBLE);
+		mDataset.clear();
+		mAdapter.notifyDataSetChanged();
+		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+		return true;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		return false;
 	}
 }
