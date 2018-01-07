@@ -29,8 +29,7 @@
 		android:largeHeap="true"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
-		android:theme="@style/AppTheme"
-		tools:ignore="GoogleAppIndexingWarning">
+		android:theme="@style/AppTheme">
 		<activity
 			android:name=".ui.MainActivity"
 			android:configChanges="orientation|screenSize"
@@ -41,44 +40,6 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".legacy.activities.PreviewActivity2">
-			<intent-filter>
-				<action android:name="org.nv95.openmanga.action.PREVIEW" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".legacy.activities.SearchActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/search_results" />
-		<activity android:name=".legacy.activities.ReadActivity2" />
-		<activity
-			android:name=".legacy.activities.settings.ProviderPreferencesActivity"
-			android:label="@string/action_settings" />
-		<activity
-			android:name=".legacy.activities.DownloadsActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/downloads_queue"
-			android:launchMode="singleInstance" />
-		<activity
-			android:name=".legacy.activities.NewChaptersActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/manga_updates" />
-		<activity
-			android:name=".legacy.activities.settings.SettingsActivity2"
-			android:label="@string/action_settings" />
-		<activity
-			android:name=".legacy.activities.WelcomeActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/welcome" />
-		<activity
-			android:name=".legacy.activities.AboutActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/about" />
-		<activity
-			android:name=".legacy.activities.FileSelectActivity"
-			android:configChanges="orientation|screenSize"
-			android:label="@string/select_file" />
-		<activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
 		<activity
 			android:name=".sync.ui.SyncAuthActivity"
@@ -86,28 +47,39 @@
 			android:label="@string/sync"
 			android:windowSoftInputMode="adjustResize" />
 
-		<activity android:name=".ui.PreviewActivity"
+		<activity
+			android:name=".ui.PreviewActivity"
 			android:configChanges="orientation|screenSize" />
 
-		<activity android:name=".ui.mangalist.MangaListActivity"
+		<activity
+			android:name=".ui.mangalist.MangaListActivity"
 			android:configChanges="screenSize|orientation" />
 
-		<activity android:name=".sync.ui.DevicesListActivity"
+		<activity
+			android:name=".ui.search.SearchActivity"
+			android:configChanges="screenSize|orientation"
+			android:label="@string/action_search">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data
+				android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
+		</activity>
+
+		<activity
+			android:name=".sync.ui.DevicesListActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/attached_devices">
 
 			<intent-filter>
-				<action android:name="org.nv95.openmanga.sync.DEVICES"/>
+				<action android:name="org.nv95.openmanga.sync.DEVICES" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 		</activity>
 
-		<service android:name=".legacy.services.ScheduledService" />
-		<service android:name=".legacy.services.UpdateService" />
-		<service android:name=".legacy.services.ImportService" />
-		<service android:name=".legacy.services.SyncService" />
-		<service android:name=".legacy.services.ExportService" />
-		<service android:name=".legacy.services.SaveService" />
+		<provider android:name=".ui.search.SearchSuggestionsProvider"
+			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST" />
 
 		<service android:name=".sync.AccountService">
 			<intent-filter>
@@ -121,15 +93,15 @@
 		<provider
 			android:name=".sync.FavouritesContentProvider"
 			android:authorities="org.nv95.openmanga.favourites"
-			android:label="@string/_favourites"
 			android:exported="false"
+			android:label="@string/_favourites"
 			android:syncable="true" />
 
 		<provider
 			android:name=".sync.HistoryContentProvider"
 			android:authorities="org.nv95.openmanga.history"
-			android:label="@string/_history"
 			android:exported="false"
+			android:label="@string/_history"
 			android:syncable="true" />
 
 		<service
@@ -155,18 +127,6 @@
 				android:name="android.content.SyncAdapter"
 				android:resource="@xml/sync_history" />
 		</service>
-
-		<receiver
-			android:name=".legacy.ScheduledServiceReceiver"
-			android:enabled="true"
-			android:exported="true">
-			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
-				<action android:name="android.intent.action.QUICKBOOT_POWERON" />
-
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</receiver>
 
 	</application>
 

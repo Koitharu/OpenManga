@@ -398,4 +398,5 @@
 	<string name="apply">Apply</string>
 	<string name="reset">Reset</string>
 	<string name="filter_resetted">Filter was resetted</string>
+	<string name="search_hint">Search manga</string>
 </resources>

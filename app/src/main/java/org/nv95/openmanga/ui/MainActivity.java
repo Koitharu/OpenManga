@@ -1,10 +1,16 @@
 package org.nv95.openmanga.ui;
 
 import android.app.Fragment;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +18,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ui.discover.DiscoverFragment;
+import org.nv95.openmanga.ui.search.SearchActivity;
 import org.nv95.openmanga.ui.shelf.ShelfFragment;
 
 /**
@@ -22,8 +29,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener {
 
 	private BottomNavigationView mBottomNavigationView;
-	private TextView mTextViewSearch;
+	private SearchView mSearchView;
 	private ImageView mImageViewMenu;
+	private View mContent;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,16 +41,29 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 
 		mBottomNavigationView = findViewById(R.id.bottomNavView);
 		mImageViewMenu = findViewById(R.id.imageViewMenu);
-		mTextViewSearch = findViewById(R.id.textViewSearch);
+		mSearchView = findViewById(R.id.searchView);
+		mContent = findViewById(R.id.content);
 
 		mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 		mBottomNavigationView.setOnNavigationItemReselectedListener(this);
-		mTextViewSearch.setOnClickListener(this);
 		mImageViewMenu.setOnClickListener(this);
+
+		final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		final SearchableInfo searchableInfo;
+		if (searchManager != null) {
+			searchableInfo = searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class));
+			mSearchView.setSearchableInfo(searchableInfo);
+		}
 
 		getFragmentManager().beginTransaction()
 				.replace(R.id.content, new ShelfFragment())
 				.commit();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mContent.requestFocus();
 	}
 
 	@Override
@@ -77,9 +98,6 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.imageViewMenu:
-				//TODO
-				break;
-			case R.id.textViewSearch:
 				//TODO
 				break;
 		}

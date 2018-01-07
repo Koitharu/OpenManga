@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.ProviderHeader;
 import org.nv95.openmanga.content.providers.DesumeProvider;
+import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.ui.AppBaseFragment;
 import org.nv95.openmanga.ui.common.HeaderDividerItemDecoration;
 
@@ -52,7 +54,7 @@ public final class DiscoverFragment extends AppBaseFragment {
 		dataset.add(new ProviderHeaderDetailed("browse/bookmarks" /* TODO */, getString(R.string.bookmarks),
 				getString(R.string.bookmarks_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_white)));
 		dataset.add(getString(R.string.storages_remote));
-		dataset.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
+		dataset.addAll(MangaProvider.getAvailableProviders(getActivity()));
 		final DiscoverAdapter adapter = new DiscoverAdapter(dataset);
 		mRecyclerView.setAdapter(adapter);
 	}

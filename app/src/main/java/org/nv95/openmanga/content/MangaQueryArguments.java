@@ -25,7 +25,7 @@ public final class MangaQueryArguments {
 
 	@NonNull
 	public Bundle toBundle() {
-		Bundle bundle = new Bundle();
+		Bundle bundle = new Bundle(4);
 		bundle.putString("query", query);
 		bundle.putInt("page", page);
 		bundle.putInt("sort", sort);

@@ -11,6 +11,7 @@ import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
+import org.nv95.openmanga.content.ProviderHeader;
 
 import java.util.ArrayList;
 
@@ -30,8 +31,17 @@ public abstract class MangaProvider {
 		return mContext.getSharedPreferences("prov_" + this.getClass().getSimpleName(), Context.MODE_PRIVATE);
 	}
 
+	/**
+	 *
+	 * @param search - search query or null
+	 * @param page - from 0 to infinity
+	 * @param sortOrder - index of {@link #getAvailableSortOrders()} or -1
+	 * @param genres - array of values from {@link #getAvailableGenres()}
+	 * @return list
+	 * @throws Exception if anything wrong
+	 */
 	@NonNull
-	public abstract ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, String[] genres) throws Exception;
+	public abstract ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, @NonNull String[] genres) throws Exception;
 
 	@NonNull
 	public abstract MangaDetails getDetails(MangaHeader header) throws Exception;
@@ -110,5 +120,13 @@ public abstract class MangaProvider {
 			}
 		}
 		return null;
+	}
+
+	@NonNull
+	public static ArrayList<ProviderHeader> getAvailableProviders(@NonNull Context context) {
+		//TODO load form settings
+		final ArrayList<ProviderHeader> providers = new ArrayList<>();
+		providers.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
+		return providers;
 	}
 }

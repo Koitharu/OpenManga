@@ -1,9 +1,8 @@
-package org.nv95.openmanga.loaders;
+package org.nv95.openmanga.ui.mangalist;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
-import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.ProviderHeader;
 import org.nv95.openmanga.ui.mangalist.MangaListActivity;
 
 import java.lang.annotation.Retention;
@@ -53,14 +54,14 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof DetailsProviderHolder) {
 			ProviderHeaderDetailed item = (ProviderHeaderDetailed) mDataset.get(position);
-			((DetailsProviderHolder) holder).text1.setText(item.dname);
-			holder.itemView.setTag(item.cname);
+			((DetailsProviderHolder) holder).text1.setText(item.dName);
+			holder.itemView.setTag(item.cName);
 			((DetailsProviderHolder) holder).icon.setImageDrawable(item.icon);
 			((DetailsProviderHolder) holder).text2.setText(item.summary);
 		} else if (holder instanceof ProviderHolder) {
 			ProviderHeader item = (ProviderHeader) mDataset.get(position);
-			holder.itemView.setTag(item.cname);
-			((ProviderHolder) holder).text1.setText(item.dname);
+			holder.itemView.setTag(item.cName);
+			((ProviderHolder) holder).text1.setText(item.dName);
 		} else if (holder instanceof HeaderHolder) {
 			((HeaderHolder) holder).textView.setText((String) mDataset.get(position));
 		}

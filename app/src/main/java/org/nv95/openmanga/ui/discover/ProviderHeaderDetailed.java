@@ -2,6 +2,8 @@ package org.nv95.openmanga.ui.discover;
 
 import android.graphics.drawable.Drawable;
 
+import org.nv95.openmanga.content.ProviderHeader;
+
 /**
  * Created by koitharu on 26.12.17.
  */

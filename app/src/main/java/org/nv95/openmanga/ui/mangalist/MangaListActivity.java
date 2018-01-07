@@ -3,13 +3,8 @@ package org.nv95.openmanga.ui.mangalist;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +13,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,13 +21,10 @@ import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
-import org.nv95.openmanga.loaders.MangaListLoader;
 import org.nv95.openmanga.ui.AppBaseActivity;
-import org.nv95.openmanga.utils.CollectionsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Created by koitharu on 28.12.17.
@@ -115,7 +106,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 			if (firstPos == 0) {
 				mAdapter.notifyDataSetChanged();
 			} else {
-				mAdapter.notifyItemRangeInserted(firstPos, mDataset.size() - 1);
+				mAdapter.notifyItemRangeInserted(firstPos, mangaHeaders.size());
 			}
 		}
 	}

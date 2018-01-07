@@ -99,14 +99,14 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     
-    <org.nv95.openmanga.legacy.components.AppCompatProgressBar
+    <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
         app:layout_anchor="@id/pager"
         app:layout_anchorGravity="center"
-        app:layout_behavior="org.nv95.openmanga.components.CenterAlignBehavior"
+        app:layout_behavior="org.nv95.openmanga.ui.ux.CenterGravityBehavior"
         style="?android:progressBarStyleLarge"/>
 
 </android.support.design.widget.CoordinatorLayout>
