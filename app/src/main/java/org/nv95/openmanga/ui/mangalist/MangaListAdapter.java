@@ -14,7 +14,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.ui.PreviewActivity;
-import org.nv95.openmanga.utils.CollectionsUtils;
+import org.nv95.openmanga.ui.common.EndlessRecyclerView;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -26,7 +26,8 @@ import java.util.ArrayList;
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
+public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener,
+		EndlessRecyclerView.EndlessAdapter {
 
 	private final ArrayList<MangaHeader> mDataset;
 	private boolean mInProgress;
@@ -91,6 +92,11 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 		Context context = view.getContext();
 		context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
 				.putExtra("manga", mangaHeader));
+	}
+
+	@Override
+	public void setHasNext(boolean hasNext) {
+		mInProgress = hasNext;
 	}
 
 	class MangaHeaderHolder extends RecyclerView.ViewHolder {

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,6 +21,7 @@ import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.ui.AppBaseActivity;
+import org.nv95.openmanga.ui.common.EndlessRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,9 +31,9 @@ import java.util.Arrays;
  */
 
 public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
-		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener {
+		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener, EndlessRecyclerView.OnLoadMoreListener {
 
-	private RecyclerView mRecyclerView;
+	private EndlessRecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
 	private FloatingActionButton mFabFilter;
 	private SearchView mSearchView;
@@ -59,6 +59,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+		mRecyclerView.setOnLoadMoreListener(this);
 
 		final String cname = getIntent().getStringExtra("provider.cname");
 		assert cname != null;
@@ -100,6 +101,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mProgressBar.setVisibility(View.GONE);
 		if (mangaHeaders == null) {
 			Toast.makeText(this, R.string.loading_error, Toast.LENGTH_SHORT).show();
+			mRecyclerView.onLoadingFinished(false);
 		} else {
 			int firstPos = mDataset.size();
 			mDataset.addAll(mangaHeaders);
@@ -108,6 +110,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 			} else {
 				mAdapter.notifyItemRangeInserted(firstPos, mangaHeaders.size());
 			}
+			mRecyclerView.onLoadingFinished(!mangaHeaders.isEmpty());
 		}
 	}
 
@@ -162,5 +165,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	@Override
 	public boolean onQueryTextChange(String newText) {
 		return false;
+	}
+
+	@Override
+	public boolean onLoadMore() {
+		mArguments.page++;
+		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+		return true;
 	}
 }

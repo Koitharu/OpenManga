@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.shelf.ShelfContent;
-import org.nv95.openmanga.loaders.ShelfLoader;
 import org.nv95.openmanga.ui.AppBaseFragment;
 import org.nv95.openmanga.utils.ResourceUtils;
 

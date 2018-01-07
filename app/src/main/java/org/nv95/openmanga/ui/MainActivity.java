@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ui.discover.DiscoverFragment;
@@ -57,7 +55,7 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 
 		getFragmentManager().beginTransaction()
 				.replace(R.id.content, new ShelfFragment())
-				.commit();
+				.commitAllowingStateLoss();
 	}
 
 	@Override
