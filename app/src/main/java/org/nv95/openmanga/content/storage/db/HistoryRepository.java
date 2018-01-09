@@ -3,15 +3,15 @@ package org.nv95.openmanga.content.storage.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.content.MangaChapter;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaHistory;
+import org.nv95.openmanga.content.MangaPage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by koitharu on 24.12.17.
@@ -103,9 +103,8 @@ public class HistoryRepository implements Repository<MangaHistory> {
 							cursor.getLong(9),
 							cursor.getLong(10),
 							cursor.getLong(11),
-							cursor.getLong(12),
-							cursor.getShort(13),
-							cursor.getInt(14),
+							cursor.getShort(12),
+							cursor.getInt(13),
 							cursor.getInt(14)
 					));
 				} while (cursor.moveToNext());
@@ -118,8 +117,22 @@ public class HistoryRepository implements Repository<MangaHistory> {
 		}
 	}
 
+	public boolean quickUpdate(MangaHeader manga, MangaChapter chapter, MangaPage page) {
+		try {
+			final ContentValues cv = new ContentValues();
+			cv.put(PROJECTION[9], chapter.id);
+			cv.put(PROJECTION[10], page.id);
+			cv.put(PROJECTION[11], System.currentTimeMillis());
+			return mStorageHelper.getWritableDatabase()
+					.update(TABLE_NAME, cv,
+							"id=?", new String[]{String.valueOf(manga.id)}) > 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	private ContentValues toContentValues(MangaHistory mangaHistory) {
-		ContentValues cv = new ContentValues();
+		final ContentValues cv = new ContentValues();
 		cv.put(PROJECTION[0], mangaHistory.id);
 		cv.put(PROJECTION[1], mangaHistory.name);
 		cv.put(PROJECTION[2], mangaHistory.summary);

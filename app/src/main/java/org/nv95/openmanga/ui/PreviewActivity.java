@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.content.storage.db.FavouritesRepository;
 import org.nv95.openmanga.content.storage.db.HistoryRepository;
 import org.nv95.openmanga.ui.common.SimpleViewPagerAdapter;
+import org.nv95.openmanga.ui.reader.ReaderActivity;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MenuUtils;
 import org.nv95.openmanga.utils.TextUtils;
@@ -42,7 +44,8 @@ import org.nv95.openmanga.utils.TextUtils;
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreviewActivity extends AppBaseActivity implements AppBarLayout.OnOffsetChangedListener, LoaderManager.LoaderCallbacks<MangaDetails>,ChaptersListAdapter.OnChapterClickListener {
+public final class PreviewActivity extends AppBaseActivity implements AppBarLayout.OnOffsetChangedListener,
+		LoaderManager.LoaderCallbacks<MangaDetails>,ChaptersListAdapter.OnChapterClickListener {
 
 	private boolean mToolbarCollapsed = false;
 	private MangaHeader mMangaHeader;
@@ -277,7 +280,9 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 
 	@Override
 	public void onChapterClick(int pos, MangaChapter chapter) {
-		//TODO
+		startActivity(new Intent(this, ReaderActivity.class)
+		.putExtra("manga", mMangaDetails)
+		.putExtra("chapter", chapter));
 	}
 
 	@Override

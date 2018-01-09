@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/action_chapters"
+		android:icon="@drawable/ic_view_list_white"
+		app:showAsAction="always"
+		android:title="@string/chapters_list" />
+
+</menu>

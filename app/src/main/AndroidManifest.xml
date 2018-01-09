@@ -78,6 +78,9 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".ui.reader.ReaderActivity"
+			android:configChanges="orientation|screenSize" />
+
 		<provider android:name=".ui.search.SearchSuggestionsProvider"
 			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST" />
 

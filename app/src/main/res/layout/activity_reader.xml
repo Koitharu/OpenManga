@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.nv95.openmanga.ui.reader.ImmersiveFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<FrameLayout
+		android:id="@+id/content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+	<RelativeLayout
+		android:id="@+id/contentPanel"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="?colorTranslucent"
+		android:clickable="true"
+		tools:ignore="KeyboardInaccessibleWidget">
+
+		<ProgressBar
+			android:id="@+id/progressBar"
+			style="@style/Widget.AppCompat.ProgressBar"
+			android:layout_centerInParent="true"
+			android:layout_width="72dp"
+			android:layout_height="72dp" />
+
+		<TextView
+			android:id="@+id/textView"
+			android:layout_below="@id/progressBar"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="12dp"
+			android:text="@string/loading_chapter"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+	</RelativeLayout>
+
+	<android.support.v7.widget.Toolbar
+
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="?attr/actionBarSize"
+		android:layout_gravity="top"
+		android:background="@color/transparent_dark"
+		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+	<RelativeLayout
+		android:id="@+id/bottomBar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_gravity="bottom"
+		android:background="@color/transparent_dark"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark"
+		app:elevation="4dp">
+
+		<TextView
+			android:id="@+id/textView_page"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_toLeftOf="@+id/action_thumbnails"
+			android:layout_toStartOf="@+id/action_thumbnails"
+			android:lines="1"
+			android:paddingBottom="2dp"
+			android:paddingLeft="12dp"
+			android:paddingRight="12dp"
+			android:singleLine="true"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+			tools:text="Page 3 of 14" />
+
+		<android.support.v7.widget.AppCompatSeekBar
+			android:id="@+id/seekBar"
+			style="@style/Widget.AppCompat.SeekBar.Discrete"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@+id/textView_page"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"
+			android:layout_toLeftOf="@id/action_thumbnails"
+			android:layout_toStartOf="@id/action_thumbnails"
+			tools:max="14"
+			tools:progress="3" />
+
+		<org.nv95.openmanga.ui.reader.ToolButtonCompat
+			android:id="@+id/action_thumbnails"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentTop="true"
+			android:layout_toLeftOf="@+id/action_menu"
+			android:layout_toStartOf="@+id/action_menu"
+			android:src="@drawable/ic_view_grid_white" />
+
+		<org.nv95.openmanga.ui.reader.ToolButtonCompat
+			android:id="@+id/action_menu"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
+			android:src="@drawable/ic_menu_white" />
+
+	</RelativeLayout>
+
+</org.nv95.openmanga.ui.reader.ImmersiveFrameLayout>

@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.support.annotation.AttrRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
@@ -102,10 +101,10 @@ public final class ThemeUtils {
 	}
 
 	public static Drawable getSelectableBackground(Context context) {
-		TypedValue typedValue = new TypedValue();
-		TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { R.attr.selectableItemBackground });
-		Drawable d = a.getDrawable(0);
-		a.recycle();
-		return d;
+		return getAttrDrawable(context, R.attr.selectableItemBackground);
+	}
+
+	public static Drawable getSelectableBackgroundBorderless(Context context) {
+		return getAttrDrawable(context, R.attr.selectableItemBackgroundBorderless);
 	}
 }

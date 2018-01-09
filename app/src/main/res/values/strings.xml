@@ -388,7 +388,7 @@
     <string name="allowed_only_one_account">You already have an OpenManga account</string>
 	<string name="browse_filesystem">Browse local files</string>
     <string name="import_cbz_summary">Import manga from zip or cbz file</string>
-	<string name="bookmarks_summary">Favourited pages</string>
+	<string name="bookmarks_summary">Favourite pages</string>
     <string name="saved_manga">Saved manga</string>
     <string name="saved_manga_summary">Downloaded chapters, available without network</string>
     <string name="recommendations_summary">Random manga based on your preferences</string>
@@ -399,4 +399,6 @@
 	<string name="reset">Reset</string>
 	<string name="filter_resetted">Filter was resetted</string>
 	<string name="search_hint">Search manga</string>
+	<string name="loading_chapter">Loading chapter…</string>
+    <string name="page_x_of_n">Page %1$d of %2$d</string>
 </resources>

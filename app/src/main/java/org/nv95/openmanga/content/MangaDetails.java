@@ -1,6 +1,6 @@
 package org.nv95.openmanga.content;
 
-import android.text.Spanned;
+import android.os.Parcel;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -31,5 +31,38 @@ public final class MangaDetails extends MangaHeader {
 		this.description = description;
 		this.cover = cover;
 		this.chapters = new MangaChaptersList();
+	}
+
+	protected MangaDetails(Parcel in) {
+		super(in);
+		description = in.readString();
+		cover = in.readString();
+		chapters = new MangaChaptersList();
+		in.readTypedList(chapters, MangaChapter.CREATOR);
+	}
+
+	public static final Creator<MangaDetails> CREATOR = new Creator<MangaDetails>() {
+		@Override
+		public MangaDetails createFromParcel(Parcel in) {
+			return new MangaDetails(in);
+		}
+
+		@Override
+		public MangaDetails[] newArray(int size) {
+			return new MangaDetails[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int i) {
+		super.writeToParcel(parcel, i);
+		parcel.writeString(description);
+		parcel.writeString(cover);
+		parcel.writeTypedList(chapters);
 	}
 }
