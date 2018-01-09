@@ -29,6 +29,7 @@ import org.nv95.openmanga.content.MangaPage;
 import org.nv95.openmanga.content.storage.db.HistoryRepository;
 import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.ChaptersListAdapter;
+import org.nv95.openmanga.ui.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.utils.AnimationUtils;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 
 public final class ReaderActivity extends AppBaseActivity implements View.OnClickListener,
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
-		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener {
+		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener, ReaderCallback {
 
 	private ImmersiveFrameLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
@@ -48,7 +49,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private RelativeLayout mBottomBar;
 	private TextView mTextViewPage;
 
-	private ReaderFragment mFragment;
+	private ReaderFragment mReader;
 
 	private HistoryRepository mHistoryRepository;
 	private MangaDetails mManga;
@@ -73,7 +74,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		findViewById(R.id.action_menu).setOnClickListener(this);
 		findViewById(R.id.action_thumbnails).setOnClickListener(this);
 
-		if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			mRoot.setFitsSystemWindows(true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				Window window = getWindow();
@@ -86,6 +87,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mChapter = getIntent().getParcelableExtra("chapter");
 		assert mManga != null && mChapter != null;
 
+		mReader = new PagerReaderFragment();
+		getFragmentManager().beginTransaction()
+				.replace(R.id.reader, mReader)
+				.commit();
 		mHistoryRepository = new HistoryRepository(this);
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
@@ -106,7 +111,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus && Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT && mToolbar.getVisibility() != View.VISIBLE) {
+		if (hasFocus && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && mToolbar.getVisibility() != View.VISIBLE) {
 			getWindow().getDecorView().setSystemUiVisibility(
 					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 							| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -149,7 +154,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		mTextViewPage.setText(getString(R.string.page_x_of_n, progress, seekBar.getMax()));
+		mTextViewPage.setText(getString(R.string.page_x_of_n, progress + 1, seekBar.getMax()));
 	}
 
 	@Override
@@ -159,7 +164,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-
+		mReader.scrollToPage(seekBar.getProgress());
 	}
 
 	@Override
@@ -197,6 +202,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mSeekBar.setMax(mPages.size());
 		mSeekBar.setProgress(0);
 		addToHistory();
+		mReader.setPages(mPages);
 	}
 
 	@Override
@@ -289,5 +295,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		if (!mHistoryRepository.add(history)) {
 			mHistoryRepository.update(history);
 		}
+	}
+
+	@Override
+	public void onPageChanged(int page) {
+		mSeekBar.setProgress(page);
 	}
 }
