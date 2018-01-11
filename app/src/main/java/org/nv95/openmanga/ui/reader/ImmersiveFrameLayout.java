@@ -1,10 +1,8 @@
 package org.nv95.openmanga.ui.reader;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
@@ -31,13 +29,6 @@ public final class ImmersiveFrameLayout extends FrameLayout {
 
 	public ImmersiveFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		mStatusBarThreshold = getResources().getDimensionPixelOffset(R.dimen.statusbar_threshold);
-		mNavBarThreshold = getResources().getDimensionPixelOffset(R.dimen.navbar_threshold);
-	}
-
-	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-	public ImmersiveFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
 		mStatusBarThreshold = getResources().getDimensionPixelOffset(R.dimen.statusbar_threshold);
 		mNavBarThreshold = getResources().getDimensionPixelOffset(R.dimen.navbar_threshold);
 	}

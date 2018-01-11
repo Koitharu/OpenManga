@@ -3,7 +3,9 @@ package org.nv95.openmanga.ui.reader.pager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,12 +23,6 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	private ViewPager mPager;
 	private PagerReaderAdapter mAdapter;
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mAdapter = new PagerReaderAdapter(getPages());
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +36,8 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mPager.setOffscreenPageLimit(1);
+		mAdapter = new PagerReaderAdapter(getPages(), new GestureDetector(view.getContext(), new TapDetector()));
+		mPager.setOffscreenPageLimit(2);
 		mPager.setAdapter(mAdapter);
 		mPager.addOnPageChangeListener(this);
 	}
@@ -79,5 +76,53 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	@Override
 	public void onPageScrollStateChanged(int state) {
 
+	}
+
+	@Override
+	public void moveLeft() {
+		smoothScrollToPage(getCurrentPageIndex() - 1);
+	}
+
+	@Override
+	public void moveRight() {
+		smoothScrollToPage(getCurrentPageIndex() + 1);
+	}
+
+	@Override
+	public void moveUp() {
+
+	}
+
+	@Override
+	public void moveDown() {
+
+	}
+
+	private final class TapDetector extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			if (mPager == null) {
+				return false;
+			}
+			final float x = e.getX();
+			final float w3 = mPager.getWidth() / 3;
+			if (x < w3) {
+				moveLeft();
+			} else if (x <= w3 + w3) {
+				final float y = e.getY();
+				final float h3 = mPager.getHeight() / 3;
+				if (y < h3) {
+					moveLeft();
+				} else if (y <= h3 + h3) {
+					toggleUi();
+				} else {
+					moveRight();
+				}
+			} else {
+				moveRight();
+			}
+			return true;
+		}
 	}
 }

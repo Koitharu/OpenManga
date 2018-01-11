@@ -234,11 +234,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		}
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_MENU:
-				if (mToolbar.getVisibility() == View.VISIBLE) {
-					hideUi();
-				} else {
-					showUi();
-				}
+				toggleUi();
 				return true;
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
 				//TODO
@@ -300,5 +296,13 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onPageChanged(int page) {
 		mSeekBar.setProgress(page);
+	}
+
+	public void toggleUi() {
+		if (mToolbar.getVisibility() == View.VISIBLE) {
+			hideUi();
+		} else {
+			showUi();
+		}
 	}
 }

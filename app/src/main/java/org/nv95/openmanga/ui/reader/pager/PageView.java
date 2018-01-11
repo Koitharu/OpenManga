@@ -1,10 +1,13 @@
 package org.nv95.openmanga.ui.reader.pager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -71,8 +74,22 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		});
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
+	public void setTapDetector(final GestureDetector detector) {
+		mSubsamplingScaleImageView.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return detector.onTouchEvent(event);
+			}
+		});
+	}
+
 	public void setData(MangaPage page) {
 		mTextProgressView.show();
+		if (mErrorView != null) {
+			mErrorView.setVisibility(View.GONE);
+		}
 		mPage = page;
 		mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
 		if (mFile.exists()) {
@@ -80,14 +97,6 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		} else {
 			PageDownloader.getInstance().downloadPage(page.url, mFile.getPath(), this);
 		}
-	}
-
-	@Override
-	protected void onDetachedFromWindow() {
-		if (mPage != null) {
-			PageDownloader.getInstance().cancel(mPage.url);
-		}
-		super.onDetachedFromWindow();
 	}
 
 	private void setError(CharSequence errorMessage) {
@@ -155,5 +164,16 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	@Override
 	public void onPageDownloadProgress(int progress, int max) {
 		mTextProgressView.setProgress(progress, max);
+	}
+
+	public void recycle() {
+		if (mPage != null) {
+			PageDownloader.getInstance().cancel(mPage.url);
+		}
+		mSubsamplingScaleImageView.recycle();
+	}
+
+	public MangaPage getData() {
+		return mPage;
 	}
 }

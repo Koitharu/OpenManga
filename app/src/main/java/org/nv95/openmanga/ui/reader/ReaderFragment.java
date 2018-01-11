@@ -69,4 +69,19 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 			mCallback = (ReaderCallback) activity;
 		}
 	}
+
+	public abstract void moveLeft();
+
+	public abstract void moveRight();
+
+	public abstract void moveUp();
+
+	public abstract void moveDown();
+
+	protected void toggleUi() {
+		final Activity activity = getActivity();
+		if (activity != null && activity instanceof ReaderActivity) {
+			((ReaderActivity) activity).toggleUi();
+		}
+	}
 }

@@ -2,7 +2,7 @@ package org.nv95.openmanga.ui.reader.pager;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.view.View;
+import android.view.GestureDetector;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.content.MangaPage;
@@ -13,30 +13,33 @@ import java.util.ArrayList;
  * Created by koitharu on 09.01.18.
  */
 
-public final class PagerReaderAdapter extends PagerAdapter {
+public final class PagerReaderAdapter extends RecyclerPagerAdapter<PageView> {
 
 	private final ArrayList<MangaPage> mDataset;
+	private final GestureDetector mGestureDetector;
 
-	public PagerReaderAdapter(ArrayList<MangaPage> dataset) {
+	public PagerReaderAdapter(ArrayList<MangaPage> dataset, GestureDetector gestureDetector) {
+		mGestureDetector = gestureDetector;
 		mDataset = dataset;
 	}
 
-	@NonNull
 	@Override
-	public Object instantiateItem(@NonNull ViewGroup container, int position) {
-		final MangaPage page = mDataset.get(position);
+	protected PageView onCreateView(@NonNull ViewGroup container) {
 		final PageView pageView = new PageView(container.getContext());
 		pageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		pageView.setData(page);
-		container.addView(pageView);
+		pageView.setTapDetector(mGestureDetector);
 		return pageView;
 	}
 
 	@Override
-	public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-		container.removeView((View) object);
+	protected void onBindView(@NonNull PageView view, int position) {
+		view.setData(mDataset.get(position));
 	}
 
+	@Override
+	protected void onRecyclerView(@NonNull PageView view) {
+		view.recycle();
+	}
 
 	@Override
 	public int getCount() {
@@ -44,12 +47,10 @@ public final class PagerReaderAdapter extends PagerAdapter {
 	}
 
 	@Override
-	public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-		return view == object;
+	public int getItemPosition(@NonNull Object object) {
+		PageView view = (PageView) object;
+		return mDataset.contains(view.getData()) ? PagerAdapter.POSITION_UNCHANGED : PagerAdapter.POSITION_NONE;
 	}
 
-	@Override
-	public int getItemPosition(@NonNull Object object) {
-		return super.getItemPosition(object);
-	}
+
 }
