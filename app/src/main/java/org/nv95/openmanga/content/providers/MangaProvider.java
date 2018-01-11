@@ -28,7 +28,7 @@ public abstract class MangaProvider {
 	}
 
 	protected SharedPreferences getPreferences() {
-		return mContext.getSharedPreferences("prov_" + this.getClass().getSimpleName(), Context.MODE_PRIVATE);
+		return mContext.getSharedPreferences("prov_" + this.getCName(), Context.MODE_PRIVATE);
 	}
 
 	/**
@@ -95,19 +95,31 @@ public abstract class MangaProvider {
 		}
 	}
 
+	@CName
+	@Nullable
+	public final String getCName() {
+		try {
+			return ((String)this.getClass().getField("CNAME").get(this));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	private static LruCache<String,MangaProvider> sProviderCache = new LruCache<>(4);
 
-	public static MangaProvider getProvider(Context context, @NonNull String cname) {
-		MangaProvider provider = sProviderCache.get(cname);
+	@NonNull
+	public static MangaProvider getProvider(Context context, @NonNull @CName String cName) throws AssertionError {
+		MangaProvider provider = sProviderCache.get(cName);
 		if (provider != null) return provider;
-		switch (cname) {
+		switch (cName) {
 			case DesumeProvider.CNAME:
 				provider = new DesumeProvider(context);
 				break;
 			default:
-				throw new AssertionError("MangaProvider.getProvider must not return null!");
+				throw new AssertionError("Invalid CNAME");
 		}
-		sProviderCache.put(cname, provider);
+		sProviderCache.put(cName, provider);
 		return provider;
 	}
 
@@ -128,5 +140,15 @@ public abstract class MangaProvider {
 		final ArrayList<ProviderHeader> providers = new ArrayList<>();
 		providers.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
 		return providers;
+	}
+
+	@NonNull
+	public static String getDomain(@CName String cName) {
+		switch (cName) {
+			case DesumeProvider.CNAME:
+				return "desu.me";
+			default:
+				throw new AssertionError("Invalid CNAME");
+		}
 	}
 }

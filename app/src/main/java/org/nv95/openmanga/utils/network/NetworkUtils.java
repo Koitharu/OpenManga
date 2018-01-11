@@ -49,6 +49,7 @@ public class NetworkUtils {
 	@NonNull
 	private static OkHttpClient.Builder getClientBuilder() {
 		return new OkHttpClient.Builder()
+				.addInterceptor(CookieInterceptor.getInstance())
 				.addInterceptor(new CloudflareInterceptor());
 	}
 
@@ -154,38 +155,6 @@ public class NetworkUtils {
 		} finally {
 			if (reader != null) {
 				reader.close();
-			}
-		}
-	}
-
-	@Deprecated
-	@Nullable
-	public static CookieParser authorize(String url, String... data) {
-		DataOutputStream out = null;
-		try {
-			HttpURLConnection con = createConnection(url);
-			con.setRequestMethod("POST");
-			con.setDoOutput(true);
-			con.setInstanceFollowRedirects(true);
-			out = new DataOutputStream(con.getOutputStream());
-			out.writeBytes(makeQuery(data));
-			out.flush();
-			con.connect();
-			if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				return new CookieParser(con.getHeaderFields().get("Set-Cookie"));
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
