@@ -1,7 +1,6 @@
 package org.nv95.openmanga.ui.shelf;
 
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -26,6 +25,8 @@ public class ShelfItemSpaceDecoration extends RecyclerView.ItemDecoration {
 		final int position = parent.getChildAdapterPosition(view);
 		final int itemType = mAdapter.getItemViewType(position);
 		switch (itemType) {
+			case ShelfItemType.TYPE_RECENT:
+			case ShelfItemType.TYPE_TIP:
 			case ShelfItemType.TYPE_ITEM_DEFAULT:
 			case ShelfItemType.TYPE_ITEM_SMALL:
 				outRect.left = mSpacing;

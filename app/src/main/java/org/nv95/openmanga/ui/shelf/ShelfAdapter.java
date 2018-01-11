@@ -2,24 +2,23 @@ package org.nv95.openmanga.ui.shelf;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntDef;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.content.MangaHistory;
 import org.nv95.openmanga.ui.PreviewActivity;
 import org.nv95.openmanga.ui.common.ListHeader;
-import org.nv95.openmanga.ui.views.AspectRatioImageView;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.ResourceUtils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /**
@@ -46,11 +45,13 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		switch (viewType) {
 			case ShelfItemType.TYPE_HEADER:
-				return new HeaderHolder(inflater.inflate(R.layout.header_group, parent, false));
+				return new HeaderHolder(inflater.inflate(R.layout.header_group_button, parent, false));
 			case ShelfItemType.TYPE_ITEM_DEFAULT:
 				return new MangaHolder(inflater.inflate(R.layout.item_manga, parent, false));
+			case ShelfItemType.TYPE_RECENT:
+				return new RecentHolder(inflater.inflate(R.layout.item_recent, parent, false));
 			case ShelfItemType.TYPE_ITEM_SMALL:
-				throw new AssertionError("Unknown viewType");
+				return new MangaHolder(inflater.inflate(R.layout.item_manga_small, parent, false));
 			case ShelfItemType.TYPE_TIP:
 				throw new AssertionError("Unknown viewType");
 			default:
@@ -74,6 +75,11 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			ImageUtils.setThumbnail(((MangaHolder) holder).imageViewThumbnail, item.thumbnail);
 			((MangaHolder) holder).textViewTitle.setText(item.name);
 			holder.itemView.setTag(item);
+			if (holder instanceof RecentHolder) {
+				MangaHistory history = (MangaHistory) item;
+				((RecentHolder) holder).textViewSubtitle.setText(item.summary);
+				((RecentHolder) holder).textViewStatus.setText(ResourceUtils.formatTimeRelative(history.updatedAt));
+			}
 		}
 
 	}
@@ -84,8 +90,12 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		Object item = mDataset.get(position);
 		if (item instanceof ListHeader) {
 			return ShelfItemType.TYPE_HEADER;
-		} else if (item instanceof MangaHeader) {
+		} else if (item instanceof MangaHistory) {
+			return ShelfItemType.TYPE_RECENT;
+		} else if (item instanceof MangaFavourite) {
 			return ShelfItemType.TYPE_ITEM_DEFAULT;
+		} else if (item instanceof MangaHeader) {
+			return ShelfItemType.TYPE_ITEM_SMALL;
 		} else {
 			throw new AssertionError("Unknown viewType");
 		}
@@ -109,20 +119,30 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		}
 	}
 
-	class HeaderHolder extends RecyclerView.ViewHolder {
+	class HeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-		private final TextView textView;
+		final TextView textView;
+		final Button buttonMore;
 
 		HeaderHolder(View itemView) {
 			super(itemView);
 			textView = itemView.findViewById(R.id.textView);
+			buttonMore = itemView.findViewById(R.id.button_more);
+			buttonMore.setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+				//todo
+			}
 		}
 	}
 
 	class MangaHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-		private final AspectRatioImageView imageViewThumbnail;
-		private final TextView textViewTitle;
+		final ImageView imageViewThumbnail;
+		final TextView textViewTitle;
 
 		MangaHolder(View itemView) {
 			super(itemView);
@@ -133,10 +153,32 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 		@Override
 		public void onClick(View view) {
-			MangaHeader mangaHeader = (MangaHeader) view.getTag();
+			MangaHeader mangaHeader = (MangaHeader) itemView.getTag();
 			Context context = view.getContext();
 			context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
 					.putExtra("manga", mangaHeader));
+		}
+	}
+
+	class RecentHolder extends MangaHolder {
+
+		final TextView textViewStatus;
+		final TextView textViewSubtitle;
+
+		RecentHolder(View itemView) {
+			super(itemView);
+			textViewStatus = itemView.findViewById(R.id.textView_status);
+			textViewSubtitle = itemView.findViewById(R.id.textView_subtitle);
+			itemView.findViewById(R.id.button_continue).setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View view) {
+			if (view.getId() == R.id.button_continue) {
+
+			} else {
+				super.onClick(view);
+			}
 		}
 	}
 }

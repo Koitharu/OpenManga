@@ -1,9 +1,7 @@
 package org.nv95.openmanga.content.shelf;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.content.MangaBookmark;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaHistory;
@@ -16,9 +14,6 @@ import java.util.HashMap;
  */
 
 public class ShelfContent {
-
-	@Nullable
-	public MangaHistory recent;
 
 	@NonNull
 	public final ArrayList<MangaHistory> history;
@@ -33,6 +28,5 @@ public class ShelfContent {
 		history = new ArrayList<>();
 		favourites = new HashMap<>();
 		recommended = new ArrayList<>();
-		recent = null;
 	}
 }

@@ -29,17 +29,13 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 	@Override
 	public ShelfContent loadInBackground() {
 		final ShelfContent content = new ShelfContent();
-		/*MangaProvider provider = MangaProvider.getProvider(getContext(), DesumeProvider.CNAME);
-		try {
-			content.recommended.addAll(provider.query(null, 0, -1, new String[0]));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		//history
 		final HistoryRepository historyRepository = new HistoryRepository(getContext());
 		final ArrayList<MangaHistory> history = historyRepository.query(new HistorySpecification().orderByDate(true).limit(5));
 		if (history != null && !history.isEmpty()) {
-			content.history.addAll(history);
+			if (!history.isEmpty()) {
+				content.history.addAll(history);
+			}
 		}
 		//favourites
 		final CategoriesRepository categoriesRepository = new CategoriesRepository(getContext());

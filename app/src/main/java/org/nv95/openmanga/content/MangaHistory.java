@@ -43,4 +43,6 @@ public final class MangaHistory extends MangaHeader {
 		this.readerPreset = readerPreset;
 
 	}
+
+
 }

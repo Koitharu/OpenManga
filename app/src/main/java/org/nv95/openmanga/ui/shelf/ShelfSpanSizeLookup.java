@@ -21,10 +21,11 @@ public class ShelfSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 	public int getSpanSize(int position) {
 		switch (mAdapter.getItemViewType(position)) {
 			case ShelfItemType.TYPE_ITEM_DEFAULT:
-				return 2;
+				return 4;
 			case ShelfItemType.TYPE_ITEM_SMALL:
-				return 1;
+				return 3;
 			case ShelfItemType.TYPE_TIP:
+			case ShelfItemType.TYPE_RECENT:
 			case ShelfItemType.TYPE_HEADER:
 				return mMaxSpans;
 			default:

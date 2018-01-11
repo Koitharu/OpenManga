@@ -1,10 +1,8 @@
 package org.nv95.openmanga.ui.views;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by koitharu on 24.12.17.
@@ -12,7 +10,7 @@ import android.widget.ImageView;
 
 public class AspectRatioImageView extends AppCompatImageView {
 
-	private double mAspectRatio = 18f / 13f;
+	protected double mAspectRatio = 18f / 13f;
 
 	public AspectRatioImageView(Context context) {
 		super(context);

@@ -23,6 +23,13 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 
 	private RecyclerView mRecyclerView;
 	private ShelfAdapter mAdapter;
+	private int mColumnCount;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mColumnCount = 12;
+	}
 
 	@Nullable
 	@Override
@@ -40,10 +47,13 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (ResourceUtils.isLandscapeTablet(getResources())) {
+			mColumnCount = 12;
+		}
 		mAdapter = new ShelfAdapter();
-		GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 6);
-		layoutManager.setSpanSizeLookup(new ShelfSpanSizeLookup(mAdapter, 6));
-		mRecyclerView.addItemDecoration(new ShelfItemSpaceDecoration(ResourceUtils.dpToPx(getResources(), 4), mAdapter, 6));
+		GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mColumnCount);
+		layoutManager.setSpanSizeLookup(new ShelfSpanSizeLookup(mAdapter, mColumnCount));
+		mRecyclerView.addItemDecoration(new ShelfItemSpaceDecoration(ResourceUtils.dpToPx(getResources(), 4), mAdapter, mColumnCount));
 		mRecyclerView.setLayoutManager(layoutManager);
 		mRecyclerView.setAdapter(mAdapter);
 		getLoaderManager().initLoader(0, null, this);
@@ -57,7 +67,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 
 	@Override
 	public void onLoadFinished(Loader<ShelfContent> loader, ShelfContent content) {
-		ShelfUpdater.update(mAdapter, content);
+		ShelfUpdater.update(mAdapter, content, mColumnCount);
 	}
 
 	@Override

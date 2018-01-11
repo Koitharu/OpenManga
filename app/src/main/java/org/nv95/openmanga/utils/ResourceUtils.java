@@ -4,9 +4,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
-import android.text.*;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 
@@ -106,13 +106,20 @@ public final class ResourceUtils {
 		return size2 > size1 ? size2 : size1;
 	}
 
+	@NonNull
 	public static String formatDateTime(Context context, long time) {
 		Date date = new Date(time);
 		DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context.getApplicationContext());
 		return dateFormat.format(date);
 	}
 
+	@NonNull
 	public static String formatDateTimeRelative(Context context, long time) {
 		return DateUtils.getRelativeTimeSpanString(context, time).toString();
+	}
+
+	@NonNull
+	public static String formatTimeRelative(long time) {
+		return DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
 	}
 }

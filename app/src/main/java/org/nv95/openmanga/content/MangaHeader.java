@@ -2,7 +2,6 @@ package org.nv95.openmanga.content;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -85,5 +84,19 @@ public class MangaHeader implements Parcelable {
 		parcel.writeString(provider);
 		parcel.writeInt(status);
 		parcel.writeInt((int) rating);
+	}
+
+	public static MangaHeader from(MangaHeader other) {
+		return new MangaHeader(
+				other.id,
+				other.name,
+				other.summary,
+				other.genres,
+				other.url,
+				other.thumbnail,
+				other.provider,
+				other.status,
+				other.rating
+		);
 	}
 }

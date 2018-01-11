@@ -3,17 +3,31 @@ package org.nv95.openmanga.ui.reader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Created by koitharu on 09.01.18.
  */
 
 public final class PagesCache {
+
+	private static final Comparator<File> FILES_COMPARATOR = new Comparator<File>() {
+		@Override
+		public int compare(File o1, File o2) {
+			return compare(o1.lastModified(), o2.lastModified());
+		}
+
+		private int compare(long x, long y) {
+			return (x < y) ? -1 : ((x == y) ? 0 : 1);
+		}
+	};
 
 	@Nullable
 	private static PagesCache sInstance = null;
@@ -40,5 +54,44 @@ public final class PagesCache {
 	public File getFileForUrl(String url) {
 		String filename = mNameGenerator.generate(url);
 		return new File(mCacheDir, filename);
+	}
+
+	@WorkerThread
+	private long getTotalSize() {
+		final File[] files = mCacheDir.listFiles();
+		long size = 0;
+		for (File o : files) {
+			if (o != null && o.exists()) {
+				size += o.length();
+			}
+		}
+		return size;
+	}
+
+	@WorkerThread
+	private long trimToSize(long maxSize) {
+		final File[] files = mCacheDir.listFiles();
+		Arrays.sort(files, FILES_COMPARATOR);
+		long size = 0;
+		for (File o : files) {
+			if (o != null && o.exists()) {
+				size += o.length();
+			}
+		}
+		if (size <= maxSize) {
+			return size;
+		}
+		for (File o : files) {
+			if (o != null && o.exists()) {
+				long fileSize = o.length();
+				if (o.delete()) {
+					size -= fileSize;
+				}
+				if (size <= maxSize) {
+					break;
+				}
+			}
+		}
+		return size;
 	}
 }
