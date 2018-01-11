@@ -117,6 +117,47 @@ public class HistoryRepository implements Repository<MangaHistory> {
 		}
 	}
 
+	@Nullable
+	public MangaHistory find(MangaHeader mangaHeader) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					TABLE_NAME,
+					PROJECTION,
+					"id = ?",
+					new String[]{String.valueOf(mangaHeader.id)},
+					null,
+					null,
+					null,
+				null
+			);
+			if (cursor.moveToFirst()) {
+				return new MangaHistory(
+						cursor.getLong(0),
+						cursor.getString(1),
+						cursor.getString(2),
+						cursor.getString(3),
+						cursor.getString(4),
+						cursor.getString(5),
+						cursor.getString(6),
+						cursor.getInt(7),
+						cursor.getShort(8),
+						cursor.getLong(9),
+						cursor.getLong(10),
+						cursor.getLong(11),
+						cursor.getShort(12),
+						cursor.getInt(13),
+						cursor.getInt(14)
+				);
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+	}
+
 	public boolean quickUpdate(MangaHeader manga, MangaChapter chapter, MangaPage page) {
 		try {
 			final ContentValues cv = new ContentValues();

@@ -138,7 +138,7 @@ public class DesumeProvider extends MangaProvider {
 		for (int i = 0; i < total; i++) {
 			JSONObject chapter = ja.getJSONObject(i);
 			details.chapters.add(0, new MangaChapter(
-					chapter.isNull("title") ? "Chapter " + (i + 1) : chapter.getString("title"),
+					chapter.isNull("title") ? "Chapter " + (total - i) : chapter.getString("title"),
 					i,
 					details.url + "/chapter/" + chapter.getInt("id"),
 					CNAME

@@ -1,5 +1,7 @@
 package org.nv95.openmanga.content;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 
 /**
@@ -7,4 +9,14 @@ import java.util.ArrayList;
  */
 
 public class MangaChaptersList extends ArrayList<MangaChapter> {
+
+	@Nullable
+	public MangaChapter findItemById(long id) {
+		for (MangaChapter o : this) {
+			if (o != null && o.id == id) {
+				return o;
+			}
+		}
+		return null;
+	}
 }

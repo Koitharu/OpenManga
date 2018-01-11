@@ -9,15 +9,12 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,11 +27,11 @@ import org.nv95.openmanga.content.MangaChapter;
 import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
+import org.nv95.openmanga.content.MangaHistory;
 import org.nv95.openmanga.content.MangaStatus;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.content.storage.db.FavouritesRepository;
 import org.nv95.openmanga.content.storage.db.HistoryRepository;
-import org.nv95.openmanga.ui.common.SimpleViewPagerAdapter;
 import org.nv95.openmanga.ui.reader.ReaderActivity;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MenuUtils;
@@ -44,27 +41,21 @@ import org.nv95.openmanga.utils.TextUtils;
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreviewActivity extends AppBaseActivity implements AppBarLayout.OnOffsetChangedListener,
-		LoaderManager.LoaderCallbacks<MangaDetails>,ChaptersListAdapter.OnChapterClickListener {
+public final class PreviewActivity extends AppBaseActivity implements
+		LoaderManager.LoaderCallbacks<MangaDetails>,ChaptersListAdapter.OnChapterClickListener, View.OnClickListener {
 
-	private boolean mToolbarCollapsed = false;
 	private MangaHeader mMangaHeader;
 	@Nullable
 	private MangaDetails mMangaDetails = null;
 
-	private TabLayout mTabLayout;
 	private ImageView mImageView;
 	private RecyclerView mRecyclerViewChapters;
-	private RecyclerView mRecyclerViewBookmarks;
-	private TextView mTextViewChaptersHolder;
-	private TextView mTextViewBookmarksHolder;
 	private TextView mTextViewSummary;
 	private TextView mTextViewDescription;
 	private TextView mTextViewState;
-	private TextView mTextViewTitle;
 	private ProgressBar mProgressBar;
-	private ViewPager mViewPager;
-	private Toolbar mToolbarMenu;
+	private FloatingActionButton mFabRead;
+	private BottomSheetBehavior<RecyclerView> mBottomSheetBehavior;
 
 	private FavouritesRepository mFavouritesRepository;
 	private HistoryRepository mHistoryRepository;
@@ -76,64 +67,27 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		setContentView(R.layout.activity_preview);
 		setSupportActionBar(R.id.toolbar);
 		enableHomeAsUp();
-		disableTitle();
 
 		mFavouritesRepository = new FavouritesRepository(this);
 		mHistoryRepository = new HistoryRepository(this);
 
 		mImageView = findViewById(R.id.imageView);
-		mTabLayout = findViewById(R.id.tabs);
 		mTextViewSummary = findViewById(R.id.textView_summary);
-		mTextViewTitle = findViewById(R.id.textView_title);
 		mProgressBar = findViewById(R.id.progressBar);
 		mTextViewState = findViewById(R.id.textView_state);
-		mViewPager = findViewById(R.id.pager);
-		mToolbarMenu = findViewById(R.id.toolbarMenu);
-		AppBarLayout appBar = findViewById(R.id.appbar_container);
-		if (appBar != null) {
-			appBar.addOnOffsetChangedListener(this);
-		}
-		final SimpleViewPagerAdapter adapter = new SimpleViewPagerAdapter();
-		//Page 0 - description
-		View page = getLayoutInflater().inflate(R.layout.page_text, mViewPager, false);
-		mTextViewDescription = page.findViewById(R.id.textView);
-		adapter.addView(page, getString(R.string.description));
-		//Page 1 - chapters
-		page = LayoutInflater.from(this).inflate(R.layout.page_list_fastscroll, mViewPager, false);
-		mRecyclerViewChapters = page.findViewById(R.id.recyclerView);
-		mTextViewChaptersHolder = page.findViewById(R.id.textView_holder);
-		mRecyclerViewChapters.setLayoutManager(new LinearLayoutManager(this));
-		mRecyclerViewChapters.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-		mTextViewChaptersHolder.setText(R.string.no_chapters_found);
-		adapter.addView(page, getString(R.string.chapters));
-		//Page 3 - bookmarks
-		page = LayoutInflater.from(this).inflate(R.layout.page_list, mViewPager, false);
-		mRecyclerViewBookmarks = page.findViewById(R.id.recyclerView);
-		mTextViewBookmarksHolder = page.findViewById(R.id.textView_holder);
-		mRecyclerViewBookmarks.setLayoutManager(new LinearLayoutManager(this));
-		mTextViewBookmarksHolder.setText(R.string.no_bookmarks_tip);
-		adapter.addView(page, getString(R.string.bookmarks));
+		mTextViewDescription = findViewById(R.id.textView_description);
+		mRecyclerViewChapters = findViewById(R.id.recyclerView_chapters);
+		mFabRead = findViewById(R.id.fab_read);
 
-		mViewPager.setAdapter(adapter);
-		mTabLayout.setupWithViewPager(mViewPager);
-		mToolbarMenu.inflateMenu(R.menu.options_preview_toolbar);
-		mToolbarMenu.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				return PreviewActivity.this.onOptionsItemSelected(item);
-			}
-		});
+		mBottomSheetBehavior = BottomSheetBehavior.from(mRecyclerViewChapters);
+		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+		mRecyclerViewChapters.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+		mFabRead.setOnClickListener(this);
 
 		mMangaHeader = getIntent().getParcelableExtra("manga");
 		updateContent();
-		//init toolbar menu
-		final Menu menu = mToolbarMenu.getMenu();
-		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
-		MenuUtils.buildCategoriesSubmenu(this, menu.findItem(R.id.action_favourite));
-		//MenuUtils.setRadioCheckable(menu.findItem(R.id.action_favourite), R.id.group_categories);
-		invalidateMenuBar();
 
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(0, null, this).forceLoad();
 	}
 
 	@Override
@@ -146,29 +100,12 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	}
 
 	@Override
-	public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-		if (verticalOffset <= appBarLayout.getTotalScrollRange() / -2) {
-			if (!mToolbarCollapsed) {
-				mToolbarCollapsed = true;
-				invalidateOptionsMenu();
-			}
-		} else {
-			if (mToolbarCollapsed) {
-				mToolbarCollapsed = false;
-				invalidateOptionsMenu();
-				invalidateMenuBar();
-			}
-		}
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_favourites_remove:
 				if (mFavouritesRepository.remove(mMangaHeader)) {
-					Snackbar.make(mViewPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
+					Snackbar.make(mTextViewDescription, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
 					invalidateOptionsMenu();
-					invalidateMenuBar();
 					return true;
 				}
 				return false;
@@ -177,9 +114,8 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 					assert mMangaDetails != null;
 					MangaFavourite favourite = MangaFavourite.from(mMangaHeader, item.getItemId(), mMangaDetails.chapters.size());
 					if (mFavouritesRepository.add(favourite) || mFavouritesRepository.update(favourite)) {
-						Snackbar.make(mViewPager, R.string.favourited, Snackbar.LENGTH_SHORT).show();
+						Snackbar.make(mTextViewDescription, R.string.favourited, Snackbar.LENGTH_SHORT).show();
 						invalidateOptionsMenu();
-						invalidateMenuBar();
 					} else {
 						return false;
 					}
@@ -191,31 +127,20 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mToolbarCollapsed) {
-			menu.setGroupVisible(R.id.group_all, true);
-			onUpdateMenu(menu);
-		} else {
-			menu.setGroupVisible(R.id.group_all, false);
-		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@NonNull
 	@Override
 	public Loader<MangaDetails> onCreateLoader(int i, Bundle bundle) {
-		MangaLoader loader = new MangaLoader(this, mMangaHeader);
-		if (mRecyclerViewChapters.getAdapter() == null) {
-			loader.forceLoad();
-		}
-		return loader;
+		return new MangaLoader(this, mMangaHeader);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<MangaDetails> loader, MangaDetails mangaDetails) {
 		if (mangaDetails == null) {
-			mTextViewChaptersHolder.setText(R.string.loading_error);
 			mTextViewDescription.setText(R.string.loading_error);
-			mProgressBar.setVisibility(View.GONE);
+			mProgressBar.setVisibility(View.INVISIBLE);
 			return;
 		}
 		mMangaDetails = mangaDetails;
@@ -223,18 +148,13 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 		ChaptersListAdapter adapter = new ChaptersListAdapter(mangaDetails.chapters, this);
 		//TODO history
 		mRecyclerViewChapters.setAdapter(adapter);
-		mProgressBar.setVisibility(View.GONE);
+		mProgressBar.setVisibility(View.INVISIBLE);
+		mFabRead.show();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<MangaDetails> loader) {
 
-	}
-
-	private void invalidateMenuBar() {
-		if (!mToolbarCollapsed) {
-			onUpdateMenu(mToolbarMenu.getMenu());
-		}
 	}
 
 	private void onUpdateMenu(Menu menu) {
@@ -254,8 +174,8 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	private void updateContent() {
 		if (mMangaDetails == null) { //full info wasn't loaded yet
 			ImageUtils.setThumbnail(mImageView, mMangaHeader.thumbnail);
-			mTextViewTitle.setText(mMangaHeader.name);
 			setTitle(mMangaHeader.name);
+			setSubtitle(mMangaHeader.summary);
 			mTextViewSummary.setText(mMangaHeader.genres);
 			if (mMangaHeader.status == MangaStatus.STATUS_UNKNOWN) {
 				mTextViewState.setVisibility(View.GONE);
@@ -265,8 +185,8 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 			}
 		} else {
 			ImageUtils.updateImage(mImageView, mMangaDetails.cover);
-			mTextViewTitle.setText(mMangaDetails.name);
 			setTitle(mMangaDetails.name);
+			setSubtitle(mMangaDetails.summary);
 			mTextViewSummary.setText(mMangaDetails.genres);
 			if (mMangaDetails.status == MangaStatus.STATUS_UNKNOWN) {
 				mTextViewState.setVisibility(View.GONE);
@@ -288,6 +208,28 @@ public final class PreviewActivity extends AppBaseActivity implements AppBarLayo
 	@Override
 	public boolean onChapterLongClick(int pos, MangaChapter chapter) {
 		return false;
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.fab_read:
+				if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+					mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+				} else {
+					final MangaHistory history = mHistoryRepository.find(mMangaHeader);
+					final Intent intent = new Intent(this, ReaderActivity.class);
+					intent.putExtra("manga", mMangaDetails);
+					if (history == null) {
+						intent.putExtra("chapter", mMangaDetails.chapters.get(0));
+					} else {
+						intent.putExtra("chapter", mMangaDetails.chapters.findItemById(history.chapterId));
+						intent.putExtra("page_id", history.pageId);
+					}
+					startActivity(intent);
+				}
+				return;
+		}
 	}
 
 	private static class MangaLoader extends AsyncTaskLoader<MangaDetails> {
