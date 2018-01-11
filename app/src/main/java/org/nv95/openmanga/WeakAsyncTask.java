@@ -60,6 +60,14 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
 		}
 	}
 
+	@Override
+	protected void onCancelled(Result result) {
+		super.onCancelled(result);Obj obj = getObject();
+		if (obj != null) {
+			onTaskCancelled(obj, result);
+		}
+	}
+
 	@SafeVarargs
 	public final void start(Param... params) {
 		this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
@@ -76,6 +84,8 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
 	protected void onPostExecute(@NonNull Obj obj, Result result) {}
 
 	protected void onTaskCancelled(@NonNull Obj obj) {}
+
+	protected void onTaskCancelled(@NonNull Obj obj, Result result) {}
 
 	public static void cancel(@Nullable WeakReference<? extends AsyncTask> weakReference, boolean mayInterruptIfRunning) {
 		if (weakReference == null) return;

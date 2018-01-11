@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.content.MangaChapter;
-import org.nv95.openmanga.content.MangaGenre;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.Map;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -86,5 +84,15 @@ public final class CollectionsUtils {
 			builder.append(o.toString());
 		}
 		return builder.toString();
+	}
+
+	public static <T> boolean removeByValue(Map<?, T> map, T value) {
+		for (Map.Entry<?, T> o : map.entrySet()) {
+			if (o.getValue() == value) {
+				map.remove(o.getKey());
+				return true;
+			}
+		}
+		return false;
 	}
 }

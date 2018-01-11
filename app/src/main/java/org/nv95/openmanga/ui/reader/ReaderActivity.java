@@ -154,7 +154,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		mTextViewPage.setText(getString(R.string.page_x_of_n, progress + 1, seekBar.getMax()));
+		mTextViewPage.setText(getString(R.string.page_x_of_n, progress + 1, seekBar.getMax() + 1));
 	}
 
 	@Override
@@ -199,7 +199,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			return;
 		}
 		mPages = data;
-		mSeekBar.setMax(mPages.size());
+		mSeekBar.setMax(mPages.size() - 1);
 		mSeekBar.setProgress(0);
 		addToHistory();
 		mReader.setPages(mPages);

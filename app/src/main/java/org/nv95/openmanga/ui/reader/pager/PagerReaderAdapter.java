@@ -2,11 +2,9 @@ package org.nv95.openmanga.ui.reader.pager;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaPage;
 
 import java.util.ArrayList;
@@ -27,10 +25,11 @@ public final class PagerReaderAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(@NonNull ViewGroup container, int position) {
 		final MangaPage page = mDataset.get(position);
-		LayoutInflater inflater = LayoutInflater.from(container.getContext());
-		ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.item_page, container, false);
-		container.addView(layout);
-		return layout;
+		final PageView pageView = new PageView(container.getContext());
+		pageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		pageView.setData(page);
+		container.addView(pageView);
+		return pageView;
 	}
 
 	@Override

@@ -1,0 +1,159 @@
+package org.nv95.openmanga.ui.reader.pager;
+
+import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.MangaPage;
+import org.nv95.openmanga.ui.reader.ImageConverter;
+import org.nv95.openmanga.ui.reader.PageDownloader;
+import org.nv95.openmanga.ui.reader.PagesCache;
+import org.nv95.openmanga.ui.views.TextProgressView;
+
+import java.io.File;
+
+/**
+ * Created by koitharu on 09.01.18.
+ */
+
+public final class PageView extends FrameLayout implements View.OnClickListener,
+		ImageConverter.Callback, PageDownloader.Callback {
+
+	private MangaPage mPage;
+	private File mFile;
+
+	private final SubsamplingScaleImageView mSubsamplingScaleImageView;
+	private final TextProgressView mTextProgressView;
+	@Nullable
+	private ViewStub mStubError;
+	@Nullable
+	private View mErrorView = null;
+
+	public PageView(@NonNull Context context) {
+		this(context, null, 0);
+	}
+
+	public PageView(@NonNull Context context, @Nullable AttributeSet attrs) {
+		this(context, attrs, 0);
+	}
+
+	public PageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		View.inflate(context, R.layout.view_page, this);
+		mSubsamplingScaleImageView = findViewById(R.id.subsamplingImageView);
+		mTextProgressView = findViewById(R.id.progressView);
+		mStubError = findViewById(R.id.stubError);
+		mSubsamplingScaleImageView.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_FIXED);
+		mSubsamplingScaleImageView.setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE);
+		mSubsamplingScaleImageView.setMinimumDpi(90);
+		mSubsamplingScaleImageView.setMinimumTileDpi(180);
+		mSubsamplingScaleImageView.setOnImageEventListener(new SubsamplingScaleImageView.DefaultOnImageEventListener() {
+
+			@Override
+			public void onReady() {
+				onLoadingComplete();
+			}
+
+			@Override
+			public void onImageLoadError(Exception e) {
+				onImageDisplayFailed(e);
+			}
+		});
+	}
+
+	public void setData(MangaPage page) {
+		mTextProgressView.show();
+		mPage = page;
+		mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
+		if (mFile.exists()) {
+			mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
+		} else {
+			PageDownloader.getInstance().downloadPage(page.url, mFile.getPath(), this);
+		}
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		if (mPage != null) {
+			PageDownloader.getInstance().cancel(mPage.url);
+		}
+		super.onDetachedFromWindow();
+	}
+
+	private void setError(CharSequence errorMessage) {
+		mTextProgressView.hide();
+		if (mErrorView == null) {
+			assert mStubError != null;
+			mErrorView = mStubError.inflate();
+			mErrorView.findViewById(R.id.button_retry).setOnClickListener(this);
+			mStubError = null;
+		}
+		mErrorView.setVisibility(VISIBLE);
+		((TextView)mErrorView.findViewById(R.id.textView_error)).setText(errorMessage);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.button_retry:
+				if (mErrorView != null) {
+					mErrorView.setVisibility(GONE);
+				}
+				mTextProgressView.show();
+				mFile.delete();
+				PageDownloader.getInstance().downloadPage(mPage.url, mFile.getPath(), this);
+				break;
+		}
+	}
+
+	/**
+	 * Loading done, alles ok
+	 */
+	public void onLoadingComplete() {
+		mTextProgressView.hide();
+	}
+
+	public void onImageDisplayFailed(Exception e) {
+		if (mFile.exists()) {
+			ImageConverter.getInstance().convert(mFile.getPath(), this);
+		} else {
+			mTextProgressView.hide();
+			setError(getContext().getString(R.string.error));
+		}
+	}
+
+	@Override
+	public void onImageConverted() {
+		mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
+	}
+
+	@Override
+	public void onImageConvertFailed() {
+		setError(getContext().getString(R.string.image_decode_error));
+	}
+
+	@Override
+	public void onPageDownloaded() {
+		mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
+	}
+
+	@Override
+	public void onPageDownloadFailed() {
+		setError(getContext().getString(R.string.image_loading_error));
+	}
+
+	@Override
+	public void onPageDownloadProgress(int progress, int max) {
+		mTextProgressView.setProgress(progress, max);
+	}
+}

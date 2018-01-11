@@ -2,9 +2,6 @@ package org.nv95.openmanga.utils.network;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.ProxyInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -29,9 +26,8 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HttpsURLConnection;
 
 import info.guardianproject.netcipher.NetCipher;
-import info.guardianproject.netcipher.client.*;
+import info.guardianproject.netcipher.client.StrongOkHttpClientBuilder;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
-import info.guardianproject.netcipher.proxy.TorServiceUtils;
 import okhttp3.CacheControl;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -259,5 +255,24 @@ public class NetworkUtils {
 		}
 		con.setConnectTimeout(15000);
 		return con;
+	}
+
+	@NonNull
+	public static OkHttpClient getHttpClient() {
+		return sHttpClient != null ? sHttpClient : getClientBuilder().build();
+	}
+
+	public static int getContentLength(Response response) {
+		String header = response.header("content-length");
+		if (header == null) {
+			return -1;
+		} else {
+			try {
+				return Integer.parseInt(header);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
 	}
 }

@@ -40,6 +40,7 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		mPager.setOffscreenPageLimit(1);
 		mPager.setAdapter(mAdapter);
 		mPager.addOnPageChangeListener(this);
 	}
