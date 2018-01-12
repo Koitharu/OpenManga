@@ -402,4 +402,5 @@
 	<string name="loading_chapter">Loading chapter…</string>
     <string name="page_x_of_n">Page %1$d of %2$d</string>
 	<string name="more">More</string>
+	<string name="authorization_success">Authorization success</string>
 </resources>

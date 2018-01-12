@@ -57,6 +57,7 @@
 		android:id="@+id/imageView"
 		android:layout_width="72dp"
 		android:layout_marginStart="12dp"
+		android:scaleType="centerCrop"
 		android:layout_marginLeft="12dp"
 		android:layout_height="wrap_content"
 		android:layout_alignParentEnd="true"

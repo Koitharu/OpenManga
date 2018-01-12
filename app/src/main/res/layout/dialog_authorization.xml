@@ -5,6 +5,21 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 
+	<TextView
+		android:text="@string/authorization"
+		android:id="@+id/textView_title"
+		android:layout_width="match_parent"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:gravity="center_vertical"
+		android:singleLine="true"
+		android:lines="1"
+		android:minHeight="46dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+		android:textColor="?android:textColorTertiary"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true" />
+
 	<android.support.design.widget.TextInputLayout
 		android:id="@+id/inputLayout_login"
 		android:layout_width="match_parent"
@@ -13,7 +28,7 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentStart="true"
-		android:layout_alignParentTop="true">
+		android:layout_below="@id/textView_title">
 
 		<android.support.design.widget.TextInputEditText
 			android:id="@+id/edit_login"

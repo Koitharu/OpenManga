@@ -5,6 +5,7 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -22,6 +23,7 @@ import org.nv95.openmanga.content.MangaQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.common.EndlessRecyclerView;
+import org.nv95.openmanga.ui.settings.AuthorizationDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +33,8 @@ import java.util.Arrays;
  */
 
 public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
-		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener, EndlessRecyclerView.OnLoadMoreListener {
+		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener, EndlessRecyclerView.OnLoadMoreListener,
+		AuthorizationDialog.Callback {
 
 	private EndlessRecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
@@ -85,8 +88,23 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.action_authorize).setVisible(mProvider.isAuthorizationSupported());
+		menu.findItem(R.id.action_authorize).setVisible(mProvider.isAuthorizationSupported() && !mProvider.isAuthorized());
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_authorize:
+				final AuthorizationDialog dialog = new AuthorizationDialog();
+				final Bundle args = new Bundle(1);
+				args.putString("provider", mProvider.getCName());
+				dialog.setArguments(args);
+				dialog.show(getSupportFragmentManager(), "auth");
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -178,5 +196,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mArguments.page++;
 		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
 		return true;
+	}
+
+	@Override
+	public void onAuthorized() {
+		Snackbar.make(mRecyclerView, R.string.authorization_success, Snackbar.LENGTH_SHORT).show();
+		mArguments.page = 0;
+		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
 	}
 }

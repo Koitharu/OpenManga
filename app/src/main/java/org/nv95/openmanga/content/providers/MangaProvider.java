@@ -100,6 +100,10 @@ public abstract class MangaProvider {
 		return "";
 	}
 
+	public final boolean isAuthorized() {
+		return !android.text.TextUtils.isEmpty(getAuthCookie());
+	}
+
 	@Nullable
 	public final String getName() {
 		try {
@@ -131,6 +135,9 @@ public abstract class MangaProvider {
 			case DesumeProvider.CNAME:
 				provider = new DesumeProvider(context);
 				break;
+			case ExhentaiProvider.CNAME:
+				provider = new ExhentaiProvider(context);
+				break;
 			default:
 				throw new AssertionError("Invalid CNAME");
 		}
@@ -154,6 +161,7 @@ public abstract class MangaProvider {
 		//TODO load form settings
 		final ArrayList<ProviderHeader> providers = new ArrayList<>();
 		providers.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
+		providers.add(new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME));
 		return providers;
 	}
 
@@ -162,8 +170,14 @@ public abstract class MangaProvider {
 		switch (cName) {
 			case DesumeProvider.CNAME:
 				return "desu.me";
+			case ExhentaiProvider.CNAME:
+				return "exhentai.org";
 			default:
 				throw new AssertionError("Invalid CNAME");
 		}
+	}
+
+	public static SharedPreferences getSharedPreferences(@NonNull Context context, @NonNull @CName String cName) {
+		return context.getSharedPreferences("prov_" + cName.replace('/','_'), Context.MODE_PRIVATE);
 	}
 }

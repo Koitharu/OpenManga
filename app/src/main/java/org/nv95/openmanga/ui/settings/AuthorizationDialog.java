@@ -1,13 +1,15 @@
 package org.nv95.openmanga.ui.settings;
 
-import android.app.DialogFragment;
-import android.app.LoaderManager;
-import android.content.Loader;
+import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +20,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.WeakAsyncTask;
+import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.utils.network.CookieStore;
 
 /**
  * Created by koitharu on 12.01.18.
  */
 
-public final class AuthorizationDialog extends DialogFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<String> {
+public final class AuthorizationDialog extends AppCompatDialogFragment implements View.OnClickListener,
+		Handler.Callback {
 
 	private ProgressBar mProgressBar;
 	private TextInputLayout mInputLayoutLogin;
@@ -35,6 +40,8 @@ public final class AuthorizationDialog extends DialogFragment implements View.On
 	private Button mButtonCancel;
 
 	private String mProviderCName;
+	@Nullable
+	private AuthTask mAuthTask;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,12 +106,11 @@ public final class AuthorizationDialog extends DialogFragment implements View.On
 					mEditTextPassword.requestFocus();
 					return;
 				}
-				Bundle args = new Bundle(3);
-				args.putString("login", login);
-				args.putString("password", password);
-				args.putString("provider", mProviderCName);
-				setIsReady(false);
-				getLoaderManager().initLoader(0, args, this).forceLoad();
+				if (mAuthTask != null && mAuthTask.canCancel()) {
+					mAuthTask.cancel(true);
+				}
+				mAuthTask = new AuthTask(this);
+				mAuthTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mProviderCName, login, password);
 				break;
 		}
 	}
@@ -120,28 +126,60 @@ public final class AuthorizationDialog extends DialogFragment implements View.On
 	}
 
 	@Override
-	public Loader<String> onCreateLoader(int id, Bundle args) {
-		return new ProviderAuthorizationLoader(
-				getActivity(),
-				args.getString("provider"),
-				args.getString("login"),
-				args.getString("password")
-		);
+	public boolean handleMessage(Message msg) {
+		if (msg.what == 1) {
+			final Activity activity = getActivity();
+			if (activity != null && activity instanceof Callback) {
+				((Callback) activity).onAuthorized();
+			}
+			dismiss();
+			return true;
+		}
+		return false;
 	}
 
-	@Override
-	public void onLoadFinished(Loader<String> loader, @Nullable String data) {
-		setIsReady(true);
-		if (data == null) {
-			mInputLayoutPassword.setError(getString(R.string.auth_failed));
-		} else {
-			CookieStore.getInstance().putCookie(mProviderCName, data);
-			dismiss();
+	private static final class AuthTask extends WeakAsyncTask<AuthorizationDialog,String,Void,String> {
+
+		AuthTask(AuthorizationDialog authorizationDialog) {
+			super(authorizationDialog);
+		}
+
+		@Override
+		protected void onPreExecute(@NonNull AuthorizationDialog authorizationDialog) {
+			authorizationDialog.setIsReady(false);
+		}
+
+		@Override
+		protected String doInBackground(String... strings) {
+			try {
+				@SuppressWarnings("ConstantConditions")
+				final MangaProvider provider = MangaProvider.getProvider(getObject().getContext(), strings[0]);
+				return provider.authorize(strings[1], strings[2]);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(@NonNull AuthorizationDialog authorizationDialog, String data) {
+			authorizationDialog.setIsReady(true);
+			authorizationDialog.mAuthTask = null;
+			if (data == null) {
+				authorizationDialog.mInputLayoutPassword.setError(authorizationDialog.getString(R.string.auth_failed));
+			} else {
+				CookieStore.getInstance().putCookie(authorizationDialog.mProviderCName, data);
+				final Activity activity = authorizationDialog.getActivity();
+				if (activity != null && activity instanceof Callback) {
+					((Callback) activity).onAuthorized();
+				}
+				authorizationDialog.dismiss();
+			}
 		}
 	}
 
-	@Override
-	public void onLoaderReset(Loader<String> loader) {
+	public interface Callback {
 
+		void onAuthorized();
 	}
 }

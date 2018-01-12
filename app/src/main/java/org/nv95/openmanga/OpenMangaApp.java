@@ -18,7 +18,7 @@ public final class OpenMangaApp extends Application {
 		super.onCreate();
 		final AppSettings settings = AppSettings.get(this);
 		ImageUtils.init(this);
-		CookieStore.getInstance().reload(this);
+		CookieStore.getInstance().init(this);
 		NetworkUtils.init(this, settings.isUseTor());
 		ResourceUtils.setLocale(getResources(), settings.getAppLocale());
 	}

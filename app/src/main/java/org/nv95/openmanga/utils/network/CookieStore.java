@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.ProviderHeader;
-import org.nv95.openmanga.content.providers.CName;
 import org.nv95.openmanga.content.providers.MangaProvider;
 
 import java.io.IOException;
@@ -38,19 +37,14 @@ public final class CookieStore implements Interceptor {
 		mCookies = new HashMap<>();
 	}
 
-	public void reload(@NonNull Context context) {
+	public void init(@NonNull Context context) {
 		mCookies.clear();
 		final ArrayList<ProviderHeader> providers = MangaProvider.getAvailableProviders(context);
 		for (ProviderHeader o : providers) {
-			loadCookies(context, o.cName);
-		}
-	}
-
-	private void loadCookies(Context context, @CName String cName) {
-		final String cookie = context.getSharedPreferences("prov_" + cName.replace('/','_'), Context.MODE_PRIVATE)
-				.getString("_cookie", null);
-		if (cookie != null) {
-			putCookie(cName, cookie);
+			final String cookie = MangaProvider.getSharedPreferences(context, o.cName).getString("_cookie", null);
+			if (cookie != null) {
+				mCookies.put(MangaProvider.getDomain(o.cName), cookie);
+			}
 		}
 	}
 
@@ -64,7 +58,12 @@ public final class CookieStore implements Interceptor {
 		}
 	}
 
-	public void putCookie(@CName String cName, @NonNull String cookie) {
-		mCookies.put(MangaProvider.getDomain(cName), cookie);
+	public void put(String domain, String cookie) {
+		mCookies.put(domain, cookie);
+	}
+
+	@Nullable
+	public String get(String domain) {
+		return mCookies.get(domain);
 	}
 }
