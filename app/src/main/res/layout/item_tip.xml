@@ -10,7 +10,7 @@
 		android:padding="4dp">
 
 		<ImageView
-			android:id="@+id/imageView_icon"
+			android:id="@android:id/icon"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
@@ -20,14 +20,14 @@
 			tools:src="@drawable/ic_bug_red" />
 
 		<TextView
-			android:id="@+id/textView_title"
+			android:id="@android:id/text1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_toEndOf="@id/imageView_icon"
 			android:layout_alignParentEnd="true"
 			android:layout_alignParentRight="true"
-			android:layout_toRightOf="@id/imageView_icon"
+			android:layout_alignParentTop="true"
+			android:layout_toEndOf="@android:id/icon"
+			android:layout_toRightOf="@android:id/icon"
 			android:lines="1"
 			android:padding="4dp"
 			android:singleLine="true"
@@ -35,14 +35,14 @@
 			tools:text="@string/error_occurred" />
 
 		<TextView
-			android:id="@+id/textView_content"
+			android:id="@android:id/text2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/textView_title"
-			android:layout_toEndOf="@id/imageView_icon"
-			android:layout_toRightOf="@id/imageView_icon"
 			android:layout_alignParentEnd="true"
 			android:layout_alignParentRight="true"
+			android:layout_below="@android:id/text1"
+			android:layout_toEndOf="@android:id/icon"
+			android:layout_toRightOf="@android:id/icon"
 			android:paddingLeft="4dp"
 			android:paddingRight="4dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -50,13 +50,13 @@
 			tools:text="@string/application_crashed" />
 
 		<org.nv95.openmanga.ui.common.BorderlessButton
-			android:id="@+id/button_action"
+			android:id="@android:id/button1"
 			style="@style/Widget.AppCompat.Button.Borderless.Colored"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_alignParentRight="true"
-			android:layout_below="@id/textView_content"
+			android:layout_below="@android:id/text2"
 			tools:text="@string/report" />
 
 	</RelativeLayout>

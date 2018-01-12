@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.ui.discover.DiscoverFragment;
 import org.nv95.openmanga.ui.search.SearchActivity;
+import org.nv95.openmanga.ui.settings.SettingsFragment;
 import org.nv95.openmanga.ui.shelf.ShelfFragment;
 
 /**
@@ -73,6 +74,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 				break;
 			case R.id.section_discover:
 				fragment = new DiscoverFragment();
+				break;
+			case R.id.section_settings:
+				fragment = new SettingsFragment();
 				break;
 			default:
 				return false;

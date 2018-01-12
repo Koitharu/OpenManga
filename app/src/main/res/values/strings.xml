@@ -407,4 +407,6 @@
 	<string name="error_occurred">An error has occurred</string>
     <string name="application_crashed">The application was closed due to a fatal error</string>
 	<string name="report">Report</string>
+	<string name="additional">Additional</string>
+    <string name="downloads">Downloads</string>
 </resources>

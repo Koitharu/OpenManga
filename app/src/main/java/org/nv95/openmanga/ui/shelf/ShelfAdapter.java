@@ -181,10 +181,10 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 		TipHolder(View itemView) {
 			super(itemView);
-			textViewTitle = itemView.findViewById(R.id.textView_title);
-			textViewContent = itemView.findViewById(R.id.textView_content);
-			buttonAction = itemView.findViewById(R.id.button_action);
-			imageViewIcon = itemView.findViewById(R.id.imageView_icon);
+			textViewTitle = itemView.findViewById(android.R.id.text1);
+			textViewContent = itemView.findViewById(android.R.id.text2);
+			buttonAction = itemView.findViewById(android.R.id.button1);
+			imageViewIcon = itemView.findViewById(android.R.id.icon);
 			buttonAction.setOnClickListener(this);
 		}
 
