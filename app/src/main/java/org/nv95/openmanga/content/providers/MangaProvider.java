@@ -1,5 +1,6 @@
 package org.nv95.openmanga.content.providers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -28,7 +29,7 @@ public abstract class MangaProvider {
 	}
 
 	protected SharedPreferences getPreferences() {
-		return mContext.getSharedPreferences("prov_" + this.getCName(), Context.MODE_PRIVATE);
+		return mContext.getSharedPreferences("prov_" + this.getCName().replace('/','_'), Context.MODE_PRIVATE);
 	}
 
 	/**
@@ -69,9 +70,23 @@ public abstract class MangaProvider {
 		return getPreferences().getString("_cookie", null);
 	}
 
-	public abstract boolean isSearchSupported();
+	public boolean isSearchSupported() {
+		return true;
+	}
 
-	public abstract boolean isMultipleGenresSupported();
+	public boolean isMultipleGenresSupported() {
+		return true;
+	}
+
+	public boolean isAuthorizationSupported() {
+		return false;
+	}
+
+	@Nullable
+	@SuppressLint("WrongConstant")
+	public String authorize(@NonNull String login, @NonNull String password) throws Exception {
+		throw new UnsupportedOperationException("Authorization not supported for " + getCName());
+	}
 
 	public MangaGenre[] getAvailableGenres() {
 		return new MangaGenre[0];

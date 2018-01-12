@@ -19,22 +19,22 @@ import okhttp3.Response;
  * Created by koitharu on 11.01.18.
  */
 
-public final class CookieInterceptor implements Interceptor {
+public final class CookieStore implements Interceptor {
 
 	@Nullable
-	private static CookieInterceptor sInstance = null;
+	private static CookieStore sInstance = null;
 
 	@NonNull
-	public static CookieInterceptor getInstance() {
+	public static CookieStore getInstance() {
 		if (sInstance == null) {
-			sInstance = new CookieInterceptor();
+			sInstance = new CookieStore();
 		}
 		return sInstance;
 	}
 
 	private final HashMap<String,String> mCookies;
 
-	private CookieInterceptor() {
+	private CookieStore() {
 		mCookies = new HashMap<>();
 	}
 
@@ -47,10 +47,10 @@ public final class CookieInterceptor implements Interceptor {
 	}
 
 	private void loadCookies(Context context, @CName String cName) {
-		final String cookie = context.getSharedPreferences("prov_" + cName, Context.MODE_PRIVATE)
+		final String cookie = context.getSharedPreferences("prov_" + cName.replace('/','_'), Context.MODE_PRIVATE)
 				.getString("_cookie", null);
 		if (cookie != null) {
-			mCookies.put(MangaProvider.getDomain(cName), cookie);
+			putCookie(cName, cookie);
 		}
 	}
 
@@ -62,5 +62,9 @@ public final class CookieInterceptor implements Interceptor {
 		} else {
 			return chain.proceed(chain.request());
 		}
+	}
+
+	public void putCookie(@CName String cName, @NonNull String cookie) {
+		mCookies.put(MangaProvider.getDomain(cName), cookie);
 	}
 }

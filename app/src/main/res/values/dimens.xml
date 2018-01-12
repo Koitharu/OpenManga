@@ -19,4 +19,5 @@
 	<dimen name="drawer_size">260dp</dimen>
     <dimen name="statusbar_threshold">24dp</dimen>
     <dimen name="navbar_threshold">32dp</dimen>
+	<dimen name="progressbar_large">72dp</dimen>
 </resources>

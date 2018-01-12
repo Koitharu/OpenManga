@@ -84,6 +84,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.action_authorize).setVisible(mProvider.isAuthorizationSupported());
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public Loader<ArrayList<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
 		final MangaQueryArguments queryArgs = MangaQueryArguments.from(bundle);
 		if (!TextUtils.isEmpty(queryArgs.query)) {

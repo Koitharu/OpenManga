@@ -4,7 +4,7 @@ import android.app.Application;
 
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.ResourceUtils;
-import org.nv95.openmanga.utils.network.CookieInterceptor;
+import org.nv95.openmanga.utils.network.CookieStore;
 import org.nv95.openmanga.utils.network.NetworkUtils;
 
 /**
@@ -18,7 +18,7 @@ public final class OpenMangaApp extends Application {
 		super.onCreate();
 		final AppSettings settings = AppSettings.get(this);
 		ImageUtils.init(this);
-		CookieInterceptor.getInstance().reload(this);
+		CookieStore.getInstance().reload(this);
 		NetworkUtils.init(this, settings.isUseTor());
 		ResourceUtils.setLocale(getResources(), settings.getAppLocale());
 	}

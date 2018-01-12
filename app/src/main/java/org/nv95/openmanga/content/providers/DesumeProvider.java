@@ -172,15 +172,4 @@ public class DesumeProvider extends MangaProvider {
 	public int[] getAvailableSortOrders() {
 		return mSorts;
 	}
-
-	@Override
-	public boolean isSearchSupported() {
-		return true;
-	}
-
-	@Override
-	public boolean isMultipleGenresSupported() {
-		return true;
-	}
-
 }

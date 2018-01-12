@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/inputLayout_login"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true">
+
+		<android.support.design.widget.TextInputEditText
+			android:id="@+id/edit_login"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/login"
+			android:inputType="textEmailAddress"
+			android:maxLines="1"
+			android:singleLine="true" />
+
+	</android.support.design.widget.TextInputLayout>
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/inputLayout_password"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentStart="true"
+		android:layout_below="@id/inputLayout_login"
+		app:errorEnabled="true"
+		app:passwordToggleEnabled="true">
+
+		<android.support.design.widget.TextInputEditText
+			android:id="@+id/edit_password"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/password"
+			android:imeActionId="6"
+			android:imeActionLabel="@string/sign_in"
+			android:imeOptions="actionUnspecified"
+			android:inputType="textPassword"
+			android:maxLines="1"
+			android:singleLine="true" />
+
+	</android.support.design.widget.TextInputLayout>
+
+	<Button
+		android:id="@+id/button_login"
+		style="@style/Widget.AppCompat.Button.Colored"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/inputLayout_password"
+		android:text="@string/sign_in" />
+
+	<Button
+		android:id="@+id/button_cancel"
+		style="@style/Widget.AppCompat.Button.Borderless.Colored"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/inputLayout_password"
+		android:layout_toLeftOf="@id/button_login"
+		android:layout_toStartOf="@id/button_login"
+		android:text="@android:string/cancel" />
+
+	<ProgressBar
+		android:id="@+id/progressBar"
+		style="@style/Widget.AppCompat.ProgressBar"
+		android:layout_width="@dimen/progressbar_large"
+		android:layout_height="@dimen/progressbar_large"
+		android:layout_centerInParent="true"
+		android:indeterminate="true"
+		android:visibility="gone" />
+
+
+</RelativeLayout>

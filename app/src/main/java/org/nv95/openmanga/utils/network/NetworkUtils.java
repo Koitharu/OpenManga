@@ -49,7 +49,7 @@ public class NetworkUtils {
 	@NonNull
 	private static OkHttpClient.Builder getClientBuilder() {
 		return new OkHttpClient.Builder()
-				.addInterceptor(CookieInterceptor.getInstance())
+				.addInterceptor(CookieStore.getInstance())
 				.addInterceptor(new CloudflareInterceptor());
 	}
 
