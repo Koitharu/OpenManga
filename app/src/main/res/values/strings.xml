@@ -403,4 +403,8 @@
     <string name="page_x_of_n">Page %1$d of %2$d</string>
 	<string name="more">More</string>
 	<string name="authorization_success">Authorization success</string>
+	<string name="error_bad_response">Invalid response from server</string>
+	<string name="error_occurred">An error has occurred</string>
+    <string name="application_crashed">The application was closed due to a fatal error</string>
+	<string name="report">Report</string>
 </resources>

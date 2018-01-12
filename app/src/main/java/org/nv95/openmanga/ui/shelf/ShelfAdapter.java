@@ -2,6 +2,7 @@ package org.nv95.openmanga.ui.shelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.nv95.openmanga.CrashHandler;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaHistory;
+import org.nv95.openmanga.content.UserTip;
 import org.nv95.openmanga.ui.PreviewActivity;
+import org.nv95.openmanga.ui.common.Dismissible;
 import org.nv95.openmanga.ui.common.ListHeader;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.ResourceUtils;
@@ -53,7 +57,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			case ShelfItemType.TYPE_ITEM_SMALL:
 				return new MangaHolder(inflater.inflate(R.layout.item_manga_small, parent, false));
 			case ShelfItemType.TYPE_TIP:
-				throw new AssertionError("Unknown viewType");
+				return new TipHolder(inflater.inflate(R.layout.item_tip, parent, false));
 			default:
 				throw new AssertionError("Unknown viewType");
 		}
@@ -61,7 +65,24 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		if (holder instanceof HeaderHolder) {
+		if (holder instanceof TipHolder) {
+			UserTip tip = (UserTip) mDataset.get(position);
+			((TipHolder) holder).textViewTitle.setText(tip.title);
+			((TipHolder) holder).textViewContent.setText(tip.content);
+			if (tip.hasIcon()) {
+				((TipHolder) holder).imageViewIcon.setImageResource(tip.icon);
+				((TipHolder) holder).imageViewIcon.setVisibility(View.VISIBLE);
+			} else {
+				((TipHolder) holder).imageViewIcon.setVisibility(View.GONE);
+			}
+			if (tip.hasAction()) {
+				((TipHolder) holder).buttonAction.setText(tip.actionText);
+				((TipHolder) holder).buttonAction.setId(tip.actionId);
+				((TipHolder) holder).buttonAction.setVisibility(View.VISIBLE);
+			} else {
+				((TipHolder) holder).buttonAction.setVisibility(View.GONE);
+			}
+		} else if (holder instanceof HeaderHolder) {
 			ListHeader item = (ListHeader) mDataset.get(position);
 			if (item.text != null) {
 				((HeaderHolder) holder).textView.setText(item.text);
@@ -90,6 +111,8 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		Object item = mDataset.get(position);
 		if (item instanceof ListHeader) {
 			return ShelfItemType.TYPE_HEADER;
+		} else if (item instanceof UserTip) {
+			return ShelfItemType.TYPE_TIP;
 		} else if (item instanceof MangaHistory) {
 			return ShelfItemType.TYPE_RECENT;
 		} else if (item instanceof MangaFavourite) {
@@ -114,9 +137,15 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		} else if (item instanceof ListHeader) {
 			final String text = ((ListHeader) item).text;
 			return text != null ? text.hashCode() : ((ListHeader) item).textResId;
+		} else if (item instanceof UserTip) {
+			return ((UserTip) item).title.hashCode() + ((UserTip) item).content.hashCode();
 		} else {
 			throw new AssertionError("Unknown viewType");
 		}
+	}
+
+	public ArrayList<Object> getDataset() {
+		return mDataset;
 	}
 
 	class HeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -136,6 +165,55 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			switch (v.getId()) {
 				//todo
 			}
+		}
+	}
+
+	class TipHolder extends RecyclerView.ViewHolder implements View.OnClickListener, Dismissible {
+
+		final TextView textViewTitle;
+		final TextView textViewContent;
+		final ImageView imageViewIcon;
+		final Button buttonAction;
+
+		TipHolder(View itemView) {
+			super(itemView);
+			textViewTitle = itemView.findViewById(R.id.textView_title);
+			textViewContent = itemView.findViewById(R.id.textView_content);
+			buttonAction = itemView.findViewById(R.id.button_action);
+			imageViewIcon = itemView.findViewById(R.id.imageView_icon);
+			buttonAction.setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+				case R.id.action_crash_report:
+					final CrashHandler crashHandler = CrashHandler.get();
+					if (crashHandler != null) {
+						new AlertDialog.Builder(v.getContext())
+								.setTitle(crashHandler.getErrorClassName())
+								.setMessage(crashHandler.getErrorMessage() + "\n\n" + crashHandler.getErrorStackTrace())
+								.setNegativeButton(R.string.close, null)
+								.create()
+								.show();
+					}
+					break;
+			}
+		}
+
+		@Override
+		public void dismiss() {
+			switch (buttonAction.getId()) {
+				case R.id.action_crash_report:
+					final CrashHandler crashHandler = CrashHandler.get();
+					if (crashHandler != null) {
+						crashHandler.clear();
+					}
+					break;
+			}
+			mDataset.remove(getAdapterPosition());
+			notifyDataSetChanged();
+			//notifyItemRemoved throws ArrayIndexOutOfBoundsException
 		}
 	}
 

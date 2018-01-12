@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.shelf.ShelfContent;
 import org.nv95.openmanga.ui.AppBaseFragment;
+import org.nv95.openmanga.ui.common.Dismissible;
 import org.nv95.openmanga.utils.ResourceUtils;
 
 /**
@@ -42,6 +44,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 		super.onViewCreated(view, savedInstanceState);
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mRecyclerView.setHasFixedSize(true);
+		new ItemTouchHelper(new DismissCallback()).attachToRecyclerView(mRecyclerView);
 	}
 
 	@Override
@@ -78,5 +81,29 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	@Override
 	public void scrollToTop() {
 		mRecyclerView.smoothScrollToPosition(0);
+	}
+
+	private class DismissCallback extends ItemTouchHelper.SimpleCallback {
+
+		public DismissCallback() {
+			super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+		}
+
+		@Override
+		public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+			return viewHolder instanceof ShelfAdapter.TipHolder ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
+		}
+
+		@Override
+		public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+			return false;
+		}
+
+		@Override
+		public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+			if (viewHolder instanceof Dismissible) {
+				((Dismissible) viewHolder).dismiss();
+			}
+		}
 	}
 }

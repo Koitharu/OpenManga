@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.ListWrapper;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaQueryArguments;
@@ -24,6 +25,7 @@ import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.common.EndlessRecyclerView;
 import org.nv95.openmanga.ui.settings.AuthorizationDialog;
+import org.nv95.openmanga.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +34,7 @@ import java.util.Arrays;
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
+public final class MangaListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaHeader>>,
 		View.OnClickListener, FilterCallback, SearchView.OnQueryTextListener, EndlessRecyclerView.OnLoadMoreListener,
 		AuthorizationDialog.Callback {
 
@@ -68,6 +70,9 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		assert cname != null;
 		mProvider = MangaProvider.getProvider(this, cname);
 		setTitle(mProvider.getName());
+		if (mProvider.getAvailableGenres().length == 0 && mProvider.getAvailableSortOrders().length == 0) {
+			mFabFilter.setVisibility(View.GONE);
+		}
 
 		mDataset = new ArrayList<>();
 		mAdapter = new MangaListAdapter(mDataset);
@@ -108,7 +113,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	}
 
 	@Override
-	public Loader<ArrayList<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
+	public Loader<ListWrapper<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
 		final MangaQueryArguments queryArgs = MangaQueryArguments.from(bundle);
 		if (!TextUtils.isEmpty(queryArgs.query)) {
 			setSubtitle(queryArgs.query);
@@ -121,25 +126,26 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<MangaHeader>> loader, ArrayList<MangaHeader> mangaHeaders) {
+	public void onLoadFinished(Loader<ListWrapper<MangaHeader>> loader, ListWrapper<MangaHeader> result) {
 		mProgressBar.setVisibility(View.GONE);
-		if (mangaHeaders == null) {
-			Toast.makeText(this, R.string.loading_error, Toast.LENGTH_SHORT).show();
-			mRecyclerView.onLoadingFinished(false);
-		} else {
+		if (result.isSuccess()) {
+			final ArrayList<MangaHeader> list = result.get();
 			int firstPos = mDataset.size();
-			mDataset.addAll(mangaHeaders);
+			mDataset.addAll(list);
 			if (firstPos == 0) {
 				mAdapter.notifyDataSetChanged();
 			} else {
-				mAdapter.notifyItemRangeInserted(firstPos, mangaHeaders.size());
+				mAdapter.notifyItemRangeInserted(firstPos, list.size());
 			}
-			mRecyclerView.onLoadingFinished(!mangaHeaders.isEmpty());
+			mRecyclerView.onLoadingFinished(!list.isEmpty());
+		} else {
+			Snackbar.make(mRecyclerView, ErrorUtils.getErrorMessage(result.getError()), Toast.LENGTH_SHORT).show();
+			mRecyclerView.onLoadingFinished(false);
 		}
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ArrayList<MangaHeader>> loader) {
+	public void onLoaderReset(Loader<ListWrapper<MangaHeader>> loader) {
 
 	}
 

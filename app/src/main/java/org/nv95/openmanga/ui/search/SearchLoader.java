@@ -3,17 +3,16 @@ package org.nv95.openmanga.ui.search;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import org.nv95.openmanga.content.ListWrapper;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.SearchQueryArguments;
 import org.nv95.openmanga.content.providers.MangaProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by koitharu on 07.01.18.
  */
 
-public final class SearchLoader extends AsyncTaskLoader<ArrayList<MangaHeader>> {
+public final class SearchLoader extends AsyncTaskLoader<ListWrapper<MangaHeader>> {
 
 	private final SearchQueryArguments mArguments;
 
@@ -23,13 +22,13 @@ public final class SearchLoader extends AsyncTaskLoader<ArrayList<MangaHeader>> 
 	}
 
 	@Override
-	public ArrayList<MangaHeader> loadInBackground() {
+	public ListWrapper<MangaHeader> loadInBackground() {
 		try {
 			MangaProvider provider = MangaProvider.getProvider(getContext(), mArguments.providerCName);
-			return provider.query(mArguments.query, mArguments.page, -1, new String[0]);
+			return new ListWrapper<>(provider.query(mArguments.query, mArguments.page, -1, new String[0]));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return new ListWrapper<>(e);
 		}
 	}
 }

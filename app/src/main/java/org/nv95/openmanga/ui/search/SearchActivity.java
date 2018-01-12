@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.content.ListWrapper;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.ProviderHeader;
 import org.nv95.openmanga.content.SearchQueryArguments;
@@ -28,7 +29,7 @@ import java.util.Stack;
  * Created by koitharu on 06.01.18.
  */
 
-public final class SearchActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ArrayList<MangaHeader>>,
+public final class SearchActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaHeader>>,
 		EndlessRecyclerView.OnLoadMoreListener, View.OnClickListener {
 
 	private EndlessRecyclerView mRecyclerView;
@@ -78,13 +79,13 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 	}
 
 	@Override
-	public Loader<ArrayList<MangaHeader>> onCreateLoader(int id, Bundle args) {
+	public Loader<ListWrapper<MangaHeader>> onCreateLoader(int id, Bundle args) {
 		return new SearchLoader(this, SearchQueryArguments.from(args));
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<MangaHeader>> loader, @Nullable ArrayList<MangaHeader> data) {
-		if (data == null) {
+	public void onLoadFinished(Loader<ListWrapper<MangaHeader>> loader, @NonNull ListWrapper<MangaHeader> result) {
+		if (result.isFailed()) {
 			Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
 					.setAction(R.string.retry, this)
 					.show();
@@ -93,7 +94,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 				mTextViewHolder.setVisibility(View.VISIBLE);
 			}
 			mRecyclerView.onLoadingFinished(false);
-		} else if (data.isEmpty()) {
+		} else if (result.isEmpty()) {
 			//next provider
 			if (mProviders.empty()) {
 				mProgressBar.setVisibility(View.GONE);
@@ -109,11 +110,11 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 		} else {
 			mProgressBar.setVisibility(View.GONE);
 			int firstPos = mDataset.size();
-			mDataset.addAll(data);
+			mDataset.addAll(result.get());
 			if (firstPos == 0) {
 				mAdapter.notifyDataSetChanged();
 			} else {
-				mAdapter.notifyItemRangeInserted(firstPos, data.size());
+				mAdapter.notifyItemRangeInserted(firstPos, result.size());
 			}
 			mQueryArguments.page++;
 			mRecyclerView.onLoadingFinished(true);
@@ -121,7 +122,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ArrayList<MangaHeader>> loader) {
+	public void onLoaderReset(Loader<ListWrapper<MangaHeader>> loader) {
 
 	}
 

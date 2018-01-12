@@ -21,7 +21,9 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.WeakAsyncTask;
+import org.nv95.openmanga.content.ObjectWrapper;
 import org.nv95.openmanga.content.providers.MangaProvider;
+import org.nv95.openmanga.utils.ErrorUtils;
 import org.nv95.openmanga.utils.network.CookieStore;
 
 /**
@@ -138,7 +140,7 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 		return false;
 	}
 
-	private static final class AuthTask extends WeakAsyncTask<AuthorizationDialog,String,Void,String> {
+	private static final class AuthTask extends WeakAsyncTask<AuthorizationDialog,String,Void,ObjectWrapper<String>> {
 
 		AuthTask(AuthorizationDialog authorizationDialog) {
 			super(authorizationDialog);
@@ -150,11 +152,12 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 		}
 
 		@Override
-		protected String doInBackground(String... strings) {
+		protected ObjectWrapper<String> doInBackground(String... strings) {
 			try {
 				@SuppressWarnings("ConstantConditions")
 				final MangaProvider provider = MangaProvider.getProvider(getObject().getContext(), strings[0]);
-				return provider.authorize(strings[1], strings[2]);
+				String result = provider.authorize(strings[1], strings[2]);
+				return result == null ? ObjectWrapper.badResult(String.class) : new ObjectWrapper<>(result);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
@@ -162,13 +165,17 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 		}
 
 		@Override
-		protected void onPostExecute(@NonNull AuthorizationDialog authorizationDialog, String data) {
+		protected void onPostExecute(@NonNull AuthorizationDialog authorizationDialog, @NonNull ObjectWrapper<String> data) {
 			authorizationDialog.setIsReady(true);
 			authorizationDialog.mAuthTask = null;
-			if (data == null) {
-				authorizationDialog.mInputLayoutPassword.setError(authorizationDialog.getString(R.string.auth_failed));
+			if (data.isFailed()) {
+				authorizationDialog.mInputLayoutPassword.setError(
+						data.getError() instanceof ObjectWrapper.BadResultException ?
+								authorizationDialog.getString(R.string.auth_failed)
+								: authorizationDialog.getString(ErrorUtils.getErrorMessage(data.getError()))
+				);
 			} else {
-				CookieStore.getInstance().putCookie(authorizationDialog.mProviderCName, data);
+				CookieStore.getInstance().put(MangaProvider.getDomain(authorizationDialog.mProviderCName), data.get());
 				final Activity activity = authorizationDialog.getActivity();
 				if (activity != null && activity instanceof Callback) {
 					((Callback) activity).onAuthorized();

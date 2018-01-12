@@ -97,7 +97,8 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		switch (view.getId()) {
 			case R.id.imageViewMenu:
 				//TODO
-				break;
+				throw new OutOfMemoryError("Test");
+				//break;
 		}
 	}
 }

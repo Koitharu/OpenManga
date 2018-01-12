@@ -3,8 +3,11 @@ package org.nv95.openmanga.ui.shelf;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import org.nv95.openmanga.CrashHandler;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHistory;
+import org.nv95.openmanga.content.UserTip;
 import org.nv95.openmanga.content.shelf.Category;
 import org.nv95.openmanga.content.shelf.ShelfContent;
 import org.nv95.openmanga.content.storage.db.CategoriesRepository;
@@ -29,6 +32,17 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 	@Override
 	public ShelfContent loadInBackground() {
 		final ShelfContent content = new ShelfContent();
+		//tips
+		CrashHandler crashHandler = CrashHandler.get();
+		if (crashHandler != null && crashHandler.wasCrashed()) {
+			content.tips.add(new UserTip(
+					getContext().getString(R.string.error_occurred),
+					getContext().getString(R.string.application_crashed),
+					R.drawable.ic_bug_red,
+					R.string.report,
+					R.id.action_crash_report
+			));
+		}
 		//history
 		final HistoryRepository historyRepository = new HistoryRepository(getContext());
 		final ArrayList<MangaHistory> history = historyRepository.query(new HistorySpecification().orderByDate(true).limit(5));

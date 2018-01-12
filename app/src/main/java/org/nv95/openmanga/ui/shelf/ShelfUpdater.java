@@ -17,6 +17,7 @@ public final class ShelfUpdater {
 
 	public static void update(ShelfAdapter adapter, ShelfContent content, int columnCount) {
 		ArrayList<Object> dataset = new ArrayList<>();
+		dataset.addAll(content.tips);
 		if (!content.history.isEmpty()) {
 			dataset.add(new ListHeader(R.string.action_history));
 			dataset.add(content.history.get(0));

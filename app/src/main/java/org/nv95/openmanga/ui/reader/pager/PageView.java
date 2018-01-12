@@ -22,6 +22,7 @@ import org.nv95.openmanga.ui.reader.ImageConverter;
 import org.nv95.openmanga.ui.reader.PageDownloader;
 import org.nv95.openmanga.ui.reader.PagesCache;
 import org.nv95.openmanga.ui.views.TextProgressView;
+import org.nv95.openmanga.utils.ErrorUtils;
 
 import java.io.File;
 
@@ -137,7 +138,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 			ImageConverter.getInstance().convert(mFile.getPath(), this);
 		} else {
 			mTextProgressView.hide();
-			setError(getContext().getString(R.string.error));
+			setError(getContext().getString(ErrorUtils.getErrorMessage(e)));
 		}
 	}
 
