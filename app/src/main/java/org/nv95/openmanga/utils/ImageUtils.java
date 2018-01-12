@@ -3,6 +3,7 @@ package org.nv95.openmanga.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.support.annotation.NonNull;
@@ -87,6 +88,10 @@ public final class ImageUtils {
 	}
 
 	public static void setThumbnail(@NonNull ImageView imageView, String url) {
+		if (url != null && url.equals(imageView.getTag())) {
+			return;
+		}
+		imageView.setTag(url);
 		ImageLoader.getInstance().displayImage(
 				url,
 				new ImageViewAware(imageView),
@@ -95,10 +100,24 @@ public final class ImageUtils {
 	}
 
 	public static void setImage(@NonNull ImageView imageView, String url) {
+		if (url != null && url.equals(imageView.getTag())) {
+			return;
+		}
+		imageView.setTag(url);
 		ImageLoader.getInstance().displayImage(
 				url,
 				imageView
 		);
+	}
+
+	public static void recycle(@NonNull ImageView imageView) {
+		ImageLoader.getInstance().cancelDisplayTask(imageView);
+		final Drawable drawable = imageView.getDrawable();
+		if (drawable != null && drawable instanceof BitmapDrawable) {
+			((BitmapDrawable) drawable).getBitmap().recycle();
+			imageView.setImageDrawable(null);
+		}
+		imageView.setTag(null);
 	}
 
 	public static void updateImage(@NonNull ImageView imageView, String url) {

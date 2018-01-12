@@ -87,6 +87,14 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 	}
 
 	@Override
+	public void onViewRecycled(RecyclerView.ViewHolder holder) {
+		if (holder instanceof MangaHeaderHolder) {
+			ImageUtils.recycle(((MangaHeaderHolder) holder).imageView);
+		}
+		super.onViewRecycled(holder);
+	}
+
+	@Override
 	public void onClick(View view) {
 		MangaHeader mangaHeader = (MangaHeader) view.getTag();
 		Context context = view.getContext();

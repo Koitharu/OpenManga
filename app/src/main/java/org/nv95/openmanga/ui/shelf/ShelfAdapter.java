@@ -144,8 +144,12 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		}
 	}
 
-	public ArrayList<Object> getDataset() {
-		return mDataset;
+	@Override
+	public void onViewRecycled(RecyclerView.ViewHolder holder) {
+		if (holder instanceof MangaHolder) {
+			ImageUtils.recycle(((MangaHolder) holder).imageViewThumbnail);
+		}
+		super.onViewRecycled(holder);
 	}
 
 	class HeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
