@@ -87,7 +87,8 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	}
 
 	public void setData(MangaPage page) {
-		mTextProgressView.show();
+		mTextProgressView.setProgress(TextProgressView.INDETERMINATE);
+		mTextProgressView.setVisibility(VISIBLE);
 		if (mErrorView != null) {
 			mErrorView.setVisibility(View.GONE);
 		}
@@ -101,7 +102,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	}
 
 	private void setError(CharSequence errorMessage) {
-		mTextProgressView.hide();
+		mTextProgressView.setVisibility(GONE);
 		if (mErrorView == null) {
 			assert mStubError != null;
 			mErrorView = mStubError.inflate();
@@ -119,7 +120,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 				if (mErrorView != null) {
 					mErrorView.setVisibility(GONE);
 				}
-				mTextProgressView.show();
+				mTextProgressView.setVisibility(VISIBLE);
 				mFile.delete();
 				PageDownloader.getInstance().downloadPage(mPage.url, mFile.getPath(), this);
 				break;
@@ -130,14 +131,14 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	 * Loading done, alles ok
 	 */
 	public void onLoadingComplete() {
-		mTextProgressView.hide();
+		mTextProgressView.setVisibility(GONE);
 	}
 
 	public void onImageDisplayFailed(Exception e) {
 		if (mFile.exists()) {
 			ImageConverter.getInstance().convert(mFile.getPath(), this);
 		} else {
-			mTextProgressView.hide();
+			mTextProgressView.setVisibility(GONE);
 			setError(getContext().getString(ErrorUtils.getErrorMessage(e)));
 		}
 	}

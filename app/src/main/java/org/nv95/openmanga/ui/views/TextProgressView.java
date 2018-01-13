@@ -1,5 +1,6 @@
 package org.nv95.openmanga.ui.views;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ public final class TextProgressView extends LinearLayout {
 
 	private static final int MIN_SHOW_TIME = 500; // ms
 	private static final int MIN_DELAY = 500; // ms
+	public static final int INDETERMINATE = -1;
 
 	private long mStartTime = -1;
 
@@ -67,6 +69,7 @@ public final class TextProgressView extends LinearLayout {
 	public TextProgressView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		setOrientation(VERTICAL);
+		setLayoutTransition(new LayoutTransition());
 		setGravity(Gravity.CENTER_HORIZONTAL);
 		final int padding = ResourceUtils.dpToPx(context.getResources(),4);
 		setPadding(padding, padding, padding, padding);

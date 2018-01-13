@@ -30,6 +30,8 @@ import org.nv95.openmanga.content.storage.db.HistoryRepository;
 import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.ChaptersListAdapter;
 import org.nv95.openmanga.ui.reader.pager.PagerReaderFragment;
+import org.nv95.openmanga.ui.reader.thumbview.OnThumbnailClickListener;
+import org.nv95.openmanga.ui.reader.thumbview.ThumbViewFragment;
 import org.nv95.openmanga.utils.AnimationUtils;
 
 import java.util.ArrayList;
@@ -40,7 +42,8 @@ import java.util.ArrayList;
 
 public final class ReaderActivity extends AppBaseActivity implements View.OnClickListener,
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
-		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener, ReaderCallback {
+		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
+		ReaderCallback, OnThumbnailClickListener {
 
 	private ImmersiveFrameLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
@@ -147,7 +150,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 				break;
 			case R.id.action_thumbnails:
-
+				final ThumbViewFragment dialogFragment = new ThumbViewFragment();
+				final Bundle args = new Bundle();
+				args.putParcelableArrayList("pages", mPages);
+				dialogFragment.setArguments(args);
+				dialogFragment.show(getSupportFragmentManager(), "thumb_view");
 				break;
 		}
 	}
@@ -304,5 +311,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		} else {
 			showUi();
 		}
+	}
+
+	@Override
+	public void onThumbnailClick(int position) {
+		mReader.scrollToPage(position);
 	}
 }

@@ -99,6 +99,11 @@ public final class ImageUtils {
 		);
 	}
 
+	public static void setThumbnail(@NonNull ImageView imageView, @Nullable File file) {
+		final String url = file == null ? null : "file://" + file.getPath();
+		setThumbnail(imageView, url);
+	}
+
 	public static void setImage(@NonNull ImageView imageView, String url) {
 		if (url != null && url.equals(imageView.getTag())) {
 			return;

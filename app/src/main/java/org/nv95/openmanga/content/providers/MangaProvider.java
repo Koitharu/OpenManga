@@ -161,7 +161,7 @@ public abstract class MangaProvider {
 		//TODO load form settings
 		final ArrayList<ProviderHeader> providers = new ArrayList<>();
 		providers.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
-		providers.add(new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME));
+		//providers.add(new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME));
 		return providers;
 	}
 

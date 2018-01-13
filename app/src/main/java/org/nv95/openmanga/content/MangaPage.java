@@ -1,10 +1,13 @@
 package org.nv95.openmanga.content;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaPage {
+public class MangaPage implements Parcelable {
 
 	public final long id;
 	public final String url;
@@ -20,5 +23,35 @@ public class MangaPage {
 		this.id = id;
 		this.url = url;
 		this.provider = provider;
+	}
+
+	protected MangaPage(Parcel in) {
+		id = in.readLong();
+		url = in.readString();
+		provider = in.readString();
+	}
+
+	public static final Creator<MangaPage> CREATOR = new Creator<MangaPage>() {
+		@Override
+		public MangaPage createFromParcel(Parcel in) {
+			return new MangaPage(in);
+		}
+
+		@Override
+		public MangaPage[] newArray(int size) {
+			return new MangaPage[size];
+		}
+	};
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(id);
+		dest.writeString(url);
+		dest.writeString(provider);
 	}
 }
