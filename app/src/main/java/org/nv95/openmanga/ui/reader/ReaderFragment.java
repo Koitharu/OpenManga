@@ -2,6 +2,7 @@ package org.nv95.openmanga.ui.reader;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -23,6 +24,7 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 	@Nullable
 	private ReaderCallback mCallback = null;
 
+	@CallSuper
 	public void setPages(List<MangaPage> pages) {
 		mPages.clear();
 		mPages.addAll(pages);

@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
@@ -60,6 +61,19 @@ public final class ThemeUtils {
 		return ds;
 	}
 
+	public static Drawable[] getAccentIcons(Context context, @DrawableRes int... resIds) {
+		PorterDuffColorFilter cf = new PorterDuffColorFilter(getAccentColor(context), PorterDuff.Mode.SRC_ATOP);
+		Drawable[] ds = new Drawable[resIds.length];
+		for (int i=0;i<resIds.length;i++) {
+			ds[i] = ContextCompat.getDrawable(context, resIds[i]);
+			if (ds[i] != null) {
+				ds[i].setColorFilter(cf);
+			}
+		}
+		return ds;
+	}
+
+	@ColorInt
 	public static int getAttrColor(Context context, @AttrRes int resId) {
 		TypedValue typedValue = new TypedValue();
 		TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { resId });
@@ -68,6 +82,7 @@ public final class ThemeUtils {
 		return color;
 	}
 
+	@ColorInt
 	public static int getThemeAttrColor(Context context, @AttrRes int resId) {
 		TypedArray a = context.getTheme().obtainStyledAttributes(getAppThemeRes(context), new int[] { resId });
 		int color = a.getColor(0, 0);
@@ -106,5 +121,10 @@ public final class ThemeUtils {
 
 	public static Drawable getSelectableBackgroundBorderless(Context context) {
 		return getAttrDrawable(context, R.attr.selectableItemBackgroundBorderless);
+	}
+
+	@ColorInt
+	public static int getAccentColor(Context context) {
+		return getThemeAttrColor(context, R.attr.colorAccent);
 	}
 }

@@ -68,12 +68,12 @@ public final class TextProgressView extends LinearLayout {
 
 	public TextProgressView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		View.inflate(context, R.layout.view_progress, this);
 		setOrientation(VERTICAL);
 		setLayoutTransition(new LayoutTransition());
 		setGravity(Gravity.CENTER_HORIZONTAL);
 		final int padding = ResourceUtils.dpToPx(context.getResources(),4);
 		setPadding(padding, padding, padding, padding);
-		View.inflate(context, R.layout.view_progress, this);
 		mTextView = findViewById(android.R.id.text1);
 		mProgressBar = findViewById(android.R.id.progress);
 	}

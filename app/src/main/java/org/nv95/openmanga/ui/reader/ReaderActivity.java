@@ -103,7 +103,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	protected void onPause() {
 		if (mHistoryRepository != null && mPages != null) {
-			if (!mHistoryRepository.quickUpdate(mManga, mChapter, mPages.get(0/* TODO*/))) {
+			if (!mHistoryRepository.quickUpdate(mManga, mChapter, mReader.getCurrentPage())) {
 				addToHistory();
 			}
 
@@ -137,6 +137,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			final ChaptersDialogFragment dialogFragment = new ChaptersDialogFragment();
 			final Bundle args = new Bundle();
 			args.putParcelableArrayList("chapters", mManga.chapters);
+			args.putLong("current_id", mChapter.id);
 			dialogFragment.setArguments(args);
 			dialogFragment.show(getSupportFragmentManager(), "chapters_list");
 			return true;
@@ -208,8 +209,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mPages = data;
 		mSeekBar.setMax(mPages.size() - 1);
 		mSeekBar.setProgress(0);
-		addToHistory();
 		mReader.setPages(mPages);
+		mReader.scrollToPage(0);
+		addToHistory();
 	}
 
 	@Override
@@ -294,7 +296,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	}
 
 	private void addToHistory() {
-		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mPages.get(0), mPages.size(), (short) 0);
+		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
 		if (!mHistoryRepository.add(history)) {
 			mHistoryRepository.update(history);
 		}

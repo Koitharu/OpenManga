@@ -13,7 +13,6 @@ CREATE TABLE history (
     updated_at INTEGER NOT NULL,
     reader_preset INTEGER,
     total_chapters INTEGER,
-    total_pages_in_chapter INTEGER,
     removed INTEGER DEFAULT 0
 );
 

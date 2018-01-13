@@ -35,8 +35,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 				"updated_at",				//11
 				"reader_preset",			//12
 				"total_chapters",			//13
-				"total_pages_in_chapter",	//14
-				"removed"					//15
+				"removed"					//14
 	};
 
 	private final StorageHelper mStorageHelper;
@@ -104,8 +103,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 							cursor.getLong(10),
 							cursor.getLong(11),
 							cursor.getShort(12),
-							cursor.getInt(13),
-							cursor.getInt(14)
+							cursor.getInt(13)
 					));
 				} while (cursor.moveToNext());
 			}
@@ -146,8 +144,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 						cursor.getLong(10),
 						cursor.getLong(11),
 						cursor.getShort(12),
-						cursor.getInt(13),
-						cursor.getInt(14)
+						cursor.getInt(13)
 				);
 			}
 			return null;
@@ -188,8 +185,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 		cv.put(PROJECTION[11], mangaHistory.updatedAt);
 		cv.put(PROJECTION[12], mangaHistory.readerPreset);
 		cv.put(PROJECTION[13], mangaHistory.totalChapters);
-		cv.put(PROJECTION[14], mangaHistory.totalPagesInChapter);
-		//cv.put(PROJECTION[15], 0);
+		//cv.put(PROJECTION[14], 0);
 		return cv;
 	}
 }

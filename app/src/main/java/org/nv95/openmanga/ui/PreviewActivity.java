@@ -145,7 +145,7 @@ public final class PreviewActivity extends AppBaseActivity implements
 		}
 		mMangaDetails = mangaDetails;
 		updateContent();
-		ChaptersListAdapter adapter = new ChaptersListAdapter(mangaDetails.chapters, this);
+		ChaptersListAdapter adapter = new ChaptersListAdapter(this, mangaDetails.chapters, this);
 		//TODO history
 		mRecyclerViewChapters.setAdapter(adapter);
 		mProgressBar.setVisibility(View.INVISIBLE);

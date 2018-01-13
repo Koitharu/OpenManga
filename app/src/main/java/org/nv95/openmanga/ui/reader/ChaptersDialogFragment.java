@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaChapter;
 import org.nv95.openmanga.ui.ChaptersListAdapter;
+import org.nv95.openmanga.utils.CollectionsUtils;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public final class ChaptersDialogFragment extends BottomSheetDialogFragment {
 	private RecyclerView mRecyclerView;
 
 	private ArrayList<MangaChapter> mChaptersList;
+	private long mCurrentId;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public final class ChaptersDialogFragment extends BottomSheetDialogFragment {
 		final Bundle args = getArguments();
 		assert args != null;
 		mChaptersList = args.getParcelableArrayList("chapters");
+		mCurrentId = args.getLong("current_id");
 	}
 
 	@Nullable
@@ -46,7 +49,6 @@ public final class ChaptersDialogFragment extends BottomSheetDialogFragment {
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mRecyclerView = view.findViewById(R.id.recyclerView);
-		mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL));
 	}
 
 	@Override
@@ -54,7 +56,15 @@ public final class ChaptersDialogFragment extends BottomSheetDialogFragment {
 		super.onActivityCreated(savedInstanceState);
 		final Activity activity = getActivity();
 		assert activity != null;
-		ChaptersListAdapter adapter = new ChaptersListAdapter(mChaptersList, (ChaptersListAdapter.OnChapterClickListener) activity);
+		mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
+		ChaptersListAdapter adapter = new ChaptersListAdapter(activity, mChaptersList, (ChaptersListAdapter.OnChapterClickListener) activity);
+		adapter.setCurrentChapterId(mCurrentId);
 		mRecyclerView.setAdapter(adapter);
+		int current = CollectionsUtils.findPositionById(mChaptersList, mCurrentId);
+		if (current != -1) {
+			if (current > 2) {
+				mRecyclerView.scrollToPosition(current - 1);
+			}
+		}
 	}
 }
