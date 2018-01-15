@@ -17,7 +17,7 @@ import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaHistory;
 import org.nv95.openmanga.content.UserTip;
-import org.nv95.openmanga.ui.PreviewActivity;
+import org.nv95.openmanga.ui.preview.PreviewActivity;
 import org.nv95.openmanga.ui.common.Dismissible;
 import org.nv95.openmanga.ui.common.ListHeader;
 import org.nv95.openmanga.utils.ImageUtils;

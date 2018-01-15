@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
-import org.nv95.openmanga.ui.PreviewActivity;
+import org.nv95.openmanga.ui.preview.PreviewActivity;
 import org.nv95.openmanga.ui.common.EndlessRecyclerView;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;

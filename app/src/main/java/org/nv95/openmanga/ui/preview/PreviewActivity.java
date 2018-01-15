@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui;
+package org.nv95.openmanga.ui.preview;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
@@ -9,8 +9,6 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,11 +25,11 @@ import org.nv95.openmanga.content.MangaChapter;
 import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaFavourite;
 import org.nv95.openmanga.content.MangaHeader;
-import org.nv95.openmanga.content.MangaHistory;
 import org.nv95.openmanga.content.MangaStatus;
 import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.content.storage.db.FavouritesRepository;
 import org.nv95.openmanga.content.storage.db.HistoryRepository;
+import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.reader.ReaderActivity;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MenuUtils;
@@ -50,12 +48,10 @@ public final class PreviewActivity extends AppBaseActivity implements
 
 	private ImageView mImageView;
 	private RecyclerView mRecyclerViewChapters;
-	private TextView mTextViewSummary;
+	private TextView mTextVireGenres;
 	private TextView mTextViewDescription;
 	private TextView mTextViewState;
 	private ProgressBar mProgressBar;
-	private FloatingActionButton mFabRead;
-	private BottomSheetBehavior<RecyclerView> mBottomSheetBehavior;
 
 	private FavouritesRepository mFavouritesRepository;
 	private HistoryRepository mHistoryRepository;
@@ -72,17 +68,13 @@ public final class PreviewActivity extends AppBaseActivity implements
 		mHistoryRepository = new HistoryRepository(this);
 
 		mImageView = findViewById(R.id.imageView);
-		mTextViewSummary = findViewById(R.id.textView_summary);
+		mTextVireGenres = findViewById(R.id.textView_genres);
 		mProgressBar = findViewById(R.id.progressBar);
 		mTextViewState = findViewById(R.id.textView_state);
 		mTextViewDescription = findViewById(R.id.textView_description);
 		mRecyclerViewChapters = findViewById(R.id.recyclerView_chapters);
-		mFabRead = findViewById(R.id.fab_read);
 
-		mBottomSheetBehavior = BottomSheetBehavior.from(mRecyclerViewChapters);
-		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 		mRecyclerViewChapters.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-		mFabRead.setOnClickListener(this);
 
 		mMangaHeader = getIntent().getParcelableExtra("manga");
 		updateContent();
@@ -149,7 +141,6 @@ public final class PreviewActivity extends AppBaseActivity implements
 		//TODO history
 		mRecyclerViewChapters.setAdapter(adapter);
 		mProgressBar.setVisibility(View.INVISIBLE);
-		mFabRead.show();
 	}
 
 	@Override
@@ -176,7 +167,7 @@ public final class PreviewActivity extends AppBaseActivity implements
 			ImageUtils.setThumbnail(mImageView, mMangaHeader.thumbnail);
 			setTitle(mMangaHeader.name);
 			setSubtitle(mMangaHeader.summary);
-			mTextViewSummary.setText(mMangaHeader.genres);
+			mTextVireGenres.setText(mMangaHeader.genres);
 			if (mMangaHeader.status == MangaStatus.STATUS_UNKNOWN) {
 				mTextViewState.setVisibility(View.GONE);
 			} else {
@@ -187,7 +178,7 @@ public final class PreviewActivity extends AppBaseActivity implements
 			ImageUtils.updateImage(mImageView, mMangaDetails.cover);
 			setTitle(mMangaDetails.name);
 			setSubtitle(mMangaDetails.summary);
-			mTextViewSummary.setText(mMangaDetails.genres);
+			mTextVireGenres.setText(mMangaDetails.genres);
 			if (mMangaDetails.status == MangaStatus.STATUS_UNKNOWN) {
 				mTextViewState.setVisibility(View.GONE);
 			} else {
@@ -213,7 +204,7 @@ public final class PreviewActivity extends AppBaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.fab_read:
+			/*case R.id.fab_read:
 				if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
 					mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 				} else {
@@ -228,7 +219,7 @@ public final class PreviewActivity extends AppBaseActivity implements
 					}
 					startActivity(intent);
 				}
-				return;
+				return;*/
 		}
 	}
 

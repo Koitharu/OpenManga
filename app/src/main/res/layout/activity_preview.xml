@@ -6,27 +6,28 @@
 	android:layout_height="match_parent">
 
 	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbar"
 		android:layout_width="match_parent"
+		app:elevation="0dp"
 		android:layout_height="wrap_content"
-		app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+		android:background="@android:color/transparent">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+			android:layout_height="?attr/actionBarSize"
+			android:background="?colorPrimary"
+			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+			tools:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+			tools:subtitle="Manga subtitle some text"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			tools:title="Manga name" />
 
-	</android.support.design.widget.AppBarLayout>
-
-	<android.support.v4.widget.NestedScrollView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-		<LinearLayout
+		<android.support.v7.widget.CardView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="vertical">
+			app:layout_scrollFlags="scroll|enterAlways"
+			android:layout_margin="6dp">
 
 			<org.nv95.openmanga.ui.common.HorizontalContentView
 				android:layout_width="match_parent"
@@ -34,90 +35,63 @@
 
 				<ImageView
 					android:id="@+id/imageView"
-					tools:src="@drawable/placeholder"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
-					android:scaleType="centerCrop" />
+					android:scaleType="centerCrop"
+					tools:src="@drawable/placeholder" />
 
-				<RelativeLayout
+				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
+					android:orientation="vertical"
 					android:padding="4dp">
+
+					<TextView
+						android:id="@+id/textView_description"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+						tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
+
 
 					<TextView
 						android:id="@+id/textView_genres"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_alignParentTop="true"
-						android:text="@string/action_genre"
 						android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
-
-					<TextView
-						android:id="@+id/textView_summary"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_above="@id/textView_state"
-						android:layout_below="@id/textView_genres" />
 
 					<TextView
 						android:id="@+id/textView_state"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_alignParentBottom="true"
 						android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
-				</RelativeLayout>
+				</LinearLayout>
 			</org.nv95.openmanga.ui.common.HorizontalContentView>
 
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="?android:listDivider" />
+		</android.support.v7.widget.CardView>
 
-			<TextView
-				android:id="@+id/textView_description"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:padding="4dp" />
-		</LinearLayout>
-
-	</android.support.v4.widget.NestedScrollView>
-
-	<ProgressBar
-		android:id="@+id/progressBar"
-		style="@style/Widget.AppCompat.ProgressBar"
-		android:layout_width="72dp"
-		android:layout_height="72dp"
-		android:indeterminate="true"
-		app:layout_anchor="@id/textView_description"
-		app:layout_anchorGravity="center" />
+	</android.support.design.widget.AppBarLayout>
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/recyclerView_chapters"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="?android:attr/windowBackground"
-		android:orientation="vertical"
+		android:layout_height="match_parent"
 		android:scrollbars="vertical"
-		app:behavior_hideable="true"
-		app:behavior_peekHeight="172dp"
 		app:fastScrollEnabled="true"
 		app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
 		app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
 		app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
 		app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
 		app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-		app:layout_behavior="@string/bottom_sheet_behavior" />
+		app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-	<android.support.design.widget.FloatingActionButton
-		android:id="@+id/fab_read"
-		android:layout_width="wrap_content"
+	<ProgressBar
+		android:id="@+id/progressBar"
+		style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="16dp"
-		android:src="@drawable/ic_fab_read"
-		android:visibility="gone"
-		app:fabSize="normal"
-		app:layout_anchor="@id/recyclerView_chapters"
-		app:layout_anchorGravity="top|end" />
+		app:layout_anchor="@id/appbar"
+		app:layout_anchorGravity="bottom" />
 
 </android.support.design.widget.CoordinatorLayout>

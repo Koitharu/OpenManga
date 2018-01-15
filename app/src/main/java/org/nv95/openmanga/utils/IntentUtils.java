@@ -7,7 +7,7 @@ import android.media.ThumbnailUtils;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaHeader;
-import org.nv95.openmanga.ui.PreviewActivity;
+import org.nv95.openmanga.ui.preview.PreviewActivity;
 
 /**
  * Created by koitharu on 26.12.17.

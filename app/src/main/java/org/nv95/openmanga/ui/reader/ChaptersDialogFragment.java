@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.MangaChapter;
-import org.nv95.openmanga.ui.ChaptersListAdapter;
+import org.nv95.openmanga.ui.preview.ChaptersListAdapter;
 import org.nv95.openmanga.utils.CollectionsUtils;
 
 import java.util.ArrayList;

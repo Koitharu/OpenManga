@@ -28,7 +28,7 @@ import org.nv95.openmanga.content.MangaHistory;
 import org.nv95.openmanga.content.MangaPage;
 import org.nv95.openmanga.content.storage.db.HistoryRepository;
 import org.nv95.openmanga.ui.AppBaseActivity;
-import org.nv95.openmanga.ui.ChaptersListAdapter;
+import org.nv95.openmanga.ui.preview.ChaptersListAdapter;
 import org.nv95.openmanga.ui.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.ui.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.ui.reader.thumbview.ThumbViewFragment;

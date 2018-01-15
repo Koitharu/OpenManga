@@ -16,7 +16,6 @@ import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.shelf.Category;
 import org.nv95.openmanga.content.storage.db.CategoriesRepository;
 import org.nv95.openmanga.content.storage.db.CategoriesSpecification;
-import org.nv95.openmanga.ui.PreviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

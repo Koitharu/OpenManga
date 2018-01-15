@@ -48,7 +48,7 @@
 			android:windowSoftInputMode="adjustResize" />
 
 		<activity
-			android:name=".ui.PreviewActivity"
+			android:name=".ui.preview.PreviewActivity"
 			android:configChanges="orientation|screenSize" />
 
 		<activity

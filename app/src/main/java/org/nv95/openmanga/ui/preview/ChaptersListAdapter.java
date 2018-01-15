@@ -1,4 +1,4 @@
-package org.nv95.openmanga.ui;
+package org.nv95.openmanga.ui.preview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
