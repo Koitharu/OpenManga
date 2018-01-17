@@ -5,10 +5,9 @@
 	android:foreground="?attr/selectableItemBackground"
 	android:layout_height="wrap_content">
 
-	<org.nv95.openmanga.ui.common.HorizontalContentView
+	<org.nv95.openmanga.ui.common.TwoPaneLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
+		android:layout_height="124dp">
 
 		<ImageView
 			android:id="@+id/imageViewThumbnail"
@@ -62,6 +61,6 @@
 				android:text="@string/continue_reading" />
 		</LinearLayout>
 
-	</org.nv95.openmanga.ui.common.HorizontalContentView>
+	</org.nv95.openmanga.ui.common.TwoPaneLayout>
 
 </android.support.v7.widget.CardView>

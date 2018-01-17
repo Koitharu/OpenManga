@@ -19,7 +19,7 @@
     <string name="view_mode_list">Отображать списком</string>
     <string name="wait">Подождите…</string>
     <string name="search_results">Результаты поиска</string>
-    <string name="action_share">Поделиться</string>
+    <string name="share">Поделиться</string>
     <string name="action_reading_options">Параметры чтения</string>
     <string name="scrolling_direction">Направление листания</string>
     <string name="keep_screen">Держать экран включеным</string>

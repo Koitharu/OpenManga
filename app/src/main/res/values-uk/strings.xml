@@ -19,7 +19,7 @@
     <string name="view_mode_list">Відображати списком</string>
     <string name="wait">Зачекайте…</string>
     <string name="search_results">Результати пошуку</string>
-    <string name="action_share">Поділитися</string>
+    <string name="share">Поділитися</string>
     <string name="action_reading_options">Параметри читання</string>
     <string name="scrolling_direction">Напрямок листання</string>
     <string name="keep_screen">Тримати екран увімкненим</string>

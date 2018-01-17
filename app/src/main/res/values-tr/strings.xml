@@ -18,7 +18,7 @@
     <string name="action_save_add">Kayıp bölümlerı kurtar</string>
     <string name="action_search">Ara</string>
     <string name="action_settings">Ayarlar</string>
-    <string name="action_share">Paylaş</string>
+    <string name="share">Paylaş</string>
     <string name="action_sort">Sıralama</string>
     <string name="action_unfavourite">Favorilerden kaldır</string>
     <string name="adjust_brightness">Parlaklığı Ayarla</string>

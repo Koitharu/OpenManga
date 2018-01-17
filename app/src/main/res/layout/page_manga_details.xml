@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:scrollbars="vertical"
+	android:tag="@string/description"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<org.nv95.openmanga.ui.common.TwoPaneLayout
+			android:layout_width="match_parent"
+			android:layout_height="182dp">
+
+			<ImageView
+				android:id="@+id/imageView_cover"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				tools:src="@drawable/placeholder" />
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="6dp">
+
+				<TextView
+					android:id="@+id/textView_summary"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:maxLines="3"
+					tools:text="Chapters: 5\nSource: MangaFox\nOngoing"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+				<RatingBar
+					android:id="@+id/ratingBar"
+					style="@style/Widget.AppCompat.RatingBar.Small"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/textView_summary"
+					android:isIndicator="true"
+					android:numStars="5"
+					tools:rating="3.7" />
+
+				<TextView
+					android:id="@+id/textView_genres"
+					android:layout_width="match_parent"
+					android:maxLines="3"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/ratingBar"
+					android:layout_above="@id/button_read"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+					tools:text="Lorem ipsum dolor sit amet" />
+
+				<ImageButton
+					android:contentDescription="@string/action_favourite"
+					android:id="@+id/button_favourite"
+					style="@style/Widget.AppCompat.ImageButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignBottom="@id/button_read"
+					android:layout_alignTop="@id/button_read"
+					android:layout_marginEnd="4dp"
+					android:layout_marginRight="4dp"
+					android:layout_toLeftOf="@id/button_read"
+					android:layout_toStartOf="@id/button_read"
+					android:background="?selectableItemBackground"
+					android:padding="12dp"
+					android:src="@drawable/ic_tag_black"
+					tools:src="@drawable/ic_tag_heart_black" />
+
+				<Button
+					android:id="@+id/button_read"
+					style="@style/Widget.AppCompat.Button.Colored"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentEnd="true"
+					android:layout_alignParentRight="true"
+					android:text="@string/read" />
+			</RelativeLayout>
+
+		</org.nv95.openmanga.ui.common.TwoPaneLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="?android:attr/listDivider" />
+
+		<TextView
+			android:id="@+id/textView_description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingBottom="8dp"
+			android:paddingLeft="12dp"
+			android:paddingRight="12dp"
+			android:paddingTop="8dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+			tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
+
+	</LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

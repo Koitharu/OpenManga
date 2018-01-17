@@ -12,27 +12,23 @@ import java.util.ArrayList;
  * Created by koitharu on 26.12.17.
  */
 
-public final class SimpleViewPagerAdapter extends PagerAdapter {
+public final class ViewPagerAdapter extends PagerAdapter {
 
-	private final ArrayList<Pair<View,String>> mViews;
+	private final View[] mViews;
 
-	public SimpleViewPagerAdapter() {
-		mViews = new ArrayList<>();
-	}
-
-	public void addView(View view, String title) {
-		mViews.add(new Pair<>(view, title));
+	public ViewPagerAdapter(View... pages) {
+		mViews = pages;
 	}
 
 	@Override
 	public int getCount() {
-		return mViews.size();
+		return mViews.length;
 	}
 
 	@NonNull
 	@Override
 	public Object instantiateItem(@NonNull ViewGroup container, int position) {
-		View view = mViews.get(position).first;
+		View view = mViews[position];
 		container.addView(view);
 		return view;
 	}
@@ -44,7 +40,7 @@ public final class SimpleViewPagerAdapter extends PagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return mViews.get(position).second;
+		return mViews[position].getTag().toString();
 	}
 
 	@Override

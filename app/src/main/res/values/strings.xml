@@ -23,7 +23,7 @@
     <string name="action_save">Save</string>
     <string name="continue_reading">Continue</string>
     <string name="search_results">Search results</string>
-    <string name="action_share">Share</string>
+    <string name="share">Share</string>
     <string name="action_reading_options">Reading options</string>
     <string name="scrolling_direction">Scrolling direction</string>
     <string name="keep_screen">Keep screen on</string>
@@ -409,4 +409,7 @@
 	<string name="report">Report</string>
 	<string name="additional">Additional</string>
     <string name="downloads">Downloads</string>
+	<string name="chapters_count_">Chapters:</string>
+    <string name="source_">Source:</string>
+	<string name="save_">Save…</string>
 </resources>

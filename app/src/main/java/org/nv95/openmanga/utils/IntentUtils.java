@@ -43,6 +43,6 @@ public final class IntentUtils {
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_TEXT, mangaHeader.url);
 		intent.putExtra(android.content.Intent.EXTRA_SUBJECT, mangaHeader.name);
-		context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)));
+		context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
 	}
 }

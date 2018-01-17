@@ -30,10 +30,9 @@ public final class ToolButtonCompat extends AppCompatImageView {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int originalSize = MeasureSpec.getSize(heightMeasureSpec);
 		super.onMeasure(
-				MeasureSpec.makeMeasureSpec(originalSize, MeasureSpec.EXACTLY),
-				MeasureSpec.makeMeasureSpec(originalSize, MeasureSpec.EXACTLY)
+				heightMeasureSpec,
+				heightMeasureSpec
 		);
 	}
 
