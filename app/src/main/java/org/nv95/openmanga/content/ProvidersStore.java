@@ -1,0 +1,88 @@
+package org.nv95.openmanga.content;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.SparseBooleanArray;
+
+import org.nv95.openmanga.content.providers.DesumeProvider;
+import org.nv95.openmanga.content.providers.ExhentaiProvider;
+import org.nv95.openmanga.utils.CollectionsUtils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * Created by koitharu on 17.01.18.
+ */
+
+public final class ProvidersStore {
+
+	private static final ProviderHeader[] sProviders = new ProviderHeader[]{
+			new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME),            //0
+			new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME)        //1
+	};
+
+	private final SharedPreferences mPreferences;
+
+	public ProvidersStore(Context context) {
+		mPreferences = context.getSharedPreferences("providers", Context.MODE_PRIVATE);
+	}
+
+	public ArrayList<ProviderHeader> getAllProvidersSorted() {
+		final ArrayList<ProviderHeader> list = new ArrayList<>(sProviders.length);
+		final int[] order = CollectionsUtils.convertToInt(mPreferences.getString("order", "").split("\\|"), -1);
+		for (int o : order) {
+			ProviderHeader h = CollectionsUtils.getOrNull(sProviders, o);
+			if (h != null) {
+				list.add(h);
+			}
+		}
+		for (ProviderHeader h : sProviders) {
+			if (!list.contains(h)) {
+				list.add(h);
+			}
+		}
+		return list;
+	}
+
+	public ArrayList<ProviderHeader> getUserProviders() {
+		final ArrayList<ProviderHeader> list = getAllProvidersSorted();
+		final int[] disabled = getDisabledIds();
+		Iterator<ProviderHeader> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			ProviderHeader h = iterator.next();
+			if (CollectionsUtils.indexOf(disabled, h.hashCode()) != -1) {
+				iterator.remove();
+			}
+		}
+		return list;
+	}
+
+	public void save(ArrayList<ProviderHeader> providers, SparseBooleanArray enabled) {
+		final Integer[] order = new Integer[providers.size()];
+		for (int i = 0; i < sProviders.length; i++) {
+			ProviderHeader h = sProviders[i];
+			int p = providers.indexOf(h);
+			if (p != -1) {
+				order[i] = p;
+			}
+		}
+		final ArrayList<Integer> disabled = new ArrayList<>();
+		for (int i=0;i<providers.size();i++) {
+			if (!enabled.get(i, true)) {
+				disabled.add(providers.get(i).hashCode());
+			}
+		}
+		mPreferences.edit()
+				.putString("order", TextUtils.join("|", order))
+				.putString("disabled", TextUtils.join("|", disabled))
+				.apply();
+	}
+
+	@NonNull
+	public int[] getDisabledIds() {
+		return CollectionsUtils.convertToInt(mPreferences.getString("disabled", "").split("\\|"), -1);
+	}
+}

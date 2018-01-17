@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.content.ProviderHeader;
+import org.nv95.openmanga.content.ProvidersStore;
 import org.nv95.openmanga.content.providers.MangaProvider;
 
 import java.io.IOException;
@@ -39,9 +40,9 @@ public final class CookieStore implements Interceptor {
 
 	public void init(@NonNull Context context) {
 		mCookies.clear();
-		final ArrayList<ProviderHeader> providers = MangaProvider.getAvailableProviders(context);
+		final ArrayList<ProviderHeader> providers = new ProvidersStore(context).getUserProviders();
 		for (ProviderHeader o : providers) {
-			final String cookie = MangaProvider.getSharedPreferences(context, o.cName).getString("_cookie", null);
+			final String cookie = MangaProvider.getCookie(context, o.cName);
 			if (cookie != null) {
 				mCookies.put(MangaProvider.getDomain(o.cName), cookie);
 			}

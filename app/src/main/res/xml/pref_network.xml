@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Network usage">
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:widgetLayout="@layout/pref_switchcompat"
+			android:key="network.usage.system"
+			android:title="Use system-wide preferences" />
+
+		<ListPreference
+			android:defaultValue="0"
+			android:entries="@array/network_types"
+			android:entryValues="@array/network_types_values"
+			android:title="@string/load_thumbnails"
+			android:key="network.usage.show_thumbnails" />
+
+	</PreferenceCategory>
+</PreferenceScreen>

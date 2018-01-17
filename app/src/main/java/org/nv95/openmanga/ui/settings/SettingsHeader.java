@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 
 public final class SettingsHeader {
 
+	public final int id;
 	public String title;
 	public String summary;
 	public Drawable icon;
@@ -23,15 +24,16 @@ public final class SettingsHeader {
 	@IdRes
 	public final int actionId;
 
-	public SettingsHeader(@NonNull Context context, @StringRes int title,@DrawableRes int icon) {
-		this(context, title, 0, icon, 0, 0);
+	public SettingsHeader(@NonNull Context context, int id, @StringRes int title,@DrawableRes int icon) {
+		this(context, id, title, 0, icon, 0, 0);
 	}
 
-	public SettingsHeader(@NonNull Context context, @StringRes int title, @StringRes int summary, @DrawableRes int icon) {
-		this(context, title, summary, icon, 0, 0);
+	public SettingsHeader(@NonNull Context context, int id, @StringRes int title, @StringRes int summary, @DrawableRes int icon) {
+		this(context, id, title, summary, icon, 0, 0);
 	}
 
-	public SettingsHeader(@NonNull Context context, @StringRes int title, @StringRes int summary, @DrawableRes int icon, @StringRes int actionText, @IdRes int actionId) {
+	public SettingsHeader(@NonNull Context context, int id, @StringRes int title, @StringRes int summary, @DrawableRes int icon, @StringRes int actionText, @IdRes int actionId) {
+		this.id = id;
 		this.title = context.getString(title);
 		this.icon = ContextCompat.getDrawable(context, icon);
 		this.summary = summary == 0 ? null : context.getString(summary);

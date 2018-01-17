@@ -17,8 +17,8 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.content.ListWrapper;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.ProviderHeader;
+import org.nv95.openmanga.content.ProvidersStore;
 import org.nv95.openmanga.content.SearchQueryArguments;
-import org.nv95.openmanga.content.providers.MangaProvider;
 import org.nv95.openmanga.ui.AppBaseActivity;
 import org.nv95.openmanga.ui.common.EndlessRecyclerView;
 
@@ -70,7 +70,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 		setSubtitle(query);
 		SearchSuggestionsProvider.getSuggestions(this).saveRecentQuery(query, null);
 		mProviders.clear();
-		mProviders.addAll(MangaProvider.getAvailableProviders(this));
+		mProviders.addAll(new ProvidersStore(this).getUserProviders());
 		mQueryArguments = new SearchQueryArguments(query, mProviders.pop().cName);
 		mDataset.clear();
 		mAdapter = new SearchAdapter(mDataset);

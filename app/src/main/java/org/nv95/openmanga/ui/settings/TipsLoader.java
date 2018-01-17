@@ -26,6 +26,7 @@ public final class TipsLoader extends AsyncTaskLoader<ArrayList<SettingsHeader>>
 		if (crashHandler != null && crashHandler.wasCrashed()) {
 			result.add(new SettingsHeader(
 					getContext(),
+					-1,
 					R.string.error_occurred,
 					R.string.application_crashed,
 					R.drawable.ic_bug_red,

@@ -139,4 +139,12 @@
         <item>1</item>
         <item>0</item>
     </string-array>
+    <string-array name="network_types">
+		<item>@string/on_any_network</item>
+		<item>@string/only_when_wifi</item>
+	</string-array>
+	<string-array name="network_types_values">
+		<item>0</item>
+		<item>1</item>
+	</string-array>
 </resources>

@@ -82,6 +82,19 @@
 		<activity android:name=".ui.reader.ReaderActivity"
 			android:configChanges="orientation|screenSize" />
 
+		<activity android:name=".ui.settings.SettingsActivity"
+			android:label="@string/action_settings" >
+
+			<intent-filter>
+				<action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<activity android:name=".ui.settings.providers.ProvidersSettingsActivity"
+			android:label="@string/manga_catalogues"
+			android:configChanges="orientation|screenSize" />
+
 		<provider android:name=".ui.search.SearchSuggestionsProvider"
 			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST" />
 

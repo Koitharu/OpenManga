@@ -1,6 +1,7 @@
 package org.nv95.openmanga;
 
 import android.os.AsyncTask;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -61,7 +62,8 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
 	}
 
 	@Override
-	protected final void onCancelled(Result result) {
+	@CallSuper
+	protected void onCancelled(Result result) {
 		super.onCancelled(result);Obj obj = getObject();
 		if (obj != null) {
 			onTaskCancelled(obj, result);

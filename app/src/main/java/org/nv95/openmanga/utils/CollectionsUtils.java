@@ -45,6 +45,11 @@ public final class CollectionsUtils {
 		}
 	}
 
+	@Nullable
+	public static <T> T getOrNull(T[] array, int position) {
+		return position < 0 || position >= array.length ? null : array[position];
+	}
+
 	public static <T> T getOrDefault(List<T> list, int position, @Nullable T defaultValue) {
 		try {
 			return list.get(position);
@@ -94,5 +99,34 @@ public final class CollectionsUtils {
 			}
 		}
 		return false;
+	}
+
+	public static void swap(SparseBooleanArray booleanArray, int x, int p, boolean defaultValue) {
+		boolean value = booleanArray.get(x, defaultValue);
+		booleanArray.put(x, booleanArray.get(p, defaultValue));
+		booleanArray.put(p, value);
+	}
+
+	@NonNull
+	public static int[] convertToInt(@NonNull String[] strings, int defaultValue) {
+		final int[] res = new int[strings.length];
+		for (int i = 0; i < res.length; i++) {
+			try {
+				res[i] = Integer.parseInt(strings[i]);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				res[i] = defaultValue;
+			}
+		}
+		return res;
+	}
+
+	public static int indexOf(int[] array, int x) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == x) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

@@ -412,4 +412,7 @@
 	<string name="chapters_count_">Chapters:</string>
     <string name="source_">Source:</string>
 	<string name="save_">Save…</string>
+    <string name="only_when_wifi">Only when on Wi-Fi</string>
+    <string name="on_any_network">On any network</string>
+    <string name="load_thumbnails">Load thumbnails</string>
 </resources>

@@ -3,6 +3,7 @@ package org.nv95.openmanga.utils;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.ui.preferences.IntegerPreference;
@@ -14,7 +15,7 @@ import org.nv95.openmanga.ui.preferences.IntegerPreference;
 public final class PreferencesUtils {
 
 	public static void bindPreferenceSummary(Preference preference) {
-		bindPreferenceSummary(preference, null, null);
+		bindPreferenceSummary(preference, preference.getOnPreferenceChangeListener(), null);
 	}
 
 	public static void bindPreferenceSummary(Preference preference,
@@ -32,6 +33,12 @@ public final class PreferencesUtils {
 		handler.initSummary(preference);
 		preference.setOnPreferenceChangeListener(handler);
 
+	}
+
+	public static void bindSummaryMultiple(PreferenceFragment fragment, String... keys) {
+		for (String key : keys) {
+			bindPreferenceSummary(fragment.findPreference(key));
+		}
 	}
 
 	static class SummaryHandler implements Preference.OnPreferenceChangeListener {

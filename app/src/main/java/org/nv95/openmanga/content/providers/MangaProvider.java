@@ -12,7 +12,6 @@ import org.nv95.openmanga.content.MangaDetails;
 import org.nv95.openmanga.content.MangaGenre;
 import org.nv95.openmanga.content.MangaHeader;
 import org.nv95.openmanga.content.MangaPage;
-import org.nv95.openmanga.content.ProviderHeader;
 
 import java.util.ArrayList;
 
@@ -157,15 +156,6 @@ public abstract class MangaProvider {
 	}
 
 	@NonNull
-	public static ArrayList<ProviderHeader> getAvailableProviders(@NonNull Context context) {
-		//TODO load form settings
-		final ArrayList<ProviderHeader> providers = new ArrayList<>();
-		providers.add(new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME));
-		//providers.add(new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME));
-		return providers;
-	}
-
-	@NonNull
 	public static String getDomain(@CName String cName) {
 		switch (cName) {
 			case DesumeProvider.CNAME:
@@ -179,5 +169,10 @@ public abstract class MangaProvider {
 
 	public static SharedPreferences getSharedPreferences(@NonNull Context context, @NonNull @CName String cName) {
 		return context.getSharedPreferences("prov_" + cName.replace('/','_'), Context.MODE_PRIVATE);
+	}
+
+	@Nullable
+	public static String getCookie(@NonNull Context context, @NonNull @CName String cName) {
+		return getSharedPreferences(context, cName).getString("_cookie", null);
 	}
 }
