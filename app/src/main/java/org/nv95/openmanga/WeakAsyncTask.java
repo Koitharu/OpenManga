@@ -61,7 +61,7 @@ public abstract class WeakAsyncTask<Obj, Param, Progress, Result> extends AsyncT
 	}
 
 	@Override
-	protected void onCancelled(Result result) {
+	protected final void onCancelled(Result result) {
 		super.onCancelled(result);Obj obj = getObject();
 		if (obj != null) {
 			onTaskCancelled(obj, result);
