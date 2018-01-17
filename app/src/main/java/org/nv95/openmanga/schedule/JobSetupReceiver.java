@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import org.nv95.openmanga.utils.TextUtils;
+import org.nv95.openmanga.common.utils.TextUtils;
 
 /**
  * Created by koitharu on 17.01.18.

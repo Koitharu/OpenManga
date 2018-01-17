@@ -12,7 +12,7 @@
 		android:layout_height="match_parent" />
 
 
-	<org.nv95.openmanga.ui.views.TextProgressView
+	<org.nv95.openmanga.common.views.TextProgressView
 		android:id="@+id/progressView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

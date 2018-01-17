@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.utils.network.NetworkUtils;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
 
 /**
  * Created by koitharu on 17.01.18.

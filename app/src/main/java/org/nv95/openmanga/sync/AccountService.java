@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import java.net.Authenticator;
-
 /**
  * Created by koitharu on 18.12.17.
  */

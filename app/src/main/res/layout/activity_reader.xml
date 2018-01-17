@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.nv95.openmanga.ui.reader.ImmersiveFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.nv95.openmanga.reader.ImmersiveFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/root"
@@ -91,7 +91,7 @@
 			tools:max="14"
 			tools:progress="3" />
 
-		<org.nv95.openmanga.ui.reader.ToolButtonCompat
+		<org.nv95.openmanga.reader.ToolButtonCompat
 			android:id="@+id/action_thumbnails"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
@@ -100,7 +100,7 @@
 			android:layout_toStartOf="@+id/action_menu"
 			android:src="@drawable/ic_view_grid_white" />
 
-		<org.nv95.openmanga.ui.reader.ToolButtonCompat
+		<org.nv95.openmanga.reader.ToolButtonCompat
 			android:id="@+id/action_menu"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
@@ -110,4 +110,4 @@
 
 	</RelativeLayout>
 
-</org.nv95.openmanga.ui.reader.ImmersiveFrameLayout>
+</org.nv95.openmanga.reader.ImmersiveFrameLayout>

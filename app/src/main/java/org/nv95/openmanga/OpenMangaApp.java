@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.ResourceUtils;
-import org.nv95.openmanga.utils.network.CookieStore;
-import org.nv95.openmanga.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.storage.AppSettings;
+import org.nv95.openmanga.common.CrashHandler;
+import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.ResourceUtils;
+import org.nv95.openmanga.common.utils.network.CookieStore;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
 
 /**
  * Created by koitharu on 24.12.17.

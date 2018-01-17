@@ -3,7 +3,7 @@ package org.nv95.openmanga.schedule;
 import android.app.Service;
 import android.support.annotation.NonNull;
 
-import org.nv95.openmanga.WeakAsyncTask;
+import org.nv95.openmanga.common.WeakAsyncTask;
 
 /**
  * Created by koitharu on 17.01.18.

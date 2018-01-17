@@ -9,13 +9,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.nv95.openmanga.content.storage.db.StorageHelper;
+import org.nv95.openmanga.core.storage.db.StorageHelper;
 
 
 /**
  * Created by koitharu on 18.12.17.
  */
-
+@Deprecated
 public class HistoryContentProvider extends ContentProvider {
 
 	private static final int MATCH_ALL = 1;

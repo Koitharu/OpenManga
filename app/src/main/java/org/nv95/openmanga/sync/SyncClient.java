@@ -7,15 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.content.RESTResponse;
-import org.nv95.openmanga.utils.network.NetworkUtils;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
 
 import java.util.ArrayList;
 
 /**
  * Created by koitharu on 19.12.17.
  */
-
+@Deprecated
 public class SyncClient {
 
 	private final String mToken;

@@ -14,15 +14,14 @@ import android.os.Bundle;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.nv95.openmanga.content.RESTResponse;
-import org.nv95.openmanga.utils.TextUtils;
+import org.nv95.openmanga.common.utils.TextUtils;
 
 import java.io.IOException;
 
 /**
  * Created by koitharu on 18.12.17.
  */
-
+@Deprecated
 public class FavouritesSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private static final String KEY_LAST_SYNC = "lastsync.favourites";

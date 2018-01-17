@@ -21,12 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.WeakAsyncTask;
-import org.nv95.openmanga.content.RESTResponse;
+import org.nv95.openmanga.common.WeakAsyncTask;
+import org.nv95.openmanga.sync.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.sync.SyncClient;
 import org.nv95.openmanga.sync.SyncDevice;
-import org.nv95.openmanga.ui.AppBaseActivity;
+import org.nv95.openmanga.AppBaseActivity;
 
 import java.util.ArrayList;
 

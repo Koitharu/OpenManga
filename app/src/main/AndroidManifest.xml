@@ -32,7 +32,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		<activity
-			android:name=".ui.MainActivity"
+			android:name=".MainActivity"
 			android:configChanges="orientation|screenSize"
 			android:label="@string/app_name"
 			android:windowSoftInputMode="adjustPan">
@@ -49,15 +49,15 @@
 			android:windowSoftInputMode="adjustResize" />
 
 		<activity
-			android:name=".ui.preview.PreviewActivity"
+			android:name=".preview.PreviewActivity"
 			android:configChanges="orientation|screenSize" />
 
 		<activity
-			android:name=".ui.mangalist.MangaListActivity"
+			android:name=".mangalist.MangaListActivity"
 			android:configChanges="screenSize|orientation" />
 
 		<activity
-			android:name=".ui.search.SearchActivity"
+			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"
 			android:label="@string/action_search">
 			<intent-filter>
@@ -79,10 +79,10 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".ui.reader.ReaderActivity"
+		<activity android:name=".reader.ReaderActivity"
 			android:configChanges="orientation|screenSize" />
 
-		<activity android:name=".ui.settings.SettingsActivity"
+		<activity android:name=".settings.SettingsActivity"
 			android:label="@string/action_settings" >
 
 			<intent-filter>
@@ -91,11 +91,11 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".ui.settings.providers.ProvidersSettingsActivity"
+		<activity android:name=".settings.providers.ProvidersSettingsActivity"
 			android:label="@string/manga_catalogues"
 			android:configChanges="orientation|screenSize" />
 
-		<provider android:name=".ui.search.SearchSuggestionsProvider"
+		<provider android:name=".search.SearchSuggestionsProvider"
 			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST" />
 
 		<service android:name=".sync.AccountService">

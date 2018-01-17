@@ -4,7 +4,7 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".ui.search.SearchActivity">
+	tools:context=".search.SearchActivity">
 
 	<android.support.design.widget.AppBarLayout
 		android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 
 	</android.support.design.widget.AppBarLayout>
 
-	<org.nv95.openmanga.ui.common.EndlessRecyclerView
+	<org.nv95.openmanga.common.views.EndlessRecyclerView
 		android:id="@+id/recyclerView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

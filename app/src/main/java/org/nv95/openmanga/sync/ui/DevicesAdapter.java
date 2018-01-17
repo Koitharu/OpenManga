@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.sync.SyncDevice;
-import org.nv95.openmanga.utils.ResourceUtils;
+import org.nv95.openmanga.common.utils.ResourceUtils;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="vertical">
 
-		<org.nv95.openmanga.ui.views.AspectRatioImageView
+		<org.nv95.openmanga.common.views.AspectRatioImageView
 			android:id="@+id/imageView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
