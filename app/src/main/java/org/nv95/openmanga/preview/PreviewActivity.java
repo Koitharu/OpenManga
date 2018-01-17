@@ -175,7 +175,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 				mRatingBar.setVisibility(View.VISIBLE);
 				mRatingBar.setRating(mMangaHeader.rating / 20);
 			}
-			mTextViewSummary.setText(formatSummary(-1, mProvider.getName(), mMangaHeader.status));
+			mTextViewSummary.setText(formatSummary(null, -1, mProvider.getName(), mMangaHeader.status));
 		} else {
 			ImageUtils.updateImage(mImageViewCover, mMangaDetails.cover);
 			setTitle(mMangaDetails.name);
@@ -186,13 +186,17 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 				mRatingBar.setVisibility(View.VISIBLE);
 				mRatingBar.setRating(mMangaDetails.rating / 20);
 			}
-			mTextViewSummary.setText(formatSummary(mMangaDetails.chapters.size(), mProvider.getName(), mMangaDetails.status));
+			mTextViewSummary.setText(formatSummary(mMangaDetails.author, mMangaDetails.chapters.size(), mProvider.getName(), mMangaDetails.status));
 		}
 	}
 
 	@NonNull
-	private CharSequence formatSummary(int chapters, String provider, @MangaStatus int status) {
+	private CharSequence formatSummary(@Nullable String author, int chapters, String provider, @MangaStatus int status) {
 		final StringBuilder builder = new StringBuilder();
+		if (!android.text.TextUtils.isEmpty(author)) {
+			builder.append("<b>").append(getString(R.string.author_)).append("</b> ");
+			builder.append(author).append("<br/>");
+		}
 		builder.append("<b>").append(getString(R.string.chapters_count_)).append("</b> ");
 		if (chapters == -1) {
 			builder.append("?");

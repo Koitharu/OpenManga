@@ -415,4 +415,5 @@
     <string name="only_when_wifi">Only when on Wi-Fi</string>
     <string name="on_any_network">On any network</string>
     <string name="load_thumbnails">Load thumbnails</string>
+    <string name="author_">Author:</string>
 </resources>

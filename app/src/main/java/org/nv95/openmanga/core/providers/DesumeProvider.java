@@ -131,7 +131,8 @@ public class DesumeProvider extends MangaProvider {
 		MangaDetails details = new MangaDetails(
 				header,
 				jo.getString("description"),
-				jo.getJSONObject("image").getString("original")
+				jo.getJSONObject("image").getString("original"),
+				"" //not supported by desu.me
 		);
 		JSONArray ja = jo.getJSONObject("chapters").getJSONArray("list");
 		final int total = ja.length();
