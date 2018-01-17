@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.utils.network.NetworkUtils;
+
 /**
  * Created by koitharu on 17.01.18.
  */
@@ -17,6 +19,11 @@ public final class BackgroundService extends Service implements BackgroundTask.C
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		//check network
+		if (!NetworkUtils.isNetworkAvailable(this)) {
+			stopSelf();
+			return Service.START_NOT_STICKY;
+		}
 		mTask = new BackgroundTask(this);
 		mTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return Service.START_STICKY;
