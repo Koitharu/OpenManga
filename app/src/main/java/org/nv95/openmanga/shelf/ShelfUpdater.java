@@ -1,6 +1,7 @@
 package org.nv95.openmanga.shelf;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
@@ -26,10 +27,10 @@ public final class ShelfUpdater {
 				dataset.add(MangaHeader.from(o));
 			}
 		}
-		for (String category : content.favourites.keySet()) {
+		for (Category category : content.favourites.keySet()) {
 			ArrayList<MangaFavourite> favourites = content.favourites.get(category);
 			if (favourites != null && !favourites.isEmpty()) {
-				dataset.add(new ListHeader(category, /*TODO*/ null));
+				dataset.add(new ListHeader(category.name, category.id));
 				int len = getOptimalCells(favourites.size(), columnCount);
 				for (int i = 0; i < len; i++) {
 					dataset.add(favourites.get(i));

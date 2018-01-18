@@ -1,4 +1,4 @@
-package org.nv95.openmanga.mangalist.history;
+package org.nv95.openmanga.mangalist.favourites;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.ImageUtils;
-import org.nv95.openmanga.common.utils.ResourceUtils;
-import org.nv95.openmanga.core.models.MangaHistory;
+import org.nv95.openmanga.common.utils.LayoutUtils;
+import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.preview.PreviewActivity;
 
@@ -22,26 +22,26 @@ import java.util.ArrayList;
  * Created by koitharu on 18.01.18.
  */
 
-final class MangaHistoryAdapter extends RecyclerView.Adapter<MangaHistoryAdapter.HistoryHolder> {
+final class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouriteHolder> {
 
-	private final ArrayList<MangaHistory> mDataset;
+	private final ArrayList<MangaFavourite> mDataset;
 
-	MangaHistoryAdapter(ArrayList<MangaHistory> dataset) {
+	FavouritesAdapter(ArrayList<MangaFavourite> dataset) {
 		setHasStableIds(true);
 		mDataset = dataset;
 	}
 
 	@Override
-	public HistoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		return new HistoryHolder(LayoutInflater.from(parent.getContext())
+	public FavouriteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		return new FavouriteHolder(LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.item_manga_list, parent, false));
 	}
 
 	@Override
-	public void onBindViewHolder(HistoryHolder holder, int position) {
-		MangaHistory item = mDataset.get(position);
+	public void onBindViewHolder(FavouriteHolder holder, int position) {
+		MangaFavourite item = mDataset.get(position);
 		holder.text1.setText(item.name);
-		holder.text2.setText(ResourceUtils.formatTimeRelative(item.updatedAt));
+		LayoutUtils.setTextOrHide(holder.text2, item.summary);
 		holder.summary.setText(item.genres);
 		ImageUtils.setThumbnail(holder.imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
 		holder.itemView.setTag(item);
@@ -58,19 +58,19 @@ final class MangaHistoryAdapter extends RecyclerView.Adapter<MangaHistoryAdapter
 	}
 
 	@Override
-	public void onViewRecycled(HistoryHolder holder) {
+	public void onViewRecycled(FavouriteHolder holder) {
 		ImageUtils.recycle(holder.imageView);
 		super.onViewRecycled(holder);
 	}
 
-	class HistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	class FavouriteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 		final TextView text1;
 		final TextView text2;
 		final TextView summary;
 		final ImageView imageView;
 
-		HistoryHolder(View itemView) {
+		FavouriteHolder(View itemView) {
 			super(itemView);
 			text1 = itemView.findViewById(android.R.id.text1);
 			text2 = itemView.findViewById(android.R.id.text2);
@@ -83,7 +83,7 @@ final class MangaHistoryAdapter extends RecyclerView.Adapter<MangaHistoryAdapter
 		@Override
 		public void onClick(View view) {
 			final Context context = view.getContext();
-			final MangaHistory item = mDataset.get(getAdapterPosition());
+			final MangaFavourite item = mDataset.get(getAdapterPosition());
 			switch (view.getId()) {
 				default:
 					context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)

@@ -37,7 +37,7 @@
         android:id="@+id/action_remove"
         android:icon="@drawable/ic_trash_white"
         android:orderInCategory="100"
-        android:title="@string/action_remove"
+        android:title="@string/remove"
         android:visible="false"
         app:showAsAction="ifRoom" />
 

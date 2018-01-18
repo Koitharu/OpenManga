@@ -22,7 +22,7 @@
 
 			<item android:id="@+id/action_favourites_remove"
 				android:orderInCategory="10"
-				android:title="@string/action_remove" />
+				android:title="@string/remove" />
 		</menu>
 	</item>
 	<item

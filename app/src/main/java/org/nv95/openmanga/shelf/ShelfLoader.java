@@ -51,7 +51,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 				for (Category category : categories) {
 					ArrayList<MangaFavourite> favourites = favouritesRepository.query(new FavouritesSpecification().orderByDate(true).category(category.id));
 					if (favourites != null && !favourites.isEmpty()) {
-						content.favourites.put(category.name, favourites);
+						content.favourites.put(category, favourites);
 					}
 				}
 			}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	android:paddingLeft="6dp"
+	android:paddingRight="6dp"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/inputLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:counterEnabled="true"
+		app:counterMaxLength="14"
+		app:errorEnabled="true">
+
+		<android.support.design.widget.TextInputEditText
+			android:id="@+id/edit_name"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:hint="@string/enter_category_name"
+			android:imeOptions="actionDone"
+			android:inputType="textCapSentences"
+			android:lines="1"
+			android:selectAllOnFocus="true"
+			android:singleLine="true" />
+
+	</android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

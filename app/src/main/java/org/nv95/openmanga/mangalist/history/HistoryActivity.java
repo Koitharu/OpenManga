@@ -41,8 +41,7 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 	private ProgressBar mProgressBar;
 	private TextView mTextViewHolder;
 
-	private MangaHistoryAdapter mAdapter;
-	private UndoHelper<MangaHistory> mUndoHelper;
+	private HistoryAdapter mAdapter;
 	private ArrayList<MangaHistory> mDataset;
 	private HistorySpecification mSpecifications;
 	private HistoryRepository mHistoryRepository;
@@ -65,7 +64,7 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 		mHistoryRepository = new HistoryRepository(this);
 
 		mDataset = new ArrayList<>();
-		mAdapter = new MangaHistoryAdapter(mDataset);
+		mAdapter = new HistoryAdapter(mDataset);
 		mRecyclerView.setAdapter(mAdapter);
 		SwipeRemoveHelper.setup(mRecyclerView, this);
 

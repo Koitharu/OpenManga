@@ -22,6 +22,7 @@ import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.UserTip;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.mangalist.favourites.FavouritesActivity;
 import org.nv95.openmanga.mangalist.history.HistoryActivity;
 import org.nv95.openmanga.preview.PreviewActivity;
 
@@ -176,6 +177,9 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			final Context context = v.getContext();
 			if (extra.equals(ShelfContent.SECTION_HISTORY)) {
 				context.startActivity(new Intent(context, HistoryActivity.class));
+			} else if (extra instanceof Integer) {
+				context.startActivity(new Intent(context, FavouritesActivity.class)
+					.putExtra("category_id", (Integer) extra));
 			}
 		}
 	}

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode gitCommits
         versionName "$majorVersion-$gitCommits"

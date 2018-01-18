@@ -1,5 +1,7 @@
 package org.nv95.openmanga.core.storage.db;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -92,5 +94,31 @@ public final class FavouritesSpecification implements SqlSpecification {
 	@Override
 	public String getLimit() {
 		return mLimit;
+	}
+
+	@NonNull
+	public Bundle toBundle() {
+		final Bundle bundle = new Bundle(5);
+		bundle.putString("order_by", mOrderBy);
+		bundle.putString("limit", mLimit);
+		if (mCategory != null) {
+			bundle.putInt("category", mCategory);
+		}
+		bundle.putBoolean("only_new", mOnlyNew);
+		bundle.putBoolean("removed", mRemoved);
+		return bundle;
+	}
+
+	@NonNull
+	public static FavouritesSpecification from(Bundle bundle) {
+		final FavouritesSpecification spec = new FavouritesSpecification();
+		spec.mOrderBy = bundle.getString("order_by");
+		spec.mLimit = bundle.getString("limit");
+		if (bundle.containsKey("category")) {
+			spec.mCategory = bundle.getInt("category", 0);
+		}
+		spec.mOnlyNew = bundle.getBoolean("only_new");
+		spec.mRemoved = bundle.getBoolean("removed_new");
+		return spec;
 	}
 }

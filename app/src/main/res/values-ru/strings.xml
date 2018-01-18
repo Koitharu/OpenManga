@@ -3,7 +3,7 @@
     <string name="action_favourite">Добавить в избранное</string>
     <string name="action_favourites">Избранное</string>
     <string name="action_history">История</string>
-    <string name="action_remove">Удалить</string>
+    <string name="remove">Удалить</string>
     <string name="action_save">Сохранить</string>
     <string name="action_search">Поиск</string>
     <string name="action_settings">Настройки</string>

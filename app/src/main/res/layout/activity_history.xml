@@ -19,7 +19,7 @@
 			app:layout_scrollFlags="scroll|enterAlways" />
 	</android.support.design.widget.AppBarLayout>
 
-	<org.nv95.openmanga.common.views.EndlessRecyclerView
+	<android.support.v7.widget.RecyclerView
 		android:id="@+id/recyclerView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

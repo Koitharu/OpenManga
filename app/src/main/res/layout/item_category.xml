@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="48dp"
+	android:background="?selectableItemBackground">
+
+	<TextView
+		android:id="@android:id/text1"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_vertical"
+		android:lines="1"
+		android:paddingBottom="8dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingTop="8dp"
+		android:singleLine="true"
+		android:textColor="?android:attr/textColorPrimary"
+		android:textSize="16sp"
+		tools:text="Single-line item" />
+
+	<android.support.v7.widget.AppCompatImageButton
+		android:id="@+id/button_remove"
+		android:layout_width="48dp"
+		android:layout_height="match_parent"
+		android:layout_gravity="end"
+		android:background="?selectableItemBackgroundBorderless"
+		android:src="@drawable/ic_trash_white"
+		app:tint="?android:attr/textColorSecondary"
+		app:tintMode="src_in" />
+
+</FrameLayout>

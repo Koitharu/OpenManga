@@ -3,7 +3,7 @@
     <string name="action_favourite">Додати до улюбленого</string>
     <string name="action_favourites">Улюблене</string>
     <string name="action_history">Історія</string>
-    <string name="action_remove">Видалити</string>
+    <string name="remove">Видалити</string>
     <string name="action_save">Зберегти</string>
     <string name="action_search">Пошук</string>
     <string name="action_settings">Налаштування</string>

@@ -62,6 +62,16 @@
 			android:configChanges="screenSize|orientation" />
 
 		<activity
+			android:name=".mangalist.favourites.FavouritesActivity"
+			android:label="@string/action_favourites"
+			android:configChanges="screenSize|orientation" />
+
+		<activity
+			android:name=".mangalist.favourites.CategoriesActivity"
+			android:label="@string/favourites_categories"
+			android:configChanges="screenSize|orientation" />
+
+		<activity
 			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"
 			android:label="@string/action_search">

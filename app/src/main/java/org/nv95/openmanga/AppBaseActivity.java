@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.nv95.openmanga.common.utils.ThemeUtils;
 
@@ -179,6 +180,10 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 
 	protected void onPermissionGranted(String permission) {
 
+	}
+
+	protected void stub() {
+		Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show();
 	}
 }
 

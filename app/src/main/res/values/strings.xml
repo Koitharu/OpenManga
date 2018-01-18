@@ -19,7 +19,7 @@
     <string name="view_mode_grid_medium">Medium grid</string>
     <string name="view_mode_grid_small">Small grid</string>
     <string name="action_history">History</string>
-    <string name="action_remove">Remove</string>
+    <string name="remove">Remove</string>
     <string name="action_save">Save</string>
     <string name="continue_reading">Continue</string>
     <string name="search_results">Search results</string>
@@ -422,4 +422,12 @@
     <string name="history_clear_confirm">Are you sure want to clear the history? This action cannot be undone</string>
 	<string name="undo">Undo</string>
     <string name="removed_from_history">Manga \"%1$s\" was from history</string>
+    <string name="removed_from_favourites">Manga \"%1$s\" was from favourites</string>
+	<string name="enter_category_name">Enter category name</string>
+	<string name="rename">Rename</string>
+    <string name="create_new_category">Create new category</string>
+    <string name="create">Create</string>
+	<string name="manage_categories">Manage categories</string>
+    <string name="category_remove_confirm">Are you sure want to remove category \"%1$s\"? This action cannot be undone</string>
+	<string name="category_x_removed">Category \"%1$s\" was removed</string>
 </resources>
