@@ -1,4 +1,4 @@
-package org.nv95.openmanga.core.storage;
+package org.nv95.openmanga.core.storage.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +27,15 @@ public class AppSettings {
 		if (instance == null) {
 			instance = new AppSettings(context);
 			sInstanceReference = new WeakReference<AppSettings>(instance);
+		}
+		return instance;
+	}
+
+	public static NetworkSettings getNetworkSettings(Context context) {
+		NetworkSettings instance = NetworkSettings.sInstanceReference == null ? null : NetworkSettings.sInstanceReference.get();
+		if (instance == null) {
+			instance = new NetworkSettings(context);
+			NetworkSettings.sInstanceReference = new WeakReference<NetworkSettings>(instance);
 		}
 		return instance;
 	}

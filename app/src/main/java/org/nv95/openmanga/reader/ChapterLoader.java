@@ -26,7 +26,7 @@ public final class ChapterLoader extends AsyncTaskLoader<ArrayList<MangaPage>> {
 	@Override
 	public ArrayList<MangaPage> loadInBackground() {
 		try {
-			MangaProvider provider = MangaProvider.getProvider(getContext(), mChapter.provider);
+			MangaProvider provider = MangaProvider.get(getContext(), mChapter.provider);
 			return provider.getPages(mChapter.url);
 		} catch (Exception e) {
 			e.printStackTrace();

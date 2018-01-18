@@ -127,7 +127,7 @@ public abstract class MangaProvider {
 	private static LruCache<String,MangaProvider> sProviderCache = new LruCache<>(4);
 
 	@NonNull
-	public static MangaProvider getProvider(Context context, @NonNull @CName String cName) throws AssertionError {
+	public static MangaProvider get(Context context, @NonNull @CName String cName) throws AssertionError {
 		MangaProvider provider = sProviderCache.get(cName);
 		if (provider != null) return provider;
 		switch (cName) {

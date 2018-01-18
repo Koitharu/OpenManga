@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by koitharu on 21.12.17.
  */
 @SuppressLint("DefaultLocale")
-public class DesumeProvider extends MangaProvider {
+public final class DesumeProvider extends MangaProvider {
 
 	public static final String CNAME = "network/desu.me";
 	public static final String DNAME = "DesuMe";

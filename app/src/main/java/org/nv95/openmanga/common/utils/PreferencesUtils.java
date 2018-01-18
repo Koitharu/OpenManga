@@ -14,16 +14,18 @@ import org.nv95.openmanga.common.views.preferences.IntegerPreference;
 
 public final class PreferencesUtils {
 
-	public static void bindPreferenceSummary(Preference preference) {
-		bindPreferenceSummary(preference, preference.getOnPreferenceChangeListener(), null);
+	public static void bindPreferenceSummary(@Nullable Preference preference) {
+		if (preference != null) {
+			bindPreferenceSummary(preference, preference.getOnPreferenceChangeListener(), null);
+		}
 	}
 
-	public static void bindPreferenceSummary(Preference preference,
+	public static void bindPreferenceSummary(@Nullable Preference preference,
 											 @Nullable Preference.OnPreferenceChangeListener changeListener) {
 		bindPreferenceSummary(preference, changeListener, null);
 	}
 
-	public static void bindPreferenceSummary(Preference preference,
+	public static void bindPreferenceSummary(@Nullable Preference preference,
 											 @Nullable Preference.OnPreferenceChangeListener changeListener,
 											 @Nullable String pattern) {
 		if (preference == null) {

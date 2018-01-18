@@ -23,7 +23,7 @@ public final class SearchLoader extends AsyncTaskLoader<ListWrapper<MangaHeader>
 	@Override
 	public ListWrapper<MangaHeader> loadInBackground() {
 		try {
-			MangaProvider provider = MangaProvider.getProvider(getContext(), mArguments.providerCName);
+			MangaProvider provider = MangaProvider.get(getContext(), mArguments.providerCName);
 			return new ListWrapper<>(provider.query(mArguments.query, mArguments.page, -1, new String[0]));
 		} catch (Exception e) {
 			e.printStackTrace();

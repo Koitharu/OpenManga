@@ -18,7 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
-import org.nv95.openmanga.core.storage.AppSettings;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.AppImageDownloader;
 import org.nv95.openmanga.common.TransitionDisplayer;

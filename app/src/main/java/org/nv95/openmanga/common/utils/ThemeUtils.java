@@ -13,7 +13,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
-import org.nv95.openmanga.core.storage.AppSettings;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.R;
 
 /**

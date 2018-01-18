@@ -26,7 +26,7 @@ final class MangaDetailsLoader extends AsyncTaskLoader<ObjectWrapper<MangaDetail
 	@NonNull
 	public ObjectWrapper<MangaDetails> loadInBackground() {
 		try {
-			final MangaProvider provider = MangaProvider.getProvider(getContext(), mManga.provider);
+			final MangaProvider provider = MangaProvider.get(getContext(), mManga.provider);
 			return new ObjectWrapper<>(provider.getDetails(mManga));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -416,4 +416,6 @@
     <string name="on_any_network">On any network</string>
     <string name="load_thumbnails">Load thumbnails</string>
     <string name="author_">Author:</string>
+	<string name="restart">Restart</string>
+    <string name="postpone">Postpone</string>
 </resources>

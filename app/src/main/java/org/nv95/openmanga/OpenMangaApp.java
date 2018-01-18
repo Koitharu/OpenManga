@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import org.nv95.openmanga.core.storage.AppSettings;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;

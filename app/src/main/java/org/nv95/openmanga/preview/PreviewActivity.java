@@ -93,7 +93,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		mMangaDetails = null;
 		assert mMangaHeader != null;
 		mChaptersAdapter = null;
-		mProvider = MangaProvider.getProvider(this, mMangaHeader.provider);
+		mProvider = MangaProvider.get(this, mMangaHeader.provider);
 		mHistory = new HistoryRepository(this);
 		mFavourites = new FavouritesRepository(this);
 

@@ -155,7 +155,7 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 		protected ObjectWrapper<String> doInBackground(String... strings) {
 			try {
 				@SuppressWarnings("ConstantConditions")
-				final MangaProvider provider = MangaProvider.getProvider(getObject().getContext(), strings[0]);
+				final MangaProvider provider = MangaProvider.get(getObject().getContext(), strings[0]);
 				String result = provider.authorize(strings[1], strings[2]);
 				return result == null ? ObjectWrapper.badResult(String.class) : new ObjectWrapper<>(result);
 			} catch (Exception e) {

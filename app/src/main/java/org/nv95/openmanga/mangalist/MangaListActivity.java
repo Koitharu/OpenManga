@@ -67,7 +67,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 		final String cname = getIntent().getStringExtra("provider.cname");
 		assert cname != null;
-		mProvider = MangaProvider.getProvider(this, cname);
+		mProvider = MangaProvider.get(this, cname);
 		setTitle(mProvider.getName());
 		if (mProvider.getAvailableGenres().length == 0 && mProvider.getAvailableSortOrders().length == 0) {
 			mFabFilter.setVisibility(View.GONE);
