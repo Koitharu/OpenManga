@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.storage.db.CategoriesRepository;
 
 /**
@@ -68,7 +69,17 @@ public final class FavouritesActivity extends AppBaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_CATEGORIES && resultCode == RESULT_OK) {
+			int pos = mPager.getCurrentItem();
+			int id = mPagerAdapter.getData().get(pos).id;
 			mPagerAdapter.notifyDataSetChanged();
+			int newPos = CollectionsUtils.findCategoryPositionById(mPagerAdapter.getData(), id);
+			if (newPos == -1) { //removed current page
+				if (pos >= mPagerAdapter.getCount()) { //it was latest
+					mPager.setCurrentItem(mPagerAdapter.getCount() - 1); //switch to new latest
+				}
+			} else {
+				mPager.setCurrentItem(newPos, false);
+			}
 		}
 	}
 }

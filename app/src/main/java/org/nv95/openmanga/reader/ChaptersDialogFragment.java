@@ -60,7 +60,7 @@ public final class ChaptersDialogFragment extends BottomSheetDialogFragment {
 		ChaptersListAdapter adapter = new ChaptersListAdapter(activity, mChaptersList, (ChaptersListAdapter.OnChapterClickListener) activity);
 		adapter.setCurrentChapterId(mCurrentId);
 		mRecyclerView.setAdapter(adapter);
-		int current = CollectionsUtils.findPositionById(mChaptersList, mCurrentId);
+		int current = CollectionsUtils.findChapterPositionById(mChaptersList, mCurrentId);
 		if (current != -1) {
 			if (current > 2) {
 				mRecyclerView.scrollToPosition(current - 1);

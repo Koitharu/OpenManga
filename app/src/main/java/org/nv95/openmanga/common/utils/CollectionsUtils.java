@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseBooleanArray;
 
+import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaChapter;
 
 import java.util.ArrayList;
@@ -27,7 +28,16 @@ public final class CollectionsUtils {
 		return null;
 	}
 
-	public static int findPositionById(List<MangaChapter> list, long id) {
+	public static int findChapterPositionById(List<MangaChapter> list, long id) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).id == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static int findCategoryPositionById(List<Category> list, long id) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).id == id) {
 				return i;

@@ -1,6 +1,7 @@
 package org.nv95.openmanga.mangalist.favourites;
 
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * Created by koitharu on 18.01.18.
  */
 
-final class CategoriesPagerAdapter extends NativeFragmentPagerAdapter<FavouritesFragment> {
+final class CategoriesPagerAdapter extends NativeFragmentPagerAdapter {
 
 	@NonNull
 	private final CategoriesRepository mRepository;
@@ -40,7 +41,7 @@ final class CategoriesPagerAdapter extends NativeFragmentPagerAdapter<Favourites
 	}
 
 	@Override
-	public FavouritesFragment getItem(int position) {
+	public Fragment getItem(int position) {
 		final FavouritesFragment fragment = new FavouritesFragment();
 		fragment.setArguments(new FavouritesSpecification()
 				.category(mDataset.get(position).id)
@@ -74,5 +75,9 @@ final class CategoriesPagerAdapter extends NativeFragmentPagerAdapter<Favourites
 			}
 		}
 		return -1;
+	}
+
+	public ArrayList<Category> getData() {
+		return mDataset;
 	}
 }

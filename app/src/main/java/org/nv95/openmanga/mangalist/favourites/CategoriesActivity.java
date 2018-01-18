@@ -95,6 +95,14 @@ public final class CategoriesActivity extends AppBaseActivity implements View.On
 
 	@Override
 	public void onItemActionClick(int position) {
+		if (mDataset.size() == 1) {
+			new AlertDialog.Builder(this)
+					.setMessage(R.string.favourites_category_must_be)
+					.setPositiveButton(android.R.string.ok, null)
+					.create()
+					.show();
+			return;
+		}
 		final Category category = mDataset.get(position);
 		new AlertDialog.Builder(this)
 				.setMessage(getString(R.string.category_remove_confirm, category.name))
