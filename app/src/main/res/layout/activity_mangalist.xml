@@ -38,7 +38,7 @@
 		android:indeterminate="true"
 		app:layout_anchor="@id/recyclerView"
 		app:layout_anchorGravity="center"
-		app:layout_behavior="org.nv95.openmanga.ui.ux.CenterGravityBehavior"
+		app:layout_behavior="@string/center_gravity_behavior"
 		style="?android:progressBarStyleLarge"/>
 
 	<android.support.design.widget.FloatingActionButton
@@ -50,6 +50,6 @@
 		app:layout_anchorGravity="bottom|end"
 		app:fabSize="normal"
 		android:src="@drawable/ic_filter_list_white"
-		app:layout_behavior="org.nv95.openmanga.ui.ux.ScrollAwareFABBehavior"/>
+		app:layout_behavior="@string/scroll_aware_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

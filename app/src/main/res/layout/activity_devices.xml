@@ -17,7 +17,7 @@
 			android:layout_height="match_parent"
 			android:background="?android:windowBackground"
 			android:scrollbars="vertical"
-			app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+			app:layoutManager="@string/linear_layout_manager" />
 
 		<TextView
 			android:id="@+id/textView_holder"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="bottom_bar_behavior" translatable="false">org.nv95.openmanga.common.views.behavior.BottomNavigationBehavior</string>
+	<string name="center_gravity_behavior" translatable="false">org.nv95.openmanga.common.views.behavior.CenterGravityBehavior</string>
+	<string name="scroll_aware_behavior" translatable="false">org.nv95.openmanga.common.views.behavior.ScrollAwareFABBehavior</string>
+	<string name="linear_layout_manager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
+</resources>

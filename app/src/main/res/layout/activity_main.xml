@@ -27,6 +27,7 @@
 				android:layout_marginEnd="32dp"
 				android:layout_marginRight="32dp"
 				android:gravity="center_vertical"
+				android:background="@android:color/transparent"
 				android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 				app:iconifiedByDefault="false"
 				app:queryHint="@string/action_search" />
@@ -61,7 +62,7 @@
 		app:itemTextColor="@color/nav_item_light"
 		app:layout_anchor="@id/content"
 		app:layout_anchorGravity="bottom"
-		app:layout_behavior="org.nv95.openmanga.common.views.behavior.BottomNavigationBehavior"
+		app:layout_behavior="@string/bottom_bar_behavior"
 		app:menu="@menu/nav_bottom" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -43,6 +43,6 @@
 		android:layout_height="@dimen/progressbar_large"
 		app:layout_anchor="@id/pager"
 		app:layout_anchorGravity="center"
-		app:layout_behavior="org.nv95.openmanga.ui.ux.CenterGravityBehavior" />
+		app:layout_behavior="@string/center_gravity_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
