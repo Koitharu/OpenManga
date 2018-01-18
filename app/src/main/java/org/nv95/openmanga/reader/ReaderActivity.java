@@ -2,6 +2,7 @@ package org.nv95.openmanga.reader;
 
 import android.annotation.TargetApi;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,18 +22,23 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.WeakAsyncTask;
+import org.nv95.openmanga.common.utils.AnimationUtils;
+import org.nv95.openmanga.common.utils.CollectionsUtils;
+import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
+import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
+import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
-import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.preview.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
-import org.nv95.openmanga.common.utils.AnimationUtils;
 
 import java.util.ArrayList;
 
@@ -44,6 +50,8 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
 		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
 		ReaderCallback, OnThumbnailClickListener {
+
+	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 
 	private ImmersiveFrameLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
@@ -58,6 +66,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private MangaDetails mManga;
 	private MangaChapter mChapter;
 	private ArrayList<MangaPage> mPages;
+	private long mPageId;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,15 +95,28 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				window.setNavigationBarColor(color);
 			}
 		}
-		mManga = getIntent().getParcelableExtra("manga");
-		mChapter = getIntent().getParcelableExtra("chapter");
-		assert mManga != null && mChapter != null;
+
 
 		mReader = new PagerReaderFragment();
 		getFragmentManager().beginTransaction()
 				.replace(R.id.reader, mReader)
 				.commit();
 		mHistoryRepository = new HistoryRepository(this);
+
+		final Intent intent = getIntent();
+		if(ACTION_READING_CONTINUE.equals(intent.getAction())) {
+			MangaHeader mangaHeader = intent.getParcelableExtra("manga");
+			new ResumeReadingTask(this).start(mangaHeader);
+		} else {
+			mManga = intent.getParcelableExtra("manga");
+			mChapter = intent.getParcelableExtra("chapter");
+			mPageId = intent.getLongExtra("page_id", 0);
+			onMangaReady();
+		}
+	}
+
+	public void onMangaReady() {
+		assert mManga != null && mChapter != null;
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
 		getLoaderManager().initLoader(0, mChapter.toBundle(), this).forceLoad();
@@ -210,7 +232,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mSeekBar.setMax(mPages.size() - 1);
 		mSeekBar.setProgress(0);
 		mReader.setPages(mPages);
-		mReader.scrollToPage(0);
+		final int page = CollectionsUtils.findPagePositionById(mPages, mPageId);
+		mPageId = 0;
+		mReader.scrollToPage(page == -1 ? 0 : page);
 		addToHistory();
 	}
 
@@ -246,7 +270,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				toggleUi();
 				return true;
 			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-				//TODO
+				mReader.moveNext();
 				return true;
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
@@ -318,5 +342,52 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onThumbnailClick(int position) {
 		mReader.scrollToPage(position);
+	}
+
+	final static class ResumeReadingTask extends WeakAsyncTask<ReaderActivity,MangaHeader,Void,ObjectWrapper<ResumeReadingTask.Result>> {
+
+		ResumeReadingTask(ReaderActivity readerActivity) {
+			super(readerActivity);
+		}
+
+		@Override
+		protected ObjectWrapper<Result> doInBackground(MangaHeader... mangaHeaders) {
+			try {
+				final Result result = new Result();
+				final MangaHeader manga = mangaHeaders[0];
+				final MangaHistory history = manga instanceof MangaHistory ? (MangaHistory) manga :
+						new HistoryRepository(getObject()).find(manga);
+				MangaProvider provider = MangaProvider.get(getObject(), manga.provider);
+				result.mangaDetails = provider.getDetails(history);
+				result.chapter = history == null ? result.mangaDetails.chapters.get(0) :
+						CollectionsUtils.findItemById(result.mangaDetails.chapters, history.chapterId);
+				result.pageId = history != null ? history.pageId : 0;
+				return new ObjectWrapper<>(result);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ObjectWrapper<>(e);
+			}
+		}
+
+		@Override
+		protected void onPostExecute(@NonNull ReaderActivity readerActivity, ObjectWrapper<Result> result) {
+			super.onPostExecute(readerActivity, result);
+			if (result.isSuccess()) {
+				final Result data = result.get();
+				readerActivity.mManga = data.mangaDetails;
+				readerActivity.mChapter = data.chapter;
+				readerActivity.mPageId = data.pageId;
+				readerActivity.onMangaReady();
+			} else {
+				readerActivity.stub();
+			}
+		}
+
+		final static class Result {
+
+			MangaDetails mangaDetails;
+			MangaChapter chapter;
+			long pageId;
+		}
 	}
 }

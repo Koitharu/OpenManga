@@ -25,6 +25,7 @@ import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.mangalist.favourites.FavouritesActivity;
 import org.nv95.openmanga.mangalist.history.HistoryActivity;
 import org.nv95.openmanga.preview.PreviewActivity;
+import org.nv95.openmanga.reader.ReaderActivity;
 
 import java.util.ArrayList;
 
@@ -248,7 +249,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		@Override
 		public void onClick(View view) {
 			MangaHeader mangaHeader = (MangaHeader) itemView.getTag();
-			Context context = view.getContext();
+			final Context context = view.getContext();
 			context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
 					.putExtra("manga", mangaHeader));
 		}
@@ -269,7 +270,11 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		@Override
 		public void onClick(View view) {
 			if (view.getId() == R.id.button_continue) {
-
+				MangaHeader mangaHeader = (MangaHeader) itemView.getTag();
+				final Context context = view.getContext();
+				context.startActivity(new Intent(context.getApplicationContext(), ReaderActivity.class)
+						.setAction(ReaderActivity.ACTION_READING_CONTINUE)
+						.putExtra("manga", mangaHeader));
 			} else {
 				super.onClick(view);
 			}

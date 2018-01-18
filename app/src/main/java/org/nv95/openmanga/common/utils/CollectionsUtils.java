@@ -6,6 +6,7 @@ import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,15 @@ public final class CollectionsUtils {
 	}
 
 	public static int findChapterPositionById(List<MangaChapter> list, long id) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).id == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static int findPagePositionById(ArrayList<MangaPage> list, long id) {
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).id == id) {
 				return i;

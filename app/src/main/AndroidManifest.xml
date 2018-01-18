@@ -95,7 +95,13 @@
 		</activity>
 
 		<activity android:name=".reader.ReaderActivity"
-			android:configChanges="orientation|screenSize" />
+			android:configChanges="orientation|screenSize" >
+
+			<intent-filter>
+				<action android:name="org.nv95.openmanga.ACTION_READING_CONTINUE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
 
 		<activity android:name=".settings.SettingsActivity"
 			android:label="@string/action_settings" >

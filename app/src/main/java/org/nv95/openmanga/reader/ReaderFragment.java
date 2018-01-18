@@ -80,6 +80,8 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 
 	public abstract void moveDown();
 
+	public abstract void moveNext();
+
 	protected void toggleUi() {
 		final Activity activity = getActivity();
 		if (activity != null && activity instanceof ReaderActivity) {
