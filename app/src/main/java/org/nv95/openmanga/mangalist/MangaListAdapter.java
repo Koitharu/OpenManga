@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.preview.PreviewActivity;
 import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.common.utils.ImageUtils;
@@ -62,7 +63,7 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 			((MangaHeaderHolder) holder).text1.setText(item.name);
 			LayoutUtils.setTextOrHide(((MangaHeaderHolder) holder).text2, item.summary);
 			((MangaHeaderHolder) holder).summary.setText(item.genres);
-			ImageUtils.setThumbnail(((MangaHeaderHolder) holder).imageView, item.thumbnail);
+			ImageUtils.setThumbnail(((MangaHeaderHolder) holder).imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
 			holder.itemView.setTag(item);
 		} else if (holder instanceof ProgressHolder) {
 			((ProgressHolder) holder).progressBar.setVisibility(mInProgress ? View.VISIBLE : View.INVISIBLE);

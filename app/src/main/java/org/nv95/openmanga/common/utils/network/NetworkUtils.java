@@ -33,8 +33,15 @@ import okhttp3.ResponseBody;
 
 public class NetworkUtils {
 
+	public static final String HEADER_USER_AGENT = "User-Agent";
+	public static final String HEADER_REFERER = "Referer";
+
+	public static final String USER_AGENT_DEFAULT = "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0";
+
 	private static final CacheControl CACHE_CONTROL_DEFAULT = new CacheControl.Builder().maxAge(10, TimeUnit.MINUTES).build();
-	private static final Headers HEADERS_DEFAULT = new Headers.Builder().build();
+	private static final Headers HEADERS_DEFAULT = new Headers.Builder()
+			.add(HEADER_USER_AGENT, USER_AGENT_DEFAULT)
+			.build();
 
 	private static OkHttpClient sHttpClient = null;
 

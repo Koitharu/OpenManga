@@ -12,11 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.models.MangaHeader;
-import org.nv95.openmanga.preview.PreviewActivity;
-import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.LayoutUtils;
+import org.nv95.openmanga.common.views.EndlessRecyclerView;
+import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.preview.PreviewActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -62,7 +63,7 @@ public final class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 			((MangaHeaderHolder) holder).text1.setText(item.name);
 			LayoutUtils.setTextOrHide(((MangaHeaderHolder) holder).text2, item.summary);
 			((MangaHeaderHolder) holder).summary.setText(item.genres);
-			ImageUtils.setThumbnail(((MangaHeaderHolder) holder).imageView, item.thumbnail);
+			ImageUtils.setThumbnail(((MangaHeaderHolder) holder).imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
 			holder.itemView.setTag(item);
 		} else if (holder instanceof ProgressHolder) {
 			((ProgressHolder) holder).progressBar.setVisibility(mHasNext ? View.VISIBLE : View.INVISIBLE);

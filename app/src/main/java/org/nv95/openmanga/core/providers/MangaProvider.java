@@ -14,12 +14,15 @@ import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by koitharu on 21.12.17.
  */
 
 public abstract class MangaProvider {
+
+	private static final HashMap<String, String> sDomainsMap = new HashMap<>();
 
 	protected final Context mContext;
 
@@ -157,14 +160,12 @@ public abstract class MangaProvider {
 
 	@NonNull
 	public static String getDomain(@CName String cName) {
-		switch (cName) {
-			case DesumeProvider.CNAME:
-				return "desu.me";
-			case ExhentaiProvider.CNAME:
-				return "exhentai.org";
-			default:
-				throw new AssertionError("Invalid CNAME");
+		if (sDomainsMap.isEmpty()) {
+			//init
+			sDomainsMap.put(DesumeProvider.CNAME, "desu.me");
+			sDomainsMap.put(ExhentaiProvider.CNAME, "exhentai.org");
 		}
+		return sDomainsMap.get(cName);
 	}
 
 	public static SharedPreferences getSharedPreferences(@NonNull Context context, @NonNull @CName String cName) {

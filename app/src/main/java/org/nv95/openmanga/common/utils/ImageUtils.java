@@ -20,7 +20,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.AppImageDownloader;
+import org.nv95.openmanga.common.utils.network.AppImageDownloader;
 import org.nv95.openmanga.common.TransitionDisplayer;
 
 import java.io.File;
@@ -31,8 +31,8 @@ import java.io.File;
 
 public final class ImageUtils {
 
-	private static DisplayImageOptions sOptionsThumbnail = null;
-	private static DisplayImageOptions sOptionsUpdate = null;
+	private static DisplayImageOptions.Builder sOptionsThumbnail = null;
+	private static DisplayImageOptions.Builder sOptionsUpdate = null;
 
 	public static void init(Context context) {
 		DisplayImageOptions.Builder optionsBuilder = new DisplayImageOptions.Builder()
@@ -57,16 +57,14 @@ public final class ImageUtils {
 					.showImageOnFail(holder)
 					.showImageForEmptyUri(holder)
 					.showImageOnLoading(holder)
-					.displayer(new FadeInBitmapDisplayer(500, true, true, false))
-					.build();
+					.displayer(new FadeInBitmapDisplayer(500, true, true, false));
 		}
 
 		if (sOptionsUpdate == null) {
 			sOptionsUpdate = optionsBuilder
 					.resetViewBeforeLoading(false)
 					.showImageOnLoading(null)
-					.displayer(new TransitionDisplayer())
-					.build();
+					.displayer(new TransitionDisplayer());
 		}
 	}
 
@@ -87,7 +85,7 @@ public final class ImageUtils {
 		}
 	}
 
-	public static void setThumbnail(@NonNull ImageView imageView, String url) {
+	public static void setThumbnail(@NonNull ImageView imageView, String url, String referer) {
 		if (url != null && url.equals(imageView.getTag())) {
 			return;
 		}
@@ -96,23 +94,14 @@ public final class ImageUtils {
 				url,
 				new ImageViewAware(imageView),
 				sOptionsThumbnail
+						.extraForDownloader(referer)
+						.build()
 		);
 	}
 
 	public static void setThumbnail(@NonNull ImageView imageView, @Nullable File file) {
 		final String url = file == null ? null : "file://" + file.getPath();
-		setThumbnail(imageView, url);
-	}
-
-	public static void setImage(@NonNull ImageView imageView, String url) {
-		if (url != null && url.equals(imageView.getTag())) {
-			return;
-		}
-		imageView.setTag(url);
-		ImageLoader.getInstance().displayImage(
-				url,
-				imageView
-		);
+		setThumbnail(imageView, url, null);
 	}
 
 	public static void recycle(@NonNull ImageView imageView) {
@@ -125,11 +114,13 @@ public final class ImageUtils {
 		imageView.setTag(null);
 	}
 
-	public static void updateImage(@NonNull ImageView imageView, String url) {
+	public static void updateImage(@NonNull ImageView imageView, String url, String referer) {
 		ImageLoader.getInstance().displayImage(
 				url,
 				imageView,
 				sOptionsUpdate
+						.extraForDownloader(referer)
+						.build()
 		);
 	}
 

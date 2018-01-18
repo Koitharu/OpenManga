@@ -165,7 +165,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	private void updateContent() {
 		if (mMangaDetails == null) { //full info wasn't loaded yet
-			ImageUtils.setThumbnail(mImageViewCover, mMangaHeader.thumbnail);
+			ImageUtils.setThumbnail(mImageViewCover, mMangaHeader.thumbnail, MangaProvider.getDomain(mMangaHeader.provider));
 			setTitle(mMangaHeader.name);
 			setSubtitle(mMangaHeader.summary);
 			mTextViewGenres.setText(mMangaHeader.genres);
@@ -177,7 +177,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			}
 			mTextViewSummary.setText(formatSummary(null, -1, mProvider.getName(), mMangaHeader.status));
 		} else {
-			ImageUtils.updateImage(mImageViewCover, mMangaDetails.cover);
+			ImageUtils.updateImage(mImageViewCover, mMangaDetails.cover, MangaProvider.getDomain(mMangaDetails.provider));
 			setTitle(mMangaDetails.name);
 			setSubtitle(mMangaDetails.summary);
 			mTextViewGenres.setText(mMangaDetails.genres);

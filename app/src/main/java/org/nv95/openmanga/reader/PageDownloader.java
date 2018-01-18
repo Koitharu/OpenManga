@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import org.nv95.openmanga.common.WeakAsyncTask;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.models.MangaPage;
+import org.nv95.openmanga.core.providers.MangaProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,12 +46,12 @@ public final class PageDownloader {
 		mExecutor = Executors.newFixedThreadPool(3);
 	}
 
-	public void downloadPage(@NonNull String url, @NonNull String destination, @NonNull Callback callback) {
-		LoadTask task = mTasksMap.get(url);
+	public void downloadPage(@NonNull MangaPage page, @NonNull String destination, @NonNull Callback callback) {
+		LoadTask task = mTasksMap.get(page.url);
 		if (task == null) {
 			task = new LoadTask(callback);
-			mTasksMap.put(url, task);
-			task.executeOnExecutor(mExecutor, url, destination);
+			mTasksMap.put(page.url, task);
+			task.executeOnExecutor(mExecutor, page.url, MangaProvider.getDomain(page.provider), destination);
 		} else {
 			//TODO
 		}
@@ -75,9 +77,12 @@ public final class PageDownloader {
 			FileOutputStream output = null;
 			try {
 				boolean ignoreCancel = false;
-				final String destination = strings[1];
+				final String domain = strings[1];
+				final String destination = strings[2];
 				final Request request = new Request.Builder()
 						.url(strings[0])
+						.header(NetworkUtils.HEADER_USER_AGENT, NetworkUtils.USER_AGENT_DEFAULT)
+						.header(NetworkUtils.HEADER_REFERER, "http://" + domain)
 						.get()
 						.build();
 				final Response response = NetworkUtils.getHttpClient().newCall(request).execute();

@@ -11,17 +11,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.CrashHandler;
+import org.nv95.openmanga.common.Dismissible;
+import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.ResourceUtils;
+import org.nv95.openmanga.core.models.ListHeader;
 import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.UserTip;
+import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.preview.PreviewActivity;
-import org.nv95.openmanga.common.Dismissible;
-import org.nv95.openmanga.core.models.ListHeader;
-import org.nv95.openmanga.common.utils.ImageUtils;
-import org.nv95.openmanga.common.utils.ResourceUtils;
 
 import java.util.ArrayList;
 
@@ -93,7 +94,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			}
 		} else if (holder instanceof MangaHolder) {
 			MangaHeader item = (MangaHeader) mDataset.get(position);
-			ImageUtils.setThumbnail(((MangaHolder) holder).imageViewThumbnail, item.thumbnail);
+			ImageUtils.setThumbnail(((MangaHolder) holder).imageViewThumbnail, item.thumbnail, MangaProvider.getDomain(item.provider));
 			((MangaHolder) holder).textViewTitle.setText(item.name);
 			holder.itemView.setTag(item);
 			if (holder instanceof RecentHolder) {

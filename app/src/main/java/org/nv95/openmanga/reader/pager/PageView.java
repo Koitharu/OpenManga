@@ -97,7 +97,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		if (mFile.exists()) {
 			mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
 		} else {
-			PageDownloader.getInstance().downloadPage(page.url, mFile.getPath(), this);
+			PageDownloader.getInstance().downloadPage(page, mFile.getPath(), this);
 		}
 	}
 
@@ -122,7 +122,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 				}
 				mTextProgressView.setVisibility(VISIBLE);
 				mFile.delete();
-				PageDownloader.getInstance().downloadPage(mPage.url, mFile.getPath(), this);
+				PageDownloader.getInstance().downloadPage(mPage, mFile.getPath(), this);
 				break;
 		}
 	}
