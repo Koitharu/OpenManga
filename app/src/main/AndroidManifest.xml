@@ -57,6 +57,11 @@
 			android:configChanges="screenSize|orientation" />
 
 		<activity
+			android:name=".mangalist.history.HistoryActivity"
+			android:label="@string/action_history"
+			android:configChanges="screenSize|orientation" />
+
+		<activity
 			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"
 			android:label="@string/action_search">

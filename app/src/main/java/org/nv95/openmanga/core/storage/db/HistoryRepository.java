@@ -61,6 +61,11 @@ public class HistoryRepository implements Repository<MangaHistory> {
 	}
 
 	@Override
+	public void clear() {
+		mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+	}
+
+	@Override
 	public boolean update(MangaHistory mangaHistory) {
 		try {
 			return mStorageHelper.getWritableDatabase()

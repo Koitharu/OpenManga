@@ -46,6 +46,11 @@ public final class CategoriesRepository implements Repository<Category> {
 	}
 
 	@Override
+	public void clear() {
+		mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+	}
+
+	@Override
 	public boolean update(Category category) {
 		try {
 			return mStorageHelper.getWritableDatabase().update(TABLE_NAME, toContentValues(category),

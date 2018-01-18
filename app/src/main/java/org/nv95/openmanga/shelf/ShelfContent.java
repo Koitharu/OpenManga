@@ -16,6 +16,8 @@ import java.util.HashMap;
 
 class ShelfContent {
 
+	static final int SECTION_HISTORY = 2;
+
 	@NonNull
 	final ArrayList<UserTip> tips;
 

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import org.nv95.openmanga.AppBaseActivity;
@@ -69,14 +68,8 @@ public class SettingsActivity extends AppBaseActivity implements SharedPreferenc
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		switch (key) {
 			case "theme":
-				requestRestart();
 				setResult(RESULT_RESTART);
 				break;
 		}
-	}
-
-	private void requestRestart() {
-		Snackbar.make(mContent, R.string.need_restart, Snackbar.LENGTH_INDEFINITE)
-				.show();
 	}
 }

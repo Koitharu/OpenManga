@@ -46,7 +46,7 @@
     <string name="cache_size" formatted="false">Размер кэша: %.1f Мб</string>
     <string name="action_clear_cache">Очистить кэш изображений</string>
     <string name="size_calculating">Расчет размера…</string>
-    <string name="action_histclear">Очистить историю</string>
+    <string name="clear_history">Очистить историю</string>
     <string name="error">Произошла ошибка</string>
     <string name="file_not_found">Файл не найден</string>
     <string name="history_will_cleared">История будет очищена</string>

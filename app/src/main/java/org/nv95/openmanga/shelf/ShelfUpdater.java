@@ -18,7 +18,7 @@ public final class ShelfUpdater {
 		ArrayList<Object> dataset = new ArrayList<>();
 		dataset.addAll(content.tips);
 		if (!content.history.isEmpty()) {
-			dataset.add(new ListHeader(R.string.action_history));
+			dataset.add(new ListHeader(R.string.action_history, ShelfContent.SECTION_HISTORY));
 			dataset.add(content.history.get(0));
 			int len = getOptimalCells(content.history.size() - 1, columnCount) + 1;
 			for (int i = 1; i < len; i++) {
@@ -29,7 +29,7 @@ public final class ShelfUpdater {
 		for (String category : content.favourites.keySet()) {
 			ArrayList<MangaFavourite> favourites = content.favourites.get(category);
 			if (favourites != null && !favourites.isEmpty()) {
-				dataset.add(new ListHeader(category));
+				dataset.add(new ListHeader(category, /*TODO*/ null));
 				int len = getOptimalCells(favourites.size(), columnCount);
 				for (int i = 0; i < len; i++) {
 					dataset.add(favourites.get(i));
@@ -37,7 +37,7 @@ public final class ShelfUpdater {
 			}
 		}
 		if (!content.recommended.isEmpty()) {
-			dataset.add(new ListHeader(R.string.recommendations));
+			dataset.add(new ListHeader(R.string.recommendations, null /*TODO*/));
 			dataset.addAll(content.recommended);
 		}
 		dataset.trimToSize();

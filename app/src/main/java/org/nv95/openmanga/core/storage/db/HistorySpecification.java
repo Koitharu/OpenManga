@@ -1,5 +1,7 @@
 package org.nv95.openmanga.core.storage.db;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -63,5 +65,22 @@ public class HistorySpecification implements SqlSpecification {
 	@Override
 	public String getLimit() {
 		return mLimit;
+	}
+
+	@NonNull
+	public Bundle toBundle() {
+		final Bundle bundle = new Bundle(3);
+		bundle.putString("limit", mLimit);
+		bundle.putString("order_by", mOrderBy);
+		bundle.putBoolean("removed", mRemoved);
+		return bundle;
+	}
+
+	public static HistorySpecification from(Bundle bundle) {
+		final HistorySpecification specification = new HistorySpecification();
+		specification.mLimit = bundle.getString("limit", null);
+		specification.mOrderBy = bundle.getString("order_by", null);
+		specification.mRemoved = bundle.getBoolean("removed", false);
+		return specification;
 	}
 }

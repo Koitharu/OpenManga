@@ -46,7 +46,7 @@
     <string name="cache_size" formatted="false">Розмір кешу: %.1f Мб</string>
     <string name="action_clear_cache">Очистити кеш зображень</string>
     <string name="size_calculating">Розрахунок розміру…</string>
-    <string name="action_histclear">Очистити історію</string>
+    <string name="clear_history">Очистити історію</string>
     <string name="error">Виникла помилка</string>
     <string name="file_not_found">Файл не знайдено</string>
     <string name="history_will_cleared">Історію буде очищено</string>

@@ -13,14 +13,18 @@ public class ListHeader {
 	public final int textResId;
 	@Nullable
 	public final String text;
+	@Nullable
+	public final Object extra;
 
-	public ListHeader(@Nullable String text) {
+	public ListHeader(@Nullable String text, @Nullable Object extra) {
 		this.text = text;
-		textResId = 0;
+		this.textResId = 0;
+		this.extra = extra;
 	}
 
-	public ListHeader(int textResId) {
+	public ListHeader(int textResId, @Nullable Object extra) {
 		this.textResId = textResId;
-		text = null;
+		this.text = null;
+		this.extra = extra;
 	}
 }

@@ -7,7 +7,7 @@
     <string name="action_favourite">Favorilere Ekle</string>
     <string name="action_favourites">Favoriler</string>
     <string name="action_genre">Türler</string>
-    <string name="action_histclear">Geçmişi temizle</string>
+    <string name="clear_history">Geçmişi temizle</string>
     <string name="action_history">Geçmiş</string>
     <string name="action_move">Şuraya taşı</string>
     <string name="action_options">Ayarlar</string>

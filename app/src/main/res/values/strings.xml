@@ -51,7 +51,7 @@
     <string name="cache_clearing">Clearing cache…</string>
     <string name="cache_size" formatted="false">Cache size: %.1f Mb</string>
     <string name="size_calculating">Calculating size…</string>
-    <string name="action_histclear">Clear history</string>
+    <string name="clear_history">Clear history</string>
     <string name="history_will_cleared">History will be erased</string>
     <string name="file_not_found">File not found</string>
     <string name="error">An error has occurred</string>
@@ -418,4 +418,8 @@
     <string name="author_">Author:</string>
 	<string name="restart">Restart</string>
     <string name="postpone">Postpone</string>
+    <string name="history_cleared">History cleared</string>
+    <string name="history_clear_confirm">Are you sure want to clear the history? This action cannot be undone</string>
+	<string name="undo">Undo</string>
+    <string name="removed_from_history">Manga \"%1$s\" was from history</string>
 </resources>

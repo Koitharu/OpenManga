@@ -8,7 +8,7 @@
         android:visible="false" />
     <item android:id="@+id/action_remove"
         android:title="@string/action_remove"
-        android:icon="@drawable/ic_delete_light"
+        android:icon="@drawable/ic_trash_white"
         app:showAsAction="ifRoom"
         android:visible="false" />
     <item android:id="@+id/action_save"

@@ -63,6 +63,11 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	}
 
 	@Override
+	public void clear() {
+		mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
+	}
+
+	@Override
 	public boolean update(MangaFavourite mangaFavourite) {
 		try {
 			return mStorageHelper.getWritableDatabase()

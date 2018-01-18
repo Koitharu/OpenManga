@@ -22,6 +22,7 @@ import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.UserTip;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.mangalist.history.HistoryActivity;
 import org.nv95.openmanga.preview.PreviewActivity;
 
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			} else {
 				((HeaderHolder) holder).textView.setText(null);
 			}
+			holder.itemView.setTag(item.extra);
 		} else if (holder instanceof MangaHolder) {
 			MangaHeader item = (MangaHeader) mDataset.get(position);
 			ImageUtils.setThumbnail(((MangaHolder) holder).imageViewThumbnail, item.thumbnail, MangaProvider.getDomain(item.provider));
@@ -167,8 +169,13 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 		@Override
 		public void onClick(View v) {
-			switch (v.getId()) {
-				//todo
+			final Object extra = itemView.getTag();
+			if (extra == null) {
+				return;
+			}
+			final Context context = v.getContext();
+			if (extra.equals(ShelfContent.SECTION_HISTORY)) {
+				context.startActivity(new Intent(context, HistoryActivity.class));
 			}
 		}
 	}

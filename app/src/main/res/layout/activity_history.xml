@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/appbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			app:layout_scrollFlags="scroll|enterAlways" />
+	</android.support.design.widget.AppBarLayout>
+
+	<org.nv95.openmanga.common.views.EndlessRecyclerView
+		android:id="@+id/recyclerView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:scrollbars="vertical"
+		app:fastScrollEnabled="true"
+		app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+		app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+		app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+		app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
+		app:layoutManager="@string/linear_layout_manager"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+	<ProgressBar
+		android:id="@+id/progressBar"
+		android:layout_width="@dimen/progressbar_large"
+		android:layout_height="@dimen/progressbar_large"
+		android:indeterminate="true"
+		app:layout_anchor="@id/recyclerView"
+		app:layout_anchorGravity="center"
+		app:layout_behavior="@string/center_gravity_behavior"
+		style="@style/Widget.AppCompat.ProgressBar"/>
+
+	<TextView
+		android:id="@+id/textView_holder"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/history_empty"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:visibility="gone"
+		tools:visibility="visible"
+		app:layout_anchor="@id/recyclerView"
+		app:layout_anchorGravity="center"
+		app:layout_behavior="@string/center_gravity_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>
