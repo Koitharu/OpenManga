@@ -431,4 +431,5 @@
     <string name="category_remove_confirm">Are you sure want to remove category \"%1$s\"? This action cannot be undone</string>
 	<string name="category_x_removed">Category \"%1$s\" was removed</string>
 	<string name="favourites_category_must_be">You must have at least one favourites category</string>
+	<string name="failed_to_load_chapters">Failed to load the list of chapters</string>
 </resources>

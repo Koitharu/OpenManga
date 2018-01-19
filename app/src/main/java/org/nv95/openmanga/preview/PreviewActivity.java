@@ -13,32 +13,38 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.models.MangaChapter;
-import org.nv95.openmanga.core.models.MangaDetails;
-import org.nv95.openmanga.core.models.MangaHeader;
-import org.nv95.openmanga.core.models.MangaHistory;
+import org.nv95.openmanga.common.ViewPagerAdapter;
+import org.nv95.openmanga.common.dialogs.FavouriteDialog;
+import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.TextUtils;
 import org.nv95.openmanga.core.MangaStatus;
 import org.nv95.openmanga.core.ObjectWrapper;
+import org.nv95.openmanga.core.models.Category;
+import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaDetails;
+import org.nv95.openmanga.core.models.MangaFavourite;
+import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.core.storage.db.FavouritesRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
-import org.nv95.openmanga.AppBaseActivity;
-import org.nv95.openmanga.common.ViewPagerAdapter;
 import org.nv95.openmanga.reader.ReaderActivity;
-import org.nv95.openmanga.common.utils.ImageUtils;
-import org.nv95.openmanga.common.utils.TextUtils;
 
 /**
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,ChaptersListAdapter.OnChapterClickListener {
+public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, FavouriteDialog.OnFavouriteListener {
 
 	//views
 	//activity
@@ -51,6 +57,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	private RatingBar mRatingBar;
 	private TextView mTextViewGenres;
 	private TextView mTextViewDescription;
+	private Button mButtonRead;
+	private ImageButton mButtonFavourite;
 	//tab 2 - chapters
 	private RecyclerView mRecyclerViewChapters;
 	private TextView mTextViewChaptersHolder;
@@ -60,7 +68,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Nullable
 	private MangaDetails mMangaDetails;
 	private ViewPagerAdapter mPagerAdapter;
-	@Nullable ChaptersListAdapter mChaptersAdapter;
+	@Nullable
+	ChaptersListAdapter mChaptersAdapter;
 	private HistoryRepository mHistory;
 	private FavouritesRepository mFavourites;
 
@@ -81,6 +90,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		mRatingBar = page1.findViewById(R.id.ratingBar);
 		mTextViewDescription = page1.findViewById(R.id.textView_description);
 		mTextViewGenres = page1.findViewById(R.id.textView_genres);
+		mButtonRead = page1.findViewById(R.id.button_read);
+		mButtonFavourite = page1.findViewById(R.id.button_favourite);
 		View page2 = getLayoutInflater().inflate(R.layout.page_manga_chapters, mPager, false);
 		mRecyclerViewChapters = page2.findViewById(R.id.recyclerView_chapters);
 		mRecyclerViewChapters.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -88,6 +99,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		mPagerAdapter = new ViewPagerAdapter(page1, page2);
 		mPager.setAdapter(mPagerAdapter);
 		mTabs.setupWithViewPager(mPager);
+		mButtonRead.setOnClickListener(this);
+		mButtonFavourite.setOnClickListener(this);
 
 		mMangaHeader = getIntent().getParcelableExtra("manga");
 		mMangaDetails = null;
@@ -113,11 +126,16 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mChaptersAdapter != null) {
-			MangaHistory history = mHistory.find(mMangaHeader);
-			mChaptersAdapter.setCurrentChapterId(history == null ? 0 : history.chapterId);
-			mChaptersAdapter.notifyDataSetChanged();
+		final MangaHistory history = mHistory.find(mMangaHeader);
+		if (history != null) {
+			if (mChaptersAdapter != null) {
+				mChaptersAdapter.setCurrentChapterId(history.chapterId);
+				mChaptersAdapter.notifyDataSetChanged();
+			}
+			mButtonRead.setText(R.string.continue_reading);
 		}
+		final MangaFavourite favourite = mFavourites.get(mMangaHeader);
+		mButtonFavourite.setImageResource(favourite == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
 	}
 
 	@NonNull
@@ -134,15 +152,25 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			assert mMangaDetails != null;
 			updateContent();
 			mChaptersAdapter = new ChaptersListAdapter(this, mMangaDetails.chapters, this);
-			MangaHistory history = mHistory.find(mMangaHeader);
+			final MangaHistory history = mHistory.find(mMangaHeader);
 			if (history == null) {
 				mChaptersAdapter.setCurrentChapterId(0);
 			} else {
 				mChaptersAdapter.setCurrentChapterId(history.chapterId);
-				//todo read button
 			}
 			mRecyclerViewChapters.setAdapter(mChaptersAdapter);
+			/*if (history != null) {
+				int pos = CollectionsUtils.findChapterPositionById(mMangaDetails.chapters, history.chapterId);
+				if (pos != -1 && LayoutUtils.findLastVisibleItemPosition(mRecyclerViewChapters) > pos) {
+					mRecyclerViewChapters.scrollToPosition(Math.max(0, pos - 3));
+				}
+			}*/
+			mTextViewChaptersHolder.setText(R.string.no_chapters_found);
 			mTextViewChaptersHolder.setVisibility(mMangaDetails.chapters.isEmpty() ? View.VISIBLE : View.GONE);
+		} else {
+			mTextViewChaptersHolder.setText(R.string.failed_to_load_chapters);
+			mTextViewChaptersHolder.setVisibility(View.VISIBLE);
+			mTextViewDescription.setText(ErrorUtils.getErrorMessage(data.getError()));
 		}
 	}
 
@@ -216,5 +244,28 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 				break;
 		}
 		return TextUtils.fromHtmlCompat(builder.toString());
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.button_read:
+				startActivity(new Intent(this, ReaderActivity.class)
+						.setAction(ReaderActivity.ACTION_READING_CONTINUE)
+						.putExtra("manga", mMangaDetails));
+				break;
+			case R.id.button_favourite:
+				if (mMangaDetails != null) {
+					new FavouriteDialog(this, mMangaDetails)
+							.setListener(this)
+							.show();
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void onFavouritesChanged(MangaDetails manga, @Nullable Category category) {
+		mButtonFavourite.setImageResource(category == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
 	}
 }

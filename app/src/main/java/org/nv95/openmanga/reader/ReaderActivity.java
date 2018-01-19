@@ -358,7 +358,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				final MangaHistory history = manga instanceof MangaHistory ? (MangaHistory) manga :
 						new HistoryRepository(getObject()).find(manga);
 				MangaProvider provider = MangaProvider.get(getObject(), manga.provider);
-				result.mangaDetails = provider.getDetails(history);
+				result.mangaDetails = manga instanceof MangaDetails ? (MangaDetails) manga : provider.getDetails(history);
 				result.chapter = history == null ? result.mangaDetails.chapters.get(0) :
 						CollectionsUtils.findItemById(result.mangaDetails.chapters, history.chapterId);
 				result.pageId = history != null ? history.pageId : 0;

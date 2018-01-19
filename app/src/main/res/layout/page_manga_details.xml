@@ -56,7 +56,7 @@
 					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 					tools:text="Lorem ipsum dolor sit amet" />
 
-				<ImageButton
+				<android.support.v7.widget.AppCompatImageButton
 					android:contentDescription="@string/action_favourite"
 					android:id="@+id/button_favourite"
 					style="@style/Widget.AppCompat.ImageButton"
@@ -68,10 +68,12 @@
 					android:layout_marginRight="4dp"
 					android:layout_toLeftOf="@id/button_read"
 					android:layout_toStartOf="@id/button_read"
-					android:background="?selectableItemBackground"
+					android:background="?selectableItemBackgroundBorderless"
 					android:padding="12dp"
-					android:src="@drawable/ic_tag_black"
-					tools:src="@drawable/ic_tag_heart_black" />
+					app:tint="?android:attr/textColorSecondary"
+					app:tintMode="src_in"
+					android:src="@drawable/ic_favorite_outline_light"
+					tools:src="@drawable/ic_favorite_light" />
 
 				<Button
 					android:id="@+id/button_read"

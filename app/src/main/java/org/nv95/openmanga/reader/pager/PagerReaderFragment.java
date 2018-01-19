@@ -98,6 +98,11 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 
 	}
 
+	@Override
+	public void moveNext() {
+		smoothScrollToPage(getCurrentPageIndex() + 1);
+	}
+
 	private final class TapDetector extends GestureDetector.SimpleOnGestureListener {
 
 		@Override
