@@ -25,6 +25,8 @@ import android.widget.TextView;
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
+import org.nv95.openmanga.common.dialogs.BottomSheetMenuDialog;
+import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
@@ -49,7 +51,7 @@ import java.util.ArrayList;
 public final class ReaderActivity extends AppBaseActivity implements View.OnClickListener,
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
 		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
-		ReaderCallback, OnThumbnailClickListener {
+		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage> {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 
@@ -170,7 +172,13 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.action_menu:
-
+				new BottomSheetMenuDialog<MangaPage>(this)
+						.setItemClickListener(this)
+						.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark)
+						.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
+						.addItem(R.id.action_page_share, R.drawable.ic_share_light ,R.string.share_image)
+						.create(mReader.getCurrentPage())
+						.show();
 				break;
 			case R.id.action_thumbnails:
 				final ThumbViewFragment dialogFragment = new ThumbViewFragment();
@@ -342,6 +350,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onThumbnailClick(int position) {
 		mReader.scrollToPage(position);
+	}
+
+	@Override
+	public void onMenuItemClick(int id, MangaPage page) {
+		switch (id) {
+			//TODO
+			default:
+				stub();
+		}
 	}
 
 	final static class ResumeReadingTask extends WeakAsyncTask<ReaderActivity,MangaHeader,Void,ObjectWrapper<ResumeReadingTask.Result>> {

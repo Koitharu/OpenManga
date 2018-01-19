@@ -435,4 +435,6 @@
     <string name="save_next_5_chapters">Save this and 5 next chapters</string>
     <string name="save_next_10_chapters">Save this and 10 next chapters</string>
     <string name="save_all_chapters">Save all chapters</string>
+    <string name="create_bookmark">Create bookmark</string>
+    <string name="share_image">Share image</string>
 </resources>

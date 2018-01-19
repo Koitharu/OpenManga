@@ -64,9 +64,8 @@ public final class MenuDialog<D> implements DialogInterface.OnClickListener {
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		if (which >= 0 && mItemClickListener != null && which < mMenuItems.size()) {
-			final SimpleMenuItem item = mMenuItems.get(which);
-			mItemClickListener.onMenuItemClick(item.id, item.title, mData);
+		if (which >= 0 && mItemClickListener != null && which < mMenuItems.size()) {;
+			mItemClickListener.onMenuItemClick(mMenuItems.get(which).id, mData);
 		}
 	}
 
@@ -84,6 +83,6 @@ public final class MenuDialog<D> implements DialogInterface.OnClickListener {
 
 	public interface OnMenuItemClickListener<D> {
 
-		void onMenuItemClick(@IdRes int id, String title, D d);
+		void onMenuItemClick(@IdRes int id, D d);
 	}
 }

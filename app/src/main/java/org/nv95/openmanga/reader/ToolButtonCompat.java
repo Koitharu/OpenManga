@@ -28,12 +28,4 @@ public final class ToolButtonCompat extends AppCompatImageView {
 		setScaleType(ImageView.ScaleType.CENTER);
 	}
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(
-				heightMeasureSpec,
-				heightMeasureSpec
-		);
-	}
-
 }

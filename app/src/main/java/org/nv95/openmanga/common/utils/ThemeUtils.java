@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
@@ -126,5 +127,16 @@ public final class ThemeUtils {
 	@ColorInt
 	public static int getAccentColor(Context context) {
 		return getThemeAttrColor(context, R.attr.colorAccent);
+	}
+
+	public static Drawable getColoredDrawable(@NonNull Context context, @DrawableRes int resId, @AttrRes int colorAttrId) {
+		final Drawable drawable = ContextCompat.getDrawable(context, resId);
+		if (drawable != null) {
+			drawable.setColorFilter(
+					getAttrColor(context, colorAttrId),
+					PorterDuff.Mode.SRC_IN
+			);
+		}
+		return drawable;
 	}
 }

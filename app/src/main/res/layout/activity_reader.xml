@@ -93,7 +93,7 @@
 
 		<org.nv95.openmanga.reader.ToolButtonCompat
 			android:id="@+id/action_thumbnails"
-			android:layout_width="wrap_content"
+			android:layout_width="?attr/actionBarSize"
 			android:layout_height="match_parent"
 			android:layout_alignParentTop="true"
 			android:layout_toLeftOf="@+id/action_menu"
@@ -102,7 +102,7 @@
 
 		<org.nv95.openmanga.reader.ToolButtonCompat
 			android:id="@+id/action_menu"
-			android:layout_width="wrap_content"
+			android:layout_width="?attr/actionBarSize"
 			android:layout_height="match_parent"
 			android:layout_alignParentEnd="true"
 			android:layout_alignParentRight="true"

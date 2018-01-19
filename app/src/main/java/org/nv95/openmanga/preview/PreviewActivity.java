@@ -46,7 +46,9 @@ import org.nv95.openmanga.reader.ReaderActivity;
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
+public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,
+		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener,
+		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
 
 	//views
 	//activity
@@ -284,7 +286,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	}
 
 	@Override
-	public void onMenuItemClick(@IdRes int id, String title, MangaChapter mangaChapter) {
+	public void onMenuItemClick(@IdRes int id, MangaChapter mangaChapter) {
 		switch (id) {
 
 		}
