@@ -356,7 +356,7 @@
     <string name="download_wifi_only">Download manga only over WiFi</string>
     <string name="save_this_chapter">Save this chapter</string>
     <string name="save_prev_chapters">Save this and previous chapters</string>
-    <string name="save_next_chapters">Save this and next chapters</string>
+    <string name="save_next_all_chapters">Save this and all next chapters</string>
     <string name="download_starts_on_network">Download will starts later</string>
     <string name="download_started">Download started</string>
     <string name="general">General</string>
@@ -432,4 +432,7 @@
 	<string name="category_x_removed">Category \"%1$s\" was removed</string>
 	<string name="favourites_category_must_be">You must have at least one favourites category</string>
 	<string name="failed_to_load_chapters">Failed to load the list of chapters</string>
+    <string name="save_next_5_chapters">Save this and 5 next chapters</string>
+    <string name="save_next_10_chapters">Save this and 10 next chapters</string>
+    <string name="save_all_chapters">Save all chapters</string>
 </resources>

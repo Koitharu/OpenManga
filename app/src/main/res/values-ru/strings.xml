@@ -330,7 +330,7 @@
     <string name="download_wifi_only">Скачивать мангу только по WiFi</string>
     <string name="save_this_chapter">Сохранить эту главу</string>
     <string name="save_prev_chapters">Сохранить эту главу и предыдущие</string>
-    <string name="save_next_chapters">Сохранить эту главу и следующие</string>
+    <string name="save_next_all_chapters">Сохранить эту главу и все следующие</string>
     <string name="download_starts_on_network">Загрузка начнётся позже</string>
     <string name="download_started">Загрузка началась</string>
     <string name="general">Основное</string>

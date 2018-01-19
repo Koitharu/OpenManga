@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -24,6 +25,7 @@ import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.ViewPagerAdapter;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
+import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.TextUtils;
@@ -44,7 +46,7 @@ import org.nv95.openmanga.reader.ReaderActivity;
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, FavouriteDialog.OnFavouriteListener {
+public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
 
 	//views
 	//activity
@@ -135,7 +137,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			mButtonRead.setText(R.string.continue_reading);
 		}
 		final MangaFavourite favourite = mFavourites.get(mMangaHeader);
-		mButtonFavourite.setImageResource(favourite == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
+		mButtonFavourite.setImageResource(favourite == null ? R.drawable.ic_tag_black : R.drawable.ic_tag_heart_black);
 	}
 
 	@NonNull
@@ -188,7 +190,18 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	@Override
 	public boolean onChapterLongClick(int pos, MangaChapter chapter) {
-		return false;
+		new MenuDialog<MangaChapter>(this)
+				.setTitle(chapter.name)
+				.setItemClickListener(this)
+				.addItem(R.id.action_chapter_save_this, R.string.save_this_chapter)
+				.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters)
+				.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters)
+				.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters)
+				.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters)
+				.addItem(R.id.action_chapter_save_all, R.string.save_all_chapters)
+				.create(chapter)
+				.show();
+		return true;
 	}
 
 	private void updateContent() {
@@ -266,6 +279,14 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	@Override
 	public void onFavouritesChanged(MangaDetails manga, @Nullable Category category) {
-		mButtonFavourite.setImageResource(category == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
+		mButtonFavourite.setImageResource(category == null ? R.drawable.ic_tag_black : R.drawable.ic_tag_heart_black);
+
+	}
+
+	@Override
+	public void onMenuItemClick(@IdRes int id, String title, MangaChapter mangaChapter) {
+		switch (id) {
+
+		}
 	}
 }

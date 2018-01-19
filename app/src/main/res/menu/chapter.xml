@@ -8,5 +8,5 @@
         android:title="@string/save_prev_chapters" />
     <item
         android:id="@+id/action_save_next"
-        android:title="@string/save_next_chapters" />
+        android:title="@string/save_next_all_chapters" />
 </menu>
