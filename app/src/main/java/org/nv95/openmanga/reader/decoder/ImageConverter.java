@@ -1,4 +1,4 @@
-package org.nv95.openmanga.reader;
+package org.nv95.openmanga.reader.decoder;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

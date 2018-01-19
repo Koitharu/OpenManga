@@ -17,12 +17,13 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.reader.ImageConverter;
-import org.nv95.openmanga.reader.PageDownloader;
-import org.nv95.openmanga.reader.PagesCache;
-import org.nv95.openmanga.common.views.TextProgressView;
 import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.views.TextProgressView;
+import org.nv95.openmanga.core.models.MangaPage;
+import org.nv95.openmanga.reader.decoder.ImageConverter;
+import org.nv95.openmanga.reader.loader.PageDownloader;
+import org.nv95.openmanga.reader.loader.PageLoadCallback;
+import org.nv95.openmanga.reader.loader.PagesCache;
 
 import java.io.File;
 
@@ -31,7 +32,7 @@ import java.io.File;
  */
 
 public final class PageView extends FrameLayout implements View.OnClickListener,
-		ImageConverter.Callback, PageDownloader.Callback {
+		ImageConverter.Callback, PageLoadCallback {
 
 	private MangaPage mPage;
 	private File mFile;
@@ -97,7 +98,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		if (mFile.exists()) {
 			mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
 		} else {
-			PageDownloader.getInstance().downloadPage(page, mFile.getPath(), this);
+			PageDownloader.getInstance().downloadPage(getContext(), page, mFile, this);
 		}
 	}
 
@@ -122,7 +123,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 				}
 				mTextProgressView.setVisibility(VISIBLE);
 				mFile.delete();
-				PageDownloader.getInstance().downloadPage(mPage, mFile.getPath(), this);
+				PageDownloader.getInstance().downloadPage(getContext(), mPage, mFile, this);
 				break;
 		}
 	}
@@ -159,8 +160,8 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	}
 
 	@Override
-	public void onPageDownloadFailed() {
-		setError(getContext().getString(R.string.image_loading_error));
+	public void onPageDownloadFailed(Throwable reason) {
+		setError(ErrorUtils.getErrorMessage(getContext(), reason));
 	}
 
 	@Override
@@ -170,7 +171,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 
 	public void recycle() {
 		if (mPage != null) {
-			PageDownloader.getInstance().cancel(mPage.url);
+			PageDownloader.getInstance().cancel(mPage);
 		}
 		mSubsamplingScaleImageView.recycle();
 	}

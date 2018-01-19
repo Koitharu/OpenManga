@@ -98,7 +98,6 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			}
 		}
 
-
 		mReader = new PagerReaderFragment();
 		getFragmentManager().beginTransaction()
 				.replace(R.id.reader, mReader)

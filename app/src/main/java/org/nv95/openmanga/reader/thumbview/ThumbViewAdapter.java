@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.reader.PagesCache;
+import org.nv95.openmanga.reader.loader.PagesCache;
 import org.nv95.openmanga.common.utils.ImageUtils;
 
 import java.util.ArrayList;

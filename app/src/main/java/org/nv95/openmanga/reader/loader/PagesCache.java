@@ -1,4 +1,4 @@
-package org.nv95.openmanga.reader;
+package org.nv95.openmanga.reader.loader;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

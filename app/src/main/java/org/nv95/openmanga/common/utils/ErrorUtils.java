@@ -1,5 +1,6 @@
 package org.nv95.openmanga.common.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -28,6 +29,10 @@ public final class ErrorUtils {
 		} else { //TODO
 			return R.string.error;
 		}
+	}
+
+	public static String getErrorMessage(Context context, @Nullable Throwable throwable) {
+		return context.getString(getErrorMessage(throwable));
 	}
 
 	@NonNull
