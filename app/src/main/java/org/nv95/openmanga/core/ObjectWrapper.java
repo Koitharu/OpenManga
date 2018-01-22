@@ -43,7 +43,7 @@ public class ObjectWrapper<T> {
 	public static class BadResultException extends Exception {}
 
 	@NonNull
-	public static <T> ObjectWrapper<T> badResult(Class<T> cls) {
+	public static <T> ObjectWrapper<T> badObject() {
 		return new ObjectWrapper<T>(new BadResultException());
 	}
 }

@@ -11,7 +11,6 @@ import org.nv95.openmanga.core.models.MangaHeader;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by koitharu on 22.01.18.
@@ -92,7 +91,7 @@ public final class BookmarksRepository implements Repository<MangaBookmark> {
 
 	@Nullable
 	@Override
-	public List<MangaBookmark> query(@NonNull SqlSpecification specification) {
+	public ArrayList<MangaBookmark> query(@NonNull SqlSpecification specification) {
 		Cursor cursor = null;
 		try {
 			cursor = mStorageHelper.getReadableDatabase().query(

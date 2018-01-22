@@ -1,5 +1,7 @@
 package org.nv95.openmanga.common.utils;
 
+import android.support.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -8,7 +10,7 @@ import java.io.File;
 
 public final class FilesystemUtils {
 
-	public static long getFileSize(File file) {
+	public static long getFileSize(@Nullable File file) {
 		if (file == null || !file.exists()) {
 			return 0;
 		}
@@ -25,5 +27,34 @@ public final class FilesystemUtils {
 			}
 		}
 		return size;
+	}
+
+	public static void clearDir(@Nullable File dir) {
+		if (dir == null || !dir.exists()) {
+			return;
+		}
+		final File[] files = dir.listFiles();
+		for (File o : files) {
+			if (o.isDirectory()) {
+				deleteDir(o);
+			} else {
+				o.delete();
+			}
+		}
+	}
+
+	public static void deleteDir(@Nullable File dir) {
+		if (dir == null || !dir.exists()) {
+			return;
+		}
+		final File[] files = dir.listFiles();
+		for (File o : files) {
+			if (o.isDirectory()) {
+				deleteDir(o);
+			} else {
+				o.delete();
+			}
+		}
+		dir.delete();
 	}
 }

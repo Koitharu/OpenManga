@@ -23,8 +23,8 @@ public class ListWrapper<E> extends ObjectWrapper<ArrayList<E>> {
 	}
 
 	@NonNull
-	public static ListWrapper badResult() {
-		return new ListWrapper(new BadResultException());
+	public static <T> ListWrapper<T> badList() {
+		return new ListWrapper<>(new BadResultException());
 	}
 
 	public int size() {

@@ -37,7 +37,7 @@ import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
-import org.nv95.openmanga.preview.ChaptersListAdapter;
+import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
@@ -54,6 +54,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage> {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
+	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
 
 	private ImmersiveFrameLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
@@ -105,9 +106,12 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mHistoryRepository = new HistoryRepository(this);
 
 		final Intent intent = getIntent();
-		if(ACTION_READING_CONTINUE.equals(intent.getAction())) {
+		final String action = intent.getAction();
+		if(ACTION_READING_CONTINUE.equals(action)) {
 			MangaHeader mangaHeader = intent.getParcelableExtra("manga");
 			new ResumeReadingTask(this).start(mangaHeader);
+		} else if (ACTION_BOOKMARK_OPEN.equals(action)) {
+			//TODO
 		} else {
 			mManga = intent.getParcelableExtra("manga");
 			mChapter = intent.getParcelableExtra("chapter");
