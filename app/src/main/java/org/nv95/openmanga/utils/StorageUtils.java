@@ -200,6 +200,7 @@ public class StorageUtils {
 
     public static boolean copyThumbnail(String source, String dest, ThumbSize size) {
         Bitmap full = BitmapFactory.decodeFile(source);
+        if (full == null) return false;
         Bitmap thumb = ThumbnailUtils.extractThumbnail(full, size.getWidth(), size.getHeight());
         boolean res = saveBitmap(thumb, dest);
         full.recycle();

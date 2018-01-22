@@ -11,6 +11,8 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
+import org.nv95.openmanga.providers.MintMangaProvider;
+import org.nv95.openmanga.providers.ReadmangaRuProvider;
 import org.nv95.openmanga.providers.RecommendationsProvider;
 import org.nv95.openmanga.utils.FileLogger;
 
@@ -187,6 +189,10 @@ public class MangaProviderManager {
     }
 
     public static void prepareConnection(HttpURLConnection connection) {
+        prepareConnection(connection, null);
+    }
+
+    public static void prepareConnection(HttpURLConnection connection, @Nullable Class<? extends MangaProvider> provider) {
         URL url = connection.getURL();
         switch (url.getHost().toLowerCase()) {
             case "exhentai.org":
@@ -194,6 +200,11 @@ public class MangaProviderManager {
                     connection.addRequestProperty("Cookie", EHentaiProvider.getCookie());
                 }
                 break;
+        }
+        if (ReadmangaRuProvider.class.equals(provider)) {
+            connection.addRequestProperty("Referer", "http://readmanga.me");
+        } else if (MintMangaProvider.class.equals(provider)) {
+            connection.addRequestProperty("Referer", "http://mintmanga.com/");
         }
     }
 }

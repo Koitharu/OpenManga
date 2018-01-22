@@ -73,6 +73,7 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
             }
+            MangaProviderManager.prepareConnection(connection, mPageWrapper.page.provider);
             connection.connect();
             final int contentLength = connection.getContentLength();
             InputStream is = connection.getInputStream();
