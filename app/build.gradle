@@ -8,7 +8,7 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 1117
+        versionCode 1317
         versionName "4.4"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
