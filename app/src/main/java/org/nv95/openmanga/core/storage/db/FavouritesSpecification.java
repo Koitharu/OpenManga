@@ -118,7 +118,7 @@ public final class FavouritesSpecification implements SqlSpecification {
 			spec.mCategory = bundle.getInt("category", 0);
 		}
 		spec.mOnlyNew = bundle.getBoolean("only_new");
-		spec.mRemoved = bundle.getBoolean("removed_new");
+		spec.mRemoved = bundle.getBoolean("removed");
 		return spec;
 	}
 }
