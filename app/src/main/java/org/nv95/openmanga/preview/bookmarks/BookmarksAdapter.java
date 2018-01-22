@@ -13,8 +13,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
+import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.reader.ReaderActivity;
 import org.nv95.openmanga.reader.ToolButtonCompat;
 
@@ -27,9 +29,11 @@ import java.util.ArrayList;
 public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.BookmarkHolder> {
 
 	private final ArrayList<MangaBookmark> mDataset;
+	private final ThumbnailsStorage mThumbStore;
 
-	public BookmarksAdapter(ArrayList<MangaBookmark> dataset) {
+	BookmarksAdapter(ArrayList<MangaBookmark> dataset, ThumbnailsStorage thumbnailsStorage) {
 		mDataset = dataset;
+		mThumbStore = thumbnailsStorage;
 		setHasStableIds(true);
 	}
 
@@ -43,6 +47,7 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 	@Override
 	public void onBindViewHolder(BookmarkHolder holder, int position) {
 		final MangaBookmark item = mDataset.get(position);
+		ImageUtils.setThumbnail(holder.imageView, mThumbStore.getFile(item));
 		holder.textView.setText(ResourceUtils.formatTimeRelative(item.createdAt));
 	}
 
@@ -56,7 +61,7 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 		return mDataset.get(position).id;
 	}
 
-	class BookmarkHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+	class BookmarkHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, View.OnLongClickListener {
 
 		final ImageView imageView;
 		final TextView textView;
@@ -72,6 +77,7 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 			popupMenu.inflate(R.menu.popup_bookmark);
 			popupMenu.setOnMenuItemClickListener(this);
 			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
 			toolButtonMenu.setOnClickListener(this);
 		}
 
@@ -95,6 +101,12 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 				default:
 					return false;
 			}
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			onClick(toolButtonMenu);
+			return true;
 		}
 	}
 }

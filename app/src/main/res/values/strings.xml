@@ -437,4 +437,5 @@
     <string name="save_all_chapters">Save all chapters</string>
     <string name="create_bookmark">Create bookmark</string>
     <string name="share_image">Share image</string>
+    <string name="failed_to_create_bookmark">Failed to create bookmark</string>
 </resources>

@@ -358,6 +358,13 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onMenuItemClick(int id, MangaPage page) {
 		switch (id) {
+			case R.id.action_page_bookmark_add:
+				new BookmarkTask(mRoot).start(new BookmarkTask.Request(
+						mManga,
+						mChapter,
+						mReader.getCurrentPage()
+				));
+				break;
 			//TODO
 			default:
 				stub();

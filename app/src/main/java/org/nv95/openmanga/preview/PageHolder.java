@@ -1,7 +1,9 @@
 package org.nv95.openmanga.preview;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,5 +36,13 @@ public abstract class PageHolder {
 	@NonNull
 	public final View getView() {
 		return mView;
+	}
+
+	protected Context getContext() {
+		return mView.getContext();
+	}
+
+	protected String getString(@StringRes int resId) {
+		return mView.getContext().getString(resId);
 	}
 }

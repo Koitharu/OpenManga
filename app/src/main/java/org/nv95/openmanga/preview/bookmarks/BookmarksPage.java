@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.storage.db.BookmarkSpecification;
+import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.PageHolder;
 
 /**
@@ -33,7 +35,8 @@ public final class BookmarksPage extends PageHolder implements LoaderManager.Loa
 	@Override
 	protected void onViewCreated(@NonNull View view) {
 		mRecyclerView = view.findViewById(R.id.recyclerView);
-		mRecyclerView.addItemDecoration(new SpaceItemDecoration(ResourceUtils.dpToPx(view.getResources(), 2)));
+		mRecyclerView.addItemDecoration(new SpaceItemDecoration(ResourceUtils.dpToPx(view.getResources(), 1)));
+		mRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
 		mTextViewHolder = view.findViewById(R.id.textView_holder);
 	}
 
@@ -45,7 +48,7 @@ public final class BookmarksPage extends PageHolder implements LoaderManager.Loa
 	@Override
 	public void onLoadFinished(Loader<ListWrapper<MangaBookmark>> loader, ListWrapper<MangaBookmark> data) {
 		if (data.isSuccess()) {
-			mRecyclerView.setAdapter(new BookmarksAdapter(data.get()));
+			mRecyclerView.setAdapter(new BookmarksAdapter(data.get(), new ThumbnailsStorage(getView().getContext())));
 			mTextViewHolder.setVisibility(data.isEmpty() ? View.VISIBLE : View.GONE);
 		}
 	}
