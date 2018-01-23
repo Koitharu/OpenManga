@@ -3,6 +3,7 @@ package org.nv95.openmanga.items;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.helpers.SpeedMeasureHelper;
+import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.NoSSLv3SocketFactory;
 
@@ -25,11 +26,18 @@ public class SimpleDownload implements Runnable {
     private final String mSourceUrl;
     private final File mDestination;
     @Nullable
+    private final Class<? extends MangaProvider> mProvider;
+    @Nullable
     private SpeedMeasureHelper mSpeedMeasureHelper;
 
     public SimpleDownload(String sourceUrl, File destination) {
+        this(sourceUrl, destination, null);
+    }
+
+    public SimpleDownload(String sourceUrl, File destination, @Nullable Class<? extends MangaProvider> provider) {
         this.mSourceUrl = sourceUrl;
         this.mDestination = destination;
+        mProvider = provider;
     }
 
     public SimpleDownload setSpeedMeasureHelper(SpeedMeasureHelper helper) {
@@ -47,7 +55,7 @@ public class SimpleDownload implements Runnable {
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
             }
-            MangaProviderManager.prepareConnection(connection);
+            MangaProviderManager.prepareConnection(connection, mProvider);
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
             connection.connect();

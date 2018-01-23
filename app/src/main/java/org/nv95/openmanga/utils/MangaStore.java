@@ -118,7 +118,7 @@ public class MangaStore {
             cv.put("chapterid", chapterId);
             cv.put("mangaid", mangaId);
             File dest = new File(getMangaDir(mContext, mangaId), chapterId + "_" + id);
-            SimpleDownload sd = new SimpleDownload(page.path, dest);
+            SimpleDownload sd = new SimpleDownload(page.path, dest, page.provider);
             sd.setSpeedMeasureHelper(speedMeasureHelper);
             sd.run();
             if (!sd.isSuccess()) {
