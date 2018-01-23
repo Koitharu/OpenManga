@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.reader.ReaderFragment;
 
@@ -26,16 +27,12 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-		assert container != null;
-		ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-		mPager = new ViewPager(container.getContext());
-		mPager.setLayoutParams(params);
-		return mPager;
+		return inflater.inflate(R.layout.fragment_reader_pager, container, false);
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+		mPager = view.findViewById(R.id.pager);
 		mAdapter = new PagerReaderAdapter(getPages(), new GestureDetector(view.getContext(), new TapDetector()));
 		mPager.setOffscreenPageLimit(2);
 		mPager.setAdapter(mAdapter);

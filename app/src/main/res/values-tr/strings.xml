@@ -175,7 +175,7 @@
     <string name="new_chapters">Yeni bölümler eklendi</string>
     <string formatted="false" name="new_chapters_count">Yeni bölümler: %d</string>
     <string name="next">Sonraki</string>
-    <string formatted="false" name="next_chapter">Sonraki bölüm\n\n%s</string>
+    <string formatted="false" name="next_chapter_">Sonraki bölüm\n\n%s</string>
     <string name="no_app_updates">Güncelleme bulunamadı</string>
     <string name="no_chapters_found">Bölüm bulunamadı</string>
     <string name="no_downloads">İndirme sırasında manga yok</string>

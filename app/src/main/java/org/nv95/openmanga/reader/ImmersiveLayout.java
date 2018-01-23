@@ -13,24 +13,25 @@ import org.nv95.openmanga.R;
  * Created by koitharu on 08.01.18.
  */
 
-public final class ImmersiveFrameLayout extends FrameLayout {
+public final class ImmersiveLayout extends FrameLayout {
 
 	private boolean mSwipeIntercepted = false;
 	private final int mStatusBarThreshold;
 	private final int mNavBarThreshold;
 
-	public ImmersiveFrameLayout(@NonNull Context context) {
+	public ImmersiveLayout(@NonNull Context context) {
 		this(context, null, 0);
 	}
 
-	public ImmersiveFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+	public ImmersiveLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
-	public ImmersiveFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+	public ImmersiveLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		mStatusBarThreshold = getResources().getDimensionPixelOffset(R.dimen.statusbar_threshold);
 		mNavBarThreshold = getResources().getDimensionPixelOffset(R.dimen.navbar_threshold);
+		setFitsSystemWindows(false);
 	}
 
 	@Override

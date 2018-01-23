@@ -2,8 +2,10 @@ package org.nv95.openmanga.common.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -97,5 +99,32 @@ public final class LayoutUtils {
 			textView.setText(text);
 			textView.setVisibility(View.VISIBLE);
 		}
+	}
+
+	public static void setSelectionFromTop(RecyclerView recyclerView, int position) {
+		Log.d("Scroll", "#" + position);
+		final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+		if (layoutManager != null) {
+			if (layoutManager instanceof LinearLayoutManager) {
+				((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(position, 0);
+			} else {
+				layoutManager.scrollToPosition(position);
+			}
+		}
+	}
+
+	public static void scrollToCenter(RecyclerView recyclerView, int position) {
+		final int firstPos = findFirstVisibleItemPosition(recyclerView);
+		final int lastPos = findLastVisibleItemPosition(recyclerView);
+		final int count = getItemCount(recyclerView);
+		if (position < firstPos) {
+			setSelectionFromTop(recyclerView, calculateScrollPos(firstPos, position, count));
+		} else if (position > lastPos) {
+			setSelectionFromTop(recyclerView, calculateScrollPos(position, position - lastPos + firstPos, count));
+		}
+	}
+
+	private static int calculateScrollPos(int a, int b, int max) {
+		return Math.min((a + b) / 2, max);
 	}
 }

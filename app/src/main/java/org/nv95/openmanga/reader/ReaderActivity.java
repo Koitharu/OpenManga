@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -56,11 +55,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
 
-	private ImmersiveFrameLayout mRoot;
+	private ImmersiveLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
 	private ViewGroup mContentPanel;
 	private Toolbar mToolbar;
-	private RelativeLayout mBottomBar;
+	private View mBottomBar;
 	private TextView mTextViewPage;
 
 	private ReaderFragment mReader;
@@ -89,14 +88,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		findViewById(R.id.action_menu).setOnClickListener(this);
 		findViewById(R.id.action_thumbnails).setOnClickListener(this);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			mRoot.setFitsSystemWindows(true);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				Window window = getWindow();
-				int color = ContextCompat.getColor(this, R.color.transparent_dark);
-				window.setStatusBarColor(color);
-				window.setNavigationBarColor(color);
-			}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Window window = getWindow();
+			int color = ContextCompat.getColor(this, R.color.transparent_dark);
+			window.setStatusBarColor(color);
+			window.setNavigationBarColor(color);
 		}
 
 		mReader = new PagerReaderFragment();
@@ -189,6 +185,17 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				args.putParcelableArrayList("pages", mPages);
 				dialogFragment.setArguments(args);
 				dialogFragment.show(getSupportFragmentManager(), "thumb_view");
+				break;
+			case R.id.button_next:
+				final int i = CollectionsUtils.findChapterPositionById(mManga.chapters, mChapter.id);
+				if (i == -1) {
+					break;
+				}
+				AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
+				mChapter = mManga.chapters.get(i + 1);
+				setSubtitle(mChapter.name);
+
+				getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
 				break;
 		}
 	}
@@ -332,8 +339,8 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	private void addToHistory() {
 		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
-		if (!mHistoryRepository.add(history)) {
-			mHistoryRepository.update(history);
+		if (!mHistoryRepository.update(history)) {
+			mHistoryRepository.add(history);
 		}
 	}
 
@@ -359,7 +366,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	public void onMenuItemClick(int id, MangaPage page) {
 		switch (id) {
 			case R.id.action_page_bookmark_add:
-				new BookmarkTask(mRoot).start(new BookmarkTask.Request(
+				new BookmarkTask(this).start(new BookmarkTask.Request(
 						mManga,
 						mChapter,
 						mReader.getCurrentPage()

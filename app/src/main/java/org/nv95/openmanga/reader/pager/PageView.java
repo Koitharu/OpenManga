@@ -90,9 +90,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	public void setData(MangaPage page) {
 		mTextProgressView.setProgress(TextProgressView.INDETERMINATE);
 		mTextProgressView.setVisibility(VISIBLE);
-		if (mErrorView != null) {
-			mErrorView.setVisibility(View.GONE);
-		}
+		setError(null);
 		mPage = page;
 		mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
 		if (mFile.exists()) {
@@ -102,7 +100,13 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		}
 	}
 
-	private void setError(CharSequence errorMessage) {
+	private void setError(@Nullable CharSequence errorMessage) {
+		if (errorMessage == null) {
+			if (mErrorView != null) {
+				mErrorView.setVisibility(GONE);
+			}
+			return;
+		}
 		mTextProgressView.setVisibility(GONE);
 		if (mErrorView == null) {
 			assert mStubError != null;
@@ -118,9 +122,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.button_retry:
-				if (mErrorView != null) {
-					mErrorView.setVisibility(GONE);
-				}
+				setError(null);
 				mTextProgressView.setVisibility(VISIBLE);
 				mFile.delete();
 				PageDownloader.getInstance().downloadPage(getContext(), mPage, mFile, this);
@@ -132,6 +134,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 	 * Loading done, alles ok
 	 */
 	public void onLoadingComplete() {
+		setError(null);
 		mTextProgressView.setVisibility(GONE);
 	}
 
@@ -173,6 +176,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		if (mPage != null) {
 			PageDownloader.getInstance().cancel(mPage);
 		}
+		setError(null);
 		mSubsamplingScaleImageView.recycle();
 	}
 

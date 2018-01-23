@@ -193,7 +193,7 @@
     <string name="recommendations">Рекомендації</string>
     <string name="no_options_available">Нема доступних опцій</string>
     <string name="downloads_cancel_confirm">Всі загрузки будут відмінені. Ви впевнені?</string>
-    <string name="next_chapter" formatted="false">Наступна глава\n\n%s</string>
+    <string name="next_chapter_" formatted="false">Наступна глава\n\n%s</string>
     <string name="prev_chapter" formatted="false">Попередня глава\n\n%s</string>
     <string name="filter">Фільтр</string>
     <string name="action_save_add">Зберегти відсутні глави</string>

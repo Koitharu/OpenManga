@@ -18,8 +18,31 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+		android:layout_weight="1"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+
+	<android.support.v7.widget.ButtonBarLayout
+		android:layout_width="match_parent"
+		android:gravity="end"
+		android:layout_height="wrap_content">
+
+		<Button
+			android:id="@+id/button_close"
+			style="@style/Widget.AppCompat.Button.Borderless.Colored"
+			android:text="@string/close"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+		<Button
+			android:id="@+id/button_next"
+			style="@style/Widget.AppCompat.Button.Borderless.Colored"
+			android:text="@string/next_chapter"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+
+	</android.support.v7.widget.ButtonBarLayout>
 
 </LinearLayout>

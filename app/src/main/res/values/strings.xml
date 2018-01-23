@@ -219,7 +219,7 @@
     <string name="downloads_cancel_confirm">All downloads will be cancelled. Are you sure?</string>
     <string name="recommendations">Recommendations</string>
     <string name="no_options_available">No options available</string>
-    <string name="next_chapter" formatted="false">Next chapter\n\n%s</string>
+    <string name="next_chapter_" formatted="false">Next chapter\n\n%s</string>
     <string name="prev_chapter" formatted="false">Previous chapter\n\n%s</string>
     <string name="filter">Filter</string>
     <string name="storage_upgrading">Upgrading local database…</string>
@@ -438,4 +438,5 @@
     <string name="create_bookmark">Create bookmark</string>
     <string name="share_image">Share image</string>
     <string name="failed_to_create_bookmark">Failed to create bookmark</string>
+    <string name="next_chapter">Next chapter</string>
 </resources>
