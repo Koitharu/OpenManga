@@ -42,7 +42,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	}
 
 	@Override
-	public boolean add(MangaFavourite mangaFavourite) {
+	public boolean add(@NonNull MangaFavourite mangaFavourite) {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.insert(TABLE_NAME, null, toContentValues(mangaFavourite)) > 0;
@@ -52,7 +52,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	}
 
 	@Override
-	public boolean remove(MangaFavourite mangaFavourite) {
+	public boolean remove(@NonNull MangaFavourite mangaFavourite) {
 		return mStorageHelper.getWritableDatabase()
 				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaFavourite.id)}) > 0;
 	}
@@ -68,7 +68,7 @@ public final class FavouritesRepository implements Repository<MangaFavourite> {
 	}
 
 	@Override
-	public boolean update(MangaFavourite mangaFavourite) {
+	public boolean update(@NonNull MangaFavourite mangaFavourite) {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.update(TABLE_NAME, toContentValues(mangaFavourite),

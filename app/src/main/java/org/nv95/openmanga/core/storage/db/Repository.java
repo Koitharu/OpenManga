@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface Repository<T> {
 
-	boolean add(T t);
-	boolean remove(T t);
-	boolean update(T t);
+	boolean add(@NonNull T t);
+	boolean remove(@NonNull T t);
+	boolean update(@NonNull T t);
 	void clear();
 
 	@Nullable

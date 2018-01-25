@@ -30,7 +30,7 @@ public final class CategoriesRepository implements Repository<Category> {
 	}
 
 	@Override
-	public boolean add(Category category) {
+	public boolean add(@NonNull Category category) {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.insert(TABLE_NAME, null, toContentValues(category)) >= 0;
@@ -40,7 +40,7 @@ public final class CategoriesRepository implements Repository<Category> {
 	}
 
 	@Override
-	public boolean remove(Category category) {
+	public boolean remove(@NonNull Category category) {
 		return mStorageHelper.getWritableDatabase()
 				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(category.id)}) >= 0;
 	}
@@ -51,7 +51,7 @@ public final class CategoriesRepository implements Repository<Category> {
 	}
 
 	@Override
-	public boolean update(Category category) {
+	public boolean update(@NonNull Category category) {
 		try {
 			return mStorageHelper.getWritableDatabase().update(TABLE_NAME, toContentValues(category),
 							"id=?", new String[]{String.valueOf(category.id)}) >= 0;

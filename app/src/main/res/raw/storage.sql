@@ -71,15 +71,19 @@ CREATE TABLE saved (
 
 CREATE TABLE saved_chapters (
 	id INTEGER PRIMARY KEY,
+	manga_id INTEGER NOT NULL,
 	name TEXT NOT NULL,
 	number INTEGER NOT NULL,
-	url TEXT
+	url TEXT,
+	provider TEXT NOT NULL
 );
 
 CREATE TABLE saved_pages (
 	id INTEGER PRIMARY KEY,
+	chapter_id INTEGER NOT NULL,
 	url TEXT NOT NULL,
-	number INTEGER
+	number INTEGER,
+	provider TEXT NOT NULL
 );
 
 CREATE TABLE categories (

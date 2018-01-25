@@ -59,7 +59,7 @@ public final class BookmarksRepository implements Repository<MangaBookmark> {
 	}
 
 	@Override
-	public boolean add(MangaBookmark mangaBookmark) {
+	public boolean add(@NonNull MangaBookmark mangaBookmark) {
 		try {
 			return mStorageHelper.getWritableDatabase()
 					.insert(TABLE_NAME, null, toContentValues(mangaBookmark)) >= 0;
@@ -69,13 +69,13 @@ public final class BookmarksRepository implements Repository<MangaBookmark> {
 	}
 
 	@Override
-	public boolean remove(MangaBookmark mangaBookmark) {
+	public boolean remove(@NonNull MangaBookmark mangaBookmark) {
 		return mStorageHelper.getWritableDatabase()
 				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaBookmark.id)}) >= 0;
 	}
 
 	@Override
-	public boolean update(MangaBookmark mangaBookmark) {
+	public boolean update(@NonNull MangaBookmark mangaBookmark) {
 		try {
 			return mStorageHelper.getWritableDatabase().update(TABLE_NAME, toContentValues(mangaBookmark),
 					"id=?", new String[]{String.valueOf(mangaBookmark.id)}) >= 0;
