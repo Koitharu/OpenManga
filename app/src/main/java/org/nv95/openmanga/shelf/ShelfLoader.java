@@ -31,7 +31,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 		//tips
 		//TODO wizard
 		//history
-		final HistoryRepository historyRepository = new HistoryRepository(getContext());
+		final HistoryRepository historyRepository = HistoryRepository.get(getContext());
 		final ArrayList<MangaHistory> history = historyRepository.query(new HistorySpecification().orderByDate(true).limit(5));
 		if (history != null && !history.isEmpty()) {
 			if (!history.isEmpty()) {
@@ -39,7 +39,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 			}
 		}
 		//favourites
-		final CategoriesRepository categoriesRepository = new CategoriesRepository(getContext());
+		final CategoriesRepository categoriesRepository = CategoriesRepository.get(getContext());
 		final ArrayList<Category> categories = categoriesRepository.query(new CategoriesSpecification().orderByDate(true));
 		if (categories != null) {
 			if (categories.isEmpty()) {
@@ -47,7 +47,7 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 				categories.add(defaultCategory);
 				categoriesRepository.add(defaultCategory);
 			} else {
-				final FavouritesRepository favouritesRepository = new FavouritesRepository(getContext());
+				final FavouritesRepository favouritesRepository = FavouritesRepository.get(getContext());
 				for (Category category : categories) {
 					ArrayList<MangaFavourite> favourites = favouritesRepository.query(new FavouritesSpecification().orderByDate(true).category(category.id));
 					if (favourites != null && !favourites.isEmpty()) {

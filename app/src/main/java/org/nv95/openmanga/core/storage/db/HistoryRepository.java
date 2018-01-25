@@ -11,13 +11,13 @@ import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
 
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by koitharu on 24.12.17.
  */
 
-public class HistoryRepository implements Repository<MangaHistory> {
+public class HistoryRepository extends SQLiteRepository<MangaHistory> {
 
 	private static final String TABLE_NAME = "history";
 	private static final String[] PROJECTION = new String[] {
@@ -38,86 +38,82 @@ public class HistoryRepository implements Repository<MangaHistory> {
 				"removed"					//14
 	};
 
-	private final StorageHelper mStorageHelper;
-
-	public HistoryRepository(Context context) {
-		mStorageHelper = new StorageHelper(context);
-	}
-
-	@Override
-	public boolean add(@NonNull MangaHistory mangaHistory) {
-		try {
-			return mStorageHelper.getWritableDatabase()
-					.insert(TABLE_NAME, null, toContentValues(mangaHistory)) > 0;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean remove(@NonNull MangaHistory mangaHistory) {
-		return mStorageHelper.getWritableDatabase()
-				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaHistory.id)}) > 0;
-	}
-
-	@Override
-	public void clear() {
-		mStorageHelper.getWritableDatabase().delete(TABLE_NAME, null, null);
-	}
-
-	@Override
-	public boolean update(@NonNull MangaHistory mangaHistory) {
-		try {
-			return mStorageHelper.getWritableDatabase()
-					.update(TABLE_NAME, toContentValues(mangaHistory),
-							"id=?", new String[]{String.valueOf(mangaHistory.id)}) > 0;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
 	@Nullable
-	@Override
-	public ArrayList<MangaHistory> query(@NonNull SqlSpecification specification) {
-		Cursor cursor = null;
-		try {
-			cursor = mStorageHelper.getReadableDatabase().query(
-					TABLE_NAME,
-					PROJECTION,
-					specification.getSelection(),
-					specification.getSelectionArgs(),
-					null,
-					null,
-					specification.getOrderBy(),
-					specification.getLimit()
-			);
-			ArrayList<MangaHistory> list = new ArrayList<>();
-			if (cursor.moveToFirst()) {
-				do {
-					list.add(new MangaHistory(
-							cursor.getLong(0),
-							cursor.getString(1),
-							cursor.getString(2),
-							cursor.getString(3),
-							cursor.getString(4),
-							cursor.getString(5),
-							cursor.getString(6),
-							cursor.getInt(7),
-							cursor.getShort(8),
-							cursor.getLong(9),
-							cursor.getLong(10),
-							cursor.getLong(11),
-							cursor.getShort(12),
-							cursor.getInt(13)
-					));
-				} while (cursor.moveToNext());
-			}
-			return list;
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if (cursor != null) cursor.close();
+	private static WeakReference<HistoryRepository> sInstanceRef = null;
+
+	@NonNull
+	public static HistoryRepository get(Context context) {
+		HistoryRepository instance = null;
+		if (sInstanceRef != null) {
+			instance = sInstanceRef.get();
 		}
+		if (instance == null) {
+			instance = new HistoryRepository(context);
+			sInstanceRef = new WeakReference<>(instance);
+		}
+		return instance;
+	}
+
+	private HistoryRepository(Context context) {
+		super(context);
+	}
+
+	@Override
+	protected void toContentValues(@NonNull MangaHistory mangaHistory, @NonNull ContentValues cv) {
+		cv.put(PROJECTION[0], mangaHistory.id);
+		cv.put(PROJECTION[1], mangaHistory.name);
+		cv.put(PROJECTION[2], mangaHistory.summary);
+		cv.put(PROJECTION[3], mangaHistory.genres);
+		cv.put(PROJECTION[4], mangaHistory.url);
+		cv.put(PROJECTION[5], mangaHistory.thumbnail);
+		cv.put(PROJECTION[6], mangaHistory.provider);
+		cv.put(PROJECTION[7], mangaHistory.status);
+		cv.put(PROJECTION[8], mangaHistory.rating);
+		cv.put(PROJECTION[9], mangaHistory.chapterId);
+		cv.put(PROJECTION[10], mangaHistory.pageId);
+		cv.put(PROJECTION[11], mangaHistory.updatedAt);
+		cv.put(PROJECTION[12], mangaHistory.readerPreset);
+		cv.put(PROJECTION[13], mangaHistory.totalChapters);
+		//cv.put(PROJECTION[14], 0);
+	}
+
+	@NonNull
+	@Override
+	protected String getTableName() {
+		return TABLE_NAME;
+	}
+
+	@NonNull
+	@Override
+	protected Object getId(@NonNull MangaHistory history) {
+		return history.id;
+	}
+
+	@NonNull
+	@Override
+	protected String[] getProjection() {
+		return PROJECTION;
+	}
+
+	@NonNull
+	@Override
+	protected MangaHistory fromCursor(@NonNull Cursor cursor) {
+		return new MangaHistory(
+				cursor.getLong(0),
+				cursor.getString(1),
+				cursor.getString(2),
+				cursor.getString(3),
+				cursor.getString(4),
+				cursor.getString(5),
+				cursor.getString(6),
+				cursor.getInt(7),
+				cursor.getShort(8),
+				cursor.getLong(9),
+				cursor.getLong(10),
+				cursor.getLong(11),
+				cursor.getShort(12),
+				cursor.getInt(13)
+		);
 	}
 
 	@Nullable
@@ -135,22 +131,7 @@ public class HistoryRepository implements Repository<MangaHistory> {
 				null
 			);
 			if (cursor.moveToFirst()) {
-				return new MangaHistory(
-						cursor.getLong(0),
-						cursor.getString(1),
-						cursor.getString(2),
-						cursor.getString(3),
-						cursor.getString(4),
-						cursor.getString(5),
-						cursor.getString(6),
-						cursor.getInt(7),
-						cursor.getShort(8),
-						cursor.getLong(9),
-						cursor.getLong(10),
-						cursor.getLong(11),
-						cursor.getShort(12),
-						cursor.getInt(13)
-				);
+				return fromCursor(cursor);
 			}
 			return null;
 		} catch (Exception e) {
@@ -172,25 +153,5 @@ public class HistoryRepository implements Repository<MangaHistory> {
 		} catch (Exception e) {
 			return false;
 		}
-	}
-
-	private ContentValues toContentValues(MangaHistory mangaHistory) {
-		final ContentValues cv = new ContentValues();
-		cv.put(PROJECTION[0], mangaHistory.id);
-		cv.put(PROJECTION[1], mangaHistory.name);
-		cv.put(PROJECTION[2], mangaHistory.summary);
-		cv.put(PROJECTION[3], mangaHistory.genres);
-		cv.put(PROJECTION[4], mangaHistory.url);
-		cv.put(PROJECTION[5], mangaHistory.thumbnail);
-		cv.put(PROJECTION[6], mangaHistory.provider);
-		cv.put(PROJECTION[7], mangaHistory.status);
-		cv.put(PROJECTION[8], mangaHistory.rating);
-		cv.put(PROJECTION[9], mangaHistory.chapterId);
-		cv.put(PROJECTION[10], mangaHistory.pageId);
-		cv.put(PROJECTION[11], mangaHistory.updatedAt);
-		cv.put(PROJECTION[12], mangaHistory.readerPreset);
-		cv.put(PROJECTION[13], mangaHistory.totalChapters);
-		//cv.put(PROJECTION[14], 0);
-		return cv;
 	}
 }

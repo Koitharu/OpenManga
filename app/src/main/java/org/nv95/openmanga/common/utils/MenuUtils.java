@@ -65,7 +65,7 @@ public final class MenuUtils {
 
 	public static void buildCategoriesSubmenu(Context context, MenuItem menuItem) {
 		final SubMenu menu = menuItem.getSubMenu();
-		final CategoriesRepository categoriesRepository = new CategoriesRepository(context);
+		final CategoriesRepository categoriesRepository = CategoriesRepository.get(context);
 		final ArrayList<Category> categories = categoriesRepository.query(new CategoriesSpecification().orderByName(false));
 		if (categories == null) {
 			return;

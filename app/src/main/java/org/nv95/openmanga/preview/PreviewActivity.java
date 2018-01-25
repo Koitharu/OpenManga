@@ -82,8 +82,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		mMangaHeader = getIntent().getParcelableExtra("manga");
 		mMangaDetails = null;
 		assert mMangaHeader != null;
-		mHistory = new HistoryRepository(this);
-		mFavourites = new FavouritesRepository(this);
+		mHistory = HistoryRepository.get(this);
+		mFavourites = FavouritesRepository.get(this);
 
 		setTitle(mMangaHeader.name);
 		setSubtitle(mMangaHeader.summary);

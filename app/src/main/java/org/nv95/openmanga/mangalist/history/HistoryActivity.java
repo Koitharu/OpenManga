@@ -61,7 +61,7 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 
 		mSpecifications = new HistorySpecification()
 				.orderByDate(true);
-		mHistoryRepository = new HistoryRepository(this);
+		mHistoryRepository = HistoryRepository.get(this);
 
 		mDataset = new ArrayList<>();
 		mAdapter = new HistoryAdapter(mDataset);

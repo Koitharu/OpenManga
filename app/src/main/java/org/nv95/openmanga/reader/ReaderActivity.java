@@ -99,7 +99,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		getFragmentManager().beginTransaction()
 				.replace(R.id.reader, mReader)
 				.commit();
-		mHistoryRepository = new HistoryRepository(this);
+		mHistoryRepository = HistoryRepository.get(this);
 
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
@@ -390,7 +390,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				final Result result = new Result();
 				final MangaHeader manga = mangaHeaders[0];
 				final MangaHistory history = manga instanceof MangaHistory ? (MangaHistory) manga :
-						new HistoryRepository(getObject()).find(manga);
+						HistoryRepository.get(getObject()).find(manga);
 				MangaProvider provider = MangaProvider.get(getObject(), manga.provider);
 				result.mangaDetails = manga instanceof MangaDetails ? (MangaDetails) manga : provider.getDetails(history);
 				result.chapter = history == null ? result.mangaDetails.chapters.get(0) :

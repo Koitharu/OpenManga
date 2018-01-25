@@ -42,7 +42,7 @@ public final class CategoriesActivity extends AppBaseActivity implements View.On
 		setSupportActionBar(R.id.toolbar);
 		enableHomeAsUp();
 
-		mRepository = new CategoriesRepository(this);
+		mRepository = CategoriesRepository.get(this);
 		mDataset = mRepository.query(new CategoriesSpecification().orderByDate(false));
 		mAdapter = new CategoriesAdapter(mDataset, this);
 

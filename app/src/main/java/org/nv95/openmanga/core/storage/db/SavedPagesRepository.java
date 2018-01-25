@@ -11,7 +11,7 @@ import org.nv95.openmanga.core.models.SavedPage;
  * Created by koitharu on 23.01.18.
  */
 
-public final class SavedPagesRepository extends DbRepositoryAbs<SavedPage> {
+public final class SavedPagesRepository extends SQLiteRepository<SavedPage> {
 
 	private static final String TABLE_NAME = "saved_pages";
 	private static final String[] PROJECTION = new String[]{
@@ -26,16 +26,13 @@ public final class SavedPagesRepository extends DbRepositoryAbs<SavedPage> {
 		super(context);
 	}
 
-	@NonNull
 	@Override
-	protected ContentValues toContentValues(@NonNull SavedPage page) {
-		ContentValues cv = new ContentValues(5);
+	protected void toContentValues(@NonNull SavedPage page, @NonNull ContentValues cv) {
 		cv.put(PROJECTION[0], page.id);
 		cv.put(PROJECTION[1], page.url);
 		cv.put(PROJECTION[2], page.provider);
 		cv.put(PROJECTION[3], page.chapterId);
 		cv.put(PROJECTION[4], page.number);
-		return cv;
 	}
 
 	@NonNull

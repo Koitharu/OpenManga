@@ -73,7 +73,7 @@ public final class FavouritesFragment extends AppBaseFragment implements LoaderM
 		mAdapter = new FavouritesAdapter(mDataset);
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
-		mFavouritesRepository = new FavouritesRepository(activity);
+		mFavouritesRepository = FavouritesRepository.get(activity);
 		getLoaderManager().initLoader(0, mSpecifications.toBundle(), this).forceLoad();
 	}
 

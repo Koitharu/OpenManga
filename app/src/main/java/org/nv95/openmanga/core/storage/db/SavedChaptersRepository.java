@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference;
  * Created by koitharu on 23.01.18.
  */
 
-public final class SavedChaptersRepository extends DbRepositoryAbs<SavedChapter> {
+public final class SavedChaptersRepository extends SQLiteRepository<SavedChapter> {
 
 	private static final String TABLE_NAME = "saved_chapters";
 	private static final String[] PROJECTION = new String[]{
@@ -46,6 +46,16 @@ public final class SavedChaptersRepository extends DbRepositoryAbs<SavedChapter>
 		super(context);
 	}
 
+	@Override
+	protected void toContentValues(@NonNull SavedChapter chapter, @NonNull ContentValues cv) {
+		cv.put(PROJECTION[0], chapter.id);
+		cv.put(PROJECTION[1], chapter.name);
+		cv.put(PROJECTION[2], chapter.number);
+		cv.put(PROJECTION[3], chapter.url);
+		cv.put(PROJECTION[4], chapter.provider);
+		cv.put(PROJECTION[5], chapter.mangaId);
+	}
+
 	@NonNull
 	@Override
 	protected SavedChapter fromCursor(@NonNull Cursor cursor) {
@@ -57,19 +67,6 @@ public final class SavedChaptersRepository extends DbRepositoryAbs<SavedChapter>
 				cursor.getString(4),
 				cursor.getLong(5)
 		);
-	}
-
-	@NonNull
-	@Override
-	protected ContentValues toContentValues(@NonNull SavedChapter chapter) {
-		ContentValues cv = new ContentValues();
-		cv.put(PROJECTION[0], chapter.id);
-		cv.put(PROJECTION[1], chapter.name);
-		cv.put(PROJECTION[2], chapter.number);
-		cv.put(PROJECTION[3], chapter.url);
-		cv.put(PROJECTION[4], chapter.provider);
-		cv.put(PROJECTION[5], chapter.mangaId);
-		return cv;
 	}
 
 	@NonNull

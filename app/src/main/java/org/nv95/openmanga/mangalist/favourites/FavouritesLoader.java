@@ -24,7 +24,7 @@ public final class FavouritesLoader extends AsyncTaskLoader<ListWrapper<MangaFav
 	@Override
 	public ListWrapper<MangaFavourite> loadInBackground() {
 		try {
-			return new ListWrapper<>(new FavouritesRepository(getContext()).query(mSpec));
+			return new ListWrapper<>(FavouritesRepository.get(getContext()).query(mSpec));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ListWrapper<>(e);

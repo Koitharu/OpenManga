@@ -24,7 +24,7 @@ final class HistoryLoader extends AsyncTaskLoader<ListWrapper<MangaHistory>> {
 	@Override
 	public ListWrapper<MangaHistory> loadInBackground() {
 		try {
-			return new ListWrapper<>(new HistoryRepository(getContext()).query(mSpec));
+			return new ListWrapper<>(HistoryRepository.get(getContext()).query(mSpec));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ListWrapper<>(e);

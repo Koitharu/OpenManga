@@ -3,6 +3,7 @@ package org.nv95.openmanga.core.storage.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -12,19 +13,21 @@ import java.util.ArrayList;
  * Created by koitharu on 23.01.18.
  */
 
-abstract class DbRepositoryAbs<T> implements Repository<T> {
+abstract class SQLiteRepository<T> implements Repository<T> {
 
 	protected final StorageHelper mStorageHelper;
 
-	protected DbRepositoryAbs(Context context) {
+	protected SQLiteRepository(Context context) {
 		mStorageHelper = new StorageHelper(context);
 	}
 
 	@Override
 	public boolean add(@NonNull T t) {
 		try {
+			final ContentValues cv = new ContentValues(getProjection().length);
+			toContentValues(t, cv);
 			return mStorageHelper.getWritableDatabase()
-					.insert(getTableName(), null, toContentValues(t)) >= 0;
+					.insert(getTableName(), null, cv) >= 0;
 		} catch (Exception e) {
 			return false;
 		}
@@ -39,11 +42,51 @@ abstract class DbRepositoryAbs<T> implements Repository<T> {
 	@Override
 	public boolean update(@NonNull T t) {
 		try {
-			return mStorageHelper.getWritableDatabase().update(getTableName(), toContentValues(t),
+			final ContentValues cv = new ContentValues(getProjection().length);
+			toContentValues(t, cv);
+			return mStorageHelper.getWritableDatabase().update(getTableName(), cv,
 					"id=?", new String[]{String.valueOf(getId(t))}) >= 0;
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	public boolean addOrUpdate(@NonNull T t) {
+		final ContentValues cv = new ContentValues(getProjection().length);
+		toContentValues(t, cv);
+		final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+		try {
+			if(database.insert(getTableName(), null, cv) >= 0) {
+				return true;
+			}
+		} catch (Exception ignored) {
+		}
+		try {
+			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) >= 0) {
+				return true;
+			}
+		} catch (Exception ignored) {
+		}
+		return false;
+	}
+
+	public boolean updateOrAdd(@NonNull T t) {
+		final ContentValues cv = new ContentValues(getProjection().length);
+		toContentValues(t, cv);
+		final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+		try {
+			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) >= 0) {
+				return true;
+			}
+		} catch (Exception ignored) {
+		}
+		try {
+			if(database.insert(getTableName(), null, cv) >= 0) {
+				return true;
+			}
+		} catch (Exception ignored) {
+		}
+		return false;
 	}
 
 	@Override
@@ -80,8 +123,7 @@ abstract class DbRepositoryAbs<T> implements Repository<T> {
 		}
 	}
 
-	@NonNull
-	protected abstract ContentValues toContentValues(@NonNull T t);
+	protected abstract void toContentValues(@NonNull T t, @NonNull ContentValues cv);
 
 	@NonNull
 	protected abstract String getTableName();

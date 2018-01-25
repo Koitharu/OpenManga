@@ -35,7 +35,7 @@ public final class FavouritesActivity extends AppBaseActivity {
 		mPager = findViewById(R.id.pager);
 		mTabs = findViewById(R.id.tabs);
 
-		mPagerAdapter = new CategoriesPagerAdapter(getFragmentManager(), new CategoriesRepository(this));
+		mPagerAdapter = new CategoriesPagerAdapter(getFragmentManager(), CategoriesRepository.get(this));
 		mPager.setAdapter(mPagerAdapter);
 		mTabs.setupWithViewPager(mPager);
 

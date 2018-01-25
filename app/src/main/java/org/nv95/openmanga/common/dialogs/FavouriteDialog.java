@@ -32,9 +32,9 @@ public final class FavouriteDialog implements DialogInterface.OnClickListener {
 	public FavouriteDialog(@NonNull Context context, @NonNull MangaDetails manga) {
 		mListener = null;
 		mBuilder = new AlertDialog.Builder(context);
-		mFavouritesRepository = new FavouritesRepository(context);
+		mFavouritesRepository = FavouritesRepository.get(context);
 		mManga = manga;
-		final CategoriesRepository categoriesRepository = new CategoriesRepository(context);
+		final CategoriesRepository categoriesRepository = CategoriesRepository.get(context);
 		mCategories = categoriesRepository.query(new CategoriesSpecification().orderByDate(false));
 		final MangaFavourite favourite = mFavouritesRepository.get(manga);
 		final String[] items = new String[mCategories.size()];
