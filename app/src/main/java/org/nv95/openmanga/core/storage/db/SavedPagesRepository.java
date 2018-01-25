@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.SavedPage;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by koitharu on 23.01.18.
@@ -21,6 +24,22 @@ public final class SavedPagesRepository extends SQLiteRepository<SavedPage> {
 			"chapter_id",		//3
 			"number"			//4
 	};
+
+	@Nullable
+	private static WeakReference<SavedPagesRepository> sInstanceRef = null;
+
+	@NonNull
+	public static SavedPagesRepository get(Context context) {
+		SavedPagesRepository instance = null;
+		if (sInstanceRef != null) {
+			instance = sInstanceRef.get();
+		}
+		if (instance == null) {
+			instance = new SavedPagesRepository(context);
+			sInstanceRef = new WeakReference<>(instance);
+		}
+		return instance;
+	}
 
 	private SavedPagesRepository(Context context) {
 		super(context);

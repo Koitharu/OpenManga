@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<plurals name="chapters_saved">
+		<item quantity="zero">No chapters saved</item>
+		<item quantity="one">One chapter saved</item>
+		<item quantity="two">Two chapters saved</item>
+		<item quantity="few">%1$d chapters saved</item>
+		<item quantity="many">%1$d chapters saved</item>
+		<item quantity="other">%1$d chapters saved</item>
+	</plurals>
+</resources>

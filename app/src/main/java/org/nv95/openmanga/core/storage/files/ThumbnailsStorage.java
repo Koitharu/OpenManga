@@ -79,7 +79,7 @@ public final class ThumbnailsStorage implements FilesStorage<MangaBookmark,Bitma
 	}
 
 	@NonNull
-	private String encodeName(MangaBookmark bookmark) {
+	private static String encodeName(MangaBookmark bookmark) {
 		return String.valueOf(bookmark.id);
 	}
 }

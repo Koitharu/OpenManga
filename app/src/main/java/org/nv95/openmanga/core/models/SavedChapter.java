@@ -1,6 +1,7 @@
 package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 
 /**
  * Created by koitharu on 25.01.18.
@@ -41,5 +42,17 @@ public class SavedChapter extends MangaChapter {
 	protected SavedChapter(Parcel in) {
 		super(in);
 		mangaId = in.readLong();
+	}
+
+	@NonNull
+	public static SavedChapter from(MangaChapter chapter, long mangaId) {
+		return new SavedChapter(
+				chapter.id,
+				chapter.name,
+				chapter.number,
+				chapter.url,
+				chapter.provider,
+				mangaId
+		);
 	}
 }

@@ -32,6 +32,8 @@ import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.preview.chapters.ChaptersPage;
 import org.nv95.openmanga.preview.details.DetailsPage;
 import org.nv95.openmanga.reader.ReaderActivity;
+import org.nv95.openmanga.storage.SaveRequest;
+import org.nv95.openmanga.storage.SaveService;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -197,7 +199,9 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	public void onMenuItemClick(@IdRes int id, MangaChapter mangaChapter) {
 		switch (id) {
-
+			case R.id.action_chapter_save_this:
+				SaveService.start(this, new SaveRequest(mMangaHeader, mangaChapter));
+				break;
 		}
 	}
 }

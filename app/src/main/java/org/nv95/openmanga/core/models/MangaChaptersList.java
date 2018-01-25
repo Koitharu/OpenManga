@@ -10,6 +10,17 @@ import java.util.ArrayList;
 
 public class MangaChaptersList extends ArrayList<MangaChapter> {
 
+	public MangaChaptersList() {
+	}
+
+	public MangaChaptersList(int initialCapacity) {
+		super(initialCapacity);
+	}
+
+	public MangaChaptersList(ArrayList<MangaChapter> source) {
+		super(source);
+	}
+
 	@Nullable
 	public MangaChapter findItemById(long id) {
 		for (MangaChapter o : this) {

@@ -2,6 +2,7 @@ package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -86,6 +87,7 @@ public class MangaHeader implements Parcelable {
 		parcel.writeInt((int) rating);
 	}
 
+	@NonNull
 	public static MangaHeader from(MangaHeader other) {
 		return new MangaHeader(
 				other.id,

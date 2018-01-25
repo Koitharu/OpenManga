@@ -2,6 +2,9 @@ package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import java.io.File;
 
 /**
  * Created by koitharu on 23.01.18.
@@ -52,5 +55,22 @@ public final class SavedManga extends MangaHeader implements Parcelable {
 		super(in);
 		createdAt = in.readLong();
 		localPath = in.readString();
+	}
+
+	@NonNull
+	public static SavedManga from(@NonNull MangaHeader other, @NonNull File localPath) {
+		return new SavedManga(
+				other.id,
+				other.name,
+				other.summary,
+				other.genres,
+				other.url,
+				other.thumbnail,
+				other.provider,
+				other.status,
+				other.rating,
+				System.currentTimeMillis(),
+				localPath.getPath()
+		);
 	}
 }

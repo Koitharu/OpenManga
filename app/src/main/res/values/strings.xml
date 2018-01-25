@@ -439,4 +439,6 @@
     <string name="share_image">Share image</string>
     <string name="failed_to_create_bookmark">Failed to create bookmark</string>
     <string name="next_chapter">Next chapter</string>
+    <string name="cannot_create_file">Cannot create file</string>
+    <string name="network_error">Network error</string>
 </resources>
