@@ -1,6 +1,7 @@
 package org.nv95.openmanga.common;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+
+import org.nv95.openmanga.R;
 
 /**
  * Created by koitharu on 25.01.18.
@@ -111,5 +114,17 @@ public final class NotificationHelper {
 
 	public void setSubText(@StringRes int subText) {
 		mBuilder.setSubText(mResources.getString(subText));
+	}
+
+	public void clearActions() {
+		mBuilder.mActions.clear();
+	}
+
+	public void addCancelAction(PendingIntent pendingIntent) {
+		mBuilder.addAction(R.drawable.sym_cancel, mResources.getString(android.R.string.cancel), pendingIntent);
+	}
+
+	public void dismiss() {
+		mManager.cancel(mId);
 	}
 }

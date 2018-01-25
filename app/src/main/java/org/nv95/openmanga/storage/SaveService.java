@@ -1,6 +1,7 @@
 package org.nv95.openmanga.storage;
 
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 
 public final class SaveService extends AsyncService<SaveRequest> implements Downloader.Callback {
 
+	private static final int RESULT_OK = 0;
+	private static final int RESULT_CANCELLED = 1;
 	private static final int RESULT_ERROR_UNKNOWN = -1;
 	private static final int RESULT_ERROR_WRITE_DIR = -2;
 	private static final int RESULT_ERROR_NETWORK = -3;
@@ -58,7 +61,8 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 				return true;
 			case ACTION_MANGA_SAVE_CANCEL:
 				mNotificationHelper.setIndeterminate();
-				//TODO
+				mNotificationHelper.setText(R.string.cancelling);
+				mNotificationHelper.clearActions();
 				mNotificationHelper.update();
 				cancelBackground();
 				return true;
@@ -70,7 +74,9 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	@Override
 	public boolean onStopService() {
 		ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
-		mNotificationHelper.update();
+		if (!isCancelled()) {
+			mNotificationHelper.update();
+		}
 		return true;
 	}
 
@@ -83,6 +89,8 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 		mNotificationHelper.setIndeterminate();
 		mNotificationHelper.setImage(ImageUtils.getCachedImage(request.manga.thumbnail));
 		mNotificationHelper.setIcon(android.R.drawable.stat_sys_download);
+		mNotificationHelper.addCancelAction(PendingIntent.getService(this, mNotificationHelper.getId() + 1,
+				new Intent(this, SaveService.class).setAction(SaveService.ACTION_MANGA_SAVE_CANCEL), 0));
 		mNotificationHelper.setOngoing();
 		mNotificationHelper.update();
 	}
@@ -119,6 +127,10 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 					final Downloader downloader = new SimplePageDownloader(page, dest, provider);
 					downloader.setCallback(this);
 					downloader.run();
+					if (isCancelled()) {
+						//TODO remove chapter
+						return RESULT_CANCELLED;
+					}
 					if (downloader.isSuccess()) {
 						pagesRepository.addOrUpdate(page);
 					} else {
@@ -128,7 +140,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 					}
 				}
 			}
-			return 0;
+			return RESULT_OK;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RESULT_ERROR_UNKNOWN;
@@ -137,7 +149,12 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 
 	@Override
 	public void onPostExecute(SaveRequest request, int result) {
-		if (result < 0) {
+		if (result == RESULT_OK) {
+			mNotificationHelper.setIcon(android.R.drawable.stat_sys_download_done);
+			mNotificationHelper.setText(getResources().getQuantityString(R.plurals.chapters_saved, request.chapters.size()));
+		} if (result == RESULT_CANCELLED) {
+			mNotificationHelper.dismiss();
+		} else {
 			mNotificationHelper.setIcon(R.drawable.ic_stat_error);
 			switch (result) {
 				case RESULT_ERROR_WRITE_DIR:
@@ -149,10 +166,8 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 				default:
 					mNotificationHelper.setText(R.string.error_occurred);
 			}
-		} else {
-			mNotificationHelper.setIcon(android.R.drawable.stat_sys_download_done);
-			mNotificationHelper.setText(getResources().getQuantityString(R.plurals.chapters_saved, request.chapters.size()));
 		}
+		mNotificationHelper.clearActions();
 		mNotificationHelper.setAutoCancel();
 		mNotificationHelper.removeProgress();
 		mNotificationHelper.update();
@@ -168,6 +183,11 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 		mNotificationHelper.update();
 	}
 
+	@Override
+	public boolean isPaused() {
+		return false;
+	}
+
 	public static void start(Context context, SaveRequest request) {
 		context.startService(new Intent(context, SaveService.class)
 				.setAction(SaveService.ACTION_MANGA_SAVE_START)
@@ -177,10 +197,5 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	private static void cancel(Context context) {
 		context.startService(new Intent(context, SaveService.class)
 				.setAction(SaveService.ACTION_MANGA_SAVE_CANCEL));
-	}
-
-	@Override
-	public boolean isPaused() {
-		return false;
 	}
 }
