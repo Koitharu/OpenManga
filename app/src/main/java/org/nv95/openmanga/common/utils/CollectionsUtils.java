@@ -149,4 +149,13 @@ public final class CollectionsUtils {
 		}
 		return -1;
 	}
+
+	public static boolean containsChapter(List<? extends MangaChapter> chapters, @NonNull MangaChapter obj) {
+		for (MangaChapter o : chapters) {
+			if (o.id == obj.id) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

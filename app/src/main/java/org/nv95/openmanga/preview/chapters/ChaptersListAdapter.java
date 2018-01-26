@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaChapter;
 
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public final class ChaptersListAdapter extends RecyclerView.Adapter<ChaptersList
 		mCurrentId = 0;
 		setHasStableIds(true);
 		mIcons = new Drawable[] {
-				ContextCompat.getDrawable(context, R.drawable.ic_play_green)
+				ContextCompat.getDrawable(context, R.drawable.ic_play_green),
+				ThemeUtils.getColoredDrawable(context, R.drawable.ic_save_white, android.R.attr.textColorTertiary)
 		};
 	}
 
@@ -67,7 +69,7 @@ public final class ChaptersListAdapter extends RecyclerView.Adapter<ChaptersList
 				tv,
 				ch.id == mCurrentId ? mIcons[0] : null,
 				null,
-				null,
+				ch.isSaved() ? mIcons[1] : null,
 				null
 		);
 	}

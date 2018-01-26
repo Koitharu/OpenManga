@@ -94,6 +94,22 @@ abstract class SQLiteRepository<T> implements Repository<T> {
 		mStorageHelper.getWritableDatabase().delete(getTableName(), null, null);
 	}
 
+	@Override
+	public boolean contains(@NonNull T t) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().rawQuery("SELECT * FROM " + getTableName() + " WHERE id = ?", new String[]{String.valueOf(getId(t))});
+			return cursor.getCount() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+
 	@Nullable
 	@Override
 	public ArrayList<T> query(@NonNull SqlSpecification specification) {

@@ -15,6 +15,7 @@ public interface Repository<T> {
 	boolean remove(@NonNull T t);
 	boolean update(@NonNull T t);
 	void clear();
+	boolean contains(@NonNull T t);
 
 	@Nullable
 	List<T> query(@NonNull SqlSpecification specification);

@@ -10,11 +10,16 @@ import android.os.Parcelable;
 
 public class MangaChapter implements Parcelable {
 
+	public static final int FLAG_CHAPTER_SAVED = 1;
+	public static final int FLAG_CHAPTER_NEW = 2;
+
 	public final long id;
 	public final String name;
 	public final int number;
 	public final String url;
 	public final String provider;
+
+	private int mFlags = 0;
 
 	public MangaChapter(String name, int number, String url, String provider) {
 		this.name = name;
@@ -38,6 +43,8 @@ public class MangaChapter implements Parcelable {
 		number = in.readInt();
 		url = in.readString();
 		provider = in.readString();
+
+		mFlags = in.readInt();
 	}
 
 	public static final Creator<MangaChapter> CREATOR = new Creator<MangaChapter>() {
@@ -64,6 +71,8 @@ public class MangaChapter implements Parcelable {
 		dest.writeInt(number);
 		dest.writeString(url);
 		dest.writeString(provider);
+
+		dest.writeInt(mFlags);
 	}
 
 	public Bundle toBundle() {
@@ -74,5 +83,17 @@ public class MangaChapter implements Parcelable {
 
 	public static MangaChapter from(Bundle bundle) {
 		return bundle.getParcelable("_chapter");
+	}
+
+	public boolean isSaved() {
+		return (mFlags & FLAG_CHAPTER_SAVED) != 0;
+	}
+
+	public void addFlag(int flag) {
+		mFlags |= flag;
+	}
+
+	public void removeFlag(int flag) {
+		mFlags &= ~flag;
 	}
 }
