@@ -105,7 +105,7 @@ public final class FilterDialogFragment extends BottomSheetDialogFragment implem
 				Activity activity = getActivity();
 				if (activity != null && activity instanceof FilterCallback) {
 					ArrayList<MangaGenre> genres = CollectionsUtils.getIfTrue(mGenres, mAdapter.getSelectedGenres());
-					((FilterCallback) activity).setFilter(mSorts[mAdapter.getSelectedSort()], genres.toArray(new MangaGenre[genres.size()]));
+					((FilterCallback) activity).setFilter(mAdapter.getSelectedSort(), genres.toArray(new MangaGenre[genres.size()]));
 				}
 			default:
 				dismiss();

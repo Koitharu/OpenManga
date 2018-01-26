@@ -39,11 +39,9 @@ public final class FilterSortAdapter extends RecyclerView.Adapter {
 			mDataset.add(new TypedString(context, R.string.action_sort, ItemViewType.TYPE_ITEM_HEADER, -1));
 			for (int i = 0; i < sorts.length; i++) {
 				mDataset.add(new TypedString(context, sorts[i], ItemViewType.TYPE_ITEM_SORT, i));
-				if (sorts[i] == selectedSort) {
-					mSelectedSort = i;
-				}
 			}
 		}
+		mSelectedSort = selectedSort;
 		if (genres.length != 0) {
 			mDataset.add(new TypedString(context, R.string.genres, ItemViewType.TYPE_ITEM_HEADER, -1));
 			for (int i = 0; i < genres.length; i++) {
