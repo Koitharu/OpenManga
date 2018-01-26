@@ -51,6 +51,11 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private MangaProvider mProvider;
 	private MangaQueryArguments mArguments;
 
+	/**
+	 * loader's id
+	 */
+	private static int LOADER_ID = 234;
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -163,13 +168,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				args.putBundle("query", mArguments.toBundle());
 				dialogFragment.setArguments(args);
 				dialogFragment.show(getSupportFragmentManager(), "");
-				return;
+				break;
 			case R.id.button_retry:
 				mErrorView.setVisibility(View.GONE);
 				mProgressBar.setVisibility(View.VISIBLE);
 			case android.support.design.R.id.snackbar_action:
-				getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
-				return;
+				load();
 		}
 	}
 
@@ -179,11 +183,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		if (theSame) return;
 		mArguments.sort = sort;
 		mArguments.genres = genres;
-		mArguments.page = 0;
-		mProgressBar.setVisibility(View.VISIBLE);
-		mDataset.clear();
-		mAdapter.notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+		loadFirstPage();
 	}
 
 	@Override
@@ -193,12 +193,19 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 			return true;
 		}
 		mArguments.query = query;
+		loadFirstPage();
+		return true;
+	}
+
+	/**
+	 * Сбрасываем на первую страницу
+	 */
+	private void loadFirstPage() {
 		mArguments.page = 0;
 		mProgressBar.setVisibility(View.VISIBLE);
 		mDataset.clear();
 		mAdapter.notifyDataSetChanged();
-		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
-		return true;
+		load();
 	}
 
 	@Override
@@ -209,7 +216,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	@Override
 	public boolean onLoadMore() {
 		mArguments.page++;
-		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+		load();
 		return true;
 	}
 
@@ -217,7 +224,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	public void onAuthorized() {
 		Snackbar.make(mRecyclerView, R.string.authorization_success, Snackbar.LENGTH_SHORT).show();
 		mArguments.page = 0;
-		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+		load();
 	}
 
 	private void setError(Throwable e) {
@@ -234,5 +241,22 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 					.setAction(R.string.retry, this)
 					.show();
 		}
+	}
+
+	/**
+	 * Лоадер не перезагрузится если
+	 * Bundle тот же самый с темиже значениями (вроде)
+	 */
+	private void load() {
+		if (getLoaderManager().getLoader(LOADER_ID) != null)
+			getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this).forceLoad();
+		else
+			getLoaderManager().restartLoader(LOADER_ID, mArguments.toBundle(), this).forceLoad();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		getLoaderManager().destroyLoader(LOADER_ID);
 	}
 }
