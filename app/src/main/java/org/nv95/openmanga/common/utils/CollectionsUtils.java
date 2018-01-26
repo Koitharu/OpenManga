@@ -6,7 +6,6 @@ import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaChapter;
-import org.nv95.openmanga.core.models.MangaChaptersList;
 import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
@@ -149,50 +148,5 @@ public final class CollectionsUtils {
 			}
 		}
 		return -1;
-	}
-
-	@NonNull
-	public static MangaChaptersList chaptersSublist(MangaChaptersList chapters, MangaChapter o, int count) {
-		final MangaChaptersList list = new MangaChaptersList(count + 1);
-		int pos = findChapterPositionById(chapters, o.id);
-		if (pos != -1) {
-			int last = Math.min(chapters.size() - 1, pos + count);
-			for (int i = pos; i <= last; i++) {
-				list.add(chapters.get(i));
-			}
-		} else {
-			list.add(o);
-		}
-		return list;
-	}
-
-	public static MangaChaptersList chaptersSublistFrom(MangaChaptersList chapters, MangaChapter o) {
-		int pos = findChapterPositionById(chapters, o.id);
-		if (pos == -1) {
-			final MangaChaptersList list = new MangaChaptersList();
-			list.add(o);
-			return list;
-		} else {
-			final MangaChaptersList list = new MangaChaptersList(chapters.size() - pos);
-			for (int i = pos; i < chapters.size(); i++) {
-				list.add(chapters.get(i));
-			}
-			return list;
-		}
-	}
-
-	public static MangaChaptersList chaptersSublistTo(MangaChaptersList chapters, MangaChapter o) {
-		int pos = findChapterPositionById(chapters, o.id);
-		if (pos == -1) {
-			final MangaChaptersList list = new MangaChaptersList();
-			list.add(o);
-			return list;
-		} else {
-			final MangaChaptersList list = new MangaChaptersList(pos + 1);
-			for (int i = 0; i <= pos; i++) {
-				list.add(chapters.get(i));
-			}
-			return list;
-		}
 	}
 }

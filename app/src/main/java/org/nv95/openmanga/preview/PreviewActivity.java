@@ -17,7 +17,6 @@ import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
-import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaChapter;
@@ -219,22 +218,22 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 				SaveService.start(this, new SaveRequest(mMangaHeader, mangaChapter));
 				break;
 			case R.id.action_chapter_save_5:
-				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 5)));
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 5)));
 				break;
 			case R.id.action_chapter_save_10:
-				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 10)));
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 10)));
 				break;
 			case R.id.action_chapter_save_30:
-				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 30)));
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 30)));
 				break;
 			case R.id.action_chapter_save_all:
 				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters));
 				break;
 			case R.id.action_chapter_save_next:
-				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublistFrom(mMangaDetails.chapters, mangaChapter)));
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter)));
 				break;
 			case R.id.action_chapter_save_prev:
-				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublistTo(mMangaDetails.chapters, mangaChapter)));
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListTo(mangaChapter)));
 				break;
 			default:
 				stub();
