@@ -41,6 +41,15 @@
 		app:layout_behavior="@string/center_gravity_behavior"
 		style="?android:progressBarStyleLarge"/>
 
+	<ViewStub
+		android:id="@+id/stub_error"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_anchor="@id/recyclerView"
+		app:layout_behavior="@string/center_gravity_behavior"
+		app:layout_anchorGravity="center"
+		android:layout="@layout/view_error" />
+
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/fabFilter"
 		android:layout_width="wrap_content"

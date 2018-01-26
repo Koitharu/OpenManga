@@ -13,18 +13,19 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.providers.MangaProvider;
-import org.nv95.openmanga.AppBaseActivity;
-import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.settings.AuthorizationDialog;
-import org.nv95.openmanga.common.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +43,8 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private FloatingActionButton mFabFilter;
 	private SearchView mSearchView;
 	private MenuItem mMenuItemSearch;
+	private TextView mTextViewError;
+	private View mErrorView;
 
 	private MangaListAdapter mAdapter;
 	private ArrayList<MangaHeader> mDataset;
@@ -58,6 +61,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mProgressBar = findViewById(R.id.progressBar);
 		mRecyclerView = findViewById(R.id.recyclerView);
 		mFabFilter = findViewById(R.id.fabFilter);
+		mErrorView = findViewById(R.id.stub_error);
 
 		mFabFilter.setOnClickListener(this);
 		mRecyclerView.setHasFixedSize(true);
@@ -138,7 +142,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 			}
 			mRecyclerView.onLoadingFinished(!list.isEmpty());
 		} else {
-			Snackbar.make(mRecyclerView, ErrorUtils.getErrorMessage(result.getError()), Toast.LENGTH_SHORT).show();
+			setError(result.getError());
 			mRecyclerView.onLoadingFinished(false);
 		}
 	}
@@ -159,6 +163,11 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				args.putBundle("query", mArguments.toBundle());
 				dialogFragment.setArguments(args);
 				dialogFragment.show(getSupportFragmentManager(), "");
+				return;
+			case R.id.button_retry:
+				mErrorView.setVisibility(View.GONE);
+			case android.support.design.R.id.snackbar_action:
+				getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
 				return;
 		}
 	}
@@ -208,5 +217,21 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		Snackbar.make(mRecyclerView, R.string.authorization_success, Snackbar.LENGTH_SHORT).show();
 		mArguments.page = 0;
 		getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
+	}
+
+	private void setError(Throwable e) {
+		if (mDataset.isEmpty()) {
+			if (mErrorView instanceof ViewStub) {
+				mErrorView = ((ViewStub) mErrorView).inflate();
+				mTextViewError = mErrorView.findViewById(R.id.textView_error);
+				mErrorView.findViewById(R.id.button_retry).setOnClickListener(this);
+			}
+			mTextViewError.setText(ErrorUtils.getErrorMessage(this, e));
+			mErrorView.setVisibility(View.VISIBLE);
+		} else {
+			Snackbar.make(mRecyclerView, ErrorUtils.getErrorMessage(e), Snackbar.LENGTH_INDEFINITE)
+					.setAction(R.string.retry, this)
+					.show();
+		}
 	}
 }
