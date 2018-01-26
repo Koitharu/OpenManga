@@ -166,6 +166,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				return;
 			case R.id.button_retry:
 				mErrorView.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.VISIBLE);
 			case android.support.design.R.id.snackbar_action:
 				getLoaderManager().restartLoader(0, mArguments.toBundle(), this).forceLoad();
 				return;

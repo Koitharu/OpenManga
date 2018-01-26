@@ -48,6 +48,8 @@ public class NetworkUtils {
 	@NonNull
 	private static OkHttpClient.Builder getClientBuilder() {
 		return new OkHttpClient.Builder()
+				/*.connectTimeout(1, TimeUnit.SECONDS)
+				.readTimeout(1, TimeUnit.SECONDS)*/
 				.addInterceptor(CookieStore.getInstance())
 				.addInterceptor(new CloudflareInterceptor());
 	}
