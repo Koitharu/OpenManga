@@ -339,9 +339,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	private void addToHistory() {
 		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
-		if (!mHistoryRepository.update(history)) {
-			mHistoryRepository.add(history);
-		}
+		mHistoryRepository.updateOrAdd(history);
 	}
 
 	@Override

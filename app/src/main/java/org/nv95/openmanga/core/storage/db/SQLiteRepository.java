@@ -45,7 +45,7 @@ abstract class SQLiteRepository<T> implements Repository<T> {
 			final ContentValues cv = new ContentValues(getProjection().length);
 			toContentValues(t, cv);
 			return mStorageHelper.getWritableDatabase().update(getTableName(), cv,
-					"id=?", new String[]{String.valueOf(getId(t))}) >= 0;
+					"id=?", new String[]{String.valueOf(getId(t))}) > 0;
 		} catch (Exception e) {
 			return false;
 		}
@@ -62,7 +62,7 @@ abstract class SQLiteRepository<T> implements Repository<T> {
 		} catch (Exception ignored) {
 		}
 		try {
-			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) >= 0) {
+			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) > 0) {
 				return true;
 			}
 		} catch (Exception ignored) {
@@ -75,10 +75,10 @@ abstract class SQLiteRepository<T> implements Repository<T> {
 		toContentValues(t, cv);
 		final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
 		try {
-			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) >= 0) {
+			if(database.update(getTableName(), cv,"id=?", new String[]{String.valueOf(getId(t))}) > 0) {
 				return true;
 			}
-		} catch (Exception ignored) {
+		} catch (Exception e) {
 		}
 		try {
 			if(database.insert(getTableName(), null, cv) >= 0) {
