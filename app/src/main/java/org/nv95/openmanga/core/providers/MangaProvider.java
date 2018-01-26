@@ -23,6 +23,7 @@ import java.util.HashMap;
 public abstract class MangaProvider {
 
 	private static final HashMap<String, String> sDomainsMap = new HashMap<>();
+	protected static final ArrayList<MangaHeader> EMPTY_HEADERS = new ArrayList<>(0);
 
 	protected final Context mContext;
 
@@ -98,10 +99,6 @@ public abstract class MangaProvider {
 		return new int[0];
 	}
 
-	protected String getSortUrlPart(int sort) {
-		return "";
-	}
-
 	public final boolean isAuthorized() {
 		return !android.text.TextUtils.isEmpty(getAuthCookie());
 	}
@@ -118,7 +115,7 @@ public abstract class MangaProvider {
 
 	@CName
 	@Nullable
-	public final String getCName() {
+	public String getCName() {
 		try {
 			return ((String)this.getClass().getField("CNAME").get(this));
 		} catch (Exception e) {
@@ -139,6 +136,9 @@ public abstract class MangaProvider {
 				break;
 			case ExhentaiProvider.CNAME:
 				provider = new ExhentaiProvider(context);
+				break;
+			case ReadmangaruProvider.CNAME:
+				provider = new ReadmangaruProvider(context);
 				break;
 			default:
 				throw new AssertionError("Invalid CNAME");
@@ -164,6 +164,7 @@ public abstract class MangaProvider {
 			//init
 			sDomainsMap.put(DesumeProvider.CNAME, "desu.me");
 			sDomainsMap.put(ExhentaiProvider.CNAME, "exhentai.org");
+			sDomainsMap.put(ReadmangaruProvider.CNAME, "readmanga.me");
 		}
 		return sDomainsMap.get(cName);
 	}
@@ -175,5 +176,9 @@ public abstract class MangaProvider {
 	@Nullable
 	public static String getCookie(@NonNull Context context, @NonNull @CName String cName) {
 		return getSharedPreferences(context, cName).getString("_cookie", null);
+	}
+
+	protected static String url(@NonNull String domain, String subj) {
+		return subj.charAt(0) == '/' ? domain + subj : subj;
 	}
 }

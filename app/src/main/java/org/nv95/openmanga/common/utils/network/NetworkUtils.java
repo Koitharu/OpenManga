@@ -122,6 +122,11 @@ public class NetworkUtils {
 	}
 
 	@NonNull
+	public static Document postDocument(@NonNull String url, String... data) throws IOException {
+		return Jsoup.parse(postString(url, data), url);
+	}
+
+	@NonNull
 	public static Document getDocument(@NonNull String url) throws IOException {
 		return getDocument(url, HEADERS_DEFAULT);
 	}
@@ -230,5 +235,11 @@ public class NetworkUtils {
 		return type == ConnectivityManager.TYPE_WIFI
 				|| type == ConnectivityManager.TYPE_WIMAX
 				|| type == ConnectivityManager.TYPE_ETHERNET;
+	}
+
+	@NonNull
+	public static String getDomainWithScheme(@NonNull String url) {
+		int p = url.indexOf('/', 10);
+		return url.substring(0, p + 1);
 	}
 }
