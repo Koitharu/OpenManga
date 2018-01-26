@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ServiceCompat;
 
 import org.nv95.openmanga.AsyncService;
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.NotificationHelper;
 import org.nv95.openmanga.common.utils.ImageUtils;
@@ -83,7 +84,6 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	@Override
 	public void onPreExecute(SaveRequest request) {
 		mNotificationHelper.nextId();
-		startForeground(mNotificationHelper.getId(), mNotificationHelper.get());
 		mNotificationHelper.setTitle(request.manga.name);
 		mNotificationHelper.setText(R.string.saving_manga);
 		mNotificationHelper.setIndeterminate();
@@ -92,6 +92,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 		mNotificationHelper.addCancelAction(PendingIntent.getService(this, mNotificationHelper.getId() + 1,
 				new Intent(this, SaveService.class).setAction(SaveService.ACTION_MANGA_SAVE_CANCEL), 0));
 		mNotificationHelper.setOngoing();
+		startForeground(mNotificationHelper.getId(), mNotificationHelper.get());
 		mNotificationHelper.update();
 	}
 
@@ -149,23 +150,30 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 
 	@Override
 	public void onPostExecute(SaveRequest request, int result) {
-		if (result == RESULT_OK) {
-			mNotificationHelper.setIcon(android.R.drawable.stat_sys_download_done);
-			mNotificationHelper.setText(getResources().getQuantityString(R.plurals.chapters_saved, request.chapters.size()));
-		} if (result == RESULT_CANCELLED) {
-			mNotificationHelper.dismiss();
-		} else {
-			mNotificationHelper.setIcon(R.drawable.ic_stat_error);
-			switch (result) {
-				case RESULT_ERROR_WRITE_DIR:
-					mNotificationHelper.setText(R.string.cannot_create_file);
-					break;
-				case RESULT_ERROR_NETWORK:
-					mNotificationHelper.setText(R.string.network_error);
-					break;
-				default:
-					mNotificationHelper.setText(R.string.error_occurred);
-			}
+		switch (result) {
+			case RESULT_OK:
+				mNotificationHelper.setIcon(android.R.drawable.stat_sys_download_done);
+				mNotificationHelper.setText(getResources().getQuantityString(R.plurals.chapters_saved, request.chapters.size(), request.chapters.size()));
+				break;
+			case RESULT_CANCELLED:
+				mNotificationHelper.dismiss();
+				return;
+			case RESULT_ERROR_WRITE_DIR:
+				mNotificationHelper.setIcon(R.drawable.ic_stat_error);
+				mNotificationHelper.setText(R.string.cannot_create_file);
+				break;
+			case RESULT_ERROR_NETWORK:
+				mNotificationHelper.setIcon(R.drawable.ic_stat_error);
+				mNotificationHelper.setText(R.string.network_error);
+				break;
+			case RESULT_ERROR_UNKNOWN:
+				mNotificationHelper.setIcon(R.drawable.ic_stat_error);
+				mNotificationHelper.setText(R.string.error_occurred);
+				break;
+			default:
+				if (BuildConfig.DEBUG) {
+					throw new AssertionError("Unknown result: " + result);
+				}
 		}
 		mNotificationHelper.clearActions();
 		mNotificationHelper.setAutoCancel();

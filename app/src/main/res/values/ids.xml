@@ -9,6 +9,7 @@
 	<item name="action_chapter_save_all" type="id" />
 	<item name="action_chapter_save_5" type="id" />
 	<item name="action_chapter_save_10" type="id" />
+	<item name="action_chapter_save_30" type="id" />
 	<!-- page menu -->
 	<item name="action_page_bookmark_add" type="id" />
 	<item name="action_page_bookmark_remove" type="id" />

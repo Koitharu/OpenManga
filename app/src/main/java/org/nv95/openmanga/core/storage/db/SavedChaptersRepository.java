@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.SavedChapter;
 
 import java.lang.ref.WeakReference;
@@ -85,5 +86,22 @@ public final class SavedChaptersRepository extends SQLiteRepository<SavedChapter
 	@Override
 	protected String[] getProjection() {
 		return PROJECTION;
+	}
+
+	public int count(MangaHeader manga) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase()
+					.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE manga_id = ?",
+							new String[]{String.valueOf(manga.id)});
+			return cursor.moveToFirst() ? cursor.getInt(0) : -1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 	}
 }

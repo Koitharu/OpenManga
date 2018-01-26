@@ -17,6 +17,7 @@ import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
+import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaChapter;
@@ -158,16 +159,28 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	@Override
 	public boolean onChapterLongClick(int pos, MangaChapter chapter) {
-		new MenuDialog<MangaChapter>(this)
+		final int totalChapters = mMangaDetails == null ? 0 : mMangaDetails.chapters.size();
+		MenuDialog<MangaChapter> menu = new MenuDialog<MangaChapter>(this)
 				.setTitle(chapter.name)
 				.setItemClickListener(this)
-				.addItem(R.id.action_chapter_save_this, R.string.save_this_chapter)
-				.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters)
-				.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters)
-				.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters)
-				.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters)
-				.addItem(R.id.action_chapter_save_all, R.string.save_all_chapters)
-				.create(chapter)
+				.addItem(R.id.action_chapter_save_this, R.string.save_this_chapter);
+		if (pos > 0) {
+			menu.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters);
+		}
+		if (pos + 5 < totalChapters) {
+				menu.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters);
+				if (pos + 10 < totalChapters) {
+					menu.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters);
+					if (pos + 30 < totalChapters) {
+						menu.addItem(R.id.action_chapter_save_30, R.string.save_next_30_chapters);
+					}
+				}
+		}
+		if (pos < totalChapters - 1) {
+			menu.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters);
+		}
+		menu.addItem(R.id.action_chapter_save_all, R.string.save_all_chapters);
+		menu.create(chapter)
 				.show();
 		return true;
 	}
@@ -198,10 +211,33 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	@Override
 	public void onMenuItemClick(@IdRes int id, MangaChapter mangaChapter) {
+		if (mMangaDetails == null) {
+			return;
+		}
 		switch (id) {
 			case R.id.action_chapter_save_this:
 				SaveService.start(this, new SaveRequest(mMangaHeader, mangaChapter));
 				break;
+			case R.id.action_chapter_save_5:
+				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 5)));
+				break;
+			case R.id.action_chapter_save_10:
+				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 10)));
+				break;
+			case R.id.action_chapter_save_30:
+				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublist(mMangaDetails.chapters, mangaChapter, 30)));
+				break;
+			case R.id.action_chapter_save_all:
+				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters));
+				break;
+			case R.id.action_chapter_save_next:
+				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublistFrom(mMangaDetails.chapters, mangaChapter)));
+				break;
+			case R.id.action_chapter_save_prev:
+				SaveService.start(this, new SaveRequest(mMangaHeader, CollectionsUtils.chaptersSublistTo(mMangaDetails.chapters, mangaChapter)));
+				break;
+			default:
+				stub();
 		}
 	}
 }

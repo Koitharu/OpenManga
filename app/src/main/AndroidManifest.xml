@@ -71,6 +71,10 @@
 			android:label="@string/favourites_categories"
 			android:configChanges="screenSize|orientation" />
 
+		<activity android:name=".storage.SavedMangaActivity"
+			android:label="@string/saved_manga"
+			android:configChanges="screenSize|orientation" />
+
 		<activity
 			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"

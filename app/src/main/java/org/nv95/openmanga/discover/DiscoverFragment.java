@@ -43,13 +43,13 @@ public final class DiscoverFragment extends AppBaseFragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		final ArrayList<Object> dataset = new ArrayList<>();
-		dataset.add(new ProviderHeaderDetailed("browse/import" /* TODO */, getString(R.string.browse_filesystem),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_IMPORT /* TODO */, getString(R.string.browse_filesystem),
 				getString(R.string.import_cbz_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_folder_white)));
-		dataset.add(new ProviderHeaderDetailed("browse/saved" /* TODO */, getString(R.string.saved_manga),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_SAVED /* TODO */, getString(R.string.saved_manga),
 				getString(R.string.saved_manga_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_sdcard_white)));
-		dataset.add(new ProviderHeaderDetailed("browse/recommendations" /* TODO */, getString(R.string.recommendations),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_RECOMMENDATIONS /* TODO */, getString(R.string.recommendations),
 				getString(R.string.recommendations_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_lightbulb_white)));
-		dataset.add(new ProviderHeaderDetailed("browse/bookmarks" /* TODO */, getString(R.string.bookmarks),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_BOOKMARKS /* TODO */, getString(R.string.bookmarks),
 				getString(R.string.bookmarks_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_white)));
 		dataset.add(getString(R.string.storages_remote));
 		dataset.addAll(new ProvidersStore(getActivity()).getUserProviders());

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.mangalist.MangaListActivity;
+import org.nv95.openmanga.storage.SavedMangaActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -92,6 +93,18 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		final String cname = String.valueOf(view.getTag());
 		final Context context = view.getContext();
 		switch (cname) {
+			case SpecificCName.BROWSE_IMPORT:
+				//TODO
+				break;
+			case SpecificCName.BROWSE_SAVED:
+				context.startActivity(new Intent(context.getApplicationContext(), SavedMangaActivity.class));
+				break;
+			case SpecificCName.BROWSE_RECOMMENDATIONS:
+				//TODO
+				break;
+			case SpecificCName.BROWSE_BOOKMARKS:
+				//TODO
+				break;
 			default:
 				context.startActivity(new Intent(context.getApplicationContext(), MangaListActivity.class)
 						.putExtra("provider.cname", cname));

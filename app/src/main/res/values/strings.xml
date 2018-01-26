@@ -441,4 +441,5 @@
     <string name="next_chapter">Next chapter</string>
     <string name="cannot_create_file">Cannot create file</string>
     <string name="network_error">Network error</string>
+    <string name="save_next_30_chapters">Save this and 30 next chapters</string>
 </resources>
