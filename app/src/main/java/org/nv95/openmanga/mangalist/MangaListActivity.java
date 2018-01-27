@@ -248,15 +248,12 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	 * Bundle тот же самый с темиже значениями (вроде)
 	 */
 	private void load() {
-		if (getLoaderManager().getLoader(LOADER_ID) != null)
-			getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this).forceLoad();
-		else
-			getLoaderManager().restartLoader(LOADER_ID, mArguments.toBundle(), this).forceLoad();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		getLoaderManager().destroyLoader(LOADER_ID);
+		Loader<ListWrapper<MangaHeader>> loader = getLoaderManager().getLoader(LOADER_ID);
+		if (loader == null) {
+			loader = getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this);
+		} else {
+			loader = getLoaderManager().restartLoader(LOADER_ID, mArguments.toBundle(), this);
+		}
+		loader.forceLoad();
 	}
 }
