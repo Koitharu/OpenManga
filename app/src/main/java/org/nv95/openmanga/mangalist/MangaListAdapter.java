@@ -21,19 +21,19 @@ import org.nv95.openmanga.common.utils.LayoutUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener,
+public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
 		EndlessRecyclerView.EndlessAdapter {
 
-	private final ArrayList<MangaHeader> mDataset;
+	private final List<MangaHeader> mDataset;
 	private boolean mInProgress;
 
-	MangaListAdapter(ArrayList<MangaHeader> dataset) {
+	MangaListAdapter(List<MangaHeader> dataset) {
 		setHasStableIds(true);
 		mDataset = dataset;
 		mInProgress = true;
@@ -52,19 +52,13 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 			default:
 				throw new AssertionError("Unknown viewType");
 		}
-		holder.itemView.setOnClickListener(this);
 		return holder;
 	}
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof MangaHeaderHolder) {
-			MangaHeader item = mDataset.get(position);
-			((MangaHeaderHolder) holder).text1.setText(item.name);
-			LayoutUtils.setTextOrHide(((MangaHeaderHolder) holder).text2, item.summary);
-			((MangaHeaderHolder) holder).summary.setText(item.genres);
-			ImageUtils.setThumbnail(((MangaHeaderHolder) holder).imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
-			holder.itemView.setTag(item);
+			((MangaHeaderHolder) holder).bind(mDataset.get(position));
 		} else if (holder instanceof ProgressHolder) {
 			((ProgressHolder) holder).progressBar.setVisibility(mInProgress ? View.VISIBLE : View.INVISIBLE);
 		}
@@ -96,19 +90,11 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 	}
 
 	@Override
-	public void onClick(View view) {
-		MangaHeader mangaHeader = (MangaHeader) view.getTag();
-		Context context = view.getContext();
-		context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
-				.putExtra("manga", mangaHeader));
-	}
-
-	@Override
 	public void setHasNext(boolean hasNext) {
 		mInProgress = hasNext;
 	}
 
-	class MangaHeaderHolder extends RecyclerView.ViewHolder {
+	class MangaHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 		final TextView text1;
 		final TextView text2;
@@ -121,6 +107,23 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 			text2 = itemView.findViewById(android.R.id.text2);
 			summary = itemView.findViewById(android.R.id.summary);
 			imageView = itemView.findViewById(R.id.imageView);
+			itemView.setOnClickListener(this);
+		}
+
+		void bind(MangaHeader item) {
+			itemView.setTag(item);
+			text1.setText(item.name);
+			summary.setText(item.genres);
+			LayoutUtils.setTextOrHide(text2, item.summary);
+			ImageUtils.setThumbnail(imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
+		}
+
+		@Override
+		public void onClick(View v) {
+			MangaHeader mangaHeader = mDataset.get(getAdapterPosition());
+			Context context = v.getContext();
+			context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
+					.putExtra("manga", mangaHeader));
 		}
 	}
 

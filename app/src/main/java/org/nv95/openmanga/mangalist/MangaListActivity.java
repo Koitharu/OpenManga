@@ -29,6 +29,7 @@ import org.nv95.openmanga.settings.AuthorizationDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by koitharu on 28.12.17.
@@ -46,10 +47,10 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private TextView mTextViewError;
 	private View mErrorView;
 
-	private MangaListAdapter mAdapter;
-	private ArrayList<MangaHeader> mDataset;
+	private List<MangaHeader> mDataset = new ArrayList<>();
+	private MangaListAdapter mAdapter = new MangaListAdapter(mDataset);
 	private MangaProvider mProvider;
-	private MangaQueryArguments mArguments;
+	private MangaQueryArguments mArguments = new MangaQueryArguments();
 
 	/**
 	 * loader's id
@@ -82,12 +83,9 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 			mFabFilter.setVisibility(View.GONE);
 		}
 
-		mDataset = new ArrayList<>();
-		mAdapter = new MangaListAdapter(mDataset);
 		mRecyclerView.setAdapter(mAdapter);
 
-		mArguments = new MangaQueryArguments();
-		getLoaderManager().initLoader(0, mArguments.toBundle(), this).forceLoad();
+		load();
 	}
 
 	@Override
@@ -123,13 +121,13 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	@Override
 	public Loader<ListWrapper<MangaHeader>> onCreateLoader(int i, Bundle bundle) {
 		final MangaQueryArguments queryArgs = MangaQueryArguments.from(bundle);
-		if (!TextUtils.isEmpty(queryArgs.query)) {
-			setSubtitle(queryArgs.query);
-		} else if (queryArgs.genres.length != 0) {
-			setSubtitle(MangaGenre.joinNames(this, queryArgs.genres, ", "));
-		} else {
-			setSubtitle(null);
-		}
+
+		setSubtitle(!TextUtils.isEmpty(queryArgs.query)
+				? queryArgs.query
+				: queryArgs.genres.length != 0
+				? MangaGenre.joinNames(this, queryArgs.genres, ", ")
+				: null);
+
 		return new MangaListLoader(this, mProvider, queryArgs);
 	}
 
@@ -248,6 +246,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	 * Bundle тот же самый с темиже значениями (вроде)
 	 */
 	private void load() {
+		mRecyclerView.onLoadingStarted();
 		Loader<ListWrapper<MangaHeader>> loader = getLoaderManager().getLoader(LOADER_ID);
 		if (loader == null) {
 			loader = getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this);
