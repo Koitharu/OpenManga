@@ -40,6 +40,7 @@ final class CategoriesPagerAdapter extends NativeFragmentPagerAdapter {
 		return mSpecification;
 	}
 
+	@NonNull
 	@Override
 	public Fragment getItem(int position) {
 		final FavouritesFragment fragment = new FavouritesFragment();

@@ -25,6 +25,7 @@ public abstract class NativeFragmentPagerAdapter extends PagerAdapter {
 	/**
 	 * Return the Fragment associated with a specified position.
 	 */
+	@NonNull
 	public abstract Fragment getItem(int position);
 
 	@NonNull
@@ -87,6 +88,11 @@ public abstract class NativeFragmentPagerAdapter extends PagerAdapter {
 
 	@Override
 	public void restoreState(Parcelable state, ClassLoader loader) {
+	}
+
+	@Override
+	public int getItemPosition(@NonNull Object object) {
+		return POSITION_NONE;
 	}
 
 	/**

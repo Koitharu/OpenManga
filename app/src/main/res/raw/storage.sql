@@ -90,4 +90,17 @@ CREATE TABLE categories (
 	id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
 	created_at INTEGER
+);
+
+CREATE TABLE recommendations (
+	id INTEGER PRIMARY KEY,
+	name TEXT NOT NULL,
+	summary TEXT,
+	genres TEXT,
+	url TEXT NOT NULL,
+	thumbnail TEXT,
+	provider TEXT NOT NULL,
+	status INTEGER,
+	rating INTEGER,
+	category INTEGER
 )

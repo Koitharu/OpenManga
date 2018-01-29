@@ -158,6 +158,16 @@ public abstract class MangaProvider {
 		return null;
 	}
 
+	public static int findSortIndex(MangaProvider provider, @StringRes int sortOrder) {
+		int[] sorts = provider.getAvailableSortOrders();
+		for (int i = 0; i < sorts.length; i++) {
+			if (sorts[i] == sortOrder) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	@NonNull
 	public static String getDomain(@CName String cName) {
 		if (sDomainsMap.isEmpty()) {

@@ -14,6 +14,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.discover.bookmarks.BookmarksListActivity;
 import org.nv95.openmanga.mangalist.MangaListActivity;
+import org.nv95.openmanga.recommendations.RecommendationsActivity;
 import org.nv95.openmanga.storage.SavedMangaActivity;
 
 import java.lang.annotation.Retention;
@@ -101,7 +102,7 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				context.startActivity(new Intent(context.getApplicationContext(), SavedMangaActivity.class));
 				break;
 			case SpecificCName.BROWSE_RECOMMENDATIONS:
-				//TODO
+				context.startActivity(new Intent(context.getApplicationContext(), RecommendationsActivity.class));
 				break;
 			case SpecificCName.BROWSE_BOOKMARKS:
 				context.startActivity(new Intent(context.getApplicationContext(), BookmarksListActivity.class));
