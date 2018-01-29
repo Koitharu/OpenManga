@@ -33,6 +33,7 @@ import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.ObjectWrapper;
+import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaHeader;
@@ -108,11 +109,12 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
-		if(ACTION_READING_CONTINUE.equals(action)) {
+		if (ACTION_READING_CONTINUE.equals(action)) {
 			MangaHeader mangaHeader = intent.getParcelableExtra("manga");
 			new ResumeReadingTask(this).start(mangaHeader);
 		} else if (ACTION_BOOKMARK_OPEN.equals(action)) {
-			//TODO
+			MangaBookmark bookmark = intent.getParcelableExtra("bookmark");
+			new BookmarkOpenTask(this).start(bookmark);
 		} else {
 			mManga = intent.getParcelableExtra("manga");
 			mChapter = intent.getParcelableExtra("chapter");
@@ -126,6 +128,13 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
 		getLoaderManager().initLoader(0, mChapter.toBundle(), this).forceLoad();
+	}
+
+	public void onMangaReady(Result result) {
+		this.mManga = result.mangaDetails;
+		this.mChapter = result.chapter;
+		this.mPageId = result.pageId;
+		onMangaReady();
 	}
 
 	@Override
@@ -180,7 +189,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 						.setItemClickListener(this)
 						.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark)
 						.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
-						.addItem(R.id.action_page_share, R.drawable.ic_share_light ,R.string.share_image)
+						.addItem(R.id.action_page_share, R.drawable.ic_share_light, R.string.share_image)
 						.create(mReader.getCurrentPage())
 						.show();
 				break;
@@ -420,50 +429,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		finish();
 	}
 
-	final static class ResumeReadingTask extends WeakAsyncTask<ReaderActivity,MangaHeader,Void,ObjectWrapper<ResumeReadingTask.Result>> {
+	final static class Result {
 
-		ResumeReadingTask(ReaderActivity readerActivity) {
-			super(readerActivity);
-		}
-
-		@Override
-		protected ObjectWrapper<Result> doInBackground(MangaHeader... mangaHeaders) {
-			try {
-				final Result result = new Result();
-				final MangaHeader manga = mangaHeaders[0];
-				final MangaHistory history = manga instanceof MangaHistory ? (MangaHistory) manga :
-						HistoryRepository.get(getObject()).find(manga);
-				MangaProvider provider = MangaProvider.get(getObject(), manga.provider);
-				result.mangaDetails = manga instanceof MangaDetails ? (MangaDetails) manga : provider.getDetails(history);
-				result.chapter = history == null ? result.mangaDetails.chapters.get(0) :
-						CollectionsUtils.findItemById(result.mangaDetails.chapters, history.chapterId);
-				result.pageId = history != null ? history.pageId : 0;
-				return new ObjectWrapper<>(result);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ObjectWrapper<>(e);
-			}
-		}
-
-		@Override
-		protected void onPostExecute(@NonNull ReaderActivity readerActivity, ObjectWrapper<Result> result) {
-			super.onPostExecute(readerActivity, result);
-			if (result.isSuccess()) {
-				final Result data = result.get();
-				readerActivity.mManga = data.mangaDetails;
-				readerActivity.mChapter = data.chapter;
-				readerActivity.mPageId = data.pageId;
-				readerActivity.onMangaReady();
-			} else {
-				readerActivity.stub();
-			}
-		}
-
-		final static class Result {
-
-			MangaDetails mangaDetails;
-			MangaChapter chapter;
-			long pageId;
-		}
+		MangaDetails mangaDetails;
+		MangaChapter chapter;
+		long pageId;
 	}
 }
