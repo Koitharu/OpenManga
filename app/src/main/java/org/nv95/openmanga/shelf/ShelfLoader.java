@@ -8,6 +8,7 @@ import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.UserTip;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.core.storage.db.CategoriesRepository;
 import org.nv95.openmanga.core.storage.db.CategoriesSpecification;
 import org.nv95.openmanga.core.storage.db.FavouritesRepository;
@@ -68,13 +69,16 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 					R.id.action_discover
 			).addFlag(UserTip.FLAG_NO_DISMISSIBLE));
 		}
-		content.tips.add(0, new UserTip(
-				getContext().getString(R.string.welcome),
-				getContext().getString(R.string.first_run_tip),
-				R.drawable.ic_wizard_blue,
-				R.string._continue,
-				R.id.action_wizard
-		).addFlag(UserTip.FLAG_DISMISS_BUTTON));
+		final FlagsStorage flagsStorage = FlagsStorage.get(getContext());
+		if (flagsStorage.isWizardRequired()) {
+			content.tips.add(0, new UserTip(
+					getContext().getString(R.string.welcome),
+					getContext().getString(R.string.first_run_tip),
+					R.drawable.ic_wizard_blue,
+					R.string._continue,
+					R.id.action_wizard
+			).addFlag(UserTip.FLAG_DISMISS_BUTTON));
+		}
 		return content;
 	}
 }

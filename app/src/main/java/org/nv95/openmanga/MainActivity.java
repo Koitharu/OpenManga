@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.nv95.openmanga.common.CrashHandler;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.discover.DiscoverFragment;
 import org.nv95.openmanga.search.SearchActivity;
 import org.nv95.openmanga.settings.SettingsFragment;
@@ -181,6 +182,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 				if (crashHandler != null) {
 					crashHandler.clear();
 				}
+				break;
+			case R.id.action_wizard:
+				FlagsStorage.get(this).setWizardRequired(false);
 				break;
 		}
 	}
