@@ -2,7 +2,6 @@ package org.nv95.openmanga.shelf;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.CrashHandler;
+import org.nv95.openmanga.common.DataViewHolder;
 import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
@@ -36,9 +35,11 @@ import java.util.ArrayList;
 public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private final ArrayList<Object> mDataset;
+	private final OnTipsActionListener mActionListener;
 
-	public ShelfAdapter() {
+	public ShelfAdapter(OnTipsActionListener listener) {
 		mDataset = new ArrayList<>();
+		mActionListener = listener;
 		setHasStableIds(true);
 	}
 
@@ -70,22 +71,7 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof TipHolder) {
-			UserTip tip = (UserTip) mDataset.get(position);
-			((TipHolder) holder).textViewTitle.setText(tip.title);
-			((TipHolder) holder).textViewContent.setText(tip.content);
-			if (tip.hasIcon()) {
-				((TipHolder) holder).imageViewIcon.setImageResource(tip.icon);
-				((TipHolder) holder).imageViewIcon.setVisibility(View.VISIBLE);
-			} else {
-				((TipHolder) holder).imageViewIcon.setVisibility(View.GONE);
-			}
-			if (tip.hasAction()) {
-				((TipHolder) holder).buttonAction.setText(tip.actionText);
-				((TipHolder) holder).buttonAction.setId(tip.actionId);
-				((TipHolder) holder).buttonAction.setVisibility(View.VISIBLE);
-			} else {
-				((TipHolder) holder).buttonAction.setVisibility(View.GONE);
-			}
+			((TipHolder) holder).bind((UserTip) mDataset.get(position));
 		} else if (holder instanceof HeaderHolder) {
 			ListHeader item = (ListHeader) mDataset.get(position);
 			if (item.text != null) {
@@ -185,52 +171,73 @@ public final class ShelfAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		}
 	}
 
-	class TipHolder extends RecyclerView.ViewHolder implements View.OnClickListener, Dismissible {
+	class TipHolder extends DataViewHolder<UserTip> implements View.OnClickListener, Dismissible {
 
-		final TextView textViewTitle;
-		final TextView textViewContent;
-		final ImageView imageViewIcon;
-		final Button buttonAction;
+		private final TextView textViewTitle;
+		private final TextView textViewContent;
+		private final ImageView imageViewIcon;
+		private final Button buttonAction;
+		private final Button buttonDismiss;
 
 		TipHolder(View itemView) {
 			super(itemView);
 			textViewTitle = itemView.findViewById(android.R.id.text1);
 			textViewContent = itemView.findViewById(android.R.id.text2);
 			buttonAction = itemView.findViewById(android.R.id.button1);
+			buttonDismiss = itemView.findViewById(android.R.id.closeButton);
 			imageViewIcon = itemView.findViewById(android.R.id.icon);
 			buttonAction.setOnClickListener(this);
+			buttonDismiss.setOnClickListener(this);
+		}
+
+		@Override
+		public void bind(UserTip userTip) {
+			super.bind(userTip);
+			textViewTitle.setText(userTip.title);
+			textViewContent.setText(userTip.content);
+			if (userTip.hasIcon()) {
+				imageViewIcon.setImageResource(userTip.icon);
+				imageViewIcon.setVisibility(View.VISIBLE);
+			} else {
+				imageViewIcon.setVisibility(View.GONE);
+			}
+			if (userTip.hasAction()) {
+				buttonAction.setText(userTip.actionText);
+				buttonAction.setTag(userTip.actionId);
+				buttonAction.setVisibility(View.VISIBLE);
+			} else {
+				buttonAction.setVisibility(View.GONE);
+			}
+			buttonDismiss.setVisibility(userTip.hasDismissButton() ? View.VISIBLE : View.GONE);
+		}
+
+		boolean isDismissible() {
+			final UserTip data = getData();
+			return data != null && data.isDismissible();
 		}
 
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
-				case R.id.action_crash_report:
-					final CrashHandler crashHandler = CrashHandler.get();
-					if (crashHandler != null) {
-						new AlertDialog.Builder(v.getContext())
-								.setTitle(crashHandler.getErrorClassName())
-								.setMessage(crashHandler.getErrorMessage() + "\n\n" + crashHandler.getErrorStackTrace())
-								.setNegativeButton(R.string.close, null)
-								.create()
-								.show();
+				case android.R.id.button1:
+					Object tag = v.getTag();
+					if (tag != null && tag instanceof Integer) {
+						mActionListener.onTipActionClick((Integer) tag);
 					}
+				case android.R.id.closeButton:
+					dismiss();
 					break;
 			}
 		}
 
 		@Override
 		public void dismiss() {
-			switch (buttonAction.getId()) {
-				case R.id.action_crash_report:
-					final CrashHandler crashHandler = CrashHandler.get();
-					if (crashHandler != null) {
-						crashHandler.clear();
-					}
-					break;
+			Object tag = buttonAction.getTag();
+			if (tag != null && tag instanceof Integer) {
+				mActionListener.onTipDismissed((Integer) tag);
 			}
 			mDataset.remove(getAdapterPosition());
 			notifyDataSetChanged();
-			//notifyItemRemoved throws ArrayIndexOutOfBoundsException
 		}
 	}
 

@@ -37,4 +37,8 @@ class ShelfContent {
 		favourites = new HashMap<>();
 		recommended = new ArrayList<>();
 	}
+
+	public boolean isEmpty() {
+		return tips.isEmpty() && history.isEmpty() && favourites.isEmpty() && recommended.isEmpty();
+	}
 }

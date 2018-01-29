@@ -3,9 +3,11 @@ package org.nv95.openmanga.shelf;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.Category;
+import org.nv95.openmanga.core.models.UserTip;
 import org.nv95.openmanga.core.storage.db.CategoriesRepository;
 import org.nv95.openmanga.core.storage.db.CategoriesSpecification;
 import org.nv95.openmanga.core.storage.db.FavouritesRepository;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 
 public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 
-	public ShelfLoader(Context context) {
+	ShelfLoader(Context context) {
 		super(context);
 	}
 
@@ -57,6 +59,22 @@ public class ShelfLoader extends AsyncTaskLoader<ShelfContent> {
 			}
 		}
 		//TODO
+		if (content.isEmpty()) {
+			content.tips.add(new UserTip(
+					getContext().getString(R.string.shelf_is_empty),
+					getContext().getString(R.string.nothing_here_yet),
+					R.drawable.ic_discover_green,
+					R.string.discover,
+					R.id.action_discover
+			).addFlag(UserTip.FLAG_NO_DISMISSIBLE));
+		}
+		content.tips.add(0, new UserTip(
+				getContext().getString(R.string.welcome),
+				getContext().getString(R.string.first_run_tip),
+				R.drawable.ic_wizard_blue,
+				R.string._continue,
+				R.id.action_wizard
+		).addFlag(UserTip.FLAG_DISMISS_BUTTON));
 		return content;
 	}
 }

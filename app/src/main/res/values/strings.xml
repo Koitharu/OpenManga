@@ -21,7 +21,7 @@
     <string name="action_history">History</string>
     <string name="remove">Remove</string>
     <string name="action_save">Save</string>
-    <string name="continue_reading">Continue</string>
+    <string name="_continue">Continue</string>
     <string name="search_results">Search results</string>
     <string name="share">Share</string>
     <string name="action_reading_options">Reading options</string>
@@ -450,4 +450,8 @@
     <string name="error_timeout">Time out while connecting</string>
 	<string name="requested_chapter_not_found">Requested chapter not found</string>
 	<string name="no_recommendations_tip">No recommendations found</string>
+	<string name="nothing_here_yet">There is nothing here yet</string>
+    <string name="discover">Discover</string>
+    <string name="shelf_is_empty">Your shelf is empty</string>
+    <string name="first_run_tip">It looks like you\'re new here. Need some help?</string>
 </resources>
