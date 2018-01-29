@@ -1,11 +1,15 @@
 package org.nv95.openmanga.discover;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,6 +17,8 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
+import org.nv95.openmanga.settings.SettingsActivity;
+import org.nv95.openmanga.settings.providers.ProvidersSettingsActivity;
 
 import java.util.ArrayList;
 
@@ -21,6 +27,8 @@ import java.util.ArrayList;
  */
 
 public final class DiscoverFragment extends AppBaseFragment {
+
+	private static final int REQUEST_PROVIDERS_CONFIG = 12;
 
 	private RecyclerView mRecyclerView;
 
@@ -55,5 +63,28 @@ public final class DiscoverFragment extends AppBaseFragment {
 		dataset.addAll(new ProvidersStore(getActivity()).getUserProviders());
 		final DiscoverAdapter adapter = new DiscoverAdapter(dataset);
 		mRecyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.options_discover, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_configure_providers:
+				startActivityForResult(new Intent(getActivity(), ProvidersSettingsActivity.class), REQUEST_PROVIDERS_CONFIG);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_PROVIDERS_CONFIG) {
+			onActivityCreated(null);
+		}
 	}
 }

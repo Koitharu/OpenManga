@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,12 +28,14 @@ import org.nv95.openmanga.shelf.ShelfFragment;
  */
 
 public final class MainActivity extends AppBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener {
+		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
 	private BottomNavigationView mBottomNavigationView;
 	private SearchView mSearchView;
 	private ImageView mImageViewMenu;
+	private PopupMenu mMainMenu;
 	private View mContent;
+	private AppBaseFragment mFragment;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +48,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		mSearchView = findViewById(R.id.searchView);
 		mContent = findViewById(R.id.content);
 
+		mMainMenu = new PopupMenu(this, mImageViewMenu);
+		mMainMenu.setOnMenuItemClickListener(this);
+
 		mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 		mBottomNavigationView.setOnNavigationItemReselectedListener(this);
 		mImageViewMenu.setOnClickListener(this);
@@ -53,8 +62,10 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 			mSearchView.setSearchableInfo(searchableInfo);
 		}
 
+		mFragment = new ShelfFragment();
+		initMenu();
 		getFragmentManager().beginTransaction()
-				.replace(R.id.content, new ShelfFragment())
+				.replace(R.id.content, mFragment)
 				.commitAllowingStateLoss();
 	}
 
@@ -66,22 +77,23 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-		Fragment fragment;
+		mFragment.onDestroyOptionsMenu();
 		switch (item.getItemId()) {
 			case R.id.section_shelf:
-				fragment = new ShelfFragment();
+				mFragment = new ShelfFragment();
 				break;
 			case R.id.section_discover:
-				fragment = new DiscoverFragment();
+				mFragment = new DiscoverFragment();
 				break;
 			case R.id.section_settings:
-				fragment = new SettingsFragment();
+				mFragment = new SettingsFragment();
 				break;
 			default:
 				return false;
 		}
+		initMenu();
 		getFragmentManager().beginTransaction()
-				.replace(R.id.content, fragment)
+				.replace(R.id.content, mFragment)
 				.commit();
 		return true;
 	}
@@ -99,9 +111,42 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.imageViewMenu:
-				//TODO
-				throw new OutOfMemoryError("Test");
-				//break;
+				showMainMenu();
+				break;
 		}
+	}
+
+	private void initMenu() {
+		mMainMenu.getMenu().clear();
+		mFragment.onCreateOptionsMenu(mMainMenu.getMenu(), mMainMenu.getMenuInflater());
+		mMainMenu.inflate(R.menu.options_main);
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+
+			default:
+				return mFragment.onOptionsItemSelected(item);
+		}
+	}
+
+	private void onPrepareMenu(Menu menu) {
+
+	}
+
+	private void showMainMenu() {
+		onPrepareMenu(mMainMenu.getMenu());
+		mFragment.onPrepareOptionsMenu(mMainMenu.getMenu());
+		mMainMenu.show();
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			showMainMenu();
+			return true;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 }

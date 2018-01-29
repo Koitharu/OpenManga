@@ -443,4 +443,6 @@
     <string name="network_error">Network error</string>
     <string name="save_next_30_chapters">Save this and 30 next chapters</string>
 	<string name="genre_maho_shoujo">Maho-shoujo</string>
+	<string name="shelf_settings">Shelf settings</string>
+	<string name="configure_sources">Configure sources</string>
 </resources>

@@ -8,6 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -78,13 +81,29 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.options_shelf, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_shelf_settings:
+				//TODO
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	public void scrollToTop() {
 		mRecyclerView.smoothScrollToPosition(0);
 	}
 
 	private class DismissCallback extends ItemTouchHelper.SimpleCallback {
 
-		public DismissCallback() {
+		DismissCallback() {
 			super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
 		}
 
