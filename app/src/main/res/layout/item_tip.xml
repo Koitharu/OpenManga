@@ -70,6 +70,7 @@
 			android:layout_alignBottom="@android:id/button1"
 			android:layout_toLeftOf="@android:id/button1"
 			android:layout_toStartOf="@android:id/button1"
+			android:visibility="gone"
 			android:text="@string/no_thanks" />
 
 	</RelativeLayout>

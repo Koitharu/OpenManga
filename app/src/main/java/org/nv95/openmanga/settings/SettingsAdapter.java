@@ -28,7 +28,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.Prefer
 	private final ArrayList<SettingsHeader> mDataset;
 	private final AdapterView.OnItemClickListener mClickListener;
 
-	public SettingsAdapter(ArrayList<SettingsHeader> headers, AdapterView.OnItemClickListener clickListener) {
+	SettingsAdapter(ArrayList<SettingsHeader> headers, AdapterView.OnItemClickListener clickListener) {
 		mDataset = headers;
 		mClickListener = clickListener;
 		setHasStableIds(true);
