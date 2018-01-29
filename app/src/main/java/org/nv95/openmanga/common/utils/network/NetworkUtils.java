@@ -242,6 +242,6 @@ public class NetworkUtils {
 	@NonNull
 	public static String getDomainWithScheme(@NonNull String url) {
 		int p = url.indexOf('/', 10);
-		return url.substring(0, p + 1);
+		return url.substring(0, p);
 	}
 }

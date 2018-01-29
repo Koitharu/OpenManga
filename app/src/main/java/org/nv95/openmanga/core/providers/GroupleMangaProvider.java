@@ -114,7 +114,7 @@ abstract class GroupleMangaProvider extends MangaProvider {
 			details.chapters.add(new MangaChapter(
 					o.text(),
 					i,
-					url(domain, o.attr("href")),
+					url(domain, o.attr("href") + "?mtr=1"),
 					header.provider
 			));
 		}
