@@ -448,4 +448,5 @@
 	<string name="failed_to_load_pages">Failed to load pages list</string>
     <string name="no_pages_found">No pages found</string>
     <string name="error_timeout">Time out while connecting</string>
+	<string name="requested_chapter_not_found">Requested chapter not found</string>
 </resources>

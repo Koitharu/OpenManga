@@ -131,6 +131,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	}
 
 	public void onMangaReady(Result result) {
+		if (result.chapter == null) {
+			new AlertDialog.Builder(this)
+					.setMessage(R.string.requested_chapter_not_found)
+					.setCancelable(true)
+					.setOnCancelListener(this)
+					.setNegativeButton(R.string.close, this)
+					.create()
+					.show();
+		}
 		this.mManga = result.mangaDetails;
 		this.mChapter = result.chapter;
 		this.mPageId = result.pageId;
