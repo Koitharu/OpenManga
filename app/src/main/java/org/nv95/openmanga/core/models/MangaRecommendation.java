@@ -2,15 +2,12 @@ package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
 
-import org.nv95.openmanga.core.RecommendationsCategory;
-
 /**
  * Created by koitharu on 29.01.18.
  */
 
 public final class MangaRecommendation extends MangaHeader {
 
-	@RecommendationsCategory
 	public final int category;
 
 	public MangaRecommendation(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, int category) {
@@ -23,7 +20,7 @@ public final class MangaRecommendation extends MangaHeader {
 		category = in.readInt();
 	}
 
-	public MangaRecommendation(MangaHeader mangaHeader, @RecommendationsCategory int category) {
+	public MangaRecommendation(MangaHeader mangaHeader, int category) {
 		this(
 				mangaHeader.id,
 				mangaHeader.name,

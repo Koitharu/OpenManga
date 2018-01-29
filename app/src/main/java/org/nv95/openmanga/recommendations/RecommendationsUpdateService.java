@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.RecommendationsCategory;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaRecommendation;
 import org.nv95.openmanga.core.models.ProviderHeader;
@@ -51,7 +50,7 @@ public final class RecommendationsUpdateService extends IntentService {
 					for (int i = 0; i < count; i++) {
 						repository.add(new MangaRecommendation(
 								list.get(i),
-								RecommendationsCategory.POPULAR
+								R.string.sort_popular
 						));
 					}
 				} catch (Exception e) {
@@ -68,7 +67,7 @@ public final class RecommendationsUpdateService extends IntentService {
 					for (int i = 0; i < count; i++) {
 						repository.add(new MangaRecommendation(
 								list.get(i),
-								RecommendationsCategory.NEWEST
+								R.string.sort_latest
 						));
 					}
 				} catch (Exception e) {
@@ -85,7 +84,7 @@ public final class RecommendationsUpdateService extends IntentService {
 					for (int i = 0; i < count; i++) {
 						repository.add(new MangaRecommendation(
 								list.get(i),
-								RecommendationsCategory.UPDATED
+								R.string.sort_updated
 						));
 					}
 				} catch (Exception e) {

@@ -454,4 +454,6 @@
     <string name="discover">Discover</string>
     <string name="shelf_is_empty">Your shelf is empty</string>
     <string name="first_run_tip">It looks like you\'re new here. Need some help?</string>
+	<string name="updating_recommendations">Updating recommendations list. This can take a few minutes</string>
+	<string name="refresh">Refresh</string>
 </resources>
