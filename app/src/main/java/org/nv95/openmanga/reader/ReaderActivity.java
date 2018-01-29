@@ -2,6 +2,7 @@ package org.nv95.openmanga.reader;
 
 import android.annotation.TargetApi;
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -28,6 +30,8 @@ import org.nv95.openmanga.common.dialogs.BottomSheetMenuDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
+import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
@@ -49,8 +53,9 @@ import java.util.ArrayList;
 
 public final class ReaderActivity extends AppBaseActivity implements View.OnClickListener,
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
-		LoaderManager.LoaderCallbacks<ArrayList<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
-		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage> {
+		LoaderManager.LoaderCallbacks<ListWrapper<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
+		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage>,
+		DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
@@ -235,29 +240,45 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@NonNull
 	@Override
-	public Loader<ArrayList<MangaPage>> onCreateLoader(int id, Bundle args) {
+	public Loader<ListWrapper<MangaPage>> onCreateLoader(int id, Bundle args) {
 		return new ChapterLoader(this, MangaChapter.from(args));
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<MangaPage>> loader, ArrayList<MangaPage> data) {
+	public void onLoadFinished(Loader<ListWrapper<MangaPage>> loader, ListWrapper<MangaPage> data) {
 		AnimationUtils.setVisibility(mContentPanel, View.GONE);
-		if (data == null) {
-			//TODO
-			return;
+		if (data.isFailed()) {
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.failed_to_load_pages)
+					.setMessage(ErrorUtils.getErrorMessageDetailed(this, data.getError()))
+					.setCancelable(true)
+					.setOnCancelListener(this)
+					.setPositiveButton(R.string.retry, this)
+					.setNegativeButton(R.string.close, this)
+					.create()
+					.show();
+		} else if (data.isEmpty()) {
+			new AlertDialog.Builder(this)
+					.setMessage(R.string.no_pages_found)
+					.setCancelable(true)
+					.setOnCancelListener(this)
+					.setNegativeButton(R.string.close, this)
+					.create()
+					.show();
+		} else {
+			mPages = data.get();
+			mSeekBar.setMax(mPages.size() - 1);
+			mSeekBar.setProgress(0);
+			mReader.setPages(mPages);
+			final int page = CollectionsUtils.findPagePositionById(mPages, mPageId);
+			mPageId = 0;
+			mReader.scrollToPage(page == -1 ? 0 : page);
+			addToHistory();
 		}
-		mPages = data;
-		mSeekBar.setMax(mPages.size() - 1);
-		mSeekBar.setProgress(0);
-		mReader.setPages(mPages);
-		final int page = CollectionsUtils.findPagePositionById(mPages, mPageId);
-		mPageId = 0;
-		mReader.scrollToPage(page == -1 ? 0 : page);
-		addToHistory();
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ArrayList<MangaPage>> loader) {
+	public void onLoaderReset(Loader<ListWrapper<MangaPage>> loader) {
 
 	}
 
@@ -374,6 +395,29 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			default:
 				stub();
 		}
+	}
+
+	/**
+	 * Only for errors
+	 */
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch (which) {
+			case DialogInterface.BUTTON_POSITIVE: //retry
+				AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
+				getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
+				break;
+			case DialogInterface.BUTTON_NEGATIVE: //close
+				onCancel(dialog);
+		}
+	}
+
+	/**
+	 * Only for errors
+	 */
+	@Override
+	public void onCancel(DialogInterface dialog) {
+		finish();
 	}
 
 	final static class ResumeReadingTask extends WeakAsyncTask<ReaderActivity,MangaHeader,Void,ObjectWrapper<ResumeReadingTask.Result>> {

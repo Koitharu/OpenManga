@@ -349,7 +349,8 @@
     <string name="reverse_order">Обр. порядок глав</string>
     <string name="auto_save_new">Сохранять новые главы</string>
     <string name="action_relative">Похожие</string>
-    <string name="open_in_">Открыть в...</string>
+    <string name="open_in_">Открыть в…</string>
     <string name="domain">Домен</string>
     <string name="authorization">Авторизация</string>
+    <string name="error_timeout">Превышено время ожидания</string>
 </resources>

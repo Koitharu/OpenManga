@@ -445,4 +445,7 @@
 	<string name="genre_maho_shoujo">Maho-shoujo</string>
 	<string name="shelf_settings">Shelf settings</string>
 	<string name="configure_sources">Configure sources</string>
+	<string name="failed_to_load_pages">Failed to load pages list</string>
+    <string name="no_pages_found">No pages found</string>
+    <string name="error_timeout">Time out while connecting</string>
 </resources>

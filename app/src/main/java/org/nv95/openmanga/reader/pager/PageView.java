@@ -143,7 +143,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 			ImageConverter.getInstance().convert(mFile.getPath(), this);
 		} else {
 			mTextProgressView.setVisibility(GONE);
-			setError(getContext().getString(ErrorUtils.getErrorMessage(e)));
+			setError(ErrorUtils.getErrorMessageDetailed(getContext(), e));
 		}
 	}
 
@@ -164,7 +164,7 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 
 	@Override
 	public void onPageDownloadFailed(Throwable reason) {
-		setError(ErrorUtils.getErrorMessage(getContext(), reason));
+		setError(ErrorUtils.getErrorMessageDetailed(getContext(), reason));
 	}
 
 	@Override
