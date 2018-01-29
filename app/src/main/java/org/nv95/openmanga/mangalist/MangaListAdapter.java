@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.DataViewHolder;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.preview.PreviewActivity;
@@ -27,7 +28,7 @@ import java.util.List;
  * Created by koitharu on 28.12.17.
  */
 
-public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+public final class MangaListAdapter extends RecyclerView.Adapter<DataViewHolder<?>> implements
 		EndlessRecyclerView.EndlessAdapter {
 
 	private final List<MangaHeader> mDataset;
@@ -40,9 +41,9 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 	}
 
 	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, @ItemViewType int viewType) {
+	public DataViewHolder<?> onCreateViewHolder(ViewGroup parent, @ItemViewType int viewType) {
 		final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-		RecyclerView.ViewHolder holder;
+		DataViewHolder<?> holder;
 		switch (viewType) {
 			case ItemViewType.TYPE_ITEM_MANGA:
 				holder = new MangaHeaderHolder(inflater.inflate(R.layout.item_manga_list, parent, false));
@@ -56,11 +57,11 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 	}
 
 	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+	public void onBindViewHolder(DataViewHolder holder, int position) {
 		if (holder instanceof MangaHeaderHolder) {
 			((MangaHeaderHolder) holder).bind(mDataset.get(position));
 		} else if (holder instanceof ProgressHolder) {
-			((ProgressHolder) holder).progressBar.setVisibility(mInProgress ? View.VISIBLE : View.INVISIBLE);
+			((ProgressHolder) holder).bind(mInProgress);
 		}
  	}
 
@@ -82,10 +83,8 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 	}
 
 	@Override
-	public void onViewRecycled(RecyclerView.ViewHolder holder) {
-		if (holder instanceof MangaHeaderHolder) {
-			ImageUtils.recycle(((MangaHeaderHolder) holder).imageView);
-		}
+	public void onViewRecycled(DataViewHolder holder) {
+		holder.recycle();
 		super.onViewRecycled(holder);
 	}
 
@@ -94,46 +93,58 @@ public final class MangaListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 		mInProgress = hasNext;
 	}
 
-	class MangaHeaderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	static class MangaHeaderHolder extends DataViewHolder<MangaHeader> implements View.OnClickListener {
 
-		final TextView text1;
-		final TextView text2;
-		final TextView summary;
-		final ImageView imageView;
+		private final TextView mText1;
+		private final TextView mText2;
+		private final TextView mTextViewSummary;
+		private final ImageView mImageView;
 
 		MangaHeaderHolder(View itemView) {
 			super(itemView);
-			text1 = itemView.findViewById(android.R.id.text1);
-			text2 = itemView.findViewById(android.R.id.text2);
-			summary = itemView.findViewById(android.R.id.summary);
-			imageView = itemView.findViewById(R.id.imageView);
+			mText1 = itemView.findViewById(android.R.id.text1);
+			mText2 = itemView.findViewById(android.R.id.text2);
+			mTextViewSummary = itemView.findViewById(android.R.id.summary);
+			mImageView = itemView.findViewById(R.id.imageView);
 			itemView.setOnClickListener(this);
 		}
 
-		void bind(MangaHeader item) {
-			itemView.setTag(item);
-			text1.setText(item.name);
-			summary.setText(item.genres);
-			LayoutUtils.setTextOrHide(text2, item.summary);
-			ImageUtils.setThumbnail(imageView, item.thumbnail, MangaProvider.getDomain(item.provider));
+		public void bind(MangaHeader item) {
+			super.bind(item);
+			mText1.setText(item.name);
+			mTextViewSummary.setText(item.genres);
+			LayoutUtils.setTextOrHide(mText2, item.summary);
+			ImageUtils.setThumbnail(mImageView, item.thumbnail, MangaProvider.getDomain(item.provider));
+		}
+
+		@Override
+		public void recycle() {
+			super.recycle();
+			ImageUtils.recycle(mImageView);
 		}
 
 		@Override
 		public void onClick(View v) {
-			MangaHeader mangaHeader = mDataset.get(getAdapterPosition());
+			MangaHeader mangaHeader = getData();
 			Context context = v.getContext();
 			context.startActivity(new Intent(context.getApplicationContext(), PreviewActivity.class)
 					.putExtra("manga", mangaHeader));
 		}
 	}
 
-	class ProgressHolder extends RecyclerView.ViewHolder {
+	static class ProgressHolder extends DataViewHolder<Boolean> {
 
-		final ProgressBar progressBar;
+		private final ProgressBar mProgressBar;
 
 		ProgressHolder(View itemView) {
 			super(itemView);
-			progressBar = itemView.findViewById(android.R.id.progress);
+			mProgressBar = itemView.findViewById(android.R.id.progress);
+		}
+
+		@Override
+		public void bind(Boolean aBoolean) {
+			super.bind(aBoolean);
+			mProgressBar.setVisibility(aBoolean ? View.VISIBLE : View.INVISIBLE);
 		}
 	}
 
