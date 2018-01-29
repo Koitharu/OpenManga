@@ -12,7 +12,7 @@ import java.util.WeakHashMap;
  * Created by koitharu on 31.12.17.
  */
 
-public final class AnimationUtils {
+public abstract class AnimationUtils {
 
 	private static final WeakHashMap<View,Animator> sAnimations = new WeakHashMap<>();
 

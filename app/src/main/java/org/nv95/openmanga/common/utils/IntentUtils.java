@@ -13,7 +13,7 @@ import org.nv95.openmanga.preview.PreviewActivity;
  * Created by koitharu on 26.12.17.
  */
 
-public final class IntentUtils {
+public abstract class IntentUtils {
 
 	public static void addHomeScreenShortcut(Context context, MangaHeader mangaHeader) {
 		final Intent shortcutIntent = new Intent(context, PreviewActivity.class);

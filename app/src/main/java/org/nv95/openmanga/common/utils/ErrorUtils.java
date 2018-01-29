@@ -18,7 +18,7 @@ import java.net.SocketTimeoutException;
  * Created by koitharu on 12.01.18.
  */
 
-public final class ErrorUtils {
+public abstract class ErrorUtils {
 
 	@StringRes
 	public static int getErrorMessage(@Nullable Throwable error) {

@@ -21,7 +21,7 @@ import org.nv95.openmanga.R;
  * Created by koitharu on 24.12.17.
  */
 
-public final class ThemeUtils {
+public abstract class ThemeUtils {
 
 	private static final int[] APP_THEMES = new int[]{
 			R.style.AppTheme_Default,

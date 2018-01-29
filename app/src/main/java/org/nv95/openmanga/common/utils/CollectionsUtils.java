@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by koitharu on 26.12.17.
  */
 
-public final class CollectionsUtils {
+public abstract class CollectionsUtils {
 
 	@Nullable
 	public static MangaChapter findItemById(Collection<MangaChapter> collection, long id) {

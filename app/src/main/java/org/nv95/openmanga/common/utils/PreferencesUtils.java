@@ -12,7 +12,7 @@ import org.nv95.openmanga.common.views.preferences.IntegerPreference;
  * Created by koitharu on 26.12.17.
  */
 
-public final class PreferencesUtils {
+public abstract class PreferencesUtils {
 
 	public static void bindPreferenceSummary(@Nullable Preference preference) {
 		if (preference != null) {

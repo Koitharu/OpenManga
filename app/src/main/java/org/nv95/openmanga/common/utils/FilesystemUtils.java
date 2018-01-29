@@ -8,7 +8,7 @@ import java.io.File;
  * Created by koitharu on 11.01.18.
  */
 
-public final class FilesystemUtils {
+public abstract class FilesystemUtils {
 
 	public static long getFileSize(@Nullable File file) {
 		if (file == null || !file.exists()) {

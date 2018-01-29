@@ -14,7 +14,7 @@ import android.widget.TextView;
  * Created by koitharu on 26.12.17.
  */
 
-public final class LayoutUtils {
+public abstract class LayoutUtils {
 
 	public static int getItemCount(RecyclerView recyclerView) {
 		RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();

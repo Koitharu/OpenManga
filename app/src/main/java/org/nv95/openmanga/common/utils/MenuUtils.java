@@ -24,7 +24,7 @@ import java.util.List;
  * Created by koitharu on 26.12.17.
  */
 
-public final class MenuUtils {
+public abstract class MenuUtils {
 
 	public static void buildOpenWithSubmenu(Context context,  MangaHeader mangaHeader, MenuItem menuItem) {
 		final Uri uri = Uri.parse(mangaHeader.url);

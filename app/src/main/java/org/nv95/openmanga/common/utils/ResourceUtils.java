@@ -24,7 +24,7 @@ import java.util.Locale;
  * Created by koitharu on 24.12.17.
  */
 
-public final class ResourceUtils {
+public abstract class ResourceUtils {
 
 	public static String getRawString(Resources resources, @RawRes int resId) {
 		InputStream is = null;

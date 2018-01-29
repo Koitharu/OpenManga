@@ -10,7 +10,7 @@ import android.text.Spanned;
  * Created by koitharu on 24.12.17.
  */
 
-public final class TextUtils {
+public abstract class TextUtils {
 
 	@NonNull
 	public static String notNull(@Nullable String str) {

@@ -29,7 +29,7 @@ import java.io.File;
  * Created by koitharu on 24.12.17.
  */
 
-public final class ImageUtils {
+public abstract class ImageUtils {
 
 	private static DisplayImageOptions.Builder sOptionsThumbnail = null;
 	private static DisplayImageOptions.Builder sOptionsUpdate = null;
