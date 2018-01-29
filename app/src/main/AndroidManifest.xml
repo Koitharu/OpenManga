@@ -75,6 +75,10 @@
 			android:label="@string/saved_manga"
 			android:configChanges="screenSize|orientation" />
 
+		<activity android:name=".discover.bookmarks.BookmarksListActivity"
+			android:label="@string/bookmarks"
+			android:configChanges="screenSize|orientation" />
+
 		<activity
 			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"

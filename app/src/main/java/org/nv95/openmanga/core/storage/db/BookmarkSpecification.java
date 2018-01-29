@@ -40,6 +40,14 @@ public final class BookmarkSpecification implements SqlSpecification {
 		return this;
 	}
 
+	public BookmarkSpecification orderByMangaAndDate(boolean dataDescending) {
+		mOrderBy = "name, created_at";
+		if (dataDescending) {
+			mOrderBy += " DESC";
+		}
+		return this;
+	}
+
 	@NonNull
 	@Override
 	public String getSelection() {

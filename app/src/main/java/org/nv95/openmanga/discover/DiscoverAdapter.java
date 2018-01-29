@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.ProviderHeader;
+import org.nv95.openmanga.discover.bookmarks.BookmarksListActivity;
 import org.nv95.openmanga.mangalist.MangaListActivity;
 import org.nv95.openmanga.storage.SavedMangaActivity;
 
@@ -103,7 +104,7 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				//TODO
 				break;
 			case SpecificCName.BROWSE_BOOKMARKS:
-				//TODO
+				context.startActivity(new Intent(context.getApplicationContext(), BookmarksListActivity.class));
 				break;
 			default:
 				context.startActivity(new Intent(context.getApplicationContext(), MangaListActivity.class)

@@ -35,7 +35,8 @@ import java.util.ArrayList;
  * Created by koitharu on 18.01.18.
  */
 
-public final class HistoryActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaHistory>>,SwipeRemoveHelper.OnItemRemovedListener, UndoHelper.OnActionUndoCallback<MangaHistory> {
+public final class HistoryActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaHistory>>,
+		SwipeRemoveHelper.OnItemRemovedListener, UndoHelper.OnActionUndoCallback<MangaHistory> {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
