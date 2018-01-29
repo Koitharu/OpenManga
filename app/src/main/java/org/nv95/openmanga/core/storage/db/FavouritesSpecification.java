@@ -4,13 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.core.models.UniqueObject;
+
 import java.util.ArrayList;
 
 /**
  * Created by koitharu on 26.12.17.
  */
 
-public final class FavouritesSpecification implements SqlSpecification {
+public final class FavouritesSpecification implements SqlSpecification, UniqueObject {
 
 	@Nullable
 	private String mOrderBy = null;
@@ -120,5 +122,10 @@ public final class FavouritesSpecification implements SqlSpecification {
 		spec.mOnlyNew = bundle.getBoolean("only_new");
 		spec.mRemoved = bundle.getBoolean("removed");
 		return spec;
+	}
+
+	@Override
+	public long getId() {
+		return mCategory == null ? 0 : mCategory;
 	}
 }
