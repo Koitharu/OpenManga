@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by koitharu on 21.12.17.
  */
 
-public final class MangaBookmark implements Parcelable {
+public final class MangaBookmark implements Parcelable, UniqueObject {
 
 	public final long id;
 	public final MangaHeader manga;
@@ -63,5 +63,10 @@ public final class MangaBookmark implements Parcelable {
 		dest.writeLong(chapterId);
 		dest.writeLong(pageId);
 		dest.writeLong(createdAt);
+	}
+
+	@Override
+	public long getId() {
+		return id;
 	}
 }

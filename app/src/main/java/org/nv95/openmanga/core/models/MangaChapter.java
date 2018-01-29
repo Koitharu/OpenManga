@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaChapter implements Parcelable {
+public class MangaChapter implements Parcelable, UniqueObject {
 
 	public static final int FLAG_CHAPTER_SAVED = 1;
 	public static final int FLAG_CHAPTER_NEW = 2;
@@ -95,5 +95,10 @@ public class MangaChapter implements Parcelable {
 
 	public void removeFlag(int flag) {
 		mFlags &= ~flag;
+	}
+
+	@Override
+	public long getId() {
+		return id;
 	}
 }

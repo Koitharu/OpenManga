@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaPage implements Parcelable {
+public class MangaPage implements Parcelable, UniqueObject {
 
 	public final long id;
 	public final String url;
@@ -53,5 +53,10 @@ public class MangaPage implements Parcelable {
 		dest.writeLong(id);
 		dest.writeString(url);
 		dest.writeString(provider);
+	}
+
+	@Override
+	public long getId() {
+		return id;
 	}
 }

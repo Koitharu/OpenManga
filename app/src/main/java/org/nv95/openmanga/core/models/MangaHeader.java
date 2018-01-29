@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
  * Created by koitharu on 21.12.17.
  */
 
-public class MangaHeader implements Parcelable {
+public class MangaHeader implements Parcelable, UniqueObject {
 
 	public final long id;
 	public final String name;
@@ -100,5 +100,10 @@ public class MangaHeader implements Parcelable {
 				other.status,
 				other.rating
 		);
+	}
+
+	@Override
+	public long getId() {
+		return id;
 	}
 }
