@@ -69,4 +69,19 @@ public final class MangaBookmark implements Parcelable, UniqueObject {
 	public long getId() {
 		return id;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MangaBookmark bookmark = (MangaBookmark) o;
+
+		return id == bookmark.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) (id ^ (id >>> 32));
+	}
 }

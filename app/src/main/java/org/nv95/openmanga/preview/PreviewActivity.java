@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.Category;
+import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaFavourite;
@@ -27,6 +29,7 @@ import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.storage.db.BookmarkSpecification;
 import org.nv95.openmanga.core.storage.db.FavouritesRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
+import org.nv95.openmanga.discover.bookmarks.BookmarkRemoveTask;
 import org.nv95.openmanga.preview.bookmarks.BookmarksPage;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.preview.chapters.ChaptersPage;
@@ -40,7 +43,7 @@ import org.nv95.openmanga.storage.SaveService;
  */
 
 public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,
-		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener,
+		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, BookmarkRemoveTask.OnBookmarkRemovedListener,
 		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
 
 	//views
@@ -94,7 +97,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		Bundle args = new Bundle(1);
 		args.putParcelable("manga", mMangaHeader);
 		getLoaderManager().initLoader(0, args, this).forceLoad();
-		getLoaderManager().initLoader(1, new BookmarkSpecification().orderByDate(true).toBundle(), mBookmarksPage).forceLoad();
+		getLoaderManager().initLoader(1, new BookmarkSpecification().manga(mMangaHeader).orderByDate(true).toBundle(), mBookmarksPage).forceLoad();
 	}
 
 	@Override
@@ -238,5 +241,10 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			default:
 				stub();
 		}
+	}
+
+	@Override
+	public void onBookmarkRemoved(@NonNull MangaBookmark bookmark) {
+		mBookmarksPage.onBookmarkRemoved(bookmark);
 	}
 }

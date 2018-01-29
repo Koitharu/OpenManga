@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaHeader;
+
 import java.util.ArrayList;
 
 /**
@@ -45,6 +48,16 @@ public final class BookmarkSpecification implements SqlSpecification {
 		if (dataDescending) {
 			mOrderBy += " DESC";
 		}
+		return this;
+	}
+
+	public BookmarkSpecification manga(@Nullable MangaHeader mangaHeader) {
+		mMangaId = mangaHeader == null ? null : mangaHeader.id;
+		return this;
+	}
+
+	public BookmarkSpecification chapter(@Nullable MangaChapter chapter) {
+		mChapterId = chapter == null ? null : chapter.id;
 		return this;
 	}
 

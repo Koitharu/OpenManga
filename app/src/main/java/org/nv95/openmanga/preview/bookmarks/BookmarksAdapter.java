@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.DataViewHolder;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
+import org.nv95.openmanga.discover.bookmarks.BookmarkRemoveTask;
 import org.nv95.openmanga.reader.ReaderActivity;
 import org.nv95.openmanga.reader.ToolButtonCompat;
 
@@ -46,9 +48,13 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 
 	@Override
 	public void onBindViewHolder(BookmarkHolder holder, int position) {
-		final MangaBookmark item = mDataset.get(position);
-		ImageUtils.setThumbnail(holder.imageView, mThumbStore.getFile(item));
-		holder.textView.setText(ResourceUtils.formatTimeRelative(item.createdAt));
+		holder.bind(mDataset.get(position));
+	}
+
+	@Override
+	public void onViewRecycled(BookmarkHolder holder) {
+		holder.recycle();
+		super.onViewRecycled(holder);
 	}
 
 	@Override
@@ -61,31 +67,38 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 		return mDataset.get(position).id;
 	}
 
-	class BookmarkHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, View.OnLongClickListener {
+	class BookmarkHolder extends DataViewHolder<MangaBookmark> implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, View.OnLongClickListener {
 
-		final ImageView imageView;
-		final TextView textView;
-		final ToolButtonCompat toolButtonMenu;
-		final PopupMenu popupMenu;
+		private final ImageView mImageView;
+		private final TextView mTextView;
+		private final ToolButtonCompat mToolButtonMenu;
+		private final PopupMenu mPopupMenu;
 
 		BookmarkHolder(View itemView) {
 			super(itemView);
-			textView = itemView.findViewById(R.id.textView);
-			imageView = itemView.findViewById(R.id.imageView);
-			toolButtonMenu = itemView.findViewById(R.id.toolButton_menu);
-			popupMenu = new PopupMenu(itemView.getContext(), toolButtonMenu);
-			popupMenu.inflate(R.menu.popup_bookmark);
-			popupMenu.setOnMenuItemClickListener(this);
+			mTextView = itemView.findViewById(R.id.textView);
+			mImageView = itemView.findViewById(R.id.imageView);
+			mToolButtonMenu = itemView.findViewById(R.id.toolButton_menu);
+			mPopupMenu = new PopupMenu(itemView.getContext(), mToolButtonMenu);
+			mPopupMenu.inflate(R.menu.popup_bookmark);
+			mPopupMenu.setOnMenuItemClickListener(this);
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
-			toolButtonMenu.setOnClickListener(this);
+			mToolButtonMenu.setOnClickListener(this);
+		}
+
+		@Override
+		public void bind(MangaBookmark bookmark) {
+			super.bind(bookmark);
+			ImageUtils.setThumbnail(mImageView, mThumbStore.getFile(bookmark));
+			mTextView.setText(ResourceUtils.formatTimeRelative(bookmark.createdAt));
 		}
 
 		@Override
 		public void onClick(View view) {
 			switch (view.getId()) {
 				case R.id.toolButton_menu:
-					popupMenu.show();
+					mPopupMenu.show();
 					break;
 				default:
 					final Context context = view.getContext();
@@ -98,6 +111,13 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			switch (item.getItemId()) {
+				case R.id.action_remove:
+					final MangaBookmark data = getData();
+					if (data == null) {
+						return false;
+					}
+					new BookmarkRemoveTask(itemView.getContext()).start(data);
+					return true;
 				default:
 					return false;
 			}
@@ -105,7 +125,7 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 
 		@Override
 		public boolean onLongClick(View v) {
-			onClick(toolButtonMenu);
+			onClick(mToolButtonMenu);
 			return true;
 		}
 	}

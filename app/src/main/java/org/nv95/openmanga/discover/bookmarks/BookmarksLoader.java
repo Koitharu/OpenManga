@@ -1,4 +1,4 @@
-package org.nv95.openmanga.preview.bookmarks;
+package org.nv95.openmanga.discover.bookmarks;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;

@@ -3,11 +3,10 @@ package org.nv95.openmanga.discover.bookmarks;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -16,21 +15,16 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.UndoHelper;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
-import org.nv95.openmanga.common.views.recyclerview.SwipeRemoveHelper;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
-import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.UniqueObject;
 import org.nv95.openmanga.core.storage.db.BookmarkSpecification;
-import org.nv95.openmanga.core.storage.db.BookmarksRepository;
-import org.nv95.openmanga.core.storage.db.HistoryRepository;
-import org.nv95.openmanga.core.storage.db.HistorySpecification;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
-import org.nv95.openmanga.preview.bookmarks.BookmarksLoader;
 
 import java.util.ArrayList;
 
@@ -38,7 +32,8 @@ import java.util.ArrayList;
  * Created by koitharu on 29.01.18.
  */
 
-public final class BookmarksListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaBookmark>> {
+public final class BookmarksListActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ListWrapper<MangaBookmark>>,
+		BookmarkRemoveTask.OnBookmarkRemovedListener {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
@@ -81,12 +76,12 @@ public final class BookmarksListActivity extends AppBaseActivity implements Load
 		if (result.isSuccess()) {
 			final ArrayList<MangaBookmark> list = result.get();
 			mDataset.clear();
-			MangaBookmark prev = null;
+			long prevId = 0;
 			for (MangaBookmark o : list) {
-				if (prev == null || prev.id != o.manga.id) {
+				if (prevId != o.manga.id) {
 					mDataset.add(o.manga);
 				}
-				prev = o;
+				prevId = o.manga.id;
 				mDataset.add(o);
 			}
 			mAdapter.notifyDataSetChanged();
@@ -99,5 +94,12 @@ public final class BookmarksListActivity extends AppBaseActivity implements Load
 	@Override
 	public void onLoaderReset(Loader<ListWrapper<MangaBookmark>> loader) {
 
+	}
+
+	@Override
+	public void onBookmarkRemoved(@NonNull MangaBookmark bookmark) {
+		mDataset.remove(bookmark);
+		mAdapter.notifyDataSetChanged();
+		Snackbar.make(mRecyclerView, R.string.bookmark_removed, Snackbar.LENGTH_SHORT).show();
 	}
 }

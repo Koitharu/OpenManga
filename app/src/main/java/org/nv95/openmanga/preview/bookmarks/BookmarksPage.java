@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,19 +18,29 @@ import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.storage.db.BookmarkSpecification;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
+import org.nv95.openmanga.discover.bookmarks.BookmarkRemoveTask;
+import org.nv95.openmanga.discover.bookmarks.BookmarksLoader;
 import org.nv95.openmanga.preview.PageHolder;
+
+import java.util.ArrayList;
 
 /**
  * Created by koitharu on 22.01.18.
  */
 
-public final class BookmarksPage extends PageHolder implements LoaderManager.LoaderCallbacks<ListWrapper<MangaBookmark>> {
+public final class BookmarksPage extends PageHolder implements LoaderManager.LoaderCallbacks<ListWrapper<MangaBookmark>>,
+		BookmarkRemoveTask.OnBookmarkRemovedListener {
 
 	public RecyclerView mRecyclerView;
-	public TextView mTextViewHolder;
+	private TextView mTextViewHolder;
+	private final ArrayList<MangaBookmark> mDataset = new ArrayList<>();
+	private final BookmarksAdapter mAdapter;
+
 
 	public BookmarksPage(@NonNull ViewGroup parent) {
 		super(parent, R.layout.page_manga_bookmarks);
+		mAdapter = new BookmarksAdapter(mDataset, new ThumbnailsStorage(parent.getContext()));
+		mRecyclerView.setAdapter(mAdapter);
 	}
 
 	@Override
@@ -48,7 +59,8 @@ public final class BookmarksPage extends PageHolder implements LoaderManager.Loa
 	@Override
 	public void onLoadFinished(Loader<ListWrapper<MangaBookmark>> loader, ListWrapper<MangaBookmark> data) {
 		if (data.isSuccess()) {
-			mRecyclerView.setAdapter(new BookmarksAdapter(data.get(), new ThumbnailsStorage(getView().getContext())));
+			mDataset.clear();
+			mDataset.addAll(data.get());
 			mTextViewHolder.setVisibility(data.isEmpty() ? View.VISIBLE : View.GONE);
 		}
 	}
@@ -56,5 +68,12 @@ public final class BookmarksPage extends PageHolder implements LoaderManager.Loa
 	@Override
 	public void onLoaderReset(Loader<ListWrapper<MangaBookmark>> loader) {
 
+	}
+
+	@Override
+	public void onBookmarkRemoved(@NonNull MangaBookmark bookmark) {
+		mDataset.remove(bookmark);
+		mAdapter.notifyDataSetChanged();
+		Snackbar.make(mRecyclerView, R.string.bookmark_removed, Snackbar.LENGTH_SHORT).show();
 	}
 }

@@ -20,6 +20,7 @@ import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.UniqueObject;
+import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.PreviewActivity;
 import org.nv95.openmanga.reader.ReaderActivity;
@@ -163,6 +164,13 @@ final class BookmarksListAdapter extends RecyclerView.Adapter<DataViewHolder<? e
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			switch (item.getItemId()) {
+				case R.id.action_remove:
+					final MangaBookmark data = getData();
+					if (data == null) {
+						return false;
+					}
+					new BookmarkRemoveTask(itemView.getContext()).start(data);
+					return true;
 				default:
 					return false;
 			}

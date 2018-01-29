@@ -1,6 +1,7 @@
 package org.nv95.openmanga.common;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -21,6 +22,10 @@ public final class UndoHelper<T> extends BaseTransientBottomBar.BaseCallback<Sna
 	public UndoHelper(int id, @NonNull OnActionUndoCallback<T> callback) {
 		mCallback = callback;
 		mId = id;
+	}
+
+	public void snackbar(@NonNull View view, @StringRes int message, @NonNull T data, int duration) {
+		snackbar(view, view.getContext().getString(message), data, duration);
 	}
 
 	public void snackbar(@NonNull View view, @NonNull String message, @NonNull T data, int duration) {
