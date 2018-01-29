@@ -18,6 +18,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.UndoHelper;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
 import org.nv95.openmanga.core.ListWrapper;
@@ -53,14 +54,16 @@ public final class BookmarksListActivity extends AppBaseActivity implements Load
 		mRecyclerView = findViewById(R.id.recyclerView);
 		mTextViewHolder = findViewById(R.id.textView_holder);
 		mRecyclerView.setHasFixedSize(true);
-		final GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+
+		final int spans = MetricsUtils.getPreferredColumnsCountMedium(getResources());
+		final GridLayoutManager layoutManager = new GridLayoutManager(this, spans);
 		mRecyclerView.addItemDecoration(new SpaceItemDecoration(ResourceUtils.dpToPx(getResources(), 1)));
 		mRecyclerView.setLayoutManager(layoutManager);
 
 		mDataset = new ArrayList<>();
 		mAdapter = new BookmarksListAdapter(mDataset, new ThumbnailsStorage(this));
 		mRecyclerView.setAdapter(mAdapter);
-		layoutManager.setSpanSizeLookup(new BookmarkSpanSizeLookup(mAdapter, 3));
+		layoutManager.setSpanSizeLookup(new BookmarkSpanSizeLookup(mAdapter, spans));
 
 		getLoaderManager().initLoader(0, new BookmarkSpecification().orderByMangaAndDate(true).toBundle(), this).forceLoad();
 	}

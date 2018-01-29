@@ -8,6 +8,8 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
 import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.MetricsUtils;
+import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaHeader;
@@ -41,7 +43,8 @@ public final class BookmarkTask extends WeakAsyncTask<Context,BookmarkTask.Reque
 			BookmarksRepository repo = BookmarksRepository.get(getObject());
 			ThumbnailsStorage thumbs = new ThumbnailsStorage(getObject());
 			File file = PagesCache.getInstance(getObject()).getFileForUrl(requests[0].page.url);
-			Bitmap bitmap = ImageUtils.getThumbnail(file.getPath(), 130, 180); //TODO size
+			MetricsUtils.Size size = MetricsUtils.getPreferredCellSizeMedium(getObject().getResources());
+			Bitmap bitmap = ImageUtils.getThumbnail(file.getPath(), size.width, size.height); //TODO size
 			thumbs.put(bookmark, bitmap);
 			if (bitmap != null) {
 				bitmap.recycle();

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
 import org.nv95.openmanga.core.ListWrapper;
@@ -45,9 +46,10 @@ public final class BookmarksPage extends PageHolder implements LoaderManager.Loa
 
 	@Override
 	protected void onViewCreated(@NonNull View view) {
+		final int spans = MetricsUtils.getPreferredColumnsCountMedium(view.getResources());
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mRecyclerView.addItemDecoration(new SpaceItemDecoration(ResourceUtils.dpToPx(view.getResources(), 1)));
-		mRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
+		mRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spans));
 		mTextViewHolder = view.findViewById(R.id.textView_holder);
 	}
 
