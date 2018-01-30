@@ -17,4 +17,7 @@
 	<item name="action_page_bookmark_remove" type="id" />
 	<item name="action_page_save" type="id" />
 	<item name="action_page_share" type="id" />
+	<item name="action_open_browser" type="id" />
+	<item name="action_reader_mode" type="id" />
+	<item name="action_reader_settings" type="id" />
 </resources>

@@ -4,13 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.SharedFileProvider;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.PreviewActivity;
 import org.nv95.openmanga.reader.ReaderActivity;
+
+import java.io.File;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -68,5 +73,17 @@ public abstract class IntentUtils {
 		}
 		addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
 		context.getApplicationContext().sendBroadcast(addIntent);
+	}
+
+	public static void openBrowser(Context context, String url) {
+		final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		context.startActivity(browserIntent);
+	}
+
+	public static void shareImage(@NonNull Context context, @NonNull File file) {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("image/*");
+		i.putExtra(Intent.EXTRA_STREAM, SharedFileProvider.getUriForFile(context, SharedFileProvider.AUTHORITY, file));
+		context.startActivity(Intent.createChooser(i, context.getString(R.string.share_image)));
 	}
 }

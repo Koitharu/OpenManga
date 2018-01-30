@@ -57,7 +57,7 @@ public final class PagesCache {
 	}
 
 	@WorkerThread
-	private long getTotalSize() {
+	public long getTotalSize() {
 		final File[] files = mCacheDir.listFiles();
 		long size = 0;
 		for (File o : files) {
@@ -69,7 +69,7 @@ public final class PagesCache {
 	}
 
 	@WorkerThread
-	private long trimToSize(long maxSize) {
+	public long trimToSize(long maxSize) {
 		final File[] files = mCacheDir.listFiles();
 		Arrays.sort(files, FILES_COMPARATOR);
 		long size = 0;

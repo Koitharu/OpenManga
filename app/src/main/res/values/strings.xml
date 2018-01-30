@@ -457,4 +457,7 @@
     <string name="first_run_tip">It looks like you\'re new here. Need some help?</string>
 	<string name="updating_recommendations">Updating recommendations list. This can take a few minutes</string>
 	<string name="refresh">Refresh</string>
+	<string name="open_in_browser">Open in browser</string>
+    <string name="reader_mode">Reader mode</string>
+    <string name="downloading_image">Loading image…</string>
 </resources>

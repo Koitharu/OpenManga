@@ -207,6 +207,17 @@
 			</intent-filter>
 		</receiver>
 
+		<provider
+			android:name=".SharedFileProvider"
+			android:authorities="org.nv95.openmanga.files"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/paths_shared" />
+		</provider>
+
+
 	</application>
 
 </manifest>

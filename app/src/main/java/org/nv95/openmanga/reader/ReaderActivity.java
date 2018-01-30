@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.utils.IntentUtils;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
@@ -205,6 +207,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 						.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark)
 						.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
 						.addItem(R.id.action_page_share, R.drawable.ic_share_light, R.string.share_image)
+						.addItem(R.id.action_open_browser, R.drawable.ic_open_in_black, R.string.open_in_browser)
+						.addItem(R.id.action_reader_mode, R.drawable.ic_aspect_ratio_black, R.string.reader_mode)
+						.addItem(R.id.action_reader_settings, R.drawable.ic_settings_black, R.string.action_reading_options)
 						.create(mReader.getCurrentPage())
 						.show();
 				break;
@@ -415,7 +420,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 						mReader.getCurrentPage()
 				));
 				break;
-			//TODO
+			case R.id.action_open_browser:
+				IntentUtils.openBrowser(this, page.url);
+				break;
+			case R.id.action_page_save:
+				new ImageSaveTask(this, false).start(page);
+				break;
+			case R.id.action_page_share:
+				new ImageSaveTask(this, true).start(page);
+				break;
 			default:
 				stub();
 		}
