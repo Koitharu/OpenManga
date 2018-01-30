@@ -45,6 +45,7 @@ import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
+import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
@@ -75,6 +76,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private ReaderFragment mReader;
 
 	private HistoryRepository mHistoryRepository;
+	private BookmarksRepository mBookmarksRepository;
 	private MangaDetails mManga;
 	private MangaChapter mChapter;
 	private ArrayList<MangaPage> mPages;
@@ -110,6 +112,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				.replace(R.id.reader, mReader)
 				.commit();
 		mHistoryRepository = HistoryRepository.get(this);
+		mBookmarksRepository = BookmarksRepository.get(this);
 
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
@@ -202,15 +205,21 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.action_menu:
-				new BottomSheetMenuDialog<MangaPage>(this)
-						.setItemClickListener(this)
-						.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark)
-						.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
+				final MangaPage page = mReader.getCurrentPage();
+				final MangaBookmark bookmark = mBookmarksRepository.find(mManga, mChapter, page);
+				final BottomSheetMenuDialog<MangaPage> menu = new BottomSheetMenuDialog<MangaPage>(this);
+				menu.setItemClickListener(this);
+				if (bookmark == null) {
+					menu.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark);
+				} else {
+					menu.addItem(R.id.action_page_bookmark_remove, R.drawable.ic_bookmark_remove_black, R.string.remove_bookmark);
+				}
+				menu.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
 						.addItem(R.id.action_page_share, R.drawable.ic_share_light, R.string.share_image)
 						.addItem(R.id.action_open_browser, R.drawable.ic_open_in_black, R.string.open_in_browser)
 						.addItem(R.id.action_reader_mode, R.drawable.ic_aspect_ratio_black, R.string.reader_mode)
 						.addItem(R.id.action_reader_settings, R.drawable.ic_settings_black, R.string.action_reading_options)
-						.create(mReader.getCurrentPage())
+						.create(page)
 						.show();
 				break;
 			case R.id.action_thumbnails:
@@ -419,6 +428,13 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 						mChapter,
 						mReader.getCurrentPage()
 				));
+				break;
+			case R.id.action_page_bookmark_remove:
+				final MangaBookmark bookmark = mBookmarksRepository.find(mManga, mChapter, page);
+				if (bookmark != null) {
+					mBookmarksRepository.remove(bookmark);
+					new ThumbnailsStorage(this).remove(bookmark);
+				}
 				break;
 			case R.id.action_open_browser:
 				IntentUtils.openBrowser(this, page.url);

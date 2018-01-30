@@ -460,4 +460,5 @@
 	<string name="open_in_browser">Open in browser</string>
     <string name="reader_mode">Reader mode</string>
     <string name="downloading_image">Loading image…</string>
+	<string name="remove_bookmark">Remove bookmark</string>
 </resources>

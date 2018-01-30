@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.MangaBookmark;
+import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.models.MangaPage;
 
 import java.lang.ref.WeakReference;
 
@@ -112,5 +114,29 @@ public final class BookmarksRepository extends SQLiteRepository<MangaBookmark> {
 				cursor.getLong(11),
 				cursor.getLong(12)
 		);
+	}
+
+	@Nullable
+	public MangaBookmark find(MangaHeader manga, MangaChapter chapter, MangaPage page) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					getTableName(),
+					getProjection(),
+					"manga_id = ? AND chapter_id = ? AND page_id = ?",
+					new String[]{String.valueOf(manga.id), String.valueOf(chapter.id), String.valueOf(page.id)},
+					null,
+					null,
+					null
+			);
+			if (cursor.moveToFirst()) {
+				return fromCursor(cursor);
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 }
