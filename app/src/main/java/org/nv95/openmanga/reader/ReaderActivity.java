@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,10 +62,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
 		LoaderManager.LoaderCallbacks<ListWrapper<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
 		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage>,
-		DialogInterface.OnClickListener, DialogInterface.OnCancelListener, ReaderModeDialog.OnReaderModeChangeListener {
+		DialogInterface.OnClickListener, DialogInterface.OnCancelListener, ReaderModeDialog.OnReaderModeChangeListener,
+		OnOverScrollListener {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
+
+	private static final long PAGE_ID_FIRST = Long.MIN_VALUE;
+	private static final long PAGE_ID_LAST = Long.MAX_VALUE;
+	private static final long PAGE_ID_UNDEFINED = 0L;
 
 	private ImmersiveLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
@@ -129,7 +135,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		} else {
 			mManga = intent.getParcelableExtra("manga");
 			mChapter = intent.getParcelableExtra("chapter");
-			mPageId = intent.getLongExtra("page_id", 0);
+			mPageId = intent.getLongExtra("page_id", PAGE_ID_UNDEFINED);
 			onMangaReady();
 		}
 	}
@@ -230,15 +236,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				dialogFragment.show(getSupportFragmentManager(), "thumb_view");
 				break;
 			case R.id.button_next:
-				final int i = CollectionsUtils.findChapterPositionById(mManga.chapters, mChapter.id);
-				if (i == -1) {
-					break;
-				}
-				AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
-				mChapter = mManga.chapters.get(i + 1);
-				setSubtitle(mChapter.name);
-
-				getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
+				onOverScrolledEnd();
 				break;
 		}
 	}
@@ -308,8 +306,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			mSeekBar.setMax(mPages.size() - 1);
 			mSeekBar.setProgress(0);
 			mReader.setPages(mPages);
-			final int page = CollectionsUtils.findPagePositionById(mPages, mPageId);
-			mPageId = 0;
+			final int page;
+			if (mPageId == PAGE_ID_LAST) {
+				page = mPages.size() - 1;
+			} else if (mPageId == PAGE_ID_FIRST || mPageId == PAGE_ID_UNDEFINED) {
+				page = 0;
+			} else {
+				page = CollectionsUtils.findPagePositionById(mPages, mPageId);
+			}
+			mPageId = PAGE_ID_UNDEFINED;
 			mReader.scrollToPage(page == -1 ? 0 : page);
 			addToHistory();
 		}
@@ -491,6 +496,38 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), mode);
 		mHistoryRepository.updateOrAdd(history);
 		//TODO
+	}
+
+	@Override
+	public void onOverScrolledStart() {
+		final int pos = mManga.chapters.indexOf(mChapter);
+		if (pos == -1 || pos == 0) {
+			return;
+		}
+		AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
+		mChapter = mManga.chapters.get(pos - 1);
+		mPageId = PAGE_ID_LAST;
+		setSubtitle(mChapter.name);
+		Toast toast = Toast.makeText(this, getString(R.string.prev_chapter, mChapter.name), Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
+	}
+
+	@Override
+	public void onOverScrolledEnd() {
+		final int pos = mManga.chapters.indexOf(mChapter);
+		if (pos == -1 || pos == mManga.chapters.size() - 1) {
+			return;
+		}
+		AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
+		mPageId = PAGE_ID_FIRST;
+		mChapter = mManga.chapters.get(pos - 1);
+		setSubtitle(mChapter.name);
+		Toast toast = Toast.makeText(this, getString(R.string.next_chapter_, mChapter.name), Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
 	final static class Result {

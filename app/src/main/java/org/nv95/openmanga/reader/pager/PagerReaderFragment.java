@@ -1,5 +1,6 @@
 package org.nv95.openmanga.reader.pager;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.MangaPage;
+import org.nv95.openmanga.reader.OnOverScrollListener;
 import org.nv95.openmanga.reader.ReaderFragment;
 
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.List;
 
 public final class PagerReaderFragment extends ReaderFragment implements ViewPager.OnPageChangeListener {
 
-	private ViewPager mPager;
+	private OverScrollPager mPager;
 	private PagerReaderAdapter mAdapter;
 
 	@Nullable
@@ -37,6 +39,15 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 		mPager.setOffscreenPageLimit(2);
 		mPager.setAdapter(mAdapter);
 		mPager.addOnPageChangeListener(this);
+	}
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		final Activity activity = getActivity();
+		if (activity instanceof OnOverScrollListener) {
+			mPager.setOnOverScrollListener((OnOverScrollListener) activity);
+		}
 	}
 
 	@Override
