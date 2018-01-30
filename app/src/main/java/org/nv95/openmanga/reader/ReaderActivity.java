@@ -5,7 +5,6 @@ import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.WeakAsyncTask;
 import org.nv95.openmanga.common.dialogs.BottomSheetMenuDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
@@ -36,14 +34,12 @@ import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.IntentUtils;
 import org.nv95.openmanga.core.ListWrapper;
-import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
@@ -63,7 +59,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		LoaderManager.LoaderCallbacks<ListWrapper<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
 		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage>,
 		DialogInterface.OnClickListener, DialogInterface.OnCancelListener, ReaderModeDialog.OnReaderModeChangeListener,
-		OnOverScrollListener {
+		OnOverScrollListener, FitWindowsFrameLayout.Callback {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
@@ -72,7 +68,6 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private static final long PAGE_ID_LAST = Long.MAX_VALUE;
 	private static final long PAGE_ID_UNDEFINED = 0L;
 
-	private ImmersiveLayout mRoot;
 	private AppCompatSeekBar mSeekBar;
 	private ViewGroup mContentPanel;
 	private Toolbar mToolbar;
@@ -96,11 +91,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		setSupportActionBar(mToolbar);
 		enableHomeAsUp();
 
-		mRoot = findViewById(R.id.root);
 		mSeekBar = findViewById(R.id.seekBar);
 		mContentPanel = findViewById(R.id.contentPanel);
 		mBottomBar = findViewById(R.id.bottomBar);
 		mTextViewPage = findViewById(R.id.textView_page);
+		this.<FitWindowsFrameLayout>findViewById(R.id.root).setCallback(this);
 
 		mSeekBar.setOnSeekBarChangeListener(this);
 		findViewById(R.id.action_menu).setOnClickListener(this);
@@ -376,7 +371,8 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		}
 	}
 
-	private void showUi() {
+	@Override
+	public void showUi() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			getWindow().getDecorView().setSystemUiVisibility(
 					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
