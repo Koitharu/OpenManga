@@ -55,7 +55,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 		if (ResourceUtils.isLandscapeTablet(getResources())) {
 			mColumnCount = 12;
 		}
-		mAdapter = new ShelfAdapter();
+		mAdapter = new ShelfAdapter((OnTipsActionListener) getActivity());
 		GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mColumnCount);
 		layoutManager.setSpanSizeLookup(new ShelfSpanSizeLookup(mAdapter, mColumnCount));
 		mRecyclerView.addItemDecoration(new ShelfItemSpaceDecoration(ResourceUtils.dpToPx(getResources(), 4), mAdapter, mColumnCount));
@@ -109,7 +109,8 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 
 		@Override
 		public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-			return viewHolder instanceof ShelfAdapter.TipHolder ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
+			return viewHolder instanceof ShelfAdapter.TipHolder && ((ShelfAdapter.TipHolder) viewHolder).isDismissible() ?
+					super.getSwipeDirs(recyclerView, viewHolder) : 0;
 		}
 
 		@Override

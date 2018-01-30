@@ -9,7 +9,7 @@
     <string name="action_settings">Налаштування</string>
     <string name="chapters_list">Перелік глав</string>
     <string name="close">Закрити</string>
-    <string name="continue_reading">Продовжити</string>
+    <string name="_continue">Продовжити</string>
     <string name="drawer_close">Закрити меню навігації</string>
     <string name="drawer_open">Відкрити меню навігації</string>
     <string name="loading">Завантаження…</string>

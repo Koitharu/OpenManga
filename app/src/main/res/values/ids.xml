@@ -2,6 +2,8 @@
 <resources>
 	<!-- tips actions -->
 	<item name="action_crash_report" type="id" />
+	<item name="action_wizard" type="id" />
+	<item name="action_discover" type="id" />
 	<!-- chapter menu -->
 	<item name="action_chapter_save_this" type="id" />
 	<item name="action_chapter_save_prev" type="id" />

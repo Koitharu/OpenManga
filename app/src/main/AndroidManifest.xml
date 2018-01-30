@@ -125,6 +125,10 @@
 			</intent-filter>
 		</activity>
 
+		<activity android:name=".recommendations.RecommendationsActivity"
+			android:label="@string/recommendations"
+			android:configChanges="orientation|screenSize" />
+
 		<activity android:name=".settings.providers.ProvidersSettingsActivity"
 			android:label="@string/manga_catalogues"
 			android:configChanges="orientation|screenSize" />
@@ -186,6 +190,9 @@
 
 		<service
 			android:name=".schedule.BackgroundService" />
+
+		<service
+			android:name=".recommendations.RecommendationsUpdateService" />
 
 		<service
 			android:name=".storage.SaveService" />

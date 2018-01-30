@@ -94,18 +94,21 @@ abstract class GroupleMangaProvider extends MangaProvider {
 	@NonNull
 	@Override
 	public MangaDetails getDetails(MangaHeader header) throws Exception {
-		Document doc = NetworkUtils.getDocument(header.url);
+		final Document doc = NetworkUtils.getDocument(header.url);
 		Element root = doc.body().getElementById("mangaBox");
+		final Element description = root.selectFirst(".manga-description");
+		final Element author = root.selectFirst(".elem_author");
 		final MangaDetails details = new MangaDetails(
 				header,
-				root.selectFirst(".manga-description").html(),
+				description == null ? "" : description.html(),
 				root.selectFirst("div.picture-fotorama").child(0).attr("data-full"),
-				root.selectFirst(".elem_author").child(0).text()
+				author == null ? "" : author.child(0).text()
 		);
-		root = root.selectFirst("div.chapters-link").selectFirst("tbody");
+		root = root.selectFirst("div.chapters-link");
 		if (root == null) {
 			return details;
 		}
+		root = root.selectFirst("tbody");
 		final Elements ch = root.select("a");
 		final String domain = NetworkUtils.getDomainWithScheme(header.url);
 		final int len = ch.size();

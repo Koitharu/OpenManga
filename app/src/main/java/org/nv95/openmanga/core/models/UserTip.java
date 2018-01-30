@@ -10,6 +10,9 @@ import android.support.annotation.StringRes;
 
 public final class UserTip {
 
+	public static final int FLAG_NO_DISMISSIBLE = 1;
+	public static final int FLAG_DISMISS_BUTTON = 2;
+
 	public final String title;
 	public final String content;
 	@DrawableRes
@@ -18,6 +21,7 @@ public final class UserTip {
 	public final int actionText;
 	@IdRes
 	public final int actionId;
+	private int mFlags = 0;
 
 	public UserTip(String title, String content) {
 		this.title = title;
@@ -41,6 +45,19 @@ public final class UserTip {
 		this.icon = icon;
 		this.actionText = actionText;
 		this.actionId = actionId;
+	}
+
+	public UserTip addFlag(int flag) {
+		mFlags |= flag;
+		return this;
+	}
+
+	public boolean isDismissible() {
+		return (mFlags & FLAG_NO_DISMISSIBLE) == 0;
+	}
+
+	public boolean hasDismissButton() {
+		return (mFlags & FLAG_DISMISS_BUTTON) != 0;
 	}
 
 	public boolean hasIcon() {

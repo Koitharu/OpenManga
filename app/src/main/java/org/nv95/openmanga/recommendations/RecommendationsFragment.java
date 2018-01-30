@@ -1,4 +1,4 @@
-package org.nv95.openmanga.mangalist.favourites;
+package org.nv95.openmanga.recommendations;
 
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -21,33 +21,30 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.core.ListWrapper;
-import org.nv95.openmanga.core.models.MangaFavourite;
-import org.nv95.openmanga.core.storage.db.FavouritesRepository;
-import org.nv95.openmanga.core.storage.db.FavouritesSpecification;
+import org.nv95.openmanga.core.models.MangaRecommendation;
+import org.nv95.openmanga.core.storage.db.RecommendationsSpecifications;
 
 import java.util.ArrayList;
 
 /**
- * Created by koitharu on 18.01.18.
+ * Created by koitharu on 29.01.18.
  */
 
-public final class FavouritesFragment extends AppBaseFragment implements LoaderManager.LoaderCallbacks<ListWrapper<MangaFavourite>> {
+public final class RecommendationsFragment extends AppBaseFragment implements LoaderManager.LoaderCallbacks<ListWrapper<MangaRecommendation>> {
 
 	private RecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
 	private TextView mTextViewHolder;
 
-	private FavouritesSpecification mSpecifications;
-	private FavouritesAdapter mAdapter;
-	private ArrayList<MangaFavourite> mDataset;
-
-	private FavouritesRepository mFavouritesRepository;
+	private RecommendationsSpecifications mSpecifications;
+	private RecommendationsAdapter mAdapter;
+	private ArrayList<MangaRecommendation> mDataset;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDataset = new ArrayList<>();
-		mSpecifications = FavouritesSpecification.from(getArguments());
+		mSpecifications = RecommendationsSpecifications.from(getArguments());
 	}
 
 	@Nullable
@@ -63,6 +60,7 @@ public final class FavouritesFragment extends AppBaseFragment implements LoaderM
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mTextViewHolder = view.findViewById(R.id.textView_holder);
 
+		mTextViewHolder.setText(R.string.no_recommendations_tip);
 		mRecyclerView.setHasFixedSize(true);
 	}
 
@@ -70,23 +68,22 @@ public final class FavouritesFragment extends AppBaseFragment implements LoaderM
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		final Activity activity = getActivity();
-		mAdapter = new FavouritesAdapter(mDataset);
+		mAdapter = new RecommendationsAdapter(mDataset);
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(activity, LinearLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
-		mFavouritesRepository = FavouritesRepository.get(activity);
 		getLoaderManager().initLoader((int) mSpecifications.getId(), mSpecifications.toBundle(), this).forceLoad();
 	}
 
 	@Override
-	public Loader<ListWrapper<MangaFavourite>> onCreateLoader(int id, Bundle args) {
-		return new FavouritesLoader(getActivity(), FavouritesSpecification.from(args));
+	public Loader<ListWrapper<MangaRecommendation>> onCreateLoader(int id, Bundle args) {
+		return new RecommendationsLoader(getActivity(), RecommendationsSpecifications.from(args));
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ListWrapper<MangaFavourite>> loader, ListWrapper<MangaFavourite> result) {
+	public void onLoadFinished(Loader<ListWrapper<MangaRecommendation>> loader, ListWrapper<MangaRecommendation> result) {
 		mProgressBar.setVisibility(View.GONE);
 		if (result.isSuccess()) {
-			final ArrayList<MangaFavourite> list = result.get();
+			final ArrayList<MangaRecommendation> list = result.get();
 			mDataset.clear();
 			mDataset.addAll(list);
 			mAdapter.notifyDataSetChanged();
@@ -97,7 +94,7 @@ public final class FavouritesFragment extends AppBaseFragment implements LoaderM
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ListWrapper<MangaFavourite>> loader) {
+	public void onLoaderReset(Loader<ListWrapper<MangaRecommendation>> loader) {
 
 	}
 }

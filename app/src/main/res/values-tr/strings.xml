@@ -46,7 +46,7 @@
     <string name="click_to_install">Yüklemek için tıkla</string>
     <string name="close">Kapat</string>
     <string name="completed">Tamamlandı</string>
-    <string name="continue_reading">Devam et</string>
+    <string name="_continue">Devam et</string>
     <string name="data">Veri</string>
     <string name="delete_mangas_confirm">Seçili mangalar silinsin mi?</string>
     <string name="description">Açıklama</string>

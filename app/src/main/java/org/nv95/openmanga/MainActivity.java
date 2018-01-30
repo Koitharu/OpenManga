@@ -9,18 +9,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.nv95.openmanga.common.CrashHandler;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.discover.DiscoverFragment;
 import org.nv95.openmanga.search.SearchActivity;
 import org.nv95.openmanga.settings.SettingsFragment;
+import org.nv95.openmanga.shelf.OnTipsActionListener;
 import org.nv95.openmanga.shelf.ShelfFragment;
 
 /**
@@ -28,7 +31,8 @@ import org.nv95.openmanga.shelf.ShelfFragment;
  */
 
 public final class MainActivity extends AppBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+		BottomNavigationView.OnNavigationItemReselectedListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener,
+		OnTipsActionListener {
 
 	private BottomNavigationView mBottomNavigationView;
 	private SearchView mSearchView;
@@ -148,5 +152,40 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 			return true;
 		}
 		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public void onTipActionClick(int actionId) {
+		switch (actionId) {
+			case R.id.action_crash_report:
+				final CrashHandler crashHandler = CrashHandler.get();
+				if (crashHandler != null) {
+					new AlertDialog.Builder(this)
+							.setTitle(crashHandler.getErrorClassName())
+							.setMessage(crashHandler.getErrorMessage() + "\n\n" + crashHandler.getErrorStackTrace())
+							.setNegativeButton(R.string.close, null)
+							.create()
+							.show();
+				}
+				break;
+			case R.id.action_discover:
+				mBottomNavigationView.setSelectedItemId(R.id.section_discover);
+				break;
+		}
+	}
+
+	@Override
+	public void onTipDismissed(int actionId) {
+		switch (actionId) {
+			case R.id.action_crash_report:
+				final CrashHandler crashHandler = CrashHandler.get();
+				if (crashHandler != null) {
+					crashHandler.clear();
+				}
+				break;
+			case R.id.action_wizard:
+				FlagsStorage.get(this).setWizardRequired(false);
+				break;
+		}
 	}
 }
