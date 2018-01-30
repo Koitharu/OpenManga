@@ -9,4 +9,13 @@
 		<item quantity="many">%1$d chapters saved</item>
 		<item quantity="other">%1$d chapters saved</item>
 	</plurals>
+
+	<plurals name="chapters_new">
+		<item quantity="zero">No new chapters</item>
+		<item quantity="one">One new chapter</item>
+		<item quantity="two">Two new chapters</item>
+		<item quantity="few">%1$d new chapters</item>
+		<item quantity="many">%1$d new chapters</item>
+		<item quantity="other">%1$d new chapters</item>
+	</plurals>
 </resources>

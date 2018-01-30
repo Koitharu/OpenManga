@@ -88,4 +88,8 @@ public final class JobSchedulerCompat {
 			manager.cancel(pendingIntent);
 		}
 	}
+
+	public void startNow() {
+		mContext.startService(new Intent(mContext, BackgroundService.class));
+	}
 }

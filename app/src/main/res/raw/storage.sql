@@ -33,11 +33,6 @@ CREATE TABLE favourites (
 	removed INTEGER DEFAULT 0
 );
 
-CREATE TABLE search_history (
-	query TEXT PRIMARY KEY,
-	updated_at INTEGER
-);
-
 CREATE TABLE bookmarks (
 	id INTEGER PRIMARY KEY,
 	manga_id INTEGER,

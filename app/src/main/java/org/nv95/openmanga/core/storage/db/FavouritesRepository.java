@@ -3,11 +3,13 @@ package org.nv95.openmanga.core.storage.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.models.MangaUpdateInfo;
 
 import java.lang.ref.WeakReference;
 
@@ -140,5 +142,30 @@ public final class FavouritesRepository extends SQLiteRepository<MangaFavourite>
 	public boolean remove(MangaHeader manga) {
 		return mStorageHelper.getWritableDatabase()
 				.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(manga.id)}) > 0;
+	}
+
+	public boolean putUpdateInfo(MangaUpdateInfo updateInfo) {
+		try {
+			final ContentValues cv = new ContentValues(1);
+			cv.put("new_chapters", updateInfo.newChapters);
+			return mStorageHelper.getWritableDatabase().update(getTableName(), cv,
+					"id=?", new String[]{String.valueOf(updateInfo.mangaId)}) > 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public void setNoUpdates(MangaHeader manga) {
+		final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+		try {
+			database.beginTransaction();
+			database.rawQuery("UPDATE " + TABLE_NAME + " SET total_chapters = total_chapters + new_chapters WHERE id = ?", new String[]{String.valueOf(manga.id)});
+			database.rawQuery("UPDATE " + TABLE_NAME + " SET new_chapters = 0 WHERE id = ?", new String[]{String.valueOf(manga.id)});
+			database.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			database.endTransaction();
+		}
 	}
 }

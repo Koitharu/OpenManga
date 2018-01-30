@@ -1,7 +1,6 @@
 package org.nv95.openmanga.common;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.AsyncQueryHandler;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -16,10 +15,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.common.utils.IntentUtils;
 
 import java.io.BufferedReader;
@@ -474,6 +473,7 @@ public final class OemBadgeHelper {
 		}
 	}
 
+	@MainThread
 	public boolean applyCount(int badgeCount) {
 		try {
 			return mBadger != null && mBadger.executeBadge(badgeCount);

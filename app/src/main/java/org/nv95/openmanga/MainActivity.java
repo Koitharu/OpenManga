@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.discover.DiscoverFragment;
+import org.nv95.openmanga.schedule.JobSchedulerCompat;
 import org.nv95.openmanga.search.SearchActivity;
 import org.nv95.openmanga.settings.SettingsFragment;
 import org.nv95.openmanga.shelf.OnTipsActionListener;
@@ -71,6 +72,9 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		getFragmentManager().beginTransaction()
 				.replace(R.id.content, mFragment)
 				.commitAllowingStateLoss();
+
+		new JobSchedulerCompat(this)
+				.startNow();
 	}
 
 	@Override

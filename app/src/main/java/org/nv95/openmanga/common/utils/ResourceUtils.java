@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
@@ -121,5 +123,14 @@ public abstract class ResourceUtils {
 	@NonNull
 	public static String formatTimeRelative(long time) {
 		return DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+	}
+
+	public static int colorToArgb(@ColorInt int color) {
+		return Color.argb(
+				255,
+				Color.red(color),
+				Color.green(color),
+				Color.blue(color)
+		);
 	}
 }
