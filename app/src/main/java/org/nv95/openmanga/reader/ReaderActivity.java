@@ -61,7 +61,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		SeekBar.OnSeekBarChangeListener, ChaptersListAdapter.OnChapterClickListener,
 		LoaderManager.LoaderCallbacks<ListWrapper<MangaPage>>, View.OnSystemUiVisibilityChangeListener,
 		ReaderCallback, OnThumbnailClickListener, MenuDialog.OnMenuItemClickListener<MangaPage>,
-		DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
+		DialogInterface.OnClickListener, DialogInterface.OnCancelListener, ReaderModeDialog.OnReaderModeChangeListener {
 
 	public static final String ACTION_READING_CONTINUE = "org.nv95.openmanga.ACTION_READING_CONTINUE";
 	public static final String ACTION_BOOKMARK_OPEN = "org.nv95.openmanga.ACTION_BOOKMARK_OPEN";
@@ -445,6 +445,15 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			case R.id.action_page_share:
 				new ImageSaveTask(this, true).start(page);
 				break;
+			case R.id.action_reader_mode:
+				if (mHistoryRepository != null && mPages != null) {
+					final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
+					mHistoryRepository.updateOrAdd(history);
+					new ReaderModeDialog(this, history)
+							.setListener(this)
+							.show();
+				}
+				break;
 			default:
 				stub();
 		}
@@ -471,6 +480,17 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onCancel(DialogInterface dialog) {
 		finish();
+	}
+
+	@Override
+	public void onReaderModeChanged(short mode) {
+		if (mode != 0) {
+			stub();
+			return;
+		}
+		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), mode);
+		mHistoryRepository.updateOrAdd(history);
+		//TODO
 	}
 
 	final static class Result {
