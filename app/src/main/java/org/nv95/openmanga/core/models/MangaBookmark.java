@@ -1,7 +1,13 @@
 package org.nv95.openmanga.core.models;
 
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.nv95.openmanga.BuildConfig;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -33,7 +39,7 @@ public final class MangaBookmark implements Parcelable, UniqueObject {
 
 	protected MangaBookmark(Parcel in) {
 		id = in.readLong();
-		manga = in.readParcelable(MangaHeader.class.getClassLoader());
+		manga = new MangaHeader(in);
 		chapterId = in.readLong();
 		pageId = in.readLong();
 		createdAt = in.readLong();
@@ -59,7 +65,7 @@ public final class MangaBookmark implements Parcelable, UniqueObject {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeLong(id);
-		dest.writeParcelable(manga, flags);
+		manga.writeToParcel(dest, flags);
 		dest.writeLong(chapterId);
 		dest.writeLong(pageId);
 		dest.writeLong(createdAt);
@@ -83,5 +89,28 @@ public final class MangaBookmark implements Parcelable, UniqueObject {
 	@Override
 	public int hashCode() {
 		return (int) (id ^ (id >>> 32));
+	}
+
+	public Bundle toBundle() {
+		final Bundle bundle = new Bundle(5);
+		bundle.putLong("id", id);
+		bundle.putBundle("manga", manga.toBundle());
+		bundle.putLong("chapter_id", chapterId);
+		bundle.putLong("page_id", pageId);
+		bundle.putLong("created_at", createdAt);
+		return bundle;
+	}
+
+	@Nullable
+	public static MangaBookmark from(Bundle bundle) {
+		if (bundle.containsKey("bookmark")) {
+			return bundle.getParcelable("bookmark");
+		} else return new MangaBookmark(
+				bundle.getLong("id"),
+				MangaHeader.from(bundle.getBundle("manga")),
+				bundle.getLong("chapter_id"),
+				bundle.getLong("page_id"),
+				bundle.getLong("created_at")
+		);
 	}
 }

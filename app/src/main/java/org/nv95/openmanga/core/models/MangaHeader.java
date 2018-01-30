@@ -1,8 +1,10 @@
 package org.nv95.openmanga.core.models;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -100,6 +102,38 @@ public class MangaHeader implements Parcelable, UniqueObject {
 				other.status,
 				other.rating
 		);
+	}
+
+	@Nullable
+	public static MangaHeader from(Bundle bundle) {
+		if (bundle.containsKey("manga")) {
+			return bundle.getParcelable("manga");
+		} else return new MangaHeader(
+				bundle.getLong("id"),
+				bundle.getString("name"),
+				bundle.getString("summary"),
+				bundle.getString("genres"),
+				bundle.getString("url"),
+				bundle.getString("thumbnail"),
+				bundle.getString("provider"),
+				bundle.getInt("status"),
+				bundle.getShort("rating")
+		);
+	}
+
+	@NonNull
+	public Bundle toBundle() {
+		final Bundle bundle = new Bundle();
+		bundle.putLong("id", id);
+		bundle.putString("name", name);
+		bundle.putString("summary", summary);
+		bundle.putString("genres", genres);
+		bundle.putString("url", url);
+		bundle.putString("thumbnail", thumbnail);
+		bundle.putString("provider", provider);
+		bundle.putInt("status", status);
+		bundle.putShort("rating", rating);
+		return bundle;
 	}
 
 	@Override

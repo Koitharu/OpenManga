@@ -449,4 +449,5 @@
     <string name="no_pages_found">No pages found</string>
     <string name="error_timeout">Time out while connecting</string>
 	<string name="requested_chapter_not_found">Requested chapter not found</string>
+	<string name="bookmark_not_found">Bookmark not found</string>
 </resources>

@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
@@ -40,6 +41,7 @@ import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
@@ -110,10 +112,14 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		final Intent intent = getIntent();
 		final String action = intent.getAction();
 		if (ACTION_READING_CONTINUE.equals(action)) {
-			MangaHeader mangaHeader = intent.getParcelableExtra("manga");
+			MangaHeader mangaHeader = MangaHeader.from(intent.getExtras());
 			new ResumeReadingTask(this).start(mangaHeader);
 		} else if (ACTION_BOOKMARK_OPEN.equals(action)) {
-			MangaBookmark bookmark = intent.getParcelableExtra("bookmark");
+			MangaBookmark bookmark = MangaBookmark.from(intent.getExtras());
+			if (bookmark == null) {
+				Toast.makeText(this, R.string.bookmark_not_found, Toast.LENGTH_SHORT).show();
+				finish();
+			}
 			new BookmarkOpenTask(this).start(bookmark);
 		} else {
 			mManga = intent.getParcelableExtra("manga");

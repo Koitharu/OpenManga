@@ -139,6 +139,30 @@ abstract class SQLiteRepository<T> implements Repository<T> {
 		}
 	}
 
+	@Nullable
+	protected T findById(@NonNull Object id) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					getTableName(),
+					getProjection(),
+					"id = ?",
+					new String[]{String.valueOf(id)},
+					null,
+					null,
+					null
+			);
+			if (cursor.moveToFirst()) {
+				return fromCursor(cursor);
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+	}
+
 	protected abstract void toContentValues(@NonNull T t, @NonNull ContentValues cv);
 
 	@NonNull

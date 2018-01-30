@@ -50,7 +50,12 @@
 
 		<activity
 			android:name=".preview.PreviewActivity"
-			android:configChanges="orientation|screenSize" />
+			android:configChanges="orientation|screenSize" >
+
+			<intent-filter>
+				<action android:name="org.nv95.openmanga.ACTION_PREVIEW" />
+			</intent-filter>
+		</activity>
 
 		<activity
 			android:name=".mangalist.MangaListActivity"

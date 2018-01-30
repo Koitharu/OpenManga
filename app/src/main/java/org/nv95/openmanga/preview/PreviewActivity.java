@@ -46,6 +46,8 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, BookmarkRemoveTask.OnBookmarkRemovedListener,
 		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
 
+	public static final String ACTION_PREVIEW = "org.nv95.openmanga.ACTION_PREVIEW";
+
 	//views
 	//activity
 	private ViewPager mPager;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.DataViewHolder;
 import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.IntentUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
@@ -110,13 +111,16 @@ public final class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapte
 
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
+			final MangaBookmark data = getData();
+			if (data == null) {
+				return false;
+			}
 			switch (item.getItemId()) {
 				case R.id.action_remove:
-					final MangaBookmark data = getData();
-					if (data == null) {
-						return false;
-					}
 					new BookmarkRemoveTask(itemView.getContext()).start(data);
+					return true;
+				case R.id.action_shortcut:
+					IntentUtils.createLauncherShortcutRead(itemView.getContext().getApplicationContext(), data);
 					return true;
 				default:
 					return false;
