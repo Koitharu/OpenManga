@@ -461,4 +461,6 @@
     <string name="reader_mode">Reader mode</string>
     <string name="downloading_image">Loading image…</string>
 	<string name="remove_bookmark">Remove bookmark</string>
+	<string name="chapters_marked_as_viewed">All chapters marked as viewed</string>
+	<string name="new_chapters_available">New chapters are available</string>
 </resources>

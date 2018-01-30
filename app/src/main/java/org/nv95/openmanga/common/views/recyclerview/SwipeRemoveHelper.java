@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -27,10 +29,10 @@ public final class SwipeRemoveHelper extends ItemTouchHelper.Callback {
 	private final Drawable mIcon;
 	private final int mPadding;
 
-	private SwipeRemoveHelper(Context context, @NonNull OnItemRemovedListener listener) {
+	private SwipeRemoveHelper(Context context, @NonNull OnItemRemovedListener listener, @ColorRes int color, @DrawableRes int icon) {
 		mListener = listener;
-		mBackground = new ColorDrawable(ContextCompat.getColor(context, R.color.red_overlay));
-		mIcon = ContextCompat.getDrawable(context, R.drawable.ic_trash_white);
+		mBackground = new ColorDrawable(ContextCompat.getColor(context, color));
+		mIcon = ContextCompat.getDrawable(context, icon);
 		mPadding = ResourceUtils.dpToPx(context.getResources(), 24);
 	}
 
@@ -91,7 +93,11 @@ public final class SwipeRemoveHelper extends ItemTouchHelper.Callback {
 	}
 
 	public static void setup(@NonNull RecyclerView recyclerView, @NonNull OnItemRemovedListener listener) {
-		new ItemTouchHelper(new SwipeRemoveHelper(recyclerView.getContext(), listener)).attachToRecyclerView(recyclerView);
+		setup(recyclerView, listener, R.color.red_overlay, R.drawable.ic_trash_white);
+	}
+
+	public static void setup(@NonNull RecyclerView recyclerView, @NonNull OnItemRemovedListener listener, @ColorRes int color, @DrawableRes int icon) {
+		new ItemTouchHelper(new SwipeRemoveHelper(recyclerView.getContext(), listener, color, icon)).attachToRecyclerView(recyclerView);
 	}
 
 	public interface OnItemRemovedListener {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_checkall"
-        android:icon="@drawable/ic_done_all_light"
+        android:icon="@drawable/ic_done_all_white"
         android:orderInCategory="100"
         android:title="@string/mark_all_viewed"
         app:showAsAction="ifRoom" />

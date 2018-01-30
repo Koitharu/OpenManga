@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item android:id="@+id/action_clear"
+		android:title="@string/mark_all_viewed"
+		android:icon="@drawable/ic_clear_all_white"
+		app:showAsAction="ifRoom" />
+</menu>

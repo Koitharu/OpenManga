@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -14,10 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.nv95.openmanga.R;
 import org.nv95.openmanga.AppBaseFragment;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.common.utils.ResourceUtils;
+import org.nv95.openmanga.schedule.JobSchedulerCompat;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -90,6 +92,12 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 		switch (item.getItemId()) {
 			case R.id.action_shelf_settings:
 				//TODO
+				return true;
+			case R.id.action_check_updates:
+				Snackbar.make(mRecyclerView, R.string.checking_new_chapters, Snackbar.LENGTH_SHORT)
+						.show();
+				new JobSchedulerCompat(getActivity())
+						.startNow();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

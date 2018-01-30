@@ -168,4 +168,18 @@ public final class FavouritesRepository extends SQLiteRepository<MangaFavourite>
 			database.endTransaction();
 		}
 	}
+
+	public void clearNewChapters() {
+		final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+		try {
+			database.beginTransaction();
+			database.rawQuery("UPDATE " + TABLE_NAME + " SET total_chapters = total_chapters + new_chapters", null);
+			database.rawQuery("UPDATE " + TABLE_NAME + " SET new_chapters = 0", null);
+			database.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			database.endTransaction();
+		}
+	}
 }

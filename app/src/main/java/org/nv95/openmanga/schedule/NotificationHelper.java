@@ -1,13 +1,15 @@
 package org.nv95.openmanga.schedule;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.utils.ResourceUtils;
-import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaUpdateInfo;
+import org.nv95.openmanga.mangalist.updates.MangaUpdatesActivity;
 
 import java.util.List;
 
@@ -37,14 +39,21 @@ final class NotificationHelper {
 		}
 		final String summary = mContext.getResources().getQuantityString(R.plurals.chapters_new, totalCount, totalCount);
 		style.setSummaryText(summary);
-		builder.setContentTitle(mContext.getString(R.string.manga_updates));
+		builder.setContentTitle(mContext.getString(R.string.new_chapters_available));
 		builder.setContentText(summary);
 		builder.setTicker(summary);
 		builder.setSmallIcon(R.drawable.ic_stat_star);
 		builder.setStyle(style);
-		final int color = ThemeUtils.getAttrColor(mContext, R.attr.colorPrimary);
+		final int color = ContextCompat.getColor(mContext, R.color.notification_chapters);
 		//TODO settings
-		builder.setLights(ResourceUtils.colorToArgb(color), 800, 4000);
+		builder.setLights(color, 800, 4000);
+		builder.setContentIntent(PendingIntent.getActivity(
+				mContext,
+				1,
+				new Intent(mContext, MangaUpdatesActivity.class),
+				0
+		));
+		builder.setAutoCancel(true);
 		mManager.notify(CHANNEL_UPDATES.hashCode(), builder.build());
 	}
 }
