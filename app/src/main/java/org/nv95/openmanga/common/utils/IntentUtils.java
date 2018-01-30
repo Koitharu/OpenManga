@@ -2,6 +2,7 @@ package org.nv95.openmanga.common.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import org.nv95.openmanga.preview.PreviewActivity;
 import org.nv95.openmanga.reader.ReaderActivity;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -85,5 +87,20 @@ public abstract class IntentUtils {
 		i.setType("image/*");
 		i.putExtra(Intent.EXTRA_STREAM, SharedFileProvider.getUriForFile(context, SharedFileProvider.AUTHORITY, file));
 		context.startActivity(Intent.createChooser(i, context.getString(R.string.share_image)));
+	}
+
+	public static boolean canResolveBroadcast(@NonNull Context context, @NonNull Intent intent) {
+		final PackageManager packageManager = context.getPackageManager();
+		final List receivers = packageManager.queryBroadcastReceivers(intent, 0);
+		return receivers != null && receivers.size() > 0;
+	}
+
+	public static boolean sendBroadcastSafely(@NonNull Context context, @NonNull Intent intent) {
+		if (canResolveBroadcast(context, intent)) {
+			context.sendBroadcast(intent);
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
