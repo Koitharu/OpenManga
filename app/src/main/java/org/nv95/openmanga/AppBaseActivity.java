@@ -21,14 +21,14 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.common.utils.ThemeUtils;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by koitharu on 21.12.17.
  */
 
 public abstract class AppBaseActivity extends AppCompatActivity {
-
-	private static final int REQUEST_PERMISSION = 112;
 
 	private boolean mActionBarVisible = false;
 	private boolean mHomeAsUpEnabled = false;
@@ -151,34 +151,35 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
-	public boolean checkPermission(String permission) {
+	public void checkPermissions(int requestCode, String... permissions) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-			return true;
+			for (String o : permissions) {
+				onPermissionGranted(requestCode, o);
+			}
 		}
-		if (ContextCompat.checkSelfPermission(this,
-				permission) == PackageManager.PERMISSION_GRANTED) {
-			return true;
+		final ArrayList<String> required = new ArrayList<>(permissions.length);
+		for (String o : permissions) {
+			if (ContextCompat.checkSelfPermission(this, o) != PackageManager.PERMISSION_GRANTED) {
+				required.add(o);
+			} else {
+				onPermissionGranted(requestCode, o);
+			}
 		}
-		if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-			ActivityCompat.requestPermissions(this,
-					new String[]{permission},
-					REQUEST_PERMISSION);
+		if (!required.isEmpty()) {
+			ActivityCompat.requestPermissions(this, required.toArray(new String[required.size()]), requestCode);
 		}
-		return false;
 	}
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-		if (requestCode == REQUEST_PERMISSION) {
-			for (int i = 0; i < permissions.length; i++) {
-				if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-					onPermissionGranted(permissions[i]);
-				}
+		for (int i = 0; i < permissions.length; i++) {
+			if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+				onPermissionGranted(requestCode, permissions[i]);
 			}
 		}
 	}
 
-	protected void onPermissionGranted(String permission) {
+	protected void onPermissionGranted(int requestCode, String permission) {
 
 	}
 

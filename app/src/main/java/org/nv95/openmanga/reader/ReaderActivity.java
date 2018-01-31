@@ -1,5 +1,6 @@
 package org.nv95.openmanga.reader;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.LoaderManager;
 import android.content.DialogInterface;
@@ -68,6 +69,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private static final long PAGE_ID_FIRST = Long.MIN_VALUE;
 	private static final long PAGE_ID_LAST = Long.MAX_VALUE;
 	private static final long PAGE_ID_UNDEFINED = 0L;
+
+	private static final int REQUEST_PAGE_SAVE = 61;
+	private static final int REQUEST_PAGE_SHARE = 62;
 
 	private AppCompatSeekBar mSeekBar;
 	private ViewGroup mContentPanel;
@@ -447,10 +451,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				IntentUtils.openBrowser(this, page.url);
 				break;
 			case R.id.action_page_save:
-				new ImageSaveTask(this, false).start(page);
+				checkPermissions(REQUEST_PAGE_SAVE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 				break;
 			case R.id.action_page_share:
-				new ImageSaveTask(this, true).start(page);
+				checkPermissions(REQUEST_PAGE_SHARE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 				break;
 			case R.id.action_reader_mode:
 				if (mHistoryRepository != null && mPages != null) {
@@ -463,6 +467,20 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				break;
 			default:
 				stub();
+		}
+	}
+
+	@Override
+	protected void onPermissionGranted(int requestCode, String permission) {
+		final MangaPage page = mReader.getCurrentPage();
+		switch (requestCode) {
+			case REQUEST_PAGE_SAVE:
+				new ImageSaveTask(this, false).start(page);
+				break;
+			case REQUEST_PAGE_SHARE:
+				new ImageSaveTask(this, true).start(page);
+				break;
+
 		}
 	}
 
@@ -539,3 +557,4 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		long pageId;
 	}
 }
+
