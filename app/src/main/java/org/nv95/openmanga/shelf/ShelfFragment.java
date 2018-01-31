@@ -30,11 +30,13 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	private RecyclerView mRecyclerView;
 	private ShelfAdapter mAdapter;
 	private int mColumnCount;
+	private boolean mWasPaused;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mColumnCount = 12;
+		mWasPaused = false;
 	}
 
 	@Nullable
@@ -63,8 +65,8 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 		mRecyclerView.addItemDecoration(new ShelfItemSpaceDecoration(ResourceUtils.dpToPx(getResources(), 4), mAdapter, mColumnCount));
 		mRecyclerView.setLayoutManager(layoutManager);
 		mRecyclerView.setAdapter(mAdapter);
-		getLoaderManager().initLoader(0, null, this);
-		getLoaderManager().getLoader(0).forceLoad(); //TODO
+		getLoaderManager().initLoader(0, null, this).forceLoad();
+		mWasPaused = false;
 	}
 
 	@Override
@@ -101,6 +103,21 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onPause() {
+		mWasPaused = true;
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mWasPaused) {
+			getLoaderManager().restartLoader(0, null, this).forceLoad();
+			mWasPaused = false;
 		}
 	}
 
