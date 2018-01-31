@@ -104,4 +104,28 @@ public final class SavedChaptersRepository extends SQLiteRepository<SavedChapter
 			}
 		}
 	}
+
+	@Nullable
+	public SavedChapter findChapterByUrl(String chapterUrl) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					getTableName(),
+					getProjection(),
+					"url = ?",
+					new String[]{String.valueOf(chapterUrl)},
+					null,
+					null,
+					null
+			);
+			if (cursor.moveToFirst()) {
+				return fromCursor(cursor);
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+	}
 }

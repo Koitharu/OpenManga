@@ -67,7 +67,8 @@ final class ImageSaveTask extends WeakAsyncTask<Context, MangaPage, Integer, Obj
 	@NonNull
 	protected ObjectWrapper<File> doInBackground(MangaPage... mangaPages) {
 		final MangaPage page = mangaPages[0];
-		final File destination = PagesCache.getInstance(getObject()).getFileForUrl(page.url);
+		final File destination = page.url != null && page.url.startsWith("file://") ?
+				new File(page.url.substring(7)) : PagesCache.getInstance(getObject()).getFileForUrl(page.url);
 		//check if not downloaded
 		if (!destination.exists()) {
 			InputStream input = null;
@@ -124,7 +125,7 @@ final class ImageSaveTask extends WeakAsyncTask<Context, MangaPage, Integer, Obj
 			}
 		}
 		if (!destination.exists()) {
-			return new ObjectWrapper<File>(new FileNotFoundException());
+			return new ObjectWrapper<>(new FileNotFoundException());
 		}
 		final File resultFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), page.id + ".png");
 		FileOutputStream out = null;

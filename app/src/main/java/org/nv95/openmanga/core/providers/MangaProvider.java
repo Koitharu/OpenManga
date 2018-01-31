@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.LruCache;
 
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
@@ -104,7 +105,7 @@ public abstract class MangaProvider {
 	}
 
 	@Nullable
-	public final String getName() {
+	public String getName() {
 		try {
 			return ((String)this.getClass().getField("DNAME").get(this));
 		} catch (Exception e) {
@@ -129,7 +130,9 @@ public abstract class MangaProvider {
 	@NonNull
 	public static MangaProvider get(Context context, @NonNull @CName String cName) throws AssertionError {
 		MangaProvider provider = sProviderCache.get(cName);
-		if (provider != null) return provider;
+		if (provider != null) {
+			return NetworkUtils.isNetworkAvailable(context) ? provider : new OfflineMangaProvider(context, provider);
+		}
 		switch (cName) {
 			case DesumeProvider.CNAME:
 				provider = new DesumeProvider(context);
@@ -144,7 +147,7 @@ public abstract class MangaProvider {
 				throw new AssertionError("Invalid CNAME");
 		}
 		sProviderCache.put(cName, provider);
-		return provider;
+		return NetworkUtils.isNetworkAvailable(context) ? provider : new OfflineMangaProvider(context, provider);
 	}
 
 	@Nullable

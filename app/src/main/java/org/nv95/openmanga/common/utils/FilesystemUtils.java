@@ -71,4 +71,9 @@ public abstract class FilesystemUtils {
 					}
 				} : callback);
 	}
+
+	@Nullable
+	public static File getFile(@Nullable String url) {
+		return url != null && url.startsWith("file://") ? new File(url.substring(7)) : null;
+	}
 }

@@ -67,7 +67,7 @@ public final class SavedPagesStorage implements FilesStorage<SavedPage, File> {
 	}
 
 	@Nullable
-	public static SavedPagesStorage get(Context context, MangaHeader manga) {
+	public static SavedPagesStorage get(@NonNull Context context, @NonNull MangaHeader manga) {
 		final SavedManga savedManga = SavedMangaRepository.get(context).find(manga);
 		return savedManga == null ? null : new SavedPagesStorage(savedManga);
 	}

@@ -113,4 +113,9 @@ public final class SavedMangaRepository extends SQLiteRepository<SavedManga> {
 	public SavedManga find(MangaHeader manga) {
 		return findById(manga.id);
 	}
+
+	@Nullable
+	public SavedManga get(long id) {
+		return findById(id);
+	}
 }
