@@ -153,7 +153,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?selectableItemBackground"
-            android:contentDescription="@string/action_settings"
+            android:contentDescription="@string/settings"
             android:scaleType="center"
             android:src="@drawable/ic_preferences_light" />
 
