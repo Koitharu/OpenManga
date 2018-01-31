@@ -7,7 +7,6 @@ import android.util.SparseBooleanArray;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaChaptersList;
 import org.nv95.openmanga.core.models.MangaDetails;
-import org.nv95.openmanga.core.models.MangaHeader;
 
 /**
  * Created by koitharu on 25.01.18.
@@ -15,15 +14,15 @@ import org.nv95.openmanga.core.models.MangaHeader;
 
 public final class SaveRequest {
 
-	public final MangaHeader manga;
+	public final MangaDetails manga;
 	public final MangaChaptersList chapters;
 
-	public SaveRequest(MangaHeader manga, MangaChaptersList chapters) {
+	public SaveRequest(MangaDetails manga, MangaChaptersList chapters) {
 		this.manga = manga;
 		this.chapters = chapters;
 	}
 
-	public SaveRequest(MangaHeader manga, MangaChapter oneChapter) {
+	public SaveRequest(MangaDetails manga, MangaChapter oneChapter) {
 		this.manga = manga;
 		this.chapters = new MangaChaptersList(1);
 		chapters.add(oneChapter);
@@ -50,7 +49,7 @@ public final class SaveRequest {
 	@NonNull
 	public static SaveRequest from(Bundle bundle) {
 		return new SaveRequest(
-				bundle.<MangaHeader>getParcelable("manga"),
+				bundle.<MangaDetails>getParcelable("manga"),
 				new MangaChaptersList(bundle.<MangaChapter>getParcelableArrayList("chapters"))
 		);
 	}

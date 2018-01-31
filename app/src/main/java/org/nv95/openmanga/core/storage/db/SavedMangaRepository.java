@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.SavedManga;
 
 import java.lang.ref.WeakReference;
@@ -18,17 +19,19 @@ public final class SavedMangaRepository extends SQLiteRepository<SavedManga> {
 
 	private static final String TABLE_NAME = "saved";
 	private static final String[] PROJECTION = new String[]{
-			"id",                        //0
-			"name",                        //1
-			"summary",                    //2
-			"genres",                    //3
-			"url",                        //4
-			"thumbnail",                //5
-			"provider",                    //6
-			"status",                    //7
-			"rating",                    //8
-			"created_at",                //9
-			"local_path"                //10
+			"id",					//0
+			"name",					//1
+			"summary",				//2
+			"genres",				//3
+			"url",					//4
+			"thumbnail",			//5
+			"provider",				//6
+			"status",				//7
+			"rating",				//8
+			"created_at",			//9
+			"local_path",			//10
+			"description",			//11
+			"author"				//12
 	};
 
 	@Nullable
@@ -64,6 +67,8 @@ public final class SavedMangaRepository extends SQLiteRepository<SavedManga> {
 		cv.put(PROJECTION[8], manga.rating);
 		cv.put(PROJECTION[9], manga.createdAt);
 		cv.put(PROJECTION[10], manga.localPath);
+		cv.put(PROJECTION[11], manga.description);
+		cv.put(PROJECTION[12], manga.author);
 	}
 
 	@NonNull
@@ -98,7 +103,14 @@ public final class SavedMangaRepository extends SQLiteRepository<SavedManga> {
 				cursor.getInt(7),
 				cursor.getShort(8),
 				cursor.getLong(9),
-				cursor.getString(10)
+				cursor.getString(10),
+				cursor.getString(11),
+				cursor.getString(12)
 		);
+	}
+
+	@Nullable
+	public SavedManga find(MangaHeader manga) {
+		return findById(manga.id);
 	}
 }

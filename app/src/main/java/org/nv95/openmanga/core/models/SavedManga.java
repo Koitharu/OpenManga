@@ -14,17 +14,23 @@ public final class SavedManga extends MangaHeader implements Parcelable {
 
 	public final long createdAt;
 	public final String localPath;
+	public final String description;
+	public final String author;
 
-	public SavedManga(String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, long createdAt, String localPath) {
+	public SavedManga(String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, long createdAt, String localPath, String description, String author) {
 		super(name, summary, genres, url, thumbnail, provider, status, rating);
 		this.createdAt = createdAt;
 		this.localPath = localPath;
+		this.description = description;
+		this.author = author;
 	}
 
-	public SavedManga(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, long createdAt, String localPath) {
+	public SavedManga(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, long createdAt, String localPath, String description, String author) {
 		super(id, name, summary, genres, url, thumbnail, provider, status, rating);
 		this.createdAt = createdAt;
 		this.localPath = localPath;
+		this.description = description;
+		this.author = author;
 	}
 
 	public static final Creator<SavedManga> CREATOR = new Creator<SavedManga>() {
@@ -49,16 +55,20 @@ public final class SavedManga extends MangaHeader implements Parcelable {
 		super.writeToParcel(parcel, i);
 		parcel.writeLong(createdAt);
 		parcel.writeString(localPath);
+		parcel.writeString(description);
+		parcel.writeString(author);
 	}
 
 	protected SavedManga(Parcel in) {
 		super(in);
 		createdAt = in.readLong();
 		localPath = in.readString();
+		description = in.readString();
+		author = in.readString();
 	}
 
 	@NonNull
-	public static SavedManga from(@NonNull MangaHeader other, @NonNull File localPath) {
+	public static SavedManga from(@NonNull MangaDetails other, @NonNull File localPath) {
 		return new SavedManga(
 				other.id,
 				other.name,
@@ -70,7 +80,9 @@ public final class SavedManga extends MangaHeader implements Parcelable {
 				other.status,
 				other.rating,
 				System.currentTimeMillis(),
-				localPath.getPath()
+				localPath.getPath(),
+				other.description,
+				other.author
 		);
 	}
 }

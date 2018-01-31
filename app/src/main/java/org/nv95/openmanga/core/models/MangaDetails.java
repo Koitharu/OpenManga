@@ -1,6 +1,7 @@
 package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -11,6 +12,7 @@ public final class MangaDetails extends MangaHeader {
 	public final String description;
 	public final String cover;
 	public final String author;
+	@NonNull
 	public final MangaChaptersList chapters;
 
 	public MangaDetails(String name, String summary, String genres, String url, String thumbnail, String provider, int status, byte rating, String description, String cover, String author, MangaChaptersList chapters) {
@@ -70,5 +72,15 @@ public final class MangaDetails extends MangaHeader {
 		parcel.writeString(cover);
 		parcel.writeString(author);
 		parcel.writeTypedList(chapters);
+	}
+
+	@NonNull
+	public static MangaDetails from(SavedManga manga) {
+		return new MangaDetails(
+				manga,
+				manga.description,
+				manga.thumbnail,
+				manga.author
+		);
 	}
 }

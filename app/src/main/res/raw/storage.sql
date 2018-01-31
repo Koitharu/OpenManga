@@ -61,7 +61,9 @@ CREATE TABLE saved (
 	status INTEGER,
 	rating INTEGER,
 	created_at INTEGER,
-	local_path TEXT NOT NULL
+	local_path TEXT NOT NULL,
+	description TEXT NOT NULL,
+	author TEXT NOT NULL
 );
 
 CREATE TABLE saved_chapters (

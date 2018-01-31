@@ -219,25 +219,25 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		}
 		switch (id) {
 			case R.id.action_chapter_save_this:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mangaChapter));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mangaChapter));
 				break;
 			case R.id.action_chapter_save_5:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 5)));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 5)));
 				break;
 			case R.id.action_chapter_save_10:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 10)));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 10)));
 				break;
 			case R.id.action_chapter_save_30:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter, 30)));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 30)));
 				break;
 			case R.id.action_chapter_save_all:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters));
 				break;
 			case R.id.action_chapter_save_next:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListFrom(mangaChapter)));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter)));
 				break;
 			case R.id.action_chapter_save_prev:
-				SaveService.start(this, new SaveRequest(mMangaHeader, mMangaDetails.chapters.subListTo(mangaChapter)));
+				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListTo(mangaChapter)));
 				break;
 			default:
 				stub();

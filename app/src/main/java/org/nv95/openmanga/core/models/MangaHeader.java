@@ -117,7 +117,7 @@ public class MangaHeader implements Parcelable, UniqueObject {
 				bundle.getString("thumbnail"),
 				bundle.getString("provider"),
 				bundle.getInt("status"),
-				bundle.getShort("rating")
+				(short) bundle.getInt("rating")
 		);
 	}
 
@@ -132,7 +132,7 @@ public class MangaHeader implements Parcelable, UniqueObject {
 		bundle.putString("thumbnail", thumbnail);
 		bundle.putString("provider", provider);
 		bundle.putInt("status", status);
-		bundle.putShort("rating", rating);
+		bundle.putInt("rating", rating);
 		return bundle;
 	}
 
