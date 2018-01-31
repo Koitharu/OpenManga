@@ -109,6 +109,9 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 		);
 		Document doc = NetworkUtils.getDocument(url);
 		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
+		if (root == null) {
+			return EMPTY_HEADERS;
+		}
 		return parseList(root.select(".tile"), "http://readmanga.me/");
 	}
 

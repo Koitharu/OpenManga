@@ -71,6 +71,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 		mProviders.clear();
 		mProviders.addAll(new ProvidersStore(this).getUserProviders());
 		mQueryArguments = new SearchQueryArguments(query, mProviders.pop().cName);
+		mRecyclerView.onLoadingStarted();
 		mDataset.clear();
 		mAdapter = new SearchAdapter(mDataset);
 		mRecyclerView.setAdapter(mAdapter);
@@ -127,6 +128,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 
 	@Override
 	public boolean onLoadMore() {
+		mRecyclerView.onLoadingStarted();
 		getLoaderManager().restartLoader(0, mQueryArguments.toBundle(), this).forceLoad();
 		return true;
 	}

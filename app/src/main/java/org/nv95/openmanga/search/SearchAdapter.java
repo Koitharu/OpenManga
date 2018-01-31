@@ -76,6 +76,9 @@ public final class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	@Override
 	public void setHasNext(boolean hasNext) {
 		mHasNext = hasNext;
+		if (mDataset.size() != 0) {
+			notifyItemChanged(mDataset.size());
+		}
 	}
 
 	@Override

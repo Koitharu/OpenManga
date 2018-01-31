@@ -48,6 +48,10 @@ public final class EndlessRecyclerView extends RecyclerView {
 
 	public void onLoadingStarted() {
 		mEndlessScrollHelper.mLoading = true;
+		final Adapter adapter = getAdapter();
+		if (adapter != null && adapter instanceof EndlessAdapter) {
+			((EndlessAdapter) adapter).setHasNext(true);
+		}
 	}
 
 	public void onLoadingFinished(boolean enableNext) {
@@ -57,6 +61,7 @@ public final class EndlessRecyclerView extends RecyclerView {
 		if (adapter != null && adapter instanceof EndlessAdapter) {
 			((EndlessAdapter) adapter).setHasNext(enableNext);
 		}
+		mEndlessScrollHelper.onScrolled(this, 0, 0);
 	}
 
 	private class EndlessScrollHelper extends OnScrollListener {
