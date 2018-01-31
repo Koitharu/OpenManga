@@ -10,6 +10,7 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.graphics.drawable.IconCompat;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.ImageUtils;
@@ -56,18 +57,18 @@ public final class AppShortcutHelper {
 		final ComponentName activity = new ComponentName(mContext, ReaderActivity.class);
 		for (MangaHistory o : history) {
 			final ShortcutInfo.Builder builder = new ShortcutInfo.Builder(mContext, String.valueOf(o.id));
-			builder.setShortLabel(TextUtils.ellipsize(o.name, 10));
+			builder.setShortLabel(TextUtils.ellipsize(o.name, 16));
 			builder.setLongLabel(o.name);
-			builder.setActivity(activity);
+			//builder.setActivity(activity);
 			final Bitmap bitmap = ImageUtils.getCachedImage(o.thumbnail);
 			if (bitmap != null) {
-				builder.setIcon(Icon.createWithBitmap(bitmap));
+				builder.setIcon(IconCompat.createWithAdaptiveBitmap(bitmap).toIcon());
 			} else {
 				builder.setIcon(Icon.createWithResource(mContext, R.drawable.placeholder));
 			}
 			final Intent intent = new Intent(ReaderActivity.ACTION_READING_CONTINUE);
 			intent.putExtras(o.toBundle());
-			intent.setComponent(activity); //TODO maybe remove it
+			intent.setComponent(activity);
 			builder.setIntent(intent);
 			shortcuts.add(builder.build());
 		}
