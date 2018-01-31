@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.AppShortcutHelper;
 import org.nv95.openmanga.common.dialogs.BottomSheetMenuDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
@@ -164,9 +165,14 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			if (!mHistoryRepository.quickUpdate(mManga, mChapter, mReader.getCurrentPage())) {
 				addToHistory();
 			}
-
 		}
 		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		new AppShortcutHelper(this).update(mHistoryRepository);
+		super.onStop();
 	}
 
 	@Override
