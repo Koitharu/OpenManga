@@ -51,7 +51,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mNotificationHelper = new NotificationHelper(this, 0, "save");
+		mNotificationHelper = new NotificationHelper(this, 0, "save", R.string.saving_manga);
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	@Override
 	public void onProgressUpdate(int progress, int max, @Nullable Object extra) {
 		if (max == -1) {
-			//todo
+			mNotificationHelper.setIndeterminate();
 		} else {
 			mNotificationHelper.setProgress(progress, max);
 		}

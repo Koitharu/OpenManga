@@ -92,11 +92,15 @@ public final class PageView extends FrameLayout implements View.OnClickListener,
 		mTextProgressView.setVisibility(VISIBLE);
 		setError(null);
 		mPage = page;
-		mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
-		if (mFile.exists()) {
-			mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
+		if (page.url.startsWith("file://")) {
+			mSubsamplingScaleImageView.setImage(ImageSource.uri(page.url));
 		} else {
-			PageDownloader.getInstance().downloadPage(getContext(), page, mFile, this);
+			mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
+			if (mFile.exists()) {
+				mSubsamplingScaleImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
+			} else {
+				PageDownloader.getInstance().downloadPage(getContext(), page, mFile, this);
+			}
 		}
 	}
 

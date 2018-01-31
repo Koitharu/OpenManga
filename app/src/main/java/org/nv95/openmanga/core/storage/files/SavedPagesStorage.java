@@ -1,11 +1,14 @@
 package org.nv95.openmanga.core.storage.files;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.common.utils.FilesystemUtils;
+import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.SavedManga;
 import org.nv95.openmanga.core.models.SavedPage;
+import org.nv95.openmanga.core.storage.db.SavedMangaRepository;
 
 import java.io.File;
 
@@ -17,7 +20,7 @@ public final class SavedPagesStorage implements FilesStorage<SavedPage, File> {
 
 	private final File mRootDirectory;
 
-	public SavedPagesStorage(SavedManga manga) {
+	public SavedPagesStorage(@NonNull SavedManga manga) {
 		mRootDirectory = new File(manga.localPath);
 		//noinspection ResultOfMethodCallIgnored
 		mRootDirectory.mkdirs();
@@ -61,5 +64,11 @@ public final class SavedPagesStorage implements FilesStorage<SavedPage, File> {
 	@NonNull
 	private static String encodeName(SavedPage page) {
 		return page.chapterId + "_" + page.id;
+	}
+
+	@Nullable
+	public static SavedPagesStorage get(Context context, MangaHeader manga) {
+		final SavedManga savedManga = SavedMangaRepository.get(context).find(manga);
+		return savedManga == null ? null : new SavedPagesStorage(savedManga);
 	}
 }

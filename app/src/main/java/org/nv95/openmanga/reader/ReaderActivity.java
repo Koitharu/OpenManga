@@ -278,7 +278,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@NonNull
 	@Override
 	public Loader<ListWrapper<MangaPage>> onCreateLoader(int id, Bundle args) {
-		return new ChapterLoader(this, MangaChapter.from(args));
+		return new ChapterLoader(this, mManga, MangaChapter.from(args));
 	}
 
 	@Override

@@ -1,16 +1,19 @@
 package org.nv95.openmanga.common;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import org.nv95.openmanga.R;
 
@@ -23,20 +26,24 @@ public final class NotificationHelper {
 	private final String mChannelId;
 	private int mId;
 	private final Resources mResources;
-	private final NotificationManagerCompat mManager;
+	private final NotificationManager mManager;
 	private final NotificationCompat.Builder mBuilder;
 
-	public NotificationHelper(Context context, String channelId) {
-		this(context, 0, channelId);
+	public NotificationHelper(Context context, String channelId, @StringRes int channelName) {
+		this(context, 0, channelId, channelName);
 		nextId();
 	}
 
-	public NotificationHelper(Context context, int id, String channelId) {
+	public NotificationHelper(Context context, int id, String channelId, @StringRes int channelName) {
 		mId = id;
 		mChannelId = channelId;
 		mResources = context.getResources();
 		mBuilder = new NotificationCompat.Builder(context, mChannelId);
-		mManager = NotificationManagerCompat.from(context);
+		mManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createChannel(context, channelId, channelName);
+		}
+		mBuilder.setCategory(NotificationCompat.CATEGORY_SERVICE);
 	}
 
 	public Notification get() {
@@ -126,5 +133,15 @@ public final class NotificationHelper {
 
 	public void dismiss() {
 		mManager.cancel(mId);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	private void createChannel(Context context, String channelId, @StringRes int channelName) {
+		final NotificationChannel channel = new NotificationChannel(
+				channelId,
+				context.getString(channelName),
+				NotificationManager.IMPORTANCE_DEFAULT
+		);
+		mManager.createNotificationChannel(channel);
 	}
 }
