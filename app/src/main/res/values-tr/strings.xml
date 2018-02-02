@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="cache_size" formatted="false">Önbellek boyutu: %.1f Mb</string>
+	<string name="cache_size">Önbellek boyutu</string>
 	<string name="chapters_removed" formatted="false">%d bölüm silindi</string>
 	<string name="chapters_total" formatted="false">Toplam bölüm: %d</string>
 	<string name="imported_from" formatted="false">%s dan aktarıldı</string>

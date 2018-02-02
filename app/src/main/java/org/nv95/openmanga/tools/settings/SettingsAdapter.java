@@ -1,4 +1,4 @@
-package org.nv95.openmanga.settings;
+package org.nv95.openmanga.tools.settings;
 
 import android.support.annotation.IntDef;
 import android.support.v7.app.AlertDialog;

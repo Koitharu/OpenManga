@@ -22,7 +22,7 @@ import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.discover.DiscoverFragment;
 import org.nv95.openmanga.search.SearchActivity;
-import org.nv95.openmanga.settings.SettingsFragment;
+import org.nv95.openmanga.tools.ToolsFragment;
 import org.nv95.openmanga.shelf.OnTipsActionListener;
 import org.nv95.openmanga.shelf.ShelfFragment;
 
@@ -89,8 +89,8 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 			case R.id.section_discover:
 				mFragment = new DiscoverFragment();
 				break;
-			case R.id.section_settings:
-				mFragment = new SettingsFragment();
+			case R.id.action_tools:
+				mFragment = new ToolsFragment();
 				break;
 			default:
 				return false;

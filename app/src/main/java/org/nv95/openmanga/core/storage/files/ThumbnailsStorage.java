@@ -78,6 +78,11 @@ public final class ThumbnailsStorage implements FilesStorage<MangaBookmark,Bitma
 		FilesystemUtils.clearDir(mRootDirectory);
 	}
 
+	@Override
+	public long size() {
+		return FilesystemUtils.getFileSize(mRootDirectory);
+	}
+
 	@NonNull
 	private static String encodeName(MangaBookmark bookmark) {
 		return String.valueOf(bookmark.id);

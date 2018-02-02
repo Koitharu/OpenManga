@@ -1,4 +1,4 @@
-package org.nv95.openmanga.settings;
+package org.nv95.openmanga.tools.settings;
 
 import android.app.Activity;
 import android.content.Intent;

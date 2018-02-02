@@ -6,6 +6,12 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 
+import java.io.File;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 /**
  * Created by koitharu on 24.12.17.
  */
@@ -60,5 +66,16 @@ public abstract class TextUtils {
 
 	public static String inline(String string) {
 		return string.replaceAll("\\s+", " ");
+	}
+
+	@NonNull
+	public static String formatFileSize(long size) {
+		if(size <= 0) return "0 B";
+		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+		int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+		final DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+		symbols.setDecimalSeparator('.');
+		symbols.setGroupingSeparator(' ');
+		return new DecimalFormat("#,##0.#", symbols).format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 }

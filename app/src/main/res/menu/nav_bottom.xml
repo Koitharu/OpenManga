@@ -9,7 +9,7 @@
 		android:title="@string/discover"
 		android:icon="@drawable/ic_compass_black" />
 
-	<item android:id="@+id/section_settings"
-		android:title="@string/settings"
-		android:icon="@drawable/ic_nav_settings" />
+	<item android:id="@+id/action_tools"
+		android:title="@string/tools"
+		android:icon="@drawable/ic_tools_black" />
 </menu>

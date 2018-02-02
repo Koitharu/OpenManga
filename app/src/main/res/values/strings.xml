@@ -55,7 +55,7 @@
 	<string name="bug_report">Send a bug report</string>
 	<string name="bug_report_summ">Send debug log to developer</string>
 	<string name="cache_clearing">Clearing cache…</string>
-	<string name="cache_size" formatted="false">Cache size: %.1f Mb</string>
+	<string name="cache_size">Cache size</string>
 	<string name="cache_size_invalid" formatted="false">Cache size must be between %d and %d Mb</string>
 	<string name="cancel_all">Cancel all</string>
 	<string name="cancelling">Cancelling…</string>
@@ -383,4 +383,8 @@
 	<string name="web">Web</string>
 	<string name="welcome">Welcome</string>
 	<string name="shelf">Shelf</string>
+	<string name="tools">Tools</string>
+	<string name="storage_usage">Local storage usage</string>
+	<string name="show_more_details">Show more details</string>
+	<string name="hide_details">Hide details</string>
 </resources>

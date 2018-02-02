@@ -24,4 +24,7 @@ public interface FilesStorage<K,V> {
 
 	@WorkerThread
 	void clear();
+
+	@WorkerThread
+	long size();
 }

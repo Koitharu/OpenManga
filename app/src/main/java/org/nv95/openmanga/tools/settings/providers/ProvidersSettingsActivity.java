@@ -1,4 +1,4 @@
-package org.nv95.openmanga.settings.providers;
+package org.nv95.openmanga.tools.settings.providers;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

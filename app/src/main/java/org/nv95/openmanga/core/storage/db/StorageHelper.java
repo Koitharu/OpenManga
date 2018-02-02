@@ -45,4 +45,10 @@ public class StorageHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		close();
+		super.finalize();
+	}
 }

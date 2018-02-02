@@ -135,7 +135,11 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".settings.SettingsActivity"
+		<activity android:name=".tools.settings.SettingsHeadersActivity"
+			android:label="@string/settings"
+			android:configChanges="orientation|screenSize" />
+
+		<activity android:name=".tools.settings.SettingsActivity"
 			android:label="@string/settings" >
 
 			<intent-filter>
@@ -148,7 +152,7 @@
 			android:label="@string/recommendations"
 			android:configChanges="orientation|screenSize" />
 
-		<activity android:name=".settings.providers.ProvidersSettingsActivity"
+		<activity android:name=".tools.settings.providers.ProvidersSettingsActivity"
 			android:label="@string/manga_catalogues"
 			android:configChanges="orientation|screenSize" />
 

@@ -61,6 +61,11 @@ public final class SavedPagesStorage implements FilesStorage<SavedPage, File> {
 		FilesystemUtils.clearDir(mRootDirectory);
 	}
 
+	@Override
+	public long size() {
+		return FilesystemUtils.getFileSize(mRootDirectory);
+	}
+
 	@NonNull
 	private static String encodeName(SavedPage page) {
 		return page.chapterId + "_" + page.id;

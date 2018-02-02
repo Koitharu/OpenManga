@@ -48,7 +48,7 @@
 	<string name="bug_report_summ">Отправить отладочный лог разработчику</string>
 	<string name="bug_report">Отчёт об ошибке</string>
 	<string name="cache_clearing">Очистка кэша…</string>
-	<string name="cache_size" formatted="false">Размер кэша: %.1f Мб</string>
+	<string name="cache_size">Размер кэша</string>
 	<string name="cache_size_invalid" formatted="false">Размер кэша должен быть между %d и %d Мб</string>
 	<string name="cancel_all">Отменить все</string>
 	<string name="cancelling">Отмена…</string>

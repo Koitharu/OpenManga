@@ -36,7 +36,7 @@
 	<string name="bug_report_summ">Відправити лог розробнику</string>
 	<string name="bug_report">Звіт про помилку</string>
 	<string name="cache_clearing">Очищення кешу…</string>
-	<string name="cache_size" formatted="false">Розмір кешу: %.1f Мб</string>
+	<string name="cache_size">Розмір кешу</string>
 	<string name="cache_size_invalid" formatted="false">Размір кешу повинен бути між %d та %d Мб</string>
 	<string name="cancelling">Відміна…</string>
 	<string name="category_no">Без мітки</string>

@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
-import org.nv95.openmanga.settings.SettingsActivity;
-import org.nv95.openmanga.settings.providers.ProvidersSettingsActivity;
+import org.nv95.openmanga.tools.settings.providers.ProvidersSettingsActivity;
 
 import java.util.ArrayList;
 
@@ -86,5 +86,10 @@ public final class DiscoverFragment extends AppBaseFragment {
 		if (requestCode == REQUEST_PROVIDERS_CONFIG) {
 			onActivityCreated(null);
 		}
+	}
+
+	@Override
+	public void scrollToTop() {
+		mRecyclerView.smoothScrollToPosition(0);
 	}
 }

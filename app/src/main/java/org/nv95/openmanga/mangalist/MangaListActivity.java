@@ -25,7 +25,7 @@ import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.providers.MangaProvider;
-import org.nv95.openmanga.settings.AuthorizationDialog;
+import org.nv95.openmanga.tools.settings.AuthorizationDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
