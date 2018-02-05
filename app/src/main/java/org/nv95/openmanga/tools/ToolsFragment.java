@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,15 @@ import org.nv95.openmanga.tools.settings.SettingsHeadersActivity;
  * Created by koitharu on 02.02.18.
  */
 
-public final class ToolsFragment extends AppBaseFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<StorageStats> {
+public final class ToolsFragment extends AppBaseFragment implements View.OnClickListener,
+		LoaderManager.LoaderCallbacks<StorageStats>, CacheClearTask.Callback {
 
 	private static final int LOADER_STORAGE_STATS = 0;
 
 	private NestedScrollView mScrollView;
 	private TextView mTextViewStorageTotal;
 	private TextView mTextViewStorageCache;
+	private TextView mTextViewStorageManga;
 
 	@Nullable
 	@Override
@@ -42,8 +45,11 @@ public final class ToolsFragment extends AppBaseFragment implements View.OnClick
 		mScrollView = view.findViewById(R.id.scrollView);
 		mTextViewStorageTotal = view.findViewById(R.id.textView_storage_total);
 		mTextViewStorageCache = view.findViewById(R.id.textView_storage_cache);
+		mTextViewStorageManga = view.findViewById(R.id.textView_storage_manga);
 
 		view.findViewById(R.id.action_settings).setOnClickListener(this);
+		view.findViewById(R.id.button_clear_cache).setOnClickListener(this);
+		view.findViewById(R.id.button_saved_manga).setOnClickListener(this);
 	}
 
 	@Override
@@ -65,6 +71,11 @@ public final class ToolsFragment extends AppBaseFragment implements View.OnClick
 			case R.id.action_settings:
 				startActivity(new Intent(context, SettingsHeadersActivity.class));
 				break;
+			case R.id.button_clear_cache:
+				new CacheClearTask(context, this).start();
+				break;
+			case R.id.button_saved_manga:
+				//TODO
 		}
 	}
 
@@ -77,10 +88,21 @@ public final class ToolsFragment extends AppBaseFragment implements View.OnClick
 	public void onLoadFinished(Loader<StorageStats> loader, StorageStats data) {
 		mTextViewStorageTotal.setText(TextUtils.formatFileSize(data.total()));
 		mTextViewStorageCache.setText(TextUtils.formatFileSize(data.cacheSize));
+		mTextViewStorageManga.setText(TextUtils.formatFileSize(data.savedSize));
 	}
 
 	@Override
 	public void onLoaderReset(Loader<StorageStats> loader) {
 
+	}
+
+	@Override
+	public void onCacheSizeChanged(long newSize) {
+		if (newSize == -1) {
+			Snackbar.make(mScrollView, R.string.error_occurred, Snackbar.LENGTH_SHORT).show();
+		} else {
+			mTextViewStorageCache.setText(TextUtils.formatFileSize(newSize));
+			getLoaderManager().getLoader(LOADER_STORAGE_STATS).onContentChanged();
+		}
 	}
 }
