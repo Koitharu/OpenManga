@@ -48,7 +48,7 @@ android {
 
 		debug {
             applicationIdSuffix ".debug"
-			versionNameSuffix="-debug"
+			versionNameSuffix="a"
 			minifyEnabled false
 			shrinkResources false
 			signingConfig signingConfigs.debug

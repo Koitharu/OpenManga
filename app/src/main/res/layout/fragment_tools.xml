@@ -185,6 +185,15 @@
 
 		</android.support.v7.widget.CardView>
 
+		<TextView
+			android:id="@+id/textView_about"
+			android:layout_width="match_parent"
+			android:gravity="center_horizontal"
+			android:padding="12dp"
+			tools:text="Lorem ipsum v423"
+			android:textColor="?android:attr/textColorTertiary"
+			android:layout_height="wrap_content" />
+
 	</LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
