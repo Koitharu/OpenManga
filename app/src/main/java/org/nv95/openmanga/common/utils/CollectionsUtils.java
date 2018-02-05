@@ -134,7 +134,6 @@ public abstract class CollectionsUtils {
 			try {
 				res[i] = Integer.parseInt(strings[i]);
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
 				res[i] = defaultValue;
 			}
 		}

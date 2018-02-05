@@ -143,6 +143,9 @@ public abstract class MangaProvider {
 			case ReadmangaruProvider.CNAME:
 				provider = new ReadmangaruProvider(context);
 				break;
+			case MintmangaProvider.CNAME:
+				provider = new MintmangaProvider(context);
+				break;
 			default:
 				throw new AssertionError("Invalid CNAME");
 		}
@@ -178,6 +181,7 @@ public abstract class MangaProvider {
 			sDomainsMap.put(DesumeProvider.CNAME, "desu.me");
 			sDomainsMap.put(ExhentaiProvider.CNAME, "exhentai.org");
 			sDomainsMap.put(ReadmangaruProvider.CNAME, "readmanga.me");
+			sDomainsMap.put(MintmangaProvider.CNAME, "mintmanga.com");
 		}
 		return sDomainsMap.get(cName);
 	}
