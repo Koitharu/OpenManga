@@ -47,6 +47,7 @@ import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
+import org.nv95.openmanga.reader.pager.RtlPagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
 
@@ -79,7 +80,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private View mBottomBar;
 	private TextView mTextViewPage;
 
-	private ReaderFragment mReader;
+	private ReaderFragment mReader = null;
 
 	private HistoryRepository mHistoryRepository;
 	private BookmarksRepository mBookmarksRepository;
@@ -113,10 +114,6 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			window.setNavigationBarColor(color);
 		}
 
-		mReader = new PagerReaderFragment();
-		getFragmentManager().beginTransaction()
-				.replace(R.id.reader, mReader)
-				.commit();
 		mHistoryRepository = HistoryRepository.get(this);
 		mBookmarksRepository = BookmarksRepository.get(this);
 
@@ -144,6 +141,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		assert mManga != null && mChapter != null;
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
+		setupReader(mHistoryRepository.getPreset(mManga, (short) 0));
 		getLoaderManager().initLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
@@ -408,7 +406,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	}
 
 	private void addToHistory() {
-		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
+		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), getReaderPreset());
 		mHistoryRepository.updateOrAdd(history);
 	}
 
@@ -458,7 +456,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				break;
 			case R.id.action_reader_mode:
 				if (mHistoryRepository != null && mPages != null) {
-					final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
+					final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), getReaderPreset());
 					mHistoryRepository.updateOrAdd(history);
 					new ReaderModeDialog(this, history)
 							.setListener(this)
@@ -509,17 +507,30 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@Override
 	public void onReaderModeChanged(short mode) {
-		if (mode != 0) {
-			stub();
-			return;
-		}
 		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), mode);
 		mHistoryRepository.updateOrAdd(history);
-		//TODO
+		setupReader(mode);
 	}
 
 	@Override
 	public void onOverScrolledStart() {
+		if (mReader instanceof RtlPagerReaderFragment) {
+			nextChapter();
+		} else {
+			prevChapter();
+		}
+	}
+
+	@Override
+	public void onOverScrolledEnd() {
+		if (mReader instanceof RtlPagerReaderFragment) {
+			prevChapter();
+		} else {
+			nextChapter();
+		}
+	}
+
+	private void prevChapter() {
 		final int pos = mManga.chapters.indexOf(mChapter);
 		if (pos == -1 || pos == 0) {
 			return;
@@ -534,8 +545,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
-	@Override
-	public void onOverScrolledEnd() {
+	private void nextChapter() {
 		final int pos = mManga.chapters.indexOf(mChapter);
 		if (pos == -1 || pos == mManga.chapters.size() - 1) {
 			return;
@@ -548,6 +558,43 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
+	}
+
+	private void setupReader(int preset) {
+		Bundle savedState;
+		if (mReader != null) {
+			savedState = new Bundle();
+			mReader.onSaveInstanceState(savedState);
+		} else {
+			savedState = null;
+		}
+		switch (preset) {
+			case 0:
+				mReader = new PagerReaderFragment();
+				break;
+			case 1:
+				mReader = new RtlPagerReaderFragment();
+				break;
+			default:
+				stub();
+				return;
+		}
+		mReader.setArguments(savedState);
+		getFragmentManager().beginTransaction()
+				.replace(R.id.reader, mReader)
+				.commit();
+	}
+
+	private short getReaderPreset() {
+		if (mReader == null) {
+			return mHistoryRepository.getPreset(mManga, (short) 0);
+		} else if (mReader instanceof RtlPagerReaderFragment) {
+			return 1;
+		} else if (mReader instanceof PagerReaderFragment) {
+			return 0;
+		} else {
+			return 0;//TODO
+		}
 	}
 
 	final static class Result {

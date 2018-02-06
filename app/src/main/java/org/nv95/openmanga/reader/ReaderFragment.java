@@ -20,9 +20,7 @@ import java.util.List;
 public abstract class ReaderFragment extends AppBaseFragment implements ReaderCallback {
 
 	@NonNull
-	private final ArrayList<MangaPage> mPages = new ArrayList<>();
-	@Nullable
-	private ReaderCallback mCallback = null;
+	protected final ArrayList<MangaPage> mPages = new ArrayList<>();
 
 	@CallSuper
 	public void setPages(List<MangaPage> pages) {
@@ -58,17 +56,18 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 
 	@Override
 	public void onPageChanged(int page) {
-		if (mCallback != null) {
-			mCallback.onPageChanged(page);
+		Activity activity = getActivity();
+		if (activity != null && activity instanceof ReaderCallback) {
+			((ReaderCallback) activity).onPageChanged(page);
 		}
 	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		final Activity activity = getActivity();
-		if (activity != null && activity instanceof ReaderCallback) {
-			mCallback = (ReaderCallback) activity;
+		final Bundle args = getArguments();
+		if (args != null) {
+			onRestoreState(args);
 		}
 	}
 
@@ -81,6 +80,10 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 	public abstract void moveDown();
 
 	public abstract void moveNext();
+
+	public void onRestoreState(@NonNull Bundle savedState) {
+
+	}
 
 	protected void toggleUi() {
 		final Activity activity = getActivity();
