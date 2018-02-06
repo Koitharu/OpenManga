@@ -542,7 +542,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		}
 		AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
 		mPageId = PAGE_ID_FIRST;
-		mChapter = mManga.chapters.get(pos - 1);
+		mChapter = mManga.chapters.get(pos + 1);
 		setSubtitle(mChapter.name);
 		Toast toast = Toast.makeText(this, getString(R.string.next_chapter_, mChapter.name), Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
