@@ -8,7 +8,7 @@
 
     <color name="white_overlay_85">#d9ffffff</color>
     <color name="white_overlay_60">#b4ffffff</color>
-    <color name="light_gray">#bdbdbd</color>
+    <color name="light_gray">#a5bdbdbd</color>
     <color name="selector_frame">#26a69a</color>
     <color name="pressed_light">#14838383</color>
     <color name="dark_disabled">#454545</color>

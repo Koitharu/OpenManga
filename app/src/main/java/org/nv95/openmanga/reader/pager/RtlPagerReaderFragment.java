@@ -36,4 +36,14 @@ public class RtlPagerReaderFragment extends PagerReaderFragment {
 	private int invertIndex(int index) {
 		return mPages.size() - index - 1;
 	}
+
+	@Override
+	public boolean moveRight() {
+		return super.moveLeft();
+	}
+
+	@Override
+	public boolean moveLeft() {
+		return super.moveRight();
+	}
 }

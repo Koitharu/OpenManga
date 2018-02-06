@@ -45,10 +45,13 @@ final class CacheClearTask extends WeakAsyncTask<Context,Void,Integer,Long> {
 	@Override
 	protected Long doInBackground(Void... voids) {
 		try {
-			final File cacheDir = getObject().getExternalCacheDir();
-			final long size = FilesystemUtils.getFileSize(cacheDir);
+			final File internalCache = getObject().getCacheDir();
+			final File externalCache = getObject().getExternalCacheDir();
+			final long size = FilesystemUtils.getFileSize(internalCache)
+					+ FilesystemUtils.getFileSize(externalCache);
 			publishProgress(0, (int) (size / 1024));
-			long removed = clearDir(cacheDir, size, 0);
+			long removed = clearDir(internalCache, size, 0);
+			removed += clearDir(externalCache, size, removed);
 			return size - removed;
 		} catch (Exception e) {
 			e.printStackTrace();

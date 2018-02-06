@@ -389,4 +389,5 @@
 	<string name="hide_details">Hide details</string>
 	<string name="genre_omegaverse">Omegaverse</string>
 	<string name="default_mode">Default mode</string>
+	<string name="added_to_x">Added to %1$s</string>
 </resources>
