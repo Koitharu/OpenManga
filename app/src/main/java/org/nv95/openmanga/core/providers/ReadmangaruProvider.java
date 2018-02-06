@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.StringJoinerCompat;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
@@ -78,7 +79,51 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			new MangaGenre(R.string.genre_fantasy, "fantasy"),
 			new MangaGenre(R.string.genre_school, "school"),
 			new MangaGenre(R.string.genre_ecchi, "ecchi"),
-			new MangaGenre(R.string.genre_yuri, "yuri"),
+			new MangaGenre(R.string.genre_yuri, "yuri")
+	};
+
+	private final String[] mTags = new String[] {
+			"el_5685",
+			"el_2155",
+			"el_2143",
+			"el_2148",
+			"el_2142",
+			"el_2156",
+			"el_2146",
+			"el_2152",
+			"el_2158",
+			"el_2141",
+			"el_2118",
+			"el_2154",
+			"el_2119",
+			"el_8032",
+			"el_2137",
+			"el_2136",
+			"el_2147",
+			"el_2126",
+			"el_2132",
+			"el_2133",
+			"el_2135",
+			"el_2151",
+			"el_2130",
+			"el_2144",
+			"el_2121",
+			"el_2124",
+			"el_2159",
+			"el_2122",
+			"el_2128",
+			"el_2134",
+			"el_2139",
+			"el_2129",
+			"el_2138",
+			"el_2153",
+			"el_2150",
+			"el_2125",
+			"el_2140",
+			"el_2131",
+			"el_2127",
+			"el_2149",
+			"el_2123"
 	};
 
 	public ReadmangaruProvider(Context context) {
@@ -118,12 +163,16 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 	@NonNull
 	@SuppressLint("DefaultLocale")
 	protected ArrayList<MangaHeader> advancedSearch(@NonNull String search, @NonNull String[] genres) throws Exception {
-		Document doc = NetworkUtils.postDocument(
-				"http://readmanga.me/search/advanced",
-				"q", search
-				//"el_5685", "in"
-				//TODO
-		);
+		final StringJoinerCompat query = new StringJoinerCompat("&", "&", "");
+		for (String o : genres) {
+			int i = MangaGenre.indexOf(mGenres, o);
+			if (i < 0 || i >= mTags.length) {
+				continue;
+			}
+			String tag = mTags[i];
+			query.add(tag + "=in");
+		}
+		Document doc = NetworkUtils.getDocument("http://readmanga.me/search/advanced?q=" + urlEncode(search) + query.toString());
 		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
 		return parseList(root.select(".tile"), "http://readmanga.me/");
 	}

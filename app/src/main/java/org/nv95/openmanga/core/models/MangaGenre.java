@@ -84,4 +84,13 @@ public final class MangaGenre implements Parcelable {
 		}
 		return builder.toString();
 	}
+
+	public static int indexOf(MangaGenre[] array, @NonNull String value) {
+		for (int i = 0; i < array.length; i++) {
+			if (value.equalsIgnoreCase(array[i].value)) {
+				return i;
+			}
+		}
+		return -1;
+	}
 }

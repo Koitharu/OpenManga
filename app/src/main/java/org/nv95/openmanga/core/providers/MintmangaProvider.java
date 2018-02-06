@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.StringJoinerCompat;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
@@ -83,6 +84,52 @@ public final class MintmangaProvider extends GroupleMangaProvider {
 			new MangaGenre(R.string.genre_yaoi, "yaoi")
 	};
 
+	private final String[] mTags = new String[] {
+			"el_2220",
+			"el_1353",
+			"el_1346",
+			"el_1334",
+			"el_1339",
+			"el_1333",
+			"el_1347",
+			"el_1337",
+			"el_1343",
+			"el_1349",
+			"el_1332",
+			"el_1310",
+			"el_5229",
+			"el_1311",
+			"el_1351",
+			"el_1328",
+			"el_1318",
+			"el_1324",
+			"el_1325",
+			"el_5676",
+			"el_1327",
+			"el_1342",
+			"el_1322",
+			"el_1335",
+			"el_1313",
+			"el_1316",
+			"el_1350",
+			"el_1314",
+			"el_1320",
+			"el_1326",
+			"el_1330",
+			"el_1321",
+			"el_1329",
+			"el_1344",
+			"el_1341",
+			"el_1317",
+			"el_1331",
+			"el_1323",
+			"el_1319",
+			"el_1340",
+			"el_1354",
+			"el_1315",
+			"el_1336"
+	};
+
 	public MintmangaProvider(Context context) {
 		super(context);
 	}
@@ -120,14 +167,18 @@ public final class MintmangaProvider extends GroupleMangaProvider {
 	@NonNull
 	@SuppressLint("DefaultLocale")
 	protected ArrayList<MangaHeader> advancedSearch(@NonNull String search, @NonNull String[] genres) throws Exception {
-		Document doc = NetworkUtils.postDocument(
-				"http://mintmanga.com/search/advanced",
-				"q", search
-				//"el_5685", "in"
-				//TODO
-		);
+		final StringJoinerCompat query = new StringJoinerCompat("&", "&", "");
+		for (String o : genres) {
+			int i = MangaGenre.indexOf(mGenres, o);
+			if (i < 0 || i >= mTags.length) {
+				continue;
+			}
+			String tag = mTags[i];
+			query.add(tag + "=in");
+		}
+		Document doc = NetworkUtils.getDocument("http://mintmanga.com/search/advanced?q=" + urlEncode(search) + query.toString());
 		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
-		return parseList(root.select(".tile"), "http://mintmanga.com/");
+		return parseList(root.select(".tile"), "http://readmanga.me/");
 	}
 
 	@CName
