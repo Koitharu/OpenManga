@@ -1,25 +1,17 @@
 package org.nv95.openmanga.tools.settings;
 
-import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.AppBaseFragment;
-import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.tools.settings.providers.ProvidersSettingsActivity;
 
 import java.util.ArrayList;
@@ -73,6 +65,10 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 			case 1:
 				intent = new Intent(view.getContext(), SettingsActivity.class)
 						.setAction(SettingsActivity.ACTION_SETTINGS_APPEARANCE);
+				break;
+			case 4:
+				intent = new Intent(view.getContext(), SettingsActivity.class)
+						.setAction(SettingsActivity.ACTION_SETTINGS_READER);
 				break;
 			default:
 				return;

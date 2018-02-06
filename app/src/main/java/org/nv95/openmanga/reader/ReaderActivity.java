@@ -45,11 +45,14 @@ import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
+import org.nv95.openmanga.core.storage.settings.ReaderSettings;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.reader.pager.RtlPagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
+import org.nv95.openmanga.tools.settings.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -81,7 +84,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private TextView mTextViewPage;
 
 	private ReaderFragment mReader = null;
-
+	private ReaderSettings mSettings;
 	private HistoryRepository mHistoryRepository;
 	private BookmarksRepository mBookmarksRepository;
 	private MangaDetails mManga;
@@ -96,6 +99,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mToolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		enableHomeAsUp();
+		mSettings = AppSettings.get(this).readerSettings;
 
 		mSeekBar = findViewById(R.id.seekBar);
 		mContentPanel = findViewById(R.id.contentPanel);
@@ -141,7 +145,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		assert mManga != null && mChapter != null;
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
-		setupReader(mHistoryRepository.getPreset(mManga, (short) 0));
+		setupReader(mHistoryRepository.getPreset(mManga, mSettings.getDefaultPreset()));
 		getLoaderManager().initLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
@@ -169,6 +173,12 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			}
 		}
 		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setKeepScreenOn(mSettings.isWakelockEnabled());
 	}
 
 	@Override
@@ -335,11 +345,19 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		}
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
-				//TODO
-				return true;
+				if (mSettings.isVolumeKeysEnabled()) {
+					if (!mReader.movePrevious()) {
+						prevChapter();
+					}
+					return true;
+				} else return super.onKeyDown(keyCode, event);
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				//TODO
-				return true;
+				if (mSettings.isVolumeKeysEnabled()) {
+					if (!mReader.moveNext()) {
+						nextChapter();
+					}
+					return true;
+				} else return super.onKeyDown(keyCode, event);
 			default:
 				return super.onKeyDown(keyCode, event);
 		}
@@ -354,12 +372,33 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			case KeyEvent.KEYCODE_MENU:
 				toggleUi();
 				return true;
-			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-				mReader.moveNext();
+			case KeyEvent.KEYCODE_SPACE:
+				if (!mReader.moveNext()) {
+					nextChapter();
+				}
+			case KeyEvent.KEYCODE_DPAD_UP:
+				if (!mReader.moveUp()) {
+					prevChapter();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+				if (!mReader.moveDown()) {
+					nextChapter();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				if (!mReader.moveLeft()) {
+					onOverScrolledStart();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				if (!mReader.moveRight()) {
+					onOverScrolledEnd();
+				}
 				return true;
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				return true;
+				return mSettings.isVolumeKeysEnabled() || super.onKeyUp(keyCode, event);
 			default:
 				return super.onKeyUp(keyCode, event);
 		}
@@ -462,6 +501,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 							.setListener(this)
 							.show();
 				}
+				break;
+			case R.id.action_reader_settings:
+				startActivity(new Intent(this, SettingsActivity.class)
+						.setAction(SettingsActivity.ACTION_SETTINGS_READER));
 				break;
 			default:
 				stub();
@@ -577,7 +620,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				break;
 			default:
 				stub();
-				return;
+				mReader = new PagerReaderFragment();
 		}
 		mReader.setArguments(savedState);
 		getFragmentManager().beginTransaction()
@@ -587,7 +630,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	private short getReaderPreset() {
 		if (mReader == null) {
-			return mHistoryRepository.getPreset(mManga, (short) 0);
+			return mHistoryRepository.getPreset(mManga, mSettings.getDefaultPreset());
 		} else if (mReader instanceof RtlPagerReaderFragment) {
 			return 1;
 		} else if (mReader instanceof PagerReaderFragment) {

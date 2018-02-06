@@ -388,4 +388,5 @@
 	<string name="show_more_details">Show more details</string>
 	<string name="hide_details">Hide details</string>
 	<string name="genre_omegaverse">Omegaverse</string>
+	<string name="default_mode">Default mode</string>
 </resources>

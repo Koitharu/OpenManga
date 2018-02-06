@@ -36,16 +36,6 @@
         <item>@string/action_favourites</item>
         <item>@string/action_history</item>
     </string-array>
-    <string-array name="directions_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="directions">
-        <item>@string/direction_ltr</item>
-        <item>@string/direction_ttb</item>
-        <item>@string/direction_rtl</item>
-    </string-array>
     <string-array name="intervals">
         <item>@string/interval_4hours</item>
         <item>@string/interval_twice_day</item>
@@ -121,13 +111,10 @@
         <item>tr</item>
         <item>uk</item>
     </string-array>
-    <string-array name="r2_modes">
-        <item>@string/pages</item>
-        <item>@string/scroll</item>
-    </string-array>
     <string-array name="r2_modes_values">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
     <string-array name="preloadings">
         <item>@string/enabled</item>

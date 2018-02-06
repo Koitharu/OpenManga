@@ -21,6 +21,7 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 
 	@NonNull
 	protected final ArrayList<MangaPage> mPages = new ArrayList<>();
+	private boolean mRestored = false;
 
 	@CallSuper
 	public void setPages(List<MangaPage> pages) {
@@ -66,24 +67,41 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		final Bundle args = getArguments();
-		if (args != null) {
+		if (!mRestored && args != null) {
 			onRestoreState(args);
+			mRestored = true;
 		}
 	}
 
-	public abstract void moveLeft();
+	public abstract boolean moveLeft();
 
-	public abstract void moveRight();
+	public abstract boolean moveRight();
 
-	public abstract void moveUp();
+	public abstract boolean moveUp();
 
-	public abstract void moveDown();
+	public abstract boolean moveDown();
 
-	public abstract void moveNext();
-
-	public void onRestoreState(@NonNull Bundle savedState) {
-
+	public boolean moveNext() {
+		final int newPos = getCurrentPageIndex() + 1;
+		if (newPos < mPages.size()) {
+			smoothScrollToPage(newPos);
+			return true;
+		} else {
+			return false;
+		}
 	}
+
+	public boolean movePrevious() {
+		final int newPos = getCurrentPageIndex() - 1;
+		if (newPos >= 0) {
+			smoothScrollToPage(newPos);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public abstract void onRestoreState(@NonNull Bundle savedState);
 
 	protected void toggleUi() {
 		final Activity activity = getActivity();
