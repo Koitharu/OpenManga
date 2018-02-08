@@ -32,12 +32,12 @@
 					android:id="@+id/textView_summary"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:maxLines="3"
 					tools:text="Chapters: 5\nSource: MangaFox\nOngoing"
 					android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 				<RatingBar
 					android:id="@+id/ratingBar"
+					android:layout_marginTop="2dp"
 					style="@style/Widget.AppCompat.RatingBar.Small"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -45,16 +45,6 @@
 					android:isIndicator="true"
 					android:numStars="5"
 					tools:rating="3.7" />
-
-				<TextView
-					android:id="@+id/textView_genres"
-					android:layout_width="match_parent"
-					android:maxLines="3"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/ratingBar"
-					android:layout_above="@id/button_read"
-					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-					tools:text="Lorem ipsum dolor sit amet" />
 
 				<android.support.v7.widget.AppCompatImageButton
 					android:contentDescription="@string/action_favourite"
@@ -92,6 +82,17 @@
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:background="?android:attr/listDivider" />
+
+		<TextView
+			android:id="@+id/textView_genres"
+			android:layout_width="match_parent"
+			android:maxLines="3"
+			android:layout_height="wrap_content"
+			android:paddingLeft="12dp"
+			android:paddingRight="12dp"
+			android:paddingTop="8dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			tools:text="Lorem ipsum dolor sit amet" />
 
 		<TextView
 			android:id="@+id/textView_description"

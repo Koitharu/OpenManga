@@ -15,7 +15,7 @@ public final class MangaDetails extends MangaHeader {
 	@NonNull
 	public final MangaChaptersList chapters;
 
-	public MangaDetails(String name, String summary, String genres, String url, String thumbnail, String provider, int status, byte rating, String description, String cover, String author, MangaChaptersList chapters) {
+	public MangaDetails(String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, String description, String cover, String author, MangaChaptersList chapters) {
 		super(name, summary, genres, url, thumbnail, provider, status, rating);
 		this.description = description;
 		this.cover = cover;
@@ -23,7 +23,7 @@ public final class MangaDetails extends MangaHeader {
 		this.chapters = chapters;
 	}
 
-	public MangaDetails(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, byte rating, String description, String cover, String author, MangaChaptersList chapters) {
+	public MangaDetails(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating, String description, String cover, String author, MangaChaptersList chapters) {
 		super(id, name, summary, genres, url, thumbnail, provider, status, rating);
 		this.description = description;
 		this.cover = cover;

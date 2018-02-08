@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.common.utils.TextUtils;
 import org.nv95.openmanga.core.MangaStatus;
 import org.nv95.openmanga.core.models.MangaDetails;
@@ -54,7 +55,7 @@ public final class DetailsPage extends PageHolder {
 		final MangaProvider provider = MangaProvider.get(getContext(), mangaHeader.provider);
 		if (mangaDetails == null) { //full info wasn't loaded yet
 			ImageUtils.setThumbnail(mImageViewCover, mangaHeader.thumbnail, MangaProvider.getDomain(mangaHeader.provider));
-			mTextViewGenres.setText(mangaHeader.genres);
+			LayoutUtils.setTextOrHide(mTextViewGenres, mangaHeader.genres);
 			if (mangaHeader.rating == 0) {
 				mRatingBar.setVisibility(View.GONE);
 			} else {
@@ -64,7 +65,7 @@ public final class DetailsPage extends PageHolder {
 			mTextViewSummary.setText(formatSummary(null, -1, provider.getName(), mangaHeader.status));
 		} else {
 			ImageUtils.updateImage(mImageViewCover, mangaDetails.cover, MangaProvider.getDomain(mangaDetails.provider));
-			mTextViewGenres.setText(mangaDetails.genres);
+			LayoutUtils.setTextOrHide(mTextViewGenres, mangaDetails.genres);
 			mTextViewDescription.setText(TextUtils.fromHtmlCompat(mangaDetails.description));
 			if (mangaDetails.rating != 0) {
 				mRatingBar.setVisibility(View.VISIBLE);
