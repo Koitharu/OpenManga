@@ -45,4 +45,12 @@ public final class FlagsStorage {
 	public void setIsListDetailed(boolean value) {
 		mPreferences.edit().putBoolean("list_detailed", value).apply();
 	}
+
+	public boolean isHistoryDetailed() {
+		return mPreferences.getBoolean("history_detailed", false);
+	}
+
+	public void setIsHistoryDetailed(boolean value) {
+		mPreferences.edit().putBoolean("history_detailed", value).apply();
+	}
 }

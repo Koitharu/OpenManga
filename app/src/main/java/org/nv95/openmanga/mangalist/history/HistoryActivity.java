@@ -22,10 +22,12 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.UndoHelper;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.common.utils.MenuUtils;
 import org.nv95.openmanga.common.views.recyclerview.SwipeRemoveHelper;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaHistory;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.core.storage.db.HistorySpecification;
 
@@ -65,7 +67,7 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 		mHistoryRepository = HistoryRepository.get(this);
 
 		mDataset = new ArrayList<>();
-		mAdapter = new HistoryAdapter(mDataset);
+		mAdapter = new HistoryAdapter(mDataset, FlagsStorage.get(this).isHistoryDetailed());
 		mRecyclerView.setAdapter(mAdapter);
 		SwipeRemoveHelper.setup(mRecyclerView, this);
 
@@ -87,6 +89,7 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 		} else {
 			menu.findItem(R.id.sort_latest).setChecked(true);
 		}
+		menu.findItem(R.id.option_details).setChecked(mAdapter.isDetailed());
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -102,6 +105,13 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 				item.setChecked(true);
 				mSpecifications.orderByName(false);
 				getLoaderManager().restartLoader(0, mSpecifications.toBundle(), this).forceLoad();
+				return true;
+			case R.id.option_details:
+				boolean checked = !item.isChecked();
+				item.setChecked(checked);
+				FlagsStorage.get(this).setIsHistoryDetailed(checked);
+				mAdapter.setIsDetailed(checked);
+				LayoutUtils.forceUpdate(mRecyclerView);
 				return true;
 			case R.id.action_clear:
 				new AlertDialog.Builder(this)

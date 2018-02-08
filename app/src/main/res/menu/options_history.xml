@@ -23,6 +23,13 @@
 			</group>
 		</menu>
 	</item>
+
+	<item
+		android:id="@+id/option_details"
+		android:checkable="true"
+		android:title="@string/details"
+		app:showAsAction="never" />
+
 	<item android:id="@+id/action_clear"
 		android:title="@string/clear_history"
 		app:showAsAction="never" />
