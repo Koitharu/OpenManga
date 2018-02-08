@@ -33,10 +33,12 @@ public class AppImageDownloader extends BaseImageDownloader {
 		connection.setReadTimeout(readTimeout);
 		final String domain = connection.getURL().getHost();
 		final String cookie = CookieStore.getInstance().get(domain);
+		if (extra != null && extra instanceof String) {
+			connection.addRequestProperty(NetworkUtils.HEADER_REFERER, (String) extra);
+		}
 		if (cookie != null) {
 			connection.addRequestProperty("cookie", cookie);
 		}
-		connection.addRequestProperty(NetworkUtils.HEADER_REFERER, domain);
 		connection.addRequestProperty(NetworkUtils.HEADER_USER_AGENT, NetworkUtils.USER_AGENT_DEFAULT);
 		return connection;
 	}
