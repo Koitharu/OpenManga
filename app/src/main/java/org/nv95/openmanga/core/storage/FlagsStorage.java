@@ -37,4 +37,12 @@ public final class FlagsStorage {
 	public void setWizardRequired(boolean value) {
 		mPreferences.edit().putBoolean("wizard_required", value).apply();
 	}
+
+	public boolean isListDetailed() {
+		return mPreferences.getBoolean("list_detailed", false);
+	}
+
+	public void setIsListDetailed(boolean value) {
+		mPreferences.edit().putBoolean("list_detailed", value).apply();
+	}
 }

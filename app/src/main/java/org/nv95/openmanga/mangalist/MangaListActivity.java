@@ -20,11 +20,13 @@ import android.widget.TextView;
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.ErrorUtils;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.tools.settings.AuthorizationDialog;
 
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private View mErrorView;
 
 	private List<MangaHeader> mDataset = new ArrayList<>();
-	private MangaListAdapter mAdapter = new MangaListAdapter(mDataset);
+	private MangaListAdapter mAdapter;
 	private MangaProvider mProvider;
 	private MangaQueryArguments mArguments = new MangaQueryArguments();
 
@@ -69,6 +71,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mFabFilter = findViewById(R.id.fabFilter);
 		mErrorView = findViewById(R.id.stub_error);
 
+		mAdapter = new MangaListAdapter(mDataset, FlagsStorage.get(this).isListDetailed());
 		mFabFilter.setOnClickListener(this);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -100,6 +103,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(R.id.action_authorize).setVisible(mProvider.isAuthorizationSupported() && !mProvider.isAuthorized());
+		menu.findItem(R.id.option_details).setChecked(mAdapter.isDetailed());
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -112,6 +116,13 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				args.putString("provider", mProvider.getCName());
 				dialog.setArguments(args);
 				dialog.show(getSupportFragmentManager(), "auth");
+				return true;
+			case R.id.option_details:
+				boolean checked = !item.isChecked();
+				item.setChecked(checked);
+				FlagsStorage.get(this).setIsListDetailed(checked);
+				mAdapter.setIsDetailed(checked);
+				LayoutUtils.forceUpdate(mRecyclerView);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
