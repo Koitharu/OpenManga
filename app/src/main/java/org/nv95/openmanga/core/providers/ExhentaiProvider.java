@@ -125,10 +125,11 @@ public final class ExhentaiProvider extends MangaProvider {
 				author = td.nextElementSibling().text();
 				continue;
 			}
-			description.append(title)
-					.append(" <b>")
+			description.append("<b>")
+					.append(title)
+					.append("</b> ")
 					.append(td.nextElementSibling().text())
-					.append("</b><br/>");
+					.append("<br/>");
 		}
 		String cover = header.thumbnail;
 		try {
