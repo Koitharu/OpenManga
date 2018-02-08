@@ -12,11 +12,9 @@ public final class StringJoinerCompat {
 	private final String mPrefix;
 	private final String mDelimiter;
 	private final String mSuffix;
-
+	private String mEmptyValue;
 	@Nullable
 	private StringBuilder mValue;
-
-	private String mEmptyValue;
 
 	public StringJoinerCompat(@NonNull CharSequence delimiter) {
 		this(delimiter, "", "");
@@ -26,7 +24,7 @@ public final class StringJoinerCompat {
 		mPrefix = prefix.toString();
 		mDelimiter = delimiter.toString();
 		mSuffix = suffix.toString();
-		mEmptyValue = mPrefix + mSuffix;
+		mEmptyValue = "";
 	}
 
 	public StringJoinerCompat setEmptyValue(@NonNull CharSequence emptyValue) {

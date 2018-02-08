@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,7 +173,7 @@ public class NetworkUtils {
 		Response response = null;
 		try {
 			response = sHttpClient.newCall(builder.build()).execute();
-			return response.header("set-cookie");
+			return TextUtils.join("; ", response.headers("set-cookie"));
 		} finally {
 			if (response != null) {
 				response.close();
