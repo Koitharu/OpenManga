@@ -35,6 +35,12 @@
 		app:iconDrawable="@drawable/ic_brightness_darker"
 		app:max="100"
 		app:summaryPattern="%d%%" />
+
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="reader.statusbar"
+		android:title="@string/show_status_bar"
+		android:widgetLayout="@layout/pref_switchcompat" />
 	<!--
 
 		<PreferenceCategory android:title="@string/standard_mode">

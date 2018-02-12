@@ -395,4 +395,5 @@
 	<string name="file_archive">File (archive)</string>
 	<string name="directory_empty">Directory is empty or content is not available</string>
 	<string name="hide_unsupported">Hide unsupported</string>
+	<string name="show_status_bar">Show status bar</string>
 </resources>

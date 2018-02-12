@@ -37,4 +37,8 @@ public final class ReaderSettings {
 	public int getBrightnessValue() {
 		return mPreferences.getInt("reader.brightness_value", 20);
 	}
+
+	public boolean isStatusBarEnbaled() {
+		return mPreferences.getBoolean("reader.statusbar", true);
+	}
 }

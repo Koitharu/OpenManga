@@ -82,6 +82,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private Toolbar mToolbar;
 	private View mBottomBar;
 	private TextView mTextViewPage;
+	private ReaderStatusBar mStatusBar;
 
 	private ReaderFragment mReader = null;
 	private ReaderSettings mSettings;
@@ -101,6 +102,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		enableHomeAsUp();
 		mSettings = AppSettings.get(this).readerSettings;
 
+		mStatusBar = findViewById(R.id.statusBar);
 		mSeekBar = findViewById(R.id.seekBar);
 		mContentPanel = findViewById(R.id.contentPanel);
 		mBottomBar = findViewById(R.id.bottomBar);
@@ -110,6 +112,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mSeekBar.setOnSeekBarChangeListener(this);
 		findViewById(R.id.action_menu).setOnClickListener(this);
 		findViewById(R.id.action_thumbnails).setOnClickListener(this);
+		mStatusBar.setIsActive(mSettings.isStatusBarEnbaled());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Window window = getWindow();
@@ -179,6 +182,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	protected void onResume() {
 		super.onResume();
 		setKeepScreenOn(mSettings.isWakelockEnabled());
+		mStatusBar.setIsActive(mSettings.isStatusBarEnbaled());
+		if (mToolbar.getVisibility() != View.VISIBLE) {
+			mStatusBar.show();
+		}
 	}
 
 	@Override
@@ -452,13 +459,16 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	@Override
 	public void onPageChanged(int page) {
 		mSeekBar.setProgress(page);
+		mStatusBar.setStatus(page, mPages.size());
 	}
 
 	public void toggleUi() {
 		if (mToolbar.getVisibility() == View.VISIBLE) {
 			hideUi();
+			mStatusBar.show();
 		} else {
 			showUi();
+			mStatusBar.hide();
 		}
 	}
 
