@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import org.nv95.openmanga.common.utils.network.HttpException;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.core.providers.ZipArchiveProvider;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +41,10 @@ public final class PageLoadTask extends AsyncTask<PageLoadRequest,Integer,Throwa
 		try {
 			final MangaProvider provider = MangaProvider.get(getContext(), param.page.provider);
 			final String pageUrl = provider.getImageUrl(param.page);
+			if (pageUrl.startsWith(ZipArchiveProvider.SCHEME)) {
+				ZipArchiveProvider.extractTo(pageUrl, param.destination);
+				return null;
+			}
 			final String domain = MangaProvider.getDomain(param.page.provider);
 			final Request request = new Request.Builder()
 					.url(pageUrl)

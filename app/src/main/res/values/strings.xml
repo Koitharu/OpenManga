@@ -391,4 +391,6 @@
 	<string name="default_mode">Default mode</string>
 	<string name="added_to_x">Added to %1$s</string>
 	<string name="details">Details</string>
+	<string name="invalid_file_not_supported">This file is invalid or format not supported</string>
+	<string name="file_archive">File (archive)</string>
 </resources>

@@ -103,6 +103,10 @@
 			android:label="@string/bookmarks"
 			android:configChanges="screenSize|orientation" />
 
+		<activity android:name=".filepicker.FilePickerActivity"
+			android:label="@string/select_file"
+			android:configChanges="screenSize|orientation" />
+
 		<activity
 			android:name=".search.SearchActivity"
 			android:configChanges="screenSize|orientation"

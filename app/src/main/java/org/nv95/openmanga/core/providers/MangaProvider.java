@@ -148,6 +148,10 @@ public abstract class MangaProvider {
 			case MintmangaProvider.CNAME:
 				provider = new MintmangaProvider(context);
 				break;
+			case ZipArchiveProvider.CNAME:
+				provider = new ZipArchiveProvider(context);
+				sProviderCache.put(cName, provider);
+				return provider;
 			default:
 				throw new AssertionError("Invalid CNAME");
 		}

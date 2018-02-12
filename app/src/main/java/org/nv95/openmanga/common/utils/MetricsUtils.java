@@ -1,11 +1,9 @@
 package org.nv95.openmanga.common.utils;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.annotation.DimenRes;
-import android.util.DisplayMetrics;
-
+import android.support.annotation.UiThread;
+import android.view.View;
 
 import org.nv95.openmanga.R;
 
@@ -45,6 +43,11 @@ public abstract class MetricsUtils {
 		public Size(int width, int height) {
 			this.width = width;
 			this.height = height;
+		}
+
+		@UiThread
+		public static Size from(View view) {
+			return new Size(view.getWidth(), view.getHeight());
 		}
 	}
 }

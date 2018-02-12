@@ -129,6 +129,7 @@ public abstract class LayoutUtils {
 	}
 
 	public static void forceUpdate(@NonNull RecyclerView recyclerView) {
+		int pos = findFirstCompletelyVisibleItemPosition(recyclerView);
 		final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
 		final RecyclerView.Adapter adapter = recyclerView.getAdapter();
 		recyclerView.setAdapter(null);
@@ -136,5 +137,6 @@ public abstract class LayoutUtils {
 		recyclerView.setAdapter(adapter);
 		recyclerView.setLayoutManager(layoutManager);
 		adapter.notifyDataSetChanged();
+		setSelectionFromTop(recyclerView, pos);
 	}
 }
