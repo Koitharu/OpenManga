@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.FileDesc;
+import org.nv95.openmanga.core.providers.ZipArchiveProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,28 +16,36 @@ import java.util.Comparator;
 final class FileListLoader extends AsyncTaskLoader<ListWrapper<FileDesc>> {
 
 	private final String mPath;
+	private final boolean mSupportedOnly;
 
-	FileListLoader(Context context, String path) {
+	FileListLoader(Context context, String path, boolean supportedOnly) {
 		super(context);
 		mPath = path;
+		mSupportedOnly = supportedOnly;
 	}
 
 	@NonNull
 	@Override
 	public ListWrapper<FileDesc> loadInBackground() {
 		try {
-			//final FileProvider fileProvider = new SharedFileProvider();
-
 			File[] files = new File(mPath).listFiles();
 			if (files == null) {
 				return ListWrapper.badList();
 			}
 			final ArrayList<FileDesc> result = new ArrayList<>();
 			for (File o : files) {
-				result.add(new FileDesc(
-						o,
-						o.isDirectory() ? o.list().length : 0
-				));
+				if (o.isDirectory()) {
+					final String[] sub = o.list();
+					result.add(new FileDesc(
+							o,
+							sub == null ? 0 : sub.length
+					));
+				} else if (!mSupportedOnly || ZipArchiveProvider.isFileSupported(o)) {
+					result.add(new FileDesc(
+							o,
+							0
+					));
+				}
 			}
 			Collections.sort(result, new FileNameComparator());
 			Collections.sort(result, new FileTypeComparator());

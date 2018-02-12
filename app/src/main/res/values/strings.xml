@@ -393,4 +393,6 @@
 	<string name="details">Details</string>
 	<string name="invalid_file_not_supported">This file is invalid or format not supported</string>
 	<string name="file_archive">File (archive)</string>
+	<string name="directory_empty">Directory is empty or content is not available</string>
+	<string name="hide_unsupported">Hide unsupported</string>
 </resources>

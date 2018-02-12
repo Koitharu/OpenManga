@@ -13,19 +13,26 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.FileDesc;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.providers.ZipArchiveProvider;
+import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.preview.PreviewActivity;
 
 import java.io.File;
@@ -37,9 +44,12 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 	private static final int REQUEST_CODE_PERMISSION = 14;
 
 	private RecyclerView mRecyclerView;
+	private TextView mTextViewHolder;
+	private ContentLoadingProgressBar mProgressBar;
 	private final ArrayList<FileDesc> mDataset = new ArrayList<>();
 	private FilePickerAdapter mAdapter;
 	private File mRoot;
+	private boolean mFilterFiles;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +58,8 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 		setSupportActionBar(R.id.toolbar);
 		enableHomeAsClose();
 
+		mTextViewHolder = findViewById(R.id.textView_holder);
+		mProgressBar = findViewById(R.id.progressBar);
 		mRecyclerView = findViewById(R.id.recyclerView);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(ResourceUtils.isLandscape(getResources()) ?
@@ -55,6 +67,8 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 				: new LinearLayoutManager(this));
 		mAdapter = new FilePickerAdapter(mDataset, this);
 		mRecyclerView.setAdapter(mAdapter);
+
+		mFilterFiles = FlagsStorage.get(this).isPickerFilterFiles();
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			checkPermissions(REQUEST_CODE_PERMISSION, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -71,20 +85,52 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 				: new LinearLayoutManager(this));
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.options_file_picker, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.option_filter).setChecked(mFilterFiles);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.option_filter:
+				mFilterFiles = !item.isChecked();
+				item.setChecked(mFilterFiles);
+				FlagsStorage.get(this).setPickerFilterFiles(mFilterFiles);
+				onFileSelected(mRoot);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
 	@NonNull
 	@Override
 	public Loader<ListWrapper<FileDesc>> onCreateLoader(int id, Bundle args) {
-		return new FileListLoader(this, args.getString("path"));
+		return new FileListLoader(this, args.getString("path"), args.getBoolean("filter"));
 	}
 
 	@Override
 	public void onLoadFinished(Loader<ListWrapper<FileDesc>> loader, ListWrapper<FileDesc> data) {
+		mDataset.clear();
+		mProgressBar.hide();
 		if (data.isSuccess()) {
-			mDataset.clear();
 			mDataset.addAll(data.get());
-			mAdapter.notifyDataSetChanged();
+			mTextViewHolder.setVisibility(mDataset.isEmpty() ? View.VISIBLE : View.GONE);
+			FlagsStorage.get(this).setLastPickerDir(mRoot);
+		} else {
+			mTextViewHolder.setVisibility(View.VISIBLE);
 		}
- 	}
+		mAdapter.notifyDataSetChanged();
+		LayoutUtils.setSelectionFromTop(mRecyclerView, 0);
+	}
 
 	@Override
 	public void onLoaderReset(Loader<ListWrapper<FileDesc>> loader) {
@@ -93,9 +139,12 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 
 	@Override
 	protected void onPermissionGranted(int requestCode, String permission) {
-		mRoot = Environment.getExternalStorageDirectory();
-		final Bundle args = new Bundle(1);
+		mProgressBar.show();
+		mRoot = FlagsStorage.get(this).getLastPickerRoot(Environment.getExternalStorageDirectory());
+		setSubtitle(mRoot.getPath());
+		final Bundle args = new Bundle(2);
 		args.putString("path", mRoot.getAbsolutePath());
+		args.putBoolean("filter", mFilterFiles);
 		getLoaderManager().initLoader(0, args, this).forceLoad();
 	}
 
@@ -103,8 +152,12 @@ public final class FilePickerActivity extends AppBaseActivity implements LoaderM
 	public void onFileSelected(@NonNull File file) {
 		if (file.isDirectory()) {
 			mRoot = file;
-			final Bundle args = new Bundle(1);
+			setSubtitle(mRoot.getPath());
+			mProgressBar.show();
+			mTextViewHolder.setVisibility(View.GONE);
+			final Bundle args = new Bundle(2);
 			args.putString("path", file.getAbsolutePath());
+			args.putBoolean("filter", mFilterFiles);
 			getLoaderManager().restartLoader(0, args, this).forceLoad();
 		} else if (file.isFile()) {
 			new MangaOpenTask(this)

@@ -102,10 +102,10 @@ final class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Fil
 
 		public ThumbnailTask(FileViewHolder fileViewHolder, int id) {
 			super(fileViewHolder);
-			fileViewHolder.mIcon.setImageResource(R.drawable.ic_file_dark);
+			fileViewHolder.mIcon.setImageResource(R.drawable.ic_file_image_white);
 			mId = id;
 			fileViewHolder.mIcon.setTag(mId);
-			mSize = MetricsUtils.Size.from(fileViewHolder.mIcon);
+			mSize = MetricsUtils.Size.fromLayoutParams(fileViewHolder.mIcon);
 		}
 
 		@Nullable

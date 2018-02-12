@@ -101,9 +101,8 @@ public final class ZipArchiveProvider extends MangaProvider {
 	@WorkerThread
 	@Nullable
 	public static MangaHeader getManga(@NonNull Context context, @NonNull Uri uri) {
-		ZipInputStream zipInputStream = null;
 		try {
-			zipInputStream = new ZipInputStream(context.getContentResolver().openInputStream(uri));
+			new ZipFile(uri.getPath()).close(); //check if supported format
 			final File thumbRoot = new File(context.getExternalFilesDir("thumb"), "zip");
 			if (!thumbRoot.exists() && !thumbRoot.mkdirs()) {
 				return null;
@@ -139,13 +138,6 @@ public final class ZipArchiveProvider extends MangaProvider {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			if (zipInputStream != null) {
-				try {
-					zipInputStream.close();
-				} catch (IOException ignored) {
-				}
-			}
 		}
 	}
 
@@ -190,7 +182,11 @@ public final class ZipArchiveProvider extends MangaProvider {
 	}
 
 	public static boolean isFileSupported(@NonNull File file) {
-		final String ext = FilesystemUtils.getExtension(file.getPath());
+		return isFileSupported(file.getPath());
+	}
+
+	public static boolean isFileSupported(@NonNull String filename) {
+		final String ext = FilesystemUtils.getExtension(filename);
 		return "cbz".equalsIgnoreCase(ext) || "zip".equalsIgnoreCase(ext);
 	}
 
