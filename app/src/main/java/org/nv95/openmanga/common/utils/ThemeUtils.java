@@ -3,6 +3,7 @@ package org.nv95.openmanga.common.utils;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -12,7 +13,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
+import android.view.View;
 
 import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.R;

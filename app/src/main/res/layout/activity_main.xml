@@ -30,6 +30,7 @@
 				android:background="@android:color/transparent"
 				android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 				app:iconifiedByDefault="false"
+				app:queryBackground="@android:color/transparent"
 				app:queryHint="@string/action_search" />
 
 			<android.support.v7.widget.AppCompatImageView
@@ -40,7 +41,7 @@
 				android:background="?selectableItemBackgroundBorderless"
 				android:scaleType="center"
 				app:tintMode="src_atop"
-				app:tint="?android:attr/textColorPrimary"
+				app:tint="?android:attr/textColorSecondary"
 				android:src="@drawable/ic_action_navigation_more_vert" />
 		</android.support.v7.widget.CardView>
 
