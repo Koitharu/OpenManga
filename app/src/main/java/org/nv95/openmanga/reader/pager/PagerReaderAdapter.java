@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by koitharu on 09.01.18.
  */
 
-public final class PagerReaderAdapter extends RecyclerPagerAdapter<PageView> {
+class PagerReaderAdapter extends RecyclerPagerAdapter<PageView> {
 
 	private final ArrayList<MangaPage> mDataset;
 	private final GestureDetector mGestureDetector;
 
-	public PagerReaderAdapter(ArrayList<MangaPage> dataset, GestureDetector gestureDetector) {
+	PagerReaderAdapter(ArrayList<MangaPage> dataset, GestureDetector gestureDetector) {
 		mGestureDetector = gestureDetector;
 		mDataset = dataset;
 	}
@@ -51,6 +51,4 @@ public final class PagerReaderAdapter extends RecyclerPagerAdapter<PageView> {
 		PageView view = (PageView) object;
 		return mDataset.contains(view.getData()) ? PagerAdapter.POSITION_UNCHANGED : PagerAdapter.POSITION_NONE;
 	}
-
-
 }

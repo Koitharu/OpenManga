@@ -14,6 +14,8 @@ import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaPage;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -143,6 +145,13 @@ public abstract class MangaProvider {
 			case ReadmangaruProvider.CNAME:
 				provider = new ReadmangaruProvider(context);
 				break;
+			case MintmangaProvider.CNAME:
+				provider = new MintmangaProvider(context);
+				break;
+			case ZipArchiveProvider.CNAME:
+				provider = new ZipArchiveProvider(context);
+				sProviderCache.put(cName, provider);
+				return provider;
 			default:
 				throw new AssertionError("Invalid CNAME");
 		}
@@ -178,6 +187,7 @@ public abstract class MangaProvider {
 			sDomainsMap.put(DesumeProvider.CNAME, "desu.me");
 			sDomainsMap.put(ExhentaiProvider.CNAME, "exhentai.org");
 			sDomainsMap.put(ReadmangaruProvider.CNAME, "readmanga.me");
+			sDomainsMap.put(MintmangaProvider.CNAME, "mintmanga.com");
 		}
 		return sDomainsMap.get(cName);
 	}
@@ -193,5 +203,15 @@ public abstract class MangaProvider {
 
 	protected static String url(@NonNull String domain, String subj) {
 		return subj.charAt(0) == '/' ? domain + subj : subj;
+	}
+
+	@NonNull
+	protected static String urlEncode(@NonNull String text) {
+		try {
+			return URLEncoder.encode(text, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return text;
+		}
 	}
 }

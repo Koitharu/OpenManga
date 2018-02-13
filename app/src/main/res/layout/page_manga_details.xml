@@ -32,12 +32,12 @@
 					android:id="@+id/textView_summary"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:maxLines="3"
 					tools:text="Chapters: 5\nSource: MangaFox\nOngoing"
 					android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 				<RatingBar
 					android:id="@+id/ratingBar"
+					android:layout_marginTop="2dp"
 					style="@style/Widget.AppCompat.RatingBar.Small"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -45,16 +45,6 @@
 					android:isIndicator="true"
 					android:numStars="5"
 					tools:rating="3.7" />
-
-				<TextView
-					android:id="@+id/textView_genres"
-					android:layout_width="match_parent"
-					android:maxLines="3"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/ratingBar"
-					android:layout_above="@id/button_read"
-					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-					tools:text="Lorem ipsum dolor sit amet" />
 
 				<android.support.v7.widget.AppCompatImageButton
 					android:contentDescription="@string/action_favourite"
@@ -94,6 +84,17 @@
 			android:background="?android:attr/listDivider" />
 
 		<TextView
+			android:id="@+id/textView_genres"
+			android:layout_width="match_parent"
+			android:maxLines="3"
+			android:layout_height="wrap_content"
+			android:paddingLeft="12dp"
+			android:paddingRight="12dp"
+			android:paddingTop="8dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			tools:text="Lorem ipsum dolor sit amet" />
+
+		<TextView
 			android:id="@+id/textView_description"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -101,6 +102,7 @@
 			android:paddingLeft="12dp"
 			android:paddingRight="12dp"
 			android:paddingTop="8dp"
+			android:textSize="18sp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 			tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
 

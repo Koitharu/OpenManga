@@ -10,6 +10,7 @@ import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.core.providers.DesumeProvider;
 import org.nv95.openmanga.core.providers.ExhentaiProvider;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
+import org.nv95.openmanga.core.providers.MintmangaProvider;
 import org.nv95.openmanga.core.providers.ReadmangaruProvider;
 
 import java.util.ArrayList;
@@ -22,9 +23,10 @@ import java.util.Iterator;
 public final class ProvidersStore {
 
 	private static final ProviderHeader[] sProviders = new ProviderHeader[]{
-			new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME),            //0
-			new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME),        //1
-			new ProviderHeader(ReadmangaruProvider.CNAME, ReadmangaruProvider.DNAME)        //2
+			new ProviderHeader(ReadmangaruProvider.CNAME, ReadmangaruProvider.DNAME),	//0
+			new ProviderHeader(MintmangaProvider.CNAME, MintmangaProvider.DNAME),		//1
+			new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME),				//2
+			new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME)			//3
 	};
 
 	private final SharedPreferences mPreferences;

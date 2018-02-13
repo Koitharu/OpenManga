@@ -17,9 +17,11 @@ public class AppSettings {
 	private static WeakReference<AppSettings> sInstanceReference = null;
 
 	private final SharedPreferences mPreferences;
+	public final ReaderSettings readerSettings;
 
 	private AppSettings(Context context) {
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+		readerSettings = new ReaderSettings(mPreferences);
 	}
 
 	public static AppSettings get(Context context) {

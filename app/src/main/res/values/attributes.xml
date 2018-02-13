@@ -3,6 +3,7 @@
     <declare-styleable name="SeekBarPreferenceAttrs">
         <attr name="iconDrawable" format="reference" />
         <attr name="max" format="integer" />
+        <attr name="summaryPattern" format="string" />
     </declare-styleable>
     <declare-styleable name="IntSelectPreferenceAttrs">
         <attr name="minValue" format="integer" />

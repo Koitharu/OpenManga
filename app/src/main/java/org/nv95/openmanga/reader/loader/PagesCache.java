@@ -44,7 +44,11 @@ public final class PagesCache {
 	private final FileNameGenerator mNameGenerator;
 
 	private PagesCache(Context context) {
-		mCacheDir = new File(context.getExternalCacheDir(),"pages");
+		File cacheDir = context.getExternalCacheDir();
+		if (cacheDir == null) {
+			cacheDir = context.getCacheDir();
+		}
+		mCacheDir = new File(cacheDir,"pages");
 		//noinspection ResultOfMethodCallIgnored
 		mCacheDir.mkdirs();
 		mNameGenerator = new HashCodeFileNameGenerator();

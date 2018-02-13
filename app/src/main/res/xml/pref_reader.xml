@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<ListPreference
+		android:defaultValue="0"
+		android:entries="@array/reader_modes"
+		android:entryValues="@array/r2_modes_values"
+		android:key="reader.default_preset"
+		android:title="@string/default_mode" />
+
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="reader.volume_keys"
+		android:title="@string/scroll_by_volkeys"
+		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="reader.wakelock"
+		android:title="@string/keep_screen"
+		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<CheckBoxPreference
+		android:defaultValue="false"
+		android:key="reader.brightness_adjust"
+		android:title="@string/adjust_brightness"
+		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<org.nv95.openmanga.common.views.preferences.SeekBarPreference
+		android:defaultValue="20"
+		android:dependency="reader.brightness_adjust"
+		android:key="reader.brightness_value"
+		android:title="@string/brightness_value"
+		app:iconDrawable="@drawable/ic_brightness_darker"
+		app:max="100"
+		app:summaryPattern="%d%%" />
+
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="reader.statusbar"
+		android:title="@string/show_status_bar"
+		android:widgetLayout="@layout/pref_switchcompat" />
+	<!--
+
+		<PreferenceCategory android:title="@string/standard_mode">
+
+
+			<ListPreference
+				android:defaultValue="0"
+				android:entries="@array/scale_modes"
+				android:entryValues="@array/scale_values"
+				android:key="reader.scale_mode"
+				android:title="@string/scale_mode" />
+		</PreferenceCategory>
+
+		<PreferenceCategory android:title="@string/webmode">
+
+			&lt;!&ndash;<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="show_numbers"
+				android:title="@string/show_page_number"
+				android:widgetLayout="@layout/pref_switchcompat" />&ndash;&gt;
+		</PreferenceCategory>
+
+	-->
+
+
+	<!--<PreferenceCategory android:title="@string/pref_common">
+
+		<ListPreference
+			android:defaultValue="1"
+			android:entries="@array/preloadings"
+			android:entryValues="@array/preloadings_values"
+			android:key="preload"
+			android:title="@string/preloading" />
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:key="tap_navs"
+			android:title="@string/scroll_by_click"
+			android:widgetLayout="@layout/pref_switchcompat" />
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="keep_screen"
+			android:title="@string/keep_screen"
+			android:widgetLayout="@layout/pref_switchcompat" />
+	</PreferenceCategory>-->
+</PreferenceScreen>

@@ -13,11 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.utils.LayoutUtils;
-import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.AppBaseFragment;
+import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
+import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.tools.settings.providers.ProvidersSettingsActivity;
 
 import java.util.ArrayList;
@@ -51,13 +50,13 @@ public final class DiscoverFragment extends AppBaseFragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		final ArrayList<Object> dataset = new ArrayList<>();
-		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_IMPORT /* TODO */, getString(R.string.browse_filesystem),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_IMPORT, getString(R.string.browse_filesystem),
 				getString(R.string.import_cbz_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_folder_white)));
-		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_SAVED /* TODO */, getString(R.string.saved_manga),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_SAVED, getString(R.string.saved_manga),
 				getString(R.string.saved_manga_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_sdcard_white)));
-		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_RECOMMENDATIONS /* TODO */, getString(R.string.recommendations),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_RECOMMENDATIONS, getString(R.string.recommendations),
 				getString(R.string.recommendations_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_lightbulb_white)));
-		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_BOOKMARKS /* TODO */, getString(R.string.bookmarks),
+		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_BOOKMARKS, getString(R.string.bookmarks),
 				getString(R.string.bookmarks_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_white)));
 		dataset.add(getString(R.string.storages_remote));
 		dataset.addAll(new ProvidersStore(getActivity()).getUserProviders());

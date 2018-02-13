@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -116,7 +117,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			mDetailsPage.buttonRead.setText(R.string._continue);
 		}
 		final MangaFavourite favourite = mFavourites.get(mMangaHeader);
-		mDetailsPage.buttonFavourite.setImageResource(favourite == null ? R.drawable.ic_tag_black : R.drawable.ic_tag_heart_black);
+		mDetailsPage.buttonFavourite.setImageResource(favourite == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
 	}
 
 	@NonNull
@@ -209,7 +210,12 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 	@Override
 	public void onFavouritesChanged(MangaDetails manga, @Nullable Category category) {
-		mDetailsPage.buttonFavourite.setImageResource(category == null ? R.drawable.ic_tag_black : R.drawable.ic_tag_heart_black);
+		Snackbar.make(
+				mPager,
+				category == null ? getString(R.string.unfavourited) : getString(R.string.added_to_x, category.name),
+				Snackbar.LENGTH_SHORT
+		).show();
+		mDetailsPage.buttonFavourite.setImageResource(category == null ? R.drawable.ic_favorite_outline_light : R.drawable.ic_favorite_light);
 	}
 
 	@Override

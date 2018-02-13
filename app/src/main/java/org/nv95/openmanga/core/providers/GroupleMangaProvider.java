@@ -9,9 +9,11 @@ import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nv95.openmanga.common.StringJoinerCompat;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.MangaStatus;
 import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaChaptersList;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaPage;
@@ -70,7 +72,7 @@ abstract class GroupleMangaProvider extends MangaProvider {
 			list.add(new MangaHeader(
 					title.text(),
 					subtitle == null ? "" : subtitle.text(),
-					e.select(".element-link").text(),
+					parseGenres(e.select(".element-link"), ""),
 					url(domain, title.attr("href")),
 					e.selectFirst("img.lazy").attr("data-original"),
 					getCName(),
@@ -99,10 +101,19 @@ abstract class GroupleMangaProvider extends MangaProvider {
 		final Element description = root.selectFirst(".manga-description");
 		final Element author = root.selectFirst(".elem_author");
 		final MangaDetails details = new MangaDetails(
-				header,
+				header.id,
+				header.name,
+				header.summary,
+				parseGenres(root.select(".elem_genre a"),header.genres),
+				header.url,
+				header.thumbnail,
+				header.provider,
+				header.status,
+				header.rating,
 				description == null ? "" : description.html(),
 				root.selectFirst("div.picture-fotorama").child(0).attr("data-full"),
-				author == null ? "" : author.child(0).text()
+				author == null ? "" : author.child(0).text(),
+				new MangaChaptersList()
 		);
 		root = root.selectFirst("div.chapters-link");
 		if (root == null) {
@@ -150,5 +161,17 @@ abstract class GroupleMangaProvider extends MangaProvider {
 			return pages;
 		}
 		throw new RuntimeException("No reader script found");
+	}
+
+	@NonNull
+	private String parseGenres(@Nullable Elements elements, @NonNull String defValue) {
+		if (elements == null || elements.isEmpty()) {
+			return defValue;
+		}
+		StringJoinerCompat joiner = new StringJoinerCompat(", ");
+		for (Element o : elements) {
+			joiner.add(o.text());
+		}
+		return joiner.toString();
 	}
 }

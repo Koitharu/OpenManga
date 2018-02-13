@@ -147,8 +147,12 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void keepScreenOn() {
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	public void setKeepScreenOn(boolean flag) {
+		if (flag) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		} else {
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
 	}
 
 	public void checkPermissions(int requestCode, String... permissions) {

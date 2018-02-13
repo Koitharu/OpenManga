@@ -10,6 +10,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent" />
 
+	<org.nv95.openmanga.reader.ReaderStatusBar
+		android:id="@+id/statusBar"
+		android:visibility="gone"
+		android:fitsSystemWindows="false"
+		android:layout_gravity="top"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
 	<org.nv95.openmanga.reader.FitWindowsFrameLayout
 		android:id="@+id/root"
 		android:layout_width="match_parent"
@@ -40,6 +48,7 @@
 				android:text="@string/loading_chapter" />
 
 		</RelativeLayout>
+
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"

@@ -48,7 +48,6 @@ public final class FavouriteDialog implements DialogInterface.OnClickListener {
 		}
 		mBuilder.setSingleChoiceItems(items, selected, this);
 		mBuilder.setTitle(R.string.action_favourite);
-		mBuilder.setPositiveButton(android.R.string.ok, this);
 		mBuilder.setNegativeButton(android.R.string.cancel, this);
 		mBuilder.setNeutralButton(R.string.remove, this);
 		mBuilder.setCancelable(true);
@@ -66,9 +65,6 @@ public final class FavouriteDialog implements DialogInterface.OnClickListener {
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-			case DialogInterface.BUTTON_POSITIVE:
-
-				break;
 			case DialogInterface.BUTTON_NEGATIVE:
 
 				break;
@@ -88,6 +84,7 @@ public final class FavouriteDialog implements DialogInterface.OnClickListener {
 				if (!mFavouritesRepository.update(favourite)) {
 					mFavouritesRepository.add(favourite);
 				}
+				dialog.dismiss();
 				if (mListener != null) {
 					mListener.onFavouritesChanged(mManga, category);
 				}

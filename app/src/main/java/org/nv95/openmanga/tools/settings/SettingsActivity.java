@@ -20,6 +20,7 @@ import org.nv95.openmanga.common.utils.TextUtils;
 public class SettingsActivity extends AppBaseActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	public static final String ACTION_SETTINGS_APPEARANCE = "org.nv95.openmanga.ACTION_SETTINGS_APPEARANCE";
+	public static final String ACTION_SETTINGS_READER = "org.nv95.openmanga.ACTION_SETTINGS_READER";
 
 	public static final int RESULT_RESTART = Activity.RESULT_FIRST_USER + 1;
 
@@ -42,6 +43,9 @@ public class SettingsActivity extends AppBaseActivity implements SharedPreferenc
 				break;
 			case ACTION_SETTINGS_APPEARANCE:
 				mFragment = new AppearanceSettingsFragment();
+				break;
+			case ACTION_SETTINGS_READER:
+				mFragment = new ReaderSettingsFragment();
 				break;
 			default:
 				//TODO

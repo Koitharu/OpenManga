@@ -49,6 +49,9 @@ public final class RecommendationsActivity extends AppBaseActivity {
 		};
 		final IntentFilter intentFilter = new IntentFilter(RecommendationsUpdateService.ACTION_RECOMMENDATIONS_UPDATED);
 		registerReceiver(mBroadcastReceiver, intentFilter);
+		if (mPagerAdapter.getCount() == 0) {
+			updateContent();
+		}
 	}
 
 	@Override

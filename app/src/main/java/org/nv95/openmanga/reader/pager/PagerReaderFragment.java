@@ -2,6 +2,7 @@ package org.nv95.openmanga.reader.pager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
@@ -15,16 +16,17 @@ import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.reader.OnOverScrollListener;
 import org.nv95.openmanga.reader.ReaderFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by koitharu on 09.01.18.
  */
 
-public final class PagerReaderFragment extends ReaderFragment implements ViewPager.OnPageChangeListener {
+public class PagerReaderFragment extends ReaderFragment implements ViewPager.OnPageChangeListener {
 
-	private OverScrollPager mPager;
-	private PagerReaderAdapter mAdapter;
+	protected OverScrollPager mPager;
+	protected PagerReaderAdapter mAdapter;
 
 	@Nullable
 	@Override
@@ -35,10 +37,14 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		mPager = view.findViewById(R.id.pager);
-		mAdapter = new PagerReaderAdapter(getPages(), new GestureDetector(view.getContext(), new TapDetector()));
+		mAdapter = onCreateAdapter(new GestureDetector(view.getContext(), new TapDetector()));
 		mPager.setOffscreenPageLimit(2);
 		mPager.setAdapter(mAdapter);
 		mPager.addOnPageChangeListener(this);
+	}
+
+	protected PagerReaderAdapter onCreateAdapter(GestureDetector gestureDetector) {
+		return new PagerReaderAdapter(getPages(), gestureDetector);
 	}
 
 	@Override
@@ -87,28 +93,23 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 	}
 
 	@Override
-	public void moveLeft() {
-		smoothScrollToPage(getCurrentPageIndex() - 1);
+	public boolean moveLeft() {
+		return movePrevious();
 	}
 
 	@Override
-	public void moveRight() {
-		smoothScrollToPage(getCurrentPageIndex() + 1);
+	public boolean moveRight() {
+		return moveNext();
 	}
 
 	@Override
-	public void moveUp() {
-
+	public boolean moveUp() {
+		return false;
 	}
 
 	@Override
-	public void moveDown() {
-
-	}
-
-	@Override
-	public void moveNext() {
-		smoothScrollToPage(getCurrentPageIndex() + 1);
+	public boolean moveDown() {
+		return false;
 	}
 
 	private final class TapDetector extends GestureDetector.SimpleOnGestureListener {
@@ -137,5 +138,27 @@ public final class PagerReaderFragment extends ReaderFragment implements ViewPag
 			}
 			return true;
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		final MangaPage page = getCurrentPage();
+		if (page != null) {
+			outState.putLong("page_id", page.id);
+		}
+		outState.putParcelableArrayList("pages", mPages);
+	}
+
+	@Override
+	public void onRestoreState(@NonNull Bundle savedState) {
+		ArrayList<MangaPage> pages = savedState.getParcelableArrayList("pages");
+		if (pages != null) {
+			setPages(pages);
+			long pageId = savedState.getLong("page_id", 0);
+			if (pageId != 0) {
+				scrollToPageById(pageId);
+			}
+		}
+		onPageSelected(mPager.getCurrentItem());
 	}
 }

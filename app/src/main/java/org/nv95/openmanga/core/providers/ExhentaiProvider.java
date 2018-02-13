@@ -8,12 +8,16 @@ import android.support.annotation.Nullable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.nv95.openmanga.core.models.MangaDetails;
-import org.nv95.openmanga.core.models.MangaHeader;
-import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.core.MangaStatus;
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.StringJoinerCompat;
 import org.nv95.openmanga.common.utils.network.CookieStore;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.MangaStatus;
+import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaDetails;
+import org.nv95.openmanga.core.models.MangaGenre;
+import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -35,6 +39,19 @@ public final class ExhentaiProvider extends MangaProvider {
 		CookieStore.getInstance().put("exhentai.org", COOKIE_DEFAULT);
 	}
 
+	private final MangaGenre[] mGenres = new MangaGenre[] {
+		new MangaGenre(R.string.genre_doujinshi, "f_doujinshi"),
+		new MangaGenre(R.string.genre_manga, "f_manga"),
+		new MangaGenre(R.string.genre_artistcg, "f_artistcg"),
+		new MangaGenre(R.string.genre_gamecg, "f_gamecg"),
+		new MangaGenre(R.string.genre_western, "f_western"),
+		new MangaGenre(R.string.genre_nonh, "f_non-h"),
+		new MangaGenre(R.string.genre_imageset, "f_imageset"),
+		new MangaGenre(R.string.genre_cosplay, "f_cosplay"),
+		new MangaGenre(R.string.genre_asianporn, "f_asianporn"),
+		new MangaGenre(R.string.genre_misc, "f_misc"),
+	};
+
 	@NonNull
 	private String mDomain;
 
@@ -53,11 +70,18 @@ public final class ExhentaiProvider extends MangaProvider {
 	@Override
 	@SuppressLint("DefaultLocale")
 	public ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, @NonNull String[] genres) throws Exception {
+		final StringJoinerCompat query = new StringJoinerCompat("&", "", "&");
+		for (String g : genres) {
+			query.add(g + "=1");
+		}
+		if (search != null) {
+			query.add("f_search=" + search);
+		}
 		String url = String.format(
-				"https://%s/?page=%d&f_doujinshi=on&f_manga=on&f_artistcg=on&f_gamecg=on&f_western=on&f_non-h=on&f_imageset=on&f_cosplay=on&f_asianporn=on&f_misc=on%s&f_apply=Apply+Filter",
+				"https://%s/?page=%d&%sf_apply=Apply+Filter",
 				mDomain,
 				page,
-				search == null ? "" : "&f_search=" + search
+				query.toString()
 		);
 		Document document = NetworkUtils.getDocument(url);
 		Element root = document.body().select("div.itg").first();
@@ -69,7 +93,7 @@ public final class ExhentaiProvider extends MangaProvider {
 		for (Element o : elements) {
 			String name = o.select("a").first().text();
 			list.add(new MangaHeader(
-					name.replaceAll("\\[[^\\[,\\]]+]","").trim(),
+					name.replaceAll("\\[[^\\[,\\]]+]", "").trim(),
 					getFromBrackets(name),
 					"",
 					o.select("a").first().attr("href"),
@@ -82,16 +106,92 @@ public final class ExhentaiProvider extends MangaProvider {
 		return list;
 	}
 
+	@SuppressLint("DefaultLocale")
 	@NonNull
 	@Override
 	public MangaDetails getDetails(MangaHeader header) throws Exception {
-		return null;
+		final Element body = NetworkUtils.getDocument(header.url).body();
+		final Element taglist = body.getElementById("taglist");
+		final StringBuilder description = new StringBuilder();
+		final Elements trs = taglist.select("tr");
+		String author = "";
+		for (Element o : trs) {
+			final Element td = o.selectFirst("td");
+			if (td == null) {
+				continue;
+			}
+			final String title = td.text();
+			if (title.startsWith("artist")) {
+				author = td.nextElementSibling().text();
+				continue;
+			}
+			description.append("<b>")
+					.append(title)
+					.append("</b> ")
+					.append(td.nextElementSibling().text())
+					.append("<br/>");
+		}
+		String cover = header.thumbnail;
+		try {
+			final String pvw = body.getElementById("gd1").child(0).attr("style");
+			int p = pvw.indexOf("url(") + 4;
+			cover = pvw.substring(p, pvw.indexOf(')', p));
+		} catch (Exception ignored) {
+		}
+		final MangaDetails details = new MangaDetails(
+				header,
+				description.toString(),
+				cover,
+				author
+		);
+		final Element table = body.selectFirst("table.ptt");
+		if (table != null) {
+			final Elements cells = table.select("td");
+			if (cells.size() > 2) {
+				cells.remove(cells.size() - 1);
+				cells.remove(0);
+				for (int i = 0; i < cells.size(); i++) {
+					final Element a = cells.get(i).selectFirst("a");
+					if (a != null) {
+						details.chapters.add(new MangaChapter(
+								String.format("%s (%s)", header.name, a.text()),
+								i,
+								url("https://" + mDomain, a.attr("href")),
+								header.provider
+						));
+					}
+				}
+			} else {
+				details.chapters.add(new MangaChapter(
+						header.name,
+						0,
+						header.url,
+						header.provider
+				));
+			}
+		}
+		return details;
 	}
 
 	@NonNull
 	@Override
 	public ArrayList<MangaPage> getPages(String chapterUrl) throws Exception {
-		return null;
+		final ArrayList<MangaPage> pages = new ArrayList<>();
+		final Element body = NetworkUtils.getDocument(chapterUrl).body();
+		final Elements cells = body.select("div.gdtm");
+		for (Element cell : cells) {
+			pages.add(new MangaPage(
+					url("https://" + mDomain, cell.selectFirst("a").attr("href")),
+					CNAME
+			));
+		}
+		return pages;
+	}
+
+	@NonNull
+	@Override
+	public String getImageUrl(MangaPage page) throws Exception {
+		return url("https://" + mDomain, NetworkUtils.getDocument(page.url).getElementById("img").attr("src"));
 	}
 
 	@Override
@@ -171,5 +271,10 @@ public final class ExhentaiProvider extends MangaProvider {
 			sb.append(t);
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public MangaGenre[] getAvailableGenres() {
+		return mGenres;
 	}
 }

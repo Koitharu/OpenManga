@@ -45,10 +45,14 @@ import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.db.HistoryRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
+import org.nv95.openmanga.core.storage.settings.ReaderSettings;
 import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.reader.pager.PagerReaderFragment;
+import org.nv95.openmanga.reader.pager.RtlPagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
+import org.nv95.openmanga.tools.settings.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -78,9 +82,10 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private Toolbar mToolbar;
 	private View mBottomBar;
 	private TextView mTextViewPage;
+	private ReaderStatusBar mStatusBar;
 
-	private ReaderFragment mReader;
-
+	private ReaderFragment mReader = null;
+	private ReaderSettings mSettings;
 	private HistoryRepository mHistoryRepository;
 	private BookmarksRepository mBookmarksRepository;
 	private MangaDetails mManga;
@@ -95,7 +100,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mToolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		enableHomeAsUp();
+		mSettings = AppSettings.get(this).readerSettings;
 
+		mStatusBar = findViewById(R.id.statusBar);
 		mSeekBar = findViewById(R.id.seekBar);
 		mContentPanel = findViewById(R.id.contentPanel);
 		mBottomBar = findViewById(R.id.bottomBar);
@@ -105,6 +112,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mSeekBar.setOnSeekBarChangeListener(this);
 		findViewById(R.id.action_menu).setOnClickListener(this);
 		findViewById(R.id.action_thumbnails).setOnClickListener(this);
+		mStatusBar.setIsActive(mSettings.isStatusBarEnbaled());
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Window window = getWindow();
@@ -113,10 +121,6 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			window.setNavigationBarColor(color);
 		}
 
-		mReader = new PagerReaderFragment();
-		getFragmentManager().beginTransaction()
-				.replace(R.id.reader, mReader)
-				.commit();
 		mHistoryRepository = HistoryRepository.get(this);
 		mBookmarksRepository = BookmarksRepository.get(this);
 
@@ -144,6 +148,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		assert mManga != null && mChapter != null;
 		setTitle(mManga.name);
 		setSubtitle(mChapter.name);
+		setupReader(mHistoryRepository.getPreset(mManga, mSettings.getDefaultPreset()));
 		getLoaderManager().initLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
@@ -171,6 +176,16 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			}
 		}
 		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setKeepScreenOn(mSettings.isWakelockEnabled());
+		mStatusBar.setIsActive(mSettings.isStatusBarEnbaled());
+		if (mToolbar.getVisibility() != View.VISIBLE) {
+			mStatusBar.show();
+		}
 	}
 
 	@Override
@@ -337,11 +352,19 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		}
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
-				//TODO
-				return true;
+				if (mSettings.isVolumeKeysEnabled()) {
+					if (!mReader.movePrevious()) {
+						prevChapter();
+					}
+					return true;
+				} else return super.onKeyDown(keyCode, event);
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				//TODO
-				return true;
+				if (mSettings.isVolumeKeysEnabled()) {
+					if (!mReader.moveNext()) {
+						nextChapter();
+					}
+					return true;
+				} else return super.onKeyDown(keyCode, event);
 			default:
 				return super.onKeyDown(keyCode, event);
 		}
@@ -356,12 +379,33 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			case KeyEvent.KEYCODE_MENU:
 				toggleUi();
 				return true;
-			case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-				mReader.moveNext();
+			case KeyEvent.KEYCODE_SPACE:
+				if (!mReader.moveNext()) {
+					nextChapter();
+				}
+			case KeyEvent.KEYCODE_DPAD_UP:
+				if (!mReader.moveUp()) {
+					prevChapter();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+				if (!mReader.moveDown()) {
+					nextChapter();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				if (!mReader.moveLeft()) {
+					onOverScrolledStart();
+				}
+				return true;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				if (!mReader.moveRight()) {
+					onOverScrolledEnd();
+				}
 				return true;
 			case KeyEvent.KEYCODE_VOLUME_UP:
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
-				return true;
+				return mSettings.isVolumeKeysEnabled() || super.onKeyUp(keyCode, event);
 			default:
 				return super.onKeyUp(keyCode, event);
 		}
@@ -408,20 +452,23 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	}
 
 	private void addToHistory() {
-		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
+		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), getReaderPreset());
 		mHistoryRepository.updateOrAdd(history);
 	}
 
 	@Override
 	public void onPageChanged(int page) {
 		mSeekBar.setProgress(page);
+		mStatusBar.setStatus(page, mPages.size());
 	}
 
 	public void toggleUi() {
 		if (mToolbar.getVisibility() == View.VISIBLE) {
 			hideUi();
+			mStatusBar.show();
 		} else {
 			showUi();
+			mStatusBar.hide();
 		}
 	}
 
@@ -458,12 +505,16 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 				break;
 			case R.id.action_reader_mode:
 				if (mHistoryRepository != null && mPages != null) {
-					final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), (short) 0);
+					final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), getReaderPreset());
 					mHistoryRepository.updateOrAdd(history);
 					new ReaderModeDialog(this, history)
 							.setListener(this)
 							.show();
 				}
+				break;
+			case R.id.action_reader_settings:
+				startActivity(new Intent(this, SettingsActivity.class)
+						.setAction(SettingsActivity.ACTION_SETTINGS_READER));
 				break;
 			default:
 				stub();
@@ -509,17 +560,30 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 
 	@Override
 	public void onReaderModeChanged(short mode) {
-		if (mode != 0) {
-			stub();
-			return;
-		}
 		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), mode);
 		mHistoryRepository.updateOrAdd(history);
-		//TODO
+		setupReader(mode);
 	}
 
 	@Override
 	public void onOverScrolledStart() {
+		if (mReader instanceof RtlPagerReaderFragment) {
+			nextChapter();
+		} else {
+			prevChapter();
+		}
+	}
+
+	@Override
+	public void onOverScrolledEnd() {
+		if (mReader instanceof RtlPagerReaderFragment) {
+			prevChapter();
+		} else {
+			nextChapter();
+		}
+	}
+
+	private void prevChapter() {
 		final int pos = mManga.chapters.indexOf(mChapter);
 		if (pos == -1 || pos == 0) {
 			return;
@@ -534,20 +598,56 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
 	}
 
-	@Override
-	public void onOverScrolledEnd() {
+	private void nextChapter() {
 		final int pos = mManga.chapters.indexOf(mChapter);
 		if (pos == -1 || pos == mManga.chapters.size() - 1) {
 			return;
 		}
 		AnimationUtils.setVisibility(mContentPanel, View.VISIBLE);
 		mPageId = PAGE_ID_FIRST;
-		mChapter = mManga.chapters.get(pos - 1);
+		mChapter = mManga.chapters.get(pos + 1);
 		setSubtitle(mChapter.name);
 		Toast toast = Toast.makeText(this, getString(R.string.next_chapter_, mChapter.name), Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 		getLoaderManager().restartLoader(0, mChapter.toBundle(), this).forceLoad();
+	}
+
+	private void setupReader(int preset) {
+		Bundle savedState;
+		if (mReader != null) {
+			savedState = new Bundle();
+			mReader.onSaveInstanceState(savedState);
+		} else {
+			savedState = null;
+		}
+		switch (preset) {
+			case 0:
+				mReader = new PagerReaderFragment();
+				break;
+			case 1:
+				mReader = new RtlPagerReaderFragment();
+				break;
+			default:
+				stub();
+				mReader = new PagerReaderFragment();
+		}
+		mReader.setArguments(savedState);
+		getFragmentManager().beginTransaction()
+				.replace(R.id.reader, mReader)
+				.commit();
+	}
+
+	private short getReaderPreset() {
+		if (mReader == null) {
+			return mHistoryRepository.getPreset(mManga, mSettings.getDefaultPreset());
+		} else if (mReader instanceof RtlPagerReaderFragment) {
+			return 1;
+		} else if (mReader instanceof PagerReaderFragment) {
+			return 0;
+		} else {
+			return 0;//TODO
+		}
 	}
 
 	final static class Result {

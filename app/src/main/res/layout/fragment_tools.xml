@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/scrollView"
 	android:layout_width="match_parent"
@@ -53,34 +54,102 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-					<TextView
+					<RelativeLayout
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:paddingLeft="12dp"
-						android:paddingRight="12dp"
-						android:paddingTop="6dp"
-						android:text="@string/cache_size"
 						android:visibility="gone"
-						tools:visibility="visible"
-						android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+						tools:visibility="visible">
 
-					<TextView
-						android:id="@+id/textView_storage_cache"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:lines="1"
-						android:paddingBottom="6dp"
-						android:paddingLeft="12dp"
-						android:paddingRight="12dp"
-						android:paddingTop="6dp"
-						android:singleLine="true"
-						android:text="..."
-						android:textAllCaps="true"
-						android:visibility="gone"
-						tools:visibility="visible"
-						android:textColor="?android:textColorSecondary"
-						android:textAppearance="@style/TextAppearance.AppCompat.Large"
-						tools:text="122.4 Mb" />
+						<TextView
+							android:id="@+id/textView_1"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:paddingLeft="12dp"
+							android:paddingRight="12dp"
+							android:paddingTop="6dp"
+							android:text="@string/cache_size"
+							android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+
+						<TextView
+							android:id="@+id/textView_storage_cache"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_alignParentLeft="true"
+							android:layout_alignParentStart="true"
+							android:layout_below="@id/textView_1"
+							android:layout_toLeftOf="@id/button_clear_cache"
+							android:layout_toStartOf="@id/button_clear_cache"
+							android:lines="1"
+							android:paddingBottom="6dp"
+							android:paddingLeft="12dp"
+							android:paddingRight="12dp"
+							android:paddingTop="6dp"
+							android:singleLine="true"
+							android:text="..."
+							android:textAllCaps="true"
+							android:textAppearance="@style/TextAppearance.AppCompat.Large"
+							android:textColor="?android:textColorSecondary"
+							tools:text="122.4 Mb" />
+
+						<org.nv95.openmanga.reader.ToolButtonCompat
+							android:id="@+id/button_clear_cache"
+							android:layout_width="42dp"
+							android:layout_height="wrap_content"
+							android:layout_alignParentEnd="true"
+							android:layout_alignParentRight="true"
+							android:layout_alignTop="@id/textView_storage_cache"
+							android:layout_alignBottom="@id/textView_storage_cache"
+							android:layout_marginEnd="6dp"
+							android:layout_marginRight="6dp"
+							android:src="@drawable/ic_trash_white"
+							app:tint="?android:attr/textColorSecondary" />
+
+						<TextView
+							android:layout_below="@id/textView_storage_cache"
+							android:id="@+id/textView_2"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:paddingLeft="12dp"
+							android:paddingRight="12dp"
+							android:paddingTop="6dp"
+							android:text="@string/saved_manga"
+							android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+
+						<TextView
+							android:id="@+id/textView_storage_manga"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_alignParentLeft="true"
+							android:layout_alignParentStart="true"
+							android:layout_below="@id/textView_2"
+							android:layout_toLeftOf="@id/button_saved_manga"
+							android:layout_toStartOf="@id/button_saved_manga"
+							android:lines="1"
+							android:paddingBottom="6dp"
+							android:paddingLeft="12dp"
+							android:paddingRight="12dp"
+							android:paddingTop="6dp"
+							android:singleLine="true"
+							android:text="..."
+							android:textAllCaps="true"
+							android:textAppearance="@style/TextAppearance.AppCompat.Large"
+							android:textColor="?android:textColorSecondary"
+							tools:text="122.4 Mb" />
+
+						<org.nv95.openmanga.reader.ToolButtonCompat
+							android:id="@+id/button_saved_manga"
+							android:layout_width="42dp"
+							android:layout_height="wrap_content"
+							android:layout_alignParentEnd="true"
+							android:layout_alignParentRight="true"
+							android:layout_alignTop="@id/textView_storage_manga"
+							android:layout_alignBottom="@id/textView_storage_manga"
+							android:layout_marginEnd="6dp"
+							android:layout_marginRight="6dp"
+							android:src="@drawable/ic_menu_white"
+							app:tint="?android:attr/textColorSecondary" />
+
+					</RelativeLayout>
 
 				</org.nv95.openmanga.common.views.ExpansionPanel>
 
@@ -115,6 +184,15 @@
 				android:textSize="16sp" />
 
 		</android.support.v7.widget.CardView>
+
+		<TextView
+			android:id="@+id/textView_about"
+			android:layout_width="match_parent"
+			android:gravity="center_horizontal"
+			android:padding="12dp"
+			tools:text="Lorem ipsum v423"
+			android:textColor="?android:attr/textColorTertiary"
+			android:layout_height="wrap_content" />
 
 	</LinearLayout>
 

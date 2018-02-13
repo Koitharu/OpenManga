@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.discover.bookmarks.BookmarksListActivity;
+import org.nv95.openmanga.filepicker.FilePickerActivity;
 import org.nv95.openmanga.mangalist.MangaListActivity;
 import org.nv95.openmanga.recommendations.RecommendationsActivity;
 import org.nv95.openmanga.storage.SavedMangaActivity;
@@ -96,7 +97,7 @@ public final class DiscoverAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		final Context context = view.getContext();
 		switch (cname) {
 			case SpecificCName.BROWSE_IMPORT:
-				//TODO
+				context.startActivity(new Intent(context.getApplicationContext(), FilePickerActivity.class));
 				break;
 			case SpecificCName.BROWSE_SAVED:
 				context.startActivity(new Intent(context.getApplicationContext(), SavedMangaActivity.class));

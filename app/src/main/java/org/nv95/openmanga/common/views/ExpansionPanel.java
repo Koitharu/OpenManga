@@ -1,16 +1,15 @@
 package org.nv95.openmanga.common.views;
 
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.AnimationUtils;
 
 /**
  * Created by koitharu on 02.02.18.
@@ -36,7 +35,6 @@ public final class ExpansionPanel extends LinearLayout {
 		super(context, attrs, defStyleAttr);
 		View.inflate(context, R.layout.view_expansion_panel, this);
 		setOrientation(VERTICAL);
-		setLayoutTransition(new LayoutTransition());
 		mTextViewControl = findViewById(R.id.textView_control);
 		mDivider = findViewById(R.id.divider);
 		mTextViewControl.setOnClickListener(new OnClickListener() {
@@ -74,13 +72,8 @@ public final class ExpansionPanel extends LinearLayout {
 		mTextViewControl.setText(R.string.hide_details);
 		TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mTextViewControl,
 				0, 0, R.drawable.ic_collapse_black, 0);
-		final int count = getChildCount();
-		for (int i = 0; i < count; i++) {
-			final View child = getChildAt(i);
-			if (!TAG_PERSISTENT.equals(child.getTag())) {
-				child.setVisibility(VISIBLE);
-			}
-		}
+		AnimationUtils.expand(getChildAt(0));
+		mDivider.setVisibility(VISIBLE);
 	}
 
 	private void collapse() {
@@ -88,13 +81,8 @@ public final class ExpansionPanel extends LinearLayout {
 		mTextViewControl.setText(R.string.show_more_details);
 		TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mTextViewControl,
 				0, 0, R.drawable.ic_expand_black, 0);
-		final int count = getChildCount();
-		for (int i = 0; i < count; i++) {
-			final View child = getChildAt(i);
-			if (!TAG_PERSISTENT.equals(child.getTag())) {
-				child.setVisibility(GONE);
-			}
-		}
+		AnimationUtils.collapse(getChildAt(0));
+		mDivider.setVisibility(GONE);
 	}
 
 	private void reorderViews() {

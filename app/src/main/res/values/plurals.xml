@@ -18,4 +18,13 @@
 		<item quantity="many">%1$d new chapters</item>
 		<item quantity="other">%1$d new chapters</item>
 	</plurals>
+
+	<plurals name="files_count">
+		<item quantity="zero">Empty folder</item>
+		<item quantity="one">1 file</item>
+		<item quantity="two">2 files</item>
+		<item quantity="few">%1$d files</item>
+		<item quantity="many">%1$d files</item>
+		<item quantity="other">Files: %1$d</item>
+	</plurals>
 </resources>

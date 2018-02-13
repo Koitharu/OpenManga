@@ -127,4 +127,16 @@ public abstract class LayoutUtils {
 	private static int calculateScrollPos(int a, int b, int max) {
 		return Math.min((a + b) / 2, max);
 	}
+
+	public static void forceUpdate(@NonNull RecyclerView recyclerView) {
+		int pos = findFirstCompletelyVisibleItemPosition(recyclerView);
+		final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+		final RecyclerView.Adapter adapter = recyclerView.getAdapter();
+		recyclerView.setAdapter(null);
+		recyclerView.setLayoutManager(null);
+		recyclerView.setAdapter(adapter);
+		recyclerView.setLayoutManager(layoutManager);
+		adapter.notifyDataSetChanged();
+		setSelectionFromTop(recyclerView, pos);
+	}
 }

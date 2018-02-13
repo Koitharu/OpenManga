@@ -387,4 +387,13 @@
 	<string name="storage_usage">Local storage usage</string>
 	<string name="show_more_details">Show more details</string>
 	<string name="hide_details">Hide details</string>
+	<string name="genre_omegaverse">Omegaverse</string>
+	<string name="default_mode">Default mode</string>
+	<string name="added_to_x">Added to %1$s</string>
+	<string name="details">Details</string>
+	<string name="invalid_file_not_supported">This file is invalid or format not supported</string>
+	<string name="file_archive">File (archive)</string>
+	<string name="directory_empty">Directory is empty or content is not available</string>
+	<string name="hide_unsupported">Hide unsupported</string>
+	<string name="show_status_bar">Show status bar</string>
 </resources>

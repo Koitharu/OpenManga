@@ -20,9 +20,8 @@ import java.util.List;
 public abstract class ReaderFragment extends AppBaseFragment implements ReaderCallback {
 
 	@NonNull
-	private final ArrayList<MangaPage> mPages = new ArrayList<>();
-	@Nullable
-	private ReaderCallback mCallback = null;
+	protected final ArrayList<MangaPage> mPages = new ArrayList<>();
+	private boolean mRestored = false;
 
 	@CallSuper
 	public void setPages(List<MangaPage> pages) {
@@ -58,29 +57,51 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 
 	@Override
 	public void onPageChanged(int page) {
-		if (mCallback != null) {
-			mCallback.onPageChanged(page);
+		Activity activity = getActivity();
+		if (activity != null && activity instanceof ReaderCallback) {
+			((ReaderCallback) activity).onPageChanged(page);
 		}
 	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		final Activity activity = getActivity();
-		if (activity != null && activity instanceof ReaderCallback) {
-			mCallback = (ReaderCallback) activity;
+		final Bundle args = getArguments();
+		if (!mRestored && args != null) {
+			onRestoreState(args);
+			mRestored = true;
 		}
 	}
 
-	public abstract void moveLeft();
+	public abstract boolean moveLeft();
 
-	public abstract void moveRight();
+	public abstract boolean moveRight();
 
-	public abstract void moveUp();
+	public abstract boolean moveUp();
 
-	public abstract void moveDown();
+	public abstract boolean moveDown();
 
-	public abstract void moveNext();
+	public boolean moveNext() {
+		final int newPos = getCurrentPageIndex() + 1;
+		if (newPos < mPages.size()) {
+			smoothScrollToPage(newPos);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean movePrevious() {
+		final int newPos = getCurrentPageIndex() - 1;
+		if (newPos >= 0) {
+			smoothScrollToPage(newPos);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public abstract void onRestoreState(@NonNull Bundle savedState);
 
 	protected void toggleUi() {
 		final Activity activity = getActivity();

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.MangaChapter;
+import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.models.MangaPage;
@@ -152,6 +153,30 @@ public class HistoryRepository extends SQLiteRepository<MangaHistory> {
 							"id=?", new String[]{String.valueOf(manga.id)}) > 0;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	public short getPreset(MangaDetails manga, short defaultValue) {
+		Cursor cursor = null;
+		try {
+			cursor = mStorageHelper.getReadableDatabase().query(
+					TABLE_NAME,
+					new String[]{PROJECTION[12]},
+					"id = ?",
+					new String[]{String.valueOf(manga.id)},
+					null,
+					null,
+					null,
+					null
+			);
+			if (cursor.moveToFirst()) {
+				return cursor.getShort(0);
+			}
+			return defaultValue;
+		} catch (Exception e) {
+			return defaultValue;
+		} finally {
+			if (cursor != null) cursor.close();
 		}
 	}
 }
