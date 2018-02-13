@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="12dp">
+
+	<android.support.v7.widget.AppCompatSeekBar
+		android:id="@+id/seekBar_red"
+		android:layout_width="match_parent"
+		android:layout_height="34dp"
+		android:layout_marginBottom="12dp"
+		android:background="@drawable/gradient_red"
+		android:max="255"
+		android:tag="0"
+		android:thumb="@drawable/thumb_color" />
+
+	<android.support.v7.widget.AppCompatSeekBar
+		android:id="@+id/seekBar_green"
+		android:layout_width="match_parent"
+		android:layout_height="34dp"
+		android:layout_marginBottom="12dp"
+		android:background="@drawable/gradient_green"
+		android:max="255"
+		android:tag="1"
+		android:thumb="@drawable/thumb_color" />
+
+	<android.support.v7.widget.AppCompatSeekBar
+		android:id="@+id/seekBar_blue"
+		android:layout_width="match_parent"
+		android:layout_height="34dp"
+		android:layout_marginBottom="12dp"
+		android:background="@drawable/gradient_blue"
+		android:max="255"
+		android:tag="2"
+		android:thumb="@drawable/thumb_color" />
+
+	<View
+		android:id="@+id/view_sample"
+		android:layout_width="match_parent"
+		android:layout_height="46dp" />
+
+</LinearLayout>

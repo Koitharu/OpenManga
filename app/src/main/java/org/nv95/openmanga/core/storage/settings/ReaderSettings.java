@@ -1,6 +1,8 @@
 package org.nv95.openmanga.core.storage.settings;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 
 /**
  * Created by koitharu on 06.02.18.
@@ -40,5 +42,14 @@ public final class ReaderSettings {
 
 	public boolean isStatusBarEnbaled() {
 		return mPreferences.getBoolean("reader.statusbar", true);
+	}
+
+	public boolean isCustomBackground() {
+		return mPreferences.getBoolean("reader.background_apply", false);
+	}
+
+	@ColorInt
+	public int getBackgroundColor() {
+		return mPreferences.getInt("reader.background", Color.BLACK);
 	}
 }

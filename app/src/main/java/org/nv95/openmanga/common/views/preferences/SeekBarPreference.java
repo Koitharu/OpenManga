@@ -26,7 +26,6 @@ public final class SeekBarPreference extends Preference implements SeekBar.OnSee
 	private Drawable mIcon;
 	private int mMax;
 	private String mSummaryPattern;
-	private AppCompatSeekBar mSeekBar;
 	private int mValue;
 	private boolean mValueSet = false;
 
@@ -100,5 +99,10 @@ public final class SeekBarPreference extends Preference implements SeekBar.OnSee
 	@Override
 	public int getValue() {
 		return mValue;
+	}
+
+	@Override
+	protected Object onGetDefaultValue(TypedArray a, int index) {
+		return a.getInt(index, 0);
 	}
 }

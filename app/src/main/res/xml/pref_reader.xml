@@ -41,6 +41,18 @@
 		android:key="reader.statusbar"
 		android:title="@string/show_status_bar"
 		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<CheckBoxPreference
+		android:defaultValue="false"
+		android:key="reader.background_apply"
+		android:title="@string/custom_background"
+		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<org.nv95.openmanga.common.views.preferences.ColorPreference
+		android:defaultValue="0"
+		android:dependency="reader.background_apply"
+		android:key="reader.background"
+		android:title="@string/background_color" />
 	<!--
 
 		<PreferenceCategory android:title="@string/standard_mode">

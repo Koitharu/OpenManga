@@ -396,4 +396,6 @@
 	<string name="directory_empty">Directory is empty or content is not available</string>
 	<string name="hide_unsupported">Hide unsupported</string>
 	<string name="show_status_bar">Show status bar</string>
+	<string name="custom_background">Custom background</string>
+	<string name="background_color">Background color</string>
 </resources>

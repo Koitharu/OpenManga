@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.IntentUtils;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
@@ -84,6 +86,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private TextView mTextViewPage;
 	private ReaderStatusBar mStatusBar;
 
+	private FrameLayout mFrame;
 	private ReaderFragment mReader = null;
 	private ReaderSettings mSettings;
 	private HistoryRepository mHistoryRepository;
@@ -106,6 +109,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mSeekBar = findViewById(R.id.seekBar);
 		mContentPanel = findViewById(R.id.contentPanel);
 		mBottomBar = findViewById(R.id.bottomBar);
+		mFrame = findViewById(R.id.frame);
 		mTextViewPage = findViewById(R.id.textView_page);
 		this.<FitWindowsFrameLayout>findViewById(R.id.root).setCallback(this);
 
@@ -185,6 +189,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 		mStatusBar.setIsActive(mSettings.isStatusBarEnbaled());
 		if (mToolbar.getVisibility() != View.VISIBLE) {
 			mStatusBar.show();
+		}
+		if (mSettings.isCustomBackground()) {
+			mFrame.setBackgroundColor(mSettings.getBackgroundColor());
+		} else {
+			mFrame.setBackgroundColor(ThemeUtils.getThemeAttrColor(this, android.R.attr.windowBackground));
 		}
 	}
 

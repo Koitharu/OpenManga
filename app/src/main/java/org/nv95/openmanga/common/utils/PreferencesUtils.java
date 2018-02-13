@@ -1,11 +1,13 @@
 package org.nv95.openmanga.common.utils;
 
+import android.graphics.Color;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.common.views.preferences.ColorPreference;
 import org.nv95.openmanga.common.views.preferences.IntegerPreference;
 
 /**
@@ -68,6 +70,8 @@ public abstract class PreferencesUtils {
 				preference.setSummary(formatSummary(
 						String.valueOf(newValue)
 				));
+			} else if (preference instanceof ColorPreference) {
+				preference.setSummary(String.format("#%06X", (0xFFFFFF & (int)newValue)));
 			} else {
 				preference.setSummary(formatSummary((String) newValue));
 			}
@@ -87,6 +91,8 @@ public abstract class PreferencesUtils {
 				preference.setSummary(formatSummary(
 						String.valueOf(((IntegerPreference)preference).getValue())
 				));
+			} else if (preference instanceof ColorPreference) {
+				preference.setSummary(String.format("#%06X", (0xFFFFFF & ((ColorPreference) preference).getColor())));
 			} else {
 				preference.setSummary(formatSummary(preference.getSharedPreferences()
 						.getString(preference.getKey(), null)));

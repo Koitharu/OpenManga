@@ -20,7 +20,8 @@ public final class ReaderSettingsFragment extends PreferenceFragment {
 		PreferencesUtils.bindSummaryMultiple(
 				this,
 				"reader.default_preset",
-				"reader.scale_mode"
+				"reader.scale_mode",
+				"reader.background"
 		);
 	}
 }
