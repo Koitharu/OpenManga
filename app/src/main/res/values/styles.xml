@@ -1,6 +1,5 @@
 <resources>
 
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="windowActionModeOverlay">true</item>
@@ -40,7 +39,7 @@
     <style name="AppTheme.Blue">
         <item name="colorPrimary">#03a9f4</item>
         <item name="colorPrimaryDark">#007ac1</item>
-        <item name="colorAccent">#424242</item>
+        <item name="colorAccent">#f57f17</item>
     </style>
 
     <style name="AppTheme.Teal">
@@ -76,7 +75,7 @@
     <style name="AppThemeDark.Blue">
         <item name="colorPrimary">#03a9f4</item>
         <item name="colorPrimaryDark">#007ac1</item>
-        <item name="colorAccent">#424242</item>
+		<item name="colorAccent">#f57f17</item>
     </style>
 
     <style name="AppThemeBlack.Grey">
@@ -149,4 +148,13 @@
         <item name="android:windowEnterAnimation">@anim/alpha_show</item>
         <item name="android:windowExitAnimation">@anim/alpha_hide</item>
     </style>
+
+	<style name="AppDialogLight" parent="Theme.Design.Light.BottomSheetDialog">
+
+	</style>
+
+	<style name="AppDialogDark" parent="Theme.Design.BottomSheetDialog">
+
+	</style>
+
 </resources>

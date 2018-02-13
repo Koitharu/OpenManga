@@ -36,12 +36,12 @@ public class BottomSheetMenuDialog<D> {
 	private D mData;
 
 	public BottomSheetMenuDialog(@NonNull Context context) {
-		mDialog = new BottomSheetDialog(context);
+		mDialog = new BottomSheetDialog(context, ThemeUtils.getBottomSheetTheme(context));
 		if (context instanceof Activity) {
 			mDialog.setOwnerActivity((Activity) context);
 		}
 		mRecyclerView = (RecyclerView) View.inflate(context, R.layout.recyclerview, null);
-		mRecyclerView.setBackgroundColor(ThemeUtils.getThemeAttrColor(context, android.R.attr.colorBackground));
+		//mRecyclerView.setBackgroundColor(ThemeUtils.getThemeAttrColor(context, android.R.attr.colorBackground));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 		mDialog.setContentView(mRecyclerView);
 	}

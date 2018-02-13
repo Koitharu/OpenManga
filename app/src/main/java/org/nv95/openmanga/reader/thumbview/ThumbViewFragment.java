@@ -1,9 +1,11 @@
 package org.nv95.openmanga.reader.thumbview;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.dialogs.AppBaseBottomSheetDialogFragment;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
 import org.nv95.openmanga.common.utils.ResourceUtils;
@@ -22,7 +26,7 @@ import java.util.ArrayList;
  * Created by koitharu on 13.01.18.
  */
 
-public final class ThumbViewFragment extends BottomSheetDialogFragment implements OnThumbnailClickListener {
+public final class ThumbViewFragment extends AppBaseBottomSheetDialogFragment implements OnThumbnailClickListener {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<MangaPage> mPages;

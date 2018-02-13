@@ -2,6 +2,7 @@ package org.nv95.openmanga;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -40,6 +41,13 @@ public final class OpenMangaApp extends Application {
 			new JobSchedulerCompat(this).setup();
 			prefs.edit().putBoolean(PreferenceManager.KEY_HAS_SET_DEFAULT_VALUES, true).apply();
 		}
+	}
+
+	public void restart() {
+		final Intent intent = getBaseContext().getPackageManager()
+				.getLaunchIntentForPackage(getBaseContext().getPackageName());
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 	}
 
 	@NonNull

@@ -139,4 +139,9 @@ public abstract class ThemeUtils {
 		}
 		return drawable;
 	}
+
+	@StyleRes
+	public static int getBottomSheetTheme(Context context) {
+		return isAppThemeDark(context) ? R.style.AppDialogDark : R.style.AppDialogLight;
+	}
 }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.dialogs.AppBaseBottomSheetDialogFragment;
 import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  * Created by koitharu on 31.12.17.
  */
 
-public final class FilterDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener {
+public final class FilterDialogFragment extends AppBaseBottomSheetDialogFragment implements View.OnClickListener {
 
 	private RecyclerView mRecyclerView;
 	private Toolbar mToolbar;

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import org.nv95.openmanga.AppBaseActivity;
+import org.nv95.openmanga.OpenMangaApp;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.tools.settings.providers.ProvidersSettingsActivity;
 
@@ -85,7 +86,7 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 					.setPositiveButton(R.string.restart, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							//TODO restart application
+							OpenMangaApp.from(SettingsHeadersActivity.this).restart();
 						}
 					})
 					.create()
