@@ -1,6 +1,7 @@
 package org.nv95.openmanga.shelf;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.schedule.JobSchedulerCompat;
+import org.nv95.openmanga.tools.settings.SettingsActivity;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -71,12 +73,12 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 
 	@Override
 	public Loader<ShelfContent> onCreateLoader(int i, Bundle bundle) {
-		return new ShelfLoader(getActivity());
+		return new ShelfLoader(getActivity(), mColumnCount);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<ShelfContent> loader, ShelfContent content) {
-		ShelfUpdater.update(mAdapter, content, mColumnCount);
+		ShelfUpdater.update(mAdapter, content);
 	}
 
 	@Override
@@ -93,7 +95,8 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_shelf_settings:
-				//TODO
+				startActivity(new Intent(getActivity(), SettingsActivity.class)
+						.setAction(SettingsActivity.ACTION_SETTINGS_SHELF));
 				return true;
 			case R.id.action_check_updates:
 				Snackbar.make(mRecyclerView, R.string.checking_new_chapters, Snackbar.LENGTH_SHORT)

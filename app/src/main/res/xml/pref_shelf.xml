@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<CheckBoxPreference
+		android:defaultValue="true"
+		android:key="shelf.recent_enabled"
+		android:title="@string/show_last_manga"
+		android:widgetLayout="@layout/pref_switchcompat" />
+
+	<PreferenceCategory android:title="@string/action_history">
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="shelf.history_enabled"
+			android:title="@string/show_history"
+			android:widgetLayout="@layout/pref_switchcompat" />
+
+		<org.nv95.openmanga.common.views.preferences.IntPickerPreference
+			android:defaultValue="1"
+			android:dependency="shelf.history_enabled"
+			android:key="shelf.history_rows"
+			android:title="@string/max_rows"
+			app:maxValue="5"
+			app:minValue="1" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="@string/action_favourites">
+
+		<CheckBoxPreference
+			android:defaultValue="true"
+			android:key="shelf.favourites_enabled"
+			android:title="@string/show_favourites"
+			android:widgetLayout="@layout/pref_switchcompat" />
+
+		<org.nv95.openmanga.common.views.preferences.CategoriesSelectPreference
+			android:dependency="shelf.favourites_enabled"
+			android:key="shelf.favourites_categories"
+			android:title="@string/favourites_categories" />
+
+		<org.nv95.openmanga.common.views.preferences.IntPickerPreference
+			android:defaultValue="1"
+			android:dependency="shelf.favourites_enabled"
+			android:key="shelf.favourites_cat_rows"
+			android:title="@string/max_rows_per_cat"
+			app:maxValue="5"
+			app:minValue="1" />
+
+	</PreferenceCategory>
+</PreferenceScreen>

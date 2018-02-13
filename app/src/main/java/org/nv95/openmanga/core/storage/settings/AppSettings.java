@@ -18,10 +18,12 @@ public class AppSettings {
 
 	private final SharedPreferences mPreferences;
 	public final ReaderSettings readerSettings;
+	public final ShelfSettings shelfSettings;
 
 	private AppSettings(Context context) {
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
 		readerSettings = new ReaderSettings(mPreferences);
+		shelfSettings = new ShelfSettings(mPreferences);
 	}
 
 	public static AppSettings get(Context context) {

@@ -1,14 +1,20 @@
 package org.nv95.openmanga.common.utils;
 
-import android.graphics.Color;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.StringJoinerCompat;
 import org.nv95.openmanga.common.views.preferences.ColorPreference;
 import org.nv95.openmanga.common.views.preferences.IntegerPreference;
+
+import java.util.Set;
 
 /**
  * Created by koitharu on 26.12.17.
@@ -39,10 +45,35 @@ public abstract class PreferencesUtils {
 
 	}
 
-	public static void bindSummaryMultiple(PreferenceFragment fragment, String... keys) {
+	public static void bindSummaryMultiple(@NonNull PreferenceFragment fragment, String... keys) {
 		for (String key : keys) {
 			bindPreferenceSummary(fragment.findPreference(key));
 		}
+	}
+
+	public static String buildSummary(@NonNull MultiSelectListPreference preference, @NonNull Set<String> values,
+									  @StringRes int emptySummary) {
+		return buildSummary(preference, values, emptySummary, 0);
+	}
+
+	@NonNull
+	public static String buildSummary(@NonNull MultiSelectListPreference preference, @NonNull Set<String> values,
+									   @StringRes int emptySummary, @StringRes int allSummary) {
+		if (values.isEmpty()) {
+			return preference.getContext().getString(emptySummary);
+		}
+		final CharSequence[] entries = preference.getEntries();
+		final CharSequence[] entryValues = preference.getEntryValues();
+		if (allSummary != 0 && entryValues.length == values.size()) {
+			return preference.getContext().getString(allSummary);
+		}
+		final StringJoinerCompat joiner = new StringJoinerCompat(", ");
+		for (int i = 0; i < entryValues.length; i++) {
+			if (values.contains(entryValues[i].toString())) {
+				joiner.add(entries[i]);
+			}
+		}
+		return joiner.toString();
 	}
 
 	static class SummaryHandler implements Preference.OnPreferenceChangeListener {
@@ -70,10 +101,13 @@ public abstract class PreferencesUtils {
 				preference.setSummary(formatSummary(
 						String.valueOf(newValue)
 				));
+			} else if (preference instanceof MultiSelectListPreference) {
+				preference.setSummary(buildSummary((MultiSelectListPreference) preference,
+						(Set<String>) newValue, R.string.nothing_selected, R.string.all));
 			} else if (preference instanceof ColorPreference) {
 				preference.setSummary(String.format("#%06X", (0xFFFFFF & (int)newValue)));
 			} else {
-				preference.setSummary(formatSummary((String) newValue));
+				preference.setSummary(formatSummary(String.valueOf(newValue)));
 			}
 			return true;
 		}
@@ -89,8 +123,11 @@ public abstract class PreferencesUtils {
 				));
 			} else if (preference instanceof IntegerPreference) {
 				preference.setSummary(formatSummary(
-						String.valueOf(((IntegerPreference)preference).getValue())
+						String.valueOf(((IntegerPreference) preference).getValue())
 				));
+			} else if (preference instanceof MultiSelectListPreference) {
+				preference.setSummary(buildSummary((MultiSelectListPreference) preference,
+						((MultiSelectListPreference) preference).getValues(), R.string.nothing_selected, R.string.all));
 			} else if (preference instanceof ColorPreference) {
 				preference.setSummary(String.format("#%06X", (0xFFFFFF & ((ColorPreference) preference).getColor())));
 			} else {

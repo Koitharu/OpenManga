@@ -17,6 +17,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.storage.db.CategoriesRepository;
 import org.nv95.openmanga.core.storage.db.CategoriesSpecification;
+import org.nv95.openmanga.core.storage.settings.ShelfSettings;
 
 import java.util.ArrayList;
 
@@ -80,6 +81,7 @@ public final class CategoriesActivity extends AppBaseActivity implements View.On
 			final Category category = new Category(name, System.currentTimeMillis());
 			mRepository.add(category);
 			mDataset.add(category);
+			ShelfSettings.onCategoryAdded(this, category);
 			mAdapter.notifyItemInserted(mDataset.size() - 1);
 			setResult(RESULT_OK);
 		} else {

@@ -2,12 +2,13 @@ package org.nv95.openmanga.shelf;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.models.Category;
+import org.nv95.openmanga.core.models.ListHeader;
 import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaHistory;
-import org.nv95.openmanga.core.models.ListHeader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by koitharu on 24.12.17.
@@ -15,26 +16,23 @@ import java.util.ArrayList;
 
 public final class ShelfUpdater {
 
-	public static void update(ShelfAdapter adapter, ShelfContent content, int columnCount) {
+	public static void update(ShelfAdapter adapter, ShelfContent content) {
 		ArrayList<Object> dataset = new ArrayList<>();
 		dataset.addAll(content.tips);
-		if (!content.history.isEmpty()) {
+		if (content.recent != null || !content.history.isEmpty()) {
 			dataset.add(new ListHeader(R.string.action_history, ShelfContent.SECTION_HISTORY));
-			dataset.add(content.history.get(0));
-			int len = getOptimalCells(content.history.size() - 1, columnCount) + 1;
-			for (int i = 1; i < len; i++) {
-				MangaHistory o = content.history.get(i);
+			if (content.recent != null) {
+				dataset.add(content.recent);
+			}
+			for (MangaHistory o : content.history) {
 				dataset.add(MangaHeader.from(o));
 			}
 		}
 		for (Category category : content.favourites.keySet()) {
-			ArrayList<MangaFavourite> favourites = content.favourites.get(category);
+			List<MangaFavourite> favourites = content.favourites.get(category);
 			if (favourites != null && !favourites.isEmpty()) {
 				dataset.add(new ListHeader(category.name, category.id));
-				int len = getOptimalCells(favourites.size(), columnCount);
-				for (int i = 0; i < len; i++) {
-					dataset.add(favourites.get(i));
-				}
+				dataset.addAll(favourites);
 			}
 		}
 		if (!content.recommended.isEmpty()) {
@@ -43,12 +41,5 @@ public final class ShelfUpdater {
 		}
 		dataset.trimToSize();
 		adapter.updateData(dataset);
-	}
-
-	private static int getOptimalCells(int items, int columns) {
-		if (items <= columns) {
-			return items;
-		}
-		return items - items % columns;
 	}
 }

@@ -1,13 +1,10 @@
 package org.nv95.openmanga.common.views.preferences;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.preference.DialogPreference;
 import android.support.annotation.ColorInt;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.View;
@@ -24,19 +21,16 @@ public final class ColorPreference extends DialogPreference implements SeekBar.O
 	private View mViewSample;
 
 	public ColorPreference(Context context) {
-		this(context, null,0);
+		this(context, null,android.R.attr.dialogPreferenceStyle);
 	}
 
 	public ColorPreference(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
+		this(context, attrs, android.R.attr.dialogPreferenceStyle);
 	}
 
 	public ColorPreference(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		setLayoutResource(R.layout.pref_color);
 		setDialogLayoutResource(R.layout.dialog_pref_color);
-		setPositiveButtonText(android.R.string.ok);
-		setNegativeButtonText(android.R.string.cancel);
 	}
 
 	@Override

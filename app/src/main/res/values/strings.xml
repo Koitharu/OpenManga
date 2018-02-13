@@ -398,4 +398,10 @@
 	<string name="show_status_bar">Show status bar</string>
 	<string name="custom_background">Custom background</string>
 	<string name="background_color">Background color</string>
+	<string name="show_history">Show history</string>
+	<string name="show_last_manga">Show last manga</string>
+	<string name="show_favourites">Show favourites</string>
+	<string name="max_rows">Max. rows</string>
+	<string name="max_rows_per_cat">Max. rows per category</string>
+	<string name="all">All</string>
 </resources>

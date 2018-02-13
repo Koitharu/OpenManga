@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -138,5 +139,12 @@ public abstract class LayoutUtils {
 		recyclerView.setLayoutManager(layoutManager);
 		adapter.notifyDataSetChanged();
 		setSelectionFromTop(recyclerView, pos);
+	}
+
+	public static void checkAll(@NonNull ListView listView) {
+		final int size = listView.getAdapter().getCount();
+		for (int i = 0; i <= size; i++) {
+			listView.setItemChecked(i, true);
+		}
 	}
 }
