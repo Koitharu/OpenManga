@@ -133,7 +133,7 @@ public abstract class ThemeUtils {
 		final Drawable drawable = ContextCompat.getDrawable(context, resId);
 		if (drawable != null) {
 			drawable.setColorFilter(
-					getAttrColor(context, colorAttrId),
+					getThemeAttrColor(context, colorAttrId),
 					PorterDuff.Mode.SRC_IN
 			);
 		}

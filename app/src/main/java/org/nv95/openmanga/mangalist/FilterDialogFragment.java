@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
 import org.nv95.openmanga.common.utils.CollectionsUtils;

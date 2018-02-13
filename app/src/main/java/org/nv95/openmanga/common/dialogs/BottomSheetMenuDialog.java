@@ -40,8 +40,8 @@ public class BottomSheetMenuDialog<D> {
 		if (context instanceof Activity) {
 			mDialog.setOwnerActivity((Activity) context);
 		}
-		mRecyclerView = new RecyclerView(context);
-		mRecyclerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mRecyclerView = (RecyclerView) View.inflate(context, R.layout.recyclerview, null);
+		mRecyclerView.setBackgroundColor(ThemeUtils.getThemeAttrColor(context, android.R.attr.colorBackground));
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 		mDialog.setContentView(mRecyclerView);
 	}
