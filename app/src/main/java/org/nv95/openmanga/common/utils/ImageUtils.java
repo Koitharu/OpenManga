@@ -108,7 +108,7 @@ public abstract class ImageUtils {
 		ImageLoader.getInstance().cancelDisplayTask(imageView);
 		final Drawable drawable = imageView.getDrawable();
 		if (drawable != null && drawable instanceof BitmapDrawable) {
-			((BitmapDrawable) drawable).getBitmap().recycle();
+			//((BitmapDrawable) drawable).getBitmap().recycle();
 			imageView.setImageDrawable(null);
 		}
 		imageView.setTag(null);
