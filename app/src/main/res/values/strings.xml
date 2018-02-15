@@ -398,4 +398,5 @@
 	<string name="show_status_bar">Show status bar</string>
 	<string name="custom_background">Custom background</string>
 	<string name="background_color">Background color</string>
+	<string name="genre_yonkoma">Yonkoma</string>
 </resources>

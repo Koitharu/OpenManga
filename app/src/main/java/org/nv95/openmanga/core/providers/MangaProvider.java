@@ -148,6 +148,9 @@ public abstract class MangaProvider {
 			case MintmangaProvider.CNAME:
 				provider = new MintmangaProvider(context);
 				break;
+			case SelfmangaProvider.CNAME:
+				provider = new SelfmangaProvider(context);
+				break;
 			case ZipArchiveProvider.CNAME:
 				provider = new ZipArchiveProvider(context);
 				sProviderCache.put(cName, provider);
