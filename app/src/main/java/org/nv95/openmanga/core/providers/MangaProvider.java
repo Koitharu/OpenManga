@@ -151,12 +151,15 @@ public abstract class MangaProvider {
 			case SelfmangaProvider.CNAME:
 				provider = new SelfmangaProvider(context);
 				break;
+			case MangarawProvider.CNAME:
+				provider = new MangarawProvider(context);
+				break;
 			case ZipArchiveProvider.CNAME:
 				provider = new ZipArchiveProvider(context);
 				sProviderCache.put(cName, provider);
 				return provider;
 			default:
-				throw new AssertionError("Invalid CNAME");
+				throw new AssertionError(String.format("Provider %s not registered", cName));
 		}
 		sProviderCache.put(cName, provider);
 		return NetworkUtils.isNetworkAvailable(context) ? provider : new OfflineMangaProvider(context, provider);
