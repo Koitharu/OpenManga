@@ -179,7 +179,6 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 				dialogFragment.show(getSupportFragmentManager(), "");
 				break;
 			case R.id.button_retry:
-				mErrorView.setVisibility(View.GONE);
 				mProgressBar.setVisibility(View.VISIBLE);
 			case android.support.design.R.id.snackbar_action:
 				load();
@@ -258,6 +257,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	 */
 	private void load() {
 		mRecyclerView.onLoadingStarted();
+		mErrorView.setVisibility(View.GONE);
 		Loader<ListWrapper<MangaHeader>> loader = getLoaderManager().getLoader(LOADER_ID);
 		if (loader == null) {
 			loader = getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this);
