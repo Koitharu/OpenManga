@@ -140,15 +140,6 @@ public class PagerReaderFragment extends ReaderFragment implements ViewPager.OnP
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		final MangaPage page = getCurrentPage();
-		if (page != null) {
-			outState.putLong("page_id", page.id);
-		}
-		outState.putParcelableArrayList("pages", mPages);
-	}
-
-	@Override
 	public void onRestoreState(@NonNull Bundle savedState) {
 		super.onRestoreState(savedState);
 		onPageSelected(mPager.getCurrentItem());

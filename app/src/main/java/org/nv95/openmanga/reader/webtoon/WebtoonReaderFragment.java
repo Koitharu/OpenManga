@@ -1,5 +1,6 @@
 package org.nv95.openmanga.reader.webtoon;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,11 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.reader.ReaderFragment;
 
 public final class WebtoonReaderFragment extends ReaderFragment {
 
-	private View mView;
+	private WebtoonRecyclerView mRecyclerView;
 
 	@Nullable
 	@Override
@@ -23,17 +25,14 @@ public final class WebtoonReaderFragment extends ReaderFragment {
 	}
 
 	@Override
+	@SuppressLint("ClickableViewAccessibility")
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mView = view;
+		mRecyclerView = view.findViewById(R.id.recyclerView);
+		mRecyclerView.setHasFixedSize(true);
+		mRecyclerView.setAdapter(new WebtoonReaderAdapter(mPages));
 		final GestureDetector detector = new GestureDetector(view.getContext(), new TapDetector());
-		mView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//stub
-			}
-		});
-		mView.setOnTouchListener(new View.OnTouchListener() {
+		mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				return detector.onTouchEvent(event);
@@ -43,17 +42,17 @@ public final class WebtoonReaderFragment extends ReaderFragment {
 
 	@Override
 	public int getCurrentPageIndex() {
-		return 0;
+		return LayoutUtils.findFirstVisibleItemPosition(mRecyclerView);
 	}
 
 	@Override
 	public void scrollToPage(int index) {
-
+		LayoutUtils.setSelectionFromTop(mRecyclerView, index);
 	}
 
 	@Override
 	public void smoothScrollToPage(int index) {
-
+		mRecyclerView.smoothScrollToPosition(index);
 	}
 
 	@Override
@@ -85,16 +84,16 @@ public final class WebtoonReaderFragment extends ReaderFragment {
 
 		@Override
 		public boolean onSingleTapConfirmed(MotionEvent e) {
-			if (mView == null) {
+			if (mRecyclerView == null) {
 				return false;
 			}
 			final float x = e.getX();
-			final float w3 = mView.getWidth() / 3;
+			final float w3 = mRecyclerView.getWidth() / 3;
 			if (x < w3) {
 				return moveLeft();
 			} else if (x <= w3 + w3) {
 				final float y = e.getY();
-				final float h3 = mView.getHeight() / 3;
+				final float h3 = mRecyclerView.getHeight() / 3;
 				if (y < h3) {
 					return moveLeft();
 				} else if (y <= h3 + h3) {

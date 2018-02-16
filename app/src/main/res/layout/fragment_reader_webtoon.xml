@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.nv95.openmanga.reader.webtoon.WebtoonRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/recyclerView"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_vertical"
-		android:gravity="center_horizontal"
-		android:padding="6dp"
-		android:text="Not implemented"
-		android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-</FrameLayout>
+	android:layout_height="match_parent"
+	android:scrollbars="vertical"
+	app:layoutManager="android.support.v7.widget.LinearLayoutManager" />

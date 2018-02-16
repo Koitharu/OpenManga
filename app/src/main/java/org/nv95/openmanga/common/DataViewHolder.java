@@ -1,5 +1,6 @@
 package org.nv95.openmanga.common;
 
+import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -31,5 +32,9 @@ public abstract class DataViewHolder<D> extends RecyclerView.ViewHolder {
 	@Nullable
 	protected final D getData() {
 		return mData;
+	}
+
+	public final Context getContext() {
+		return itemView.getContext();
 	}
 }

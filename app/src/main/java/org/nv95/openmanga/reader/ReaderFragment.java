@@ -101,6 +101,16 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 		}
 	}
 
+	@Override
+	@CallSuper
+	public void onSaveInstanceState(Bundle outState) {
+		final MangaPage page = getCurrentPage();
+		if (page != null) {
+			outState.putLong("page_id", page.id);
+		}
+		outState.putParcelableArrayList("pages", mPages);
+	}
+
 	@CallSuper
 	public void onRestoreState(@NonNull Bundle savedState) {
 		ArrayList<MangaPage> pages = savedState.getParcelableArrayList("pages");
