@@ -16,7 +16,6 @@ import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.reader.OnOverScrollListener;
 import org.nv95.openmanga.reader.ReaderFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -151,14 +150,7 @@ public class PagerReaderFragment extends ReaderFragment implements ViewPager.OnP
 
 	@Override
 	public void onRestoreState(@NonNull Bundle savedState) {
-		ArrayList<MangaPage> pages = savedState.getParcelableArrayList("pages");
-		if (pages != null) {
-			setPages(pages);
-			long pageId = savedState.getLong("page_id", 0);
-			if (pageId != 0) {
-				scrollToPageById(pageId);
-			}
-		}
+		super.onRestoreState(savedState);
 		onPageSelected(mPager.getCurrentItem());
 	}
 }

@@ -54,6 +54,7 @@ import org.nv95.openmanga.reader.pager.PagerReaderFragment;
 import org.nv95.openmanga.reader.pager.RtlPagerReaderFragment;
 import org.nv95.openmanga.reader.thumbview.OnThumbnailClickListener;
 import org.nv95.openmanga.reader.thumbview.ThumbViewFragment;
+import org.nv95.openmanga.reader.webtoon.WebtoonReaderFragment;
 import org.nv95.openmanga.tools.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -242,7 +243,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			case R.id.action_menu:
 				final MangaPage page = mReader.getCurrentPage();
 				final MangaBookmark bookmark = mBookmarksRepository.find(mManga, mChapter, page);
-				final BottomSheetMenuDialog<MangaPage> menu = new BottomSheetMenuDialog<MangaPage>(this);
+				final BottomSheetMenuDialog<MangaPage> menu = new BottomSheetMenuDialog<>(this);
 				menu.setItemClickListener(this);
 				if (bookmark == null) {
 					menu.addItem(R.id.action_page_bookmark_add, R.drawable.ic_bookmark_add_black, R.string.create_bookmark);
@@ -461,8 +462,11 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	}
 
 	private void addToHistory() {
-		final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), mReader.getCurrentPage(), getReaderPreset());
-		mHistoryRepository.updateOrAdd(history);
+		final MangaPage page = mReader.getCurrentPage();
+		if (page != null) {
+			final MangaHistory history = new MangaHistory(mManga, mChapter, mManga.chapters.size(), page, getReaderPreset());
+			mHistoryRepository.updateOrAdd(history);
+		}
 	}
 
 	@Override
@@ -637,6 +641,9 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 			case 1:
 				mReader = new RtlPagerReaderFragment();
 				break;
+			case 2:
+				mReader = new WebtoonReaderFragment();
+				break;
 			default:
 				stub();
 				mReader = new PagerReaderFragment();
@@ -650,6 +657,8 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 	private short getReaderPreset() {
 		if (mReader == null) {
 			return mHistoryRepository.getPreset(mManga, mSettings.getDefaultPreset());
+		} else if (mReader instanceof WebtoonReaderFragment) {
+			return 2;
 		} else if (mReader instanceof RtlPagerReaderFragment) {
 			return 1;
 		} else if (mReader instanceof PagerReaderFragment) {

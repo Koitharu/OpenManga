@@ -6,9 +6,9 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
+import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,17 @@ public abstract class ReaderFragment extends AppBaseFragment implements ReaderCa
 		}
 	}
 
-	public abstract void onRestoreState(@NonNull Bundle savedState);
+	@CallSuper
+	public void onRestoreState(@NonNull Bundle savedState) {
+		ArrayList<MangaPage> pages = savedState.getParcelableArrayList("pages");
+		if (pages != null) {
+			setPages(pages);
+			long pageId = savedState.getLong("page_id", 0);
+			if (pageId != 0) {
+				scrollToPageById(pageId);
+			}
+		}
+	}
 
 	protected void toggleUi() {
 		final Activity activity = getActivity();
