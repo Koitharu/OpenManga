@@ -9,10 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.reader.loader.PagesCache;
+import org.nv95.openmanga.common.DataViewHolder;
 import org.nv95.openmanga.common.utils.ImageUtils;
+import org.nv95.openmanga.common.utils.MetricsUtils;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.models.MangaPage;
+import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.reader.loader.PagesCache;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -39,9 +44,7 @@ final class ThumbViewAdapter extends RecyclerView.Adapter<ThumbViewAdapter.Thumb
 
 	@Override
 	public void onBindViewHolder(ThumbHolder holder, int position) {
-		MangaPage item = mDataset.get(position);
-		holder.textView.setText(String.valueOf(position + 1));
-		ImageUtils.setThumbnail(holder.imageView, mCache.getFileForUrl(item.url));
+		holder.bind(mDataset.get(position));
 	}
 
 	@Override
@@ -54,18 +57,33 @@ final class ThumbViewAdapter extends RecyclerView.Adapter<ThumbViewAdapter.Thumb
 		return mDataset.get(position).id;
 	}
 
-	final class ThumbHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	final class ThumbHolder extends DataViewHolder<MangaPage> implements View.OnClickListener {
 
-		final ImageView imageView;
-		final TextView textView;
-		final View selector;
+		private final ImageView mImageView;
+		private final TextView mTextView;
+		private final View mSelector;
 
 		ThumbHolder(View itemView) {
 			super(itemView);
-			imageView = itemView.findViewById(R.id.imageView);
-			textView = itemView.findViewById(R.id.textView);
-			selector = itemView.findViewById(R.id.selector);
-			selector.setOnClickListener(this);
+			mImageView = itemView.findViewById(R.id.imageView);
+			mTextView = itemView.findViewById(R.id.textView);
+			mSelector = itemView.findViewById(R.id.selector);
+			mSelector.setOnClickListener(this);
+		}
+
+		@Override
+		public void bind(MangaPage mangaPage) {
+			super.bind(mangaPage);
+			final MetricsUtils.Size size = MetricsUtils.getPreferredCellSizeMedium(getContext().getResources());
+			mTextView.setText(String.valueOf(getAdapterPosition() + 1));
+			final File file = mCache.getFileForUrl(mangaPage.url);
+			if (file.exists()) {
+				ImageUtils.setThumbnailCropped(mImageView, mCache.getFileForUrl(mangaPage.url), size);
+			} else if (NetworkUtils.isNetworkAvailable(getContext(), false)) {
+				ImageUtils.setThumbnailCropped(mImageView, mangaPage.url, size, MangaProvider.getDomain(mangaPage.provider));
+			} else {
+				ImageUtils.setEmptyThumbnail(mImageView);
+			}
 		}
 
 		@Override

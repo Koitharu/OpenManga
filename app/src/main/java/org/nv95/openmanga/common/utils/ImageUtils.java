@@ -15,13 +15,14 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
-import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.utils.network.AppImageDownloader;
 import org.nv95.openmanga.common.TransitionDisplayer;
+import org.nv95.openmanga.common.utils.network.AppImageDownloader;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
 
 import java.io.File;
 
@@ -35,7 +36,7 @@ public abstract class ImageUtils {
 	private static DisplayImageOptions.Builder sOptionsUpdate = null;
 
 	public static void init(Context context) {
-		DisplayImageOptions.Builder optionsBuilder = new DisplayImageOptions.Builder()
+		sOptionsThumbnail = new DisplayImageOptions.Builder()
 				.cacheInMemory(true)
 				.cacheOnDisk(true)
 				.resetViewBeforeLoading(true);
@@ -43,7 +44,7 @@ public abstract class ImageUtils {
 		if (!ImageLoader.getInstance().isInited()) {
 			final int cacheMb = AppSettings.get(context).getCacheMaxSizeMb();
 			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-					.defaultDisplayImageOptions(optionsBuilder.build())
+					.defaultDisplayImageOptions(sOptionsThumbnail.build())
 					.diskCacheSize(cacheMb * 1024 * 1024)
 					.imageDownloader(new AppImageDownloader(context))
 					.memoryCache(new UsingFreqLimitedMemoryCache(2 * 1024 * 1024)) // 2 Mb
@@ -51,21 +52,19 @@ public abstract class ImageUtils {
 
 			ImageLoader.getInstance().init(config);
 		}
-		if (sOptionsThumbnail == null) {
-			Drawable holder = ContextCompat.getDrawable(context, R.drawable.placeholder);
-			sOptionsThumbnail = optionsBuilder
-					.showImageOnFail(holder)
-					.showImageForEmptyUri(holder)
-					.showImageOnLoading(holder)
-					.displayer(new FadeInBitmapDisplayer(500, true, true, false));
-		}
+		Drawable holder = ContextCompat.getDrawable(context, R.drawable.placeholder);
+		sOptionsThumbnail
+				.showImageOnFail(holder)
+				.showImageForEmptyUri(holder)
+				.showImageOnLoading(holder)
+				.displayer(new FadeInBitmapDisplayer(500, true, true, false));
 
-		if (sOptionsUpdate == null) {
-			sOptionsUpdate = optionsBuilder
-					.resetViewBeforeLoading(false)
-					.showImageOnLoading(null)
-					.displayer(new TransitionDisplayer());
-		}
+		sOptionsUpdate = new DisplayImageOptions.Builder()
+				.cacheInMemory(false)
+				.cacheOnDisk(true)
+				.resetViewBeforeLoading(false)
+				.showImageOnLoading(null)
+				.displayer(new TransitionDisplayer());
 	}
 
 	@Nullable
@@ -102,6 +101,33 @@ public abstract class ImageUtils {
 	public static void setThumbnail(@NonNull ImageView imageView, @Nullable File file) {
 		final String url = file == null ? null : "file://" + file.getPath();
 		setThumbnail(imageView, url, null);
+	}
+
+	public static void setThumbnailCropped(@NonNull ImageView imageView, @Nullable String url, @NonNull MetricsUtils.Size size, String referer) {
+		if (url != null && url.equals(imageView.getTag())) {
+			return;
+		}
+		imageView.setTag(url);
+		ImageLoader.getInstance().displayImage(
+				url,
+				new ImageViewAware(imageView),
+				sOptionsThumbnail
+						.extraForDownloader(referer)
+						.build(),
+				new ImageSize(size.width, size.height),
+				null, null
+		);
+	}
+
+	public static void setThumbnailCropped(@NonNull ImageView imageView, @Nullable File file, @NonNull MetricsUtils.Size size) {
+		final String url = file != null && file.exists() ? "file://" + file.getPath() : null;
+		setThumbnailCropped(imageView, url, size, null);
+	}
+
+	public static void setEmptyThumbnail(ImageView imageView) {
+		ImageLoader.getInstance().cancelDisplayTask(imageView);
+		imageView.setImageResource(R.drawable.placeholder);
+		imageView.setTag(null);
 	}
 
 	public static void recycle(@NonNull ImageView imageView) {
