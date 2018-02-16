@@ -95,7 +95,16 @@ public final class MangaListAdapter extends RecyclerView.Adapter<DataViewHolder<
 
 	@Override
 	public void setHasNext(boolean hasNext) {
-		mInProgress = hasNext;
+		if (mInProgress != hasNext) {
+			mInProgress = hasNext;
+			if (!mDataset.isEmpty()) {
+				if (hasNext) {
+					notifyItemInserted(mDataset.size());
+				} else {
+					notifyItemRemoved(mDataset.size());
+				}
+			}
+		}
 	}
 
 	public void setIsDetailed(boolean detailed) {

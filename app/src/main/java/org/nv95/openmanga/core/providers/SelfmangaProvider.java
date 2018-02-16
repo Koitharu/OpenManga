@@ -15,14 +15,10 @@ import org.nv95.openmanga.core.models.MangaHeader;
 
 import java.util.ArrayList;
 
-/**
- * Created by koitharu on 26.01.18.
- */
+public final class SelfmangaProvider extends GroupleMangaProvider {
 
-public final class ReadmangaruProvider extends GroupleMangaProvider {
-
-	public static final String CNAME = "network/readmanga.ru";
-	public static final String DNAME = "ReadManga";
+	public static final String CNAME = "network/selfmanga.ru";
+	public static final String DNAME = "SelfManga";
 
 	private final int[] mSorts = new int[] {
 			R.string.sort_popular,
@@ -39,7 +35,6 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 	};
 
 	private final MangaGenre[] mGenres = new MangaGenre[]{
-			new MangaGenre(R.string.genre_art, "art"),
 			new MangaGenre(R.string.genre_action, "action"),
 			new MangaGenre(R.string.genre_martialarts, "martial_arts"),
 			new MangaGenre(R.string.genre_vampires, "vampires"),
@@ -50,13 +45,10 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			new MangaGenre(R.string.genre_josei, "josei"),
 			new MangaGenre(R.string.genre_doujinshi, "doujinshi"),
 			new MangaGenre(R.string.genre_drama, "drama"),
-			new MangaGenre(R.string.genre_game, "game"),
+			new MangaGenre(R.string.genre_yonkoma, "yonkoma"),
 			new MangaGenre(R.string.genre_historical, "historical"),
-			new MangaGenre(R.string.genre_cyberpunk, "cyberpunk"),
-			new MangaGenre(R.string.genre_codomo, "codomo"),
 			new MangaGenre(R.string.genre_comedy, "comedy"),
 			new MangaGenre(R.string.genre_maho_shoujo, "maho_shoujo"),
-			new MangaGenre(R.string.genre_mecha, "mecha"),
 			new MangaGenre(R.string.genre_mystery, "mystery"),
 			new MangaGenre(R.string.genre_sci_fi, "sci_fi"),
 			new MangaGenre(R.string.genre_natural, "natural"),
@@ -64,7 +56,6 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			new MangaGenre(R.string.genre_adventure, "adventure"),
 			new MangaGenre(R.string.genre_psychological, "psychological"),
 			new MangaGenre(R.string.genre_romance, "romance"),
-			new MangaGenre(R.string.genre_samurai, "samurai"),
 			new MangaGenre(R.string.genre_supernatural, "supernatural"),
 			new MangaGenre(R.string.genre_shoujo, "shoujo"),
 			new MangaGenre(R.string.genre_shoujo_ai, "shoujo_ai"),
@@ -78,12 +69,10 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			new MangaGenre(R.string.genre_fantastic, "fantastic"),
 			new MangaGenre(R.string.genre_fantasy, "fantasy"),
 			new MangaGenre(R.string.genre_school, "school"),
-			new MangaGenre(R.string.genre_ecchi, "ecchi"),
-			new MangaGenre(R.string.genre_yuri, "yuri")
+			new MangaGenre(R.string.genre_ecchi, "ecchi")
 	};
 
 	private final String[] mTags = new String[] {
-			"el_5685",
 			"el_2155",
 			"el_2143",
 			"el_2148",
@@ -94,13 +83,10 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			"el_2158",
 			"el_2141",
 			"el_2118",
-			"el_2154",
+			"el_2161",
 			"el_2119",
-			"el_8032",
-			"el_2137",
 			"el_2136",
 			"el_2147",
-			"el_2126",
 			"el_2132",
 			"el_2133",
 			"el_2135",
@@ -108,7 +94,6 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			"el_2130",
 			"el_2144",
 			"el_2121",
-			"el_2124",
 			"el_2159",
 			"el_2122",
 			"el_2128",
@@ -122,11 +107,10 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			"el_2140",
 			"el_2131",
 			"el_2127",
-			"el_2149",
-			"el_2123"
+			"el_4982"
 	};
 
-	public ReadmangaruProvider(Context context) {
+	public SelfmangaProvider(Context context) {
 		super(context);
 	}
 
@@ -135,14 +119,14 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 	@SuppressLint("DefaultLocale")
 	protected ArrayList<MangaHeader> getList(int page, int sortOrder, @Nullable String genre) throws Exception {
 		String url = String.format(
-				"http://readmanga.me/list%s?lang=&sortType=%s&offset=%d&max=70",
+				"http://selfmanga.ru/list%s?lang=&sortType=%s&offset=%d&max=70",
 				genre == null ? "" : "/genre/" + genre,
 				sortOrder == -1 ? "rate" : mSortValues[sortOrder],
 				page * 70
 		);
 		Document doc = NetworkUtils.getDocument(url);
 		Element root = doc.body().getElementById("mangaBox").selectFirst("div.tiles");
-		return parseList(root.select(".tile"), "http://readmanga.me/");
+		return parseList(root.select(".tile"), "http://selfmanga.ru/");
 	}
 
 	@NonNull
@@ -150,7 +134,7 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 	@SuppressLint("DefaultLocale")
 	protected ArrayList<MangaHeader> simpleSearch(@NonNull String search, int page) throws Exception {
 		String url = String.format(
-				"http://readmanga.me/search?q=%s&offset=%d&max=50",
+				"http://selfmanga.ru/search?q=%s&offset=%d&max=50",
 				search,
 				page * 50
 		);
@@ -159,7 +143,7 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 		if (root == null) {
 			return EMPTY_HEADERS;
 		}
-		return parseList(root.select(".tile"), "http://readmanga.me/");
+		return parseList(root.select(".tile"), "http://selfmanga.ru/");
 	}
 
 	@NonNull
@@ -175,9 +159,9 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			String tag = mTags[i];
 			query.add(tag + "=in");
 		}
-		Document doc = NetworkUtils.getDocument("http://readmanga.me/search/advanced?q=" + urlEncode(search) + query.toString());
+		Document doc = NetworkUtils.getDocument("http://selfmanga.ru/search/advanced?q=" + urlEncode(search) + query.toString());
 		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
-		return parseList(root.select(".tile"), "http://readmanga.me/");
+		return parseList(root.select(".tile"), "http://selfmanga.ru/");
 	}
 
 	@CName

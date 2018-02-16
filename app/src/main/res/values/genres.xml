@@ -76,6 +76,7 @@
 	<string name="genre_western">Western</string>
 	<string name="genre_yaoi">Yaoi</string>
 	<string name="genre_yetiskin">Yetişkin</string>
+	<string name="genre_yonkoma">Yonkoma</string>
 	<string name="genre_youkai">Youkai</string>
 	<string name="genre_yuri">Yuri</string>
 </resources>

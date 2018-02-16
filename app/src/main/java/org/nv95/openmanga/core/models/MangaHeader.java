@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.nv95.openmanga.core.MangaStatus;
+
 /**
  * Created by koitharu on 21.12.17.
  */
@@ -19,10 +21,11 @@ public class MangaHeader implements Parcelable, UniqueObject {
 	public final String url;
 	public final String thumbnail;
 	public final String provider;
+	@MangaStatus
 	public final int status;
 	public final short rating; //0..100
 
-	public MangaHeader(String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating) {
+	public MangaHeader(String name, String summary, String genres, String url, String thumbnail, String provider, @MangaStatus int status, short rating) {
 		this.name = name;
 		this.summary = summary;
 		this.genres = genres;
@@ -34,7 +37,7 @@ public class MangaHeader implements Parcelable, UniqueObject {
 		this.id = provider.hashCode() + url.hashCode();
 	}
 
-	public MangaHeader(long id, String name, String summary, String genres, String url, String thumbnail, String provider, int status, short rating) {
+	public MangaHeader(long id, String name, String summary, String genres, String url, String thumbnail, String provider, @MangaStatus int status, short rating) {
 		this.id = id;
 		this.name = name;
 		this.summary = summary;

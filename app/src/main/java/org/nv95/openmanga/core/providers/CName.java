@@ -10,6 +10,12 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 @Retention(RetentionPolicy.SOURCE)
-@StringDef({DesumeProvider.CNAME, ExhentaiProvider.CNAME, ReadmangaruProvider.CNAME, MintmangaProvider.CNAME})
+@StringDef({
+		DesumeProvider.CNAME,
+		ExhentaiProvider.CNAME,
+		ReadmangaruProvider.CNAME,
+		MintmangaProvider.CNAME,
+		SelfmangaProvider.CNAME
+})
 public @interface CName {
 }
