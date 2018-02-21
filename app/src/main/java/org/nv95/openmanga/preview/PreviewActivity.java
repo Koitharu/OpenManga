@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,8 @@ import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
+import org.nv95.openmanga.common.utils.IntentUtils;
+import org.nv95.openmanga.common.utils.MenuUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.Category;
 import org.nv95.openmanga.core.models.MangaBookmark;
@@ -44,7 +47,7 @@ import org.nv95.openmanga.storage.SaveService;
 
 public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,
 		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, BookmarkRemoveTask.OnBookmarkRemovedListener,
-		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter> {
+		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter>, ViewPager.OnPageChangeListener {
 
 	public static final String ACTION_PREVIEW = "org.nv95.openmanga.ACTION_PREVIEW";
 
@@ -82,6 +85,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		);
 		mPager.setAdapter(adapter);
 		mTabs.setupWithViewPager(mPager);
+		mPager.addOnPageChangeListener(this);
 
 		mDetailsPage.buttonRead.setOnClickListener(this);
 		mDetailsPage.buttonFavourite.setOnClickListener(this);
@@ -105,7 +109,47 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_preview, menu);
+		MenuUtils.buildOpenWithSubmenu(this, mMangaHeader, menu.findItem(R.id.action_open_ext));
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		final int page = mPager.getCurrentItem();
+		menu.setGroupVisible(R.id.group_details, page == 0);
+		menu.setGroupVisible(R.id.group_chapters, page == 1);
+		final MenuItem item = menu.findItem(R.id.action_reverse);
+		item.setIcon(item.isChecked() ? R.drawable.ic_sort_numeric_reverse_white : R.drawable.ic_sort_numeric_white);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_share:
+				IntentUtils.shareManga(this, mMangaHeader);
+				return true;
+			case R.id.action_shortcut:
+				IntentUtils.createLauncherShortcutPreview(this, mMangaHeader);
+				return true;
+			case R.id.action_reverse:
+				boolean reversed = !item.isChecked();
+				if (mChaptersPage.setReversed(reversed)) {
+					item.setChecked(reversed);
+					item.setIcon(reversed ? R.drawable.ic_sort_numeric_reverse_white : R.drawable.ic_sort_numeric_white);
+					return true;
+				} else {
+					return false;
+				}
+			case R.id.action_relative:
+				stub();
+				return true;
+			case R.id.action_save:
+				stub();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -253,5 +297,20 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	public void onBookmarkRemoved(@NonNull MangaBookmark bookmark) {
 		mBookmarksPage.onBookmarkRemoved(bookmark);
+	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		invalidateOptionsMenu();
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+
 	}
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.LayoutUtils;
 import org.nv95.openmanga.core.models.MangaChaptersList;
 import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.preview.PageHolder;
@@ -62,6 +63,23 @@ public final class ChaptersPage extends PageHolder {
 		if (mChaptersAdapter != null) {
 			mChaptersAdapter.setCurrentChapterId(history.chapterId);
 			mChaptersAdapter.notifyDataSetChanged();
+		}
+	}
+
+	public boolean setReversed(boolean reversed) {
+		if (mChaptersAdapter != null && mChaptersAdapter.isReversed() != reversed) {
+			final int topPos = LayoutUtils.findLastVisibleItemPosition(mRecyclerViewChapters);
+			mChaptersAdapter.reverse();
+			if (topPos != -1) {
+				int newPos = mChaptersAdapter.getItemCount() - topPos - 1;
+				/*if (newPos <= mChaptersAdapter.getItemCount() - 1) {
+					newPos += 2;	//toolbar
+				}*/
+				LayoutUtils.setSelectionFromTop(mRecyclerViewChapters, newPos);
+			}
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.TextView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import org.nv95.openmanga.R;
@@ -25,7 +26,7 @@ final class WebtoonPageHolder extends DataViewHolder<MangaPage> implements View.
 
 	private File mFile;
 
-	private final WebtoonView mWebtoonImageView;
+	private final WebtoonImageView mWebtoonImageView;
 	private final TextProgressView mTextProgressView;
 	@Nullable
 	private ViewStub mStubError;
@@ -42,7 +43,7 @@ final class WebtoonPageHolder extends DataViewHolder<MangaPage> implements View.
 		mWebtoonImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
 		mWebtoonImageView.setMinimumDpi(90);
 		mWebtoonImageView.setMinimumTileDpi(180);
-		mWebtoonImageView.setOnImageEventListener(new WebtoonView.DefaultOnImageEventListener() {
+		mWebtoonImageView.setOnImageEventListener(new WebtoonImageView.DefaultOnImageEventListener() {
 
 			@Override
 			public void onReady() {
@@ -63,11 +64,11 @@ final class WebtoonPageHolder extends DataViewHolder<MangaPage> implements View.
 		mTextProgressView.setVisibility(View.VISIBLE);
 		setError(null);
 		if (page.url.startsWith("file://")) {
-			mWebtoonImageView.setImage(WtImageSource.uri(page.url));
+			mWebtoonImageView.setImage(ImageSource.uri(page.url));
 		} else {
 			mFile = PagesCache.getInstance(getContext()).getFileForUrl(page.url);
 			if (mFile.exists()) {
-				mWebtoonImageView.setImage(WtImageSource.uri(Uri.fromFile(mFile)));
+				mWebtoonImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
 			} else {
 				PageDownloader.getInstance().downloadPage(getContext(), page, mFile, this);
 			}
@@ -124,7 +125,7 @@ final class WebtoonPageHolder extends DataViewHolder<MangaPage> implements View.
 
 	@Override
 	public void onImageConverted() {
-		mWebtoonImageView.setImage(WtImageSource.uri(Uri.fromFile(mFile)));
+		mWebtoonImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
 	}
 
 	@Override
@@ -134,7 +135,7 @@ final class WebtoonPageHolder extends DataViewHolder<MangaPage> implements View.
 
 	@Override
 	public void onPageDownloaded() {
-		mWebtoonImageView.setImage(WtImageSource.uri(Uri.fromFile(mFile)));
+		mWebtoonImageView.setImage(ImageSource.uri(Uri.fromFile(mFile)));
 	}
 
 	@Override

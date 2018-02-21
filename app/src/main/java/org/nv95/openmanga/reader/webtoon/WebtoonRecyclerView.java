@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public final class WebtoonRecyclerView extends RecyclerView {
@@ -20,6 +21,11 @@ public final class WebtoonRecyclerView extends RecyclerView {
 	public WebtoonRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
+	}
+
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent e) {
+		return super.onInterceptTouchEvent(e);
 	}
 
 	@Nullable

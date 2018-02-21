@@ -251,7 +251,7 @@ public final class ReaderActivity extends AppBaseActivity implements View.OnClic
 					menu.addItem(R.id.action_page_bookmark_remove, R.drawable.ic_bookmark_remove_black, R.string.remove_bookmark);
 				}
 				menu.addItem(R.id.action_page_save, R.drawable.ic_save_white, R.string.save_image)
-						.addItem(R.id.action_page_share, R.drawable.ic_share_light, R.string.share_image)
+						.addItem(R.id.action_page_share, R.drawable.ic_share_white, R.string.share_image)
 						.addItem(R.id.action_open_browser, R.drawable.ic_open_in_black, R.string.open_in_browser)
 						.addItem(R.id.action_reader_mode, R.drawable.ic_aspect_ratio_black, R.string.reader_mode)
 						.addItem(R.id.action_reader_settings, R.drawable.ic_settings_black, R.string.action_reading_options)
