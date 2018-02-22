@@ -85,7 +85,7 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 
 	@Override
 	public void onLoadFinished(Loader<ListWrapper<MangaHeader>> loader, @NonNull ListWrapper<MangaHeader> result) {
-		if (result.isFailed()) {
+		/*if (result.isFailed()) {
 			Snackbar.make(mRecyclerView, R.string.loading_error, Snackbar.LENGTH_INDEFINITE)
 					.setAction(R.string.retry, this)
 					.show();
@@ -93,8 +93,9 @@ public final class SearchActivity extends AppBaseActivity implements LoaderManag
 			if (mDataset.isEmpty()) {
 				mTextViewHolder.setVisibility(View.VISIBLE);
 			}
-			mRecyclerView.onLoadingFinished(false);
-		} else if (result.isEmpty()) {
+			mRecyclerView.onLoadingFinished(true);
+		} else */
+		if (result.isFailed() || result.isEmpty()) {
 			//next provider
 			if (mProviders.empty()) {
 				mProgressBar.setVisibility(View.GONE);

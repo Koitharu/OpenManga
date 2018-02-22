@@ -69,12 +69,13 @@ abstract class GroupleMangaProvider extends MangaProvider {
 				status = MangaStatus.STATUS_COMPLETED;
 			}
 			final Element subtitle = e.selectFirst("h4");
+			final Element img = e.selectFirst("img.lazy");
 			list.add(new MangaHeader(
 					title.text(),
 					subtitle == null ? "" : subtitle.text(),
 					parseGenres(e.select(".element-link"), ""),
 					url(domain, title.attr("href")),
-					e.selectFirst("img.lazy").attr("data-original"),
+					img == null ? "" : img.attr("data-original"),
 					getCName(),
 					status,
 					rating == null ? 0 : parseRating(rating.attr("title"))
