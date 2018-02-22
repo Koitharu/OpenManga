@@ -31,13 +31,7 @@ public final class WebtoonReaderFragment extends ReaderFragment {
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setAdapter(new WebtoonReaderAdapter(mPages));
-		final GestureDetector detector = new GestureDetector(view.getContext(), new TapDetector());
-		mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return detector.onTouchEvent(event);
-			}
-		});
+		mRecyclerView.setOnGestureListener(new TapDetector());
 	}
 
 	@Override
