@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.AppBaseBottomSheetDialogFragment;
+import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.common.views.recyclerview.SpaceItemDecoration;
@@ -49,7 +50,8 @@ public final class ThumbViewFragment extends AppBaseBottomSheetDialogFragment im
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mRecyclerView = view.findViewById(R.id.recyclerView);
-		mRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 4));
+		final int spanCount = MetricsUtils.getPreferredColumnsCountMedium(view.getResources());
+		mRecyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
 		mRecyclerView.addItemDecoration(new SpaceItemDecoration(ResourceUtils.dpToPx(view.getResources(), 4)));
 	}
 

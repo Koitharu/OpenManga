@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 
 public class BottomSheetMenuDialog<D> {
 
-	private final BottomSheetDialog mDialog;
+	private final AppCompatDialog mDialog;
 	private final ArrayList<SimpleMenuItem> mMenuItems = new ArrayList<>();
 	private final RecyclerView mRecyclerView;
 	@Nullable
@@ -62,7 +63,7 @@ public class BottomSheetMenuDialog<D> {
 		return this;
 	}
 
-	public BottomSheetDialog create(D data) {
+	public AppCompatDialog create(D data) {
 		mData = data;
 		mRecyclerView.setAdapter(new MenuAdapter());
 		return mDialog;

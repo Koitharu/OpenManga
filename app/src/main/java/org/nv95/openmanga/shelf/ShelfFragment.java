@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
+import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.schedule.JobSchedulerCompat;
 import org.nv95.openmanga.tools.settings.SettingsActivity;
@@ -59,7 +60,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (ResourceUtils.isLandscapeTablet(getResources())) {
-			mColumnCount = 12;
+			mColumnCount = 24;
 		}
 		mAdapter = new ShelfAdapter((OnTipsActionListener) getActivity());
 		GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), mColumnCount);
