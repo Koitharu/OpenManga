@@ -6,11 +6,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 
+import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.core.providers.DesumeProvider;
 import org.nv95.openmanga.core.providers.ExhentaiProvider;
-import org.nv95.openmanga.common.utils.CollectionsUtils;
-import org.nv95.openmanga.core.providers.MangarawProvider;
 import org.nv95.openmanga.core.providers.MintmangaProvider;
 import org.nv95.openmanga.core.providers.ReadmangaruProvider;
 import org.nv95.openmanga.core.providers.SelfmangaProvider;
@@ -30,7 +29,7 @@ public final class ProvidersStore {
 			new ProviderHeader(DesumeProvider.CNAME, DesumeProvider.DNAME),				//2
 			new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME),			//3
 			new ProviderHeader(SelfmangaProvider.CNAME, SelfmangaProvider.DNAME),		//4
-			new ProviderHeader(MangarawProvider.CNAME, MangarawProvider.DNAME)		//5
+			//new ProviderHeader(MangarawProvider.CNAME, MangarawProvider.DNAME)		//5
 	};
 
 	private final SharedPreferences mPreferences;
