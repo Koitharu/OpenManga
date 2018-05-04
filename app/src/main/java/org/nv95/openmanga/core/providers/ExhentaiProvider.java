@@ -32,7 +32,7 @@ public final class ExhentaiProvider extends MangaProvider {
 	public static final String CNAME = "network/exhentai";
 	public static final String DNAME = "ExHentai";
 
-	private static final String COOKIE_DEFAULT = "nw=1; uconfig=dm_t; igneous=0";
+	private static final String COOKIE_DEFAULT = "sl=dm_1; nw=1; uconfig=dm_t; igneous=0";
 
 	static {
 		CookieStore.getInstance().put("e-hentai.org", COOKIE_DEFAULT);
@@ -83,25 +83,29 @@ public final class ExhentaiProvider extends MangaProvider {
 				page,
 				query.toString()
 		);
-		Document document = NetworkUtils.getDocument(url);
-		Element root = document.body().select("div.itg").first();
-		Elements elements = root.select("div.id1");
+		final Document document = NetworkUtils.getDocument(url);
+		final Element root = document.body().select("div.itg").first();
+		final Elements elements = root.select("div.id1");
 		if (elements == null) {
 			throw new RuntimeException("div.id1 is null");
 		}
 		final ArrayList<MangaHeader> list = new ArrayList<>(elements.size());
 		for (Element o : elements) {
-			String name = o.select("a").first().text();
-			list.add(new MangaHeader(
-					name.replaceAll("\\[[^\\[,\\]]+]", "").trim(),
-					getFromBrackets(name),
-					"",
-					o.select("a").first().attr("href"),
-					o.select("img").first().attr("src"),
-					CNAME,
-					MangaStatus.STATUS_UNKNOWN,
-					parseRating(o.select("div.id43").first().attr("style"))
-			));
+			try {
+				final Element a = o.selectFirst("a");
+				final String name = a.text();
+				list.add(new MangaHeader(
+						name.replaceAll("\\[[^\\[,\\]]+]", "").trim(),
+						getFromBrackets(name),
+						"",
+						a.attr("href"),
+						o.selectFirst("img").attr("src"),
+						CNAME,
+						MangaStatus.STATUS_UNKNOWN,
+						parseRating(o.select("div.id43").first().attr("style"))
+				));
+			} catch (Exception ignored) {
+			}
 		}
 		return list;
 	}
@@ -216,7 +220,7 @@ public final class ExhentaiProvider extends MangaProvider {
 		if (cookie == null || !cookie.contains("ipb_pass_hash")) {
 			return null;
 		}
-		cookie += COOKIE_DEFAULT;
+		cookie = COOKIE_DEFAULT + "; " + cookie;
 		mDomain = "exhentai.org";
 		setAuthCookie(cookie);
 		return cookie;
