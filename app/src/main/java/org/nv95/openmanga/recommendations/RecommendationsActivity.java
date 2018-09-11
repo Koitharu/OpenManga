@@ -22,7 +22,6 @@ import org.nv95.openmanga.R;
 public final class RecommendationsActivity extends AppBaseActivity {
 
 	private ViewPager mPager;
-	private TabLayout mTabs;
 	private RecommendationsPagerAdapter mPagerAdapter;
 	private BroadcastReceiver mBroadcastReceiver;
 	@Nullable
@@ -36,7 +35,7 @@ public final class RecommendationsActivity extends AppBaseActivity {
 		enableHomeAsUp();
 
 		mPager = findViewById(R.id.pager);
-		mTabs = findViewById(R.id.tabs);
+		TabLayout mTabs = findViewById(R.id.tabs);
 
 		mPagerAdapter = new RecommendationsPagerAdapter(getFragmentManager(), this);
 		mPager.setAdapter(mPagerAdapter);

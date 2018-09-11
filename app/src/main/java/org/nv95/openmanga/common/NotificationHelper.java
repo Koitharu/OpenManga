@@ -23,7 +23,6 @@ import org.nv95.openmanga.R;
 
 public final class NotificationHelper {
 
-	private final String mChannelId;
 	private int mId;
 	private final Resources mResources;
 	private final NotificationManager mManager;
@@ -36,7 +35,7 @@ public final class NotificationHelper {
 
 	public NotificationHelper(Context context, int id, String channelId, @StringRes int channelName) {
 		mId = id;
-		mChannelId = channelId;
+		String mChannelId = channelId;
 		mResources = context.getResources();
 		mBuilder = new NotificationCompat.Builder(context, mChannelId);
 		mManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

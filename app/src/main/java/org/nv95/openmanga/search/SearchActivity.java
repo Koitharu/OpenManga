@@ -7,19 +7,18 @@ import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.views.EndlessRecyclerView;
 import org.nv95.openmanga.core.ListWrapper;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.core.storage.ProvidersStore;
-import org.nv95.openmanga.AppBaseActivity;
-import org.nv95.openmanga.common.views.EndlessRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Stack;

@@ -37,12 +37,7 @@ public final class ExpansionPanel extends LinearLayout {
 		setOrientation(VERTICAL);
 		mTextViewControl = findViewById(R.id.textView_control);
 		mDivider = findViewById(R.id.divider);
-		mTextViewControl.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				toggle();
-			}
-		});
+		mTextViewControl.setOnClickListener(v -> toggle());
 	}
 
 	@Override

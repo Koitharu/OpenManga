@@ -19,7 +19,6 @@ public class AccountService extends Service {
 		mAuthenticator = new SyncAuthenticator(this);
 	}
 
-
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {

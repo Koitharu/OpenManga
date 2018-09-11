@@ -35,12 +35,12 @@ abstract class GroupleMangaProvider extends MangaProvider {
 	public ArrayList<MangaHeader> query(@Nullable String search, int page, int sortOrder, @NonNull String[] genres) throws Exception {
 		boolean hasQuery = !TextUtils.isEmpty(search);
 		boolean multipleGenres = genres.length >= 1;
-		if (multipleGenres || (hasQuery && genres.length != 0)) {
+		if (multipleGenres) {
 			return page != 0 ? EMPTY_HEADERS : advancedSearch(org.nv95.openmanga.common.utils.TextUtils.notNull(search), genres);
 		} else if (hasQuery) {
 			return simpleSearch(search, page);
 		} else {
-			return getList(page, sortOrder, genres.length == 0 ? null : genres[0]);
+			return getList(page, sortOrder, null);
 		}
 	}
 
@@ -53,7 +53,7 @@ abstract class GroupleMangaProvider extends MangaProvider {
 	@NonNull
 	protected abstract ArrayList<MangaHeader> advancedSearch(@NonNull String search, @NonNull String[] genres) throws Exception;
 
-	protected final ArrayList<MangaHeader> parseList(Elements elements, String domain) throws Exception {
+	protected final ArrayList<MangaHeader> parseList(Elements elements, String domain) {
 		final ArrayList<MangaHeader> list = new ArrayList<>(elements.size());
 		for (Element e : elements) {
 			if (!e.select(".fa-external-link").isEmpty()) {

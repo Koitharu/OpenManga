@@ -58,7 +58,7 @@ public final class DiscoverFragment extends AppBaseFragment {
 				getString(R.string.recommendations_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_lightbulb_white)));
 		dataset.add(new ProviderHeaderDetailed(SpecificCName.BROWSE_BOOKMARKS, getString(R.string.bookmarks),
 				getString(R.string.bookmarks_summary), ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark_white)));
-		dataset.add(getString(R.string.storages_remote));
+		dataset.add(getString(R.string.storage_remote));
 		dataset.addAll(new ProvidersStore(getActivity()).getUserProviders());
 		final DiscoverAdapter adapter = new DiscoverAdapter(dataset);
 		mRecyclerView.setAdapter(adapter);

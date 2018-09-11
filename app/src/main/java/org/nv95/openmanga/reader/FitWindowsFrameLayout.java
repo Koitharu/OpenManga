@@ -8,8 +8,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
-import org.nv95.openmanga.R;
-
 /**
  * Created by koitharu on 08.01.18.
  */

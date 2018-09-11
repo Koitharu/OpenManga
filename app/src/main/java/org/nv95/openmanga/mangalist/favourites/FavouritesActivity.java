@@ -22,7 +22,6 @@ public final class FavouritesActivity extends AppBaseActivity {
 	private static final int REQUEST_CATEGORIES = 14;
 
 	private ViewPager mPager;
-	private TabLayout mTabs;
 	private CategoriesPagerAdapter mPagerAdapter;
 
 	@Override
@@ -33,7 +32,7 @@ public final class FavouritesActivity extends AppBaseActivity {
 		enableHomeAsUp();
 
 		mPager = findViewById(R.id.pager);
-		mTabs = findViewById(R.id.tabs);
+		TabLayout mTabs = findViewById(R.id.tabs);
 
 		mPagerAdapter = new CategoriesPagerAdapter(getFragmentManager(), CategoriesRepository.get(this));
 		mPager.setAdapter(mPagerAdapter);

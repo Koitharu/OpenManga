@@ -10,21 +10,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
-import org.nv95.openmanga.core.ObjectWrapper;
-import org.nv95.openmanga.core.providers.MangaProvider;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.network.CookieStore;
+import org.nv95.openmanga.core.ObjectWrapper;
+import org.nv95.openmanga.core.providers.MangaProvider;
 
 /**
  * Created by koitharu on 12.01.18.
@@ -76,16 +74,12 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 		super.onActivityCreated(savedInstanceState);
 		mButtonCancel.setOnClickListener(this);
 		mButtonLogin.setOnClickListener(this);
-		mEditTextPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-				if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-					onClick(mButtonLogin);
-					return true;
-				}
-				return false;
+		mEditTextPassword.setOnEditorActionListener((textView, id, keyEvent) -> {
+			if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+				onClick(mButtonLogin);
+				return true;
 			}
+			return false;
 		});
 
 	}
@@ -157,7 +151,7 @@ public final class AuthorizationDialog extends AppCompatDialogFragment implement
 				@SuppressWarnings("ConstantConditions")
 				final MangaProvider provider = MangaProvider.get(getObject().getContext(), strings[0]);
 				String result = provider.authorize(strings[1], strings[2]);
-				return result == null ? ObjectWrapper.<String>badObject() : new ObjectWrapper<>(result);
+				return result == null ? ObjectWrapper.badObject() : new ObjectWrapper<>(result);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

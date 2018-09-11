@@ -146,8 +146,7 @@ public abstract class ImageUtils {
 				imageView,
 				sOptionsUpdate
 						.extraForDownloader(referer)
-						.build()
-		);
+						.build());
 	}
 
 	@Nullable

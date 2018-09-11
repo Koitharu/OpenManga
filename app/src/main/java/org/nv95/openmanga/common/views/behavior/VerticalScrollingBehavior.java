@@ -119,7 +119,6 @@ abstract class VerticalScrollingBehavior<V extends View> extends CoordinatorLayo
 		onDirectionNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, mScrollDirection);
 	}
 
-
 	@Override
 	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, V child, View target, float velocityX, float velocityY, boolean consumed) {
 		super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
@@ -136,7 +135,6 @@ abstract class VerticalScrollingBehavior<V extends View> extends CoordinatorLayo
 
 	@Override
 	public WindowInsetsCompat onApplyWindowInsets(CoordinatorLayout coordinatorLayout, V child, WindowInsetsCompat insets) {
-
 		return super.onApplyWindowInsets(coordinatorLayout, child, insets);
 	}
 
@@ -144,5 +142,4 @@ abstract class VerticalScrollingBehavior<V extends View> extends CoordinatorLayo
 	public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
 		return super.onSaveInstanceState(parent, child);
 	}
-
 }

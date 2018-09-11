@@ -29,7 +29,6 @@ public final class NetworkSettingsFragment extends PreferenceFragment {
 		super.onActivityCreated(savedInstanceState);
 		Activity activity = getActivity();
 		if (activity == null) {
-			return;
 		}
 	}
 }

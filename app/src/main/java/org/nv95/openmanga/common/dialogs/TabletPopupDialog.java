@@ -20,6 +20,4 @@ class TabletPopupDialog extends AppCompatDialog {
 		// above the bottom sheet when it is expanded.
 		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 	}
-
-
 }

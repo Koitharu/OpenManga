@@ -1,6 +1,5 @@
 package org.nv95.openmanga.mangalist.favourites;
 
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.annotation.NonNull;

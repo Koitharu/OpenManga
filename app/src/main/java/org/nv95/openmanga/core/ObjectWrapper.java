@@ -44,6 +44,6 @@ public class ObjectWrapper<T> {
 
 	@NonNull
 	public static <T> ObjectWrapper<T> badObject() {
-		return new ObjectWrapper<T>(new BadResultException());
+		return new ObjectWrapper<>(new BadResultException());
 	}
 }

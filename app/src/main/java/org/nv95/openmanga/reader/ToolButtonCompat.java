@@ -27,5 +27,4 @@ public final class ToolButtonCompat extends AppCompatImageView {
 		setBackgroundDrawable(ThemeUtils.getSelectableBackgroundBorderless(context));
 		setScaleType(ImageView.ScaleType.CENTER);
 	}
-
 }

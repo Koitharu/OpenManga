@@ -1,7 +1,6 @@
 package org.nv95.openmanga.mangalist.updates;
 
 import android.app.LoaderManager;
-import android.content.DialogInterface;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -80,14 +79,11 @@ public final class MangaUpdatesActivity extends AppBaseActivity implements Swipe
 				new AlertDialog.Builder(this)
 						.setMessage(R.string.mark_all_viewed_confirm)
 						.setNegativeButton(android.R.string.cancel, null)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								FavouritesRepository.get(MangaUpdatesActivity.this).clearNewChapters();
-								onLoadFinished(null, new ListWrapper<>(new ArrayList<MangaFavourite>()));
-								Snackbar.make(mRecyclerView, R.string.chapters_marked_as_viewed, Snackbar.LENGTH_LONG).show();
-								new OemBadgeHelper(MangaUpdatesActivity.this).applyCount(0);
-							}
+						.setPositiveButton(android.R.string.yes, (dialog, which) -> {
+							FavouritesRepository.get(MangaUpdatesActivity.this).clearNewChapters();
+							onLoadFinished(null, new ListWrapper<>(new ArrayList<>()));
+							Snackbar.make(mRecyclerView, R.string.chapters_marked_as_viewed, Snackbar.LENGTH_LONG).show();
+							new OemBadgeHelper(MangaUpdatesActivity.this).applyCount(0);
 						})
 						.create()
 						.show();

@@ -9,7 +9,6 @@ import org.nv95.openmanga.core.storage.db.SavedMangaRepository;
 import org.nv95.openmanga.core.storage.db.SavedMangaSpecification;
 import org.nv95.openmanga.core.storage.files.SavedPagesStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

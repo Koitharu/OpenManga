@@ -59,9 +59,9 @@ public final class ColorPreference extends DialogPreference implements SeekBar.O
 	@Override
 	protected View onCreateDialogView() {
 		View view = super.onCreateDialogView();
-		initSeekBar(view.<AppCompatSeekBar>findViewById(R.id.seekBar_red));
-		initSeekBar(view.<AppCompatSeekBar>findViewById(R.id.seekBar_green));
-		initSeekBar(view.<AppCompatSeekBar>findViewById(R.id.seekBar_blue));
+		initSeekBar(view.findViewById(R.id.seekBar_red));
+		initSeekBar(view.findViewById(R.id.seekBar_green));
+		initSeekBar(view.findViewById(R.id.seekBar_blue));
 		mViewSample = view.findViewById(R.id.view_sample);
 		return view;
 	}
@@ -101,8 +101,7 @@ public final class ColorPreference extends DialogPreference implements SeekBar.O
 		mViewSample.setBackgroundColor(Color.rgb(
 				mColor[0],
 				mColor[1],
-				mColor[2]
-		));
+				mColor[2]));
 	}
 
 	@Override

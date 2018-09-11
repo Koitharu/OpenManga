@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-
 /**
  * Created by koitharu on 24.12.17.
  */
@@ -130,7 +129,6 @@ public abstract class ResourceUtils {
 				255,
 				Color.red(color),
 				Color.green(color),
-				Color.blue(color)
-		);
+				Color.blue(color));
 	}
 }

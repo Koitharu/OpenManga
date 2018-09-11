@@ -57,7 +57,7 @@ public class ShelfSettings {
 
 	public static void onCategoryAdded(Context context, Category category) {
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-		final Set<String> enabledCats = preferences.getStringSet("shelf.favourites_categories", new HashSet<String>(1));
+		final Set<String> enabledCats = preferences.getStringSet("shelf.favourites_categories", new HashSet<>(1));
 		enabledCats.add(String.valueOf(category.id));
 		preferences.edit().putStringSet("shelf.favourites_categories", enabledCats).apply();
 	}

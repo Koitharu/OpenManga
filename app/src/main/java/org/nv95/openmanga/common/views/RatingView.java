@@ -5,13 +5,9 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.DrawableUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.nv95.openmanga.R;
 

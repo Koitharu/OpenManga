@@ -1,6 +1,6 @@
 package org.nv95.openmanga.recommendations;
 
-/**
+/*
  * Created by koitharu on 29.01.18.
  */
 

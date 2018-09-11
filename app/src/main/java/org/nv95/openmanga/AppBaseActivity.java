@@ -23,7 +23,6 @@ import org.nv95.openmanga.common.utils.ThemeUtils;
 
 import java.util.ArrayList;
 
-
 /**
  * Created by koitharu on 21.12.17.
  */
@@ -76,7 +75,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
 	}
 
 	public void setSupportActionBar(@IdRes int toolbarId) {
-		setSupportActionBar((Toolbar) findViewById(toolbarId));
+		setSupportActionBar(findViewById(toolbarId));
 	}
 
 	public void hideActionBar() {

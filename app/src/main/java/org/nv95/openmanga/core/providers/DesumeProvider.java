@@ -9,13 +9,13 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.MangaStatus;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.MangaPage;
-import org.nv95.openmanga.core.MangaStatus;
-import org.nv95.openmanga.common.utils.network.NetworkUtils;
 
 import java.util.ArrayList;
 

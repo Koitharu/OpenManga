@@ -27,6 +27,6 @@ public final class BookmarksLoader extends AsyncTaskLoader<ListWrapper<MangaBook
 	public ListWrapper<MangaBookmark> loadInBackground() {
 		final BookmarksRepository repo = BookmarksRepository.get(getContext());
 		final ArrayList<MangaBookmark> list = repo.query(mSpec);
-		return list == null ? ListWrapper.<MangaBookmark>badList() : new ListWrapper<>(list);
+		return list == null ? ListWrapper.badList() : new ListWrapper<>(list);
 	}
 }

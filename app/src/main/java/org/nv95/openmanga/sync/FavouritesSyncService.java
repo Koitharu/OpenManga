@@ -27,5 +27,4 @@ public class FavouritesSyncService extends Service {
 	public IBinder onBind(Intent intent) {
 		return sFavouritesSyncAdapter.getSyncAdapterBinder();
 	}
-
 }

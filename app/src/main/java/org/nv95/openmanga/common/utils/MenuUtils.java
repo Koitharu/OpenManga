@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.Category;
+import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.storage.db.CategoriesRepository;
 import org.nv95.openmanga.core.storage.db.CategoriesSpecification;
 

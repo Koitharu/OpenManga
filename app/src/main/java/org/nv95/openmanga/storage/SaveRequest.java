@@ -49,8 +49,8 @@ public final class SaveRequest {
 	@NonNull
 	public static SaveRequest from(Bundle bundle) {
 		return new SaveRequest(
-				bundle.<MangaDetails>getParcelable("manga"),
-				new MangaChaptersList(bundle.<MangaChapter>getParcelableArrayList("chapters"))
+				bundle.getParcelable("manga"),
+				new MangaChaptersList(bundle.getParcelableArrayList("chapters"))
 		);
 	}
 }

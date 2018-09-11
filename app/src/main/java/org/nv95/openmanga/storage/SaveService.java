@@ -1,6 +1,5 @@
 package org.nv95.openmanga.storage;
 
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;

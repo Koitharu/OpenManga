@@ -5,6 +5,5 @@ package org.nv95.openmanga.common.views.preferences;
  */
 
 public interface IntegerPreference {
-
 	int getValue();
 }

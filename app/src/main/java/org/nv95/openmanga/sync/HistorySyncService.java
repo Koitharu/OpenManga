@@ -27,5 +27,4 @@ public class HistorySyncService extends Service {
 	public IBinder onBind(Intent intent) {
 		return sHistorySyncAdapter.getSyncAdapterBinder();
 	}
-
 }
