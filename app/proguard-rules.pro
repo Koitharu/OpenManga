@@ -1,11 +1,11 @@
 # Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
-# in /media/HDD1/Other/Android/Sdk/tools/proguard/proguard-android.txt
+# in C:/$USER/JTM/AppData/Local/Android/Sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
 #
 # For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#   https://developer.android.com/studio/build/shrink-code.html
 
 # Add any project specific keep options here:
 
@@ -15,3 +15,17 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keeppackagenames org.jsoup.nodes
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
