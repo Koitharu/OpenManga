@@ -30,7 +30,7 @@
 	<string name="app_language">Язык приложения</string>
 	<string name="application_crashed">Приложение было закрыто в следствии ошибки</string>
 	<string name="apply">Применить</string>
-	<string name="app_update_avaliable">Доступно обновление приложения</string>
+	<string name="app_update_available">Доступно обновление приложения</string>
 	<string name="auth_failed">Авторизация не удалась</string>
 	<string name="authorization">Авторизация</string>
 	<string name="automatic">Автоматически</string>
@@ -286,7 +286,7 @@
 	<string name="status_completed">Выпуск завершён</string>
 	<string name="status_ongoing">Онгоинг</string>
 	<string name="storage_settings">Локальное хранилище</string>
-	<string name="storages_remote">Онлайн каталоги</string>
+	<string name="storage_remote">Онлайн каталоги</string>
 	<string name="storage_upgrading">Обновление локальных данных…</string>
 	<string name="successfully">Успешно</string>
 	<string name="sync_banner">Данная функция позволяет синхронизировать Вашу историю и избранное между разными устройствами. Если у Вас ещё нет аккаунта - заполните поля ниже и нажмите Зарегистрироваться</string>

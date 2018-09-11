@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -75,7 +76,7 @@
     <style name="AppThemeDark.Blue">
         <item name="colorPrimary">#03a9f4</item>
         <item name="colorPrimaryDark">#007ac1</item>
-		<item name="colorAccent">#f57f17</item>
+        <item name="colorAccent">#f57f17</item>
     </style>
 
     <style name="AppThemeBlack.Grey">
@@ -134,13 +135,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="behavior_peekHeight">@dimen/bottomsheet_peek_height</item>
     </style>
 
@@ -149,12 +148,12 @@
         <item name="android:windowExitAnimation">@anim/alpha_hide</item>
     </style>
 
-	<style name="AppDialogLight" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppDialogLight" parent="Theme.Design.Light.BottomSheetDialog">
 
-	</style>
+    </style>
 
-	<style name="AppDialogDark" parent="Theme.Design.BottomSheetDialog">
+    <style name="AppDialogDark" parent="Theme.Design.BottomSheetDialog">
 
-	</style>
+    </style>
 
 </resources>
