@@ -42,8 +42,7 @@ public final class AppShortcutHelper {
 		final ArrayList<MangaHistory> list = repository.query(
 				new HistorySpecification()
 						.orderByDate(true)
-						.limit(5)
-		);
+						.limit(5));
 		updateImpl(list);
 	}
 

@@ -1,6 +1,5 @@
 package org.nv95.openmanga.tools.settings;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,9 +24,7 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 
 	private static final int REQUEST_SETTINGS = 12;
 
-	private RecyclerView mRecyclerView;
 	private ArrayList<SettingsHeader> mHeaders;
-	private SettingsAdapter mAdapter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +33,7 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 		setSupportActionBar(R.id.toolbar);
 		enableHomeAsUp();
 
-		mRecyclerView = findViewById(R.id.recyclerView);
+		RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.setHasFixedSize(true);
 
@@ -51,7 +48,7 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 		mHeaders.add(new SettingsHeader(this, 7, R.string.additional, R.drawable.ic_braces_white));
 		mHeaders.add(new SettingsHeader(this, 8, R.string.help, R.drawable.ic_help_white));
 
-		mAdapter = new SettingsAdapter(mHeaders, this);
+		SettingsAdapter mAdapter = new SettingsAdapter(mHeaders, this);
 		mRecyclerView.setAdapter(mAdapter);
 	}
 
@@ -83,12 +80,8 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 			new AlertDialog.Builder(this)
 					.setMessage(R.string.need_restart)
 					.setNegativeButton(R.string.postpone, null)
-					.setPositiveButton(R.string.restart, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							OpenMangaApp.from(SettingsHeadersActivity.this).restart();
-						}
-					})
+					.setPositiveButton(R.string.restart, (dialog, which) ->
+							OpenMangaApp.from(SettingsHeadersActivity.this).restart())
 					.create()
 					.show();
 		}

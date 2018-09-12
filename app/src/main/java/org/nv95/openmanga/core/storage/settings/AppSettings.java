@@ -30,7 +30,7 @@ public class AppSettings {
 		AppSettings instance = sInstanceReference == null ? null : sInstanceReference.get();
 		if (instance == null) {
 			instance = new AppSettings(context);
-			sInstanceReference = new WeakReference<AppSettings>(instance);
+			sInstanceReference = new WeakReference<>(instance);
 		}
 		return instance;
 	}
@@ -39,7 +39,7 @@ public class AppSettings {
 		NetworkSettings instance = NetworkSettings.sInstanceReference == null ? null : NetworkSettings.sInstanceReference.get();
 		if (instance == null) {
 			instance = new NetworkSettings(context);
-			NetworkSettings.sInstanceReference = new WeakReference<NetworkSettings>(instance);
+			NetworkSettings.sInstanceReference = new WeakReference<>(instance);
 		}
 		return instance;
 	}

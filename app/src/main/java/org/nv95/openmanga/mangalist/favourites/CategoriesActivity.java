@@ -109,16 +109,13 @@ public final class CategoriesActivity extends AppBaseActivity implements View.On
 		new AlertDialog.Builder(this)
 				.setMessage(getString(R.string.category_remove_confirm, category.name))
 				.setNegativeButton(android.R.string.cancel, null)
-				.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mRepository.remove(category);
-						mDataset.remove(category);
-						mAdapter.notifyDataSetChanged();
-						Snackbar.make(mRecyclerView, getString(R.string.category_x_removed, category.name), Snackbar.LENGTH_SHORT)
-								.show();
-						setResult(RESULT_OK);
-					}
+				.setPositiveButton(R.string.remove, (dialog, which) -> {
+					mRepository.remove(category);
+					mDataset.remove(category);
+					mAdapter.notifyDataSetChanged();
+					Snackbar.make(mRecyclerView, getString(R.string.category_x_removed, category.name), Snackbar.LENGTH_SHORT)
+							.show();
+					setResult(RESULT_OK);
 				})
 				.create()
 				.show();

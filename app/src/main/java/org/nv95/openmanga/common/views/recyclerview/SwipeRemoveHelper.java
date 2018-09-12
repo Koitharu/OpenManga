@@ -81,11 +81,10 @@ public final class SwipeRemoveHelper extends ItemTouchHelper.Callback {
 			int intrinsicWidth = mIcon.getIntrinsicWidth();
 			int intrinsicHeight = mIcon.getIntrinsicWidth();
 
-			int xMarkLeft = mPadding;
 			int xMarkRight = mPadding + intrinsicWidth;
 			int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
 			int xMarkBottom = xMarkTop + intrinsicHeight;
-			mIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+			mIcon.setBounds(mPadding, xMarkTop, xMarkRight, xMarkBottom);
 			mIcon.draw(c);
 		}
 

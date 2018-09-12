@@ -11,7 +11,6 @@ import android.text.TextUtils;
 
 import org.nv95.openmanga.core.storage.db.StorageHelper;
 
-
 /**
  * Created by koitharu on 18.12.17.
  */

@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
-import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.common.utils.network.CookieStore;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
+import org.nv95.openmanga.core.storage.settings.AppSettings;
 import org.nv95.openmanga.schedule.JobSchedulerCompat;
 
 /**

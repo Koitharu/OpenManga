@@ -194,6 +194,8 @@ public final class MangaListAdapter extends RecyclerView.Adapter<DataViewHolder<
 				default:
 					mTextViewStatus.setVisibility(View.GONE);
 
+				case MangaStatus.STATUS_UNKNOWN:
+					break;
 			}
 		}
 	}

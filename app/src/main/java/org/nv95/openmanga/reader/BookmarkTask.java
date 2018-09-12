@@ -9,7 +9,6 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.common.utils.MetricsUtils;
-import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaHeader;

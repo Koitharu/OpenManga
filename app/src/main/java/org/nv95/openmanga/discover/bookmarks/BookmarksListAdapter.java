@@ -21,7 +21,6 @@ import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.core.models.MangaBookmark;
 import org.nv95.openmanga.core.models.MangaHeader;
 import org.nv95.openmanga.core.models.UniqueObject;
-import org.nv95.openmanga.core.storage.db.BookmarksRepository;
 import org.nv95.openmanga.core.storage.files.ThumbnailsStorage;
 import org.nv95.openmanga.preview.PreviewActivity;
 import org.nv95.openmanga.reader.ReaderActivity;

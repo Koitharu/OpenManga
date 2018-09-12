@@ -5,7 +5,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 /**
  * Created by koitharu on 29.01.18.
  */

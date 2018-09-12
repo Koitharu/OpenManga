@@ -1,18 +1,14 @@
 package org.nv95.openmanga.reader.webtoon;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.utils.LayoutUtils;
 
 public final class WebtoonRecyclerView extends RecyclerView {
 
@@ -46,6 +42,6 @@ public final class WebtoonRecyclerView extends RecyclerView {
 	@Nullable
 	private WebtoonImageView getWebtoonView(int pos) {
 		ViewHolder vh = findViewHolderForAdapterPosition(pos);
-		return vh != null ? vh.itemView.<WebtoonImageView>findViewById(R.id.webtoonImageView) : null;
+		return vh != null ? vh.itemView.findViewById(R.id.webtoonImageView) : null;
 	}
 }

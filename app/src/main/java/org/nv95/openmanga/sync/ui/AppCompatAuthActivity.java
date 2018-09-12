@@ -22,7 +22,6 @@ import org.nv95.openmanga.common.utils.ThemeUtils;
 
 public abstract class AppCompatAuthActivity extends AccountAuthenticatorActivity {
 
-	private int mTheme = 0;
 	private AppCompatDelegate mDelegate;
 
 	@Override
@@ -30,7 +29,7 @@ public abstract class AppCompatAuthActivity extends AccountAuthenticatorActivity
 		getDelegate().installViewFactory();
 		getDelegate().onCreate(savedInstanceState);
 		super.onCreate(savedInstanceState);
-		mTheme = ThemeUtils.getAppTheme(this);
+		int mTheme = ThemeUtils.getAppTheme(this);
 		setTheme(ThemeUtils.getAppThemeRes(mTheme));
 	}
 

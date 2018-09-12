@@ -55,7 +55,7 @@ public final class OemBadgeHelper {
 		private static final String CLASSNAME = "CNAME";
 		private static final String COUNT = "COUNT";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent = new Intent(INTENT_UPDATE_COUNTER);
 			intent.putExtra(PACKAGENAME, mComponentName.getPackageName());
 			intent.putExtra(CLASSNAME, mComponentName.getClassName());
@@ -71,7 +71,7 @@ public final class OemBadgeHelper {
 		private static final String COUNT = "count";
 		private static final String CLASS = "class";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent = new Intent(INTENT_UPDATE_COUNTER);
 			intent.putExtra(PACKAGENAME, mComponentName.getPackageName());
 			intent.putExtra(COUNT, badgeCount);
@@ -87,7 +87,7 @@ public final class OemBadgeHelper {
 		private static final String INTENT_EXTRA_PACKAGENAME = "badge_count_package_name";
 		private static final String INTENT_EXTRA_ACTIVITY_NAME = "badge_count_class_name";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent = new Intent(INTENT_ACTION);
 			intent.putExtra(INTENT_EXTRA_BADGE_COUNT, badgeCount);
 			intent.putExtra(INTENT_EXTRA_PACKAGENAME, mComponentName.getPackageName());
@@ -104,7 +104,7 @@ public final class OemBadgeHelper {
 		private static final String INTENT_EXTRA_PACKAGENAME = "badge_count_package_name";
 		private static final String INTENT_EXTRA_ACTIVITY_NAME = "badge_count_class_name";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent = new Intent(INTENT_ACTION);
 			intent.putExtra(INTENT_EXTRA_BADGE_COUNT, badgeCount);
 			intent.putExtra(INTENT_EXTRA_PACKAGENAME, mComponentName.getPackageName());
@@ -116,7 +116,7 @@ public final class OemBadgeHelper {
 
 	private class HuaweiHomeBadger implements Badger {
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Bundle localBundle = new Bundle(3);
 			localBundle.putString("package", mContext.getPackageName());
 			localBundle.putString("class", mComponentName.getClassName());
@@ -136,7 +136,7 @@ public final class OemBadgeHelper {
 		private static final String EXTRA_COMPONENT = "com.htc.launcher.extra.COMPONENT";
 		private static final String EXTRA_COUNT = "com.htc.launcher.extra.COUNT";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent1 = new Intent(INTENT_SET_NOTIFICATION);
 			intent1.putExtra(EXTRA_COMPONENT, mComponentName.flattenToShortString());
 			intent1.putExtra(EXTRA_COUNT, badgeCount);
@@ -156,7 +156,7 @@ public final class OemBadgeHelper {
 		private static final String COUNT = "count";
 		private static final String TAG = "tag";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final ContentValues contentValues = new ContentValues(2);
 			contentValues.put(TAG, mComponentName.getPackageName() + "/" + mComponentName.getClassName());
 			contentValues.put(COUNT, badgeCount);
@@ -176,7 +176,7 @@ public final class OemBadgeHelper {
 		private int ROMVERSION = -1;
 
 		@Override
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			if (badgeCount == 0) {
 				badgeCount = -1;
 			}
@@ -192,7 +192,8 @@ public final class OemBadgeHelper {
 				try {
 					final Bundle extras = new Bundle();
 					extras.putInt(INTENT_EXTRA_BADGEUPGRADE_COUNT, badgeCount);
-					mContext.getContentResolver().call(Uri.parse(PROVIDER_CONTENT_URI), "setAppBadgeCount", null, extras);
+					mContext.getContentResolver().call(Uri.parse(PROVIDER_CONTENT_URI),
+							"setAppBadgeCount", null, extras);
 					return true;
 				} catch (Throwable ignore) {
 				}
@@ -212,7 +213,7 @@ public final class OemBadgeHelper {
 			}
 			if (i == 0) {
 				try {
-					String str = getSystemProperty("ro.build.version.opporom");
+					String str = getSystemProperty();
 					if (str.startsWith("V1.4")) {
 						return 3;
 					}
@@ -261,7 +262,7 @@ public final class OemBadgeHelper {
 				try {
 					return cls.getMethod(str, clsArr);
 				} catch (Exception e2) {
-					return cls.getSuperclass() != null ? getMethod(cls.getSuperclass(), str, clsArr) : method;
+					return cls.getSuperclass() != null ? getMethod(cls.getSuperclass(), str, clsArr) : null;
 				}
 			}
 		}
@@ -282,11 +283,11 @@ public final class OemBadgeHelper {
 		}
 
 
-		private String getSystemProperty(String propName) {
+		private String getSystemProperty() {
 			String line;
 			BufferedReader input = null;
 			try {
-				Process p = Runtime.getRuntime().exec("getprop " + propName);
+				Process p = Runtime.getRuntime().exec("getprop " + "ro.build.version.opporom");
 				input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
 				line = input.readLine();
 				input.close();
@@ -306,7 +307,7 @@ public final class OemBadgeHelper {
 		@Nullable
 		private DefaultBadger mDefaultBadger = null;
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			try {
 				if (mDefaultBadger == null) {
 					mDefaultBadger = new DefaultBadger();
@@ -375,7 +376,7 @@ public final class OemBadgeHelper {
 		private final Uri BADGE_CONTENT_URI = Uri.parse(PROVIDER_CONTENT_URI);
 		private AsyncQueryHandler mQueryHandler;
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			if (sonyBadgeContentProviderExists()) {
 				return executeBadgeByContentProvider(badgeCount);
 			} else {
@@ -428,7 +429,7 @@ public final class OemBadgeHelper {
 		private static final String EXTRA_UPDATE_APP_COMPONENT_NAME = "android.intent.extra.update_application_component_name";
 		private static final String EXTRA_UPDATE_APP_MSG_TEXT = "android.intent.extra.update_application_message_text";
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			try {
 				@SuppressLint("PrivateApi")
 				Class miuiNotificationClass = Class.forName("android.app.MiuiNotification");
@@ -450,7 +451,7 @@ public final class OemBadgeHelper {
 
 		private final Uri CONTENT_URI = Uri.parse("content://com.android.badge/badge");
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Bundle extra = new Bundle(1);
 			extra.putInt("app_badge_count", badgeCount);
 			try {
@@ -464,7 +465,7 @@ public final class OemBadgeHelper {
 
 	private class VivoHomeBadger implements Badger {
 
-		public boolean executeBadge(int badgeCount) throws Exception {
+		public boolean executeBadge(int badgeCount) {
 			final Intent intent = new Intent("launcher.action.CHANGE_APPLICATION_NOTIFICATION_NUM");
 			intent.putExtra("packageName", mContext.getPackageName());
 			intent.putExtra("className", mComponentName.getClassName());

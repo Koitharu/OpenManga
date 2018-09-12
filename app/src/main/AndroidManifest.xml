@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.nv95.openmanga">
+    package="org.nv95.openmanga"
+    android:installLocation="auto">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -32,7 +33,6 @@
 	<uses-permission android:name="android.permission.READ_APP_BADGE"/>
 	<uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS"/>
 	<uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS"/>
-
 
 	<application
 		android:name=".OpenMangaApp"
@@ -161,7 +161,8 @@
 			android:configChanges="orientation|screenSize" />
 
 		<provider android:name=".search.SearchSuggestionsProvider"
-			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST" />
+            android:authorities="org.nv95.openmanga.SEARCH_SUGGEST"
+            android:exported="false" />
 
 		<service android:name=".sync.AccountService">
 			<intent-filter>
@@ -243,7 +244,6 @@
 				android:name="android.support.FILE_PROVIDER_PATHS"
 				android:resource="@xml/paths_shared" />
 		</provider>
-
 
 	</application>
 

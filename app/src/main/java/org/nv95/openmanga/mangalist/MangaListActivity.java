@@ -43,8 +43,6 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 	private EndlessRecyclerView mRecyclerView;
 	private ProgressBar mProgressBar;
-	private FloatingActionButton mFabFilter;
-	private SearchView mSearchView;
 	private MenuItem mMenuItemSearch;
 	private TextView mTextViewError;
 	private View mErrorView;
@@ -53,11 +51,6 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private MangaListAdapter mAdapter;
 	private MangaProvider mProvider;
 	private MangaQueryArguments mArguments = new MangaQueryArguments();
-
-	/**
-	 * loader's id
-	 */
-	private static int LOADER_ID = 234;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +61,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 
 		mProgressBar = findViewById(R.id.progressBar);
 		mRecyclerView = findViewById(R.id.recyclerView);
-		mFabFilter = findViewById(R.id.fabFilter);
+		FloatingActionButton mFabFilter = findViewById(R.id.fabFilter);
 		mErrorView = findViewById(R.id.stub_error);
 
 		mAdapter = new MangaListAdapter(mDataset, FlagsStorage.get(this).isListDetailed());
@@ -83,7 +76,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mProvider = MangaProvider.get(this, cname);
 		setTitle(mProvider.getName());
 		if (mProvider.getAvailableGenres().length == 0 && mProvider.getAvailableSortOrders().length == 0) {
-			mFabFilter.setVisibility(View.GONE);
+			mFabFilter.hide();
 		}
 
 		mRecyclerView.setAdapter(mAdapter);
@@ -95,7 +88,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_mangalist, menu);
 		mMenuItemSearch = menu.findItem(R.id.action_search);
-		mSearchView = (SearchView) mMenuItemSearch.getActionView();
+		SearchView mSearchView = (SearchView) mMenuItemSearch.getActionView();
 		mSearchView.setOnQueryTextListener(this);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -258,6 +251,10 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 	private void load() {
 		mRecyclerView.onLoadingStarted();
 		mErrorView.setVisibility(View.GONE);
+		/*
+	  loader's id
+	 */
+		int LOADER_ID = 234;
 		Loader<ListWrapper<MangaHeader>> loader = getLoaderManager().getLoader(LOADER_ID);
 		if (loader == null) {
 			loader = getLoaderManager().initLoader(LOADER_ID, mArguments.toBundle(), this);

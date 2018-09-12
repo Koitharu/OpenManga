@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
-import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.schedule.JobSchedulerCompat;
 import org.nv95.openmanga.tools.settings.SettingsActivity;

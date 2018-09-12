@@ -33,8 +33,6 @@ public class ShelfItemSpaceDecoration extends RecyclerView.ItemDecoration {
 				outRect.right = mSpacing;
 				outRect.bottom = mSpacing;
 				outRect.top = mSpacing;
-				return;
 		}
-
 	}
 }

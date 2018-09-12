@@ -1,7 +1,6 @@
 package org.nv95.openmanga.mangalist.history;
 
 import android.app.LoaderManager;
-import android.content.DialogInterface;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -117,13 +116,10 @@ public final class HistoryActivity extends AppBaseActivity implements LoaderMana
 				new AlertDialog.Builder(this)
 						.setMessage(R.string.history_clear_confirm)
 						.setNegativeButton(android.R.string.cancel, null)
-						.setPositiveButton(R.string.clear, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								mHistoryRepository.clear();
-								onLoadFinished(null, new ListWrapper<>(new ArrayList<MangaHistory>()));
-								Snackbar.make(mRecyclerView, R.string.history_cleared, Snackbar.LENGTH_LONG).show();
-							}
+						.setPositiveButton(R.string.clear, (dialog, which) -> {
+							mHistoryRepository.clear();
+							onLoadFinished(null, new ListWrapper<>(new ArrayList<>()));
+							Snackbar.make(mRecyclerView, R.string.history_cleared, Snackbar.LENGTH_LONG).show();
 						})
 						.create()
 						.show();

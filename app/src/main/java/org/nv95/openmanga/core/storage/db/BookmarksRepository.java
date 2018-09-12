@@ -48,7 +48,7 @@ public final class BookmarksRepository extends SQLiteRepository<MangaBookmark> {
 		}
 		if (instance == null) {
 			instance = new BookmarksRepository(context);
-			sInstanceRef = new WeakReference<BookmarksRepository>(instance);
+			sInstanceRef = new WeakReference<>(instance);
 		}
 		return instance;
 	}

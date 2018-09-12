@@ -22,9 +22,9 @@ import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.core.storage.FlagsStorage;
 import org.nv95.openmanga.discover.DiscoverFragment;
 import org.nv95.openmanga.search.SearchActivity;
-import org.nv95.openmanga.tools.ToolsFragment;
 import org.nv95.openmanga.shelf.OnTipsActionListener;
 import org.nv95.openmanga.shelf.ShelfFragment;
+import org.nv95.openmanga.tools.ToolsFragment;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -35,8 +35,6 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		OnTipsActionListener {
 
 	private BottomNavigationView mBottomNavigationView;
-	private SearchView mSearchView;
-	private ImageView mImageViewMenu;
 	private PopupMenu mMainMenu;
 	private View mContent;
 	private AppBaseFragment mFragment;
@@ -48,8 +46,8 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 		setSupportActionBar(R.id.toolbar);
 
 		mBottomNavigationView = findViewById(R.id.bottomNavView);
-		mImageViewMenu = findViewById(R.id.imageViewMenu);
-		mSearchView = findViewById(R.id.searchView);
+		ImageView mImageViewMenu = findViewById(R.id.imageViewMenu);
+		SearchView mSearchView = findViewById(R.id.searchView);
 		mContent = findViewById(R.id.content);
 
 		mMainMenu = new PopupMenu(this, mImageViewMenu);
@@ -136,7 +134,6 @@ public final class MainActivity extends AppBaseActivity implements BottomNavigat
 	}
 
 	private void onPrepareMenu(Menu menu) {
-
 	}
 
 	private void showMainMenu() {

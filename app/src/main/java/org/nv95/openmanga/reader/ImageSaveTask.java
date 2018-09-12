@@ -85,7 +85,7 @@ final class ImageSaveTask extends WeakAsyncTask<Context, MangaPage, Integer, Obj
 						.build();
 				final Response response = NetworkUtils.getHttpClient().newCall(request).execute();
 				if (!response.isSuccessful()) {
-					return new ObjectWrapper<File>(new HttpException(response.code()));
+					return new ObjectWrapper<>(new HttpException(response.code()));
 				}
 				//noinspection ConstantConditions
 				input = response.body().byteStream();

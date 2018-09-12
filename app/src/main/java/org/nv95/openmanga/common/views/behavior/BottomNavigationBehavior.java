@@ -15,7 +15,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-
 /**
  * Created by koitharu on 24.12.17.
  */
@@ -199,7 +198,6 @@ public final class BottomNavigationBehavior<V extends View> extends VerticalScro
 					child.getParent().requestLayout();
 					((View) child.getParent()).invalidate();
 				}
-
 			}
 		}
 	}

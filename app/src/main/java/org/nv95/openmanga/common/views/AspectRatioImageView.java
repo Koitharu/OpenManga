@@ -3,7 +3,6 @@ package org.nv95.openmanga.common.views;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-
 /**
  * Created by koitharu on 24.12.17.
  */

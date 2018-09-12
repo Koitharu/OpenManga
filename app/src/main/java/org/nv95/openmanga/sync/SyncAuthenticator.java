@@ -39,17 +39,12 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 	}
 
 	@Override
-	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+	public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) {
 		if (isAccountExists()) {
 			final Bundle result = new Bundle();
 			result.putInt(AccountManager.KEY_ERROR_CODE, AccountManager.ERROR_CODE_UNSUPPORTED_OPERATION);
 			result.putString(AccountManager.KEY_ERROR_MESSAGE, mContext.getString(R.string.allowed_only_one_account));
-			mHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(mContext, R.string.allowed_only_one_account, Toast.LENGTH_SHORT).show();
-				}
-			});
+			mHandler.post(() -> Toast.makeText(mContext, R.string.allowed_only_one_account, Toast.LENGTH_SHORT).show());
 			return result;
 		}
 
@@ -61,7 +56,7 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 	}
 
 	@Override
-	public Bundle confirmCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, Bundle bundle) throws NetworkErrorException {
+	public Bundle confirmCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, Bundle bundle) {
 		return null;
 	}
 
@@ -101,12 +96,12 @@ public class SyncAuthenticator extends AbstractAccountAuthenticator {
 	}
 
 	@Override
-	public Bundle updateCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String s, Bundle bundle) throws NetworkErrorException {
+	public Bundle updateCredentials(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String s, Bundle bundle) {
 		return null;
 	}
 
 	@Override
-	public Bundle hasFeatures(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String[] strings) throws NetworkErrorException {
+	public Bundle hasFeatures(AccountAuthenticatorResponse accountAuthenticatorResponse, Account account, String[] strings) {
 		return null;
 	}
 

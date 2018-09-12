@@ -1,5 +1,6 @@
 package org.nv95.openmanga.core.storage.db;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.MangaChapter;
@@ -29,7 +30,7 @@ public final class SavedPagesSpecification implements SqlSpecification {
 		return mChapterId == null ? null : new String[]{String.valueOf(mChapterId)};
 	}
 
-	@Nullable
+	@NonNull
 	@Override
 	public String getOrderBy() {
 		return "number";

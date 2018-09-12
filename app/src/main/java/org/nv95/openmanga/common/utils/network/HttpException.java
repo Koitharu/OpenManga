@@ -1,7 +1,6 @@
 package org.nv95.openmanga.common.utils.network;
 
 import java.io.IOException;
-
 /**
  * Created by koitharu on 19.01.18.
  */

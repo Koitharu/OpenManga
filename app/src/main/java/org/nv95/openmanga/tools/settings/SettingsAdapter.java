@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.CrashHandler;
 import org.nv95.openmanga.common.Dismissible;
 
 import java.lang.annotation.Retention;

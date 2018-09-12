@@ -17,8 +17,7 @@ import java.util.List;
 public final class ShelfUpdater {
 
 	public static void update(ShelfAdapter adapter, ShelfContent content) {
-		ArrayList<Object> dataset = new ArrayList<>();
-		dataset.addAll(content.tips);
+		ArrayList<Object> dataset = new ArrayList<>(content.tips);
 		if (content.recent != null || !content.history.isEmpty()) {
 			dataset.add(new ListHeader(R.string.action_history, ShelfContent.SECTION_HISTORY));
 			if (content.recent != null) {

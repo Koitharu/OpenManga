@@ -9,12 +9,7 @@ import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
 import org.nv95.openmanga.core.models.MangaBookmark;
-import org.nv95.openmanga.core.models.MangaChapter;
-import org.nv95.openmanga.core.models.MangaDetails;
-import org.nv95.openmanga.core.models.MangaHeader;
-import org.nv95.openmanga.core.models.MangaHistory;
 import org.nv95.openmanga.core.providers.MangaProvider;
-import org.nv95.openmanga.core.storage.db.HistoryRepository;
 
 /**
  * Created by koitharu on 29.01.18.

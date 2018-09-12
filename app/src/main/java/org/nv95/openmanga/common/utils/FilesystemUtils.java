@@ -2,7 +2,6 @@ package org.nv95.openmanga.common.utils;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
@@ -63,13 +62,11 @@ public abstract class FilesystemUtils {
 		dir.delete();
 	}
 
-	public static void scanFile(@NonNull Context context, @NonNull File file, @Nullable MediaScannerConnection.OnScanCompletedListener callback) {
+	public static void scanFile(@NonNull Context context, @NonNull File file,
+								@Nullable MediaScannerConnection.OnScanCompletedListener callback) {
 		MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, callback == null ?
-				new MediaScannerConnection.OnScanCompletedListener() {
-					@Override
-					public void onScanCompleted(String path, Uri uri) {
+				(MediaScannerConnection.OnScanCompletedListener) (path, uri) -> {
 
-					}
 				} : callback);
 	}
 

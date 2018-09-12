@@ -6,9 +6,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 
-import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 

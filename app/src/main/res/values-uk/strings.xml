@@ -22,7 +22,7 @@
 	<string name="action_unfavourite">Видалити з улюбленного</string>
 	<string name="adjust_brightness">Встановити яскравість</string>
 	<string name="app_language">Мова програми</string>
-	<string name="app_update_avaliable">Доступно оновлення додатка</string>
+    <string name="app_update_available">Доступно оновлення додатка</string>
 	<string name="auth_failed">Авторизація невдала</string>
 	<string name="automatic">Автоматично</string>
 	<string name="backup_done">Резервне копіювання завершено</string>
@@ -194,7 +194,7 @@
 	<string name="sources">Джерела</string>
 	<string name="status_completed">Випуск завершений</string>
 	<string name="status_ongoing">Онгоінг</string>
-	<string name="storages_remote">Онлайн каталоги</string>
+    <string name="storage_remote">Онлайн каталоги</string>
 	<string name="storage_upgrading">Оновлення локальних даних…</string>
 	<string name="successfully">Успішно</string>
 	<string name="theme">Тема</string>

@@ -1,13 +1,9 @@
 package org.nv95.openmanga.core.models;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import org.nv95.openmanga.BuildConfig;
 
 /**
  * Created by koitharu on 21.12.17.

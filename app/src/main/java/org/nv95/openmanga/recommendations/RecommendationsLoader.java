@@ -28,10 +28,10 @@ final class RecommendationsLoader extends AsyncTaskLoader<ListWrapper<MangaRecom
 		try {
 			final RecommendationsRepository repository = RecommendationsRepository.get(getContext());
 			final ArrayList<MangaRecommendation> list = repository.query(mSpecifications);
-			return list == null ? ListWrapper.<MangaRecommendation>badList() : new ListWrapper<>(list);
+			return list == null ? ListWrapper.badList() : new ListWrapper<>(list);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ListWrapper<MangaRecommendation>(e);
+			return new ListWrapper<>(e);
 		}
 	}
 }

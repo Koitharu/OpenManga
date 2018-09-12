@@ -12,7 +12,6 @@ public class StaggeredGridLayout extends ViewGroup {
 	private int mColumns = 2;
 	private float mColumnWidth = 0;
 	private int mLayoutHeight = 0;
-	private int mFinalHeight = 0;
 	private int[] mColumnsHeights = new int[mColumns];
 
 	public StaggeredGridLayout(Context context) {
@@ -70,7 +69,7 @@ public class StaggeredGridLayout extends ViewGroup {
 			int column = i % mColumns;
 			mColumnsHeights[column] += getChildAt(i).getMeasuredHeight() + getPaddingTop();
 		}
-		mFinalHeight = mColumnsHeights[0];
+		int mFinalHeight = mColumnsHeights[0];
 		for (int i = 0;i < mColumns; i++) {
 			if (mFinalHeight < mColumnsHeights[i]) {
 				mFinalHeight = mColumnsHeights[i];

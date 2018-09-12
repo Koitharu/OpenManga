@@ -64,7 +64,7 @@ public final class MenuDialog<D> implements DialogInterface.OnClickListener {
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		if (which >= 0 && mItemClickListener != null && which < mMenuItems.size()) {;
+		if (which >= 0 && mItemClickListener != null && which < mMenuItems.size()) {
 			mItemClickListener.onMenuItemClick(mMenuItems.get(which).id, mData);
 		}
 	}

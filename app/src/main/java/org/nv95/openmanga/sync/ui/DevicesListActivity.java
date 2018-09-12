@@ -6,7 +6,6 @@ import android.accounts.AccountManagerFuture;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,13 +19,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
 import org.nv95.openmanga.sync.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.sync.SyncClient;
 import org.nv95.openmanga.sync.SyncDevice;
-import org.nv95.openmanga.AppBaseActivity;
 
 import java.util.ArrayList;
 
@@ -95,13 +94,10 @@ public class DevicesListActivity extends AppBaseActivity implements LoaderManage
 	public void onItemClick(final SyncDevice item) {
 		new AlertDialog.Builder(this)
 				.setMessage(getString(R.string.device_detach_confirm, item.name))
-				.setPositiveButton(R.string.detach, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						mProgressBar.setVisibility(View.VISIBLE);
-						new DeviceDetachTask(DevicesListActivity.this)
-								.start(item.id);
-					}
+				.setPositiveButton(R.string.detach, (dialogInterface, i) -> {
+					mProgressBar.setVisibility(View.VISIBLE);
+					new DeviceDetachTask(DevicesListActivity.this)
+							.start(item.id);
 				})
 				.setNegativeButton(android.R.string.cancel, null)
 				.create().show();

@@ -13,9 +13,9 @@ import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.models.MangaGenre;
 import org.nv95.openmanga.core.models.TypedString;
-import org.nv95.openmanga.common.utils.CollectionsUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public final class FilterSortAdapter extends RecyclerView.Adapter {
 
 	private final ArrayList<TypedString> mDataset;
-	private int mSelectedSort = 0;
+	private int mSelectedSort;
 	private final SparseBooleanArray mSelectedGenres;
 
 	FilterSortAdapter(Context context, @NonNull @StringRes int[] sorts, @NonNull MangaGenre[] genres, int selectedSort, String[] selectedGenres) {

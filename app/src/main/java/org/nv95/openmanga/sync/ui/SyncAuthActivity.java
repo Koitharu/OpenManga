@@ -10,22 +10,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.json.JSONException;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.WeakAsyncTask;
+import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.sync.RESTResponse;
 import org.nv95.openmanga.sync.SyncAuthenticator;
 import org.nv95.openmanga.sync.SyncClient;
-import org.nv95.openmanga.common.utils.network.NetworkUtils;
 
 /**
  * Created by koitharu on 18.12.17.
@@ -48,7 +45,7 @@ public class SyncAuthActivity extends AppCompatAuthActivity implements View.OnCl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_syncauth);
-		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+		setSupportActionBar(findViewById(R.id.toolbar));
 		enableHomeAsUp();
 
 		mEditLogin = findViewById(R.id.editLogin);
@@ -59,16 +56,12 @@ public class SyncAuthActivity extends AppCompatAuthActivity implements View.OnCl
 		mButtonRegisterMode = findViewById(R.id.buttonRegisterMode);
 		mButtonBack = findViewById(R.id.buttonBack);
 
-		mEditPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-				if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-					attemptLogin(mButtonRegister.getVisibility() == View.VISIBLE);
-					return true;
-				}
-				return false;
+		mEditPassword.setOnEditorActionListener((textView, id, keyEvent) -> {
+			if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+				attemptLogin(mButtonRegister.getVisibility() == View.VISIBLE);
+				return true;
 			}
+			return false;
 		});
 
 		mButtonRegister.setOnClickListener(this);

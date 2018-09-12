@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 /**
  * Created by koitharu on 26.12.17.
  */
@@ -59,7 +58,6 @@ public final class HeaderDividerItemDecoration extends RecyclerView.ItemDecorati
 		canvas.restore();
 	}
 
-
 	@Override
 	public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
 							   RecyclerView.State state) {
@@ -69,5 +67,4 @@ public final class HeaderDividerItemDecoration extends RecyclerView.ItemDecorati
 		}
 		outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
 	}
-
 }

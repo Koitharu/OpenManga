@@ -159,6 +159,8 @@ final class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryHo
 				default:
 					mTextViewStatus.setVisibility(View.GONE);
 
+				case MangaStatus.STATUS_UNKNOWN:
+					break;
 			}
 		}
 	}

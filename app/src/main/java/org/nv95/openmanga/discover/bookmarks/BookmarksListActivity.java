@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.common.UndoHelper;
 import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.ErrorUtils;
 import org.nv95.openmanga.common.utils.MetricsUtils;

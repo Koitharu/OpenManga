@@ -7,7 +7,5 @@ import android.support.v4.content.FileProvider;
  */
 
 public final class SharedFileProvider extends FileProvider {
-
 	public static final String AUTHORITY = "org.nv95.openmanga.files";
-
 }

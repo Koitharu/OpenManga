@@ -55,7 +55,6 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	//activity
 	private ViewPager mPager;
 	private ProgressBar mProgressBar;
-	private TabLayout mTabs;
 	//tabs
 	private DetailsPage mDetailsPage;
 	private ChaptersPage mChaptersPage;
@@ -76,7 +75,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 
 		mPager = findViewById(R.id.pager);
 		mProgressBar = findViewById(R.id.progressBar);
-		mTabs = findViewById(R.id.tabs);
+		TabLayout mTabs = findViewById(R.id.tabs);
 
 		final PagesAdapter adapter = new PagesAdapter(
 				mDetailsPage = new DetailsPage(mPager),
@@ -167,7 +166,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@NonNull
 	@Override
 	public Loader<ObjectWrapper<MangaDetails>> onCreateLoader(int id, Bundle args) {
-		return new MangaDetailsLoader(this, args.<MangaHeader>getParcelable("manga"));
+		return new MangaDetailsLoader(this, args.getParcelable("manga"));
 	}
 
 	@Override

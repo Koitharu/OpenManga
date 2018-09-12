@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -17,10 +16,9 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.AppBaseBottomSheetDialogFragment;
-import org.nv95.openmanga.common.utils.ThemeUtils;
-import org.nv95.openmanga.core.models.MangaGenre;
-import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
 import org.nv95.openmanga.common.utils.CollectionsUtils;
+import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
+import org.nv95.openmanga.core.models.MangaGenre;
 
 import java.util.ArrayList;
 
@@ -32,8 +30,6 @@ public final class FilterDialogFragment extends AppBaseBottomSheetDialogFragment
 
 	private RecyclerView mRecyclerView;
 	private Toolbar mToolbar;
-	private Button mButtonApply;
-	private Button mButtonReset;
 	private AppBarLayout mAppBar;
 	private FilterSortAdapter mAdapter;
 
@@ -63,8 +59,8 @@ public final class FilterDialogFragment extends AppBaseBottomSheetDialogFragment
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mToolbar = view.findViewById(R.id.toolbar);
 		mAppBar = view.findViewById(R.id.appbar);
-		mButtonApply = view.findViewById(R.id.buttonApply);
-		mButtonReset = view.findViewById(R.id.buttonReset);
+		Button mButtonApply = view.findViewById(R.id.buttonApply);
+		Button mButtonReset = view.findViewById(R.id.buttonReset);
 
 		mButtonApply.setOnClickListener(this);
 		mButtonReset.setOnClickListener(this);
@@ -99,7 +95,7 @@ public final class FilterDialogFragment extends AppBaseBottomSheetDialogFragment
 		switch (v.getId()) {
 			case R.id.buttonReset:
 				mAdapter.reset();
-				final Toast toast = Toast.makeText(v.getContext(), R.string.filter_resetted, Toast.LENGTH_SHORT);
+				final Toast toast = Toast.makeText(v.getContext(), R.string.filter_reset, Toast.LENGTH_SHORT);
 				toast.setGravity(Gravity.TOP, 0, 0);
 				toast.show();
 				break;

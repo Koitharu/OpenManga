@@ -31,7 +31,7 @@
 	<string name="action_unfavourite">Favorilerden kaldır</string>
 	<string name="adjust_brightness">Parlaklığı Ayarla</string>
 	<string name="app_language">Uygulama dili</string>
-	<string name="app_update_avaliable">Güncelleme Mevcut</string>
+    <string name="app_update_available">Güncelleme Mevcut</string>
 	<string name="automatic">Otomatik</string>
 	<string name="backup_done">Yedekleme tamamlandı</string>
 	<string name="backup">Verileri Yedekle</string>
@@ -164,7 +164,7 @@
 	<string name="sources">Kaynaklar</string>
 	<string name="status_completed">Manga tamamlandı</string>
 	<string name="status_ongoing">Devam ediyor</string>
-	<string name="storages_remote">Manga Siteleri</string>
+    <string name="storage_remote">Manga Siteleri</string>
 	<string name="storage_upgrading">Yerel veritabanı güncelleniyor…</string>
 	<string name="theme">Tema</string>
 	<string name="tip_chapter_checking">Bu kısmı açmanız durumunda favori mangalarınıza bölüm eklendiğinde bildirim alacaksınız.</string>

@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.nv95.openmanga.core.models.ProviderHeader;
-import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.core.storage.ProvidersStore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
-
 /**
  * Created by koitharu on 11.01.18.
  */
