@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
-
+	<item
+		android:id="@+id/action_share"
+		android:icon="@drawable/ic_share_white"
+		android:title="@string/share"
+		app:showAsAction="ifRoom" />
 	<group android:id="@+id/group_details">
-		<item
-			android:id="@+id/action_share"
-			android:icon="@drawable/ic_share_white"
-			android:title="@string/share"
-			app:showAsAction="ifRoom" />
 		<item
 			android:id="@+id/action_shortcut"
 			android:title="@string/add_to_homescreen"
@@ -24,13 +23,6 @@
 			app:showAsAction="never" />
 	</group>
 	<group android:id="@+id/group_chapters">
-		<item
-			android:id="@+id/action_reverse"
-			android:checkable="true"
-			android:icon="@drawable/ic_sort_numeric_white"
-			android:title="@string/reverse_order"
-			android:visible="true"
-			app:showAsAction="ifRoom" />
 		<item
 			android:id="@+id/action_save"
 			android:title="@string/save_"

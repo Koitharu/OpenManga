@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.bottomappbar.BottomAppBar;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,7 @@ import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
+import org.nv95.openmanga.common.utils.AnimationUtils;
 import org.nv95.openmanga.common.utils.IntentUtils;
 import org.nv95.openmanga.common.utils.MenuUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
@@ -55,6 +57,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	//activity
 	private ViewPager mPager;
 	private ProgressBar mProgressBar;
+	private BottomAppBar mBottomBar;
 	//tabs
 	private DetailsPage mDetailsPage;
 	private ChaptersPage mChaptersPage;
@@ -74,8 +77,11 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		enableHomeAsUp();
 
 		mPager = findViewById(R.id.pager);
+		mBottomBar = findViewById(R.id.bottomBar);
 		mProgressBar = findViewById(R.id.progressBar);
 		TabLayout mTabs = findViewById(R.id.tabs);
+		mBottomBar.inflateMenu(R.menu.options_preview_bottombar);
+		mBottomBar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
 		final PagesAdapter adapter = new PagesAdapter(
 				mDetailsPage = new DetailsPage(mPager),
@@ -117,9 +123,12 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		final int page = mPager.getCurrentItem();
 		menu.setGroupVisible(R.id.group_details, page == 0);
 		menu.setGroupVisible(R.id.group_chapters, page == 1);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	private void onPrepareBottomBarMenu(Menu menu) {
 		final MenuItem item = menu.findItem(R.id.action_reverse);
 		item.setIcon(item.isChecked() ? R.drawable.ic_sort_numeric_reverse_white : R.drawable.ic_sort_numeric_white);
-		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -215,13 +224,13 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 			menu.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters);
 		}
 		if (pos + 5 < totalChapters) {
-				menu.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters);
-				if (pos + 10 < totalChapters) {
-					menu.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters);
-					if (pos + 30 < totalChapters) {
-						menu.addItem(R.id.action_chapter_save_30, R.string.save_next_30_chapters);
-					}
+			menu.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters);
+			if (pos + 10 < totalChapters) {
+				menu.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters);
+				if (pos + 30 < totalChapters) {
+					menu.addItem(R.id.action_chapter_save_30, R.string.save_next_30_chapters);
 				}
+			}
 		}
 		if (pos < totalChapters - 1) {
 			menu.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters);
@@ -306,6 +315,12 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	public void onPageSelected(int position) {
 		invalidateOptionsMenu();
+		if (position == 1) {
+			onPrepareBottomBarMenu(mBottomBar.getMenu());
+			AnimationUtils.setVisibility(mBottomBar, View.VISIBLE);
+		} else {
+			AnimationUtils.setVisibility(mBottomBar, View.GONE);
+		}
 	}
 
 	@Override
