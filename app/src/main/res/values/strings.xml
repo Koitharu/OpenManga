@@ -404,4 +404,7 @@
     <string name="max_rows">Max. rows</string>
     <string name="max_rows_per_cat">Max. rows per category</string>
     <string name="all">All</string>
+	<string name="remove_this_chapter">Remove this chapter</string>
+    <string name="remove_all_chapters">Remove all chapters</string>
+	<string name="find_chapter">Find chapter</string>
 </resources>

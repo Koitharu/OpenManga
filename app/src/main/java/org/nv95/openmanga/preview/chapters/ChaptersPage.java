@@ -82,4 +82,11 @@ public final class ChaptersPage extends PageHolder {
 			return false;
 		}
 	}
+
+	public void setFilter(String str) {
+		final int pos = mChaptersAdapter != null ? mChaptersAdapter.findByNameContains(str) : -1;
+		if (pos != -1) {
+			LayoutUtils.setSelectionFromTop(mRecyclerViewChapters, pos);
+		}
+	}
 }

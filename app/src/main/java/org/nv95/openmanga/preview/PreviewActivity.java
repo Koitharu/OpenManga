@@ -11,6 +11,7 @@ import android.support.design.bottomappbar.BottomAppBar;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,7 @@ import org.nv95.openmanga.storage.SaveService;
 
 public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,
 		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, BookmarkRemoveTask.OnBookmarkRemovedListener,
-		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter>, ViewPager.OnPageChangeListener {
+		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter>, ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener {
 
 	public static final String ACTION_PREVIEW = "org.nv95.openmanga.ACTION_PREVIEW";
 
@@ -58,6 +59,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	private ViewPager mPager;
 	private ProgressBar mProgressBar;
 	private BottomAppBar mBottomBar;
+	private SearchView mSearchView;
 	//tabs
 	private DetailsPage mDetailsPage;
 	private ChaptersPage mChaptersPage;
@@ -81,7 +83,10 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		mProgressBar = findViewById(R.id.progressBar);
 		TabLayout mTabs = findViewById(R.id.tabs);
 		mBottomBar.inflateMenu(R.menu.options_preview_bottombar);
+		mSearchView = (SearchView) mBottomBar.getMenu().findItem(R.id.action_find_chapter).getActionView();
 		mBottomBar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+		mSearchView.setQueryHint(getString(R.string.find_chapter));
+		mSearchView.setOnQueryTextListener(this);
 
 		final PagesAdapter adapter = new PagesAdapter(
 				mDetailsPage = new DetailsPage(mPager),
@@ -218,24 +223,29 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		final int totalChapters = mMangaDetails == null ? 0 : mMangaDetails.chapters.size();
 		MenuDialog<MangaChapter> menu = new MenuDialog<MangaChapter>(this)
 				.setTitle(chapter.name)
-				.setItemClickListener(this)
-				.addItem(R.id.action_chapter_save_this, R.string.save_this_chapter);
-		if (pos > 0) {
-			menu.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters);
-		}
-		if (pos + 5 < totalChapters) {
-			menu.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters);
-			if (pos + 10 < totalChapters) {
-				menu.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters);
-				if (pos + 30 < totalChapters) {
-					menu.addItem(R.id.action_chapter_save_30, R.string.save_next_30_chapters);
+				.setItemClickListener(this);
+		if (chapter.isSaved()) {
+			menu.addItem(R.id.action_chapter_remove_this, R.string.remove_this_chapter);
+			menu.addItem(R.id.action_chapter_remove_all, R.string.remove_all_chapters);
+		} else {
+			menu.addItem(R.id.action_chapter_save_this, R.string.save_this_chapter);
+			if (pos > 0) {
+				menu.addItem(R.id.action_chapter_save_prev, R.string.save_prev_chapters);
+			}
+			if (pos + 5 < totalChapters) {
+				menu.addItem(R.id.action_chapter_save_5, R.string.save_next_5_chapters);
+				if (pos + 10 < totalChapters) {
+					menu.addItem(R.id.action_chapter_save_10, R.string.save_next_10_chapters);
+					if (pos + 30 < totalChapters) {
+						menu.addItem(R.id.action_chapter_save_30, R.string.save_next_30_chapters);
+					}
 				}
 			}
+			if (pos < totalChapters - 1) {
+				menu.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters);
+			}
+			menu.addItem(R.id.action_chapter_save_all, R.string.save_all_chapters);
 		}
-		if (pos < totalChapters - 1) {
-			menu.addItem(R.id.action_chapter_save_next, R.string.save_next_all_chapters);
-		}
-		menu.addItem(R.id.action_chapter_save_all, R.string.save_all_chapters);
 		menu.create(chapter)
 				.show();
 		return true;
@@ -326,5 +336,16 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	@Override
 	public void onPageScrollStateChanged(int state) {
 
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String s) {
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String s) {
+		mChaptersPage.setFilter(s);
+		return false;
 	}
 }

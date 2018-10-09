@@ -84,6 +84,17 @@ public final class ChaptersListAdapter extends RecyclerView.Adapter<ChaptersList
 		return mDataset.size();
 	}
 
+	public int findByNameContains(String what) {
+		final String whatLower = what.toLowerCase();
+		for (int i = 0, datasetSize = mDataset.size(); i < datasetSize; i++) {
+			MangaChapter o = mDataset.get(i);
+			if (o.name.toLowerCase().contains(whatLower)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	final class ChapterHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
 		private final OnChapterClickListener mListener;

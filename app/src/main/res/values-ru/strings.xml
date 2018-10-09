@@ -331,4 +331,7 @@
 	<string name="webmode">Режим манхвы</string>
 	<string name="welcome">Добро пожаловать</string>
 	<string name="shelf">Полка</string>
+	<string name="remove_this_chapter">Remove this chapter</string>
+	<string name="remove_all_chapters">Remove all chapters</string>
+	<string name="find_chapter">Find chapter</string>
 </resources>
