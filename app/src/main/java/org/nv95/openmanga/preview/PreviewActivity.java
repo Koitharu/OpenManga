@@ -1,7 +1,9 @@
 package org.nv95.openmanga.preview;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -22,6 +24,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.dialogs.FavouriteDialog;
 import org.nv95.openmanga.common.dialogs.MenuDialog;
 import org.nv95.openmanga.common.utils.AnimationUtils;
+import org.nv95.openmanga.common.utils.BroadcastUtils;
 import org.nv95.openmanga.common.utils.IntentUtils;
 import org.nv95.openmanga.common.utils.MenuUtils;
 import org.nv95.openmanga.core.ObjectWrapper;
@@ -51,7 +54,7 @@ import org.nv95.openmanga.storage.SaveService;
 
 public final class PreviewActivity extends AppBaseActivity implements LoaderManager.LoaderCallbacks<ObjectWrapper<MangaDetails>>,
 		ChaptersListAdapter.OnChapterClickListener, View.OnClickListener, BookmarkRemoveTask.OnBookmarkRemovedListener,
-		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter>, ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener {
+		FavouriteDialog.OnFavouriteListener, MenuDialog.OnMenuItemClickListener<MangaChapter>, ViewPager.OnPageChangeListener, SearchView.OnQueryTextListener, BroadcastUtils.DownloadsReceiverCallback {
 
 	public static final String ACTION_PREVIEW = "org.nv95.openmanga.ACTION_PREVIEW";
 
@@ -71,6 +74,7 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	private MangaDetails mMangaDetails;
 	private HistoryRepository mHistory;
 	private FavouritesRepository mFavourites;
+	private BroadcastReceiver mDownloadsReceiver;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,6 +119,15 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		args.putParcelable("manga", mMangaHeader);
 		getLoaderManager().initLoader(0, args, this).forceLoad();
 		getLoaderManager().initLoader(1, new BookmarkSpecification().manga(mMangaHeader).orderByDate(true).toBundle(), mBookmarksPage).forceLoad();
+
+		mDownloadsReceiver = BroadcastUtils.createDownloadsReceiver(this);
+		registerReceiver(mDownloadsReceiver, new IntentFilter(BroadcastUtils.ACTION_DOWNLOAD_DONE));
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mDownloadsReceiver);
+		super.onDestroy();
 	}
 
 	@Override
@@ -377,5 +390,16 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 	public boolean onQueryTextChange(String s) {
 		mChaptersPage.setFilter(s);
 		return false;
+	}
+
+	@Override
+	public void onChapterDownloaded(MangaChapter chapter) {
+		if (mMangaDetails != null) {
+			final int pos = mMangaDetails.chapters.indexOf(chapter);
+			if (pos != -1) {
+				mMangaDetails.chapters.get(pos).addFlag(MangaChapter.FLAG_CHAPTER_SAVED);
+				mChaptersPage.update(pos);
+			}
+		}
 	}
 }

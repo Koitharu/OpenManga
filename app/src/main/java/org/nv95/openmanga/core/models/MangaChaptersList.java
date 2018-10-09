@@ -36,7 +36,7 @@ public class MangaChaptersList extends ArrayList<MangaChapter> {
 
 	@Override
 	public int indexOf(@Nullable Object obj) {
-		if (obj != null && obj instanceof MangaChapter) {
+		if (obj instanceof MangaChapter) {
 			for (int i = 0; i < size(); i++) {
 				if (get(i).id == ((MangaChapter) obj).id) {
 					return i;
@@ -48,7 +48,7 @@ public class MangaChaptersList extends ArrayList<MangaChapter> {
 
 	@Override
 	public int lastIndexOf(@Nullable Object obj) {
-		if (obj != null && obj instanceof MangaChapter) {
+		if (obj instanceof MangaChapter) {
 			for (int i = size() - 1; i >= 0; i--) {
 				if (get(i).id == ((MangaChapter) obj).id) {
 					return i;

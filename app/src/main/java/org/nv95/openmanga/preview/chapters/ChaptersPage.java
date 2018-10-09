@@ -91,8 +91,16 @@ public final class ChaptersPage extends PageHolder {
 	}
 
 	public void update() {
+		update(-1);
+	}
+
+	public void update(int index) {
 		if (mChaptersAdapter != null) {
-			mChaptersAdapter.notifyDataSetChanged();
+			if (index == -1) {
+				mChaptersAdapter.notifyDataSetChanged();
+			} else {
+				mChaptersAdapter.notifyItemChanged(index);
+			}
 		}
 	}
 }

@@ -12,6 +12,7 @@ import org.nv95.openmanga.AsyncService;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.NotificationHelper;
+import org.nv95.openmanga.common.utils.BroadcastUtils;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.core.models.MangaPage;
 import org.nv95.openmanga.core.models.SavedChapter;
@@ -139,6 +140,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 						j--;
 					}
 				}
+				BroadcastUtils.sendDownloadDoneBroadcast(SaveService.this, chapter);
 			}
 			return RESULT_OK;
 		} catch (Exception e) {
