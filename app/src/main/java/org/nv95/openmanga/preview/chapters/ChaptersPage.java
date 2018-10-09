@@ -89,4 +89,10 @@ public final class ChaptersPage extends PageHolder {
 			LayoutUtils.setSelectionFromTop(mRecyclerViewChapters, pos);
 		}
 	}
+
+	public void update() {
+		if (mChaptersAdapter != null) {
+			mChaptersAdapter.notifyDataSetChanged();
+		}
+	}
 }

@@ -10,6 +10,15 @@
 		<item quantity="other">%1$d chapters saved</item>
 	</plurals>
 
+	<plurals name="chapters_removed">
+		<item quantity="zero">No chapters has been removed</item>
+		<item quantity="one">One chapter has been removed</item>
+		<item quantity="two">Two chapters has been removed</item>
+		<item quantity="few">%1$d chapters has been removed</item>
+		<item quantity="many">%1$d chapters has been removed</item>
+		<item quantity="other">%1$d chapters has been removed</item>
+	</plurals>
+
 	<plurals name="chapters_new">
 		<item quantity="zero">No new chapters</item>
 		<item quantity="one">One new chapter</item>

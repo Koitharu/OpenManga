@@ -42,7 +42,7 @@ public final class SavedMangaRepository extends SQLiteRepository<SavedManga> {
 	}
 
 	@NonNull
-	public static SavedMangaRepository get(Context context) {
+	public static synchronized SavedMangaRepository get(Context context) {
 		SavedMangaRepository instance = null;
 		if (sInstanceRef != null) {
 			instance = sInstanceRef.get();

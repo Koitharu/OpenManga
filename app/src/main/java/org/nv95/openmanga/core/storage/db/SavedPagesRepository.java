@@ -29,7 +29,7 @@ public final class SavedPagesRepository extends SQLiteRepository<SavedPage> {
 	private static WeakReference<SavedPagesRepository> sInstanceRef = null;
 
 	@NonNull
-	public static SavedPagesRepository get(Context context) {
+	public static synchronized SavedPagesRepository get(Context context) {
 		SavedPagesRepository instance = null;
 		if (sInstanceRef != null) {
 			instance = sInstanceRef.get();

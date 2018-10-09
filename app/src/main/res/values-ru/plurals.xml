@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<plurals name="chapters_saved">
+		<item quantity="one">Cохранена %1$d глава</item>
+		<item quantity="few">Cохранено %1$d главы</item>
+		<item quantity="many">Cохранено %1$d глав</item>
+		<item quantity="other">%1$d глав сохранено</item>
+	</plurals>
+
+	<plurals name="chapters_removed">
+		<item quantity="one">Была удалена %1$d глава</item>
+		<item quantity="few">Было удалено %1$d главы</item>
+		<item quantity="many">Было удалено %1$d глав</item>
+		<item quantity="other">%1$d глав было удалено</item>
+	</plurals>
+
+	<plurals name="chapters_new">
+		<item quantity="one">%1$d новая глава</item>
+		<item quantity="few">%1$d новые главы</item>
+		<item quantity="many">%1$d новых глав</item>
+		<item quantity="other">%1$d новых глав</item>
+	</plurals>
+
+	<plurals name="files_count">
+		<item quantity="one">%1$d файл</item>
+		<item quantity="few">%1$d файла</item>
+		<item quantity="many">%1$d файлов</item>
+		<item quantity="other">Файлов: %1$d</item>
+	</plurals>
+</resources>

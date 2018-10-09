@@ -31,7 +31,7 @@ public final class SavedChaptersRepository extends SQLiteRepository<SavedChapter
 	private static WeakReference<SavedChaptersRepository> sInstanceRef = null;
 
 	@NonNull
-	public static SavedChaptersRepository get(Context context) {
+	public static synchronized SavedChaptersRepository get(Context context) {
 		SavedChaptersRepository instance = null;
 		if (sInstanceRef != null) {
 			instance = sInstanceRef.get();

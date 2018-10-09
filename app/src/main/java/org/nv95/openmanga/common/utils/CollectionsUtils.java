@@ -10,6 +10,7 @@ import org.nv95.openmanga.core.models.MangaChapter;
 import org.nv95.openmanga.core.models.MangaPage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -173,5 +174,11 @@ public abstract class CollectionsUtils {
 			result.add(o.second);
 		}
 		return result;
+	}
+
+	public static <T> ArrayList<T> arrayListOf(T... args) {
+		final ArrayList<T> list = new ArrayList<>(args.length);
+		list.addAll(Arrays.asList(args));
+		return list;
 	}
 }

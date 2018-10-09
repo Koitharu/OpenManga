@@ -41,6 +41,7 @@ import org.nv95.openmanga.preview.chapters.ChaptersListAdapter;
 import org.nv95.openmanga.preview.chapters.ChaptersPage;
 import org.nv95.openmanga.preview.details.DetailsPage;
 import org.nv95.openmanga.reader.ReaderActivity;
+import org.nv95.openmanga.storage.LocalRemoveService;
 import org.nv95.openmanga.storage.SaveRequest;
 import org.nv95.openmanga.storage.SaveService;
 
@@ -159,6 +160,10 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 				return true;
 			case R.id.action_save:
 				stub();
+				return true;
+			case R.id.action_chapter_save_all:
+			case R.id.action_chapter_remove_all:
+				onMenuItemClick(item.getItemId(), null);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -288,24 +293,49 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		switch (id) {
 			case R.id.action_chapter_save_this:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mangaChapter));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_5:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 5)));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_10:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 10)));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_30:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter, 30)));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_all:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_next:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListFrom(mangaChapter)));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
 				break;
 			case R.id.action_chapter_save_prev:
 				SaveService.start(this, new SaveRequest(mMangaDetails, mMangaDetails.chapters.subListTo(mangaChapter)));
+				Snackbar.make(mPager, R.string.downloading_started_, Snackbar.LENGTH_SHORT).show();
+				break;
+			case R.id.action_chapter_remove_this:
+				LocalRemoveService.start(this, mMangaHeader, mangaChapter);
+				mangaChapter.removeFlag(MangaChapter.FLAG_CHAPTER_SAVED);
+				mChaptersPage.update();
+				Snackbar.make(mPager, getResources().getQuantityString(R.plurals.chapters_removed, 1, 1), Snackbar.LENGTH_SHORT).show();
+				break;
+			case R.id.action_chapter_remove_all:
+				LocalRemoveService.start(this, mMangaHeader);
+				int c = 0;
+				for (MangaChapter o : mMangaDetails.chapters) {
+					if (o.isSaved()) {
+						c++;
+						o.removeFlag(MangaChapter.FLAG_CHAPTER_SAVED);
+					}
+				}
+				mChaptersPage.update();
+				Snackbar.make(mPager, getResources().getQuantityString(R.plurals.chapters_removed, c, c), Snackbar.LENGTH_SHORT).show();
 				break;
 			default:
 				stub();
