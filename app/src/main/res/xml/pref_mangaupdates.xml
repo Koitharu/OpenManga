@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="mangaupdates.enabled"
+        android:title="@string/scheduled_checking"
+        android:widgetLayout="@layout/pref_switchcompat" />
+
+    <ListPreference
+        android:defaultValue="12"
+        android:dependency="mangaupdates.enabled"
+        android:entries="@array/intervals"
+        android:entryValues="@array/intervals_hours"
+        android:key="mangaupdates.interval"
+        android:title="@string/checking_frequency" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:dependency="mangaupdates.enabled"
+        android:entries="@array/network_types"
+        android:entryValues="@array/network_types_values"
+        android:title="@string/network_connection_type"
+        android:key="mangaupdates.networktype" />
+
+	<Preference
+		android:key="mangaupdates.check_now"
+		android:title="@string/check_new_chapters"
+		android:summary="@string/last_update_check" />
+
+	<PreferenceCategory
+		android:title="@string/tracked_manga"
+		android:key="mangaupdates.tracked">
+
+	</PreferenceCategory>
+
+</PreferenceScreen>

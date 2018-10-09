@@ -176,9 +176,15 @@ public abstract class CollectionsUtils {
 		return result;
 	}
 
+	@NonNull
 	public static <T> ArrayList<T> arrayListOf(T... args) {
 		final ArrayList<T> list = new ArrayList<>(args.length);
 		list.addAll(Arrays.asList(args));
 		return list;
+	}
+
+	@NonNull
+	public static <T> ArrayList<T> empty() {
+		return new ArrayList<>(0);
 	}
 }

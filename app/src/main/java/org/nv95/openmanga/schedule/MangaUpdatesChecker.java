@@ -1,6 +1,7 @@
 package org.nv95.openmanga.schedule;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.core.models.MangaDetails;
@@ -28,5 +29,17 @@ public final class MangaUpdatesChecker {
 		} catch (Exception e) {
 			return -1;
 		}
+	}
+
+	public long getLastCheck() {
+		return PreferenceManager.getDefaultSharedPreferences(mContext)
+				.getLong("mangaupdates.last_check", 0);
+	}
+
+	public void onCheckSuccess() {
+		PreferenceManager.getDefaultSharedPreferences(mContext)
+				.edit()
+				.putLong("mangaupdates.last_check", System.currentTimeMillis())
+				.apply();
 	}
 }

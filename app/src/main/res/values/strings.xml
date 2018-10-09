@@ -408,4 +408,8 @@
     <string name="remove_all_chapters">Remove all chapters</string>
 	<string name="find_chapter">Find chapter</string>
 	<string name="downloading_started_">Downloading started…</string>
+	<string name="network_connection_type">Network connection type</string>
+	<string name="scheduled_checking">Scheduled checking</string>
+	<string name="tracked_manga">Tracked manga</string>
+	<string name="never">Never</string>
 </resources>

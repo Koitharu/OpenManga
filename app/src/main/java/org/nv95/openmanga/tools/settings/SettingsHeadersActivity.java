@@ -68,6 +68,10 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 				intent = new Intent(view.getContext(), SettingsActivity.class)
 						.setAction(SettingsActivity.ACTION_SETTINGS_READER);
 				break;
+			case 5:
+				intent = new Intent(view.getContext(), SettingsActivity.class)
+						.setAction(SettingsActivity.ACTION_SETTINGS_MANGAUPDATES);
+				break;
 			default:
 				return;
 		}

@@ -335,4 +335,7 @@
 	<string name="remove_all_chapters">Удалить все главы</string>
 	<string name="find_chapter">Найти главу</string>
 	<string name="downloading_started_">Загрузка началась…</string>
+	<string name="scheduled_checking">Scheduled checking</string>
+	<string name="tracked_manga">Tracked manga</string>
+	<string name="never">Never</string>
 </resources>

@@ -22,6 +22,7 @@ public class SettingsActivity extends AppBaseActivity implements SharedPreferenc
 	public static final String ACTION_SETTINGS_APPEARANCE = "org.nv95.openmanga.ACTION_SETTINGS_APPEARANCE";
 	public static final String ACTION_SETTINGS_READER = "org.nv95.openmanga.ACTION_SETTINGS_READER";
 	public static final String ACTION_SETTINGS_SHELF = "org.nv95.openmanga.ACTION_SETTINGS_SHELF";
+	public static final String ACTION_SETTINGS_MANGAUPDATES = "org.nv95.openmanga.ACTION_SETTINGS_MANGAUPDATES";
 
 	public static final int RESULT_RESTART = Activity.RESULT_FIRST_USER + 1;
 
@@ -50,6 +51,9 @@ public class SettingsActivity extends AppBaseActivity implements SharedPreferenc
 				break;
 			case ACTION_SETTINGS_SHELF:
 				mFragment = new ShelfSettingsFragment();
+				break;
+			case ACTION_SETTINGS_MANGAUPDATES:
+				mFragment = new MangaUpdatesSettingsFragment();
 				break;
 			default:
 				finish();
