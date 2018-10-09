@@ -2,6 +2,7 @@ package org.nv95.openmanga.common.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 
 import org.nv95.openmanga.core.models.Category;
@@ -156,5 +157,21 @@ public abstract class CollectionsUtils {
 			}
 		}
 		return false;
+	}
+
+	public static <F, S> ArrayList<F> mapFirsts(ArrayList<Pair<F, S>> pairs) {
+		final ArrayList<F> result = new ArrayList<>(pairs.size());
+		for (Pair<F, S> o : pairs) {
+			result.add(o.first);
+		}
+		return result;
+	}
+
+	public static <F, S> ArrayList<S> mapSeconds(ArrayList<Pair<F, S>> pairs) {
+		final ArrayList<S> result = new ArrayList<>(pairs.size());
+		for (Pair<F, S> o : pairs) {
+			result.add(o.second);
+		}
+		return result;
 	}
 }

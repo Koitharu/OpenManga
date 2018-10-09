@@ -8,8 +8,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.util.Pair;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.NaturalOrderComparator;
+import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.common.utils.FilesystemUtils;
 import org.nv95.openmanga.common.utils.MetricsUtils;
 import org.nv95.openmanga.core.MangaStatus;
@@ -24,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -64,7 +68,7 @@ public final class ZipArchiveProvider extends MangaProvider {
 		ZipFile zipFile = null;
 		final Uri uri = Uri.parse(chapterUrl);
 		try {
-			final ArrayList<MangaPage> pages = new ArrayList<>();
+			final ArrayList<Pair<String,MangaPage>> pagesPairs = new ArrayList<>();
 			zipFile = new ZipFile(uri.getPath());
 			final Uri zipUri = new Uri.Builder()
 					.scheme(SCHEME)
@@ -75,13 +79,19 @@ public final class ZipArchiveProvider extends MangaProvider {
 			while (entries.hasMoreElements()) {
 				e = entries.nextElement();
 				if (!e.isDirectory()) {
-					pages.add(new MangaPage(
+					pagesPairs.add(new Pair<>(e.getName(), new MangaPage(
 							Uri.withAppendedPath(zipUri, e.getName()).toString(),
 							CNAME
-					));
+					)));
 				}
 			}
-			return pages;
+			Collections.sort(pagesPairs, new NaturalOrderComparator<Pair<String, MangaPage>>() {
+				@Override
+				protected String objectToString(Pair<String, MangaPage> obj) {
+					return obj.first;
+				}
+			});
+			return CollectionsUtils.mapSeconds(pagesPairs);
 		} finally {
 			if (zipFile != null) {
 				try {
