@@ -90,6 +90,7 @@ public final class MangaListActivity extends AppBaseActivity implements LoaderMa
 		mMenuItemSearch = menu.findItem(R.id.action_search);
 		SearchView mSearchView = (SearchView) mMenuItemSearch.getActionView();
 		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setOnSearchClickListener(v -> mSearchView.setQuery(mArguments.query, false));
 		return super.onCreateOptionsMenu(menu);
 	}
 
