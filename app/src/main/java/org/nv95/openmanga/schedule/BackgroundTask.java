@@ -9,6 +9,7 @@ import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaUpdateInfo;
 import org.nv95.openmanga.core.storage.db.FavouritesRepository;
 import org.nv95.openmanga.core.storage.db.FavouritesSpecification;
+import org.nv95.openmanga.updchecker.MangaUpdatesChecker;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ final class BackgroundTask extends WeakAsyncTask<Service, Void, Void, JobResult>
 			final ArrayList<MangaFavourite> favourites = favouritesRepository.query(new FavouritesSpecification());
 			//noinspection ConstantConditions
 			for (MangaFavourite o : favourites) {
-				final int totalChapters = checker.getChaptersCount(o);
+				final int totalChapters = checker.fetchChaptersCount(o);
 				if (totalChapters == -1) {
 					result.errors++;
 					continue;

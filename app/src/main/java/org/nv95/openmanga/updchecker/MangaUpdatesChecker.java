@@ -1,4 +1,4 @@
-package org.nv95.openmanga.schedule;
+package org.nv95.openmanga.updchecker;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
@@ -14,21 +14,32 @@ import org.nv95.openmanga.core.providers.MangaProvider;
 
 public final class MangaUpdatesChecker {
 
+	static final int COUNT_UNKNOWN = -1;
 	private final Context mContext;
 
 	public MangaUpdatesChecker(Context context) {
 		mContext = context;
 	}
 
+	/**
+	 * load actual count of chapters
+	 */
 	@WorkerThread
-	public int getChaptersCount(MangaHeader manga) {
+	public int fetchChaptersCount(MangaHeader manga) {
 		try {
 			final MangaProvider provider = MangaProvider.get(mContext, manga.provider);
 			final MangaDetails details = provider.getDetails(manga);
 			return details.chapters.size();
 		} catch (Exception e) {
-			return -1;
+			return COUNT_UNKNOWN;
 		}
+	}
+
+	@WorkerThread
+	public UpdatesCheckResult fetchUpdates() {
+		final UpdatesCheckResult result = new UpdatesCheckResult();
+		//TODO
+		return result;
 	}
 
 	public long getLastCheck() {
