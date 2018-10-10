@@ -149,12 +149,12 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 	@Override
 	@SuppressLint("DefaultLocale")
 	protected ArrayList<MangaHeader> simpleSearch(@NonNull String search, int page) throws Exception {
-		String url = String.format(
+		final String url = String.format(
 				"http://readmanga.me/search?q=%s&offset=%d&max=50",
 				search,
 				page * 50
-		);
-		Document doc = NetworkUtils.getDocument(url);
+		); //TODO fix "nothing found" problem
+		final Document doc = NetworkUtils.getDocument(url);
 		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
 		if (root == null) {
 			return EMPTY_HEADERS;
@@ -175,8 +175,8 @@ public final class ReadmangaruProvider extends GroupleMangaProvider {
 			String tag = mTags[i];
 			query.add(tag + "=in");
 		}
-		Document doc = NetworkUtils.getDocument("http://readmanga.me/search/advanced?q=" + urlEncode(search) + query.toString());
-		Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
+		final Document doc = NetworkUtils.getDocument("http://readmanga.me/search/advanced?q=" + urlEncode(search) + query.toString());
+		final Element root = doc.body().getElementById("mangaResults").selectFirst("div.tiles");
 		return parseList(root.select(".tile"), "http://readmanga.me/");
 	}
 
