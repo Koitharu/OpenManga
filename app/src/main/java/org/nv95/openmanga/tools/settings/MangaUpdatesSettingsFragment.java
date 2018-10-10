@@ -1,6 +1,7 @@
 package org.nv95.openmanga.tools.settings;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -56,6 +57,11 @@ public final class MangaUpdatesSettingsFragment extends PreferenceFragment imple
 		super.onActivityCreated(savedInstanceState);
 		final PreferenceCategory category = (PreferenceCategory) findPreference("mangaupdates.tracked");
 		new LoadTrackedTask(category).start();
+		final Activity activity = getActivity();
+		if (activity instanceof Preference.OnPreferenceClickListener) {
+			findPreference("mangaupdates.check_now")
+					.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
+		}
 	}
 
 	@Override

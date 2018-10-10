@@ -4,20 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import org.nv95.openmanga.AppBaseActivity;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.TextUtils;
+import org.nv95.openmanga.updchecker.JobSetupReceiver;
+import org.nv95.openmanga.updchecker.UpdatesCheckService;
 
 /**
  * Created by koitharu on 17.01.18.
  */
 
-public class SettingsActivity extends AppBaseActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppBaseActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
+		Preference.OnPreferenceClickListener {
 
 	public static final String ACTION_SETTINGS_APPEARANCE = "org.nv95.openmanga.ACTION_SETTINGS_APPEARANCE";
 	public static final String ACTION_SETTINGS_READER = "org.nv95.openmanga.ACTION_SETTINGS_READER";
@@ -82,6 +87,21 @@ public class SettingsActivity extends AppBaseActivity implements SharedPreferenc
 			case "theme":
 				setResult(RESULT_RESTART);
 				break;
+			case "mangaupdates.enabled":
+				JobSetupReceiver.setup(this);
+				break;
+		}
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		switch (preference.getKey()) {
+			case "mangaupdates.check_now":
+				UpdatesCheckService.runForce(this);
+				Snackbar.make(mFragment.getView(), R.string.checking_new_chapters, Snackbar.LENGTH_SHORT).show();
+				return true;
+			default:
+				return false;
 		}
 	}
 }

@@ -20,8 +20,8 @@ import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.common.utils.ResourceUtils;
-import org.nv95.openmanga.schedule.JobSchedulerCompat;
 import org.nv95.openmanga.tools.settings.SettingsActivity;
+import org.nv95.openmanga.updchecker.UpdatesCheckService;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -101,8 +101,7 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 			case R.id.action_check_updates:
 				Snackbar.make(mRecyclerView, R.string.checking_new_chapters, Snackbar.LENGTH_SHORT)
 						.show();
-				new JobSchedulerCompat(getActivity())
-						.startNow();
+				UpdatesCheckService.runForce(getActivity());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

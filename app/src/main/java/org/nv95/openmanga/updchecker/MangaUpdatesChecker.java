@@ -5,8 +5,14 @@ import android.preference.PreferenceManager;
 import android.support.annotation.WorkerThread;
 
 import org.nv95.openmanga.core.models.MangaDetails;
+import org.nv95.openmanga.core.models.MangaFavourite;
 import org.nv95.openmanga.core.models.MangaHeader;
+import org.nv95.openmanga.core.models.MangaUpdateInfo;
 import org.nv95.openmanga.core.providers.MangaProvider;
+import org.nv95.openmanga.core.storage.db.FavouritesRepository;
+import org.nv95.openmanga.core.storage.db.FavouritesSpecification;
+
+import java.util.ArrayList;
 
 /**
  * Created by koitharu on 30.01.18.
@@ -38,17 +44,47 @@ public final class MangaUpdatesChecker {
 	@WorkerThread
 	public UpdatesCheckResult fetchUpdates() {
 		final UpdatesCheckResult result = new UpdatesCheckResult();
-		//TODO
+		try {
+			final FavouritesRepository favouritesRepository = FavouritesRepository.get(mContext);
+			final MangaUpdatesChecker checker = new MangaUpdatesChecker(mContext);
+			final ArrayList<MangaFavourite> favourites = favouritesRepository.query(new FavouritesSpecification());
+			//noinspection ConstantConditions
+			for (MangaFavourite manga : favourites) {
+				final int total = checker.fetchChaptersCount(manga);
+				if (total == COUNT_UNKNOWN) {
+					result.fail();
+				} else {
+					final int newChapters = total - manga.totalChapters;
+					if (newChapters > 0) {
+						final MangaUpdateInfo update = new MangaUpdateInfo(
+								manga.id,
+								manga.name,
+								newChapters
+						);
+						if (favouritesRepository.putUpdateInfo(update)) {
+							result.add(update);
+						} else {
+							result.fail();
+						}
+					} else if (newChapters < 0) {
+						//TODO
+					}
+				}
+			}
+		} catch (Exception e) {
+			result.error(e);
+			e.printStackTrace();
+		}
 		return result;
 	}
 
-	public long getLastCheck() {
-		return PreferenceManager.getDefaultSharedPreferences(mContext)
+	public static long getLastCheck(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context)
 				.getLong("mangaupdates.last_check", 0);
 	}
 
-	public void onCheckSuccess() {
-		PreferenceManager.getDefaultSharedPreferences(mContext)
+	public static void onCheckSuccess(Context context) {
+		PreferenceManager.getDefaultSharedPreferences(context)
 				.edit()
 				.putLong("mangaupdates.last_check", System.currentTimeMillis())
 				.apply();

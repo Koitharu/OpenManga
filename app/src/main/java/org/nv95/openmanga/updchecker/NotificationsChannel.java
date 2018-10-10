@@ -1,9 +1,12 @@
-package org.nv95.openmanga.schedule;
+package org.nv95.openmanga.updchecker;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -13,24 +16,20 @@ import org.nv95.openmanga.mangalist.updates.MangaUpdatesActivity;
 
 import java.util.List;
 
-/**
- * Created by koitharu on 30.01.18.
- */
+class NotificationsChannel {
 
-final class NotificationHelper {
-
-	private static final String CHANNEL_UPDATES = "manga.updates";
+	private static final String CHANNEL_NAME = "manga.updates";
 
 	private final NotificationManager mManager;
 	private final Context mContext;
 
-	NotificationHelper(Context context) {
+	NotificationsChannel(Context context) {
 		mContext = context;
 		mManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
 	void showUpdatesNotification(List<MangaUpdateInfo> updates) {
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_UPDATES);
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_NAME);
 		final NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
 		int totalCount = 0;
 		for (MangaUpdateInfo o : updates) {
@@ -54,6 +53,22 @@ final class NotificationHelper {
 				0
 		));
 		builder.setAutoCancel(true);
-		mManager.notify(CHANNEL_UPDATES.hashCode(), builder.build());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createChannel();
+		}
+		mManager.notify(CHANNEL_NAME.hashCode(), builder.build());
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	private NotificationChannel createChannel() {
+		final NotificationChannel channel = new NotificationChannel(
+				CHANNEL_NAME,
+				mContext.getString(R.string.checking_new_chapters),
+				NotificationManager.IMPORTANCE_DEFAULT
+		);
+		channel.setLightColor(mContext.getColor(R.color.notification_chapters));
+		channel.enableLights(true);
+		mManager.createNotificationChannel(channel);
+		return channel;
 	}
 }

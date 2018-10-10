@@ -168,6 +168,8 @@
 
 		<service android:name=".storage.LocalRemoveService" />
 
+		<service android:name=".updchecker.UpdatesCheckService" />
+
 		<service android:name=".sync.AccountService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator" />
@@ -216,12 +218,9 @@
 		</service>
 
 		<service
-			android:name=".schedule.BackgroundJobService"
+			android:name=".updchecker.UpdatesCheckJobService"
 			android:exported="true"
 			android:permission="android.permission.BIND_JOB_SERVICE" />
-
-		<service
-			android:name=".schedule.BackgroundService" />
 
 		<service
 			android:name=".recommendations.RecommendationsUpdateService" />
@@ -229,13 +228,11 @@
 		<service
 			android:name=".storage.SaveService" />
 
-		<receiver android:name=".schedule.JobSetupReceiver">
+		<receiver android:name=".updchecker.JobSetupReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 				<action android:name="android.intent.action.QUICKBOOT_POWERON" />
 				<action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-				<action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
-				<action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
 			</intent-filter>
 		</receiver>
 
