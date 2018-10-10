@@ -12,6 +12,7 @@ import org.nv95.openmanga.AsyncService;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.NotificationHelper;
+import org.nv95.openmanga.common.TwoLevelProgress;
 import org.nv95.openmanga.common.utils.BroadcastUtils;
 import org.nv95.openmanga.common.utils.ImageUtils;
 import org.nv95.openmanga.core.models.MangaPage;
@@ -99,6 +100,7 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 	@Override
 	public int doInBackground(SaveRequest request) {
 		try {
+			final TwoLevelProgress progress = new TwoLevelProgress();
 			final MangaProvider provider = MangaProvider.get(this, request.manga.provider);
 			final SavedMangaRepository mangaRepository = SavedMangaRepository.get(this);
 			final SavedChaptersRepository chaptersRepository = SavedChaptersRepository.get(this);
@@ -115,14 +117,19 @@ public final class SaveService extends AsyncService<SaveRequest> implements Down
 			final SavedPagesStorage pagesStorage = new SavedPagesStorage(savedManga);
 			mangaRepository.addOrUpdate(savedManga);
 			//loop for each chapter
+			progress.setSecondMax(totalChapters);
 			for (int i = 0; i < totalChapters; i++) {
+				progress.setSecondPos(i);
+				progress.setFirstPos(0);
 				final SavedChapter chapter = SavedChapter.from(request.chapters.get(i), savedManga.id);
 				chaptersRepository.addOrUpdate(chapter);
-				setProgress(0, -1, chapter);
+				setProgress(progress.getPercent(), 100, chapter);
 				final ArrayList<MangaPage> pages = provider.getPages(chapter.url);
 				final int totalPages = pages.size();
+				progress.setFirstMax(totalPages);
 				for (int j = 0; j < totalPages; j++) {
-					setProgress(j, totalPages, null);
+					progress.setFirstPos(j);
+					setProgress(progress.getPercent(), 100, null);
 					final SavedPage page = SavedPage.from(pages.get(j), chapter.id, j);
 					final File dest = pagesStorage.getFile(page);
 					final Downloader downloader = new SimplePageDownloader(page, dest, provider);
