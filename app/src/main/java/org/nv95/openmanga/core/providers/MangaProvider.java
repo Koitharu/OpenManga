@@ -154,6 +154,9 @@ public abstract class MangaProvider {
 			case MangarawProvider.CNAME:
 				provider = new MangarawProvider(context);
 				break;
+			case NudeMoonProvider.CNAME:
+				provider = new NudeMoonProvider(context);
+				break;
 			case ZipArchiveProvider.CNAME:
 				provider = new ZipArchiveProvider(context);
 				sProviderCache.put(cName, provider);
@@ -194,6 +197,7 @@ public abstract class MangaProvider {
 			sDomainsMap.put(ExhentaiProvider.CNAME, "exhentai.org");
 			sDomainsMap.put(ReadmangaruProvider.CNAME, "readmanga.me");
 			sDomainsMap.put(MintmangaProvider.CNAME, "mintmanga.com");
+			sDomainsMap.put(NudeMoonProvider.CNAME, "http://nude-moon.me");
 		}
 		return sDomainsMap.get(cName);
 	}

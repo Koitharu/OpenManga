@@ -412,4 +412,5 @@
 	<string name="scheduled_checking">Scheduled checking</string>
 	<string name="tracked_manga">Tracked manga</string>
 	<string name="never">Never</string>
+	<string name="sort_comments">Comments</string>
 </resources>
