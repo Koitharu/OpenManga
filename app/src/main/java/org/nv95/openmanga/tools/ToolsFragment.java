@@ -20,6 +20,7 @@ import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.utils.ResourceUtils;
 import org.nv95.openmanga.common.utils.TextUtils;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.tools.settings.SettingsHeadersActivity;
 
 /**
@@ -47,6 +48,13 @@ public final class ToolsFragment extends AppBaseFragment implements View.OnClick
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		mScrollView = view.findViewById(R.id.scrollView);
+		mScrollView.setClipToPadding(false);
+		mScrollView.setPadding(
+				mScrollView.getPaddingLeft(),
+				mScrollView.getPaddingTop(),
+				mScrollView.getPaddingRight(),
+				mScrollView.getPaddingBottom() + ThemeUtils.getAttrSizePx(mScrollView.getContext(), android.R.attr.actionBarSize)
+		);
 		mTextViewStorageTotal = view.findViewById(R.id.textView_storage_total);
 		mTextViewStorageCache = view.findViewById(R.id.textView_storage_cache);
 		mTextViewStorageManga = view.findViewById(R.id.textView_storage_manga);

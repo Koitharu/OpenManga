@@ -10,6 +10,7 @@ import org.nv95.openmanga.common.utils.CollectionsUtils;
 import org.nv95.openmanga.core.models.ProviderHeader;
 import org.nv95.openmanga.core.providers.DesumeProvider;
 import org.nv95.openmanga.core.providers.ExhentaiProvider;
+import org.nv95.openmanga.core.providers.MangaFoxProvider;
 import org.nv95.openmanga.core.providers.MintmangaProvider;
 import org.nv95.openmanga.core.providers.NudeMoonProvider;
 import org.nv95.openmanga.core.providers.ReadmangaruProvider;
@@ -31,7 +32,8 @@ public final class ProvidersStore {
 			new ProviderHeader(ExhentaiProvider.CNAME, ExhentaiProvider.DNAME),			//3
 			new ProviderHeader(SelfmangaProvider.CNAME, SelfmangaProvider.DNAME),		//4
 			new ProviderHeader(NudeMoonProvider.CNAME, NudeMoonProvider.DNAME),			//5
-			//new ProviderHeader(MangarawProvider.CNAME, MangarawProvider.DNAME)		//6
+			new ProviderHeader(MangaFoxProvider.CNAME, MangaFoxProvider.DNAME),			//6
+			//new ProviderHeader(MangarawProvider.CNAME, MangarawProvider.DNAME)		//7
 	};
 
 	private final SharedPreferences mPreferences;

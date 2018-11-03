@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.LruCache;
 
+import org.nv95.openmanga.common.utils.TextUtils;
 import org.nv95.openmanga.common.utils.network.NetworkUtils;
 import org.nv95.openmanga.core.models.MangaDetails;
 import org.nv95.openmanga.core.models.MangaGenre;
@@ -57,7 +58,7 @@ public abstract class MangaProvider {
 	public abstract ArrayList<MangaPage> getPages(String chapterUrl) throws Exception;
 
 	@NonNull
-	public String getImageUrl(MangaPage page) throws Exception {
+	public String getImageUrl(@NonNull MangaPage page) throws Exception {
 		return page.url;
 	}
 
@@ -157,6 +158,9 @@ public abstract class MangaProvider {
 			case NudeMoonProvider.CNAME:
 				provider = new NudeMoonProvider(context);
 				break;
+			case MangaFoxProvider.CNAME:
+				provider = new MangaFoxProvider(context);
+				break;
 			case ZipArchiveProvider.CNAME:
 				provider = new ZipArchiveProvider(context);
 				sProviderCache.put(cName, provider);
@@ -216,7 +220,10 @@ public abstract class MangaProvider {
 	}
 
 	@NonNull
-	protected static String urlEncode(@NonNull String text) {
+	static String urlEncode(@Nullable String text) {
+		if (android.text.TextUtils.isEmpty(text)) {
+			return "";
+		}
 		try {
 			return URLEncoder.encode(text, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
