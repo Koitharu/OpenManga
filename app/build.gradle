@@ -6,7 +6,7 @@ def timestamp = new Date().getTime()
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "org.nv95.openmanga"
         minSdkVersion 15
@@ -65,7 +65,7 @@ android {
 }
 
 ext {
-	supportLib = '28.0.0-rc02'
+	supportLib = '28.0.0'
 }
 
 dependencies {
