@@ -20,6 +20,8 @@ import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.common.Dismissible;
 import org.nv95.openmanga.common.utils.ResourceUtils;
+import org.nv95.openmanga.common.utils.ThemeUtils;
+import org.nv95.openmanga.schedule.JobSchedulerCompat;
 import org.nv95.openmanga.tools.settings.SettingsActivity;
 import org.nv95.openmanga.updchecker.UpdatesCheckService;
 
@@ -53,6 +55,13 @@ public final class ShelfFragment extends AppBaseFragment implements LoaderManage
 		mRecyclerView = view.findViewById(R.id.recyclerView);
 		mRecyclerView.setHasFixedSize(true);
 		new ItemTouchHelper(new DismissCallback()).attachToRecyclerView(mRecyclerView);
+		mRecyclerView.setClipToPadding(false);
+		mRecyclerView.setPadding(
+				mRecyclerView.getPaddingLeft(),
+				mRecyclerView.getPaddingTop(),
+				mRecyclerView.getPaddingRight(),
+				mRecyclerView.getPaddingBottom() + ThemeUtils.getAttrSizePx(mRecyclerView.getContext(), android.R.attr.actionBarSize)
+		);
 	}
 
 	@Override

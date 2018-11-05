@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	package="org.nv95.openmanga"
-    android:installLocation="auto">
+	android:installLocation="auto">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -19,21 +19,22 @@
 	<uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
 	<uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<!-- OEM Badges -->
-	<uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
-	<uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
-	<uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>
-	<uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT"/>
-	<uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
-	<uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE"/>
-	<uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT"/>
-	<uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE"/>
-	<uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE"/>
-	<uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS"/>
-	<uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS"/>
-	<uses-permission android:name="android.permission.READ_APP_BADGE"/>
-	<uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS"/>
-	<uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS"/>
+	<uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+	<uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
+	<uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS" />
+	<uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT" />
+	<uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+	<uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE" />
+	<uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT" />
+	<uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE" />
+	<uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+	<uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+	<uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.READ_APP_BADGE" />
+	<uses-permission android:name="com.oppo.launcher.permission.READ_SETTINGS" />
+	<uses-permission android:name="com.oppo.launcher.permission.WRITE_SETTINGS" />
 
 	<application
 		android:name=".OpenMangaApp"
@@ -41,12 +42,13 @@
 		android:allowClearUserData="true"
 		android:fullBackupContent="false"
 		android:icon="@mipmap/ic_launcher"
+		android:installLocation="internalOnly"
 		android:label="@string/app_name"
 		android:largeHeap="true"
-		android:installLocation="internalOnly"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme"
+		android:usesCleartextTraffic="true"
 		tools:ignore="GoogleAppIndexingWarning">
 		<activity
 			android:name=".MainActivity"
@@ -67,7 +69,7 @@
 
 		<activity
 			android:name=".preview.PreviewActivity"
-			android:configChanges="orientation|screenSize" >
+			android:configChanges="orientation|screenSize">
 
 			<intent-filter>
 				<action android:name="org.nv95.openmanga.ACTION_PREVIEW" />
@@ -80,34 +82,38 @@
 
 		<activity
 			android:name=".mangalist.history.HistoryActivity"
-			android:label="@string/action_history"
-			android:configChanges="screenSize|orientation" />
+			android:configChanges="screenSize|orientation"
+			android:label="@string/action_history" />
 
 		<activity
 			android:name=".mangalist.favourites.FavouritesActivity"
-			android:label="@string/action_favourites"
-			android:configChanges="screenSize|orientation" />
+			android:configChanges="screenSize|orientation"
+			android:label="@string/action_favourites" />
 
 		<activity
 			android:name=".mangalist.favourites.CategoriesActivity"
-			android:label="@string/favourites_categories"
-			android:configChanges="screenSize|orientation" />
+			android:configChanges="screenSize|orientation"
+			android:label="@string/favourites_categories" />
 
-		<activity android:name=".storage.SavedMangaActivity"
-			android:label="@string/saved_manga"
-			android:configChanges="screenSize|orientation" />
+		<activity
+			android:name=".storage.SavedMangaActivity"
+			android:configChanges="screenSize|orientation"
+			android:label="@string/saved_manga" />
 
-		<activity android:name=".mangalist.updates.MangaUpdatesActivity"
-			android:label="@string/manga_updates"
-			android:configChanges="screenSize|orientation" />
+		<activity
+			android:name=".mangalist.updates.MangaUpdatesActivity"
+			android:configChanges="screenSize|orientation"
+			android:label="@string/manga_updates" />
 
-		<activity android:name=".discover.bookmarks.BookmarksListActivity"
-			android:label="@string/bookmarks"
-			android:configChanges="screenSize|orientation" />
+		<activity
+			android:name=".discover.bookmarks.BookmarksListActivity"
+			android:configChanges="screenSize|orientation"
+			android:label="@string/bookmarks" />
 
-		<activity android:name=".filepicker.FilePickerActivity"
-			android:label="@string/select_file"
-			android:configChanges="screenSize|orientation" />
+		<activity
+			android:name=".filepicker.FilePickerActivity"
+			android:configChanges="screenSize|orientation"
+			android:label="@string/select_file" />
 
 		<activity
 			android:name=".search.SearchActivity"
@@ -132,8 +138,9 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".reader.ReaderActivity"
-			android:configChanges="orientation|screenSize" >
+		<activity
+			android:name=".reader.ReaderActivity"
+			android:configChanges="orientation|screenSize">
 
 			<intent-filter>
 				<action android:name="org.nv95.openmanga.ACTION_READING_CONTINUE" />
@@ -141,12 +148,14 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".tools.settings.SettingsHeadersActivity"
-			android:label="@string/settings"
-			android:configChanges="orientation|screenSize" />
+		<activity
+			android:name=".tools.settings.SettingsHeadersActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/settings" />
 
-		<activity android:name=".tools.settings.SettingsActivity"
-			android:label="@string/settings" >
+		<activity
+			android:name=".tools.settings.SettingsActivity"
+			android:label="@string/settings">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
@@ -154,17 +163,20 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".recommendations.RecommendationsActivity"
-			android:label="@string/recommendations"
-			android:configChanges="orientation|screenSize" />
+		<activity
+			android:name=".recommendations.RecommendationsActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/recommendations" />
 
-		<activity android:name=".tools.settings.providers.ProvidersSettingsActivity"
-			android:label="@string/manga_catalogues"
-			android:configChanges="orientation|screenSize" />
+		<activity
+			android:name=".tools.settings.providers.ProvidersSettingsActivity"
+			android:configChanges="orientation|screenSize"
+			android:label="@string/manga_catalogues" />
 
-		<provider android:name=".search.SearchSuggestionsProvider"
-            android:authorities="org.nv95.openmanga.SEARCH_SUGGEST"
-            android:exported="false" />
+		<provider
+			android:name=".search.SearchSuggestionsProvider"
+			android:authorities="org.nv95.openmanga.SEARCH_SUGGEST"
+			android:exported="false" />
 
 		<service android:name=".storage.LocalRemoveService" />
 
@@ -222,11 +234,11 @@
 			android:exported="true"
 			android:permission="android.permission.BIND_JOB_SERVICE" />
 
-		<service
-			android:name=".recommendations.RecommendationsUpdateService" />
+		<service android:name=".schedule.BackgroundService" />
 
-		<service
-			android:name=".storage.SaveService" />
+		<service android:name=".recommendations.RecommendationsUpdateService" />
+
+		<service android:name=".storage.SaveService" />
 
 		<receiver android:name=".updchecker.JobSetupReceiver">
 			<intent-filter>

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,9 @@ import android.view.ViewGroup;
 
 import org.nv95.openmanga.AppBaseFragment;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.common.utils.LayoutUtils;
+import org.nv95.openmanga.common.utils.ResourceUtils;
+import org.nv95.openmanga.common.utils.ThemeUtils;
 import org.nv95.openmanga.common.views.recyclerview.HeaderDividerItemDecoration;
 import org.nv95.openmanga.core.storage.ProvidersStore;
 import org.nv95.openmanga.tools.settings.providers.ProvidersSettingsActivity;
@@ -44,6 +48,13 @@ public final class DiscoverFragment extends AppBaseFragment {
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 		mRecyclerView.addItemDecoration(new HeaderDividerItemDecoration(view.getContext()));
+		mRecyclerView.setClipToPadding(false);
+		mRecyclerView.setPadding(
+				mRecyclerView.getPaddingLeft(),
+				mRecyclerView.getPaddingTop(),
+				mRecyclerView.getPaddingRight(),
+				mRecyclerView.getPaddingBottom() + ThemeUtils.getAttrSizePx(mRecyclerView.getContext(), android.R.attr.actionBarSize)
+		);
 	}
 
 	@Override

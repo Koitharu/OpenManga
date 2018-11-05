@@ -10,6 +10,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Px;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
@@ -143,5 +144,14 @@ public abstract class ThemeUtils {
 	@StyleRes
 	public static int getBottomSheetTheme(Context context) {
 		return isAppThemeDark(context) ? R.style.AppDialogDark : R.style.AppDialogLight;
+	}
+
+	@Px
+	public static int getAttrSizePx(Context context, @AttrRes int resId) {
+		TypedValue typedValue = new TypedValue();
+		TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { resId });
+		int size = a.getDimensionPixelSize(0, 0);
+		a.recycle();
+		return size;
 	}
 }

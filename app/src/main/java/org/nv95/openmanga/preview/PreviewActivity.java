@@ -1,5 +1,7 @@
 package org.nv95.openmanga.preview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -370,9 +372,17 @@ public final class PreviewActivity extends AppBaseActivity implements LoaderMana
 		invalidateOptionsMenu();
 		if (position == 1) {
 			onPrepareBottomBarMenu(mBottomBar.getMenu());
-			AnimationUtils.setVisibility(mBottomBar, View.VISIBLE);
+			mBottomBar.setVisibility(View.VISIBLE);
+			mBottomBar.animate().translationY(0).setListener(null).start();
+			//AnimationUtils.setVisibility(mBottomBar, View.VISIBLE);
 		} else {
-			AnimationUtils.setVisibility(mBottomBar, View.GONE);
+			mBottomBar.animate().translationY(mBottomBar.getHeight()).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mBottomBar.setVisibility(View.GONE);
+				}
+			}).start();
+			//AnimationUtils.setVisibility(mBottomBar, View.GONE);
 		}
 	}
 

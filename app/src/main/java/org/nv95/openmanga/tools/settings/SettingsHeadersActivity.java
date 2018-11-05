@@ -41,12 +41,12 @@ public final class SettingsHeadersActivity extends AppBaseActivity implements Ad
 		//mHeaders.add(new SettingsHeader(activity, 0, R.string.general, R.drawable.ic_home_white));
 		mHeaders.add(new SettingsHeader(this, 1, R.string.appearance, R.drawable.ic_appearance_white));
 		mHeaders.add(new SettingsHeader(this, 2, R.string.manga_catalogues, R.drawable.ic_network_white));
-		mHeaders.add(new SettingsHeader(this, 3, R.string.downloads, R.drawable.ic_download_white));
+		//mHeaders.add(new SettingsHeader(this, 3, R.string.downloads, R.drawable.ic_download_white));
 		mHeaders.add(new SettingsHeader(this, 4, R.string.action_reading_options, R.drawable.ic_read_white));
 		mHeaders.add(new SettingsHeader(this, 5, R.string.checking_new_chapters, R.drawable.ic_notify_new_white));
-		mHeaders.add(new SettingsHeader(this, 6, R.string.sync, R.drawable.ic_cloud_sync_white));
-		mHeaders.add(new SettingsHeader(this, 7, R.string.additional, R.drawable.ic_braces_white));
-		mHeaders.add(new SettingsHeader(this, 8, R.string.help, R.drawable.ic_help_white));
+		//mHeaders.add(new SettingsHeader(this, 6, R.string.sync, R.drawable.ic_cloud_sync_white));
+		//mHeaders.add(new SettingsHeader(this, 7, R.string.additional, R.drawable.ic_braces_white));
+		//mHeaders.add(new SettingsHeader(this, 8, R.string.help, R.drawable.ic_help_white));
 
 		SettingsAdapter mAdapter = new SettingsAdapter(mHeaders, this);
 		mRecyclerView.setAdapter(mAdapter);

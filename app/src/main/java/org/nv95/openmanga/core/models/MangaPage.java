@@ -2,6 +2,7 @@ package org.nv95.openmanga.core.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by koitharu on 21.12.17.
@@ -10,6 +11,7 @@ import android.os.Parcelable;
 public class MangaPage implements Parcelable, UniqueObject {
 
 	public final long id;
+	@NonNull
 	public final String url;
 	public final String provider;
 
@@ -19,12 +21,13 @@ public class MangaPage implements Parcelable, UniqueObject {
 		this.id = provider.hashCode() + url.hashCode();
 	}
 
-	public MangaPage(long id, String url, String provider) {
+	public MangaPage(long id, @NonNull String url, String provider) {
 		this.id = id;
 		this.url = url;
 		this.provider = provider;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	protected MangaPage(Parcel in) {
 		id = in.readLong();
 		url = in.readString();
