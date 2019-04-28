@@ -15,7 +15,7 @@
 
 package org.nv95.openmanga.helpers;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;

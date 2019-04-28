@@ -1,6 +1,6 @@
 package org.nv95.openmanga.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.nv95.openmanga.items.MangaChapter;
 

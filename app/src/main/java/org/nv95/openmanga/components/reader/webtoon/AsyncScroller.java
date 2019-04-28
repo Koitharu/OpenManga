@@ -3,7 +3,7 @@ package org.nv95.openmanga.components.reader.webtoon;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.Scroller;
 
 

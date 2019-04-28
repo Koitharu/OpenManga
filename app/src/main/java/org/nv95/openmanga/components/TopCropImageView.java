@@ -10,7 +10,7 @@ import android.util.AttributeSet;
  *
  * @author Chris Arriola
  */
-public class TopCropImageView extends android.support.v7.widget.AppCompatImageView {
+public class TopCropImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     public TopCropImageView(Context context) {
         this(context, null);

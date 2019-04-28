@@ -1,7 +1,7 @@
 package org.nv95.openmanga.providers.staff;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.XmlRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.XmlRes;
 
 import org.nv95.openmanga.providers.MangaProvider;
 

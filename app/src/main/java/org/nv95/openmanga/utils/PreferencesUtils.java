@@ -3,8 +3,8 @@ package org.nv95.openmanga.utils;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.components.IntegerPreference;
 

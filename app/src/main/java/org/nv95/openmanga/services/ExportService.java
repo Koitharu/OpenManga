@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.NotificationHelper;

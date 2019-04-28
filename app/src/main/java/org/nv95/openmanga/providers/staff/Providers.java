@@ -1,6 +1,6 @@
 package org.nv95.openmanga.providers.staff;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.providers.DesuMeProvider;

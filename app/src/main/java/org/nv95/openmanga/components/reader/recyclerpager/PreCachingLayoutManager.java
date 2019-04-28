@@ -1,8 +1,8 @@
 package org.nv95.openmanga.components.reader.recyclerpager;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by nv95 on 17.11.16.

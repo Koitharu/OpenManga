@@ -1,7 +1,7 @@
 package org.nv95.openmanga.items;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.nv95.openmanga.lists.ChaptersList;
 

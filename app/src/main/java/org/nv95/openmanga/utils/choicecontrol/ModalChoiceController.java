@@ -1,8 +1,8 @@
 package org.nv95.openmanga.utils.choicecontrol;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.ActionMode;
 
 import org.nv95.openmanga.components.ExtraCheckable;

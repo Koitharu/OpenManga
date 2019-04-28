@@ -3,7 +3,7 @@ package org.nv95.openmanga.utils;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

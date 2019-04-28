@@ -1,7 +1,7 @@
 package org.nv95.openmanga.lists;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.items.MangaChapter;
 

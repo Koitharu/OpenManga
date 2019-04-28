@@ -1,6 +1,6 @@
 package org.nv95.openmanga.items;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;

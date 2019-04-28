@@ -2,8 +2,8 @@ package org.nv95.openmanga.components.reader.webtoon;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import org.nv95.openmanga.components.reader.PageLoader;
 import org.nv95.openmanga.components.reader.PageWrapper;

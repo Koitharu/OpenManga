@@ -1,7 +1,7 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

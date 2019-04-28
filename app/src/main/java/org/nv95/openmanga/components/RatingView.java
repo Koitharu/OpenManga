@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 
 import org.nv95.openmanga.R;
@@ -14,7 +14,7 @@ import org.nv95.openmanga.R;
  * Created by nv95 on 05.11.16.
  */
 
-public class RatingView extends android.support.v7.widget.AppCompatTextView {
+public class RatingView extends androidx.appcompat.widget.AppCompatTextView {
 
     private static final int[] mColors = new int[] {
             Color.parseColor("#808080"),

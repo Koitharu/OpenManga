@@ -3,7 +3,7 @@ package org.nv95.openmanga.components.reader.webtoon;
 import android.animation.Animator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**

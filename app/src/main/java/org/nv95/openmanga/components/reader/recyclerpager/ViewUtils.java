@@ -1,6 +1,6 @@
 package org.nv95.openmanga.components.reader.recyclerpager;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 /**

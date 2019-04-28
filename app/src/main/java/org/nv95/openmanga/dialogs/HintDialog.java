@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 /**
  * Created by nv95 on 05.12.16.

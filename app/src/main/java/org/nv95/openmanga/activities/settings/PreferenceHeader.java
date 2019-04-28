@@ -3,9 +3,9 @@ package org.nv95.openmanga.activities.settings;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.LayoutUtils;
