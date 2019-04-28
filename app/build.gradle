@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 1318
-        versionName "4.4.1"
+        targetSdkVersion 28
+        versionCode 51318
+        versionName "4.6"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://openmanga.pythonanywhere.com/api/v1\""
@@ -39,28 +39,26 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     lintOptions {
         disable 'MissingTranslation'
         abortOnError false
-    }
-    allprojects {
-        repositories {
-            jcenter()
-            google()
-            maven { url "https://jitpack.io" }
-        }
     }
 }
 
 dependencies {
 
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:cardview-v7:26.1.0'
-    compile 'org.jsoup:jsoup:1.10.3'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
-    compile 'info.guardianproject.netcipher:netcipher:2.0.0-alpha1'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:exifinterface:28.0.0'
+    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+    implementation 'info.guardianproject.netcipher:netcipher:2.0.0-beta1'
 }
