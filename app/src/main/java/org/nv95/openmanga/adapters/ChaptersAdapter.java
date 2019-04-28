@@ -117,30 +117,30 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
     
     @Override
-    public void onChapterClick(int pos, MangaChapter chapter) {
+    public void onChapterClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         if (mClickListener != null) {
             if (mLastNumber < 0) {
-                mClickListener.onChapterClick(pos, mDataset.get(pos));
+                mClickListener.onChapterClick(pos, mDataset.get(pos), viewHolder);
             } else {
                 if (pos == -1) {
-                    mClickListener.onChapterClick(-1, null);
+                    mClickListener.onChapterClick(-1, null, viewHolder);
                 } else {
-                    mClickListener.onChapterClick(pos - 1, mDataset.get(pos - 1));
+                    mClickListener.onChapterClick(pos - 1, mDataset.get(pos - 1), viewHolder);
                 }
             }
         }
     }
 
     @Override
-    public boolean onChapterLongClick(int pos, MangaChapter chapter) {
+    public boolean onChapterLongClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         if (mClickListener != null) {
             if (mLastNumber < 0) {
-                return mClickListener.onChapterLongClick(pos, mDataset.get(pos));
+                return mClickListener.onChapterLongClick(pos, mDataset.get(pos), viewHolder);
             } else {
                 if (pos == -1) {
-                    return mClickListener.onChapterLongClick(-1, null);
+                    return mClickListener.onChapterLongClick(-1, null, viewHolder);
                 } else {
-                    return mClickListener.onChapterLongClick(pos - 1, mDataset.get(pos - 1));
+                    return mClickListener.onChapterLongClick(pos - 1, mDataset.get(pos - 1), viewHolder);
                 }
             }
         }
@@ -163,7 +163,7 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         
         @Override
         public void onClick(View v) {
-            mListener.onChapterClick(-1, null);
+            mListener.onChapterClick(-1, null, this);
         }
     }
     
@@ -184,12 +184,12 @@ public class ChaptersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     
         @Override
         public void onClick(View v) {
-            mListener.onChapterClick(getAdapterPosition(), null);
+            mListener.onChapterClick(getAdapterPosition(), null, this);
         }
 
         @Override
         public boolean onLongClick(View view) {
-            return mListener.onChapterLongClick(getAdapterPosition(), null);
+            return mListener.onChapterLongClick(getAdapterPosition(), null, this);
         }
     }
 }

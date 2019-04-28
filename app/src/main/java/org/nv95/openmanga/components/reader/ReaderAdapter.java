@@ -1,6 +1,7 @@
 package org.nv95.openmanga.components.reader;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -126,7 +127,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.PageHolder
             progressBar = itemView.findViewById(R.id.progressBar);
             ssiv = itemView.findViewById(R.id.ssiv);
             textView = itemView.findViewById(R.id.textView_holder);
-            ssiv.setParallelLoadingEnabled(true);
+            ssiv.setExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ssiv.setOnImageEventListener(this);
         }
 

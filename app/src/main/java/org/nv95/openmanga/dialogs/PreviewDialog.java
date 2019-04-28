@@ -74,7 +74,7 @@ public class PreviewDialog implements DialogInterface.OnDismissListener, OnChapt
     }
 
     @Override
-    public void onChapterClick(int pos, MangaChapter chapter) {
+    public void onChapterClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         if (pos == -1) {
             Intent intent = new Intent(mDialog.getContext(), ReadActivity2.class);
             intent.putExtras(mManga.toBundle());
@@ -97,7 +97,7 @@ public class PreviewDialog implements DialogInterface.OnDismissListener, OnChapt
     }
 
     @Override
-    public boolean onChapterLongClick(int pos, MangaChapter chapter) {
+    public boolean onChapterLongClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         return false;
     }
 

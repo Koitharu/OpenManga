@@ -11,7 +11,9 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -28,7 +30,6 @@ import org.nv95.openmanga.adapters.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.adapters.SimpleViewPagerAdapter;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
-import org.nv95.openmanga.dialogs.MenuDialog;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.Bookmark;
@@ -52,7 +53,6 @@ import org.nv95.openmanga.utils.NetworkUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.nv95.openmanga.R.string.bookmarks;
@@ -116,6 +116,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         mRecyclerViewChapters = page.findViewById(R.id.recyclerView);
         mTextViewChaptersHolder = page.findViewById(R.id.textView_holder);
         mRecyclerViewChapters.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerViewChapters.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mTextViewChaptersHolder.setText(R.string.no_chapters_found);
         mPagerAdapter.addView(page, getString(R.string.chapters));
         //
@@ -313,7 +314,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
     }
 
     @Override
-    public void onChapterClick(int pos, MangaChapter chapter) {
+    public void onChapterClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         if (pos == -1) {
             Intent intent = new Intent(this, ReadActivity2.class);
             intent.putExtras(mManga.toBundle());
@@ -334,13 +335,14 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
     }
 
     @Override
-    public boolean onChapterLongClick(int pos, MangaChapter chapter) {
+    public boolean onChapterLongClick(int pos, MangaChapter chapter, RecyclerView.ViewHolder viewHolder) {
         if (pos == -1 || mManga.provider == LocalMangaProvider.class) {
             return false;
         } else {
-            new MenuDialog(this, R.menu.chapter, chapter.name)
-                    .setOnItemClickListener(new ChapterMenuListener(chapter))
-                    .show();
+            final PopupMenu menu = new PopupMenu(this, viewHolder.itemView);
+            menu.inflate(R.menu.chapter);
+            menu.setOnMenuItemClickListener(new ChapterMenuListener(chapter));
+            menu.show();
             return true;
         }
     }
@@ -485,7 +487,7 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         }
     }
 
-    private class ChapterMenuListener implements MenuItem.OnMenuItemClickListener {
+    private class ChapterMenuListener implements PopupMenu.OnMenuItemClickListener {
 
         private final MangaChapter mChapter;
 
