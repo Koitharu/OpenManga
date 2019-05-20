@@ -1,6 +1,17 @@
 package org.nv95.openmanga.helpers;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.nv95.openmanga.BuildConfig;
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.OneShotNotifier;
+import org.nv95.openmanga.utils.WeakAsyncTask;
+
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -9,22 +20,17 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.os.Build;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.nv95.openmanga.R;
-import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.OneShotNotifier;
-import org.nv95.openmanga.utils.WeakAsyncTask;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
 
 /**
  * Created by nv95 on 13.02.16.
@@ -33,18 +39,41 @@ import java.util.List;
 public class NotificationHelper {
 
     private final Context mContext;
+
     private final OneShotNotifier mNotifier;
+
     private final NotificationCompat.Builder mNotificationBuilder;
+
     @Nullable
     private NotificationCompat.Action mSecondaryAction = null;
+
     @Nullable
     private WeakReference<BitmapLoadTask> mTaskRef = null;
 
     public NotificationHelper(Context context) {
         mContext = context;
+        addChannels();
         mNotifier = new OneShotNotifier(mContext);
-        mNotificationBuilder = new NotificationCompat.Builder(context);
-        mNotificationBuilder.setColor(LayoutUtils.getThemeAttrColor(context, R.attr.colorAccent));
+        mNotificationBuilder = new NotificationCompat.Builder(context, BuildConfig.APPLICATION_ID);
+        mNotificationBuilder
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(LayoutUtils.getThemeAttrColor(context, R.attr.colorAccent));
+    }
+
+    private void addChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotifyMgr = (NotificationManager) mContext
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            List<NotificationChannel> channels = new ArrayList<>();
+            channels.add(new NotificationChannel(
+                    BuildConfig.APPLICATION_ID,
+                    mContext.getString(R.string.notification_channel_default),
+                    NotificationManager.IMPORTANCE_DEFAULT
+            ));
+
+            mNotifyMgr.createNotificationChannels(channels);
+        }
     }
 
     public NotificationHelper intentActivity(Intent intent, int requestCode) {
@@ -286,10 +315,13 @@ public class NotificationHelper {
         protected Bitmap doInBackground(String... strings) {
             try {
                 Bitmap bitmap = ImageLoader.getInstance().loadImageSync(strings[0]);
-                int width = getObject().mContext.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
-                int height = getObject().mContext.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+                int width = getObject().mContext.getResources()
+                        .getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
+                int height = getObject().mContext.getResources()
+                        .getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
                 if (bitmap != null) {
-                    bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                    bitmap = ThumbnailUtils
+                            .extractThumbnail(bitmap, width, height, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
                 }
                 return bitmap;
             } catch (Resources.NotFoundException e) {

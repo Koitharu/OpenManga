@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="backup"
+        path="." />
+    <external-files-path
+        name="backup"
+        path="." />
+</paths>

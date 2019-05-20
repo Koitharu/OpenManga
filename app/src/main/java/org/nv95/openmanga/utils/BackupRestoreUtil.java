@@ -1,5 +1,11 @@
 package org.nv95.openmanga.utils;
 
+import org.json.JSONArray;
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.helpers.ContentShareHelper;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.StorageHelper;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,15 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.nv95.openmanga.R;
-import org.nv95.openmanga.helpers.ContentShareHelper;
-import org.nv95.openmanga.helpers.DirRemoveHelper;
-import org.nv95.openmanga.helpers.StorageHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +22,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 /**
  * Created by nv95 on 14.01.16.
@@ -134,6 +135,7 @@ public class BackupRestoreUtil {
     }
 
     private class BackupTask extends AsyncTask<Boolean, Integer, File> {
+
         private final ProgressDialog processDialog;
 
         private BackupTask() {
@@ -218,12 +220,8 @@ public class BackupRestoreUtil {
                         .setMessage(R.string.backup_done)
                         .setTitle(R.string.backup)
                         .setNegativeButton(R.string.done, null)
-                        .setPositiveButton(R.string.export_file, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new ContentShareHelper(mContext).exportFile(file);
-                            }
-                        })
+                        .setPositiveButton(R.string.export_file,
+                                (dialog, which) -> new ContentShareHelper(mContext).exportFile(file))
                         .create().show();
             } else {
                 new AlertDialog.Builder(mContext)
@@ -256,6 +254,7 @@ public class BackupRestoreUtil {
     }
 
     private class RestoreTask extends AsyncTask<File, Integer, Boolean> {
+
         private final ProgressDialog processDialog;
 
         private RestoreTask() {

@@ -55,9 +55,13 @@ public class ContentShareHelper {
     }
 
     public void exportFile(File file) {
-        mIntent.setType("file/*");
-        mIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.export_file)));
+        try {
+            mIntent.setType("file/*");
+            mIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.export_file)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void createShortcut(MangaInfo manga) {

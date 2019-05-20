@@ -1,41 +1,8 @@
 package org.nv95.openmanga.activities;
 
-import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import android.text.Html;
-import android.util.Log;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.nv95.openmanga.MangaListLoader;
 import org.nv95.openmanga.R;
@@ -79,8 +46,43 @@ import org.nv95.openmanga.utils.StorageUpgradeTask;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceCallback;
 import org.nv95.openmanga.utils.choicecontrol.ModalChoiceController;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import java.io.File;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends BaseAppActivity implements
         View.OnClickListener, MangaListLoader.OnContentLoadListener, ChangesObserver.OnMangaChangesListener,
@@ -88,23 +90,38 @@ public class MainActivity extends BaseAppActivity implements
         InternalLinkMovement.OnLinkClickListener, ModalChoiceCallback, View.OnLongClickListener, NavigationListener {
 
     private static final int REQUEST_IMPORT = 792;
+
     private static final int REQUEST_SETTINGS = 795;
+
     //views
     private RecyclerView mRecyclerView;
+
     private DrawerLayout mDrawerLayout;
+
     private ActionBarDrawerToggle mToggle;
+
     private FloatingActionButton mFab;
+
     private TextView mTextViewHolder;
+
     private ProgressBar mProgressBar;
+
     //utils
     private MangaListLoader mListLoader;
+
     private MangaProviderManager mProviderManager;
+
     private ListModeHelper mListModeHelper;
+
     //data
     private MangaProvider mProvider;
+
     private GenresSortAdapter mGenresAdapter;
+
     private NavigationView mNavigationView;
+
     private int mSelectedItem;
+
     private DrawerHeaderImageTool mDrawerHeaderTool;
 
     private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
@@ -237,13 +254,18 @@ public class MainActivity extends BaseAppActivity implements
         return super.onCreateOptionsMenu(menu);
     }
 
-    private int getCurrentProviderIndex(){
-        switch (mSelectedItem){
-            case R.id.nav_local_storage: return MangaProviderManager.PROVIDER_LOCAL;
-            case R.id.nav_action_favourites: return MangaProviderManager.PROVIDER_FAVOURITES;
-            case R.id.nav_action_history: return MangaProviderManager.PROVIDER_HISTORY;
-            case R.id.nav_action_recommendations: return MangaProviderManager.PROVIDER_RECOMMENDATIONS;
-            default: return mSelectedItem;
+    private int getCurrentProviderIndex() {
+        switch (mSelectedItem) {
+            case R.id.nav_local_storage:
+                return MangaProviderManager.PROVIDER_LOCAL;
+            case R.id.nav_action_favourites:
+                return MangaProviderManager.PROVIDER_FAVOURITES;
+            case R.id.nav_action_history:
+                return MangaProviderManager.PROVIDER_HISTORY;
+            case R.id.nav_action_recommendations:
+                return MangaProviderManager.PROVIDER_RECOMMENDATIONS;
+            default:
+                return mSelectedItem;
         }
     }
 
@@ -302,7 +324,7 @@ public class MainActivity extends BaseAppActivity implements
             setupToolbarScrolling((Toolbar) findViewById(R.id.toolbar));
             mFab.setVisibility(PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
                     .getBoolean("fab", true) ? View.VISIBLE : View.GONE);
-            if (mProviderManager != null && mNavigationView != null){
+            if (mProviderManager != null && mNavigationView != null) {
                 mProviderManager.update();
                 initDrawerRemoteProviders();
                 mNavigationView.setCheckedItem(mSelectedItem);
@@ -413,7 +435,7 @@ public class MainActivity extends BaseAppActivity implements
         return true;
     }
 
-        @Override
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mToggle.syncState();
@@ -565,8 +587,8 @@ public class MainActivity extends BaseAppActivity implements
         menu.findItem(R.id.action_export).setVisible(mSelectedItem == R.id.nav_local_storage);
         menu.findItem(R.id.action_select_all).setVisible(
                 mSelectedItem == R.id.nav_action_favourites
-                || mSelectedItem == R.id.nav_action_history
-                || mSelectedItem == R.id.nav_local_storage
+                        || mSelectedItem == R.id.nav_action_history
+                        || mSelectedItem == R.id.nav_local_storage
         );
         return false;
     }
@@ -575,7 +597,7 @@ public class MainActivity extends BaseAppActivity implements
     public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
         final int[] items = mListLoader.getAdapter().getChoiceController().getSelectedItemsPositions();
         final long[] ids = new long[items.length];
-        for (int i=0;i<items.length;i++) {
+        for (int i = 0; i < items.length; i++) {
             ids[i] = mListLoader.getAdapter().getItemId(items[i]);
         }
         switch (item.getItemId()) {
@@ -662,7 +684,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onLocalChanged(int id, @Nullable MangaInfo manga) {
-        if (mSelectedItem ==  R.id.nav_local_storage) {
+        if (mSelectedItem == R.id.nav_local_storage) {
             if (id == -1) {
                 updateContent();
                 return;
@@ -682,7 +704,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onFavouritesChanged(@NonNull MangaInfo manga, int category) {
-        if (mSelectedItem ==  R.id.nav_action_favourites) {
+        if (mSelectedItem == R.id.nav_action_favourites) {
             int pos = mListLoader.getList().indexOf(manga.id);
             if (pos == -1) {
                 if (mGenresAdapter.getSelectedGenre() == 0 || category == mGenresAdapter.getSelectedGenre()) {
@@ -698,7 +720,7 @@ public class MainActivity extends BaseAppActivity implements
 
     @Override
     public void onHistoryChanged(@NonNull MangaInfo manga) {
-        if (mSelectedItem ==  R.id.nav_action_history) {
+        if (mSelectedItem == R.id.nav_action_history) {
             int pos = mListLoader.getList().indexOf(manga.id);
             if (pos == -1) {
                 mListLoader.addItem(manga, 0);
@@ -713,7 +735,8 @@ public class MainActivity extends BaseAppActivity implements
         mListLoader.loadFromPage(page - 1);
     }
 
-    private static class OpenLastTask extends ProgressAsyncTask<Boolean,Void,Pair<Integer,Intent>> implements DialogInterface.OnCancelListener {
+    private static class OpenLastTask extends ProgressAsyncTask<Boolean, Void, Pair<Integer, Intent>>
+            implements DialogInterface.OnCancelListener {
 
         OpenLastTask(MainActivity mainActivity) {
             super(mainActivity);
@@ -741,7 +764,7 @@ public class MainActivity extends BaseAppActivity implements
                 } else {
                     if (!NetworkUtils.checkConnection(getActivity())) {
                         provider = LocalMangaProvider.getInstance(getActivity());
-                        info = ((LocalMangaProvider)provider).getLocalManga(info);
+                        info = ((LocalMangaProvider) provider).getLocalManga(info);
                         if (info.provider != LocalMangaProvider.class) {
                             return new Pair<>(1, null);
                         }
@@ -797,27 +820,31 @@ public class MainActivity extends BaseAppActivity implements
         @SuppressWarnings("StatementWithEmptyBody")
         @Override
         public void run() {
-            if (mProvider instanceof FavouritesProvider && OnboardSnackbar.askOnce(mRecyclerView, R.string.tip_chapter_checking, R.string.no_thanks, R.string.configure, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SettingsActivity2.openChaptersCheckSettings(MainActivity.this, 0);
-                }
-            })) {
+            if (mProvider instanceof FavouritesProvider && OnboardSnackbar
+                    .askOnce(mRecyclerView, R.string.tip_chapter_checking, R.string.no_thanks, R.string.configure,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    SettingsActivity2.openChaptersCheckSettings(MainActivity.this, 0);
+                                }
+                            })) {
                 //done
             } else if (mProvider instanceof HistoryProvider || mProvider instanceof FavouritesProvider) {
-                OnboardSnackbar.askOnce(mRecyclerView, R.string.sync_tip, R.string.no_thanks, R.string.configure, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        SettingsActivity2.openSyncSettings(MainActivity.this, 0);
-                    }
-                });
+                OnboardSnackbar.askOnce(mRecyclerView, R.string.sync_tip, R.string.no_thanks, R.string.configure,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                SettingsActivity2.openSyncSettings(MainActivity.this, 0);
+                            }
+                        });
             } else if (mProvider instanceof RecommendationsProvider) {
-                OnboardSnackbar.askOnce(mRecyclerView, R.string.recommendations_tip, R.string.skip, R.string.configure, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        new RecommendationsPrefDialog(MainActivity.this, MainActivity.this).show();
-                    }
-                });
+                OnboardSnackbar.askOnce(mRecyclerView, R.string.recommendations_tip, R.string.skip, R.string.configure,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new RecommendationsPrefDialog(MainActivity.this, MainActivity.this).show();
+                            }
+                        });
             } else if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
                 showcase(R.id.action_search, R.string.action_search, R.string.tip_search_main);
             }
