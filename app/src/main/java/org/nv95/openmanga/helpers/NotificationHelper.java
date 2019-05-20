@@ -69,7 +69,7 @@ public class NotificationHelper {
             channels.add(new NotificationChannel(
                     BuildConfig.APPLICATION_ID,
                     mContext.getString(R.string.notification_channel_default),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_LOW
             ));
 
             mNotifyMgr.createNotificationChannels(channels);
