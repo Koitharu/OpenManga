@@ -2,8 +2,5 @@
 <paths>
     <external-path
         name="backup"
-        path="." />
-    <external-files-path
-        name="backup"
-        path="." />
+        path=".backup/OpenManga/" />
 </paths>

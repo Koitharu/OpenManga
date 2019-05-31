@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 51318
         versionName "4.6"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"

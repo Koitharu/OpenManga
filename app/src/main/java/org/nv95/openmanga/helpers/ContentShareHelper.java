@@ -1,5 +1,6 @@
 package org.nv95.openmanga.helpers;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.items.MangaInfo;
@@ -20,6 +22,9 @@ import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.io.File;
 import java.util.List;
+
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 
 /**
  * Created by nv95 on 28.01.16.
@@ -56,9 +61,17 @@ public class ContentShareHelper {
 
     public void exportFile(File file) {
         try {
+            Uri sharedFileUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".fileprovider", file);
             mIntent.setType("file/*");
-            mIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            mContext.startActivity(Intent.createChooser(mIntent, mContext.getString(R.string.export_file)));
+            mIntent.putExtra(Intent.EXTRA_STREAM, sharedFileUri);
+
+            ShareCompat.IntentBuilder
+                    .from((Activity) mContext)
+                    .addStream(sharedFileUri)
+                    .setType("file/*")
+                    .setChooserTitle(R.string.export_file)
+                    .startChooser();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
