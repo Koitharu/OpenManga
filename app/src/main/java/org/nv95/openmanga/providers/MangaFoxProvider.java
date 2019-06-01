@@ -48,29 +48,26 @@ public class MangaFoxProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://mangafox.me/directory/"
+        Document document = getPage("http://fanfox.net/directory/"
                 + (genre == 0 ? "" : genreUrls[genre - 1] + "/")
                 + (page + 1) + ".htm" + sortUrls[sort]);
         MangaInfo manga;
-        Element root = document.body().getElementById("mangalist").select("ul.list").first();
-        for (Element o : root.select("li")) {
+        Element root = document.body().selectFirst("ul.manga-list-1-list");
+        for (Element o : root.children()) {
             manga = new MangaInfo();
-            manga.name = o.select("a.title").first().text();
-            manga.subtitle = null;
+            Element e = o.selectFirst("a");
+            manga.name = e.attr("title");
+            manga.subtitle = manga.name;
+            manga.genres = "";
+            manga.path = "http://m.fanfox.net" + e.attr("href");
             try {
-                manga.genres = o.select("p.info").first().attr("title");
-            } catch (Exception e) {
-                manga.genres = "";
-            }
-            manga.path = "http:" + o.select("a").first().attr("href");
-            try {
-                manga.preview = o.select("img").first().attr("src");
-            } catch (Exception e) {
+                manga.preview = e.selectFirst("img").attr("src");
+            } catch (Exception ex) {
                 manga.preview = "";
             }
-            manga.rating = (byte) (Byte.parseByte(o.select("span.rate").first().text().substring(0,3).replace(".","")) * 2);
+            manga.rating = (byte) (Byte.parseByte((o.selectFirst("span.item-score").text().replace(".", "") + "000").substring(0, 2)) * 2);
             manga.provider = MangaFoxProvider.class;
-            if (!o.select("em.tag_completed").isEmpty()) {
+            if (!e.select("img.logo-complete").isEmpty()) {
                 manga.status = MangaInfo.STATUS_COMPLETED;
             }
             manga.id = manga.path.hashCode();
@@ -85,13 +82,17 @@ public class MangaFoxProvider extends MangaProvider {
             MangaSummary summary = new MangaSummary(mangaInfo);
             Document document = getPage(mangaInfo.path);
             Element e = document.body();
-            summary.description = Html.fromHtml(e.select("p.summary").html()).toString().trim();
-            summary.preview = e.select("div.cover").first().select("img").first().attr("src");
+            summary.description = Html.fromHtml(e.select(".manga-summary").html()).toString().trim();
+            StringBuilder sb = new StringBuilder();
+            for (Element gnr : e.select("div.manga-genres a")) {
+                sb.append(",").append(gnr.text().trim());
+            }
+            summary.genres = sb.length() > 0 ? sb.substring(1) : "";
+            summary.preview = e.selectFirst("img.detail-cover").attr("src");
             MangaChapter chapter;
-            e = e.getElementById("chapters");
-            for (Element o : e.select("a.tips")) {
+            for (Element o : e.select("dd.chlist a")) {
                 chapter = new MangaChapter();
-                chapter.name = o.text();
+                chapter.name = o.text().trim();
                 chapter.readLink = "http:" + o.attr("href");
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
@@ -109,15 +110,11 @@ public class MangaFoxProvider extends MangaProvider {
         try {
             Document document = getPage(readLink);
             MangaPage page;
-            String prefix = readLink.substring(0, readLink.lastIndexOf('/') + 1);
-            Element e = document.body().select("select.m").first();
+            Element e = document.body().select("select.mangaread-page").first();
             for (Element o : e.select("option")) {
-                page = new MangaPage(prefix + o.attr("value") + ".htm");
-                page.provider = MangaTownProvider.class;
+                page = new MangaPage("http:" + o.attr("value"));
+                page.provider = MangaFoxProvider.class;
                 pages.add(page);
-            }
-            if (pages.size() != 0) {
-                pages.remove(pages.size() - 1);
             }
             return pages;
         } catch (Exception e) {
@@ -143,7 +140,7 @@ public class MangaFoxProvider extends MangaProvider {
             return MangaList.empty();
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://m.mangafox.me/search?k=" + URLEncoder.encode(query, "UTF-8"));
+        Document document = getPage("http://m.fanfox.net/search?k=" + URLEncoder.encode(query, "UTF-8"));
         MangaInfo manga;
         Element r;
         String s;
@@ -151,9 +148,7 @@ public class MangaFoxProvider extends MangaProvider {
         for (Element o : elements) {
             manga = new MangaInfo();
             r = o.select("div.cover-info").first();
-            manga.path = o.select("a").first().attr("href");
-            manga.path = manga.path.replace("http://m.","http://");
-            manga.path = concatUrl("http://mangafox.me/", manga.path);
+            manga.path = o.selectFirst("a").attr("href");
             manga.name = r.child(0).text();
             manga.genres = r.child(1).text();
             s = r.child(2).text().toLowerCase();
