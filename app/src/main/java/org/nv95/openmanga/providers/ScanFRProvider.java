@@ -50,7 +50,7 @@ public class ScanFRProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://www.scan-fr.com/filterList?page=" + (page + 1)
+        Document document = getPage("https://www.scan-fr.io/filterList?page=" + (page + 1)
                 + "&cat=" + (genre == 0 ? "" : genreUrls[genre - 1]) + "&alpha=&sortBy="
                 + sortUrls[sort] + "&author=&tag=");
         MangaInfo manga;
@@ -72,8 +72,8 @@ public class ScanFRProvider extends MangaProvider {
             try {
                 String scr = o.select("script").first().html();
                 int p1 = scr.lastIndexOf('"');
-                int p0 = scr.lastIndexOf('"', p1-1);
-                manga.rating = (byte) (Float.parseFloat(scr.substring(p0+1,p1)) * 20);
+                int p0 = scr.lastIndexOf('"', p1 - 1);
+                manga.rating = (byte) (Float.parseFloat(scr.substring(p0 + 1, p1)) * 20);
             } catch (Exception ignored) {
             }
             //manga.rating = (byte) (Byte.parseByte(o.select("span.rate").first().text().substring(0,3).replace(".","")) * 2);
@@ -93,7 +93,7 @@ public class ScanFRProvider extends MangaProvider {
             summary.description = Html.fromHtml(e.select("div.well").first().select("p").html()).toString().trim();
             summary.preview = e.select("div.boxed").first().select("img").first().attr("src");
             MangaChapter chapter;
-            e = e.select("ul.chapters").first();
+            e = e.selectFirst("ul.chapterszz");
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
@@ -116,7 +116,7 @@ public class ScanFRProvider extends MangaProvider {
             MangaPage page;
             Element e = document.body().getElementById("all");
             for (Element o : e.select("img")) {
-                page = new MangaPage(o.attr("data-src"));
+                page = new MangaPage(o.attr("data-src").replaceFirst("http:/", "https:/"));
                 page.provider = ScanFRProvider.class;
                 pages.add(page);
             }
@@ -140,7 +140,7 @@ public class ScanFRProvider extends MangaProvider {
         }
         MangaList list = new MangaList();
         JSONObject jo = new JSONObject(getRaw(
-                "http://www.scan-fr.com/search?query=" + URLEncoder.encode(query, "UTF-8")
+                "https://www.scan-fr.io/search?query=" + URLEncoder.encode(query, "UTF-8")
         ));
         MangaInfo manga;
         JSONArray ja = jo.getJSONArray("suggestions");
@@ -148,8 +148,8 @@ public class ScanFRProvider extends MangaProvider {
             jo = ja.getJSONObject(i);
             manga = new MangaInfo();
             manga.name = jo.getString("value");
-            manga.path = "http://www.scan-fr.com/manga/" + jo.getString("data");
-            manga.preview = "http://www.scan-fr.com/uploads/manga/" + jo.getString("data") +
+            manga.path = "https://www.scan-fr.io/manga/" + jo.getString("data");
+            manga.preview = "https://www.scan-fr.io/uploads/manga/" + jo.getString("data") +
                     "/cover/cover_250x350.jpg";
             manga.provider = ScanFRProvider.class;
             manga.id = manga.path.hashCode();
