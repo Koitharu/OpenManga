@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:background="?selectableItemBackground"
+        android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/menu"
         android:minHeight="?actionBarSize"
         android:minWidth="?actionBarSize"

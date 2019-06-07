@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.items.RESTResponse;
 
 import java.io.BufferedReader;
@@ -26,6 +27,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import info.guardianproject.netcipher.NetCipher;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
+import timber.log.Timber;
 
 /**
  * Created by nv95 on 29.11.16.
@@ -33,6 +35,10 @@ import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 public class NetworkUtils {
 
+    public static final String TAG = "NetworkUtils";
+    public static final String TAG_REQUEST = TAG + "-request";
+    public static final String TAG_RESPONSE = TAG + "-response";
+    public static final String TAG_ERROR = TAG + "-error";
     public static final String HTTP_GET = "GET";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_PUT = "PUT";
@@ -59,6 +65,7 @@ public class NetworkUtils {
     public static Document httpGet(@NonNull String url, @Nullable String cookie) throws IOException {
         InputStream is = null;
         try {
+            requestLog(url, cookie);
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             if (con instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
@@ -69,7 +76,7 @@ public class NetworkUtils {
             }
             con.setConnectTimeout(15000);
             is = con.getInputStream();
-            return Jsoup.parse(is, con.getContentEncoding(), url);
+            return parseHtml(url, is, con);
         } finally {
             if (is != null) {
                 is.close();
@@ -80,6 +87,7 @@ public class NetworkUtils {
     public static Document httpPost(@NonNull String url, @Nullable String cookie, @Nullable String[] data) throws IOException {
         InputStream is = null;
         try {
+            requestLog(url, cookie);
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             if (con instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
@@ -98,7 +106,7 @@ public class NetworkUtils {
                 out.close();
             }
             is = con.getInputStream();
-            return Jsoup.parse(is, con.getContentEncoding(), url);
+            return parseHtml(url, is, con);
         } finally {
             if (is != null) {
                 is.close();
@@ -110,6 +118,7 @@ public class NetworkUtils {
     public static String getRaw(@NonNull String url, @Nullable String cookie) throws IOException {
         BufferedReader reader = null;
         try {
+            requestLog(url, cookie);
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             if (con instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
@@ -124,7 +133,9 @@ public class NetworkUtils {
             while ((line = reader.readLine()) != null) {
                 out.append(line);
             }
-            return out.toString();
+            String string = out.toString();
+            Timber.tag(TAG_RESPONSE).d(string);
+            return string;
         } finally {
             if (reader != null) {
                 reader.close();
@@ -140,6 +151,7 @@ public class NetworkUtils {
     public static CookieParser authorize(String url, String... data) {
         DataOutputStream out = null;
         try {
+            requestLog(url, null);
             HttpURLConnection con = NetCipher.getHttpURLConnection(url);
             if (con instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) con).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
@@ -158,7 +170,7 @@ public class NetworkUtils {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.tag(TAG_ERROR).e(e);
             return null;
         } finally {
             try {
@@ -166,7 +178,7 @@ public class NetworkUtils {
                     out.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Timber.tag(TAG_ERROR).e(e);
             }
         }
     }
@@ -199,9 +211,11 @@ public class NetworkUtils {
             while ((line = reader.readLine()) != null) {
                 out.append(line);
             }
-            return new RESTResponse(new JSONObject(out.toString()), respCode);
+            String json = out.toString();
+            Timber.tag(TAG_RESPONSE).d(json);
+            return new RESTResponse(new JSONObject(json), respCode);
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.tag(TAG_ERROR).e(e);
             return RESTResponse.fromThrowable(e);
         } finally {
             if (reader != null) {
@@ -223,7 +237,9 @@ public class NetworkUtils {
         if (query.length() > 1) {
             query.deleteCharAt(query.length()-1);
         }
-        return query.toString();
+        String queryString = query.toString();
+        Timber.tag(TAG_REQUEST).d(queryString);
+        return queryString;
     }
 
     public static boolean checkConnection(Context context) {
@@ -242,4 +258,19 @@ public class NetworkUtils {
         NetworkInfo ni = cm.getActiveNetworkInfo();
         return ni != null && ni.isConnected() && (!onlyWiFi || ni.getType() == ConnectivityManager.TYPE_WIFI);
     }
+
+    private static void requestLog(String url, String cookie) {
+        Timber.tag(TAG_REQUEST).d("request: %s", url);
+        Timber.tag(TAG_REQUEST).d("cookie: %s", cookie);
+    }
+
+    private static Document parseHtml(@NonNull final String url, final InputStream is,
+            final HttpURLConnection con) throws IOException {
+        Document document = Jsoup.parse(is, con.getContentEncoding(), url);
+        if (BuildConfig.DEBUG) {
+            Timber.tag(TAG_RESPONSE).d(document.html());
+        }
+        return document;
+    }
+
 }

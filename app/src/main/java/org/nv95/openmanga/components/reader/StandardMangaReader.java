@@ -45,17 +45,17 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
 
     public StandardMangaReader(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public StandardMangaReader(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public StandardMangaReader(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init();
     }
     
     private int getSide(float x) {
@@ -70,7 +70,7 @@ public class StandardMangaReader extends RecyclerViewPager implements MangaReade
         }
     }
 
-    private void init(Context context) {
+    private void init() {
         mLayoutManager = null;
         mNavEnabled = false;
         mNavPoint = new float[2];

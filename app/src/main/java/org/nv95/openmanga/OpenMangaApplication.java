@@ -1,18 +1,21 @@
 package org.nv95.openmanga;
 
+import org.nv95.openmanga.items.ThumbSize;
+import org.nv95.openmanga.utils.AnimUtils;
+import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.utils.log.OpenMangaLogTree;
+
 import android.app.Application;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
-import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.utils.AnimUtils;
-import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
-
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Created by nv95 on 10.12.15.
@@ -47,6 +50,8 @@ public class OpenMangaApplication extends Application {
         NetworkUtils.setUseTor(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("use_tor", false));
         ScheduledServiceReceiver.enable(this);
         setLanguage(getResources(), PreferenceManager.getDefaultSharedPreferences(this).getString("lang", ""));
+        // logger
+        Timber.plant(new OpenMangaLogTree());
     }
 
     public static void setLanguage(Resources res, String lang) {

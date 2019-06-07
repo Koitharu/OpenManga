@@ -247,7 +247,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 }
                 return true;
             case "restore":
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     BackupRestoreUtil.showRestoreDialog(this);
                 }
                 return true;
@@ -255,14 +255,14 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 new CacheClearTask(preference).attach(this).start();
                 return true;
             case "movemanga":
-                if (checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new LocalMoveDialog(this,
                             LocalMangaProvider.getInstance(this).getAllIds())
                             .showSelectSource(null);
                 }
                 return true;
             case "mangadir":
-                if (!checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (!checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     return true;
                 }
                 new StorageSelectDialog(this)

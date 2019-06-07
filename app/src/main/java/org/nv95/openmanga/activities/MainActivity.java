@@ -219,17 +219,12 @@ public class MainActivity extends BaseAppActivity implements
         mDrawerHeaderTool = new DrawerHeaderImageTool(this, mNavigationView);
         mDrawerHeaderTool.initDrawerImage();
         if (isFirstStart()) {
-            mDrawerLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
-            }, 700);
+            mDrawerLayout.postDelayed(() -> mDrawerLayout.openDrawer(GravityCompat.START), 700);
         }
 
         ChangesObserver.getInstance().addListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         registerReceiver(mSyncReceiver, new IntentFilter(SyncService.SYNC_EVENT));
     }
@@ -822,29 +817,14 @@ public class MainActivity extends BaseAppActivity implements
         public void run() {
             if (mProvider instanceof FavouritesProvider && OnboardSnackbar
                     .askOnce(mRecyclerView, R.string.tip_chapter_checking, R.string.no_thanks, R.string.configure,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    SettingsActivity2.openChaptersCheckSettings(MainActivity.this, 0);
-                                }
-                            })) {
+                            view -> SettingsActivity2.openChaptersCheckSettings(MainActivity.this, 0))) {
                 //done
             } else if (mProvider instanceof HistoryProvider || mProvider instanceof FavouritesProvider) {
                 OnboardSnackbar.askOnce(mRecyclerView, R.string.sync_tip, R.string.no_thanks, R.string.configure,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                SettingsActivity2.openSyncSettings(MainActivity.this, 0);
-                            }
-                        });
+                        view -> SettingsActivity2.openSyncSettings(MainActivity.this, 0));
             } else if (mProvider instanceof RecommendationsProvider) {
                 OnboardSnackbar.askOnce(mRecyclerView, R.string.recommendations_tip, R.string.skip, R.string.configure,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                new RecommendationsPrefDialog(MainActivity.this, MainActivity.this).show();
-                            }
-                        });
+                        view -> new RecommendationsPrefDialog(MainActivity.this, MainActivity.this).show());
             } else if (MangaProviderManager.needConnectionFor(mProvider)) { //returns true on online provider
                 showcase(R.id.action_search, R.string.action_search, R.string.tip_search_main);
             }
