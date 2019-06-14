@@ -77,6 +77,9 @@ public class NetworkUtils {
             con.setConnectTimeout(15000);
             is = con.getInputStream();
             return parseHtml(url, is, con);
+        } catch (Exception error) {
+            Timber.tag(TAG_ERROR).e(error);
+            throw error;
         } finally {
             if (is != null) {
                 is.close();
@@ -107,6 +110,9 @@ public class NetworkUtils {
             }
             is = con.getInputStream();
             return parseHtml(url, is, con);
+        } catch (Exception error) {
+            Timber.tag(TAG_ERROR).e(error);
+            throw error;
         } finally {
             if (is != null) {
                 is.close();
@@ -136,6 +142,9 @@ public class NetworkUtils {
             String string = out.toString();
             Timber.tag(TAG_RESPONSE).d(string);
             return string;
+        } catch (Exception error) {
+            Timber.tag(TAG_ERROR).e(error);
+            throw error;
         } finally {
             if (reader != null) {
                 reader.close();

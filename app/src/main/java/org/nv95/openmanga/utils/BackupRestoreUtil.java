@@ -101,14 +101,9 @@ public class BackupRestoreUtil {
             intent.setType("file/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             if (context.getPackageManager().resolveActivity(intent, 0) != null) {
-                builder.setNeutralButton(R.string.import_file, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((Activity) context).startActivityForResult(
-                                Intent.createChooser(intent, context.getString(R.string.import_file)),
-                                BACKUP_IMPORT_CODE);
-                    }
-                });
+                builder.setNeutralButton(R.string.import_file, (dialog, which) -> ((Activity) context).startActivityForResult(
+                        Intent.createChooser(intent, context.getString(R.string.import_file)),
+                        BACKUP_IMPORT_CODE));
             }
         }
         builder.create().show();

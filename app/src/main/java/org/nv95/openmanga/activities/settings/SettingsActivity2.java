@@ -255,7 +255,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 new CacheClearTask(preference).attach(this).start();
                 return true;
             case "movemanga":
-                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new LocalMoveDialog(this,
                             LocalMangaProvider.getInstance(this).getAllIds())
                             .showSelectSource(null);
@@ -313,7 +313,8 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
     }
 
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         if (mFragment != null) {
             outState.putString("fragment", mFragment.getClass().getName());
         }
