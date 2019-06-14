@@ -46,7 +46,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity
-            android:name=".activities.ReadActivity2" />
+            android:name=".feature.read.ReadActivity2" />
         <activity
             android:label="@string/action_settings"
             android:name=".activities.settings.ProviderPreferencesActivity" />

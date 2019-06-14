@@ -30,6 +30,7 @@ import org.nv95.openmanga.adapters.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.adapters.SimpleViewPagerAdapter;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
+import org.nv95.openmanga.feature.read.ReadActivity2;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.Bookmark;

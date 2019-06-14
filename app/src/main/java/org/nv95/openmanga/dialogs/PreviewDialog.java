@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.ReadActivity2;
+import org.nv95.openmanga.feature.read.ReadActivity2;
 import org.nv95.openmanga.adapters.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.items.Bookmark;

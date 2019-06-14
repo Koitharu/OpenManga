@@ -15,6 +15,7 @@ import org.nv95.openmanga.dialogs.FastHistoryDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.dialogs.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
+import org.nv95.openmanga.feature.read.ReadActivity2;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
