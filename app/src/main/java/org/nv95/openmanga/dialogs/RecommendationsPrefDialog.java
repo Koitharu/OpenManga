@@ -13,7 +13,7 @@ import android.widget.Checkable;
 import android.widget.CheckedTextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.GenresSortAdapter;
+import org.nv95.openmanga.feature.main.adapter.GenresSortAdapter;
 
 /**
  * Created by nv95 on 22.06.16.

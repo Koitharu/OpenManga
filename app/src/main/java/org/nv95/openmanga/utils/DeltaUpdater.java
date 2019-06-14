@@ -2,7 +2,7 @@ package org.nv95.openmanga.utils;
 
 import android.os.AsyncTask;
 
-import org.nv95.openmanga.MangaListLoader;
+import org.nv95.openmanga.feature.main.domain.MangaListLoader;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.MangaProvider;

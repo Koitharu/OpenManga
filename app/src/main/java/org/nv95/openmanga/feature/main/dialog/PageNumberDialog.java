@@ -1,4 +1,4 @@
-package org.nv95.openmanga.dialogs;
+package org.nv95.openmanga.feature.main.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 /**

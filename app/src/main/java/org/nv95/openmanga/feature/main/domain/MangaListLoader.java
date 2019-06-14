@@ -1,4 +1,4 @@
-package org.nv95.openmanga;
+package org.nv95.openmanga.feature.main.domain;
 
 import android.os.AsyncTask;
 import androidx.annotation.NonNull;
@@ -6,8 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.nv95.openmanga.adapters.EndlessAdapter;
-import org.nv95.openmanga.adapters.MangaListAdapter;
+import org.nv95.openmanga.feature.main.adapter.EndlessAdapter;
+import org.nv95.openmanga.feature.main.adapter.MangaListAdapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.main.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.PreviewActivity2;
+import org.nv95.openmanga.adapters.OnItemLongClickListener;
 import org.nv95.openmanga.components.RatingView;
 import org.nv95.openmanga.dialogs.PreviewDialog;
 import org.nv95.openmanga.items.MangaInfo;
@@ -89,7 +90,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         viewHolder.fill(data, mThumbSize, mChoiceController.isSelected(position));
     }
 
-    static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public static class MangaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private static int PADDING_16 = 0;
         private static int PADDING_4 = 0;
@@ -116,7 +117,7 @@ public class MangaListAdapter extends EndlessAdapter<MangaInfo, MangaListAdapter
         private final View cellFooter;
         private int viewMode;
 
-        MangaViewHolder(final View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
+        public MangaViewHolder(final View itemView, @Nullable OnItemLongClickListener<MangaViewHolder> longClickListener) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textView_title);
             textViewSubtitle = itemView.findViewById(R.id.textView_subtitle);

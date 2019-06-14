@@ -1,4 +1,4 @@
-package org.nv95.openmanga.dialogs;
+package org.nv95.openmanga.feature.main.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;

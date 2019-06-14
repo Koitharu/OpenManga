@@ -1,19 +1,24 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.main;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.nv95.openmanga.MangaListLoader;
+import org.nv95.openmanga.feature.main.domain.MangaListLoader;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.activities.NewChaptersActivity;
+import org.nv95.openmanga.activities.PreviewActivity2;
+import org.nv95.openmanga.activities.SearchActivity;
+import org.nv95.openmanga.activities.WelcomeActivity;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
-import org.nv95.openmanga.adapters.EndlessAdapter;
-import org.nv95.openmanga.adapters.GenresSortAdapter;
+import org.nv95.openmanga.feature.main.adapter.EndlessAdapter;
+import org.nv95.openmanga.feature.main.adapter.GenresSortAdapter;
 import org.nv95.openmanga.components.OnboardSnackbar;
-import org.nv95.openmanga.dialogs.BookmarksDialog;
-import org.nv95.openmanga.dialogs.FastHistoryDialog;
+import org.nv95.openmanga.feature.main.dialog.BookmarksDialog;
+import org.nv95.openmanga.feature.main.dialog.FastHistoryDialog;
 import org.nv95.openmanga.dialogs.NavigationListener;
-import org.nv95.openmanga.dialogs.PageNumberDialog;
+import org.nv95.openmanga.feature.main.dialog.PageNumberDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
 import org.nv95.openmanga.feature.fileselect.FileSelectActivity;
 import org.nv95.openmanga.feature.read.ReadActivity2;
