@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.fileselect.adapter;
 
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.adapters.FileHolderCallback;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.utils.LayoutUtils;
 
@@ -22,7 +23,7 @@ import java.util.Comparator;
  * Created by nv95 on 09.02.16.
  */
 public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.FileViewHolder>
-    implements FileHolderCallback{
+    implements FileHolderCallback {
 
     private String[] mPattern;
     private final DirSelectDialog.OnDirSelectListener mCallback;
@@ -136,7 +137,7 @@ public class FileSelectAdapter extends RecyclerView.Adapter<FileSelectAdapter.Fi
         mCallback.onDirSelected(holder.mFile);
     }
 
-    static class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class FileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private static Drawable[] icons = null;
         private File mFile;
         private final TextView mTextView;

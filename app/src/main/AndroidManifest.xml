@@ -71,7 +71,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/about" />
         <activity
-            android:name=".activities.FileSelectActivity"
+            android:name=".feature.fileselect.FileSelectActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/select_file" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.fileselect;
 
 import android.Manifest;
 import android.content.Intent;
@@ -11,7 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.FileSelectAdapter;
+import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.fileselect.adapter.FileSelectAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.StorageSelectDialog;
 
