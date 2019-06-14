@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.activities.SearchActivity;
+import org.nv95.openmanga.feature.search.SearchActivity;
 import org.nv95.openmanga.adapters.BookmarksAdapter;
 import org.nv95.openmanga.feature.main.adapter.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;

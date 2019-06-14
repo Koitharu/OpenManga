@@ -42,7 +42,7 @@
                 <action android:name="org.nv95.openmanga.action.PREVIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SearchActivity"
+        <activity android:name=".feature.search.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/search_results" />
         <activity

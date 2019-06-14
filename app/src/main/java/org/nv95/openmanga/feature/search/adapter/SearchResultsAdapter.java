@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.search.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.search;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -22,8 +22,9 @@ import android.widget.Toast;
 
 import org.jsoup.internal.StringUtil;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.SearchHistoryAdapter;
-import org.nv95.openmanga.adapters.SearchResultsAdapter;
+import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
+import org.nv95.openmanga.feature.search.adapter.SearchResultsAdapter;
 import org.nv95.openmanga.components.SearchInput;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;

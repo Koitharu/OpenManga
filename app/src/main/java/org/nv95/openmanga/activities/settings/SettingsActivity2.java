@@ -28,7 +28,7 @@ import android.widget.Toast;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.about.AboutActivity;
 import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.adapters.SearchHistoryAdapter;
+import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.LocalMoveDialog;
 import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
