@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.welcome;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.dialogs.DirSelectDialog;
 import org.nv95.openmanga.dialogs.StorageSelectDialog;

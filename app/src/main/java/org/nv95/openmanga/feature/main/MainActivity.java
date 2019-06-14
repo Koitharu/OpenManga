@@ -10,7 +10,7 @@ import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.newchapter.NewChaptersActivity;
 import org.nv95.openmanga.feature.preview.PreviewActivity2;
 import org.nv95.openmanga.feature.search.SearchActivity;
-import org.nv95.openmanga.activities.WelcomeActivity;
+import org.nv95.openmanga.feature.welcome.WelcomeActivity;
 import org.nv95.openmanga.activities.settings.SettingsActivity2;
 import org.nv95.openmanga.feature.main.adapter.EndlessAdapter;
 import org.nv95.openmanga.feature.main.adapter.GenresSortAdapter;

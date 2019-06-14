@@ -63,7 +63,7 @@
             android:name=".activities.settings.SettingsActivity2"
             android:label="@string/action_settings" />
         <activity
-            android:name=".activities.WelcomeActivity"
+            android:name=".feature.welcome.WelcomeActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/welcome" />
         <activity
