@@ -17,7 +17,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.newchapter.NewChaptersActivity;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
-import org.nv95.openmanga.helpers.ScheduleHelper;
+import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.MangaUpdateInfo;

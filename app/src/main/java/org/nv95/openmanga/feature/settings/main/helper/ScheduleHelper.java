@@ -1,4 +1,4 @@
-package org.nv95.openmanga.helpers;
+package org.nv95.openmanga.feature.settings.main.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;

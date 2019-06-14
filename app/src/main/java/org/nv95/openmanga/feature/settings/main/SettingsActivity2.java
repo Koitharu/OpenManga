@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.main;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,15 +26,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.feature.settings.appearance.AppearanceSettingsFragment;
+import org.nv95.openmanga.feature.settings.general.GeneralSettingsFragment;
+import org.nv95.openmanga.feature.settings.other.OtherSettingsFragment;
+import org.nv95.openmanga.feature.settings.main.model.PreferenceHeaderItem;
+import org.nv95.openmanga.feature.settings.provider.ProviderSelectFragment;
+import org.nv95.openmanga.feature.settings.read.ReadSettingsFragment;
+import org.nv95.openmanga.feature.settings.main.adapter.SettingsHeadersAdapter;
+import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
+import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
+import org.nv95.openmanga.feature.settings.update.UpdatesCheckSettingsFragment;
 import org.nv95.openmanga.feature.about.AboutActivity;
 import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
-import org.nv95.openmanga.dialogs.DirSelectDialog;
-import org.nv95.openmanga.dialogs.LocalMoveDialog;
-import org.nv95.openmanga.dialogs.RecommendationsPrefDialog;
-import org.nv95.openmanga.dialogs.StorageSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.LocalMoveDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.RecommendationsPrefDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.StorageSelectDialog;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
-import org.nv95.openmanga.helpers.ScheduleHelper;
+import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.providers.AppUpdatesProvider;
@@ -69,7 +79,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
 
     private Fragment mFragment;
     private SettingsHeadersAdapter mAdapter;
-    private ArrayList<PreferenceHeader> mHeaders;
+    private ArrayList<PreferenceHeaderItem> mHeaders;
     private AppBarLayout mAppBarLayout;
     private CardView mCardView;
     private FrameLayout mContent;
@@ -94,13 +104,13 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         mHeaders = new ArrayList<>();
 
-        mHeaders.add(new PreferenceHeader(this, R.string.general, R.drawable.ic_pref_home));
-        mHeaders.add(new PreferenceHeader(this, R.string.appearance, R.drawable.ic_pref_appearance));
-        mHeaders.add(new PreferenceHeader(this, R.string.manga_catalogues, R.drawable.ic_pref_sources));
-        mHeaders.add(new PreferenceHeader(this, R.string.action_reading_options, R.drawable.ic_pref_reader));
-        mHeaders.add(new PreferenceHeader(this, R.string.checking_new_chapters, R.drawable.ic_pref_cheknew));
-        mHeaders.add(new PreferenceHeader(this, R.string.sync, R.drawable.ic_pref_sync));
-        mHeaders.add(new PreferenceHeader(this, R.string.more_, R.drawable.ic_pref_more));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.general, R.drawable.ic_pref_home));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.appearance, R.drawable.ic_pref_appearance));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.manga_catalogues, R.drawable.ic_pref_sources));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.action_reading_options, R.drawable.ic_pref_reader));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.checking_new_chapters, R.drawable.ic_pref_cheknew));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.sync, R.drawable.ic_pref_sync));
+        mHeaders.add(new PreferenceHeaderItem(this, R.string.more_, R.drawable.ic_pref_more));
 
         recyclerView.setAdapter(mAdapter = new SettingsHeadersAdapter(mHeaders, this));
         getFragmentManager().addOnBackStackChangedListener(this);
@@ -121,7 +131,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 }
                 break;
             case SECTION_SYNC:
-                mFragment = SyncHelper.get(this).isAuthorized() ? new SyncSettingsFragment() : new SyncLoginFragment();
+                mFragment = SyncHelper.get(this).isAuthorized() ? new SyncSettingsFragment() : new AuthLoginFragment();
                 if (mIsTwoPanesMode) {
                     mAdapter.setActivatedPosition(5);
                 }
@@ -176,7 +186,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
                 if (SyncHelper.get(this).isAuthorized()) {
                     openFragment(new SyncSettingsFragment());
                 } else {
-                    openFragment(new SyncLoginFragment());
+                    openFragment(new AuthLoginFragment());
                 }
                 break;
             case 6:
@@ -579,7 +589,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         @Override
         protected void onPostExecute(@NonNull BaseAppActivity activity, RESTResponse restResponse) {
             if (restResponse.isSuccess()) {
-                ((SettingsActivity2)activity).openFragment(new SyncLoginFragment());
+                ((SettingsActivity2)activity).openFragment(new AuthLoginFragment());
             } else {
                 Toast.makeText(activity, restResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }

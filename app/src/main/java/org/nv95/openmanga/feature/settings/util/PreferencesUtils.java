@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.feature.settings.util;
 
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;

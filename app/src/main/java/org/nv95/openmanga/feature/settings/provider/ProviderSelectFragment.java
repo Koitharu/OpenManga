@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.provider;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.ProvidersAdapter;
+import org.nv95.openmanga.feature.settings.provider.adapter.ProvidersAdapter;
 import org.nv95.openmanga.components.DividerItemDecoration;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.providers.staff.ProviderSummary;

@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.activities.settings.SettingsActivity2;
+import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.feature.read.custom.ReaderMenu;
 import org.nv95.openmanga.feature.read.reader.MangaReader;
 import org.nv95.openmanga.feature.read.reader.OnOverScrollListener;

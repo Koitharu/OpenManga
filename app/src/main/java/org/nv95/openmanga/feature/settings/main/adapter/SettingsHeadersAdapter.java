@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.main.adapter;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.feature.settings.main.model.PreferenceHeaderItem;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ import java.util.ArrayList;
 
 public class SettingsHeadersAdapter extends RecyclerView.Adapter<SettingsHeadersAdapter.PreferenceHolder> {
 
-    private final ArrayList<PreferenceHeader> mDataset;
+    private final ArrayList<PreferenceHeaderItem> mDataset;
     private final AdapterView.OnItemClickListener mClickListener;
     private int mCurrentPosition = -1;
 
-    public SettingsHeadersAdapter(ArrayList<PreferenceHeader> headers, AdapterView.OnItemClickListener clickListener) {
+    public SettingsHeadersAdapter(ArrayList<PreferenceHeaderItem> headers, AdapterView.OnItemClickListener clickListener) {
         mDataset = headers;
         mClickListener = clickListener;
         setHasStableIds(true);
@@ -50,7 +51,7 @@ public class SettingsHeadersAdapter extends RecyclerView.Adapter<SettingsHeaders
 
     @Override
     public void onBindViewHolder(PreferenceHolder holder, int position) {
-        PreferenceHeader item = mDataset.get(position);
+        PreferenceHeaderItem item = mDataset.get(position);
         holder.text.setText(item.title);
         holder.icon.setImageDrawable(item.icon);
         holder.setActivated(position == mCurrentPosition);

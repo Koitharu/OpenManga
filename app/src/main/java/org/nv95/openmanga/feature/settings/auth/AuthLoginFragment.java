@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.auth;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
+import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
 import org.nv95.openmanga.services.SyncService;
@@ -26,7 +28,7 @@ import org.nv95.openmanga.utils.ProgressAsyncTask;
  * Created by admin on 24.07.17.
  */
 
-public class SyncLoginFragment extends Fragment implements View.OnClickListener {
+public class AuthLoginFragment extends Fragment implements View.OnClickListener {
 
     private EditText mEditLogin;
     private EditText mEditPassword;

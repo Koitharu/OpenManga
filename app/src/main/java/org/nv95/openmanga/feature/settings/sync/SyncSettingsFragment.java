@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.sync;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -18,12 +18,14 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
+import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.SyncDevice;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.NetworkUtils;
-import org.nv95.openmanga.utils.PreferencesUtils;
+import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class SyncSettingsFragment extends PreferenceFragment {
                     Activity activity = getActivity();
                     if (activity != null && activity instanceof SettingsActivity2) {
                         Toast.makeText(activity, R.string.auth_failed, Toast.LENGTH_SHORT).show();
-                        ((SettingsActivity2) activity).openFragment(new SyncLoginFragment());
+                        ((SettingsActivity2) activity).openFragment(new AuthLoginFragment());
                     }
                     break;
                 case SyncService.MSG_HIST_STARTED:

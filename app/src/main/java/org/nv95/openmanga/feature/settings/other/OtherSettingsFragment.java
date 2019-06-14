@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.other;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,11 +12,11 @@ import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
-import org.nv95.openmanga.helpers.ScheduleHelper;
+import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
-import org.nv95.openmanga.utils.PreferencesUtils;
+import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 

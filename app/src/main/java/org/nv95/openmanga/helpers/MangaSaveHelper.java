@@ -10,7 +10,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
+import org.nv95.openmanga.feature.preview.dialog.ChaptersSelectDialog;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.dialogs;
+package org.nv95.openmanga.feature.settings.main.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;

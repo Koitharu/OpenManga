@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.settings.provider.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.settings.ProviderPreferencesActivity;
+import org.nv95.openmanga.feature.settings.provider.activity.ProviderPreferencesActivity;
 import org.nv95.openmanga.providers.staff.ProviderSummary;
 import org.nv95.openmanga.utils.LayoutUtils;
 

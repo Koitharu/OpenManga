@@ -1,11 +1,11 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.read;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.utils.PreferencesUtils;
+import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 
 /**
  * Created by admin on 21.07.17.

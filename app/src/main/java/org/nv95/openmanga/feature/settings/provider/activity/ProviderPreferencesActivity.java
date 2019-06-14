@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.provider.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

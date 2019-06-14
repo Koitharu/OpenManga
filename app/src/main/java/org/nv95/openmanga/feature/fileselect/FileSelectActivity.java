@@ -13,8 +13,8 @@ import android.widget.TextView;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.fileselect.adapter.FileSelectAdapter;
-import org.nv95.openmanga.dialogs.DirSelectDialog;
-import org.nv95.openmanga.dialogs.StorageSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.StorageSelectDialog;
 
 import java.io.File;
 

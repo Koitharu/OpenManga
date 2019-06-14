@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities.settings;
+package org.nv95.openmanga.feature.settings.general;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.OpenMangaApplication;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.utils.PreferencesUtils;
+import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 
 /**
  * Created by admin on 24.07.17.

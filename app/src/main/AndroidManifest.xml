@@ -49,7 +49,7 @@
             android:name=".feature.read.ReadActivity2" />
         <activity
             android:label="@string/action_settings"
-            android:name=".activities.settings.ProviderPreferencesActivity" />
+            android:name=".feature.settings.provider.activity.ProviderPreferencesActivity" />
         <activity
             android:name=".feature.download.DownloadsActivity"
             android:configChanges="orientation|screenSize"
@@ -60,7 +60,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/manga_updates" />
         <activity
-            android:name=".activities.settings.SettingsActivity2"
+            android:name=".feature.settings.main.SettingsActivity2"
             android:label="@string/action_settings" />
         <activity
             android:name=".feature.welcome.WelcomeActivity"

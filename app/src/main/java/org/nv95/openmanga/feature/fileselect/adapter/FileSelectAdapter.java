@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.adapters.FileHolderCallback;
-import org.nv95.openmanga.dialogs.DirSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
 import org.nv95.openmanga.utils.LayoutUtils;
 
 import java.io.File;
