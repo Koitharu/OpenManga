@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.NewChaptersActivity;
+import org.nv95.openmanga.feature.newchapter.NewChaptersActivity;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.ScheduleHelper;

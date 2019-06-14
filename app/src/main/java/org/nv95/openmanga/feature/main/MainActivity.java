@@ -7,7 +7,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.nv95.openmanga.feature.main.domain.MangaListLoader;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.activities.BaseAppActivity;
-import org.nv95.openmanga.activities.NewChaptersActivity;
+import org.nv95.openmanga.feature.newchapter.NewChaptersActivity;
 import org.nv95.openmanga.activities.PreviewActivity2;
 import org.nv95.openmanga.activities.SearchActivity;
 import org.nv95.openmanga.activities.WelcomeActivity;

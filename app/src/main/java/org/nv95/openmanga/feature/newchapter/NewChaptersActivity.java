@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.newchapter;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,7 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.NewChaptersAdapter;
+import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.newchapter.adapter.NewChaptersAdapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.FavouritesProvider;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.newchapter.adapter;
 
 import android.content.Context;
 import android.content.Intent;
