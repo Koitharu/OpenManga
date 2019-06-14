@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.PreviewActivity2" >
+            android:name=".feature.preview.PreviewActivity2" >
             <intent-filter>
                 <action android:name="org.nv95.openmanga.action.PREVIEW" />
             </intent-filter>

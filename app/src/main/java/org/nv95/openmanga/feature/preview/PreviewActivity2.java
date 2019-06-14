@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.preview;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -25,8 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.activities.SearchActivity;
 import org.nv95.openmanga.adapters.BookmarksAdapter;
-import org.nv95.openmanga.adapters.ChaptersAdapter;
+import org.nv95.openmanga.feature.main.adapter.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.adapters.SimpleViewPagerAdapter;
 import org.nv95.openmanga.dialogs.ChaptersSelectDialog;

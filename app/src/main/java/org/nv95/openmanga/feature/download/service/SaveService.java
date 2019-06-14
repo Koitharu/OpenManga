@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.download.DownloadsActivity;
-import org.nv95.openmanga.activities.PreviewActivity2;
+import org.nv95.openmanga.feature.preview.PreviewActivity2;
 import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.feature.download.domain.model.DownloadInfo;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.dialogs;
+package org.nv95.openmanga.feature.main.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.read.ReadActivity2;
-import org.nv95.openmanga.adapters.ChaptersAdapter;
+import org.nv95.openmanga.feature.main.adapter.ChaptersAdapter;
 import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaChapter;
