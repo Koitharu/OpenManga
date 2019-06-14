@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.OnChapterClickListener;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.providers.HistoryProvider;

@@ -15,7 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.ThumbnailsAdapter;
+import org.nv95.openmanga.feature.read.adapter.ThumbnailsAdapter;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.feature.read.reader.PageLoadListener;
 import org.nv95.openmanga.feature.read.reader.PageLoader;

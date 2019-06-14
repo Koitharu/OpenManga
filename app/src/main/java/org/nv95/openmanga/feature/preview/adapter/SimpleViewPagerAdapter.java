@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.preview.adapter;
 
 import androidx.viewpager.widget.PagerAdapter;
 import android.util.Pair;

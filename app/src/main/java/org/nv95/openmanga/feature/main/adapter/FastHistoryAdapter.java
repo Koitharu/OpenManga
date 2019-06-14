@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.main.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;

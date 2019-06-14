@@ -9,7 +9,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.adapters.DirAdapter;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.MangaStore;
 

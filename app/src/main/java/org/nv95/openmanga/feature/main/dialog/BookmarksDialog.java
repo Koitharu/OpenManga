@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.read.ReadActivity2;
-import org.nv95.openmanga.adapters.BookmarksAdapter;
+import org.nv95.openmanga.feature.main.adapter.BookmarksAdapter;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;

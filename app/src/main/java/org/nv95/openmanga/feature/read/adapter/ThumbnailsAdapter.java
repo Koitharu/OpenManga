@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.read.adapter;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.settings.main.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
