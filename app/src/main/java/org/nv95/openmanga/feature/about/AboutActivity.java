@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.feature.about;
 
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
@@ -6,6 +6,7 @@ import android.text.Html;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 

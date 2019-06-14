@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.AboutActivity;
+import org.nv95.openmanga.feature.about.AboutActivity;
 import org.nv95.openmanga.activities.BaseAppActivity;
 import org.nv95.openmanga.adapters.SearchHistoryAdapter;
 import org.nv95.openmanga.dialogs.DirSelectDialog;

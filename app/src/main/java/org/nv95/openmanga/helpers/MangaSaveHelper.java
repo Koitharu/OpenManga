@@ -17,7 +17,7 @@ import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.services.SaveService;
+import org.nv95.openmanga.feature.download.service.SaveService;
 
 /**
  * Created by admin on 21.07.17.

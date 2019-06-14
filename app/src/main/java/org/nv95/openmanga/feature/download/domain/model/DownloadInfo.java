@@ -1,5 +1,7 @@
-package org.nv95.openmanga.items;
+package org.nv95.openmanga.feature.download.domain.model;
 
+import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.ChaptersList;
 
 import java.util.Arrays;

@@ -13,7 +13,7 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-package org.nv95.openmanga.adapters;
+package org.nv95.openmanga.feature.download.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -33,9 +33,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.items.DownloadInfo;
+import org.nv95.openmanga.feature.download.domain.model.DownloadInfo;
 import org.nv95.openmanga.items.ThumbSize;
-import org.nv95.openmanga.services.SaveService;
+import org.nv95.openmanga.feature.download.service.SaveService;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.PausableAsyncTask.ExStatus;

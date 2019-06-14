@@ -13,7 +13,7 @@ import androidx.annotation.WorkerThread;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.helpers.StorageHelper;
-import org.nv95.openmanga.items.DownloadInfo;
+import org.nv95.openmanga.feature.download.domain.model.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.SimpleDownload;

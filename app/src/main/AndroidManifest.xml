@@ -51,7 +51,7 @@
             android:label="@string/action_settings"
             android:name=".activities.settings.ProviderPreferencesActivity" />
         <activity
-            android:name=".activities.DownloadsActivity"
+            android:name=".feature.download.DownloadsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/downloads_queue"
             android:launchMode="singleInstance" />
@@ -67,7 +67,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/welcome" />
         <activity
-            android:name=".activities.AboutActivity"
+            android:name=".feature.about.AboutActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/about" />
         <activity
@@ -81,7 +81,7 @@
         <service android:name=".services.ImportService" />
         <service android:name=".services.SyncService" />
         <service android:name=".services.ExportService" />
-        <service android:name=".services.SaveService" />
+        <service android:name=".feature.download.service.SaveService" />
 
         <receiver android:name=".ScheduledServiceReceiver"
             android:enabled="true" android:exported="true" >
