@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 
 
 /**

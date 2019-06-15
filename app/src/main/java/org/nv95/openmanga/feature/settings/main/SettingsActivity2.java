@@ -37,7 +37,7 @@ import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
 import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
 import org.nv95.openmanga.feature.settings.update.UpdatesCheckSettingsFragment;
 import org.nv95.openmanga.feature.about.AboutActivity;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
 import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
 import org.nv95.openmanga.feature.settings.main.dialog.LocalMoveDialog;
@@ -56,7 +56,7 @@ import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.BackupRestoreUtil;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 

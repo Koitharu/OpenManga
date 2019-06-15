@@ -25,7 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.SearchActivity;
 import org.nv95.openmanga.feature.main.adapter.BookmarksAdapter;
 import org.nv95.openmanga.feature.main.adapter.ChaptersAdapter;
@@ -52,7 +52,7 @@ import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 

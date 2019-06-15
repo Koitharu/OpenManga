@@ -26,7 +26,7 @@ import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.OneShotNotifier;
 
 /**

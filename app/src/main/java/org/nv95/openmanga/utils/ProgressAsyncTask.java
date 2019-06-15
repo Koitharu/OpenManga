@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 
 import java.lang.ref.WeakReference;
 

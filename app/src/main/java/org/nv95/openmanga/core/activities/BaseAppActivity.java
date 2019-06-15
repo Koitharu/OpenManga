@@ -1,4 +1,4 @@
-package org.nv95.openmanga.activities;
+package org.nv95.openmanga.core.activities;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -30,7 +30,7 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

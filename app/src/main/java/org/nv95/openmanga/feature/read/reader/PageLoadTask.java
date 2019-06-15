@@ -11,7 +11,7 @@ import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.utils.NoSSLv3SocketFactory;
+import org.nv95.openmanga.core.network.NoSSLv3SocketFactory;
 
 import java.io.File;
 import java.io.InputStream;

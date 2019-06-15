@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
 import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
 import org.nv95.openmanga.utils.AppHelper;

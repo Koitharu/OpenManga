@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils.log;
+package org.nv95.openmanga.core.network;
 
 import org.jetbrains.annotations.Nullable;
 import org.nv95.openmanga.BuildConfig;

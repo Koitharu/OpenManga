@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.download.adapter.DownloadsAdapter;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 

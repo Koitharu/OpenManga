@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 
 import java.io.File;
 

@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
 import org.nv95.openmanga.feature.settings.main.dialog.StorageSelectDialog;

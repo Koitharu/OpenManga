@@ -6,7 +6,7 @@ import android.text.Html;
 import android.widget.TextView;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 

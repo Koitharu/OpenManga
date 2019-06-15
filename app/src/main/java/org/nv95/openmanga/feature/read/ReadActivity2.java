@@ -28,7 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.feature.read.custom.ReaderMenu;
 import org.nv95.openmanga.feature.read.reader.MangaReader;
@@ -56,7 +56,7 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.InternalLinkMovement;
 import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 

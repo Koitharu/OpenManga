@@ -31,8 +31,8 @@ import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
-import org.nv95.openmanga.utils.NetworkStateListener;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkStateListener;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.PausableAsyncTask;
 
 import java.util.ArrayList;

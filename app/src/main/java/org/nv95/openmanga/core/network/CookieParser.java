@@ -1,4 +1,4 @@
-package org.nv95.openmanga.utils;
+package org.nv95.openmanga.core.network;
 
 import androidx.annotation.Nullable;
 

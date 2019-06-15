@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
 import org.nv95.openmanga.helpers.SyncHelper;

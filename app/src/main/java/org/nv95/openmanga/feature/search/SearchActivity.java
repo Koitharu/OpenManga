@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import org.jsoup.internal.StringUtil;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
 import org.nv95.openmanga.feature.search.adapter.SearchResultsAdapter;
 import org.nv95.openmanga.components.SearchInput;

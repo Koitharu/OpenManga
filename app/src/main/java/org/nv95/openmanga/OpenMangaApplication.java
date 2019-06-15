@@ -4,8 +4,8 @@ import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.ImageUtils;
-import org.nv95.openmanga.utils.NetworkUtils;
-import org.nv95.openmanga.utils.log.OpenMangaLogTree;
+import org.nv95.openmanga.core.network.NetworkUtils;
+import org.nv95.openmanga.core.network.OpenMangaLogTree;
 
 import android.app.Application;
 import android.content.res.Resources;

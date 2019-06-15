@@ -22,7 +22,7 @@ import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

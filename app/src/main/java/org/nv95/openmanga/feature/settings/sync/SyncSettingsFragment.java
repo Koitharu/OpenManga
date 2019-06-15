@@ -17,14 +17,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.activities.BaseAppActivity;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
 import org.nv95.openmanga.feature.settings.main.SettingsActivity2;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.SyncDevice;
 import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 

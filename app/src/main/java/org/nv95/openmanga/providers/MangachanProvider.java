@@ -16,9 +16,9 @@ import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.CookieParser;
+import org.nv95.openmanga.core.network.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.util.ArrayList;
 

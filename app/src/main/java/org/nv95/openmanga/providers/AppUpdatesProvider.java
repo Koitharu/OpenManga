@@ -6,7 +6,7 @@ import androidx.annotation.WorkerThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.nv95.openmanga.BuildConfig;
-import org.nv95.openmanga.utils.NetworkUtils;
+import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.util.ArrayList;
 
