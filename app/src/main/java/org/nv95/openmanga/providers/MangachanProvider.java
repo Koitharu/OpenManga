@@ -46,6 +46,7 @@ public class MangachanProvider extends MangaProvider {
             "%D1%81%D1%91%D0%B4%D0%B7%D1%91-%D0%B0%D0%B9", "%D1%81%D1%91%D0%BD%D1%8D%D0%BD", "%D1%81%D1%91%D0%BD%D1%8D%D0%BD-%D0%B0%D0%B9",
             "%D1%82%D1%80%D0%B0%D0%B3%D0%B5%D0%B4%D0%B8%D1%8F"
     };
+    private static final String BASE_URL = "https://manga-chan.me/";
 
     private static String sAuthCookie = null;
 
@@ -59,7 +60,7 @@ public class MangachanProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.me/" + (genre == 0 ? "manga/new" : "tags/" + genreUrls[genre-1]) + "&n=" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage(BASE_URL + (genre == 0 ? "manga/new" : "tags/" + genreUrls[genre - 1]) + "&n=" + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -69,9 +70,9 @@ public class MangachanProvider extends MangaProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = concatUrl("http://mangachan.me/", t.attr("href"));
+            manga.path = concatUrl(BASE_URL, t.attr("href"));
             t = o.select("img").first();
-            manga.preview = concatUrl("http://mangachan.me/", t.attr("src"));
+            manga.preview = t.attr("src");
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -90,14 +91,14 @@ public class MangachanProvider extends MangaProvider {
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
-            summary.preview = concatUrl("http://mangachan.me/", e.getElementById("cover").attr("src"));
+            summary.preview = e.getElementById("cover").attr("src");
             MangaChapter chapter;
             Elements els = e.select("table.table_cha");
             els = els.select("a");
             for (Element o : els) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = concatUrl("http://mangachan.me/", o.attr("href"));
+                chapter.readLink = concatUrl(BASE_URL, o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -167,7 +168,7 @@ public class MangachanProvider extends MangaProvider {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://mangachan.me/?do=search&subaction=search&story=" + query);
+        Document document = getPage(BASE_URL + "?do=search&subaction=search&story=" + query);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -179,7 +180,7 @@ public class MangachanProvider extends MangaProvider {
             manga.name = t.text();
             manga.path = t.attr("href");
             t = o.select("img").first();
-            manga.preview = concatUrl("http://mangachan.me/", t.attr("src"));
+            manga.preview = concatUrl(BASE_URL, t.attr("src"));
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -222,7 +223,7 @@ public class MangachanProvider extends MangaProvider {
     @SuppressWarnings({"WeakerAccess", "unused"})
     public static boolean auth(String login, String password, String arg3) {
         CookieParser cp = NetworkUtils.authorize(
-                "http://mangachan.me/",
+                BASE_URL,
                 "login",
                 "submit",
                 "login_name",
