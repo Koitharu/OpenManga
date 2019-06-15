@@ -37,7 +37,7 @@ public class MangaTownProvider extends MangaProvider {
                 + (genre == 0 ? "" : genreUrls[genre - 1] + "/")
                 + (page + 1) + ".htm");
         MangaInfo manga;
-        Element root = document.body().select("ul.post-list").first();
+        Element root = document.body().select("ul.manga_pic_list").first();
         for (Element o : root.select("li")) {
             manga = new MangaInfo();
             manga.name = o.select("p.title").first().text();
@@ -47,7 +47,7 @@ public class MangaTownProvider extends MangaProvider {
             } catch (Exception e) {
                 manga.genres = "";
             }
-            manga.path = o.select("a").first().attr("href");
+            manga.path = appendProtocol("http:", o.select("a").first().attr("href"));
             try {
                 manga.preview = o.select("img").first().attr("src");
             } catch (Exception e) {
@@ -70,11 +70,11 @@ public class MangaTownProvider extends MangaProvider {
             summary.preview = e.select("img").first().attr("src");
 
             MangaChapter chapter;
-            e = e.select("ul.detail-ch-list").first();
+            e = e.select("ul.chapter_list").first();
             for (Element o : e.select("li")) {
                 chapter = new MangaChapter();
                 chapter.name = o.select("a").first().text() + " " + o.select("span").get(0).text();
-                chapter.readLink = o.select("a").first().attr("href");
+                chapter.readLink = appendProtocol("http:", o.select("a").first().attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -94,7 +94,7 @@ public class MangaTownProvider extends MangaProvider {
             MangaPage page;
             Element e = document.body().select("select").get(1);
             for (Element o : e.select("option")) {
-                page = new MangaPage(o.attr("value"));
+                page = new MangaPage(appendProtocol("http:", o.attr("value")));
                 page.provider = MangaTownProvider.class;
                 pages.add(page);
             }
@@ -103,6 +103,10 @@ public class MangaTownProvider extends MangaProvider {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String appendProtocol(String protocol, String url) {
+        return null != url && url.startsWith("//") ? protocol + url : url;
     }
 
     @Override
@@ -119,18 +123,20 @@ public class MangaTownProvider extends MangaProvider {
     public MangaList search(String query, int page) throws Exception {
         MangaList list = new MangaList();
         Document document =
-                getPage("http://www.mangatown.com/search/" + page + ".html?name="
-                        + URLEncoder.encode(query, "UTF-8"));
+                getPage("http://www.mangatown.com/search.php?name="
+                        + URLEncoder.encode(query, "UTF-8") + (page > 0 ? "&page=" + (page + 1) : ""));
         MangaInfo manga;
-        Element ul = document.body().select("ul.post-list").first();
-        for (Element o : ul.select("li"))
-        {
+        Element ul = document.body().select("ul.manga_pic_list").first();
+        for (Element o : ul.select("li")) {
             manga = new MangaInfo();
-            manga.name = o.select("a").first().attr("rel");
+            Element el = o.select("a").first();
+            if (null != el) {
+                manga.name = el.attr("title");
+                manga.path = appendProtocol("http:", el.attr("href"));
+            }
             manga.subtitle = "";
-            manga.path = o.select("a").first().attr("href");
             try {
-                manga.genres = o.select("p").get(1).text();
+                manga.genres = o.select("p.keyWord").first().text();
             } catch (Exception e) {
                 manga.genres = "";
             }
@@ -165,7 +171,9 @@ public class MangaTownProvider extends MangaProvider {
     }
 
     @Override
-    public boolean isSearchAvailable() { return true; }
+    public boolean isSearchAvailable() {
+        return true;
+    }
 
     @Override
     public String[] getSortTitles(Context context) {
