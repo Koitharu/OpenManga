@@ -23,6 +23,8 @@ import java.util.ArrayList;
  */
 public class ReadmangaRuProvider extends MangaProvider {
 
+    private static final String HOST = "http://readmanga.me/";
+
     protected static final int sorts[] = {R.string.sort_popular, R.string.sort_latest, R.string.sort_updated, R.string.sort_rating};
     protected static final String sortUrls[] = {"popular","created", "updated", "votes"};
     protected static final int genres[] = {R.string.genre_all, R.string.genre_art, R.string.genre_action, R.string.genre_martialarts, R.string.genre_vampires, R.string.genre_harem,
@@ -53,7 +55,7 @@ public class ReadmangaRuProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://readmanga.me/list" +
+        Document document = getPage(HOST + "list" +
                 (genre == 0 ? "" : "/genre/" + genreUrls[genre - 1])
                 + "?sortType=" + sortUrls[sort] + "&offset=" + page * 70 + "&max=70");
         MangaInfo manga;
@@ -67,7 +69,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             manga.name = lc && h4 != null ? h4.text() : h3.text();
             manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
-            manga.path = concatUrl("http://readmanga.me/", o.select("a").first().attr("href"));
+            manga.path = concatUrl(HOST, o.select("a").first().attr("href"));
             try {
                 manga.preview = o.select("img").first().attr("data-original");
             } catch (Exception e) {
@@ -105,7 +107,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = "http://readmanga.me" + o.attr("href") + "?mature=1";
+                chapter.readLink = concatUrl(HOST, o.attr("href") + "?mature=1");
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -138,7 +140,7 @@ public class ReadmangaRuProvider extends MangaProvider {
                         o1 = array.getJSONArray(i);
                         page = new MangaPage(o1.getString(1) + o1.getString(0) + o1.getString(2));
                         if (page.path.startsWith("/")) {
-                            page.path = "http://readmanga.me" + page.path;
+                            page.path = concatUrl(HOST, page.path);
                         }
                         page.provider = ReadmangaRuProvider.class;
                         pages.add(page);
@@ -196,7 +198,7 @@ public class ReadmangaRuProvider extends MangaProvider {
         String data[] = new String[]{
                 "q", query.replace(' ','_')
         };
-        Document document = postPage("http://readmanga.me/search/advanced", data);
+        Document document = postPage(HOST + "/search/advanced", data);
         MangaInfo manga;
         Element r;
         Element h4, h3;
@@ -209,7 +211,7 @@ public class ReadmangaRuProvider extends MangaProvider {
             manga.name = lc && h4 != null ? h4.text() : h3.text();
             manga.subtitle = lc ? h3.text() : (h4 == null ? "" : h4.text());
             manga.genres = o.select("a.element-link").text();
-            manga.path = concatUrl("http://readmanga.me/", o.select("a").first().attr("href"));
+            manga.path = concatUrl(HOST, o.select("a").first().attr("href"));
             manga.preview = o.select("img").first().attr("data-original");
             r = o.select("div.rating").first();
             manga.rating = r == null ? 0 : Byte.parseByte(r.attr("title").substring(0, 3).replace(".",""));

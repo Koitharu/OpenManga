@@ -10,14 +10,14 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.dialogs.ChaptersSelectDialog;
+import org.nv95.openmanga.feature.preview.dialog.ChaptersSelectDialog;
 import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.services.SaveService;
+import org.nv95.openmanga.feature.download.service.SaveService;
 
 /**
  * Created by admin on 21.07.17.

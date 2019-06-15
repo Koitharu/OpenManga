@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.nv95.openmanga.components.reader.StandardMangaReader
+    <org.nv95.openmanga.feature.read.reader.StandardMangaReader
         android:id="@+id/reader"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <org.nv95.openmanga.components.ReaderMenu
+    <org.nv95.openmanga.feature.read.custom.ReaderMenu
         android:id="@+id/menuPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:background="?selectableItemBackground"
+        android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/menu"
         android:minHeight="?actionBarSize"
         android:minWidth="?actionBarSize"
