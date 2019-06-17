@@ -60,7 +60,7 @@ public class MangachanProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage(BASE_URL + (genre == 0 ? "manga/new" : "tags/" + genreUrls[genre - 1]) + "&n=" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage(BASE_URL + (genre == 0 ? "manga/new" : "tags/" + genreUrls[genre - 1]) + "?n=" + sortUrls[sort] + "&offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
