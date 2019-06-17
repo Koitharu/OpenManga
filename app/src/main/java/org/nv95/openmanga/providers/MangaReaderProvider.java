@@ -31,7 +31,7 @@ public class MangaReaderProvider extends MangaProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://www.mangareader.net/popular/" + page * 30);
+        Document document = getPage("https://www.mangareader.net/popular/" + page * 30);
         MangaInfo manga;
         Elements elements = document.body().select("div.mangaresultinner");
         for (Element o : elements) {
@@ -43,7 +43,7 @@ public class MangaReaderProvider extends MangaProvider {
                 manga.subtitle = "";
             }
             manga.genres = o.select("div.manga_genre").first().text();
-            manga.path = "http://www.mangareader.net" + o.select("a").first().attr("href");
+            manga.path = "https://www.mangareader.net" + o.select("a").first().attr("href");
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
             manga.provider = MangaReaderProvider.class;
@@ -70,7 +70,7 @@ public class MangaReaderProvider extends MangaProvider {
             for (Element o : e.select("a")) {
                 chapter = new MangaChapter();
                 chapter.name = o.text() + o.parent().ownText();
-                chapter.readLink = concatUrl("http://www.mangareader.net/", o.attr("href"));
+                chapter.readLink = concatUrl("https://www.mangareader.net/", o.attr("href"));
                 chapter.provider = summary.provider;
                 summary.chapters.add(chapter);
             }
@@ -89,7 +89,7 @@ public class MangaReaderProvider extends MangaProvider {
             MangaPage page;
             Element e = document.body().getElementById("selectpage");
             for (Element o : e.select("option")) {
-                page = new MangaPage("http://www.mangareader.net" + o.attr("value"));
+                page = new MangaPage("https://www.mangareader.net" + o.attr("value"));
                 page.provider = MangaReaderProvider.class;
                 pages.add(page);
             }
@@ -133,7 +133,7 @@ public class MangaReaderProvider extends MangaProvider {
             return MangaList.empty();
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://www.mangareader.net/search/?w=" + URLEncoder.encode(query, "UTF-8"));
+        Document document = getPage("https://www.mangareader.net/search/?w=" + URLEncoder.encode(query, "UTF-8"));
         MangaInfo manga;
         Elements elements = document.body().select("div.mangaresultinner");
         for (Element o : elements) {
@@ -145,7 +145,7 @@ public class MangaReaderProvider extends MangaProvider {
                 manga.subtitle = "";
             }
             manga.genres = o.select("div.manga_genre").first().text();
-            manga.path = concatUrl("http://www.mangareader.net/", o.select("a").first().attr("href"));
+            manga.path = concatUrl("https://www.mangareader.net/", o.select("a").first().attr("href"));
             manga.preview = o.select("div.imgsearchresults").first().attr("style");
             manga.preview = manga.preview.substring(manga.preview.indexOf('\'') + 1, manga.preview.lastIndexOf('\''));
             manga.provider = MangaReaderProvider.class;
