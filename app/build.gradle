@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: "${rootProject.rootDir}/scripts/version.gradle"
+apply from: "${rootProject.rootDir}/scripts/sign.gradle"
 
 // version of app
 // see app/version.properties
@@ -31,6 +32,13 @@ android {
             keyAlias "develop"
             keyPassword "develop"
         }
+        release {
+            storeFile file(signingConfigsRelease.signStoreFile)
+            storePassword signingConfigsRelease.signStorePassword
+            keyAlias signingConfigsRelease.signKeyAlias
+            keyPassword signingConfigsRelease.signKeyPassword
+        }
+
     }
 
     buildTypes {
@@ -38,6 +46,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
 
         beta {
@@ -45,7 +54,7 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable true
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
