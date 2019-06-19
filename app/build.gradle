@@ -56,6 +56,17 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+
+            def nameSuff = variant.buildType.versionNameSuffix == null ? variant.versionName
+                    : variant.versionName.replace(variant.buildType.versionNameSuffix, "")
+
+            output.outputFileName = "openmanga-${variant.name}-${nameSuff}.apk"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
