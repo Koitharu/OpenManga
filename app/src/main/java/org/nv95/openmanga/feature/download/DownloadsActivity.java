@@ -1,21 +1,22 @@
 package org.nv95.openmanga.feature.download;
 
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
+import org.nv95.openmanga.feature.download.adapter.DownloadsAdapter;
+import org.nv95.openmanga.helpers.MangaSaveHelper;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.nv95.openmanga.R;
-import org.nv95.openmanga.core.activities.BaseAppActivity;
-import org.nv95.openmanga.feature.download.adapter.DownloadsAdapter;
-import org.nv95.openmanga.helpers.MangaSaveHelper;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by nv95 on 03.01.16.
@@ -23,6 +24,7 @@ import org.nv95.openmanga.helpers.MangaSaveHelper;
 public class DownloadsActivity extends BaseAppActivity {
 
     private DownloadsAdapter mAdapter;
+
     private TextView mTextViewHolder;
 
     @Override

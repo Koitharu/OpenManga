@@ -31,7 +31,8 @@ public class GeneralSettingsFragment extends PreferenceFragment {
         PreferencesUtils.bindPreferenceSummary(findPreference("lang"), new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                OpenMangaApplication.setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
+                OpenMangaApplication.Companion
+                        .setLanguage(preference.getContext().getApplicationContext().getResources(), (String) newValue);
                 int index = ((ListPreference) preference).findIndexOfValue((String) newValue);
                 String summ = ((ListPreference) preference).getEntries()[index].toString();
                 preference.setSummary(summ);
