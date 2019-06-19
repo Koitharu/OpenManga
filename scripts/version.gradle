@@ -1,0 +1,39 @@
+
+rootProject.ext.getVersionProps = {
+    Properties versionProps = new Properties()
+    File propsFile = new File("$rootDir/app/version.properties")
+    versionProps.load(propsFile.newDataInputStream())
+    return versionProps
+}
+
+rootProject.ext.updateVersion = {
+    File propsFile = new File("$rootDir/app/version.properties")
+    Properties props = new Properties()
+    props.load(propsFile.newDataInputStream())
+
+    println "-- APP VERSION --"
+    props.stringPropertyNames().forEach({
+        println "name prop: " + it
+    })
+
+    def versionName = props.getProperty("versionName")
+    def versionCode = props.getProperty("versionCode").toInteger()
+    def buildNubers = versionName.split("\\.")
+//    oldBuildNuber = versionName.substring(versionName.lastIndexOf("."))
+    def oldBuildNuber = buildNubers[buildNubers.length - 1].toInteger()
+
+    versionCode++
+    oldBuildNuber++
+
+    buildNubers[buildNubers.length - 1] = oldBuildNuber.toString()
+
+    props.setProperty('versionName', buildNubers.join("."))
+    props.setProperty('versionCode', versionCode.toString())
+    props.store(propsFile.newWriter(), null)
+}
+
+// check if run release or beta build
+def runTasks = gradle.startParameter.taskNames
+if ('assembleRelease' in runTasks || 'assembleBeta' in runTasks) {
+    rootProject.ext.updateVersion()
+}
