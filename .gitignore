@@ -6,3 +6,4 @@
 /captures
 .navigation
 .directory
+*.iml
