@@ -10,8 +10,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 51321
-        versionName "4.6.2"
+        versionCode 51322
+        versionName "4.6.3"
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://openmanga.pythonanywhere.com/api/v1\""
