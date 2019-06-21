@@ -14,9 +14,12 @@ public class Languages {
     public static final int MULTI = 4;
     public static final int VIE = 5;
     public static final int FR = 6;
+    public static final int ES = 7;
 
     public static int fromLocale(Locale locale) {
         switch (locale.getLanguage()) {
+            case "es":
+                return ES;
             case "ru":
             case "uk":
             case "be":

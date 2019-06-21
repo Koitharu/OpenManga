@@ -17,6 +17,7 @@ import org.nv95.openmanga.providers.ScanFRProvider;
 import org.nv95.openmanga.providers.SelfmangaRuProvider;
 import org.nv95.openmanga.providers.TruyenTranhProvider;
 import org.nv95.openmanga.providers.YaoiChanProvider;
+import org.nv95.openmanga.providers.HeavenMangaProvider;
 
 /**
  * Created by nv95 on 27.07.16.
@@ -38,7 +39,8 @@ public class Providers {
             new ProviderSummary(10, "Яой-тян", YaoiChanProvider.class, Languages.RU, R.xml.pref_anychan),
             new ProviderSummary(11, "TruyenTranh", TruyenTranhProvider.class, Languages.VIE, 0),
             new ProviderSummary(12, "Хентай-тян", HentaichanProvider.class, Languages.RU, R.xml.pref_henchan),
-            new ProviderSummary(13, "ScanFR", ScanFRProvider.class, Languages.FR, 0)
+            new ProviderSummary(13, "ScanFR", ScanFRProvider.class, Languages.FR, 0),
+            new ProviderSummary(14, "HeavenManga", HeavenMangaProvider.class, Languages.ES, 0)
     };
 
     public static ProviderSummary[] getAll() {
