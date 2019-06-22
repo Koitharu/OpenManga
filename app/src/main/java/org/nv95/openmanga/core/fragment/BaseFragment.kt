@@ -16,4 +16,8 @@ abstract class BaseFragment : Fragment(), BaseView {
         return inflater.inflate(getLayout(), container, false)
     }
 
+    override fun showLoader(show: Boolean) {
+        // TODO
+    }
+
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_error">Error load data</string>
+    <string name="error_server">Server response error</string>
+    <string name="error_server_convert">Error parse data from server</string>
+    <string name="error_connection">Error connection</string>
+    <string name="error_connection_wait">Wait internet</string>
+    <string name="error_timeout">Error timeout</string>
+</resources>

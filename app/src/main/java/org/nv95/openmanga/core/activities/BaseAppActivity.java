@@ -89,10 +89,12 @@ public abstract class BaseAppActivity extends AppCompatActivity {
         mActionBarVisible = toolbar != null;
     }
 
+    @Deprecated
     protected void setupToolbarScrolling(Toolbar toolbar) {
         setToolbarScrollingLock(toolbar, false);
     }
 
+    @Deprecated
     protected void setToolbarScrollingLock(Toolbar toolbar, boolean lock) {
         if (toolbar == null || !(toolbar.getParent() instanceof AppBarLayout)) {
             return;

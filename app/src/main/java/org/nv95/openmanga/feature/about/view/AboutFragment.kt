@@ -1,4 +1,4 @@
-package org.nv95.openmanga.feature.about.presentation
+package org.nv95.openmanga.feature.about.view
 
 import android.os.Bundle
 import android.view.View

@@ -8,7 +8,7 @@ import org.nv95.openmanga.R
 
 
 class FragmentActivityDelegate(
-        val fragmentManager: FragmentManager
+        private val fragmentManager: FragmentManager
 ) : ActivityDelegate<Fragment>, LifecycleObserver {
 
     /**

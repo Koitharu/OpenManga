@@ -1,12 +1,5 @@
 package org.nv95.openmanga
 
-import org.nv95.openmanga.items.ThumbSize
-import org.nv95.openmanga.utils.AnimUtils
-import org.nv95.openmanga.utils.FileLogger
-import org.nv95.openmanga.utils.ImageUtils
-import org.nv95.openmanga.core.network.NetworkUtils
-import org.nv95.openmanga.core.network.OpenMangaLogTree
-
 import android.app.Application
 import android.content.res.Resources
 import android.preference.PreferenceManager
@@ -14,11 +7,16 @@ import android.text.TextUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.nv95.openmanga.core.network.NetworkUtils
+import org.nv95.openmanga.core.network.OpenMangaLogTree
 import org.nv95.openmanga.di.appModule
-
-import java.util.Locale
-
+import org.nv95.openmanga.di.dbModules
+import org.nv95.openmanga.items.ThumbSize
+import org.nv95.openmanga.utils.AnimUtils
+import org.nv95.openmanga.utils.FileLogger
+import org.nv95.openmanga.utils.ImageUtils
 import timber.log.Timber
+import java.util.*
 
 /**
  * Created by nv95 on 10.12.15.
@@ -34,7 +32,7 @@ class OpenMangaApplication : Application() {
 
             androidContext(this@OpenMangaApplication)
 
-            modules(appModule)
+            modules(listOf(appModule, dbModules))
         }
 
         FileLogger.init(this)

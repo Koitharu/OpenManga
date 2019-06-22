@@ -3,7 +3,7 @@ package org.nv95.openmanga.feature.about
 import android.os.Bundle
 import org.nv95.openmanga.R
 import org.nv95.openmanga.core.activities.BaseActivity
-import org.nv95.openmanga.feature.about.presentation.AboutFragment
+import org.nv95.openmanga.feature.about.view.AboutFragment
 
 /**
  * Created by nv95 on 12.01.16.

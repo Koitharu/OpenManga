@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_error">Ошибка загрузки данных</string>
+    <string name="error_server">Ошибка ответа от сервера</string>
+    <string name="error_server_convert">Ошибка обработки ответа от сервера</string>
+    <string name="error_connection">Ошибка, возможно отсутствует интернет</string>
+    <string name="error_connection_wait">Жду интернет</string>
+    <string name="error_timeout">Истекло время ожидания ответа от сервера</string>
+</resources>

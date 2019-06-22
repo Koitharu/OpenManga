@@ -18,4 +18,6 @@ interface BaseView {
         }
     }
 
+    fun showLoader(show: Boolean)
+
 }
