@@ -77,7 +77,7 @@
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
         <service android:name=".services.ScheduledService" />
-        <service android:name=".services.UpdateService" />
+        <service android:name=".services.UpdateService" android:exported="false" />
         <service android:name=".services.ImportService" />
         <service android:name=".services.SyncService" />
         <service android:name=".services.ExportService" />

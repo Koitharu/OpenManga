@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.res.Resources
 import android.preference.PreferenceManager
 import android.text.TextUtils
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -11,6 +13,8 @@ import org.nv95.openmanga.core.network.NetworkUtils
 import org.nv95.openmanga.core.network.OpenMangaLogTree
 import org.nv95.openmanga.di.appModule
 import org.nv95.openmanga.di.dbModules
+import org.nv95.openmanga.feature.update_app.di.updateAppVersionModule
+import org.nv95.openmanga.feature.worker.WorkerLauncher
 import org.nv95.openmanga.items.ThumbSize
 import org.nv95.openmanga.utils.AnimUtils
 import org.nv95.openmanga.utils.FileLogger
@@ -32,7 +36,7 @@ class OpenMangaApplication : Application() {
 
             androidContext(this@OpenMangaApplication)
 
-            modules(listOf(appModule, dbModules))
+            modules(listOf(appModule, dbModules, updateAppVersionModule))
         }
 
         FileLogger.init(this)
@@ -64,6 +68,7 @@ class OpenMangaApplication : Application() {
         Timber.plant(OpenMangaLogTree())
 
 
+        WorkerLauncher.runCheckAppVersionIfNeeded()
     }
 
     companion object {

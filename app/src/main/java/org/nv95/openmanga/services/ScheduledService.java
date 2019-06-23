@@ -16,13 +16,11 @@ import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.newchapter.NewChaptersActivity;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
-import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
 import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.providers.AppUpdatesProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.FileLogger;
@@ -66,14 +64,13 @@ public class ScheduledService extends Service {
         return START_NOT_STICKY;
     }
 
-    private class BackgroundTask extends AsyncTask<Void,AppUpdatesProvider.AppUpdateInfo,MangaUpdateInfo[]> {
+    private class BackgroundTask extends AsyncTask<Void, Void, MangaUpdateInfo[]> {
 
         @Override
         protected MangaUpdateInfo[] doInBackground(Void... params) {
             try {
                 int delay = mScheduleHelper.getActionIntervalHours(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
                 if (mAutoUpdate && (delay < 0 || delay >= INTERVAL_CHECK_APP_UPDATE)) {
-                    publishProgress(new AppUpdatesProvider().getLatestAny());
                     mScheduleHelper.actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
                 }
             } catch (Exception e) {
@@ -145,22 +142,6 @@ public class ScheduledService extends Service {
             }
             SyncService.syncDelayed(ScheduledService.this.getApplicationContext());
             stopSelf();
-        }
-
-        @Override
-        protected void onProgressUpdate(AppUpdatesProvider.AppUpdateInfo... values) {
-            super.onProgressUpdate(values);
-            if (values[0] == null || !values[0].isActual()) {
-                return;
-            }
-            new NotificationHelper(ScheduledService.this)
-                    .title(R.string.app_update_avaliable)
-                    .text(getString(R.string.app_name) + " " + values[0].getVersionName())
-                    .icon(R.drawable.ic_stat_update)
-                    .autoCancel()
-                    .image(R.mipmap.ic_launcher)
-                    .intentService(new Intent(ScheduledService.this, UpdateService.class).putExtra("url", values[0].getUrl()), 555)
-                    .notifyOnce(555, R.string.app_update_avaliable, values[0].getVersionCode());
         }
 
     }

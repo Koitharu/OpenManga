@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by nv95 on 18.03.16.
  */
+@Deprecated
 public class ScheduleHelper {
 
     public static final String ACTION_CHECK_APP_UPDATES = "app_update";

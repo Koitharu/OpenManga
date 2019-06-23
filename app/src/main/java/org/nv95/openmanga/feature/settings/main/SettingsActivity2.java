@@ -1,5 +1,45 @@
 package org.nv95.openmanga.feature.settings.main;
 
+import com.google.android.material.appbar.AppBarLayout;
+
+import org.koin.core.context.GlobalContext;
+import org.nv95.openmanga.R;
+import org.nv95.openmanga.core.activities.BaseAppActivity;
+import org.nv95.openmanga.core.network.NetworkUtils;
+import org.nv95.openmanga.di.KoinJavaComponent;
+import org.nv95.openmanga.feature.about.AboutActivity;
+import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
+import org.nv95.openmanga.feature.settings.appearance.AppearanceSettingsFragment;
+import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
+import org.nv95.openmanga.feature.settings.general.GeneralSettingsFragment;
+import org.nv95.openmanga.feature.settings.main.adapter.SettingsHeadersAdapter;
+import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.LocalMoveDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.RecommendationsPrefDialog;
+import org.nv95.openmanga.feature.settings.main.dialog.StorageSelectDialog;
+import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
+import org.nv95.openmanga.feature.settings.main.model.PreferenceHeaderItem;
+import org.nv95.openmanga.feature.settings.other.OtherSettingsFragment;
+import org.nv95.openmanga.feature.settings.provider.ProviderSelectFragment;
+import org.nv95.openmanga.feature.settings.read.ReadSettingsFragment;
+import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
+import org.nv95.openmanga.feature.settings.update.UpdatesCheckSettingsFragment;
+import org.nv95.openmanga.feature.update_app.model.UpdateAppVersion;
+import org.nv95.openmanga.feature.update_app.repository.UpdateAppVersionRepository;
+import org.nv95.openmanga.helpers.DirRemoveHelper;
+import org.nv95.openmanga.helpers.SyncHelper;
+import org.nv95.openmanga.items.RESTResponse;
+import org.nv95.openmanga.providers.LocalMangaProvider;
+import org.nv95.openmanga.services.SyncService;
+import org.nv95.openmanga.services.UpdateService;
+import org.nv95.openmanga.utils.AnimUtils;
+import org.nv95.openmanga.utils.AppHelper;
+import org.nv95.openmanga.utils.BackupRestoreUtil;
+import org.nv95.openmanga.utils.FileLogger;
+import org.nv95.openmanga.utils.LayoutUtils;
+import org.nv95.openmanga.utils.ProgressAsyncTask;
+import org.nv95.openmanga.utils.WeakAsyncTask;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,13 +51,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,65 +58,49 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.nv95.openmanga.R;
-import org.nv95.openmanga.feature.settings.appearance.AppearanceSettingsFragment;
-import org.nv95.openmanga.feature.settings.general.GeneralSettingsFragment;
-import org.nv95.openmanga.feature.settings.other.OtherSettingsFragment;
-import org.nv95.openmanga.feature.settings.main.model.PreferenceHeaderItem;
-import org.nv95.openmanga.feature.settings.provider.ProviderSelectFragment;
-import org.nv95.openmanga.feature.settings.read.ReadSettingsFragment;
-import org.nv95.openmanga.feature.settings.main.adapter.SettingsHeadersAdapter;
-import org.nv95.openmanga.feature.settings.auth.AuthLoginFragment;
-import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
-import org.nv95.openmanga.feature.settings.update.UpdatesCheckSettingsFragment;
-import org.nv95.openmanga.feature.about.AboutActivity;
-import org.nv95.openmanga.core.activities.BaseAppActivity;
-import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
-import org.nv95.openmanga.feature.settings.main.dialog.DirSelectDialog;
-import org.nv95.openmanga.feature.settings.main.dialog.LocalMoveDialog;
-import org.nv95.openmanga.feature.settings.main.dialog.RecommendationsPrefDialog;
-import org.nv95.openmanga.feature.settings.main.dialog.StorageSelectDialog;
-import org.nv95.openmanga.helpers.DirRemoveHelper;
-import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
-import org.nv95.openmanga.helpers.SyncHelper;
-import org.nv95.openmanga.items.RESTResponse;
-import org.nv95.openmanga.providers.AppUpdatesProvider;
-import org.nv95.openmanga.providers.LocalMangaProvider;
-import org.nv95.openmanga.services.SyncService;
-import org.nv95.openmanga.services.UpdateService;
-import org.nv95.openmanga.utils.AnimUtils;
-import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.utils.BackupRestoreUtil;
-import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.utils.LayoutUtils;
-import org.nv95.openmanga.core.network.NetworkUtils;
-import org.nv95.openmanga.utils.ProgressAsyncTask;
-import org.nv95.openmanga.utils.WeakAsyncTask;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
+import kotlin.jvm.internal.ClassReference;
 
 /**
  * Created by admin on 24.07.17.
  */
 
 public class SettingsActivity2 extends BaseAppActivity implements AdapterView.OnItemClickListener,
-        Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, FragmentManager.OnBackStackChangedListener {
+        Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener,
+        FragmentManager.OnBackStackChangedListener {
 
     private static final int SECTION_READER = 2;
+
     private static final int SECTION_PROVIDERS = 3;
+
     private static final int SECTION_SYNC = 4;
+
     private static final int SECTION_CHUPD = 5;
 
     private Fragment mFragment;
+
     private SettingsHeadersAdapter mAdapter;
+
     private ArrayList<PreferenceHeaderItem> mHeaders;
+
     private AppBarLayout mAppBarLayout;
+
     private CardView mCardView;
+
     private FrameLayout mContent;
+
     private TextView mTitleTextView;
+
     private boolean mIsTwoPanesMode;
 
     @Override
@@ -329,7 +346,8 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
             outState.putString("fragment", mFragment.getClass().getName());
         }
     }
-    public void onRestoreInstanceState(Bundle inState){
+
+    public void onRestoreInstanceState(Bundle inState) {
         String fragment = inState.getString("fragment");
         if (fragment != null) {
             try {
@@ -340,6 +358,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
             }
         }
     }
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
         switch (preference.getKey()) {
@@ -443,9 +462,11 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
     }
 
-    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity2, Void, Void, AppUpdatesProvider> implements DialogInterface.OnCancelListener {
+    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity2, Void, Void, List<UpdateAppVersion>>
+            implements DialogInterface.OnCancelListener {
 
         private int mSelected = 0;
+
         private final ProgressDialog mDialog;
 
         CheckUpdatesTask(SettingsActivity2 activity) {
@@ -463,8 +484,11 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         @Override
-        protected AppUpdatesProvider doInBackground(Void... params) {
-            return new AppUpdatesProvider();
+        protected List<UpdateAppVersion> doInBackground(Void... params) {
+
+            UpdateAppVersionRepository updateRepository = KoinJavaComponent.get(UpdateAppVersionRepository.class);
+
+            return updateRepository.getUpdates();
         }
 
         @Override
@@ -474,48 +498,34 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         @Override
-        protected void onPostExecute(@NonNull final SettingsActivity2 activity, AppUpdatesProvider appUpdatesProvider) {
+        protected void onPostExecute(@NonNull final SettingsActivity2 activity, List<UpdateAppVersion> appUpdatesProvider) {
             mDialog.dismiss();
-            if (appUpdatesProvider.isSuccess()) {
-                if (activity.mFragment instanceof OtherSettingsFragment) {
-                    Preference p = ((OtherSettingsFragment) activity.mFragment).findPreference("update");
-                    if (p != null) {
-                        p.setSummary(activity.getString(R.string.last_update_check,
-                                AppHelper.getReadableDateTimeRelative(System.currentTimeMillis())));
-                    }
+            if (activity.mFragment instanceof OtherSettingsFragment) {
+                Preference p = ((OtherSettingsFragment) activity.mFragment).findPreference("update");
+                if (p != null) {
+                    p.setSummary(activity.getString(R.string.last_update_check,
+                            AppHelper.getReadableDateTimeRelative(System.currentTimeMillis())));
                 }
+            }
+            if (appUpdatesProvider.size() > 0) {
                 new ScheduleHelper(activity).actionDone(ScheduleHelper.ACTION_CHECK_APP_UPDATES);
-                final AppUpdatesProvider.AppUpdateInfo[] updates = appUpdatesProvider.getLatestUpdates();
-                if (updates.length == 0) {
-                    new AlertDialog.Builder(activity)
-                            .setMessage(R.string.no_app_updates)
-                            .setPositiveButton(R.string.close, null)
-                            .create().show();
-                    return;
-                }
-                final String[] titles = new String[updates.length];
+                final String[] titles = new String[appUpdatesProvider.size()];
                 for (int i = 0; i < titles.length; i++) {
-                    titles[i] = updates[i].getVersionName();
+                    titles[i] = appUpdatesProvider.get(i).getVersionName();
                 }
                 new AlertDialog.Builder(activity)
                         .setTitle(R.string.update)
-                        .setSingleChoiceItems(titles, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mSelected = which;
-                            }
-                        })
+                        .setSingleChoiceItems(titles, 0, (dialog, which) -> mSelected = which)
                         .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(R.string.download, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                UpdateService.start(activity, updates[mSelected].getUrl());
-                            }
-                        })
+                        .setPositiveButton(R.string.download,
+                                (dialog, which) -> UpdateService.start(activity, appUpdatesProvider.get(mSelected).getUrl()))
                         .setCancelable(true)
                         .create().show();
             } else {
-                Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(activity)
+                        .setMessage(R.string.no_app_updates)
+                        .setPositiveButton(R.string.close, null)
+                        .create().show();
             }
         }
 
@@ -528,18 +538,15 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
     private void detachDevice(final int devId, final Preference p) {
         new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.device_detach_confirm, p.getTitle().toString()))
-                .setPositiveButton(R.string.detach, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        p.setSelectable(false);
-                        new DeviceDetachTask(p).attach(SettingsActivity2.this).start(devId);
-                    }
+                .setPositiveButton(R.string.detach, (dialogInterface, i) -> {
+                    p.setSelectable(false);
+                    new DeviceDetachTask(p).attach(SettingsActivity2.this).start(devId);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .create().show();
     }
 
-    private static class DeviceDetachTask extends WeakAsyncTask<Preference,Integer, Void, RESTResponse> {
+    private static class DeviceDetachTask extends WeakAsyncTask<Preference, Integer, Void, RESTResponse> {
 
         DeviceDetachTask(Preference preference) {
             super(preference);
@@ -589,7 +596,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         @Override
         protected void onPostExecute(@NonNull BaseAppActivity activity, RESTResponse restResponse) {
             if (restResponse.isSuccess()) {
-                ((SettingsActivity2)activity).openFragment(new AuthLoginFragment());
+                ((SettingsActivity2) activity).openFragment(new AuthLoginFragment());
             } else {
                 Toast.makeText(activity, restResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }

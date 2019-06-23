@@ -30,7 +30,7 @@ public class UpdateService extends IntentService {
         DownloadManager.Request request = new DownloadManager.Request(uri);
         request.setTitle(url.substring(url.lastIndexOf('/') + 1));
         request.allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment());
         request.setMimeType("application/vnd.android.package-archive");
 

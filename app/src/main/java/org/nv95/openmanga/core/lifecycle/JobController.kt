@@ -12,8 +12,7 @@ class JobController(owner: LifecycleOwner) {
     private val mainJob = SupervisorJob()
 
     /**
-     * Рутовый джоб, если его отменить, то все дочерние джобы тоже
-     * отменятся
+     * Root job, when it cancel then cancel all child jobs
      */
     val rootJob get() = Dispatchers.Main + mainJob
     /*
