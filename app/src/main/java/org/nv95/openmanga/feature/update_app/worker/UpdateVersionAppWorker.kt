@@ -49,7 +49,7 @@ class UpdateVersionAppWorker(
                 .autoCancel()
                 .image(R.mipmap.ic_launcher)
                 .intentService(Intent(applicationContext, UpdateService::class.java).apply {
-                    putExtra("url", firstAvailable.url)
+                    putExtra(UpdateService.KEY_URL, firstAvailable.url)
                 }, NOTIFICATION_ID)
                 .notifyOnce(NOTIFICATION_ID, R.string.app_update_avaliable, firstAvailable.versionCode)
     }

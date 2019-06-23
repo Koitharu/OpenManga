@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
  */
 public class UpdateService extends IntentService {
 
+    public static final String KEY_URL = "url";
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
@@ -49,7 +51,7 @@ public class UpdateService extends IntentService {
     protected void onHandleIntent(@Nullable final Intent intent) {
         String url = null;
         if (intent != null) {
-            url = intent.getStringExtra("url");
+            url = intent.getStringExtra(KEY_URL);
         }
         if (!TextUtils.isEmpty(url)) {
             start(getApplicationContext(), url);
