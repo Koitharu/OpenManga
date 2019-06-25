@@ -4,8 +4,8 @@ if (file(filePatch).exists()) {
     props.load(new FileInputStream(filePatch))
 } else {
     props.put("signStoreFile", "debug.jks")
-    props.put("signStorePassword", "adsurb")
-    props.put("signKeyAlias", "adsurb")
-    props.put("signKeyPassword", "adsurb")
+    props.put("signStorePassword", "develop")
+    props.put("signKeyAlias", "develop")
+    props.put("signKeyPassword", "develop")
 }
 rootProject.ext.signingConfigsRelease = props
