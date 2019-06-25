@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import org.nv95.openmanga.BuildConfig
 import org.nv95.openmanga.R
 import org.nv95.openmanga.core.extention.getString
 import org.nv95.openmanga.core.sources.ConnectionSource

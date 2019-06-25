@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import timber.log.Timber;
 
-import org.koin.core.logger.LoggerKt;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
@@ -20,13 +19,14 @@ import org.nv95.openmanga.utils.FileLogger;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 /**
  * Created by nv95 on 18.03.16.
  */
 public class NewChaptersProvider {
+
+    private static final int LIMIT_FOR_UPDATE_MANGA = 10;
 
     private static final String TAG = "NewChaptersProvider";
     private static final String TABLE_NAME = "new_chapters";
@@ -234,7 +234,7 @@ public class NewChaptersProvider {
     public MangaUpdateInfo[] checkForNewChapters() {
         FavouritesProvider favs = FavouritesProvider.getInstance(mContext);
         try {
-            MangaList mangas = favs.getListOldUpdate(10);
+            MangaList mangas = favs.getListOldUpdate(LIMIT_FOR_UPDATE_MANGA);
 
             Map<Integer, Integer> map = getChaptersMap();
             MangaProvider provider;

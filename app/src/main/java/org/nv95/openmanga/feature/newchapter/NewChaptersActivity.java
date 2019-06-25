@@ -61,9 +61,7 @@ public class NewChaptersActivity extends BaseAppActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         mTextViewHolder = findViewById(R.id.textView_holder);
 
-        refreshLayout.setOnRefreshListener(() -> {
-            checkUpdateMangaChapters();
-        });
+        refreshLayout.setOnRefreshListener(this::checkUpdateMangaChapters);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
@@ -113,15 +111,12 @@ public class NewChaptersActivity extends BaseAppActivity {
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.mark_all_viewed_confirm)
                         .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                NewChaptersProvider.getInstance(NewChaptersActivity.this)
-                                        .markAllAsViewed();
-                                mList.clear();
-                                mAdapter.notifyDataSetChanged();
-                                mTextViewHolder.setVisibility(View.VISIBLE);
-                            }
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            NewChaptersProvider.getInstance(NewChaptersActivity.this)
+                                    .markAllAsViewed();
+                            mList.clear();
+                            mAdapter.notifyDataSetChanged();
+                            mTextViewHolder.setVisibility(View.VISIBLE);
                         }).create().show();
                 return true;
             default:
@@ -153,7 +148,7 @@ public class NewChaptersActivity extends BaseAppActivity {
                     news.checkForNewChapters();
                 }
 
-                MangaList mangas = favs.getList(0, 3, 0);
+                MangaList mangas = favs.getList(0, 0, 0);
                 Map<Integer, Integer> updates = news.getLastUpdates();
 
                 Integer t;
