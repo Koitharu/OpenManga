@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.main.adapter.FastHistoryAdapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.utils.QuickReadTask;

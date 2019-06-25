@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.providers.HistoryProvider;
 
 /**

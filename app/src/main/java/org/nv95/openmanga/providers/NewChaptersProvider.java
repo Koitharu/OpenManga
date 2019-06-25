@@ -6,10 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import android.util.Log;
+import timber.log.Timber;
 
+import org.koin.core.logger.LoggerKt;
 import org.nv95.openmanga.helpers.StorageHelper;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
+import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.MangaUpdateInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
@@ -18,6 +20,7 @@ import org.nv95.openmanga.utils.FileLogger;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -25,6 +28,7 @@ import java.util.TreeMap;
  */
 public class NewChaptersProvider {
 
+    private static final String TAG = "NewChaptersProvider";
     private static final String TABLE_NAME = "new_chapters";
     private static final int COLUMN_ID = 0;
     private static final int COLUMN_CHAPTERS_LAST = 1;
@@ -181,6 +185,7 @@ public class NewChaptersProvider {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             FileLogger.getInstance().report(e);
         } finally {
             if (cursor != null) {
@@ -229,7 +234,8 @@ public class NewChaptersProvider {
     public MangaUpdateInfo[] checkForNewChapters() {
         FavouritesProvider favs = FavouritesProvider.getInstance(mContext);
         try {
-            MangaList mangas = favs.getList(0, 0, 0);
+            MangaList mangas = favs.getListOldUpdate(10);
+
             Map<Integer, Integer> map = getChaptersMap();
             MangaProvider provider;
             int key;
@@ -240,12 +246,17 @@ public class NewChaptersProvider {
                 }
                 try {
                     provider = MangaProviderManager.instanceProvider(mContext, o.provider);
+                    if (provider == null) {
+                        Timber.tag(TAG).e(new Exception("can't find provider for: " + o.provider));
+                        continue;
+                    }
                     key = o.hashCode();
                     MangaUpdateInfo upd = new MangaUpdateInfo(key);
                     upd.mangaName = o.name;
                     upd.lastChapters = map.containsKey(key) ? map.get(key) : -1;
-                    upd.chapters = provider.getDetailedInfo(o).getChapters().size();
-                    Log.d("UPD", upd.mangaName + ": " + upd.lastChapters + " -> " + upd.chapters);
+                    MangaSummary detailedInfo = provider.getDetailedInfo(o);
+                    upd.chapters = detailedInfo != null ? detailedInfo.getChapters().size() : -1;
+                    Timber.d(upd.mangaName + ": " + upd.lastChapters + " -> " + upd.chapters);
                     if (upd.chapters > upd.lastChapters) {
                         if (upd.lastChapters == -1) {
                             upd.lastChapters = upd.chapters;
@@ -255,11 +266,22 @@ public class NewChaptersProvider {
                         storeChaptersCount(key, upd.chapters);
                     }
                 } catch (Exception e) {
+                    Timber.tag(TAG).e(e);
                     FileLogger.getInstance().report(e);
                 }
+                // need to avoid blocking from sites, because of dos attack
+                Thread.sleep(1000);
             }
+
+            String[] ids = new String[mangas.size()];
+            for (int i = 0; i < mangas.size(); i++) {
+                ids[i] = String.valueOf(mangas.get(i).id);
+            }
+
+            favs.updateLastUpdate(ids);
             return updates.toArray(new MangaUpdateInfo[updates.size()]);
         } catch (Exception e) {
+            Timber.tag(TAG).e(e);
             FileLogger.getInstance().report(e);
             return null;
         }

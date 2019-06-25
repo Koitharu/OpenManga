@@ -23,7 +23,7 @@ import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.feature.download.domain.model.DownloadInfo;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.LocalMangaProvider;

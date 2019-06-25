@@ -1,4 +1,4 @@
-package org.nv95.openmanga.items;
+package org.nv95.openmanga.feature.manga.domain;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;

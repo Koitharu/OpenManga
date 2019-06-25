@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
@@ -88,7 +88,7 @@ public class MangachanProvider extends MangaProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            final Document document = getPage(mangaInfo.path);
+            final Document document = getPage(mangaInfo.path.replace("mangachan.me", "manga-chan.me"));
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
             summary.preview = e.getElementById("cover").attr("src");

@@ -29,7 +29,7 @@ import org.nv95.openmanga.components.SearchInput;
 import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.ListModeHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.HistoryProvider;

@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;

@@ -18,9 +18,4 @@ public class UpdatesCheckSettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.pref_chupd);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        PreferencesUtils.bindPreferenceSummary(findPreference("chupd.interval"));
-    }
 }

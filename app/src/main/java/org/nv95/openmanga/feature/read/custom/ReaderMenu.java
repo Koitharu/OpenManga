@@ -29,7 +29,7 @@ import org.nv95.openmanga.feature.read.reader.recyclerpager.RecyclerViewPager;
 import org.nv95.openmanga.dialogs.NavigationListener;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.BookmarksProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;

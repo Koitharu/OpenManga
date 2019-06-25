@@ -18,7 +18,7 @@ package org.nv95.openmanga.utils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 
 import java.util.Vector;
 

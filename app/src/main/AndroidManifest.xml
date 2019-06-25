@@ -76,21 +76,11 @@
             android:label="@string/select_file" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
 
-        <service android:name=".services.ScheduledService" />
         <service android:name=".services.UpdateService" android:exported="false" />
         <service android:name=".services.ImportService" />
         <service android:name=".services.SyncService" />
         <service android:name=".services.ExportService" />
         <service android:name=".feature.download.service.SaveService" />
-
-        <receiver android:name=".ScheduledServiceReceiver"
-            android:enabled="true" android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

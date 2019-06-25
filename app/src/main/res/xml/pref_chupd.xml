@@ -2,21 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="chupd"
         android:title="@string/checking_new_chapters"
         android:widgetLayout="@layout/pref_switchcompat" />
 
-    <ListPreference
-        android:defaultValue="12"
-        android:dependency="chupd"
-        android:entries="@array/intervals"
-        android:entryValues="@array/intervals_hours"
-        android:key="chupd.interval"
-        android:title="@string/checking_frequency" />
-
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:dependency="chupd"
         android:key="chupd.wifionly"
         android:title="@string/over_wifi_only"

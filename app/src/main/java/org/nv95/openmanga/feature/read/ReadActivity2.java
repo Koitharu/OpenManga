@@ -43,7 +43,7 @@ import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.helpers.PermissionsHelper;
 import org.nv95.openmanga.feature.read.util.ReaderConfig;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.items.SimpleDownload;
@@ -130,14 +130,12 @@ public class ReadActivity2 extends BaseAppActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus && Build.VERSION.SDK_INT>= Build.VERSION_CODES.KITKAT && !mMenuPanel.isVisible()) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (hasFocus) {
+            boolean panelIsVisible = mMenuPanel.isVisible();
+            mMenuPanel.hide();
+            if (!panelIsVisible) {
+                onVisibilityChanged(false);
+            }
         }
     }
 

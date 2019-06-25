@@ -15,7 +15,7 @@ import android.view.SubMenu;
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.preview.PreviewActivity2;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.providers.LocalMangaProvider;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.LayoutUtils;

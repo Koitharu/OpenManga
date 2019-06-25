@@ -91,16 +91,10 @@ public class SyncService extends IntentService {
     }
 
     public static void syncDelayed(final Context context) {
-        new Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        sync(context);
-                    }
-                },
-                300);
+        new Handler().postDelayed(() -> sync(context), 300);
     }
 
-    private static void sync(Context context) {
+    public static void sync(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SyncHelper syncHelper = SyncHelper.get(context);
         if (!syncHelper.isAuthorized() || !(syncHelper.isHistorySyncEnabled() || syncHelper.isFavouritesSyncEnabled())) {

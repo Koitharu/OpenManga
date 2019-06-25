@@ -18,7 +18,7 @@ import org.nv95.openmanga.R;
 import org.nv95.openmanga.feature.preview.PreviewActivity2;
 import org.nv95.openmanga.components.RatingView;
 import org.nv95.openmanga.feature.main.dialog.PreviewDialog;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.PagedList;
 import org.nv95.openmanga.utils.ImageUtils;

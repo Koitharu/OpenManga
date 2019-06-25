@@ -10,7 +10,7 @@ import android.os.Bundle;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.feature.read.ReadActivity2;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.LocalMangaProvider;

@@ -1,8 +1,6 @@
 package org.nv95.openmanga.core.network;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,6 +10,8 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.nv95.openmanga.BuildConfig;
+import org.nv95.openmanga.core.sources.ConnectionSource;
+import org.nv95.openmanga.di.KoinJavaComponent;
 import org.nv95.openmanga.items.RESTResponse;
 
 import java.io.BufferedReader;
@@ -251,21 +251,24 @@ public class NetworkUtils {
         return queryString;
     }
 
+    /**
+     * Use {@link ConnectionSource#isConnectionAvailable()}
+     */
+    @Deprecated
     public static boolean checkConnection(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isAvailable() && ni.isConnected();
+        return KoinJavaComponent.get(ConnectionSource.class).isConnectionAvailable();
     }
 
     private static boolean isOk(int responseCode) {
         return responseCode >= 200 && responseCode < 300;
     }
 
+    /**
+     * Use {@link ConnectionSource#isConnectionAvailable(boolean)}
+     */
+    @Deprecated
     public static boolean checkConnection(Context context, boolean onlyWiFi) {
-        ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-        NetworkInfo ni = cm.getActiveNetworkInfo();
-        return ni != null && ni.isConnected() && (!onlyWiFi || ni.getType() == ConnectivityManager.TYPE_WIFI);
+        return KoinJavaComponent.get(ConnectionSource.class).isConnectionAvailable(onlyWiFi);
     }
 
     private static void requestLog(String url, String cookie) {

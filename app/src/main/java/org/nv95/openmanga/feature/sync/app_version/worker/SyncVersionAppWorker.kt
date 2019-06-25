@@ -1,4 +1,4 @@
-package org.nv95.openmanga.feature.update_app.worker
+package org.nv95.openmanga.feature.sync.app_version.worker
 
 import android.content.Context
 import android.content.Intent
@@ -11,13 +11,13 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.nv95.openmanga.R
 import org.nv95.openmanga.core.extention.getString
-import org.nv95.openmanga.feature.update_app.model.UpdateAppVersion
-import org.nv95.openmanga.feature.update_app.repository.UpdateAppVersionRepository
+import org.nv95.openmanga.feature.sync.app_version.model.SyncAppVersion
+import org.nv95.openmanga.feature.sync.app_version.repository.SyncAppVersionRepository
 import org.nv95.openmanga.helpers.NotificationHelper
 import org.nv95.openmanga.services.UpdateService
 
 
-class UpdateVersionAppWorker(
+class SyncVersionAppWorker(
         context: Context,
         workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams), KoinComponent {
@@ -28,19 +28,19 @@ class UpdateVersionAppWorker(
 
     override val coroutineContext: CoroutineDispatcher = Dispatchers.IO
 
-    private val updateAppRepository: UpdateAppVersionRepository by inject()
+    private val syncAppRepository: SyncAppVersionRepository by inject()
 
     override suspend fun doWork(): Result = coroutineScope {
 
-        val updates = updateAppRepository.getUpdates()
+        val updates = syncAppRepository.getUpdates()
 
         handleUpdates(updates)
 
         Result.success()
     }
 
-    private fun handleUpdates(updates: List<UpdateAppVersion>) {
-        val firstAvailable = updates.firstOrNull { it.isActual } ?: return
+    private fun handleUpdates(syncs: List<SyncAppVersion>) {
+        val firstAvailable = syncs.firstOrNull { it.isActual } ?: return
 
         NotificationHelper(applicationContext)
                 .title(R.string.app_update_avaliable)

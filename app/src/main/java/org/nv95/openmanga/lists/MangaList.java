@@ -2,7 +2,7 @@ package org.nv95.openmanga.lists;
 
 import androidx.annotation.Nullable;
 
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 
 /**
  * Created by nv95 on 30.09.15.

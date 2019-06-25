@@ -256,6 +256,10 @@ public class NotificationHelper {
         return mNotificationBuilder.build();
     }
 
+    public NotificationCompat.Builder builder() {
+        return mNotificationBuilder;
+    }
+
     public NotificationHelper autoCancel() {
         mNotificationBuilder.setAutoCancel(true);
         return this;

@@ -17,7 +17,7 @@ import org.nv95.openmanga.feature.main.adapter.ChaptersAdapter;
 import org.nv95.openmanga.feature.main.adapter.OnChapterClickListener;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.providers.HistoryProvider;
 import org.nv95.openmanga.providers.MangaProvider;

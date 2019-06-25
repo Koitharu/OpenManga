@@ -1,34 +1,37 @@
 package org.nv95.openmanga.feature.newchapter;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.activities.BaseAppActivity;
+import org.nv95.openmanga.core.sources.ConnectionSource;
+import org.nv95.openmanga.di.KoinJavaComponent;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.feature.newchapter.adapter.NewChaptersAdapter;
-import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.providers.FavouritesProvider;
 import org.nv95.openmanga.providers.NewChaptersProvider;
 import org.nv95.openmanga.utils.AnimUtils;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
-import java.io.IOException;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 /**
  * Created by nv95 on 17.04.16.
@@ -36,11 +39,15 @@ import java.util.Map;
 public class NewChaptersActivity extends BaseAppActivity {
 
     //views
+    private SwipeRefreshLayout refreshLayout;
+
     private RecyclerView mRecyclerView;
+
     private TextView mTextViewHolder;
-    private ProgressBar mProgressBar;
+
     //utils
     private final MangaList mList = new MangaList();
+
     private final NewChaptersAdapter mAdapter = new NewChaptersAdapter(mList);
 
     @Override
@@ -50,16 +57,21 @@ public class NewChaptersActivity extends BaseAppActivity {
         setSupportActionBar(R.id.toolbar);
         enableHomeAsUp();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mTextViewHolder = (TextView) findViewById(R.id.textView_holder);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        refreshLayout = findViewById(R.id.refreshLayout);
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mTextViewHolder = findViewById(R.id.textView_holder);
+
+        refreshLayout.setOnRefreshListener(() -> {
+            checkUpdateMangaChapters();
+        });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.START | ItemTouchHelper.END) {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                    RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -67,7 +79,8 @@ public class NewChaptersActivity extends BaseAppActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 final int pos = viewHolder.getAdapterPosition();
                 final MangaInfo o = mList.get(pos);
-                NewChaptersProvider.getInstance(NewChaptersActivity.this)
+                NewChaptersProvider
+                        .getInstance(NewChaptersActivity.this)
                         .markAsViewed(o.hashCode());
                 mList.remove(pos);
                 mAdapter.notifyItemRemoved(pos);
@@ -75,12 +88,16 @@ public class NewChaptersActivity extends BaseAppActivity {
             }
         }).attachToRecyclerView(mRecyclerView);
 
-        if (NetworkUtils.checkConnection(this)) {
-            new LoadTask(this).attach(this).start();
-        } else {
-            mTextViewHolder.setText(R.string.no_network_connection);
-            AnimUtils.crossfade(mProgressBar, mTextViewHolder);
-        }
+        showLoader(true);
+        checkUpdateMangaChapters();
+    }
+
+    private void checkUpdateMangaChapters() {
+        new LoadTask(this).attach(this).start();
+    }
+
+    private void showLoader(boolean show) {
+        refreshLayout.post(() -> refreshLayout.setRefreshing(show));
     }
 
     @Override
@@ -112,7 +129,9 @@ public class NewChaptersActivity extends BaseAppActivity {
         }
     }
 
-    private static class LoadTask extends WeakAsyncTask<NewChaptersActivity, Void,Void,MangaList> {
+    private static class LoadTask extends WeakAsyncTask<NewChaptersActivity, Void, Void, MangaList> {
+
+        ConnectionSource connectionSource = KoinJavaComponent.get(ConnectionSource.class);
 
         LoadTask(NewChaptersActivity object) {
             super(object);
@@ -120,7 +139,7 @@ public class NewChaptersActivity extends BaseAppActivity {
 
         @Override
         protected void onPreExecute(@NonNull NewChaptersActivity object) {
-            object.mProgressBar.setVisibility(View.VISIBLE);
+            object.refreshLayout.setRefreshing(false);
         }
 
 
@@ -129,12 +148,17 @@ public class NewChaptersActivity extends BaseAppActivity {
             try {
                 final FavouritesProvider favs = FavouritesProvider.getInstance(getObject());
                 final NewChaptersProvider news = NewChaptersProvider.getInstance(getObject());
-                news.checkForNewChapters();
-                MangaList mangas = favs.getList(0, 0, 0);
-                Map<Integer, Integer> updates =  news.getLastUpdates();
+
+                if (connectionSource.isConnectionAvailable()) {
+                    news.checkForNewChapters();
+                }
+
+                MangaList mangas = favs.getList(0, 3, 0);
+                Map<Integer, Integer> updates = news.getLastUpdates();
+
                 Integer t;
                 final MangaList res = new MangaList();
-                for (MangaInfo o:mangas) {
+                for (MangaInfo o : mangas) {
                     t = updates.get(o.hashCode());
                     if (t != null && t != 0) {
                         o.extra = "+" + t;
@@ -142,7 +166,7 @@ public class NewChaptersActivity extends BaseAppActivity {
                     }
                 }
                 return res;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 FileLogger.getInstance().report("CHUPD", e);
                 return null;
             }
@@ -150,17 +174,18 @@ public class NewChaptersActivity extends BaseAppActivity {
 
         @Override
         protected void onPostExecute(@NonNull NewChaptersActivity activity, MangaList mangaInfos) {
+            activity.showLoader(false);
             if (mangaInfos == null) {
-                AnimUtils.crossfade(activity.mProgressBar, activity.mTextViewHolder);
+                AnimUtils.crossfade(null, activity.mTextViewHolder);
                 Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show();
             } else {
                 if (mangaInfos.isEmpty()) {
-                    AnimUtils.crossfade(activity.mProgressBar, activity.mTextViewHolder);
+                    AnimUtils.crossfade(null, activity.mTextViewHolder);
                 } else {
                     activity.mList.clear();
                     activity.mList.addAll(mangaInfos);
                     activity.mAdapter.notifyDataSetChanged();
-                    AnimUtils.crossfade(activity.mProgressBar, activity.mRecyclerView);
+                    AnimUtils.crossfade(null, activity.mRecyclerView);
                 }
             }
         }

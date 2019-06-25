@@ -2,7 +2,6 @@ package org.nv95.openmanga.feature.settings.main;
 
 import com.google.android.material.appbar.AppBarLayout;
 
-import org.koin.core.context.GlobalContext;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.core.network.NetworkUtils;
@@ -24,8 +23,8 @@ import org.nv95.openmanga.feature.settings.provider.ProviderSelectFragment;
 import org.nv95.openmanga.feature.settings.read.ReadSettingsFragment;
 import org.nv95.openmanga.feature.settings.sync.SyncSettingsFragment;
 import org.nv95.openmanga.feature.settings.update.UpdatesCheckSettingsFragment;
-import org.nv95.openmanga.feature.update_app.model.UpdateAppVersion;
-import org.nv95.openmanga.feature.update_app.repository.UpdateAppVersionRepository;
+import org.nv95.openmanga.feature.sync.app_version.model.SyncAppVersion;
+import org.nv95.openmanga.feature.sync.app_version.repository.SyncAppVersionRepository;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
 import org.nv95.openmanga.items.RESTResponse;
@@ -69,7 +68,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import info.guardianproject.netcipher.proxy.OrbotHelper;
-import kotlin.jvm.internal.ClassReference;
 
 /**
  * Created by admin on 24.07.17.
@@ -462,7 +460,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
     }
 
-    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity2, Void, Void, List<UpdateAppVersion>>
+    private static class CheckUpdatesTask extends WeakAsyncTask<SettingsActivity2, Void, Void, List<SyncAppVersion>>
             implements DialogInterface.OnCancelListener {
 
         private int mSelected = 0;
@@ -484,9 +482,9 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         @Override
-        protected List<UpdateAppVersion> doInBackground(Void... params) {
+        protected List<SyncAppVersion> doInBackground(Void... params) {
 
-            UpdateAppVersionRepository updateRepository = KoinJavaComponent.get(UpdateAppVersionRepository.class);
+            SyncAppVersionRepository updateRepository = KoinJavaComponent.get(SyncAppVersionRepository.class);
 
             return updateRepository.getUpdates();
         }
@@ -498,7 +496,7 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
         }
 
         @Override
-        protected void onPostExecute(@NonNull final SettingsActivity2 activity, List<UpdateAppVersion> appUpdatesProvider) {
+        protected void onPostExecute(@NonNull final SettingsActivity2 activity, List<SyncAppVersion> appUpdatesProvider) {
             mDialog.dismiss();
             if (activity.mFragment instanceof OtherSettingsFragment) {
                 Preference p = ((OtherSettingsFragment) activity.mFragment).findPreference("update");

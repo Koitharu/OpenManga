@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class StorageHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 19;
+    private static final int DB_VERSION = 20;
 
     public StorageHelper(Context context) {
         super(context, "localmanga", null, DB_VERSION);
@@ -39,6 +39,7 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + "provider TEXT,"
                 + "path TEXT,"
                 + "timestamp INTEGER,"
+                + "last_update INTEGER DEFAULT 0,"
                 + "category INTEGER DEFAULT 0,"
                 + "rating INTEGER DEFAULT 0"
                 + ");");
@@ -65,9 +66,9 @@ public class StorageHelper extends SQLiteOpenHelper {
                 + ");");
 
         db.execSQL("CREATE TABLE new_chapters ("
-                + "id INTEGER PRIMARY KEY,"                 //0
+                + "id INTEGER PRIMARY KEY,"                 //0 - manga id
                 + "chapters_last INTEGER,"                  //1 - кол-во глав, которые юзер видел
-                + "chapters INTEGER"                        //2 - сколько сейчас глав в манге
+                + "chapters INTEGER"                        //2 - сколько сейчас глав в манге//2 - сколько сейчас глав в манге
                 + ");");
 
         db.execSQL("CREATE TABLE bookmarks ("
@@ -147,6 +148,8 @@ public class StorageHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE favourites ADD COLUMN summary TEXT");
         if(!columnsFavourites.contains("rating"))
             db.execSQL("ALTER TABLE favourites ADD COLUMN rating INTEGER DEFAULT 0");
+        if(!columnsFavourites.contains("last_update"))
+            db.execSQL("ALTER TABLE favourites ADD COLUMN last_update INTEGER DEFAULT 0");
     }
 
     @Nullable

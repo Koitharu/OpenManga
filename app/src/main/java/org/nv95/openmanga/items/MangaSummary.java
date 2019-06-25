@@ -3,6 +3,7 @@ package org.nv95.openmanga.items;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.lists.ChaptersList;
 
 /**

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.items.HistoryMangaInfo;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ImageUtils;

@@ -1,20 +1,13 @@
 package org.nv95.openmanga.providers;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.nv95.openmanga.R;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfoListDbConverter;
 import org.nv95.openmanga.helpers.StorageHelper;
 import org.nv95.openmanga.helpers.SyncHelper;
-import org.nv95.openmanga.items.MangaInfo;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
@@ -22,24 +15,44 @@ import org.nv95.openmanga.services.SyncService;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.FileLogger;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import static org.nv95.openmanga.items.MangaInfo.STATUS_UNKNOWN;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import timber.log.Timber;
+
+import static org.nv95.openmanga.feature.manga.domain.MangaInfo.STATUS_UNKNOWN;
 
 /**
  * Created by nv95 on 03.10.15.
  */
 public class FavouritesProvider extends MangaProvider {
 
+    private static final String TAG = "FavouritesProvider";
+
     private static final String TABLE_NAME = "favourites";
+
     private static final int sorts[] = {R.string.sort_latest, R.string.sort_alphabetical};
-    private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE"};
+
+    private static final String sortUrls[] = {"timestamp DESC", "name COLLATE NOCASE", "last_update ASC", "last_update DESC"};
+
     private static WeakReference<FavouritesProvider> instanceReference = new WeakReference<>(null);
+
     private final StorageHelper mStorageHelper;
+
     private final Context mContext;
 
     private FavouritesProvider(Context context) {
@@ -63,41 +76,42 @@ public class FavouritesProvider extends MangaProvider {
         super.finalize();
     }
 
+    @NotNull
     @Override
-    public MangaList getList(int page, int sort, int genre) throws IOException {
-        if (page > 0)
-            return null;
+    public MangaList getList(int page, int sort, int genre) {
+        MangaList list = new MangaList();
+        if (page > 0) {
+            return list;
+        }
         final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
-        MangaList list = null;
-        MangaInfo manga;
-        Map<Integer,Integer> updates = NewChaptersProvider.getInstance(mContext)
-                .getLastUpdates();
         //noinspection TryFinallyCanBeTryWithResources
         try {
-            list = new MangaList();
-            Cursor cursor = database.query(TABLE_NAME, new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+            Cursor cursor = database.query(TABLE_NAME,
+                    new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
                     genre == 0 ? null : "category=" + genre, null, null, null, sortUrls[sort]);
-            if (cursor.moveToFirst()) {
-                do {
-                    manga = new MangaInfo();
-                    manga.id = cursor.getInt(0);
-                    manga.name = cursor.getString(1);
-                    manga.subtitle = cursor.getString(2);
-                    manga.genres = cursor.getString(3);
-                    manga.preview = cursor.getString(4);
-                    manga.path = cursor.getString(5);
-                    try {
-                        manga.provider = (Class<? extends MangaProvider>) Class.forName(cursor.getString(6));
-                    } catch (ClassNotFoundException e) {
-                        manga.provider = LocalMangaProvider.class;
-                    }
-                    manga.status = STATUS_UNKNOWN;
-                    manga.rating = (byte) cursor.getInt(7);
-                    manga.extra = updates.containsKey(manga.id) ?
-                            "+" + updates.get(manga.id) : null;
-                    list.add(manga);
-                } while (cursor.moveToNext());
-            }
+
+            list = new MangaInfoListDbConverter().convert(cursor);
+
+            cursor.close();
+        } catch (Exception e) {
+            Timber.tag(TAG).e(e);
+            FileLogger.getInstance().report("FAV", e);
+        }
+        return list;
+    }
+
+    public MangaList getListOldUpdate(int limit) {
+
+        final SQLiteDatabase database = mStorageHelper.getReadableDatabase();
+        MangaList list = new MangaList();
+
+        try {
+            Cursor cursor = database.query(TABLE_NAME,
+                    new String[]{"id", "name", "subtitle", "summary", "preview", "path", "provider", "rating"},
+                    null, null, null, null, sortUrls[2], limit > 0 ? String.valueOf(limit) : null);
+
+            list = new MangaInfoListDbConverter().convert(cursor);
+
             cursor.close();
         } catch (Exception e) {
             FileLogger.getInstance().report("FAV", e);
@@ -150,6 +164,21 @@ public class FavouritesProvider extends MangaProvider {
         return res;
     }
 
+    public boolean updateLastUpdate(String[] ids) {
+        if (ids.length == 0) return false;
+
+        StringBuilder keys = new StringBuilder();
+        keys.append("?");
+        for (int i = 1; i < ids.length; i++) {
+            keys.append(", ?");
+        }
+
+        final ContentValues cv = new ContentValues();
+        cv.put("last_update", System.currentTimeMillis());
+        SQLiteDatabase database = mStorageHelper.getWritableDatabase();
+        return (database.update(TABLE_NAME, cv, "id IN("+keys.toString()+")", ids) != -1);
+    }
+
     public boolean remove(MangaInfo mangaInfo) {
         final SQLiteDatabase database = mStorageHelper.getWritableDatabase();
         if (database.delete(TABLE_NAME, "id=?", new String[]{String.valueOf(mangaInfo.id)}) > 0) {
@@ -194,7 +223,8 @@ public class FavouritesProvider extends MangaProvider {
         int res = -1;
         Cursor cursor = null;
         try {
-            cursor = mStorageHelper.getReadableDatabase().query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
+            cursor = mStorageHelper.getReadableDatabase()
+                    .query(TABLE_NAME, new String[]{"category"}, "id=" + mangaInfo.id, null, null, null, null);
             if (cursor.moveToFirst()) {
                 res = cursor.getInt(0);
             }
@@ -216,7 +246,8 @@ public class FavouritesProvider extends MangaProvider {
     public String[] getGenresTitles(Context context) {
         return (context.getString(R.string.genre_all) + "," +
                 PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext())
-                        .getString("fav.categories", context.getString(R.string.favourites_categories_default))).split(",\\s*");
+                        .getString("fav.categories", context.getString(R.string.favourites_categories_default)))
+                .split(",\\s*");
     }
 
     public void move(long[] ids, int category) {
@@ -251,7 +282,8 @@ public class FavouritesProvider extends MangaProvider {
         return false;
     }
 
-    public static void dialog(final Context context, @Nullable DialogInterface.OnClickListener doneListener, final MangaInfo mangaInfo) {
+    public static void dialog(final Context context, @Nullable DialogInterface.OnClickListener doneListener,
+            final MangaInfo mangaInfo) {
         final int[] selected = new int[1];
         final DialogInterface.OnClickListener listener = doneListener;
         CharSequence[] categories = (context.getString(R.string.category_no) + "," +
@@ -324,7 +356,7 @@ public class FavouritesProvider extends MangaProvider {
         try {
             int len = jsonArray.length();
             database.beginTransaction();
-            for (int i=0;i<len;i++) {
+            for (int i = 0; i < len; i++) {
                 JSONObject jobj = jsonArray.getJSONObject(i);
                 JSONObject manga = jobj.getJSONObject("manga");
                 ContentValues cv = new ContentValues();
@@ -338,7 +370,7 @@ public class FavouritesProvider extends MangaProvider {
                 cv.put("path", manga.getString("path"));
                 cv.put("timestamp", jobj.getLong("timestamp"));
                 cv.put("rating", manga.getLong("rating"));
-                if (database.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)})<= 0) {
+                if (database.update(TABLE_NAME, cv, "id=?", new String[]{String.valueOf(id)}) <= 0) {
                     database.insertOrThrow(TABLE_NAME, null, cv);
                 }
             }

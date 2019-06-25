@@ -1,6 +1,6 @@
-package org.nv95.openmanga.feature.update_app.model
+package org.nv95.openmanga.feature.sync.app_version.model
 
-data class UpdateAppVersion(
+data class SyncAppVersion(
         val versionName: String,
         val versionCode: Int,
         val url: String,

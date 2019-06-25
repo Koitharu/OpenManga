@@ -7,11 +7,11 @@ import kotlinx.coroutines.launch
 import org.koin.dsl.module
 import org.nv95.openmanga.core.errorhandler.DefaultErrorHandler
 import org.nv95.openmanga.core.errorhandler.ErrorHandlerContainer
-import org.nv95.openmanga.core.errorhandler.addHandler
 import org.nv95.openmanga.core.exeption.ErrorExceptionMessage
 import org.nv95.openmanga.core.extention.loge
 import org.nv95.openmanga.core.fragment.BaseView
 import org.nv95.openmanga.core.lifecycle.JobController
+import org.nv95.openmanga.core.sources.ConnectionSource
 import org.nv95.openmanga.di.qualifier.SupperCoroutine
 import org.nv95.openmanga.helpers.StorageHelper
 import org.nv95.openmanga.providers.staff.MangaProviderManager
@@ -20,6 +20,8 @@ import org.nv95.openmanga.providers.staff.MangaProviderManager
 val appModule = module {
 
     single { MangaProviderManager(get()) }
+
+    single { ConnectionSource(get()) }
 
 }
 

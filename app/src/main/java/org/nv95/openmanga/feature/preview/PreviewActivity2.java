@@ -37,7 +37,7 @@ import org.nv95.openmanga.helpers.ContentShareHelper;
 import org.nv95.openmanga.helpers.MangaSaveHelper;
 import org.nv95.openmanga.items.Bookmark;
 import org.nv95.openmanga.items.MangaChapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.ChaptersList;
 import org.nv95.openmanga.providers.BookmarksProvider;
@@ -235,20 +235,17 @@ public class PreviewActivity2 extends BaseAppActivity implements BookmarksAdapte
         switch (item.getItemId()) {
             case R.id.action_favourite:
                 final FavouritesProvider favouritesProvider = FavouritesProvider.getInstance(this);
-                FavouritesProvider.dialog(this, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_NEUTRAL) {
-                            if (favouritesProvider.remove(mManga)) {
-                                ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
-                                Snackbar.make(mViewPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            NewChaptersProvider.getInstance(PreviewActivity2.this)
-                                    .storeChaptersCount(mManga.id, mManga.getChapters().size());
-                            ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, which);
-                            Snackbar.make(mViewPager, R.string.favourited, Snackbar.LENGTH_SHORT).show();
+                FavouritesProvider.dialog(this, (dialog, which) -> {
+                    if (which == DialogInterface.BUTTON_NEUTRAL) {
+                        if (favouritesProvider.remove(mManga)) {
+                            ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, -1);
+                            Snackbar.make(mViewPager, R.string.unfavourited, Snackbar.LENGTH_SHORT).show();
                         }
+                    } else {
+                        NewChaptersProvider.getInstance(PreviewActivity2.this)
+                                .storeChaptersCount(mManga.id, mManga.getChapters().size());
+                        ChangesObserver.getInstance().emitOnFavouritesChanged(mManga, which);
+                        Snackbar.make(mViewPager, R.string.favourited, Snackbar.LENGTH_SHORT).show();
                     }
                 }, mManga);
                 return true;

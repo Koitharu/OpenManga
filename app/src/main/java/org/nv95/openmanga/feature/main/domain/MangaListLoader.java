@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.nv95.openmanga.feature.main.adapter.EndlessAdapter;
 import org.nv95.openmanga.feature.main.adapter.MangaListAdapter;
-import org.nv95.openmanga.items.MangaInfo;
+import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.items.ThumbSize;
 import org.nv95.openmanga.lists.MangaList;
 
