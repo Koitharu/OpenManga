@@ -5,11 +5,13 @@ OpenManga - Powerful manga reader for Android with online catalogues.
 
 ## Help
 If you can add:
-- translated into the language you are interested in
+- translation
 - source with manga
+
 please add and create pull request
 
 It will be MUCH faster
+
 
 [![Get it on F-Droid](https://cloud.githubusercontent.com/assets/8948226/22860847/7476f5c4-f112-11e6-9031-5ac233d26678.png)](https://f-droid.org/repository/browse/?fdid=org.nv95.openmanga)
 
