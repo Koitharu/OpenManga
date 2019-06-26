@@ -38,7 +38,7 @@ public class YaoiChanProvider extends MangachanProvider {
     @Override
     public MangaList getList(int page, int sort, int genre) throws Exception {
         MangaList list = new MangaList();
-        Document document = getPage("http://yaoichan.me/manga/new&n=" + sortUrls[sort] + "?offset=" + page * 20);
+        Document document = getPage("http://yaoi-chan.me/manga/new&n=" + sortUrls[sort] + "?offset=" + page * 20);
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -48,11 +48,11 @@ public class YaoiChanProvider extends MangachanProvider {
             t = o.select("h2").first();
             t = t.child(0);
             manga.name = t.text();
-            manga.path = "http://yaoichan.me" + t.attr("href");
+            manga.path = "http://yaoi-chan.me" + t.attr("href");
             t = o.select("img").first();
             manga.preview = t.attr("src");
             if (manga.preview != null && !manga.preview.startsWith("http://")) {
-                manga.preview = "http://yaoichan.me" + manga.preview;
+                manga.preview = "http://yaoi-chan.me" + manga.preview;
             }
             t = o.select("div.genre").first();
             if (t != null) {
@@ -72,14 +72,14 @@ public class YaoiChanProvider extends MangachanProvider {
             final Document document = getPage(mangaInfo.path);
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
-            summary.preview = "http://yaoichan.me" + e.getElementById("cover").attr("src");
+            summary.preview = "http://yaoi-chan.me" + e.getElementById("cover").attr("src");
             MangaChapter chapter;
             Elements els = e.select("table.table_cha");
             els = els.select("a");
             for (Element o : els) {
                 chapter = new MangaChapter();
                 chapter.name = o.text();
-                chapter.readLink = "http://yaoichan.me" + o.attr("href");
+                chapter.readLink = "http://yaoi-chan.me" + o.attr("href");
                 chapter.provider = summary.provider;
                 summary.chapters.add(0, chapter);
             }
@@ -133,7 +133,7 @@ public class YaoiChanProvider extends MangachanProvider {
             return null;
         }
         MangaList list = new MangaList();
-        Document document = getPage("http://yaoichan.me/?do=search&subaction=search&story=" + query, getAuthCookie());
+        Document document = getPage("http://yaoi-chan.me/?do=search&subaction=search&story=" + query, getAuthCookie());
         MangaInfo manga;
         Element t;
         Elements elements = document.body().select("div.content_row");
@@ -145,7 +145,7 @@ public class YaoiChanProvider extends MangachanProvider {
             manga.name = t.text();
             manga.path = t.attr("href");
             t = o.select("img").first();
-            manga.preview = "http://yaoichan.me" + t.attr("src");
+            manga.preview = "http://yaoi-chan.me" + t.attr("src");
             t = o.select("div.genre").first();
             if (t != null) {
                 manga.genres = t.text();
@@ -173,7 +173,7 @@ public class YaoiChanProvider extends MangachanProvider {
     @SuppressWarnings({"WeakerAccess", "unused"})
     public static boolean auth(String login, String password, String arg3) {
         CookieParser cp = NetworkUtils.authorize(
-                "http://yaoichan.me/",
+                "http://yaoi-chan.me/",
                 "login",
                 "submit",
                 "login_name",
