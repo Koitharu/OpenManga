@@ -69,7 +69,7 @@ public class YaoiChanProvider extends MangachanProvider {
     public MangaSummary getDetailedInfo(MangaInfo mangaInfo) {
         try {
             MangaSummary summary = new MangaSummary(mangaInfo);
-            final Document document = getPage(mangaInfo.path);
+            final Document document = getPage(mangaInfo.path.replace("yaoichan.me", "yaoi-chan.me"));
             Element e = document.body();
             summary.description = e.getElementById("description").text().trim();
             summary.preview = "http://yaoi-chan.me" + e.getElementById("cover").attr("src");
