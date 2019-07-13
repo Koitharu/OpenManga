@@ -8,12 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/appbar_container"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="?toolbarThemeOverlay">
         
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="?colorPrimary"
+            app:toolbarId="@id/toolbar"
             app:layout_scrollFlags="scroll|snap">
         
             <LinearLayout
@@ -38,7 +39,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                         android:text="@string/action_genre"/>
                     
                     <TextView
@@ -51,13 +52,13 @@
                         android:id="@+id/textView_state"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
     
                     <androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbarMenu"
                         android:background="@android:color/transparent"
                         android:layout_width="match_parent"
-                        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
                         android:layout_height="?actionBarSize"/>
                     
                 </LinearLayout>
@@ -69,7 +70,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
     
             <TextView
                 android:id="@+id/textView_title"

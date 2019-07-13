@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="?toolbarThemeOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -19,8 +19,8 @@
             android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+            app:theme="?toolbarThemeOverlay" >
 
             <org.nv95.openmanga.components.SearchInput
                 android:id="@+id/searchInput"

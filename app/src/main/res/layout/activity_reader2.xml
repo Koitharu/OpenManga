@@ -41,7 +41,7 @@
             android:textColor="@android:color/white"
             android:textAllCaps="true"
             android:padding="12dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
         <ImageView
             android:id="@+id/imageView_arrow"

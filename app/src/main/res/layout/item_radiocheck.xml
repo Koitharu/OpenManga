@@ -3,7 +3,7 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="?android:listPreferredItemHeightSmall"
-    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
     android:gravity="center_vertical"
     android:checkMark="?android:attr/listChoiceIndicatorSingle"
     android:lines="1"

@@ -7,5 +7,5 @@
     android:background="?attr/colorPrimary"
     android:fitsSystemWindows="true"
     app:elevation="4dp"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+    app:theme="?toolbarThemeOverlay" />

@@ -7,7 +7,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,9 +20,9 @@
         android:padding="@dimen/padding8"
         android:paddingTop="0px"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@android:id/button1"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -31,9 +31,9 @@
         android:textColor="@android:color/white"
         tools:text="@android:string/selectAll" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@android:id/button2"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@android:id/text1"

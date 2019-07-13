@@ -34,7 +34,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 tools:text="Medium Text"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="@android:color/white" />
 
             <TextView
@@ -45,11 +45,11 @@
                 android:singleLine="true"
                 android:lines="1"
                 tools:text="Small Text"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/white_overlay_85" />
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/buttonRead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         android:layout_margin="6dp"
         android:padding="4dp"
         android:background="?colorAccent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@android:color/white"
         android:visibility="gone" />
 </org.nv95.openmanga.components.AutoHeightLayout>

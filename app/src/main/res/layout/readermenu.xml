@@ -70,7 +70,7 @@
             android:ellipsize="end"
             android:padding="4dp"
             android:lines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>

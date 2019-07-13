@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:listDivider" />
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:listDivider" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:minHeight="?listPreferredItemHeight"
-        android:orientation="horizontal"
-        android:paddingLeft="?listPreferredItemPaddingLeft"
-        android:paddingRight="?listPreferredItemPaddingRight">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center_vertical"
+		android:minHeight="?listPreferredItemHeight"
+		android:orientation="horizontal"
+		android:paddingLeft="?listPreferredItemPaddingLeft"
+		android:paddingRight="?listPreferredItemPaddingRight">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="?android:textColorPrimary" />
+			<TextView
+				android:id="@+id/textView_title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="2dp"
+				android:ellipsize="end"
+				android:lines="1"
+				android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+				android:textColor="?android:textColorPrimary" />
 
-            <TextView
-                android:id="@+id/textView_subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="?android:textColorSecondary" />
+			<TextView
+				android:id="@+id/textView_subtitle"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:lines="1"
+				android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+				android:textColor="?android:textColorSecondary" />
 
-        </LinearLayout>
+		</LinearLayout>
 
 
-        <Button
-            android:id="@+id/button_positive"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/continue_reading" />
+		<Button
+			android:id="@+id/button_positive"
+			style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/continue_reading" />
 
-    </LinearLayout>
+	</LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:listDivider" />
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="?android:listDivider" />
 </LinearLayout>

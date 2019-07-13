@@ -43,7 +43,7 @@
 
         <Button
             android:id="@+id/button_close"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/close" />
@@ -127,7 +127,7 @@
 
                     <Button
                         android:id="@+id/buttonSync"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        style="@style/Widget.MaterialComponents.Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -137,7 +137,7 @@
 
                     <Button
                         android:id="@+id/buttonRestore"
-                        style="@style/Base.Widget.AppCompat.Button"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -151,7 +151,7 @@
 
         <Button
             android:id="@+id/button_done"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

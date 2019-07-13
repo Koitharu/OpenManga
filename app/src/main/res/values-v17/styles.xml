@@ -7,7 +7,7 @@
         <item name="android:paddingEnd">?android:listPreferredItemPaddingEnd</item>
         <item name="android:paddingStart">?android:listPreferredItemPaddingStart</item>
         <item name="android:gravity">start|center_vertical</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
         <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
         <item name="android:textSize">16sp</item>
     </style>
