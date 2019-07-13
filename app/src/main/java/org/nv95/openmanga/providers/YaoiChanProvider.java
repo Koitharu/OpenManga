@@ -1,22 +1,23 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.core.network.CookieParser;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.feature.manga.domain.MangaInfo;
+import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
-import org.nv95.openmanga.core.network.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class YaoiChanProvider extends MangachanProvider {
             manga.path = "http://yaoi-chan.me" + t.attr("href");
             t = o.select("img").first();
             manga.preview = t.attr("src");
-            if (manga.preview != null && !manga.preview.startsWith("http://")) {
+            if (manga.preview != null && !manga.preview.startsWith("http")) {
                 manga.preview = "http://yaoi-chan.me" + manga.preview;
             }
             t = o.select("div.genre").first();

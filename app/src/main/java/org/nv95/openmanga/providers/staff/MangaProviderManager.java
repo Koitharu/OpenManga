@@ -3,8 +3,9 @@ package org.nv95.openmanga.providers.staff;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import androidx.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.providers.EHentaiProvider;
 import org.nv95.openmanga.providers.FavouritesProvider;
@@ -22,6 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import okhttp3.Request;
 
 /**
  * Created by nv95 on 30.09.15.
@@ -188,10 +191,17 @@ public class MangaProviderManager {
                 .apply();
     }
 
-    public static void prepareConnection(HttpURLConnection connection) {
-        prepareConnection(connection, null);
+    public static void prepareRequest(String url, Request.Builder request, @Nullable Class<? extends MangaProvider> provider) {
+        if (url.contains("exhentai.org") && EHentaiProvider.isAuthorized()) {
+            request.addHeader("Cookie", EHentaiProvider.getCookie());
+        } else if (ReadmangaRuProvider.class.equals(provider)) {
+            request.addHeader("Referer", "http://readmanga.me");
+        } else if (MintMangaProvider.class.equals(provider)) {
+            request.addHeader("Referer", "http://mintmanga.com/");
+        }
     }
 
+    @Deprecated
     public static void prepareConnection(HttpURLConnection connection, @Nullable Class<? extends MangaProvider> provider) {
         URL url = connection.getURL();
         switch (url.getHost().toLowerCase()) {

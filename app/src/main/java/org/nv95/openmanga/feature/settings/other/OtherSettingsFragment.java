@@ -5,18 +5,19 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import androidx.annotation.NonNull;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.activities.BaseAppActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
 import org.nv95.openmanga.feature.settings.main.helper.ScheduleHelper;
+import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 import org.nv95.openmanga.utils.AppHelper;
 import org.nv95.openmanga.utils.ImageUtils;
 import org.nv95.openmanga.utils.MangaStore;
-import org.nv95.openmanga.feature.settings.util.PreferencesUtils;
 import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
@@ -79,7 +80,6 @@ public class OtherSettingsFragment extends PreferenceFragment {
         p.setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
 
         findPreference("bugreport").setOnPreferenceClickListener((Preference.OnPreferenceClickListener) activity);
-        findPreference("use_tor").setOnPreferenceChangeListener((Preference.OnPreferenceChangeListener) activity);
 
         p = findPreference("update");
         if (BuildConfig.SELFUPDATE_ENABLED) {

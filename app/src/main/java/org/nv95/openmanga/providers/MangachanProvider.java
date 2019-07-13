@@ -1,24 +1,25 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.core.network.CookieParser;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.feature.manga.domain.MangaInfo;
+import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.core.network.CookieParser;
 import org.nv95.openmanga.utils.FileLogger;
-import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class MangachanProvider extends MangaProvider {
             "%D1%81%D1%91%D0%B4%D0%B7%D1%91-%D0%B0%D0%B9", "%D1%81%D1%91%D0%BD%D1%8D%D0%BD", "%D1%81%D1%91%D0%BD%D1%8D%D0%BD-%D0%B0%D0%B9",
             "%D1%82%D1%80%D0%B0%D0%B3%D0%B5%D0%B4%D0%B8%D1%8F"
     };
-    private static final String BASE_URL = "https://manga-chan.me/";
+    private static final String BASE_URL = "http://manga-chan.me/";
 
     private static String sAuthCookie = null;
 

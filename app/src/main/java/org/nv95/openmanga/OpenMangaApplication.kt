@@ -7,7 +7,6 @@ import android.text.TextUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.nv95.openmanga.core.network.NetworkUtils
 import org.nv95.openmanga.core.network.OpenMangaLogTree
 import org.nv95.openmanga.di.appModule
 import org.nv95.openmanga.di.dbModules
@@ -59,7 +58,6 @@ class OpenMangaApplication : Application() {
 
         ImageUtils.init(this)
         AnimUtils.init(this)
-        NetworkUtils.setUseTor(this, PreferenceManager.getDefaultSharedPreferences(this).getBoolean("use_tor", false))
         setLanguage(getResources(), PreferenceManager.getDefaultSharedPreferences(this).getString("lang", ""))
         // logger
         Timber.plant(OpenMangaLogTree())

@@ -1,36 +1,39 @@
 package org.nv95.openmanga.providers;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import android.text.TextUtils;
-import android.util.Log;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nv95.openmanga.R;
-import org.nv95.openmanga.items.MangaChapter;
+import org.nv95.openmanga.core.network.CookieParser;
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.feature.manga.domain.MangaInfo;
+import org.nv95.openmanga.items.MangaChapter;
 import org.nv95.openmanga.items.MangaPage;
 import org.nv95.openmanga.items.MangaSummary;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.AppHelper;
-import org.nv95.openmanga.core.network.CookieParser;
-import org.nv95.openmanga.core.network.NetworkUtils;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import timber.log.Timber;
+
 /**
  * Created by nv95 on 30.09.15.
  */
 public class EHentaiProvider extends MangaProvider {
 
-    private static final String DEF_COOKIE = "nw=1; uconfig=dm_t; igneous=0";
+    private static final String DEF_COOKIE = "igneous=0; sl=dm_2";
     private static final int genres[] = {R.string.genre_all, R.string.genre_doujinshi, R.string.genre_manga, R.string.genre_artistcg, R.string.genre_gamecg, R.string.genre_western, R.string.genre_nonh, R.string.genre_imageset, R.string.genre_cosplay, R.string.genre_asianporn, R.string.genre_misc};
     private static final String genreUrls[] = {"f_doujinshi", "f_manga", "f_artistcg", "f_gamecg", "f_western", "f_non-h", "f_imageset", "f_cosplay", "f_asianporn", "f_misc"};
     @NonNull
@@ -49,24 +52,28 @@ public class EHentaiProvider extends MangaProvider {
         MangaList list = new MangaList();
         Document document = getPage(mDomain + "?page=" + page +
                 (genre == 0 ? "" : "&" + genreUrls[genre - 1] + "=on&f_apply=Apply+Filter"), DEF_COOKIE);
-        Element root = document.body().select("div.itg").first();
+        Element root = document.body().selectFirst("table.itg").selectFirst("tbody");
         MangaInfo manga;
-        Elements elements = root.select("div.id1");
+        Elements elements = root.select("> tr");
         if (elements == null) {
             return null;
         }
         for (Element o : elements) {
-            manga = new MangaInfo();
-            manga.name = o.select("a").first().text();
-            manga.subtitle = getFromBrackets(manga.name);
-            manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+]","").trim();
-            manga.genres = "";
-            manga.rating = parseRating(o.select("div.id43").first().attr("style"));
-            manga.path = concatUrl(mDomain, o.select("a").first().attr("href"));
-            manga.preview = o.select("img").first().attr("src");
-            manga.provider = EHentaiProvider.class;
-            manga.id = manga.path.hashCode();
-            list.add(manga);
+            try {
+                manga = new MangaInfo();
+                manga.name = o.selectFirst(".glink").text();
+                manga.subtitle = getFromBrackets(manga.name);
+                manga.name = manga.name.replaceAll("\\[[^\\[,\\]]+]", "").trim();
+                manga.genres = "";
+                manga.rating = parseRating(o.selectFirst("div.gl3e").selectFirst("div.ir").attr("style"));
+                manga.path = concatUrl(mDomain, o.selectFirst("td.gl2e").selectFirst("a").attr("href"));
+                manga.preview = o.selectFirst("img").attr("src");
+                manga.provider = EHentaiProvider.class;
+                manga.id = manga.path.hashCode();
+                list.add(manga);
+            } catch (Exception e) {
+                Timber.e(e);
+            }
         }
         return list;
     }

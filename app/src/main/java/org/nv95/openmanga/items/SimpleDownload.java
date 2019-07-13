@@ -2,21 +2,19 @@ package org.nv95.openmanga.items;
 
 import androidx.annotation.Nullable;
 
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.helpers.SpeedMeasureHelper;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.core.network.NoSSLv3SocketFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import info.guardianproject.netcipher.NetCipher;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * Created by nv95 on 12.02.16.
@@ -49,22 +47,13 @@ public class SimpleDownload implements Runnable {
     public void run() {
         InputStream input = null;
         OutputStream output = null;
-        HttpURLConnection connection = null;
         try {
-            connection = NetCipher.getHttpURLConnection(mSourceUrl);
-            if (connection instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
-            }
-            MangaProviderManager.prepareConnection(connection, mProvider);
-            connection.setConnectTimeout(15000);
-            connection.setReadTimeout(15000);
-            connection.connect();
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return;
-            }
-            input = connection.getInputStream();
+            final OkHttpClient client = NetworkUtils.getHttpClient();
+            final Request.Builder request = new Request.Builder().url(mSourceUrl).get();
+            MangaProviderManager.prepareRequest(mSourceUrl, request, mProvider);
+            input = client.newCall(request.build()).execute().body().byteStream();
             output = new FileOutputStream(mDestination);
-            byte data[] = new byte[4096];
+            byte[] data = new byte[4096];
             int count;
             long total = 0;
             if (mSpeedMeasureHelper != null) {
@@ -92,8 +81,6 @@ public class SimpleDownload implements Runnable {
                     input.close();
             } catch (IOException ignored) {
             }
-            if (connection != null)
-                connection.disconnect();
         }
     }
 

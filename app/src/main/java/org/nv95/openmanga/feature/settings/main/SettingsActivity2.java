@@ -1,10 +1,34 @@
 package org.nv95.openmanga.feature.settings.main;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.core.activities.BaseAppActivity;
-import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.di.KoinJavaComponent;
 import org.nv95.openmanga.feature.about.AboutActivity;
 import org.nv95.openmanga.feature.search.adapter.SearchHistoryAdapter;
@@ -39,35 +63,9 @@ import org.nv95.openmanga.utils.LayoutUtils;
 import org.nv95.openmanga.utils.ProgressAsyncTask;
 import org.nv95.openmanga.utils.WeakAsyncTask;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.preference.Preference;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 /**
  * Created by admin on 24.07.17.
@@ -360,29 +358,6 @@ public class SettingsActivity2 extends BaseAppActivity implements AdapterView.On
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
         switch (preference.getKey()) {
-            case "use_tor":
-                if (Boolean.TRUE.equals(o)) {
-                    if (NetworkUtils.setUseTor(this, true)) {
-                        return true;
-                    } else {
-                        new AlertDialog.Builder(this)
-                                .setTitle(R.string.use_tor_proxy)
-                                .setMessage(R.string.orbot_required)
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .setPositiveButton(R.string.install, new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        OrbotHelper.get(SettingsActivity2.this).installOrbot(SettingsActivity2.this);
-                                    }
-                                }).create().show();
-                        return false;
-                    }
-                } else if (Boolean.FALSE.equals(o)) {
-                    NetworkUtils.setUseTor(this, false);
-                    return true;
-                }
-                break;
             case "theme":
                 mCardView.postDelayed(new Runnable() {
                     @Override

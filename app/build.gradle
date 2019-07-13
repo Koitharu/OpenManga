@@ -117,9 +117,10 @@ dependencies {
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
-    implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5'
 }
 
 repositories {

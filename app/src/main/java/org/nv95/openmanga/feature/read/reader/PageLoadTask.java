@@ -2,25 +2,24 @@ package org.nv95.openmanga.feature.read.reader;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import androidx.annotation.Nullable;
 
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
-import com.nostra13.universalimageloader.utils.IoUtils;
 
+import org.nv95.openmanga.core.network.NetworkUtils;
 import org.nv95.openmanga.providers.MangaProvider;
 import org.nv95.openmanga.providers.staff.MangaProviderManager;
-import org.nv95.openmanga.core.network.NoSSLv3SocketFactory;
 
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import info.guardianproject.netcipher.NetCipher;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 
 /**
  * Created by nv95 on 16.11.16.
@@ -69,24 +68,24 @@ public class PageLoadTask extends AsyncTask<Integer,Integer,Object> {
             if (file != null) {
                 return file.getAbsolutePath();
             }
-            HttpURLConnection connection = NetCipher.getHttpURLConnection(url);
-            if (connection instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) connection).setSSLSocketFactory(NoSSLv3SocketFactory.getInstance());
+            final OkHttpClient client = NetworkUtils.getHttpClient();
+            final Request.Builder request = new Request.Builder()
+                    .url(url)
+                    .get();
+            MangaProviderManager.prepareRequest(url, request, mPageWrapper.page.provider);
+            final ResponseBody body = client.newCall(request.build()).execute().body();
+            if (body == null) {
+                return null;
             }
-            MangaProviderManager.prepareConnection(connection, mPageWrapper.page.provider);
-            connection.connect();
-            final int contentLength = connection.getContentLength();
-            InputStream is = connection.getInputStream();
+            final long contentLength = body.contentLength();
+            final InputStream is = body.byteStream();
 
-            cache.save(url, is, new IoUtils.CopyListener() {
-                @Override
-                public boolean onBytesCopied(int current, int total) {  //total is incorrect
-                    int percent = contentLength > 0 ? current * 100 / contentLength : 0;
-                    if (contentLength > 0) {
-                        publishProgress(percent);
-                    }
-                    return !isCancelled() || percent > 80;
+            cache.save(url, is, (current, total) -> {  //total is incorrect
+                int percent = Math.round(contentLength > 0 ? current * 100f / contentLength : 0);
+                if (contentLength > 0) {
+                    publishProgress(percent);
                 }
+                return !isCancelled() || percent > 80;
             });
             file = DiskCacheUtils.findInCache(url, cache);
             if (file != null) {
