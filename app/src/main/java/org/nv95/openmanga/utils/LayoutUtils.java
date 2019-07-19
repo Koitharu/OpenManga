@@ -42,7 +42,6 @@ import org.nv95.openmanga.items.ThumbSize;
 public class LayoutUtils {
 
     private static final int[] THEMES = new int[]{
-            R.style.AppTheme_New,
             R.style.AppTheme_Default,
             R.style.AppTheme_Classic,
             R.style.AppTheme_Grey,

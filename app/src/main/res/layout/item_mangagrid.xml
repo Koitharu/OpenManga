@@ -45,7 +45,7 @@
                 android:singleLine="true"
                 android:lines="1"
                 tools:text="Small Text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/white_overlay_85" />
         </LinearLayout>
 

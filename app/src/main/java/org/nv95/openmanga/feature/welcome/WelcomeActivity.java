@@ -9,15 +9,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 
 import org.nv95.openmanga.BuildConfig;
 import org.nv95.openmanga.R;
@@ -62,13 +63,6 @@ public class WelcomeActivity extends BaseAppActivity {
                             .putExtra("mode", WELCOME_ONBOARDING),
                     REQUEST_ONBOARDING
             );
-        } else if (lastVersion < version) {
-            if (BuildConfig.HAS_CHANGELOG && prefs.getBoolean("showChangelog", true)) {
-                context.startActivity(
-                        new Intent(context, WelcomeActivity.class)
-                                .putExtra("mode", WELCOME_CHANGELOG)
-                );
-            }
         }
         prefs.edit().putInt("version", version).apply();
         return lastVersion == -1;

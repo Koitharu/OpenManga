@@ -23,13 +23,6 @@
         <item name="toolbarThemeOverlay">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
     </style>
 
-    <style name="AppTheme.New">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">#B1B1B1</item>
-        <item name="colorAccent">#01579b</item>
-        <item name="toolbarThemeOverlay">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
-    </style>
-
     <style name="AppTheme.Default">
         <item name="colorPrimary">#01579b</item>
         <item name="colorPrimaryDark">#002f6c</item>

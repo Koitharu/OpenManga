@@ -2,7 +2,8 @@
 <org.nv95.openmanga.components.FrameCheckLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<com.google.android.material.card.MaterialCardView
 		android:layout_width="match_parent"
@@ -11,7 +12,7 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginRight="8dp"
 		android:layout_marginBottom="2dp"
-		android:foreground="?selectableItemBackground">
+		android:background="?selectableItemBackground">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
