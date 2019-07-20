@@ -53,7 +53,7 @@ object NetworkUtils {
 			request.header("Cookie", cookie)
 		}
 		return client.newCall(request.build()).execute().use { response ->
-			Jsoup.parse(response.body?.string(), url)
+			Jsoup.parse(response.body()?.string(), url)
 		}
 	}
 
@@ -75,7 +75,7 @@ object NetworkUtils {
 			request.header("Cookie", cookie)
 		}
 		return client.newCall(request.build()).execute().use { response ->
-			Jsoup.parse(response.body?.string(), url)
+			Jsoup.parse(response.body()?.string(), url)
 		}
 	}
 
@@ -89,7 +89,7 @@ object NetworkUtils {
 			request.header("Cookie", cookie)
 		}
 		return client.newCall(request.build()).execute().use { response ->
-			response.body?.string() ?: ""
+			response.body()?.string() ?: ""
 		}
 	}
 
@@ -138,7 +138,7 @@ object NetworkUtils {
 				request.header("X-AuthToken", token)
 			}
 			return client.newCall(request.build()).execute().use { response ->
-				return RESTResponse(JSONObject(response.body!!.string()), response.code)
+				return RESTResponse(JSONObject(response.body()!!.string()), response.code())
 			}
 		} catch (e: Exception) {
 			Timber.tag(TAG).e(e)

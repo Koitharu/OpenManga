@@ -17,8 +17,8 @@ android {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 51330 // version.properties
-        versionName '4.7' // version.properties
+        versionCode 51331 // version.properties
+        versionName '4.7.1' // version.properties
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://openmanga.pythonanywhere.com/api/v1\""
@@ -118,7 +118,8 @@ dependencies {
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    //noinspection GradleDependency
+    implementation 'com.squareup.okhttp3:okhttp:3.12.3'
     implementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.5'
 }
 

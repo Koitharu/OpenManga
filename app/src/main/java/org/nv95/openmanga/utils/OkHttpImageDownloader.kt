@@ -23,7 +23,7 @@ open class OkHttpImageDownloader(context: Context?) : BaseImageDownloader(contex
 				.url(imageUri)
 				.get()
 		onPrepareRequest(imageUri, request)
-		return client.newCall(request.build()).execute().body!!.byteStream()
+		return client.newCall(request.build()).execute().body()!!.byteStream()
 	}
 
 	open fun onPrepareRequest(url: String, request: Request.Builder) = Unit

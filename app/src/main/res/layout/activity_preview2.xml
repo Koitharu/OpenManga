@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/appbar_container"
-        android:background="@android:color/white">
+        android:background="?android:windowBackground">
         
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
