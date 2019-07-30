@@ -10,7 +10,7 @@ import org.nv95.openmanga.core.fragment.BaseView
 class DefaultErrorHandler(
         private val view: BaseView
 ) : ErrorHandler {
-
+    // TODO change to state
     override fun handle(error: ErrorExceptionMessage): Boolean {
         return if (error.error !is CancellationException) {
             // hide loader

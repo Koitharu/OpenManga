@@ -7,6 +7,7 @@ import android.text.TextUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import org.nv95.openmanga.core.network.OpenMangaLogTree
 import org.nv95.openmanga.di.appModule
 import org.nv95.openmanga.di.dbModules
@@ -29,7 +30,9 @@ class OpenMangaApplication : Application() {
 
         startKoin {
 
-            androidLogger()
+            if (BuildConfig.DEBUG) {
+                androidLogger(Level.DEBUG)
+            }
 
             androidContext(this@OpenMangaApplication)
 

@@ -55,12 +55,20 @@ public class FavouritesProvider extends MangaProvider {
 
     private final Context mContext;
 
+    public FavouritesProvider(Context context, StorageHelper storageHelper) {
+        super(context);
+        mContext = context;
+        mStorageHelper = storageHelper;
+    }
+
+    @Deprecated
     private FavouritesProvider(Context context) {
         super(context);
         mContext = context;
         mStorageHelper = new StorageHelper(context);
     }
 
+    @Deprecated
     public static FavouritesProvider getInstance(Context context) {
         FavouritesProvider instance = instanceReference.get();
         if (instance == null) {

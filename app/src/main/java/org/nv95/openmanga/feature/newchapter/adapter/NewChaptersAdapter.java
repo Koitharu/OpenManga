@@ -2,6 +2,8 @@ package org.nv95.openmanga.feature.newchapter.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +16,34 @@ import org.nv95.openmanga.feature.preview.PreviewActivity2;
 import org.nv95.openmanga.feature.manga.domain.MangaInfo;
 import org.nv95.openmanga.lists.MangaList;
 import org.nv95.openmanga.utils.ImageUtils;
+import org.nv95.openmanga.utils.diffutil.MangaInfoDiffUtill;
+
+import java.util.List;
 
 /**
  * Created by nv95 on 17.04.16.
  */
 public class NewChaptersAdapter extends RecyclerView.Adapter<NewChaptersAdapter.UpdatesHolder> {
 
-    private final MangaList mDataset;
+    private List<MangaInfo> mDataset;
 
     public NewChaptersAdapter(MangaList dataset) {
         this.mDataset = dataset;
+    }
+
+    public MangaInfo getItem(int position) {
+        return mDataset.get(position);
+    }
+
+    public void removeItem(int position) {
+        mDataset.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void setDataset(List<MangaInfo> dataset) {
+        DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new MangaInfoDiffUtill(mDataset, dataset));
+        this.mDataset = dataset;
+        diff.dispatchUpdatesTo(this);
     }
 
     @Override
