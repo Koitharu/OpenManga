@@ -99,7 +99,6 @@ class NewChaptersFragment : BaseFragment() {
 	private fun initNewChapterObserver() {
 		newChapterModel.mangaList.observe(this, Observer {
 			showLoader(false)
-			view?.recyclerView?.smoothScrollToPosition(0)
 			mAdapter.setDataset(it)
 			showOrHideTextHolder()
 		})
