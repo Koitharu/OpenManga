@@ -38,6 +38,12 @@ public class NewChaptersProvider {
     private final StorageHelper mStorageHelper;
     private static WeakReference<NewChaptersProvider> instanceReference = new WeakReference<>(null);
 
+    public NewChaptersProvider(Context context, StorageHelper storageHelper) {
+        this.mContext = context;
+        mStorageHelper = storageHelper;
+    }
+
+    @Deprecated
     public static NewChaptersProvider getInstance(Context context) {
         NewChaptersProvider instance = instanceReference.get();
         if (instance == null) {
@@ -47,6 +53,7 @@ public class NewChaptersProvider {
         return instance;
     }
 
+    @Deprecated
     private NewChaptersProvider(Context context) {
         this.mContext = context;
         mStorageHelper = new StorageHelper(mContext);

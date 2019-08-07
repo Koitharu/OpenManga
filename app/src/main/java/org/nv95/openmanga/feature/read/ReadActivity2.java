@@ -393,16 +393,13 @@ public class ReadActivity2 extends BaseAppActivity
 
     private void showChaptersList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setSingleChoiceItems(mManga.getChapters().getNames(), mChapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mMenuPanel.hide();
-                mChapter = which;
-                new ChapterLoadTask(ReadActivity2.this,0)
-                        .attach(ReadActivity2.this)
-                        .start(mManga.getChapters().get(mChapter));
-                dialog.dismiss();
-            }
+        builder.setSingleChoiceItems(mManga.getChapters().getNames(), mChapter, (dialog, which) -> {
+            mMenuPanel.hide();
+            mChapter = which;
+            new ChapterLoadTask(ReadActivity2.this,0)
+                    .attach(ReadActivity2.this)
+                    .start(mManga.getChapters().get(mChapter));
+            dialog.dismiss();
         });
         builder.setTitle(R.string.chapters_list);
         builder.create().show();
@@ -439,21 +436,23 @@ public class ReadActivity2 extends BaseAppActivity
         }
         mOverScrollFrame.setAlpha(0f);
         mOverScrollFrame.setVisibility(View.VISIBLE);
+        FrameLayout.LayoutParams overScrollTextLayoutParams = (FrameLayout.LayoutParams) mOverScrollText.getLayoutParams();
+        FrameLayout.LayoutParams overScrollArrowLayoutParams = (FrameLayout.LayoutParams) mOverScrollArrow.getLayoutParams();
         if (direction == TOP) {
-            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.CENTER;
-            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            overScrollTextLayoutParams.gravity = Gravity.CENTER;
+            overScrollArrowLayoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
             mOverScrollArrow.setRotation(0f);
         } else if (direction == LEFT) {
-            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
+            overScrollTextLayoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            overScrollArrowLayoutParams.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
             mOverScrollArrow.setRotation(-90f);
         } else if (direction == BOTTOM) {
-            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.CENTER;
-            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            overScrollTextLayoutParams.gravity = Gravity.CENTER;
+            overScrollArrowLayoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             mOverScrollArrow.setRotation(180f);
         } else if (direction == RIGHT) {
-            ((FrameLayout.LayoutParams)mOverScrollText.getLayoutParams()).gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-            ((FrameLayout.LayoutParams)mOverScrollArrow.getLayoutParams()).gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+            overScrollTextLayoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            overScrollArrowLayoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
             mOverScrollArrow.setRotation(90f);
         }
     }
@@ -525,20 +524,10 @@ public class ReadActivity2 extends BaseAppActivity
                     .setMessage(NetworkUtils.checkConnection(a) ? R.string.loading_error : R.string.no_network_connection)
                     .setTitle(R.string.app_name)
                     .setOnCancelListener(this)
-                    .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            new ChapterLoadTask(a, mPageIndex)
-                                    .attach(a)
-                                    .start(a.mManga.getChapters().get(a.mChapter));
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
+                    .setPositiveButton(R.string.retry, (dialog, which) -> new ChapterLoadTask(a, mPageIndex)
+                            .attach(a)
+                            .start(a.mManga.getChapters().get(a.mChapter)))
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
                     .create()
                     .show();
         }
@@ -621,12 +610,7 @@ public class ReadActivity2 extends BaseAppActivity
             if (file != null && file.exists()) {
                 StorageUtils.scanMediaFile(a, file);
                 Snackbar.make(a.mMenuPanel, R.string.image_saved, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.action_share, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                new ContentShareHelper(a).shareImage(file);
-                            }
-                        })
+                        .setAction(R.string.action_share, v -> new ContentShareHelper(a).shareImage(file))
                         .show();
             } else {
                 Snackbar.make(a.mMenuPanel, R.string.unable_to_save_image, Snackbar.LENGTH_SHORT).show();
