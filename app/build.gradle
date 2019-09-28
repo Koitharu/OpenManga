@@ -10,15 +10,15 @@ apply from: "${rootProject.rootDir}/scripts/sign.gradle"
 //def versionProps = rootProject.ext.getVersionProps()
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "org.nv95.openmanga"
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 51334 // version.properties
-        versionName '4.7.4' // version.properties
+        targetSdkVersion 29
+        versionCode 51340 // version.properties
+        versionName '4.8' // version.properties
         buildConfigField "boolean", "SELFUPDATE_ENABLED", "true"
         buildConfigField "String", "SELFUPDATE_URL", "\"http://anibreak.ru/v.0.3/get/openmanga/version\""
         buildConfigField "String", "SYNC_URL", "\"http://openmanga.pythonanywhere.com/api/v1\""
@@ -87,7 +87,7 @@ android {
     }
 }
 
-def work_version = "2.0.1"
+def work_version = "2.0.1" //TODO upgrade
 
 dependencies {
 
@@ -96,7 +96,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
     // worker
     implementation "androidx.work:work-runtime-ktx:$work_version"
