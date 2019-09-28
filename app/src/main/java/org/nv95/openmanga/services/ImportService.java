@@ -8,8 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
-import androidx.annotation.Nullable;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import org.nv95.openmanga.R;
 import org.nv95.openmanga.helpers.DirRemoveHelper;
@@ -17,6 +18,7 @@ import org.nv95.openmanga.helpers.NotificationHelper;
 import org.nv95.openmanga.utils.ChangesObserver;
 import org.nv95.openmanga.utils.FileLogger;
 import org.nv95.openmanga.utils.MangaStore;
+import org.nv95.openmanga.utils.NaturalOrderComparator;
 import org.nv95.openmanga.utils.StorageUtils;
 import org.nv95.openmanga.utils.ZipBuilder;
 
@@ -25,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -58,7 +62,8 @@ public class ImportService extends Service {
                         new Intent(this, ImportService.class).putExtra("action", ACTION_CANCEL),
                         0));
         startForeground(NOTIFY_ID, mNotificationHelper.notification());
-        mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Saving manga");
+        mWakeLock = ((PowerManager) getSystemService(POWER_SERVICE))
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "openmanga::saving");
         mWakeLock.acquire();
     }
 
@@ -157,6 +162,12 @@ public class ImportService extends Service {
                 //importing
                 MangaStore ms = new MangaStore(ImportService.this);
                 ContentValues cv;
+                final ZipEntry[] all = ZipBuilder.enumerateEntries(params[0]);
+                final ArrayList<String> names = new ArrayList<>(all.length);
+                for (ZipEntry zipEntry : all) {
+                    names.add(zipEntry.getName());
+                }
+                Collections.sort(names, new NaturalOrderComparator());
                 //all pages
                 chapterId = mangaId;
                 File outFile;
@@ -179,7 +190,7 @@ public class ImportService extends Service {
                                 cv.put("chapterid", chapterId);
                                 cv.put("mangaid", mangaId);
                                 cv.put("file", outFile.getName());
-                                cv.put("number", pages);
+                                cv.put("number", names.indexOf(entry.getName()));
                                 ms.getDatabase(true).insert(TABLE_PAGES, null, cv);
                                 pages++;
                                 publishProgress(pages, total);
